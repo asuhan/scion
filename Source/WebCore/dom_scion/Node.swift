@@ -77,8 +77,7 @@ class NodeWrapper {
   func hasEverPaintedImages() -> Bool { return wk_interop.Node_hasEverPaintedImages(p) }
 
   func setHasEverPaintedImages(hasEverPaintedImages: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Node_setHasEverPaintedImages(p, hasEverPaintedImages)
   }
 
   func parentElementInComposedTree() -> ElementWrapper? {
