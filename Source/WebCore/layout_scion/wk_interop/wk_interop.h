@@ -1153,6 +1153,7 @@ bool Document_inRenderTreeUpdate(const void*);
 void* Document_securityOrigin(const void* raw);
 bool Document_activeViewTransitionCapturedDocumentElement(const void*);
 bool Document_hasViewTransitionPseudoElementTree(const void*);
+bool Document_hasTopLayerElement(const void*);
 bool Settings_alignContentOnBlocksEnabled(const void*);
 bool Settings_asyncOverflowScrollingEnabled(const void*);
 bool Settings_backgroundShouldExtendBeyondPage(const void*);

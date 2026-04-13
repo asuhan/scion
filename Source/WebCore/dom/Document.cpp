@@ -528,6 +528,11 @@ extern "C" WEBCORE_EXPORT bool Document_hasViewTransitionPseudoElementTree(const
     return static_cast<const WebCore::Document*>(raw)->hasViewTransitionPseudoElementTree();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_hasTopLayerElement(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->hasTopLayerElement();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_alignContentOnBlocksEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->alignContentOnBlocksEnabled();

@@ -201,10 +201,7 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
-  func hasTopLayerElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasTopLayerElement() -> Bool { return wk_interop.Document_hasTopLayerElement(p) }
 
   func hitTest(
     _ request: HitTestRequestWrapper, _ location: HitTestLocationWrapper,
