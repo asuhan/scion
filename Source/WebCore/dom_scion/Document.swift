@@ -141,15 +141,14 @@ class Document: TreeScopeWrapper {
 
   func topDocument() -> Document { return Document(wk_interop.Document_topDocument(p)) }
 
-  enum BackForwardCacheState {
+  enum BackForwardCacheState: UInt8 {
     case NotInBackForwardCache
     case AboutToEnterBackForwardCache
     case InBackForwardCache
   }
 
   func backForwardCacheState() -> BackForwardCacheState {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BackForwardCacheState(rawValue: wk_interop.Document_backForwardCacheState(p))!
   }
 
   func displayStringModifiedByEncoding(_ string: StringWrapper) -> StringWrapper {
