@@ -112,6 +112,21 @@ extern "C" WEBCORE_EXPORT bool Node_isSVGElement(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->isSVGElement();
 }
 
+extern "C" WEBCORE_EXPORT bool Node_isPseudoElement(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isPseudoElement();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isBeforePseudoElement(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isBeforePseudoElement();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isAfterPseudoElement(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isAfterPseudoElement();
+}
+
 extern "C" WEBCORE_EXPORT bool Node_isDocumentNode(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->isDocumentNode();

@@ -45,20 +45,11 @@ class NodeWrapper {
     return wk_interop.Node_isSVGElement(p)
   }
 
-  func isPseudoElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isPseudoElement() -> Bool { return Node_isPseudoElement(p) }
 
-  func isBeforePseudoElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isBeforePseudoElement() -> Bool { return Node_isBeforePseudoElement(p) }
 
-  func isAfterPseudoElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isAfterPseudoElement() -> Bool { return Node_isAfterPseudoElement(p) }
 
   func isDocumentNode() -> Bool {
     return wk_interop.Node_isDocumentNode(p)
