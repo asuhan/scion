@@ -878,11 +878,10 @@ func RenderViewScion_viewTransitionRoot(_ viewRaw: UnsafeRawPointer) -> UnsafeMu
 
 @_cdecl("RenderViewScion_styleDidChange")
 func RenderViewScion_styleDidChange(
-  _ viewRaw: UnsafeMutableRawPointer, _ diffRaw: UInt8, _ oldStyleRaw: UnsafeRawPointer
+  _ viewRaw: UnsafeMutableRawPointer, _ diffRaw: UInt8, _ oldStyleRaw: UnsafeRawPointer?
 ) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  let oldStyle = RenderStyleWrapper()
-  oldStyle.p = oldStyleRaw
+  let oldStyle = oldStyleRaw != nil ? convert_render_style(p: oldStyleRaw!) : nil
   view.styleDidChange(diff: StyleDifference(rawValue: diffRaw)!, oldStyle: oldStyle)
 }
 
