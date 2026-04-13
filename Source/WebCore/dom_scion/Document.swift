@@ -47,10 +47,7 @@ class Document: TreeScopeWrapper {
 
   func isPluginDocument() -> Bool { return wk_interop.Document_isPluginDocument(p) }
 
-  func hasSVGRootNode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasSVGRootNode() -> Bool { return wk_interop.Document_hasSVGRootNode(p) }
 
   func fontSelector() -> CSSFontSelectorWrapper {
     // TODO(asuhan): implement this

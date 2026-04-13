@@ -428,6 +428,11 @@ extern "C" WEBCORE_EXPORT bool Document_isPluginDocument(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->isPluginDocument();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_hasSVGRootNode(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->hasSVGRootNode();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_view(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->view();
