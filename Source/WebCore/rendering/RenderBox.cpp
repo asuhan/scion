@@ -1351,7 +1351,7 @@ bool RenderBox::isScrollableOrRubberbandableBox() const
 
 bool RenderBox::requiresLayerWithScrollableArea() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->requiresLayerWithScrollableArea(); }
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
     if (isRenderView() || isDocumentElementRenderer())
         return true;

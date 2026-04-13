@@ -46,6 +46,8 @@ public:
     {
     }
 
+    bool requiresLayerWithScrollableArea();
+
     LayoutUnit width() const;
 
     void styleWillChange(StyleDifference, const RenderStyle&);

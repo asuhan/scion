@@ -25,11 +25,18 @@
 
 #include "RenderBoxScion.h"
 
-extern "C" int32_t RenderBoxScion_width(const void* p);
+extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
+
+extern "C" int32_t RenderBoxScion_width(const void*);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 namespace WebCore {
+
+bool RenderBoxScion::requiresLayerWithScrollableArea()
+{
+    return RenderBoxScion_requiresLayerWithScrollableArea(m_handle);
+}
 
 LayoutUnit RenderBoxScion::width() const
 {

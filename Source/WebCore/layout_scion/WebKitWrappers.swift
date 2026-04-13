@@ -1035,6 +1035,12 @@ func RenderElementScion_attachRendererInternal(
   element.attachRendererInternal(child: child, beforeChild: beforeChild)
 }
 
+@_cdecl("RenderBoxScion_requiresLayerWithScrollableArea")
+func RenderBoxScion_requiresLayerWithScrollableArea(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.requiresLayerWithScrollableArea()
+}
+
 @_cdecl("RenderBoxScion_width")
 func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
