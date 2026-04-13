@@ -498,6 +498,11 @@ extern "C" WEBCORE_EXPORT uint8_t Document_backForwardCacheState(const void* raw
     return static_cast<uint8_t>(static_cast<const WebCore::Document*>(raw)->backForwardCacheState());
 }
 
+extern "C" WEBCORE_EXPORT void Document_invalidateRenderingDependentRegions(void* raw)
+{
+    static_cast<WebCore::Document*>(raw)->invalidateRenderingDependentRegions();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_securityOrigin(const void* raw)
 {
     return &static_cast<const WebCore::Document*>(raw)->securityOrigin();
