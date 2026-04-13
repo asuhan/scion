@@ -41,20 +41,11 @@ class Document: TreeScopeWrapper {
     return raw != nil ? ElementWrapper(p: raw!) : nil
   }
 
-  func isImageDocument() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isImageDocument() -> Bool { return wk_interop.Document_isImageDocument(p) }
 
-  func isSVGDocument() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isSVGDocument() -> Bool { return wk_interop.Document_isSVGDocument(p) }
 
-  func isPluginDocument() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isPluginDocument() -> Bool { return wk_interop.Document_isPluginDocument(p) }
 
   func hasSVGRootNode() -> Bool {
     // TODO(asuhan): implement this

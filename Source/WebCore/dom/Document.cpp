@@ -413,6 +413,21 @@ extern "C" WEBCORE_EXPORT void* Document_documentElement(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->documentElement();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_isImageDocument(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->isImageDocument();
+}
+
+extern "C" WEBCORE_EXPORT bool Document_isSVGDocument(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->isSVGDocument();
+}
+
+extern "C" WEBCORE_EXPORT bool Document_isPluginDocument(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->isPluginDocument();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_view(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->view();
