@@ -111,10 +111,7 @@ class NodeWrapper {
     return wk_interop.Node_hasEditableStyle(p, treatment == .Editable)
   }
 
-  func computeNodeIndex() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func computeNodeIndex() -> UInt32 { return wk_interop.Node_computeNodeIndex(p) }
 
   // Returns the document associated with this node. A document node returns itself.
   func document() -> Document {
