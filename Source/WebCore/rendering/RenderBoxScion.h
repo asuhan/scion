@@ -51,6 +51,8 @@ public:
 
     LayoutUnit width() const;
 
+    bool hasAutoScrollbar(ScrollbarOrientation);
+
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation);
 
     void styleWillChange(StyleDifference, const RenderStyle&);

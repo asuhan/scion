@@ -1464,7 +1464,7 @@ bool RenderBox::canUseOverlayScrollbars() const
 
 bool RenderBox::hasAutoScrollbar(ScrollbarOrientation orientation) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hasAutoScrollbar(orientation); }
     if (!hasNonVisibleOverflow())
         return false;
 
