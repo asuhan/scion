@@ -106,10 +106,7 @@ class Document: TreeScopeWrapper {
     return wk_interop.Document_inLimitedQuirksMode(p)
   }
 
-  func inNoQuirksMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func inNoQuirksMode() -> Bool { return wk_interop.Document_inNoQuirksMode(p) }
 
   func focusedElement() -> ElementWrapper? {
     // TODO(asuhan): implement this

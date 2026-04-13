@@ -1143,6 +1143,7 @@ bool Document_printing(const void* raw);
 bool Document_paginated(const void* raw);
 bool Document_inQuirksMode(const void* raw);
 bool Document_inLimitedQuirksMode(const void* raw);
+bool Document_inNoQuirksMode(const void*);
 void* Document_ownerElement(const void*);
 void* Document_topDocument(const void* raw);
 void* Document_securityOrigin(const void* raw);

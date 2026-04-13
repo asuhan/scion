@@ -478,6 +478,11 @@ extern "C" WEBCORE_EXPORT bool Document_inLimitedQuirksMode(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->inLimitedQuirksMode();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_inNoQuirksMode(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->inNoQuirksMode();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_ownerElement(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->ownerElement();
