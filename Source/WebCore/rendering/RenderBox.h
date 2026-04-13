@@ -60,20 +60,56 @@ public:
     bool requiresLayerWithScrollableArea() const;
     bool backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) const final;
 
-    LayoutUnit x() const { return m_frameRect.x(); }
-    LayoutUnit y() const { return m_frameRect.y(); }
+    LayoutUnit x() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_frameRect.x();
+    }
+    LayoutUnit y() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_frameRect.y();
+    }
     WEBCORE_EXPORT LayoutUnit width() const;
-    LayoutUnit height() const { return m_frameRect.height(); }
+    LayoutUnit height() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_frameRect.height();
+    }
 
     // These represent your location relative to your container as a physical offset.
     // In layout related methods you almost always want the logical location (e.g. x() and y()).
-    LayoutUnit top() const { return topLeftLocation().y(); }
-    LayoutUnit left() const { return topLeftLocation().x(); }
+    LayoutUnit top() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return topLeftLocation().y();
+    }
+    LayoutUnit left() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return topLeftLocation().x();
+    }
 
-    template<typename T> void setX(T x) { m_frameRect.setX(x); }
-    template<typename T> void setY(T y) { m_frameRect.setY(y); }
-    template<typename T> void setWidth(T width) { m_frameRect.setWidth(width); }
-    template<typename T> void setHeight(T height) { m_frameRect.setHeight(height); }
+    template<typename T> void setX(T x)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.setX(x);
+    }
+    template<typename T> void setY(T y)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.setY(y);
+    }
+    template<typename T> void setWidth(T width)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.setWidth(width);
+    }
+    template<typename T> void setHeight(T height)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.setHeight(height);
+    }
 
     inline LayoutUnit logicalLeft() const;
     inline LayoutUnit logicalRight() const;
@@ -94,22 +130,62 @@ public:
     inline void setLogicalHeight(LayoutUnit);
     inline void setLogicalSize(LayoutSize);
 
-    LayoutPoint location() const { return m_frameRect.location(); }
-    LayoutSize locationOffset() const { return LayoutSize(x(), y()); }
-    LayoutSize size() const { return m_frameRect.size(); }
+    LayoutPoint location() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_frameRect.location();
+    }
+    LayoutSize locationOffset() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return LayoutSize(x(), y());
+    }
+    LayoutSize size() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_frameRect.size();
+    }
     inline LayoutSize logicalSize() const;
 
-    void setLocation(const LayoutPoint& location) { m_frameRect.setLocation(location); }
+    void setLocation(const LayoutPoint& location)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.setLocation(location);
+    }
     
-    void setSize(const LayoutSize& size) { m_frameRect.setSize(size); }
-    void move(LayoutUnit dx, LayoutUnit dy) { m_frameRect.move(dx, dy); }
+    void setSize(const LayoutSize& size)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.setSize(size);
+    }
+    void move(LayoutUnit dx, LayoutUnit dy)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect.move(dx, dy);
+    }
 
-    LayoutRect frameRect() const { return m_frameRect; }
-    void setFrameRect(const LayoutRect& rect) { m_frameRect = rect; }
+    LayoutRect frameRect() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_frameRect;
+    }
+    void setFrameRect(const LayoutRect& rect)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_frameRect = rect;
+    }
 
     inline LayoutRect marginBoxRect() const;
-    LayoutRect borderBoxRect() const { return LayoutRect(LayoutPoint(), size()); }
-    LayoutRect borderBoundingBox() const final { return borderBoxRect(); }
+    LayoutRect borderBoxRect() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return LayoutRect(LayoutPoint(), size());
+    }
+    LayoutRect borderBoundingBox() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return borderBoxRect();
+    }
     inline LayoutSize borderBoxLogicalSize() const;
 
     // Don't use this; it doesn't make sense in a future world with corner-shape. Use BorderShape instead.
@@ -135,8 +211,16 @@ public:
     LayoutRect outlineBoundsForRepaint(const RenderLayerModelObject* /*repaintContainer*/, const RenderGeometryMap* = nullptr) const final;
     void addFocusRingRects(Vector<LayoutRect>&, const LayoutPoint& additionalOffset, const RenderLayerModelObject* paintContainer = nullptr) const override;
     
-    FloatRect repaintRectInLocalCoordinates(RepaintRectCalculation = RepaintRectCalculation::Fast) const override { return borderBoxRect(); }
-    FloatRect objectBoundingBox() const override { return borderBoxRect(); }
+    FloatRect repaintRectInLocalCoordinates(RepaintRectCalculation = RepaintRectCalculation::Fast) const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return borderBoxRect();
+    }
+    FloatRect objectBoundingBox() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return borderBoxRect();
+    }
 
     // Note these functions are not equivalent of childrenOfType<RenderBox>
     RenderBox* parentBox() const;
@@ -154,11 +238,19 @@ public:
     // respectively are flipped when compared to their physical counterparts.  For example minX is on the left in vertical-lr,
     // but it is on the right in vertical-rl.
     WEBCORE_EXPORT LayoutRect flippedClientBoxRect() const;
-    LayoutRect layoutOverflowRect() const { return m_overflow ? m_overflow->layoutOverflowRect() : flippedClientBoxRect(); }
+    LayoutRect layoutOverflowRect() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_overflow ? m_overflow->layoutOverflowRect() : flippedClientBoxRect();
+    }
     inline LayoutUnit logicalLeftLayoutOverflow() const;
     inline LayoutUnit logicalRightLayoutOverflow() const;
     
-    LayoutRect visualOverflowRect() const { return m_overflow ? m_overflow->visualOverflowRect() : borderBoxRect(); }
+    LayoutRect visualOverflowRect() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_overflow ? m_overflow->visualOverflowRect() : borderBoxRect();
+    }
     inline LayoutUnit logicalLeftVisualOverflow() const;
     inline LayoutUnit logicalRightVisualOverflow() const;
 
@@ -171,7 +263,11 @@ public:
     void addVisualEffectOverflow();
     LayoutRect applyVisualEffectOverflow(const LayoutRect&) const;
 
-    void addOverflowFromChild(const RenderBox& child) { addOverflowFromChild(child, child.locationOffset()); }
+    void addOverflowFromChild(const RenderBox& child)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        addOverflowFromChild(child, child.locationOffset());
+    }
     void addOverflowFromChild(const RenderBox& child, const LayoutSize& delta);
     void addOverflowFromChild(const RenderBox&, const LayoutSize& delta, const LayoutRect& flippedClientRect);
 
@@ -191,8 +287,16 @@ public:
 
     // IE extensions. Used to calculate offsetWidth/Height.  Overridden by inlines (RenderFlow)
     // to return the remaining width on a given line (and the height of a single line).
-    LayoutUnit offsetWidth() const override { return width(); }
-    LayoutUnit offsetHeight() const override { return height(); }
+    LayoutUnit offsetWidth() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return width();
+    }
+    LayoutUnit offsetHeight() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return height();
+    }
 
     // More IE extensions.  clientWidth and clientHeight represent the interior of an object
     // excluding border and scrollbar.  clientLeft/Top are just the borderLeftWidth and borderTopWidth.
@@ -218,50 +322,134 @@ public:
     virtual void setScrollTop(int, const ScrollPositionChangeOptions&);
     void setScrollPosition(const ScrollPosition&, const ScrollPositionChangeOptions&);
 
-    const LayoutBoxExtent& marginBox() const { return m_marginBox; }
-    LayoutUnit marginTop() const override { return m_marginBox.top(); }
-    LayoutUnit marginBottom() const override { return m_marginBox.bottom(); }
-    LayoutUnit marginLeft() const override { return m_marginBox.left(); }
-    LayoutUnit marginRight() const override { return m_marginBox.right(); }
-    void setMarginTop(LayoutUnit margin) { m_marginBox.setTop(margin); }
-    void setMarginBottom(LayoutUnit margin) { m_marginBox.setBottom(margin); }
-    void setMarginLeft(LayoutUnit margin) { m_marginBox.setLeft(margin); }
-    void setMarginRight(LayoutUnit margin) { m_marginBox.setRight(margin); }
+    const LayoutBoxExtent& marginBox() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox;
+    }
+    LayoutUnit marginTop() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.top();
+    }
+    LayoutUnit marginBottom() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.bottom();
+    }
+    LayoutUnit marginLeft() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.left();
+    }
+    LayoutUnit marginRight() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.right();
+    }
+    void setMarginTop(LayoutUnit margin)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marginBox.setTop(margin);
+    }
+    void setMarginBottom(LayoutUnit margin)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marginBox.setBottom(margin);
+    }
+    void setMarginLeft(LayoutUnit margin)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marginBox.setLeft(margin);
+    }
+    void setMarginRight(LayoutUnit margin)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marginBox.setRight(margin);
+    }
 
-    LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const { return m_marginBox.start((overrideStyle ? overrideStyle : &style())->writingMode()); }
-    LayoutUnit marginLogicalRight(const RenderStyle* overrideStyle = nullptr) const { return m_marginBox.end((overrideStyle ? overrideStyle : &style())->writingMode()); }
+    LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.start((overrideStyle ? overrideStyle : &style())->writingMode());
+    }
+    LayoutUnit marginLogicalRight(const RenderStyle* overrideStyle = nullptr) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.end((overrideStyle ? overrideStyle : &style())->writingMode());
+    }
 
-    LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const final { return m_marginBox.before((overrideStyle ? overrideStyle : &style())->writingMode()); }
-    LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const final { return m_marginBox.after((overrideStyle ? overrideStyle : &style())->writingMode()); }
+    LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.before((overrideStyle ? overrideStyle : &style())->writingMode());
+    }
+    LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.after((overrideStyle ? overrideStyle : &style())->writingMode());
+    }
     LayoutUnit marginStart(const RenderStyle* overrideStyle = nullptr) const final
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
         return m_marginBox.start(styleToUse->writingMode(), styleToUse->direction());
     }
     LayoutUnit marginEnd(const RenderStyle* overrideStyle = nullptr) const final
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
         return m_marginBox.end(styleToUse->writingMode(), styleToUse->direction());
     }
-    LayoutUnit marginBlockStart(const WritingMode& writingMode) const { return m_marginBox.before(writingMode); }
-    LayoutUnit marginInlineStart(const WritingMode& writingMode) const { return m_marginBox.start(writingMode); }
+    LayoutUnit marginBlockStart(const WritingMode& writingMode) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.before(writingMode);
+    }
+    LayoutUnit marginInlineStart(const WritingMode& writingMode) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marginBox.start(writingMode);
+    }
 
-    void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr) { m_marginBox.setBefore(value, (overrideStyle ? overrideStyle : &style())->writingMode()); }
-    void setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle = nullptr) { m_marginBox.setAfter(value, (overrideStyle ? overrideStyle : &style())->writingMode()); }
+    void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marginBox.setBefore(value, (overrideStyle ? overrideStyle : &style())->writingMode());
+    }
+    void setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marginBox.setAfter(value, (overrideStyle ? overrideStyle : &style())->writingMode());
+    }
     void setMarginStart(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
         m_marginBox.setStart(value, styleToUse->writingMode(), styleToUse->direction());
     }
     void setMarginEnd(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
         m_marginBox.setEnd(value, styleToUse->writingMode(), styleToUse->direction());
     }
 
-    virtual bool isSelfCollapsingBlock() const { return false; }
-    virtual LayoutUnit collapsedMarginBefore() const { return marginBefore(); }
-    virtual LayoutUnit collapsedMarginAfter() const { return marginAfter(); }
+    virtual bool isSelfCollapsingBlock() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
+    virtual LayoutUnit collapsedMarginBefore() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return marginBefore();
+    }
+    virtual LayoutUnit collapsedMarginAfter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return marginAfter();
+    }
 
     LayoutUnit constrainBlockMarginInAvailableSpaceOrTrim(const RenderBox& containingBlock, LayoutUnit availableSpace, MarginTrimType marginSide) const;
 
@@ -325,8 +513,16 @@ public:
     LayoutUnit adjustBorderBoxLogicalWidthForBoxSizing(LayoutUnit computedLogicalWidth, LengthType originalType) const;
     LayoutUnit adjustContentBoxLogicalWidthForBoxSizing(LayoutUnit computedLogicalWidth, LengthType originalType) const;
 
-    template<typename T> LayoutUnit adjustBorderBoxLogicalWidthForBoxSizing(T computedLogicalWidth, LengthType originalType) const { return adjustBorderBoxLogicalWidthForBoxSizing(LayoutUnit(computedLogicalWidth), originalType); }
-    template<typename T> LayoutUnit adjustContentBoxLogicalWidthForBoxSizing(T computedLogicalWidth, LengthType originalType) const { return adjustContentBoxLogicalWidthForBoxSizing(LayoutUnit(computedLogicalWidth), originalType); }
+    template<typename T> LayoutUnit adjustBorderBoxLogicalWidthForBoxSizing(T computedLogicalWidth, LengthType originalType) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return adjustBorderBoxLogicalWidthForBoxSizing(LayoutUnit(computedLogicalWidth), originalType);
+    }
+    template<typename T> LayoutUnit adjustContentBoxLogicalWidthForBoxSizing(T computedLogicalWidth, LengthType originalType) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return adjustContentBoxLogicalWidthForBoxSizing(LayoutUnit(computedLogicalWidth), originalType);
+    }
 
     // Overridden by fieldsets to subtract out the intrinsic border.
     virtual LayoutUnit adjustBorderBoxLogicalHeightForBoxSizing(LayoutUnit height) const;
@@ -393,7 +589,11 @@ public:
 
     inline bool stretchesToViewport() const;
 
-    virtual LayoutSize intrinsicSize() const { return LayoutSize(); }
+    virtual LayoutSize intrinsicSize() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return LayoutSize();
+    }
     LayoutUnit intrinsicLogicalWidth() const;
     inline LayoutUnit intrinsicLogicalHeight() const;
 
@@ -422,8 +622,16 @@ public:
     LayoutUnit computeReplacedLogicalHeightUsing(SizeType, Length height) const;
     LayoutUnit computeReplacedLogicalHeightRespectingMinMaxHeight(LayoutUnit logicalHeight) const;
 
-    template<typename T> LayoutUnit computeReplacedLogicalWidthRespectingMinMaxWidth(T logicalWidth, ShouldComputePreferred shouldComputePreferred = ComputeActual) const { return computeReplacedLogicalWidthRespectingMinMaxWidth(LayoutUnit(logicalWidth), shouldComputePreferred); }
-    template<typename T> LayoutUnit computeReplacedLogicalHeightRespectingMinMaxHeight(T logicalHeight) const { return computeReplacedLogicalHeightRespectingMinMaxHeight(LayoutUnit(logicalHeight)); }
+    template<typename T> LayoutUnit computeReplacedLogicalWidthRespectingMinMaxWidth(T logicalWidth, ShouldComputePreferred shouldComputePreferred = ComputeActual) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return computeReplacedLogicalWidthRespectingMinMaxWidth(LayoutUnit(logicalWidth), shouldComputePreferred);
+    }
+    template<typename T> LayoutUnit computeReplacedLogicalHeightRespectingMinMaxHeight(T logicalHeight) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return computeReplacedLogicalHeightRespectingMinMaxHeight(LayoutUnit(logicalHeight));
+    }
 
     virtual LayoutUnit computeReplacedLogicalWidth(ShouldComputePreferred  = ComputeActual) const;
     virtual LayoutUnit computeReplacedLogicalHeight(std::optional<LayoutUnit> estimatedUsedWidth = std::nullopt) const;
@@ -452,24 +660,47 @@ public:
     bool canAutoscroll() const;
     IntSize calculateAutoscrollDirection(const IntPoint& windowPoint) const;
     static RenderBox* findAutoscrollable(RenderObject*);
-    virtual void stopAutoscroll() { }
+    virtual void stopAutoscroll()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
     virtual void panScroll(const IntPoint&);
 
     bool canUseOverlayScrollbars() const;
     bool hasAutoScrollbar(ScrollbarOrientation) const;
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;
 
-    bool scrollsOverflow() const { return scrollsOverflowX() || scrollsOverflowY(); }
-    bool scrollsOverflowX() const { return hasNonVisibleOverflow() && (style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Auto); }
-    bool scrollsOverflowY() const { return hasNonVisibleOverflow() && (style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Auto); }
+    bool scrollsOverflow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return scrollsOverflowX() || scrollsOverflowY();
+    }
+    bool scrollsOverflowX() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasNonVisibleOverflow() && (style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Auto);
+    }
+    bool scrollsOverflowY() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasNonVisibleOverflow() && (style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Auto);
+    }
 
     inline bool hasHorizontalOverflow() const;
     inline bool hasVerticalOverflow() const;
     inline bool hasScrollableOverflowX() const;
     inline bool hasScrollableOverflowY() const;
 
-    bool isScrollContainerX() const { return style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Hidden || style().overflowX() == Overflow::Auto;  }
-    bool isScrollContainerY() const { return style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Hidden || style().overflowY() == Overflow::Auto; }
+    bool isScrollContainerX() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Hidden || style().overflowX() == Overflow::Auto;
+    }
+    bool isScrollContainerY() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Hidden || style().overflowY() == Overflow::Auto;
+    }
 
     LayoutBoxExtent scrollPaddingForViewportRect(const LayoutRect& viewportRect);
 
@@ -482,10 +713,22 @@ public:
     bool shouldTreatChildAsReplacedInTableCells() const;
 
     virtual LayoutRect overflowClipRect(const LayoutPoint& location, RenderFragmentContainer* = nullptr, OverlayScrollbarSizeRelevancy = IgnoreOverlayScrollbarSize, PaintPhase = PaintPhase::BlockBackground) const;
-    virtual LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const { return overflowClipRect(location, fragment, relevancy); }
+    virtual LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return overflowClipRect(location, fragment, relevancy);
+    }
     LayoutRect clipRect(const LayoutPoint& location, RenderFragmentContainer*) const;
-    virtual bool hasControlClip() const { return false; }
-    virtual LayoutRect controlClipRect(const LayoutPoint&) const { return LayoutRect(); }
+    virtual bool hasControlClip() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
+    virtual LayoutRect controlClipRect(const LayoutPoint&) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return LayoutRect();
+    }
     bool pushContentsClip(PaintInfo&, const LayoutPoint& accumulatedOffset);
     void popContentsClip(PaintInfo&, PaintPhase originalPhase, const LayoutPoint& accumulatedOffset);
 
@@ -504,6 +747,7 @@ public:
     // that just updates the object's position. If the size does change, the object remains dirty.
     bool tryLayoutDoingPositionedMovementOnly()
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         LayoutUnit oldWidth = width();
         updateLogicalWidth();
         // If we shrink to fit our width may have changed, so we still need full layout.
@@ -522,15 +766,30 @@ public:
     
     RenderLayer* enclosingFloatPaintingLayer() const;
     
-    virtual std::optional<LayoutUnit> firstLineBaseline() const { return std::optional<LayoutUnit>(); }
-    virtual std::optional<LayoutUnit> lastLineBaseline() const { return std::optional<LayoutUnit>(); }
-    virtual std::optional<LayoutUnit> inlineBlockBaseline(LineDirectionMode) const { return std::optional<LayoutUnit>(); } // Returns empty if we should skip this box when computing the baseline of an inline-block.
+    virtual std::optional<LayoutUnit> firstLineBaseline() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return std::optional<LayoutUnit>();
+    }
+    virtual std::optional<LayoutUnit> lastLineBaseline() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return std::optional<LayoutUnit>();
+    }
+    virtual std::optional<LayoutUnit> inlineBlockBaseline(LineDirectionMode) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return std::optional<LayoutUnit>();
+    } // Returns empty if we should skip this box when computing the baseline of an inline-block.
     LayoutUnit synthesizeBaseline(FontBaseline baselineType, BaselineSynthesisEdge) const;
 
     bool shrinkToAvoidFloats() const;
     virtual bool avoidsFloats() const;
 
-    virtual void markForPaginationRelayoutIfNeeded() { }
+    virtual void markForPaginationRelayoutIfNeeded()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
     
     LayoutUnit lineHeight(bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;
@@ -552,6 +811,7 @@ public:
     // In layout related methods you almost always want the logical location (e.g. x() and y()).
     LayoutPoint topLeftLocation() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
         if (!document().view() || !document().view()->hasFlippedBlockRenderers())
             return location();
@@ -560,6 +820,7 @@ public:
 
     LayoutSize topLeftLocationOffset() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
         if (!document().view() || !document().view()->hasFlippedBlockRenderers())
             return locationOffset();
@@ -571,11 +832,22 @@ public:
     LayoutRect logicalLayoutOverflowRectForPropagation(const RenderStyle*) const;
     LayoutRect layoutOverflowRectForPropagation(const RenderStyle*) const;
 
-    bool hasRenderOverflow() const { return m_overflow; }    
-    bool hasVisualOverflow() const { return m_overflow && !borderBoxRect().contains(m_overflow->visualOverflowRect()); }
+    bool hasRenderOverflow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_overflow;
+    }
+    bool hasVisualOverflow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_overflow && !borderBoxRect().contains(m_overflow->visualOverflowRect());
+    }
 
     virtual bool needsPreferredWidthsRecalculation() const;
-    virtual void computeIntrinsicRatioInformation(FloatSize& /* intrinsicSize */, FloatSize& /* intrinsicRatio */) const { }
+    virtual void computeIntrinsicRatioInformation(FloatSize& /* intrinsicSize */, FloatSize& /* intrinsicRatio */) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
     ScrollPosition scrollPosition() const;
     LayoutSize cachedSizeForOverflowClip() const;
@@ -590,6 +862,7 @@ public:
 
     bool hasHorizontalLayoutOverflow() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (!m_overflow)
             return false;
 
@@ -600,6 +873,7 @@ public:
 
     bool hasVerticalLayoutOverflow() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (!m_overflow)
             return false;
 
@@ -616,18 +890,37 @@ public:
 
     void markShapeOutsideDependentsForLayout()
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (isFloating())
             removeFloatingOrPositionedChildFromBlockLists();
     }
 
     // True if this box can have a range in an outside fragmentation context.
-    bool canHaveOutsideFragmentRange() const { return !isRenderFragmentedFlow(); }
-    virtual bool needsLayoutAfterFragmentRangeChange() const { return false; }
+    bool canHaveOutsideFragmentRange() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !isRenderFragmentedFlow();
+    }
+    virtual bool needsLayoutAfterFragmentRangeChange() const {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
-    bool isGridItem() const { return parent() && parent()->isRenderGrid() && !isExcludedFromNormalLayout(); }
-    bool isFlexItem() const { return parent() && parent()->isRenderFlexibleBox() && !isExcludedFromNormalLayout(); }
+    bool isGridItem() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return parent() && parent()->isRenderGrid() && !isExcludedFromNormalLayout();
+    }
+    bool isFlexItem() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return parent() && parent()->isRenderFlexibleBox() && !isExcludedFromNormalLayout();
+    }
 
-    virtual void adjustBorderBoxRectForPainting(LayoutRect&) { };
+    virtual void adjustBorderBoxRectForPainting(LayoutRect&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    };
 
     bool shouldComputeLogicalHeightFromAspectRatio() const;
 
@@ -659,12 +952,24 @@ protected:
     void willBeDestroyed() override;
 
     inline bool shouldTrimChildMargin(MarginTrimType, const RenderBox&) const;
-    virtual bool isChildEligibleForMarginTrim(MarginTrimType, const RenderBox&) const { return false; }
+    virtual bool isChildEligibleForMarginTrim(MarginTrimType, const RenderBox&) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
-    virtual bool shouldResetLogicalHeightBeforeLayout() const { return false; }
+    virtual bool shouldResetLogicalHeightBeforeLayout() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
     void resetLogicalHeightBeforeLayoutIfNeeded();
 
-    virtual ItemPosition selfAlignmentNormalBehavior(const RenderBox* = nullptr) const { return ItemPosition::Stretch; }
+    virtual ItemPosition selfAlignmentNormalBehavior(const RenderBox* = nullptr) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return ItemPosition::Stretch;
+    }
 
     // Returns false if it could not cheaply compute the extent (e.g. fixed background), in which case the returned rect may be incorrect.
     bool getBackgroundPaintedExtent(const LayoutPoint& paintOffset, LayoutRect&) const;
@@ -684,7 +989,11 @@ protected:
     LayoutUnit computeIntrinsicLogicalWidthUsing(Length logicalWidthLength, LayoutUnit availableLogicalWidth, LayoutUnit borderAndPadding) const;
     std::optional<LayoutUnit> computeIntrinsicLogicalContentHeightUsing(Length logicalHeightLength, std::optional<LayoutUnit> intrinsicContentHeight, LayoutUnit borderAndPadding) const;
     
-    virtual bool shouldComputeSizeAsReplaced() const { return isReplacedOrInlineBlock() && !isInlineBlockOrInlineTable(); }
+    virtual bool shouldComputeSizeAsReplaced() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isReplacedOrInlineBlock() && !isInlineBlockOrInlineTable();
+    }
 
     LayoutRect localOutlineBoundsRepaintRect() const;
 
@@ -717,7 +1026,11 @@ protected:
 
     void computePreferredLogicalWidths(const Length& minWidth, const Length& maxWidth, LayoutUnit borderAndPadding);
     
-    bool isAspectRatioDegenerate(double aspectRatio) const { return !aspectRatio || isnan(aspectRatio); }
+    bool isAspectRatioDegenerate(double aspectRatio) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !aspectRatio || isnan(aspectRatio);
+    }
     
 private:
     bool replacedMinMaxLogicalHeightComputesAsNone(SizeType) const;
@@ -758,6 +1071,7 @@ private:
 
     virtual void computeIntrinsicKeywordLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         computeIntrinsicLogicalWidths(minLogicalWidth, maxLogicalWidth);
     }
 
@@ -766,7 +1080,11 @@ private:
     // These include tables, positioned objects, floats and flexible boxes.
     virtual void computePreferredLogicalWidths();
 
-    LayoutRect frameRectForStickyPositioning() const override { return frameRect(); }
+    LayoutRect frameRectForStickyPositioning() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return frameRect();
+    }
 
     RepaintRects computeVisibleRectsUsingPaintOffset(const RepaintRects&) const;
     
@@ -802,6 +1120,7 @@ private:
 
 inline RenderBox* RenderBox::parentBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* box = dynamicDowncast<RenderBox>(parent()))
         return box;
 
@@ -811,6 +1130,7 @@ inline RenderBox* RenderBox::parentBox() const
 
 inline RenderBox* RenderBox::firstChildBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* box = dynamicDowncast<RenderBox>(firstChild()))
         return box;
 
@@ -820,11 +1140,13 @@ inline RenderBox* RenderBox::firstChildBox() const
 
 inline RenderBox* RenderBox::firstInFlowChildBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return dynamicDowncast<RenderBox>(firstInFlowChild());
 }
 
 inline RenderBox* RenderBox::lastChildBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* box = dynamicDowncast<RenderBox>(lastChild()))
         return box;
 
@@ -834,11 +1156,13 @@ inline RenderBox* RenderBox::lastChildBox() const
 
 inline RenderBox* RenderBox::lastInFlowChildBox() const 
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return dynamicDowncast<RenderBox>(lastInFlowChild());
 }
 
 inline RenderBox* RenderBox::previousSiblingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* box = dynamicDowncast<RenderBox>(previousSibling()))
         return box;
 
@@ -848,6 +1172,7 @@ inline RenderBox* RenderBox::previousSiblingBox() const
 
 inline RenderBox* RenderBox::previousInFlowSiblingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (RenderBox* curr = previousSiblingBox(); curr; curr = curr->previousSiblingBox()) {
         if (!curr->isFloatingOrOutOfFlowPositioned())
             return curr;
@@ -857,6 +1182,7 @@ inline RenderBox* RenderBox::previousInFlowSiblingBox() const
 
 inline RenderBox* RenderBox::nextSiblingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* box = dynamicDowncast<RenderBox>(nextSibling()))
         return box;
 
@@ -866,6 +1192,7 @@ inline RenderBox* RenderBox::nextSiblingBox() const
 
 inline RenderBox* RenderBox::nextInFlowSiblingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (RenderBox* curr = nextSiblingBox(); curr; curr = curr->nextSiblingBox()) {
         if (!curr->isFloatingOrOutOfFlowPositioned())
             return curr;
