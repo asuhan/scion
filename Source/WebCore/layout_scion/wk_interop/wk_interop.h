@@ -1174,6 +1174,7 @@ bool Node_isDocumentNode(const void*);
 bool Node_hasCustomStyleResolveCallbacks(const void*);
 bool Node_needsSVGRendererUpdate(const void*);
 void Node_setNeedsSVGRendererUpdate(void*, bool);
+bool Node_hasEverPaintedImages(const void*);
 bool Node_isRootEditableElement(const void*);
 void* Node_document(const void*);
 void* Node_renderer(const void*);

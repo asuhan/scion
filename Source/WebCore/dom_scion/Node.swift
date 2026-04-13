@@ -74,10 +74,7 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
-  func hasEverPaintedImages() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasEverPaintedImages() -> Bool { return wk_interop.Node_hasEverPaintedImages(p) }
 
   func setHasEverPaintedImages(hasEverPaintedImages: Bool) {
     // TODO(asuhan): implement this

@@ -147,6 +147,11 @@ extern "C" WEBCORE_EXPORT void Node_setNeedsSVGRendererUpdate(void* raw, bool fl
     static_cast<WebCore::Node*>(raw)->setNeedsSVGRendererUpdate(flag);
 }
 
+extern "C" WEBCORE_EXPORT bool Node_hasEverPaintedImages(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasEverPaintedImages();
+}
+
 extern "C" WEBCORE_EXPORT bool Node_isRootEditableElement(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->isRootEditableElement();
