@@ -220,6 +220,7 @@ void RenderView::updateLogicalWidth()
 
 LayoutUnit RenderView::availableLogicalHeight(AvailableLogicalHeightType) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Make sure block progression pagination for percentages uses the column extent and
     // not the view's extent. See https://bugs.webkit.org/show_bug.cgi?id=135204.
     if (multiColumnFlow() && multiColumnFlow()->firstMultiColumnSet())
@@ -342,6 +343,7 @@ LayoutUnit RenderView::pageOrViewLogicalHeight() const
 
 LayoutUnit RenderView::clientLogicalWidthForFixedPosition() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: If the FrameView's fixedVisibleContentRect() is not empty, perhaps it should be consulted here too?
     Ref frameView = this->frameView();
     if (frameView->fixedElementsLayoutRelativeToFrame())
@@ -360,6 +362,7 @@ LayoutUnit RenderView::clientLogicalWidthForFixedPosition() const
 
 LayoutUnit RenderView::clientLogicalHeightForFixedPosition() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: If the FrameView's fixedVisibleContentRect() is not empty, perhaps it should be consulted here too?
     Ref frameView = this->frameView();
     if (frameView->fixedElementsLayoutRelativeToFrame())
@@ -420,6 +423,7 @@ const RenderObject* RenderView::pushMappingToContainer(const RenderLayerModelObj
 
 void RenderView::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, TransformState& transformState) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (mode & UseTransforms && shouldUseTransformFromContainer(nullptr)) {
         TransformationMatrix t;
         getTransformFromContainer(LayoutSize(), t);
@@ -529,6 +533,7 @@ static inline bool rendererObscuresBackground(const RenderElement& rootElement)
 
 void RenderView::paintBoxDecorations(PaintInfo& paintInfo, const LayoutPoint&)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!paintInfo.shouldPaintWithinRoot(*this))
         return;
 
@@ -603,6 +608,7 @@ void RenderView::paintBoxDecorations(PaintInfo& paintInfo, const LayoutPoint&)
 
 bool RenderView::shouldRepaint(const LayoutRect& rect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !printing() && !rect.isEmpty();
 }
 
@@ -625,6 +631,7 @@ void RenderView::repaintRootContents()
 
 void RenderView::repaintViewRectangle(const LayoutRect& repaintRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!shouldRepaint(repaintRect))
         return;
 
@@ -677,6 +684,7 @@ void RenderView::repaintViewRectangle(const LayoutRect& repaintRect) const
 
 void RenderView::flushAccumulatedRepaintRegion() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_accumulatedRepaintRegion);
     auto repaintRects = m_accumulatedRepaintRegion->rects();
     for (auto& rect : repaintRects)
@@ -686,6 +694,7 @@ void RenderView::flushAccumulatedRepaintRegion() const
 
 void RenderView::repaintViewAndCompositedLayers()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     repaintRootContents();
 
     RenderLayerCompositor& compositor = this->compositor();
@@ -728,6 +737,7 @@ auto RenderView::computeVisibleRectsInContainer(const RepaintRects& rects, const
 
 bool RenderView::isScrollableOrRubberbandableBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The main frame might be allowed to rubber-band even if there is no content to scroll to. This is unique to
     // the main frame; subframes and overflow areas have to have content that can be scrolled to in order to rubber-band.
     LocalFrameView::Scrollability defineScrollable = frame().ownerElement() ? LocalFrameView::Scrollability::Scrollable : LocalFrameView::Scrollability::ScrollableOrRubberbandable;
@@ -736,12 +746,14 @@ bool RenderView::isScrollableOrRubberbandableBox() const
 
 void RenderView::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: It's weird that this gets is size from the layer.
     rects.append(LayoutRect { accumulatedOffset, layer()->size() });
 }
 
 void RenderView::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (wasFixed)
         *wasFixed = false;
     quads.append(FloatRect(FloatPoint(), layer()->size()));
@@ -765,6 +777,7 @@ bool RenderView::shouldUsePrintingLayout() const
 
 LayoutRect RenderView::viewRect() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldUsePrintingLayout())
         return LayoutRect(LayoutPoint(), size());
     return protectedFrameView()->visibleContentRect(ScrollableArea::LegacyIOSDocumentVisibleRect);
@@ -780,6 +793,7 @@ IntRect RenderView::unscaledDocumentRect() const
 
 bool RenderView::rootBackgroundIsEntirelyFixed() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* rootBackgroundRenderer = rendererForRootBackground())
         return rootBackgroundRenderer->style().hasEntirelyFixedBackground();
     return false;
@@ -902,6 +916,7 @@ int RenderView::viewLogicalHeight() const
 
 void RenderView::setPageLogicalSize(LayoutSize size)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_pageLogicalSize || m_pageLogicalSize->height() != size.height())
         m_pageLogicalHeightChanged = true;
 
@@ -910,6 +925,7 @@ void RenderView::setPageLogicalSize(LayoutSize size)
 
 float RenderView::zoomFactor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return protectedFrameView()->frame().pageZoomFactor();
 }
 
@@ -940,21 +956,25 @@ Layout::LayoutState& RenderView::layoutState()
 
 FloatSize RenderView::sizeForCSSSmallViewportUnits() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return protectedFrameView()->sizeForCSSSmallViewportUnits();
 }
 
 FloatSize RenderView::sizeForCSSLargeViewportUnits() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return protectedFrameView()->sizeForCSSLargeViewportUnits();
 }
 
 FloatSize RenderView::sizeForCSSDynamicViewportUnits() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return protectedFrameView()->sizeForCSSDynamicViewportUnits();
 }
 
 FloatSize RenderView::sizeForCSSDefaultViewportUnits() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return protectedFrameView()->sizeForCSSDefaultViewportUnits();
 }
 
@@ -968,11 +988,13 @@ bool RenderView::hasQuotesNeedingUpdate() const
 
 Node* RenderView::nodeForHitTest() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return document().documentElement();
 }
 
 void RenderView::updateHitTestResult(HitTestResult& result, const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (result.innerNode())
         return;
 
@@ -997,6 +1019,7 @@ void RenderView::updateHitTestResult(HitTestResult& result, const LayoutPoint& p
 // thus choose the best place to chop it.
 void RenderView::setBestTruncatedAt(int y, RenderBoxModelObject* forRenderer, bool forcedBreak)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Nobody else can set a page break once we have a forced break.
     if (m_legacyPrinting.m_forcedPageBreak)
         return;
@@ -1057,6 +1080,7 @@ bool RenderView::hasRenderersWithOutline() const
 
 ImageQualityController& RenderView::imageQualityController()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_imageQualityController)
         m_imageQualityController = makeUnique<ImageQualityController>(*this);
     return *m_imageQualityController;
@@ -1090,12 +1114,14 @@ void RenderView::didDestroyRenderer()
 
 void RenderView::registerForVisibleInViewportCallback(RenderElement& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_visibleInViewportRenderers.contains(renderer));
     m_visibleInViewportRenderers.add(renderer);
 }
 
 void RenderView::unregisterForVisibleInViewportCallback(RenderElement& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_visibleInViewportRenderers.contains(renderer));
     m_visibleInViewportRenderers.remove(renderer);
 }
@@ -1116,6 +1142,7 @@ void RenderView::updateVisibleViewportRect(const IntRect& visibleRect)
 
 void RenderView::addRendererWithPausedImageAnimations(RenderElement& renderer, CachedImage& image)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!renderer.hasPausedImageAnimations() || m_renderersWithPausedImageAnimation.contains(renderer));
 
     renderer.setHasPausedImageAnimations(true);
@@ -1128,6 +1155,7 @@ void RenderView::addRendererWithPausedImageAnimations(RenderElement& renderer, C
 
 void RenderView::removeRendererWithPausedImageAnimations(RenderElement& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(renderer.hasPausedImageAnimations());
     ASSERT(m_renderersWithPausedImageAnimation.contains(renderer));
 
@@ -1137,6 +1165,7 @@ void RenderView::removeRendererWithPausedImageAnimations(RenderElement& renderer
 
 void RenderView::removeRendererWithPausedImageAnimations(RenderElement& renderer, CachedImage& image)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(renderer.hasPausedImageAnimations());
 
     auto it = m_renderersWithPausedImageAnimation.find(renderer);
@@ -1193,6 +1222,7 @@ static SVGSVGElement* svgSvgElementFrom(RenderElement& renderElement)
 
 void RenderView::updatePlayStateForAllAnimations(const IntRect& visibleRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool animationEnabled = page().imageAnimationEnabled();
     for (auto& renderElement : descendantsOfType<RenderElement>(*this)) {
         bool needsRepaint = false;
@@ -1286,6 +1316,7 @@ RenderView::RepaintRegionAccumulator::~RepaintRegionAccumulator()
 
 unsigned RenderView::pageNumberForBlockProgressionOffset(int offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     int columnNumber = 0;
     const Pagination& pagination = page().pagination();
     if (pagination.mode == Pagination::Mode::Unpaginated)
@@ -1312,6 +1343,7 @@ unsigned RenderView::pageNumberForBlockProgressionOffset(int offset) const
 
 unsigned RenderView::pageCount() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const Pagination& pagination = page().pagination();
     if (pagination.mode == Pagination::Mode::Unpaginated)
         return 0;
@@ -1324,6 +1356,7 @@ unsigned RenderView::pageCount() const
 
 void RenderView::layerChildrenChangedDuringStyleChange(RenderLayer& layer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_styleChangeLayerMutationRoot) {
         m_styleChangeLayerMutationRoot = layer;
         return;
@@ -1343,21 +1376,25 @@ RenderLayer* RenderView::takeStyleChangeLayerTreeMutationRoot()
 
 void RenderView::registerBoxWithScrollSnapPositions(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_boxesWithScrollSnapPositions.add(box);
 }
 
 void RenderView::unregisterBoxWithScrollSnapPositions(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_boxesWithScrollSnapPositions.remove(box);
 }
 
 void RenderView::registerContainerQueryBox(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_containerQueryBoxes.add(box);
 }
 
 void RenderView::unregisterContainerQueryBox(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_containerQueryBoxes.remove(box);
 }
 
@@ -1369,11 +1406,16 @@ const SingleThreadWeakHashSet<const RenderBox>& RenderView::containerQueryBoxes(
 
 void RenderView::addCounterNeedingUpdate(RenderCounter& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_countersNeedingUpdate.add(renderer);
 }
 
 SingleThreadWeakHashSet<RenderCounter> RenderView::takeCountersNeedingUpdate()
 {
+    if (m_scion) {
+        ASSERT(m_countersNeedingUpdate.isEmptyIgnoringNullReferences());
+        return {};
+    }
     return std::exchange(m_countersNeedingUpdate, { });
 }
 
@@ -1393,6 +1435,7 @@ SingleThreadWeakPtr<RenderElement> RenderView::viewTransitionRoot() const
 
 void RenderView::setViewTransitionRoot(RenderElement& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_viewTransitionRoot = renderer;
 }
 

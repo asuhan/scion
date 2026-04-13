@@ -81,15 +81,24 @@ public:
     Ref<LocalFrameView> protectedFrameView() const;
 
     Layout::InitialContainingBlock& initialContainingBlock();
-    const Layout::InitialContainingBlock& initialContainingBlock() const { return m_initialContainingBlock.get(); }
+    const Layout::InitialContainingBlock& initialContainingBlock() const {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_initialContainingBlock.get();
+    }
     Layout::LayoutState& layoutState();
     void updateQuirksMode();
 
     bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;
-    void setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(bool value = true) { m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = value; }
+    void setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(bool value = true) {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = value;
+    }
 
     bool needsEventRegionUpdateForNonCompositedFrame() const;
-    void setNeedsEventRegionUpdateForNonCompositedFrame(bool value = true) { m_needsEventRegionUpdateForNonCompositedFrame = value; }
+    void setNeedsEventRegionUpdateForNonCompositedFrame(bool value = true) {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_needsEventRegionUpdateForNonCompositedFrame = value;
+    }
 
     std::optional<RepaintRects> computeVisibleRectsInContainer(const RepaintRects&, const RenderLayerModelObject* container, VisibleRectContext) const override;
     void repaintRootContents();
@@ -124,18 +133,28 @@ public:
     unsigned pageCount() const;
 
     // FIXME: These functions are deprecated. No code should be added that uses these.
-    int bestTruncatedAt() const { return m_legacyPrinting.m_bestTruncatedAt; }
+    int bestTruncatedAt() const {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyPrinting.m_bestTruncatedAt;
+    }
     void setBestTruncatedAt(int y, RenderBoxModelObject* forRenderer, bool forcedBreak = false);
-    int truncatedAt() const { return m_legacyPrinting.m_truncatedAt; }
+    int truncatedAt() const {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyPrinting.m_truncatedAt;
+    }
     void setTruncatedAt(int y)
-    { 
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         m_legacyPrinting.m_truncatedAt = y;
         m_legacyPrinting.m_bestTruncatedAt = 0;
         m_legacyPrinting.m_truncatorWidth = 0;
         m_legacyPrinting.m_forcedPageBreak = false;
     }
     const IntRect& printRect() const;
-    void setPrintRect(const IntRect& r) { m_legacyPrinting.m_printRect = r; }
+    void setPrintRect(const IntRect& r) {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_legacyPrinting.m_printRect = r;
+    }
     // End deprecated functions.
 
     // Notification that this view moved into or out of a native window.
@@ -162,18 +181,30 @@ public:
     FloatSize sizeForCSSDefaultViewportUnits() const;
 
     bool hasQuotesNeedingUpdate() const;
-    void setHasQuotesNeedingUpdate(bool b) { m_hasQuotesNeedingUpdate = b; }
+    void setHasQuotesNeedingUpdate(bool b) {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasQuotesNeedingUpdate = b;
+    }
 
     void addCounterNeedingUpdate(RenderCounter&);
     SingleThreadWeakHashSet<RenderCounter> takeCountersNeedingUpdate();
 
-    void incrementRendersWithOutline() { ++m_renderersWithOutlineCount; }
-    void decrementRendersWithOutline() { ASSERT(m_renderersWithOutlineCount > 0); --m_renderersWithOutlineCount; }
+    void incrementRendersWithOutline() {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        ++m_renderersWithOutlineCount;
+    }
+    void decrementRendersWithOutline() {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        ASSERT(m_renderersWithOutlineCount > 0); --m_renderersWithOutlineCount;
+    }
     bool hasRenderersWithOutline() const;
 
     ImageQualityController& imageQualityController();
 
-    void setHasSoftwareFilters(bool hasSoftwareFilters) { m_hasSoftwareFilters = hasSoftwareFilters; }
+    void setHasSoftwareFilters(bool hasSoftwareFilters) {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasSoftwareFilters = hasSoftwareFilters;
+    }
     WEBCORE_EXPORT bool hasSoftwareFilters() const;
 
     uint64_t rendererCount() const;
@@ -209,7 +240,10 @@ public:
 
     void registerBoxWithScrollSnapPositions(const RenderBox&);
     void unregisterBoxWithScrollSnapPositions(const RenderBox&);
-    const SingleThreadWeakHashSet<const RenderBox>& boxesWithScrollSnapPositions() { return m_boxesWithScrollSnapPositions; }
+    const SingleThreadWeakHashSet<const RenderBox>& boxesWithScrollSnapPositions() {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_boxesWithScrollSnapPositions;
+    }
 
     void registerContainerQueryBox(const RenderBox&);
     void unregisterContainerQueryBox(const RenderBox&);
