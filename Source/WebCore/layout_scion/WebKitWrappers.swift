@@ -1047,6 +1047,14 @@ func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.width().rawValue()
 }
 
+@_cdecl("RenderBoxScion_hasAlwaysPresentScrollbar")
+func RenderBoxScion_hasAlwaysPresentScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
+  -> Bool
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.hasAlwaysPresentScrollbar(ScrollbarOrientation(rawValue: orientation)!)
+}
+
 @_cdecl("RenderBoxScion_styleWillChange")
 func RenderBoxScion_styleWillChange(
   _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer

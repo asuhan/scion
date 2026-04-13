@@ -27,6 +27,7 @@
 
 #include "LayoutUnit.h"
 #include "RenderStyle.h"
+#include "ScrollTypes.h"
 #include <wtf/CheckedRef.h>
 #include <wtf/FastMalloc.h>
 
@@ -49,6 +50,8 @@ public:
     bool requiresLayerWithScrollableArea();
 
     LayoutUnit width() const;
+
+    bool hasAlwaysPresentScrollbar(ScrollbarOrientation);
 
     void styleWillChange(StyleDifference, const RenderStyle&);
 

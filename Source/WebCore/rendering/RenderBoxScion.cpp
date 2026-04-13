@@ -24,10 +24,13 @@
  */
 
 #include "RenderBoxScion.h"
+#include "ScrollTypes.h"
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" int32_t RenderBoxScion_width(const void*);
+
+extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
@@ -41,6 +44,11 @@ bool RenderBoxScion::requiresLayerWithScrollableArea()
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation)
+{
+    return RenderBoxScion_hasAlwaysPresentScrollbar(m_handle, static_cast<uint8_t>(orientation));
 }
 
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)

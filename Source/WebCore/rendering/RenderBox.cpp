@@ -1483,7 +1483,7 @@ bool RenderBox::hasAutoScrollbar(ScrollbarOrientation orientation) const
 
 bool RenderBox::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hasAlwaysPresentScrollbar(orientation); }
     if (!hasNonVisibleOverflow())
         return false;
 
