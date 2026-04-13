@@ -69,10 +69,7 @@ class Document: TreeScopeWrapper {
     return SettingsWrapper(wk_interop.Document_settings(p))
   }
 
-  func deviceScaleFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func deviceScaleFactor() -> Float32 { return wk_interop.Document_deviceScaleFactor(p) }
 
   func compositeOperatorForBackgroundColor(color: ColorWrapper, renderer: RenderObjectWrapper)
     -> CompositeOperator

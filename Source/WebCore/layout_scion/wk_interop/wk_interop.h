@@ -1134,6 +1134,7 @@ bool Document_isImageDocument(const void*);
 bool Document_isSVGDocument(const void*);
 bool Document_isPluginDocument(const void*);
 bool Document_hasSVGRootNode(const void*);
+float Document_deviceScaleFactor(const void*);
 void* Document_view(const void* raw);
 const void* Document_page(const void*);
 const void* Document_settings(const void* raw);
