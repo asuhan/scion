@@ -216,10 +216,7 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
-  func hasHighlight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasHighlight() -> Bool { return wk_interop.Document_hasHighlight(p) }
 
   func highlightRegistryIfExists() -> HighlightRegistryWrapper? {
     // TODO(asuhan): implement this
@@ -238,8 +235,7 @@ class Document: TreeScopeWrapper {
 
   // TODO(asuhan): move to ScriptExecutionContext
   func activeDOMObjectsAreSuspended() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Document_activeDOMObjectsAreSuspended(p)
   }
 
   func ContainerNode() -> ContainerNodeWrapper { return ContainerNodeWrapper(p: p) }

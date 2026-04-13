@@ -533,6 +533,16 @@ extern "C" WEBCORE_EXPORT bool Document_hasTopLayerElement(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->hasTopLayerElement();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_hasHighlight(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->hasHighlight();
+}
+
+extern "C" WEBCORE_EXPORT bool Document_activeDOMObjectsAreSuspended(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->activeDOMObjectsAreSuspended();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_alignContentOnBlocksEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->alignContentOnBlocksEnabled();
