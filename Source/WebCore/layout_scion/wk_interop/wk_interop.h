@@ -1177,6 +1177,7 @@ void Node_setNeedsSVGRendererUpdate(void*, bool);
 bool Node_hasEverPaintedImages(const void*);
 void Node_setHasEverPaintedImages(void*, bool);
 bool Node_isRootEditableElement(const void*);
+bool Node_isEditingText(const void*);
 void* Node_document(const void*);
 void* Node_renderer(const void*);
 const void* BoxTree_handleNullRootBox(void*);

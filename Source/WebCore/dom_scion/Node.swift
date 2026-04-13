@@ -100,10 +100,7 @@ class NodeWrapper {
     return wk_interop.Node_isRootEditableElement(p)
   }
 
-  func isEditingText() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEditingText() -> Bool { return wk_interop.Node_isEditingText(p) }
 
   enum UserSelectAllTreatment {
     case NotEditable

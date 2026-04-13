@@ -162,6 +162,11 @@ extern "C" WEBCORE_EXPORT bool Node_isRootEditableElement(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->isRootEditableElement();
 }
 
+extern "C" WEBCORE_EXPORT bool Node_isEditingText(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isEditingText();
+}
+
 extern "C" WEBCORE_EXPORT void* Node_document(const void* raw)
 {
     return &static_cast<const WebCore::Node*>(raw)->document();
