@@ -29,13 +29,11 @@ class SettingsWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
   func acceleratedCompositingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_acceleratedCompositingEnabled(p)
   }
 
   func acceleratedCompositingForFixedPositionEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_acceleratedCompositingForFixedPositionEnabled(p)
   }
 
   func acceleratedDrawingEnabled() -> Bool {
