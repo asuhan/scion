@@ -162,10 +162,7 @@ class Document: TreeScopeWrapper {
 
   func visualUpdatesAllowed() -> Bool { return wk_interop.Document_visualUpdatesAllowed(p) }
 
-  func inRenderTreeUpdate() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func inRenderTreeUpdate() -> Bool { return wk_interop.Document_inRenderTreeUpdate(p) }
 
   func securityOrigin() -> SecurityOriginWrapper {
     return SecurityOriginWrapper(p: wk_interop.Document_securityOrigin(p))
