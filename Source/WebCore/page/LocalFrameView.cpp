@@ -168,6 +168,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_hasExtendedBackgroundRectForPainti
     return static_cast<const WebCore::LocalFrameView*>(p)->hasExtendedBackgroundRectForPainting();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;
