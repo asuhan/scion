@@ -108,8 +108,7 @@ class NodeWrapper {
   }
 
   func hasEditableStyle(_ treatment: UserSelectAllTreatment = .NotEditable) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Node_hasEditableStyle(p, treatment == .Editable)
   }
 
   func computeNodeIndex() -> UInt32 {

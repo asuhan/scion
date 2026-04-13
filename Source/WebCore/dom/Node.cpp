@@ -167,6 +167,13 @@ extern "C" WEBCORE_EXPORT bool Node_isEditingText(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->isEditingText();
 }
 
+extern "C" WEBCORE_EXPORT bool Node_hasEditableStyle(const void* raw, bool treatment)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasEditableStyle(treatment
+            ? WebCore::Node::UserSelectAllTreatment::Editable
+            : WebCore::Node::UserSelectAllTreatment::NotEditable);
+}
+
 extern "C" WEBCORE_EXPORT void* Node_document(const void* raw)
 {
     return &static_cast<const WebCore::Node*>(raw)->document();
