@@ -61,10 +61,7 @@ class NodeWrapper {
 
   func needsSVGRendererUpdate() -> Bool { return wk_interop.Node_needsSVGRendererUpdate(p) }
 
-  func setNeedsSVGRendererUpdate(flag: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setNeedsSVGRendererUpdate(flag: Bool) { wk_interop.Node_setNeedsSVGRendererUpdate(p, flag) }
 
   // If this node is in a shadow tree, returns its shadow host. Otherwise, returns null.
   func shadowHost() -> ElementWrapper? {
