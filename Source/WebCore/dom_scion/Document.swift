@@ -160,10 +160,7 @@ class Document: TreeScopeWrapper {
     wk_interop.Document_invalidateRenderingDependentRegions(p)
   }
 
-  func visualUpdatesAllowed() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func visualUpdatesAllowed() -> Bool { return wk_interop.Document_visualUpdatesAllowed(p) }
 
   func inRenderTreeUpdate() -> Bool {
     // TODO(asuhan): implement this

@@ -1148,6 +1148,7 @@ void* Document_ownerElement(const void*);
 void* Document_topDocument(const void* raw);
 uint8_t Document_backForwardCacheState(const void*);
 void Document_invalidateRenderingDependentRegions(void*);
+bool Document_visualUpdatesAllowed(const void*);
 void* Document_securityOrigin(const void* raw);
 bool Document_activeViewTransitionCapturedDocumentElement(const void*);
 bool Settings_alignContentOnBlocksEnabled(const void*);

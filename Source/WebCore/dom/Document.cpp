@@ -503,6 +503,11 @@ extern "C" WEBCORE_EXPORT void Document_invalidateRenderingDependentRegions(void
     static_cast<WebCore::Document*>(raw)->invalidateRenderingDependentRegions();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_visualUpdatesAllowed(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->visualUpdatesAllowed();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_securityOrigin(const void* raw)
 {
     return &static_cast<const WebCore::Document*>(raw)->securityOrigin();
