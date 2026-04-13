@@ -56,8 +56,7 @@ class NodeWrapper {
   }
 
   func hasCustomStyleResolveCallbacks() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Node_hasCustomStyleResolveCallbacks(p)
   }
 
   func needsSVGRendererUpdate() -> Bool {

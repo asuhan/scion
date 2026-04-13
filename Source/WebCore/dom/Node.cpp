@@ -132,6 +132,11 @@ extern "C" WEBCORE_EXPORT bool Node_isDocumentNode(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->isDocumentNode();
 }
 
+extern "C" WEBCORE_EXPORT bool Node_hasCustomStyleResolveCallbacks(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasCustomStyleResolveCallbacks();
+}
+
 extern "C" WEBCORE_EXPORT bool Node_isRootEditableElement(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->isRootEditableElement();

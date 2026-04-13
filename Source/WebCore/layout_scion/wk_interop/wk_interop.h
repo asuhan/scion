@@ -1171,6 +1171,7 @@ bool Node_isPseudoElement(const void*);
 bool Node_isBeforePseudoElement(const void*);
 bool Node_isAfterPseudoElement(const void*);
 bool Node_isDocumentNode(const void*);
+bool Node_hasCustomStyleResolveCallbacks(const void*);
 bool Node_isRootEditableElement(const void*);
 void* Node_document(const void*);
 void* Node_renderer(const void*);
