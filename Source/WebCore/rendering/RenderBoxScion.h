@@ -26,6 +26,7 @@
 #pragma once
 
 #include "LayoutUnit.h"
+#include "RenderStyle.h"
 #include <wtf/CheckedRef.h>
 #include <wtf/FastMalloc.h>
 
@@ -46,6 +47,8 @@ public:
     }
 
     LayoutUnit width() const;
+
+    void styleWillChange(StyleDifference, const RenderStyle&);
 
 private:
     void* m_handle;

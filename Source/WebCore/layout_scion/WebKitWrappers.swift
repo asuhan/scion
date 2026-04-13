@@ -1041,3 +1041,13 @@ func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   return box.width().rawValue()
 }
+
+@_cdecl("RenderBoxScion_styleWillChange")
+func RenderBoxScion_styleWillChange(
+  _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let diff = StyleDifference(rawValue: diffRaw)!
+  let newStyle = convert_render_style(p: newStyleRaw)
+  box.styleWillChange(diff: diff, newStyle: newStyle)
+}

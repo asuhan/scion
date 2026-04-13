@@ -516,7 +516,10 @@ void RenderBox::removeFloatingOrPositionedChildFromBlockLists()
 
 void RenderBox::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->styleWillChange(diff, newStyle);
+        return;
+    }
     s_hadNonVisibleOverflow = hasNonVisibleOverflow();
 
     const RenderStyle* oldStyle = hasInitializedStyle() ? &style() : nullptr;

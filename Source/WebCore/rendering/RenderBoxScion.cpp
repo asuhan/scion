@@ -27,11 +27,18 @@
 
 extern "C" int32_t RenderBoxScion_width(const void* p);
 
+extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
+
 namespace WebCore {
 
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
+{
+    RenderBoxScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
 }
 
 }
