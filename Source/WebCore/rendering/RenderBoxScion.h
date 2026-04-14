@@ -55,6 +55,8 @@ public:
 
     LayoutRect layoutOverflowRect();
 
+    LayoutRect visualOverflowRect() const;
+
     bool hasAutoScrollbar(ScrollbarOrientation);
 
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation);

@@ -5981,7 +5981,7 @@ LayoutRect RenderBox::layoutOverflowRect() const
 
 LayoutRect RenderBox::visualOverflowRect() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->visualOverflowRect(); }
     return m_overflow ? m_overflow->visualOverflowRect() : borderBoxRect();
 }
 

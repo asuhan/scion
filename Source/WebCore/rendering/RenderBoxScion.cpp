@@ -41,6 +41,8 @@ extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
+extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
+
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
@@ -79,6 +81,10 @@ LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 LayoutRect RenderBoxScion::layoutOverflowRect()
 {
     return convertLayoutRectRaw(RenderBoxScion_layoutOverflowRect(m_handle));
+}
+
+LayoutRect RenderBoxScion::visualOverflowRect() const {
+    return convertLayoutRectRaw(RenderBoxScion_visualOverflowRect(m_handle));
 }
 
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation)
