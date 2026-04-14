@@ -1047,6 +1047,13 @@ func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.width().rawValue()
 }
 
+@_cdecl("RenderBoxScion_location")
+func RenderBoxScion_location(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let point = box.location()
+  return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
+}
+
 @_cdecl("RenderBoxScion_size")
 func RenderBoxScion_size(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

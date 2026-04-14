@@ -52,6 +52,8 @@ public:
 
     LayoutUnit width() const;
 
+    LayoutPoint location() const;
+
     LayoutSize size() const;
 
     LayoutRect frameRect() const;
