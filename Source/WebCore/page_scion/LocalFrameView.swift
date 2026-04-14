@@ -168,8 +168,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func paintBehavior() -> PaintBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return PaintBehavior(rawValue: wk_interop.LocalFrameView_paintBehavior(p))
   }
 
   func documentBackgroundColor() -> ColorWrapper {

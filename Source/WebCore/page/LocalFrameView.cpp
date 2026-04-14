@@ -263,6 +263,12 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_speculativeTilingEnabled(const voi
     return static_cast<const WebCore::LocalFrameView*>(p)->speculativeTilingEnabled();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t LocalFrameView_paintBehavior(const void* p)
+{
+    const auto o = static_cast<const WebCore::LocalFrameView*>(p)->paintBehavior();
+    return o.toRaw();
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;
