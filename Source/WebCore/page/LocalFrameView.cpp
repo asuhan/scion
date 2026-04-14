@@ -361,6 +361,11 @@ extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespecting
     return { layoutPoint.x().rawValue(), layoutPoint.y().rawValue() };
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_topContentDirectionDidChange(void* p)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->topContentDirectionDidChange();
+}
+
 struct PaginationRaw {
     uint8_t mode;
     bool behavesLikeColumns;

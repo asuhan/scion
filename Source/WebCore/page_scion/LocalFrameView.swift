@@ -235,10 +235,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
       y: LayoutUnit.fromRawValue(value: rawLayoutPoint.y))
   }
 
-  func topContentDirectionDidChange() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func topContentDirectionDidChange() { wk_interop.LocalFrameView_topContentDirectionDidChange(p) }
 
   func hasFlippedBlockRenderers() -> Bool {
     return wk_interop.LocalFrameView_hasFlippedBlockRenderers(p)
