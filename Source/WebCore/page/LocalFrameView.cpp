@@ -283,6 +283,11 @@ extern "C" WEBCORE_EXPORT SRGBARaw LocalFrameView_documentBackgroundColor(const 
     return { r, g, b, a };
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_hasEnoughContentForVisualMilestones(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->hasEnoughContentForVisualMilestones();
+}
+
 extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void* p)
 {
     auto layoutPoint = static_cast<const WebCore::LocalFrameView*>(p)->scrollPositionRespectingCustomFixedPosition();

@@ -188,8 +188,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func hasEnoughContentForVisualMilestones() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameView_hasEnoughContentForVisualMilestones(p)
   }
 
   // isScrollable() takes an optional Scrollability parameter that allows the caller to define what they mean by 'scrollable.'
