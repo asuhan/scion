@@ -576,6 +576,7 @@ struct IntRectRaw LocalFrameView_windowClipRect(const void*);
 struct LayoutRectRaw LocalFrameView_layoutViewportRect(const void*);
 struct LayoutRectRaw LocalFrameView_rectForFixedPositionLayout(const void*);
 void LocalFrameView_setCannotBlitToWindow(void*);
+void LocalFrameView_setContentIsOpaque(void*, bool);
 float LocalFrameView_frameScaleFactor(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionForFixedPosition(const void*);
 struct FloatPointRaw LocalFrameView_positionForRootContentLayer(const void*);

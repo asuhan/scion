@@ -246,6 +246,11 @@ extern "C" WEBCORE_EXPORT void LocalFrameView_setCannotBlitToWindow(void* p)
     static_cast<WebCore::LocalFrameView*>(p)->setCannotBlitToWindow();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_setContentIsOpaque(void* p, bool contentIsOpaque)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->setContentIsOpaque(contentIsOpaque);
+}
+
 extern "C" WEBCORE_EXPORT float LocalFrameView_frameScaleFactor(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->frameScaleFactor();

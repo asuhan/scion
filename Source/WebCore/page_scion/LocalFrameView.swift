@@ -93,8 +93,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   func setCannotBlitToWindow() { wk_interop.LocalFrameView_setCannotBlitToWindow(p) }
 
   func setContentIsOpaque(contentIsOpaque: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_setContentIsOpaque(p, contentIsOpaque)
   }
 
   func addSlowRepaintObject(_ renderer: RenderElementWrapper) {
