@@ -582,6 +582,7 @@ struct LayoutPointRaw LocalFrameView_scrollPositionForFixedPosition(const void*)
 struct FloatPointRaw LocalFrameView_positionForRootContentLayer(const void*);
 bool LocalFrameView_hasSlowRepaintObject(const void*, const void*);
 bool LocalFrameView_speculativeTilingEnabled(const void*);
+void LocalFrameView_setPaintBehavior(void*, uint32_t);
 uint32_t LocalFrameView_paintBehavior(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);

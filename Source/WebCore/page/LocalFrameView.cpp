@@ -288,6 +288,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_speculativeTilingEnabled(const voi
     return static_cast<const WebCore::LocalFrameView*>(p)->speculativeTilingEnabled();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_setPaintBehavior(void* p, uint32_t behavior)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->setPaintBehavior(WTF::OptionSet<WebCore::PaintBehavior>::fromRaw(behavior));
+}
+
 extern "C" WEBCORE_EXPORT uint32_t LocalFrameView_paintBehavior(const void* p)
 {
     const auto o = static_cast<const WebCore::LocalFrameView*>(p)->paintBehavior();

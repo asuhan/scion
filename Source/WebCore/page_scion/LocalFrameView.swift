@@ -156,8 +156,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func setPaintBehavior(_ behavior: PaintBehavior) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_setPaintBehavior(p, behavior.rawValue)
   }
 
   func paintBehavior() -> PaintBehavior {
