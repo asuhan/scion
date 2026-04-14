@@ -72,6 +72,8 @@ public:
 
     bool scrollsOverflow() const;
 
+    LayoutPoint topLeftLocation() const;
+
     void styleWillChange(StyleDifference, const RenderStyle&);
 
 private:

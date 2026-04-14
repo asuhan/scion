@@ -1114,6 +1114,13 @@ func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.scrollsOverflow()
 }
 
+@_cdecl("RenderBoxScion_topLeftLocation")
+func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let point = box.topLeftLocation()
+  return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
+}
+
 @_cdecl("RenderBoxScion_styleWillChange")
 func RenderBoxScion_styleWillChange(
   _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer

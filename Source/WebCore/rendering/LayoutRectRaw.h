@@ -43,3 +43,8 @@ struct RepaintRectsRaw {
     struct LayoutRectRaw clippedOverflowRect;
     struct OptionalLayoutRectRaw outlineBoundsRect;
 };
+
+struct LayoutPointRaw {
+    int32_t x;
+    int32_t y;
+};

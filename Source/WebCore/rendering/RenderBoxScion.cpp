@@ -57,6 +57,8 @@ extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_scrollsOverflow(const void*);
 
+extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
+
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 namespace WebCore {
@@ -134,6 +136,12 @@ bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation)
 bool RenderBoxScion::scrollsOverflow() const
 {
     return RenderBoxScion_scrollsOverflow(m_handle);
+}
+
+LayoutPoint RenderBoxScion::topLeftLocation() const
+{
+    const auto point = RenderBoxScion_topLeftLocation(m_handle);
+    return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
 }
 
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)

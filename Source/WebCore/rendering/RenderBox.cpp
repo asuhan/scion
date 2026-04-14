@@ -177,11 +177,6 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_logicalLeft(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->logicalLeft().rawValue();
 }
 
-struct LayoutPointRaw {
-    int32_t x;
-    int32_t y;
-};
-
 extern "C" WEBCORE_EXPORT struct LayoutPointRaw RenderBox_location(const void* p)
 {
     const auto location = static_cast<const WebCore::RenderBox*>(p)->location();
@@ -6024,7 +6019,7 @@ void RenderBox::flipForWritingMode(LayoutRect& rect) const
 
 LayoutPoint RenderBox::topLeftLocation() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->topLeftLocation(); }
     // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
     if (!document().view() || !document().view()->hasFlippedBlockRenderers())
         return location();
