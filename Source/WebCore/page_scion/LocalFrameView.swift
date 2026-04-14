@@ -149,8 +149,8 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func positionForRootContentLayer() -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let p = wk_interop.LocalFrameView_positionForRootContentLayer(p)
+    return FloatPoint(x: p.x, y: p.y)
   }
 
   func speculativeTilingEnabled() -> Bool {

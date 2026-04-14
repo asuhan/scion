@@ -242,6 +242,17 @@ extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionForFixedPo
     return { layoutPoint.x().rawValue(), layoutPoint.y().rawValue() };
 }
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+extern "C" WEBCORE_EXPORT FloatPointRaw LocalFrameView_positionForRootContentLayer(const void* p)
+{
+    const auto point = static_cast<const WebCore::LocalFrameView*>(p)->positionForRootContentLayer();
+    return { point.x(), point.y() };
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));
