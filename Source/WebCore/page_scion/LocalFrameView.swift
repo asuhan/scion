@@ -76,8 +76,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   override func windowClipRect() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertIntRect(wk_interop.LocalFrameView_windowClipRect(p))
   }
 
   func visualViewportOverrideRect() -> LayoutRectWrapper? {

@@ -191,7 +191,13 @@ struct IntRectRaw {
 extern "C" WEBCORE_EXPORT IntRectRaw LocalFrameView_extendedBackgroundRectForPainting(const void* p)
 {
     const auto rect = static_cast<const WebCore::LocalFrameView*>(p)->extendedBackgroundRectForPainting();
-    return { rect.location().x(), rect.location().y(), rect.size().width(), rect.size().height() };
+    return { rect.x(), rect.y(), rect.width(), rect.height() };
+}
+
+extern "C" WEBCORE_EXPORT IntRectRaw LocalFrameView_windowClipRect(const void* p)
+{
+    const auto rect = static_cast<const WebCore::LocalFrameView*>(p)->windowClipRect();
+    return { rect.x(), rect.y(), rect.width(), rect.height() };
 }
 
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
