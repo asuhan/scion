@@ -62,6 +62,8 @@ public:
 
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
+    LayoutUnit availableLogicalWidth() const;
+
     bool hasAutoScrollbar(ScrollbarOrientation) const;
 
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;

@@ -47,6 +47,8 @@ extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const v
 
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
 
+extern "C" int32_t RenderBoxScion_availableLogicalWidth(const void*);
+
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
@@ -105,6 +107,11 @@ LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const
 {
     return convertRepaintRectsRaw(RenderBoxScion_localRectsForRepaint(m_handle, repaintOutlineBounds == RepaintOutlineBounds::Yes));
+}
+
+LayoutUnit RenderBoxScion::availableLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_availableLogicalWidth(m_handle));
 }
 
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const

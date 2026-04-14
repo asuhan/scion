@@ -1080,6 +1080,12 @@ func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOu
   return convertRepaintRects(box.localRectsForRepaint(repaintOutlineBounds ? .Yes : .No))
 }
 
+@_cdecl("RenderBoxScion_availableLogicalWidth")
+func RenderBoxScion_availableLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.availableLogicalWidth().rawValue()
+}
+
 @_cdecl("RenderBoxScion_hasAutoScrollbar")
 func RenderBoxScion_hasAutoScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
   -> Bool

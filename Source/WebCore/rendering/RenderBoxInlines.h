@@ -32,7 +32,7 @@ inline LayoutUnit RenderBox::availableHeight() const
 }
 inline LayoutUnit RenderBox::availableLogicalWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->availableLogicalWidth(); }
     return contentLogicalWidth();
 }
 inline LayoutUnit RenderBox::availableWidth() const
