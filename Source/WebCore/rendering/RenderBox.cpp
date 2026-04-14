@@ -1066,6 +1066,36 @@ LayoutUnit RenderBox::constrainContentBoxLogicalHeightByMinMax(LayoutUnit logica
     return logicalHeight;
 }
 
+LayoutPoint RenderBox::location() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return m_frameRect.location();
+}
+
+LayoutSize RenderBox::size() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return m_frameRect.size();
+}
+
+LayoutRect RenderBox::frameRect() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return m_frameRect;
+}
+
+LayoutRect RenderBox::borderBoxRect() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return LayoutRect(LayoutPoint(), size());
+}
+
+LayoutRect RenderBox::borderBoundingBox() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return borderBoxRect();
+}
+
 // FIXME: Despite the name, this returns rounded borders based on the padding box, which seems wrong.
 RoundedRect::Radii RenderBox::borderRadii() const
 {
@@ -1498,6 +1528,18 @@ bool RenderBox::scrollsOverflow() const
 {
     if (m_scion) { return m_scion->scrollsOverflow(); }
     return scrollsOverflowX() || scrollsOverflowY();
+}
+
+bool RenderBox::scrollsOverflowX() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return hasNonVisibleOverflow() && (style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Auto);
+}
+
+bool RenderBox::scrollsOverflowY() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return hasNonVisibleOverflow() && (style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Auto);
 }
 
 bool RenderBox::needsPreferredWidthsRecalculation() const
@@ -2181,6 +2223,12 @@ LayoutUnit RenderBox::width() const
 {
     if (m_scion) { return m_scion->width(); }
     return m_frameRect.width();
+}
+
+LayoutUnit RenderBox::height() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return m_frameRect.height();
 }
 
 static bool isCandidateForOpaquenessTest(const RenderBox& childBox)
@@ -5931,6 +5979,12 @@ LayoutRect RenderBox::layoutOverflowRect() const
     return m_overflow ? m_overflow->layoutOverflowRect() : flippedClientBoxRect();
 }
 
+LayoutRect RenderBox::visualOverflowRect() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return m_overflow ? m_overflow->visualOverflowRect() : borderBoxRect();
+}
+
 LayoutUnit RenderBox::offsetLeft() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -5966,6 +6020,15 @@ void RenderBox::flipForWritingMode(LayoutRect& rect) const
         rect.setY(height() - rect.maxY());
     else
         rect.setX(width() - rect.maxX());
+}
+
+LayoutPoint RenderBox::topLeftLocation() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
+    if (!document().view() || !document().view()->hasFlippedBlockRenderers())
+        return location();
+    return topLeftLocationWithFlipping();
 }
 
 LayoutUnit RenderBox::flipForWritingMode(LayoutUnit position) const

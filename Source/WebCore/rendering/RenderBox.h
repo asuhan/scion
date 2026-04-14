@@ -71,11 +71,7 @@ public:
         return m_frameRect.y();
     }
     WEBCORE_EXPORT LayoutUnit width() const;
-    LayoutUnit height() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_frameRect.height();
-    }
+    WEBCORE_EXPORT LayoutUnit height() const;
 
     // These represent your location relative to your container as a physical offset.
     // In layout related methods you almost always want the logical location (e.g. x() and y()).
@@ -130,21 +126,13 @@ public:
     inline void setLogicalHeight(LayoutUnit);
     inline void setLogicalSize(LayoutSize);
 
-    LayoutPoint location() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_frameRect.location();
-    }
+    LayoutPoint location() const;
     LayoutSize locationOffset() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return LayoutSize(x(), y());
     }
-    LayoutSize size() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_frameRect.size();
-    }
+    LayoutSize size() const;
     inline LayoutSize logicalSize() const;
 
     void setLocation(const LayoutPoint& location)
@@ -164,11 +152,7 @@ public:
         m_frameRect.move(dx, dy);
     }
 
-    LayoutRect frameRect() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_frameRect;
-    }
+    LayoutRect frameRect() const;
     void setFrameRect(const LayoutRect& rect)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -176,16 +160,8 @@ public:
     }
 
     inline LayoutRect marginBoxRect() const;
-    LayoutRect borderBoxRect() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return LayoutRect(LayoutPoint(), size());
-    }
-    LayoutRect borderBoundingBox() const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return borderBoxRect();
-    }
+    LayoutRect borderBoxRect() const;
+    LayoutRect borderBoundingBox() const final;
     inline LayoutSize borderBoxLogicalSize() const;
 
     // Don't use this; it doesn't make sense in a future world with corner-shape. Use BorderShape instead.
@@ -242,11 +218,7 @@ public:
     inline LayoutUnit logicalLeftLayoutOverflow() const;
     inline LayoutUnit logicalRightLayoutOverflow() const;
     
-    LayoutRect visualOverflowRect() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_overflow ? m_overflow->visualOverflowRect() : borderBoxRect();
-    }
+    LayoutRect visualOverflowRect() const;
     inline LayoutUnit logicalLeftVisualOverflow() const;
     inline LayoutUnit logicalRightVisualOverflow() const;
 
@@ -667,16 +639,8 @@ public:
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;
 
     bool scrollsOverflow() const;
-    bool scrollsOverflowX() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasNonVisibleOverflow() && (style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Auto);
-    }
-    bool scrollsOverflowY() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasNonVisibleOverflow() && (style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Auto);
-    }
+    bool scrollsOverflowX() const;
+    bool scrollsOverflowY() const;
 
     inline bool hasHorizontalOverflow() const;
     inline bool hasVerticalOverflow() const;
@@ -801,14 +765,7 @@ public:
 
     // These represent your location relative to your container as a physical offset.
     // In layout related methods you almost always want the logical location (e.g. x() and y()).
-    LayoutPoint topLeftLocation() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
-        if (!document().view() || !document().view()->hasFlippedBlockRenderers())
-            return location();
-        return topLeftLocationWithFlipping();
-    }
+    LayoutPoint topLeftLocation() const;
 
     LayoutSize topLeftLocationOffset() const
     {
