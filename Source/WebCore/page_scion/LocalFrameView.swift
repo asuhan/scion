@@ -290,8 +290,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   func layerAccessPrevented() -> Bool { return wk_interop.LocalFrameView_layerAccessPrevented(p) }
 
   func useSlowRepaintsIfNotOverlapped() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameView_useSlowRepaintsIfNotOverlapped(p)
   }
 
   override final func repaintContentRectangle(_ r: IntRect) {

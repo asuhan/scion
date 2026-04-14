@@ -329,6 +329,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_layerAccessPrevented(const void* p
     return static_cast<const WebCore::LocalFrameView*>(p)->layerAccessPrevented();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_useSlowRepaintsIfNotOverlapped(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->useSlowRepaintsIfNotOverlapped();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

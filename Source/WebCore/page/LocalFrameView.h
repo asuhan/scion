@@ -800,7 +800,9 @@ private:
 
     friend class RenderWidget;
     bool useSlowRepaints(bool considerOverlap = true) const;
+public:
     bool useSlowRepaintsIfNotOverlapped() const;
+private:
     void updateCanBlitOnScrollRecursively();
     bool shouldLayoutAfterContentsResized() const;
     
