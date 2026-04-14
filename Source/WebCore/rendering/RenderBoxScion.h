@@ -51,6 +51,8 @@ public:
 
     LayoutUnit width() const;
 
+    LayoutSize size() const;
+
     LayoutRect layoutOverflowRect();
 
     bool hasAutoScrollbar(ScrollbarOrientation);

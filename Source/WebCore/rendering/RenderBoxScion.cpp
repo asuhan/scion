@@ -32,6 +32,13 @@ extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" int32_t RenderBoxScion_width(const void*);
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
+
 extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
@@ -52,6 +59,12 @@ bool RenderBoxScion::requiresLayerWithScrollableArea()
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+LayoutSize RenderBoxScion::size() const
+{
+    const auto sizeRaw = RenderBoxScion_size(m_handle);
+    return { LayoutUnit::fromRawValue(sizeRaw.width), LayoutUnit::fromRawValue(sizeRaw.height) };
 }
 
 namespace {

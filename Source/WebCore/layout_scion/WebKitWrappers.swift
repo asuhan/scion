@@ -1047,6 +1047,13 @@ func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.width().rawValue()
 }
 
+@_cdecl("RenderBoxScion_size")
+func RenderBoxScion_size(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let layoutSize = box.size()
+  return LayoutSizeRaw(width: layoutSize.width().rawValue(), height: layoutSize.height().rawValue())
+}
+
 @_cdecl("RenderBoxScion_layoutOverflowRect")
 func RenderBoxScion_layoutOverflowRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
@@ -1070,8 +1077,7 @@ func RenderBoxScion_hasAlwaysPresentScrollbar(_ boxRaw: UnsafeRawPointer, _ orie
 }
 
 @_cdecl("RenderBoxScion_scrollsOverflow")
-func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool
-{
+func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   return box.scrollsOverflow()
 }
