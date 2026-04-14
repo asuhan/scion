@@ -90,10 +90,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     return convertLayoutRect(wk_interop.LocalFrameView_rectForFixedPositionLayout(p))
   }
 
-  func setCannotBlitToWindow() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setCannotBlitToWindow() { wk_interop.LocalFrameView_setCannotBlitToWindow(p) }
 
   func setContentIsOpaque(contentIsOpaque: Bool) {
     // TODO(asuhan): implement this

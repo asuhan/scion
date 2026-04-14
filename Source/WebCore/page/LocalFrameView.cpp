@@ -241,6 +241,11 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_rectForFixedPositionLayou
     return convertLayoutRect(static_cast<const WebCore::LocalFrameView*>(p)->rectForFixedPositionLayout());
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_setCannotBlitToWindow(void* p)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->setCannotBlitToWindow();
+}
+
 extern "C" WEBCORE_EXPORT float LocalFrameView_frameScaleFactor(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->frameScaleFactor();
