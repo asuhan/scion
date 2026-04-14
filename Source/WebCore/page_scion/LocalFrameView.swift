@@ -46,8 +46,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   // Called when changes to the GraphicsLayer hierarchy have to be synchronized with
   // content rendered via the normal painting path.
   func setNeedsOneShotDrawingSynchronization() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_setNeedsOneShotDrawingSynchronization(p)
   }
 
   func recalculateScrollbarOverlayStyle() {

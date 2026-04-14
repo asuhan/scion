@@ -163,6 +163,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_needsLayout(const void* p)
     return static_cast<const WebCore::LocalFrameView*>(p)->needsLayout();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_setNeedsOneShotDrawingSynchronization(void* p)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->setNeedsOneShotDrawingSynchronization();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_isTransparent(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->isTransparent();
