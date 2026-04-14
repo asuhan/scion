@@ -1114,6 +1114,12 @@ func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.scrollsOverflow()
 }
 
+@_cdecl("RenderBoxScion_isUnsplittableForPagination")
+func RenderBoxScion_isUnsplittableForPagination(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isUnsplittableForPagination()
+}
+
 @_cdecl("RenderBoxScion_topLeftLocation")
 func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

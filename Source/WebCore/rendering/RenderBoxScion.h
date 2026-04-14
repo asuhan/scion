@@ -72,6 +72,8 @@ public:
 
     bool scrollsOverflow() const;
 
+    bool isUnsplittableForPagination() const;
+
     LayoutPoint topLeftLocation() const;
 
     void styleWillChange(StyleDifference, const RenderStyle&);

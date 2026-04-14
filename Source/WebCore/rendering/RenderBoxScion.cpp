@@ -57,6 +57,8 @@ extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_scrollsOverflow(const void*);
 
+extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
+
 extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
@@ -136,6 +138,10 @@ bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation)
 bool RenderBoxScion::scrollsOverflow() const
 {
     return RenderBoxScion_scrollsOverflow(m_handle);
+}
+
+bool RenderBoxScion::isUnsplittableForPagination() const {
+    return RenderBoxScion_isUnsplittableForPagination(m_handle);
 }
 
 LayoutPoint RenderBoxScion::topLeftLocation() const
