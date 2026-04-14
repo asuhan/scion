@@ -838,7 +838,7 @@ func RenderViewScion_didDestroyRenderer(_ viewRaw: UnsafeMutableRawPointer) {
   view.didDestroyRenderer()
 }
 
-private func convertIntRect(_ r: IntRectRaw) -> IntRect {
+func convertIntRect(_ r: IntRectRaw) -> IntRect {
   return IntRect(x: r.location.x, y: r.location.y, width: r.size.width, height: r.size.height)
 }
 

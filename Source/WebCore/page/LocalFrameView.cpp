@@ -173,6 +173,27 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_hasExtendedBackgroundRectForPainti
     return static_cast<const WebCore::LocalFrameView*>(p)->hasExtendedBackgroundRectForPainting();
 }
 
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct IntRectRaw {
+    struct IntPointRaw location;
+    struct IntSizeRaw size;
+};
+
+extern "C" WEBCORE_EXPORT IntRectRaw LocalFrameView_extendedBackgroundRectForPainting(const void* p)
+{
+    const auto rect = static_cast<const WebCore::LocalFrameView*>(p)->extendedBackgroundRectForPainting();
+    return { rect.location().x(), rect.location().y(), rect.size().width(), rect.size().height() };
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));

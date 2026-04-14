@@ -72,8 +72,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func extendedBackgroundRectForPainting() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertIntRect(wk_interop.LocalFrameView_extendedBackgroundRectForPainting(p))
   }
 
   override func windowClipRect() -> IntRect {
