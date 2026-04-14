@@ -154,8 +154,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func speculativeTilingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameView_speculativeTilingEnabled(p)
   }
 
   func addEmbeddedObjectToUpdate(_ embeddedObject: RenderEmbeddedObjectWrapper) {

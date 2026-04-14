@@ -576,6 +576,7 @@ float LocalFrameView_frameScaleFactor(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionForFixedPosition(const void*);
 struct FloatPointRaw LocalFrameView_positionForRootContentLayer(const void*);
 bool LocalFrameView_hasSlowRepaintObject(const void*, const void*);
+bool LocalFrameView_speculativeTilingEnabled(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 bool LocalFrameView_hasFlippedBlockRenderers(const void*);
