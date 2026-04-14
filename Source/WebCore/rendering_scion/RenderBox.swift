@@ -1434,17 +1434,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paddingBoxRectIncludingScrollbar() -> LayoutRectWrapper {
-    assert(!isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(
+          value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_x(id())),
+        y: LayoutUnit.fromRawValue(
+          value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_y(id())),
+        width: LayoutUnit.fromRawValue(
+          value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_width(id())),
+        height: LayoutUnit.fromRawValue(
+          value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_height(id()))
+      )
+    }
+    let borderWidths = borderWidths()
     return LayoutRectWrapper(
-      x: LayoutUnit.fromRawValue(
-        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_x(id())),
-      y: LayoutUnit.fromRawValue(
-        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_y(id())),
-      width: LayoutUnit.fromRawValue(
-        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_width(id())),
-      height: LayoutUnit.fromRawValue(
-        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_height(id()))
-    )
+      x: borderWidths.left, y: borderWidths.top,
+      width: width() - borderWidths.left - borderWidths.right,
+      height: height() - borderWidths.top - borderWidths.bottom)
   }
 
   // More IE extensions.  clientWidth and clientHeight represent the interior of an object
