@@ -222,6 +222,11 @@ struct LayoutRectRaw {
     int32_t height;
 };
 
+struct OptionalLayoutRectRaw {
+    struct LayoutRectRaw rect;
+    bool is_valid;
+};
+
 namespace {
 
 LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
@@ -230,6 +235,15 @@ LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
 }
 
 } // namespace
+
+extern "C" WEBCORE_EXPORT OptionalLayoutRectRaw LocalFrameView_visualViewportOverrideRect(const void* p)
+{
+    const auto rect = static_cast<const WebCore::LocalFrameView*>(p)->visualViewportOverrideRect();
+    if (!rect) {
+        return { {}, false };
+    }
+    return { convertLayoutRect(*rect), true };
+}
 
 extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_layoutViewportRect(const void* p)
 {

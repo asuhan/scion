@@ -77,8 +77,8 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func visualViewportOverrideRect() -> LayoutRectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.LocalFrameView_visualViewportOverrideRect(p)
+    return r.is_valid ? convertLayoutRect(r.rect) : nil
   }
 
   // These are in document coordinates, unaffected by page scale (but affected by zooming).
