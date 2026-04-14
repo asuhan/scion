@@ -389,6 +389,11 @@ extern "C" WEBCORE_EXPORT void LocalFrameView_setHasFlippedBlockRenderers(void* 
     return static_cast<WebCore::LocalFrameView*>(p)->setHasFlippedBlockRenderers(b);
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_updateScrollbarSteps(void* p)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->updateScrollbarSteps();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_layerAccessPrevented(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->layerAccessPrevented();

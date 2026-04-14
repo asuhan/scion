@@ -591,6 +591,7 @@ void LocalFrameView_topContentDirectionDidChange(void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 bool LocalFrameView_hasFlippedBlockRenderers(const void*);
 void LocalFrameView_setHasFlippedBlockRenderers(void*, bool);
+void LocalFrameView_updateScrollbarSteps(void*);
 bool LocalFrameView_layerAccessPrevented(const void*);
 bool LocalFrameView_useSlowRepaintsIfNotOverlapped(const void*);
 void* RenderElement_element(const void*);
