@@ -574,6 +574,7 @@ bool LocalFrameView_hasExtendedBackgroundRectForPainting(const void*);
 struct IntRectRaw LocalFrameView_extendedBackgroundRectForPainting(const void*);
 struct IntRectRaw LocalFrameView_windowClipRect(const void*);
 struct OptionalLayoutRectRaw LocalFrameView_visualViewportOverrideRect(const void*);
+struct LayoutRectRaw LocalFrameView_fixedScrollableAreaBoundsInflatedForScrolling(const void*, struct LayoutRectRaw);
 struct LayoutRectRaw LocalFrameView_layoutViewportRect(const void*);
 struct LayoutRectRaw LocalFrameView_rectForFixedPositionLayout(const void*);
 void LocalFrameView_setCannotBlitToWindow(void*);

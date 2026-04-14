@@ -234,6 +234,11 @@ LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
     return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
 }
 
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height)  };
+}
+
 } // namespace
 
 extern "C" WEBCORE_EXPORT OptionalLayoutRectRaw LocalFrameView_visualViewportOverrideRect(const void* p)
@@ -243,6 +248,12 @@ extern "C" WEBCORE_EXPORT OptionalLayoutRectRaw LocalFrameView_visualViewportOve
         return { {}, false };
     }
     return { convertLayoutRect(*rect), true };
+}
+
+extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_fixedScrollableAreaBoundsInflatedForScrolling(const void* p, LayoutRectRaw uninflatedBoundsRaw)
+{
+    const auto rect = static_cast<const WebCore::LocalFrameView*>(p)->fixedScrollableAreaBoundsInflatedForScrolling(convertLayoutRectRaw(uninflatedBoundsRaw));
+    return convertLayoutRect(rect);
 }
 
 extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_layoutViewportRect(const void* p)

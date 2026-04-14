@@ -528,7 +528,7 @@ func convertLayoutRect(_ raw: LayoutRectRaw) -> LayoutRectWrapper {
     height: LayoutUnit.fromRawValue(value: raw.height))
 }
 
-private func convertLayoutRect(_ r: LayoutRectWrapper) -> LayoutRectRaw {
+func convertLayoutRect(_ r: LayoutRectWrapper) -> LayoutRectRaw {
   return LayoutRectRaw(
     x: r.x().rawValue(), y: r.y().rawValue(), width: r.width().rawValue(),
     height: r.height().rawValue())

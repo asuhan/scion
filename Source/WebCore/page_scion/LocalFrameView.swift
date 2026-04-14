@@ -223,8 +223,9 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   func fixedScrollableAreaBoundsInflatedForScrolling(uninflatedBounds: LayoutRectWrapper)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutRect(
+      wk_interop.LocalFrameView_fixedScrollableAreaBoundsInflatedForScrolling(
+        p, convertLayoutRect(uninflatedBounds)))
   }
 
   func scrollPositionRespectingCustomFixedPosition() -> LayoutPointWrapper {
