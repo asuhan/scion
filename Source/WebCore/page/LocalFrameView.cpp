@@ -168,6 +168,11 @@ extern "C" WEBCORE_EXPORT void LocalFrameView_setNeedsOneShotDrawingSynchronizat
     static_cast<WebCore::LocalFrameView*>(p)->setNeedsOneShotDrawingSynchronization();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_recalculateScrollbarOverlayStyle(void* p)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->recalculateScrollbarOverlayStyle();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_isTransparent(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->isTransparent();

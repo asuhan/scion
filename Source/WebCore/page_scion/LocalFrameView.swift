@@ -50,8 +50,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func recalculateScrollbarOverlayStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_recalculateScrollbarOverlayStyle(p)
   }
 
   func isTransparent() -> Bool { return wk_interop.LocalFrameView_isTransparent(p) }

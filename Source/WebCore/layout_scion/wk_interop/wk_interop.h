@@ -567,6 +567,7 @@ void* LocalFrameView_frame(const void*);
 void* LocalFrameView_layoutContext(const void*);
 bool LocalFrameView_needsLayout(const void*);
 void LocalFrameView_setNeedsOneShotDrawingSynchronization(void*);
+void LocalFrameView_recalculateScrollbarOverlayStyle(void*);
 bool LocalFrameView_isTransparent(const void*);
 bool LocalFrameView_hasExtendedBackgroundRectForPainting(const void*);
 struct IntRectRaw LocalFrameView_extendedBackgroundRectForPainting(const void*);
