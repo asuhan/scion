@@ -394,6 +394,11 @@ extern "C" WEBCORE_EXPORT void LocalFrameView_updateScrollbarSteps(void* p)
     static_cast<WebCore::LocalFrameView*>(p)->updateScrollbarSteps();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_scrollbarWidthChanged(void* p, uint8_t width)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->scrollbarWidthChanged(static_cast<WebCore::ScrollbarWidth>(width));
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_layerAccessPrevented(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->layerAccessPrevented();

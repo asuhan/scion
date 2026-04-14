@@ -269,8 +269,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   override func updateScrollbarSteps() { wk_interop.LocalFrameView_updateScrollbarSteps(p) }
 
   override func scrollbarWidthChanged(_ width: ScrollbarWidth) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_scrollbarWidthChanged(p, width.rawValue)
   }
 
   func layerAccessPrevented() -> Bool { return wk_interop.LocalFrameView_layerAccessPrevented(p) }
