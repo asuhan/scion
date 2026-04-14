@@ -581,6 +581,7 @@ uint32_t LocalFrameView_paintBehavior(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 bool LocalFrameView_hasFlippedBlockRenderers(const void*);
+bool LocalFrameView_layerAccessPrevented(const void*);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);

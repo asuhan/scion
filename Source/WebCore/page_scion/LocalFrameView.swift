@@ -287,10 +287,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
-  func layerAccessPrevented() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func layerAccessPrevented() -> Bool { return wk_interop.LocalFrameView_layerAccessPrevented(p) }
 
   func useSlowRepaintsIfNotOverlapped() -> Bool {
     // TODO(asuhan): implement this
