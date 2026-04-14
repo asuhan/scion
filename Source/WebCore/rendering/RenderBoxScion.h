@@ -47,21 +47,21 @@ public:
     {
     }
 
-    bool requiresLayerWithScrollableArea();
+    bool requiresLayerWithScrollableArea() const;
 
     LayoutUnit width() const;
 
     LayoutSize size() const;
 
-    LayoutRect layoutOverflowRect();
+    LayoutRect layoutOverflowRect() const;
 
     LayoutRect visualOverflowRect() const;
 
-    bool hasAutoScrollbar(ScrollbarOrientation);
+    bool hasAutoScrollbar(ScrollbarOrientation) const;
 
-    bool hasAlwaysPresentScrollbar(ScrollbarOrientation);
+    bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;
 
-    bool scrollsOverflow();
+    bool scrollsOverflow() const;
 
     void styleWillChange(StyleDifference, const RenderStyle&);
 

@@ -53,7 +53,7 @@ extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 namespace WebCore {
 
-bool RenderBoxScion::requiresLayerWithScrollableArea()
+bool RenderBoxScion::requiresLayerWithScrollableArea() const
 {
     return RenderBoxScion_requiresLayerWithScrollableArea(m_handle);
 }
@@ -78,26 +78,27 @@ LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 
 } // namespace
 
-LayoutRect RenderBoxScion::layoutOverflowRect()
+LayoutRect RenderBoxScion::layoutOverflowRect() const
 {
     return convertLayoutRectRaw(RenderBoxScion_layoutOverflowRect(m_handle));
 }
 
-LayoutRect RenderBoxScion::visualOverflowRect() const {
+LayoutRect RenderBoxScion::visualOverflowRect() const
+{
     return convertLayoutRectRaw(RenderBoxScion_visualOverflowRect(m_handle));
 }
 
-bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation)
+bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const
 {
     return RenderBoxScion_hasAutoScrollbar(m_handle, static_cast<uint8_t>(orientation));
 }
 
-bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation)
+bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation) const
 {
     return RenderBoxScion_hasAlwaysPresentScrollbar(m_handle, static_cast<uint8_t>(orientation));
 }
 
-bool RenderBoxScion::scrollsOverflow()
+bool RenderBoxScion::scrollsOverflow() const
 {
     return RenderBoxScion_scrollsOverflow(m_handle);
 }
