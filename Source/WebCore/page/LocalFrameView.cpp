@@ -178,6 +178,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_isTransparent(const void* p)
     return static_cast<const WebCore::LocalFrameView*>(p)->isTransparent();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_updateExtendBackgroundIfNecessary(void* p)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->updateExtendBackgroundIfNecessary();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasExtendedBackgroundRectForPainting(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->hasExtendedBackgroundRectForPainting();
