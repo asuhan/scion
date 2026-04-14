@@ -41,10 +41,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
-  func needsLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func needsLayout() -> Bool { return wk_interop.LocalFrameView_needsLayout(p) }
 
   // Called when changes to the GraphicsLayer hierarchy have to be synchronized with
   // content rendered via the normal painting path.
