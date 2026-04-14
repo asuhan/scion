@@ -231,6 +231,17 @@ extern "C" WEBCORE_EXPORT float LocalFrameView_frameScaleFactor(const void* p)
     return static_cast<const WebCore::LocalFrameView*>(p)->frameScaleFactor();
 }
 
+struct LayoutPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionForFixedPosition(const void* p)
+{
+    auto layoutPoint = static_cast<const WebCore::LocalFrameView*>(p)->scrollPositionForFixedPosition();
+    return { layoutPoint.x().rawValue(), layoutPoint.y().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));
@@ -249,11 +260,6 @@ extern "C" WEBCORE_EXPORT SRGBARaw LocalFrameView_documentBackgroundColor(const 
     const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
     return { r, g, b, a };
 }
-
-struct LayoutPointRaw {
-    int32_t x;
-    int32_t y;
-};
 
 extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void* p)
 {

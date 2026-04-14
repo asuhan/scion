@@ -145,8 +145,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   // Functions for querying the current scrolled position, negating the effects of overhang
   // and adjusting for page scale.
   func scrollPositionForFixedPosition() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutPointRaw(wk_interop.LocalFrameView_scrollPositionForFixedPosition(p))
   }
 
   func positionForRootContentLayer() -> FloatPoint {

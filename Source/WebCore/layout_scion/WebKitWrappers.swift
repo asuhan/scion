@@ -473,7 +473,7 @@ func LineLayoutScion_hasDetachedContent(handle: UInt64) -> Bool {
   return globalLineLayout!.hasDetachedContent()
 }
 
-private func convertLayoutPointRaw(_ point: LayoutPointRaw) -> LayoutPointWrapper {
+func convertLayoutPointRaw(_ point: LayoutPointRaw) -> LayoutPointWrapper {
   return LayoutPointWrapper(
     x: LayoutUnit.fromRawValue(value: point.x),
     y: LayoutUnit.fromRawValue(value: point.y))
