@@ -384,6 +384,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_hasFlippedBlockRenderers(const voi
     return static_cast<const WebCore::LocalFrameView*>(p)->hasFlippedBlockRenderers();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_setHasFlippedBlockRenderers(void* p, bool b)
+{
+    return static_cast<WebCore::LocalFrameView*>(p)->setHasFlippedBlockRenderers(b);
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_layerAccessPrevented(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->layerAccessPrevented();
