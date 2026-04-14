@@ -200,6 +200,27 @@ extern "C" WEBCORE_EXPORT IntRectRaw LocalFrameView_windowClipRect(const void* p
     return { rect.x(), rect.y(), rect.width(), rect.height() };
 }
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+namespace {
+
+LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_layoutViewportRect(const void* p)
+{
+    return convertLayoutRect(static_cast<const WebCore::LocalFrameView*>(p)->layoutViewportRect());
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));

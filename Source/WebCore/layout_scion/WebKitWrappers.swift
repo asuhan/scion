@@ -521,7 +521,7 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   return unmanaged.toOpaque()
 }
 
-private func convertLayoutRect(_ raw: LayoutRectRaw) -> LayoutRectWrapper {
+func convertLayoutRect(_ raw: LayoutRectRaw) -> LayoutRectWrapper {
   return LayoutRectWrapper(
     x: LayoutUnit.fromRawValue(value: raw.x), y: LayoutUnit.fromRawValue(value: raw.y),
     width: LayoutUnit.fromRawValue(value: raw.width),
