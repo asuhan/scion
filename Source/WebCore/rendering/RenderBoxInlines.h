@@ -20,6 +20,7 @@
 #pragma once
 
 #include "RenderBox.h"
+#include "RenderBoxScion.h"
 #include "RenderBoxModelObjectInlines.h"
 
 namespace WebCore {
@@ -252,7 +253,7 @@ inline bool RenderBox::stretchesToViewport() const
 
 inline LayoutRect RenderBox::paddingBoxRectIncludingScrollbar() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingBoxRectIncludingScrollbar(); }
     auto borderWidths = this->borderWidths();
     return LayoutRect(borderWidths.left(), borderWidths.top(), width() - borderWidths.left() - borderWidths.right(), height() - borderWidths.top() - borderWidths.bottom());
 }

@@ -58,6 +58,8 @@ public:
 
     LayoutRect visualOverflowRect() const;
 
+    LayoutRect paddingBoxRectIncludingScrollbar() const;
+
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
     bool hasAutoScrollbar(ScrollbarOrientation) const;
