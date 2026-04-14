@@ -1047,6 +1047,12 @@ func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.width().rawValue()
 }
 
+@_cdecl("RenderBoxScion_layoutOverflowRect")
+func RenderBoxScion_layoutOverflowRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return convertLayoutRect(box.layoutOverflowRect())
+}
+
 @_cdecl("RenderBoxScion_hasAutoScrollbar")
 func RenderBoxScion_hasAutoScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
   -> Bool

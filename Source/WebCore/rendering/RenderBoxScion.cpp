@@ -24,11 +24,15 @@
  */
 
 #include "RenderBoxScion.h"
+#include "LayoutRect.h"
+#include "LayoutRectRaw.h"
 #include "ScrollTypes.h"
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" int32_t RenderBoxScion_width(const void*);
+
+extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
@@ -48,6 +52,20 @@ bool RenderBoxScion::requiresLayerWithScrollableArea()
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+namespace {
+
+LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
+}
+
+} // namespace
+
+LayoutRect RenderBoxScion::layoutOverflowRect()
+{
+    return convertLayoutRectRaw(RenderBoxScion_layoutOverflowRect(m_handle));
 }
 
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation)

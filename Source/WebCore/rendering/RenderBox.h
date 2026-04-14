@@ -238,11 +238,7 @@ public:
     // respectively are flipped when compared to their physical counterparts.  For example minX is on the left in vertical-lr,
     // but it is on the right in vertical-rl.
     WEBCORE_EXPORT LayoutRect flippedClientBoxRect() const;
-    LayoutRect layoutOverflowRect() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_overflow ? m_overflow->layoutOverflowRect() : flippedClientBoxRect();
-    }
+    WEBCORE_EXPORT LayoutRect layoutOverflowRect() const;
     inline LayoutUnit logicalLeftLayoutOverflow() const;
     inline LayoutUnit logicalRightLayoutOverflow() const;
     

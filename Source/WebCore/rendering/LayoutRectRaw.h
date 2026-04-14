@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Scion authors. All rights reserved.
+ * Copyright (C) 2025 Scion authors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,44 +25,11 @@
 
 #pragma once
 
-#include "LayoutUnit.h"
-#include "RenderStyle.h"
-#include "ScrollTypes.h"
-#include <wtf/CheckedRef.h>
-#include <wtf/FastMalloc.h>
+#include <cstdint>
 
-namespace WebCore {
-
-class RenderLayer;
-
-DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(WebCore_RenderBoxScion);
-
-class RenderBoxScion final : public CanMakeCheckedPtr<RenderBoxScion> {
-    WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(WebCore_RenderBoxScion);
-    WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderBoxScion);
-
-public:
-    RenderBoxScion(void* handle)
-        : m_handle(handle)
-    {
-    }
-
-    bool requiresLayerWithScrollableArea();
-
-    LayoutUnit width() const;
-
-    LayoutRect layoutOverflowRect();
-
-    bool hasAutoScrollbar(ScrollbarOrientation);
-
-    bool hasAlwaysPresentScrollbar(ScrollbarOrientation);
-
-    bool scrollsOverflow();
-
-    void styleWillChange(StyleDifference, const RenderStyle&);
-
-private:
-    void* m_handle;
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
 };
-
-}

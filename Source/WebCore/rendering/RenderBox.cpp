@@ -54,6 +54,7 @@
 #include "InlineIteratorLineBox.h"
 #include "InlineRunAndOffset.h"
 #include "LayoutIntegrationLineLayout.h"
+#include "LayoutRectRaw.h"
 #include "LegacyRenderSVGResourceClipper.h"
 #include "LocalFrame.h"
 #include "LocalFrameView.h"
@@ -197,13 +198,6 @@ extern "C" WEBCORE_EXPORT void RenderBox_move(void* p, int32_t dx, int32_t dy)
 {
     static_cast<WebCore::RenderBox*>(p)->move(WebCore::LayoutUnit::fromRawValue(dx), WebCore::LayoutUnit::fromRawValue(dy));
 }
-
-struct LayoutRectRaw {
-    int32_t x;
-    int32_t y;
-    int32_t width;
-    int32_t height;
-};
 
 extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_frameRect(const void* p)
 {
@@ -5929,6 +5923,12 @@ LayoutRect RenderBox::flippedClientBoxRect() const
         rect.contract(verticalScrollbarWidth(), horizontalScrollbarHeight());
     }
     return rect;
+}
+
+LayoutRect RenderBox::layoutOverflowRect() const
+{
+    if (m_scion) { return m_scion->layoutOverflowRect(); }
+    return m_overflow ? m_overflow->layoutOverflowRect() : flippedClientBoxRect();
 }
 
 LayoutUnit RenderBox::offsetLeft() const
