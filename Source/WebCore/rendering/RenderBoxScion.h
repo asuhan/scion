@@ -55,6 +55,8 @@ public:
 
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation);
 
+    bool scrollsOverflow();
+
     void styleWillChange(StyleDifference, const RenderStyle&);
 
 private:

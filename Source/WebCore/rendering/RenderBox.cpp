@@ -1500,6 +1500,12 @@ bool RenderBox::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation) cons
     return false;
 }
 
+bool RenderBox::scrollsOverflow() const
+{
+    if (m_scion) { return m_scion->scrollsOverflow(); }
+    return scrollsOverflowX() || scrollsOverflowY();
+}
+
 bool RenderBox::needsPreferredWidthsRecalculation() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

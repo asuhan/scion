@@ -34,6 +34,8 @@ extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
 
+extern "C" bool RenderBoxScion_scrollsOverflow(const void*);
+
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 namespace WebCore {
@@ -56,6 +58,11 @@ bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation)
 bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation)
 {
     return RenderBoxScion_hasAlwaysPresentScrollbar(m_handle, static_cast<uint8_t>(orientation));
+}
+
+bool RenderBoxScion::scrollsOverflow()
+{
+    return RenderBoxScion_scrollsOverflow(m_handle);
 }
 
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)

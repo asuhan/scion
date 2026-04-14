@@ -670,11 +670,7 @@ public:
     bool hasAutoScrollbar(ScrollbarOrientation) const;
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;
 
-    bool scrollsOverflow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return scrollsOverflowX() || scrollsOverflowY();
-    }
+    bool scrollsOverflow() const;
     bool scrollsOverflowX() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

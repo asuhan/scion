@@ -1063,6 +1063,13 @@ func RenderBoxScion_hasAlwaysPresentScrollbar(_ boxRaw: UnsafeRawPointer, _ orie
   return box.hasAlwaysPresentScrollbar(ScrollbarOrientation(rawValue: orientation)!)
 }
 
+@_cdecl("RenderBoxScion_scrollsOverflow")
+func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.scrollsOverflow()
+}
+
 @_cdecl("RenderBoxScion_styleWillChange")
 func RenderBoxScion_styleWillChange(
   _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
