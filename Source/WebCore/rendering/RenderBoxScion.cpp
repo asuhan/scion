@@ -43,6 +43,8 @@ extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
+extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
+
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
@@ -76,6 +78,11 @@ LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
     return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
 }
 
+RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
+{
+    return { convertLayoutRectRaw(rects.clippedOverflowRect), rects.outlineBoundsRect.is_valid ? convertLayoutRectRaw(rects.outlineBoundsRect.rect) : LayoutRect {} };
+}
+
 } // namespace
 
 LayoutRect RenderBoxScion::layoutOverflowRect() const
@@ -86,6 +93,11 @@ LayoutRect RenderBoxScion::layoutOverflowRect() const
 LayoutRect RenderBoxScion::visualOverflowRect() const
 {
     return convertLayoutRectRaw(RenderBoxScion_visualOverflowRect(m_handle));
+}
+
+RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const
+{
+    return convertRepaintRectsRaw(RenderBoxScion_localRectsForRepaint(m_handle, repaintOutlineBounds == RepaintOutlineBounds::Yes));
 }
 
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const

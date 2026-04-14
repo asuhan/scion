@@ -33,3 +33,13 @@ struct LayoutRectRaw {
     int32_t width;
     int32_t height;
 };
+
+struct OptionalLayoutRectRaw {
+    struct LayoutRectRaw rect;
+    bool is_valid;
+};
+
+struct RepaintRectsRaw {
+    struct LayoutRectRaw clippedOverflowRect;
+    struct OptionalLayoutRectRaw outlineBoundsRect;
+};

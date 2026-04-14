@@ -2901,7 +2901,7 @@ LayoutSize RenderBox::offsetFromContainer(RenderElement& container, const Layout
 
 auto RenderBox::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const -> RepaintRects
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->localRectsForRepaint(repaintOutlineBounds); }
     if (isInsideEntirelyHiddenLayer())
         return { };
 

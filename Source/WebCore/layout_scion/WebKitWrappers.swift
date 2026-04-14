@@ -1066,6 +1066,14 @@ func RenderBoxScion_visualOverflowRect(_ boxRaw: UnsafeRawPointer) -> LayoutRect
   return convertLayoutRect(box.visualOverflowRect())
 }
 
+@_cdecl("RenderBoxScion_localRectsForRepaint")
+func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOutlineBounds: Bool)
+  -> RepaintRectsRaw
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return convertRepaintRects(box.localRectsForRepaint(repaintOutlineBounds ? .Yes : .No))
+}
+
 @_cdecl("RenderBoxScion_hasAutoScrollbar")
 func RenderBoxScion_hasAutoScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
   -> Bool

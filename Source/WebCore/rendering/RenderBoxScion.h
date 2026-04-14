@@ -26,6 +26,7 @@
 #pragma once
 
 #include "LayoutUnit.h"
+#include "RenderObject.h"
 #include "RenderStyle.h"
 #include "ScrollTypes.h"
 #include <wtf/CheckedRef.h>
@@ -56,6 +57,8 @@ public:
     LayoutRect layoutOverflowRect() const;
 
     LayoutRect visualOverflowRect() const;
+
+    RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
     bool hasAutoScrollbar(ScrollbarOrientation) const;
 
