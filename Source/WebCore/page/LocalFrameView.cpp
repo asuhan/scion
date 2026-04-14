@@ -295,6 +295,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_isScrollable(void* p, bool scrolla
             : WebCore::LocalFrameView::Scrollability::Scrollable);
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_isTrackingRepaints(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->isTrackingRepaints();
+}
+
 extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void* p)
 {
     auto layoutPoint = static_cast<const WebCore::LocalFrameView*>(p)->scrollPositionRespectingCustomFixedPosition();
