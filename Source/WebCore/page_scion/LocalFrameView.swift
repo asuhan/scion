@@ -140,10 +140,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
-  func frameScaleFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func frameScaleFactor() -> Float32 { return wk_interop.LocalFrameView_frameScaleFactor(p) }
 
   // Functions for querying the current scrolled position, negating the effects of overhang
   // and adjusting for page scale.
