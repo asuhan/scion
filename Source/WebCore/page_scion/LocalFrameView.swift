@@ -90,8 +90,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func rectForFixedPositionLayout() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutRect(wk_interop.LocalFrameView_rectForFixedPositionLayout(p))
   }
 
   func setCannotBlitToWindow() {

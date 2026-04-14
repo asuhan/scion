@@ -221,6 +221,11 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_layoutViewportRect(const 
     return convertLayoutRect(static_cast<const WebCore::LocalFrameView*>(p)->layoutViewportRect());
 }
 
+extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_rectForFixedPositionLayout(const void* p)
+{
+    return convertLayoutRect(static_cast<const WebCore::LocalFrameView*>(p)->rectForFixedPositionLayout());
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));
