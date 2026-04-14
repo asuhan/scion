@@ -265,8 +265,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func hasFlippedBlockRenderers() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameView_hasFlippedBlockRenderers(p)
   }
 
   func setHasFlippedBlockRenderers(_ b: Bool) {

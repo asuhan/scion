@@ -211,6 +211,11 @@ extern "C" WEBCORE_EXPORT PaginationRaw LocalFrameView_pagination(const void* p)
     return { static_cast<uint8_t>(pagination.mode), pagination.behavesLikeColumns, pagination.pageLength, pagination.gap };
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_hasFlippedBlockRenderers(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->hasFlippedBlockRenderers();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
