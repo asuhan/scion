@@ -288,6 +288,13 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_hasEnoughContentForVisualMilestone
     return static_cast<const WebCore::LocalFrameView*>(p)->hasEnoughContentForVisualMilestones();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_isScrollable(void* p, bool scrollability)
+{
+    return static_cast<WebCore::LocalFrameView*>(p)->isScrollable(scrollability
+            ? WebCore::LocalFrameView::Scrollability::ScrollableOrRubberbandable
+            : WebCore::LocalFrameView::Scrollability::Scrollable);
+}
+
 extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void* p)
 {
     auto layoutPoint = static_cast<const WebCore::LocalFrameView*>(p)->scrollPositionRespectingCustomFixedPosition();

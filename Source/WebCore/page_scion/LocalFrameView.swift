@@ -202,8 +202,8 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func isScrollable(definitionOfScrollable: Scrollability = .Scrollable) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameView_isScrollable(
+      p, definitionOfScrollable == .ScrollableOrRubberbandable)
   }
 
   func embeddedContentBox() -> RenderBoxWrapper? {
