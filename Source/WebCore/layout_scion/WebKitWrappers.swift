@@ -1054,6 +1054,12 @@ func RenderBoxScion_size(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
   return LayoutSizeRaw(width: layoutSize.width().rawValue(), height: layoutSize.height().rawValue())
 }
 
+@_cdecl("RenderBoxScion_frameRect")
+func RenderBoxScion_frameRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return convertLayoutRect(box.frameRect())
+}
+
 @_cdecl("RenderBoxScion_layoutOverflowRect")
 func RenderBoxScion_layoutOverflowRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -39,6 +39,8 @@ struct LayoutSizeRaw {
 
 extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
 
+extern "C" LayoutRectRaw RenderBoxScion_frameRect(const void*);
+
 extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
@@ -88,6 +90,11 @@ RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
 }
 
 } // namespace
+
+LayoutRect RenderBoxScion::frameRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_frameRect(m_handle));
+}
 
 LayoutRect RenderBoxScion::layoutOverflowRect() const
 {

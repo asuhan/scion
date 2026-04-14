@@ -54,6 +54,8 @@ public:
 
     LayoutSize size() const;
 
+    LayoutRect frameRect() const;
+
     LayoutRect layoutOverflowRect() const;
 
     LayoutRect visualOverflowRect() const;
