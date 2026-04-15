@@ -84,10 +84,7 @@ class SettingsWrapper {
     return wk_interop.Settings_grammarAndSpellingPseudoElementsEnabled(p)
   }
 
-  func highlightAPIEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func highlightAPIEnabled() -> Bool { return wk_interop.Settings_highlightAPIEnabled(p) }
 
   func imageSubsamplingEnabled() -> Bool {
     // TODO(asuhan): implement this

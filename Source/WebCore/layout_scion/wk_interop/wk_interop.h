@@ -1202,6 +1202,7 @@ bool Settings_cssUnprefixedBackdropFilterEnabled(const void*);
 bool Settings_fixedBackgroundsPaintRelativeToDocument(const void*);
 bool Settings_forceCompositingMode(const void*);
 bool Settings_grammarAndSpellingPseudoElementsEnabled(const void*);
+bool Settings_highlightAPIEnabled(const void*);
 bool Settings_layerBasedSVGEngineEnabled(const void*);
 bool Settings_shouldAllowUserInstalledFonts(const void*);
 bool Settings_systemLayoutDirection(const void*);

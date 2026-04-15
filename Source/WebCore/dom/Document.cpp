@@ -618,6 +618,11 @@ extern "C" WEBCORE_EXPORT bool Settings_grammarAndSpellingPseudoElementsEnabled(
     return static_cast<const WebCore::Settings*>(raw)->grammarAndSpellingPseudoElementsEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_highlightAPIEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->highlightAPIEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_layerBasedSVGEngineEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->layerBasedSVGEngineEnabled();
