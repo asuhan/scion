@@ -84,10 +84,7 @@ final class Grid {
 
   // Note that each in flow child of a grid container becomes a grid item. This means that
   // this method will return false for a grid container with only out of flow children.
-  func hasGridItems() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasGridItems() -> Bool { return !m_gridItemArea.isEmpty }
 
   func gridItemArea(item: RenderBoxWrapper) -> GridArea {
     // TODO(asuhan): implement this
