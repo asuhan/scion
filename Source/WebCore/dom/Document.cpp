@@ -628,6 +628,11 @@ extern "C" WEBCORE_EXPORT bool Settings_imageSubsamplingEnabled(const void* raw)
     return static_cast<const WebCore::Settings*>(raw)->imageSubsamplingEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_incompleteImageBorderEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->incompleteImageBorderEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_layerBasedSVGEngineEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->layerBasedSVGEngineEnabled();

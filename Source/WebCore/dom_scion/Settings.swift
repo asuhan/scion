@@ -89,8 +89,7 @@ class SettingsWrapper {
   func imageSubsamplingEnabled() -> Bool { return wk_interop.Settings_imageSubsamplingEnabled(p) }
 
   func incompleteImageBorderEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_incompleteImageBorderEnabled(p)
   }
 
   func largeImageAsyncDecodingEnabled() -> Bool {
