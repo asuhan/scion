@@ -1189,6 +1189,7 @@ bool Document_hasHighlight(const void*);
 bool Document_activeDOMObjectsAreSuspended(const void*);
 bool Settings_acceleratedCompositingEnabled(const void*);
 bool Settings_acceleratedCompositingForFixedPositionEnabled(const void*);
+bool Settings_acceleratedDrawingEnabled(const void*);
 bool Settings_alignContentOnBlocksEnabled(const void*);
 bool Settings_asyncOverflowScrollingEnabled(const void*);
 bool Settings_backgroundShouldExtendBeyondPage(const void*);

@@ -37,8 +37,7 @@ class SettingsWrapper {
   }
 
   func acceleratedDrawingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_acceleratedDrawingEnabled(p)
   }
 
   func alignContentOnBlocksEnabled() -> Bool {
