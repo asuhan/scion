@@ -24,6 +24,11 @@
  */
 
 final class AXObjectCacheWrapper {
+  func remove(_ renderer: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func childrenChanged(renderer: RenderObjectWrapper, changedChild: RenderObjectWrapper? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

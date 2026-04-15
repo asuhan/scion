@@ -2955,6 +2955,28 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_node!
   }
 
+  func willBeDestroyed() {
+    assert(isNativeImpl())
+    assert(m_parent == nil)
+    assert(
+      renderTreeBeingDestroyed() || !(self is RenderElementWrapper)
+        || !view().frameView().hasSlowRepaintObject(self as! RenderElementWrapper))
+
+    document().existingAXObjectCache()?.remove(self)
+
+    if let node = node() {
+      // FIXME: Continuations should be anonymous.
+      assert(
+        node.renderer() == nil || CPtrToInt(node.renderer()!.id()) == CPtrToInt(id())
+          || (self is RenderElementWrapper && (self as! RenderElementWrapper).isContinuation()))
+      if CPtrToInt(node.renderer()?.id()) == CPtrToInt(id()) {
+        node.setRenderer(renderer: nil)
+      }
+    }
+
+    removeRareData()
+  }
+
   func scheduleLayout(layoutRoot: RenderElementWrapper?) {
     assert(isNativeImpl())
     if let renderView = layoutRoot as? RenderViewWrapper {
@@ -3324,4 +3346,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func removeRareData() {
+    assert(isNativeImpl())
+    if !hasRareData() {
+      return
+    }
+    RenderObjectWrapper.rareDataMap.removeValue(forKey: ObjectIdentifier(self))
+    m_stateBitfields.clearFlag(.HasRareData)
+  }
+
+  typealias RareDataMap = [ObjectIdentifier: RenderObjectRareData]
+
+  private static var rareDataMap = RareDataMap()
 }
