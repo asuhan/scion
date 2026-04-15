@@ -585,8 +585,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   override func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   private func width(
