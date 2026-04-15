@@ -2651,8 +2651,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // When performing a global document tear-down, or when going into the back/forward cache, the renderer of the document is cleared.
   func renderTreeBeingDestroyed() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return document().renderTreeBeingDestroyed()
   }
 
   // Virtual function helpers for the deprecated Flexible Box Layout (display: -webkit-box).

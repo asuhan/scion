@@ -84,6 +84,8 @@ class Document: TreeScopeWrapper {
     return Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   }
 
+  func renderTreeBeingDestroyed() -> Bool { return wk_interop.Document_renderTreeBeingDestroyed(p) }
+
   func existingAXObjectCache() -> AXObjectCacheWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
