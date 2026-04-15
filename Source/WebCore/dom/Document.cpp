@@ -668,6 +668,11 @@ extern "C" WEBCORE_EXPORT bool Settings_shouldPrintBackgrounds(const void* raw)
     return static_cast<const WebCore::Settings*>(raw)->shouldPrintBackgrounds();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_showDebugBorders(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->showDebugBorders();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_systemLayoutDirection(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->systemLayoutDirection() == WebCore::TextDirection::RTL;

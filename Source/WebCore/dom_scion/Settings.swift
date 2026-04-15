@@ -118,10 +118,7 @@ class SettingsWrapper {
 
   func shouldPrintBackgrounds() -> Bool { return wk_interop.Settings_shouldPrintBackgrounds(p) }
 
-  func showDebugBorders() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func showDebugBorders() -> Bool { return wk_interop.Settings_showDebugBorders(p) }
 
   func showRepaintCounter() -> Bool {
     // TODO(asuhan): implement this
