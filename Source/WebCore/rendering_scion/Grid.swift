@@ -87,8 +87,7 @@ final class Grid {
   func hasGridItems() -> Bool { return !m_gridItemArea.isEmpty }
 
   func gridItemArea(item: RenderBoxWrapper) -> GridArea {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_gridItemArea[CPtrToInt(item.id())]!
   }
 
   func setGridItemArea(item: RenderBoxWrapper, area: GridArea) {
