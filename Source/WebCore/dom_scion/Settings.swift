@@ -109,8 +109,7 @@ class SettingsWrapper {
   }
 
   func scrollingPerformanceTestingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_scrollingPerformanceTestingEnabled(p)
   }
 
   func shouldAllowUserInstalledFonts() -> Bool {

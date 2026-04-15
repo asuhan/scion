@@ -653,6 +653,11 @@ extern "C" WEBCORE_EXPORT bool Settings_scrollToTextFragmentEnabled(const void* 
     return static_cast<const WebCore::Settings*>(raw)->scrollToTextFragmentEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_scrollingPerformanceTestingEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->scrollingPerformanceTestingEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_shouldAllowUserInstalledFonts(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->shouldAllowUserInstalledFonts();
