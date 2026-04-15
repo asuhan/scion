@@ -552,6 +552,7 @@ bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
 bool LocalFrame_shouldUsePrintingLayout(const void*);
 void* LocalFrame_view(const void* p);
+void* LocalFrame_eventHandler(void*);
 void* LocalFrame_selection(void*);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 void* LocalFrameViewLayoutContext_layoutState(const void*);
