@@ -1167,8 +1167,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func unregisterForVisibleInViewportCallback() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !m_isRegisteredForVisibleInViewportCallback {
+      return
+    }
+    m_isRegisteredForVisibleInViewportCallback = false
+
+    checkedView().unregisterForVisibleInViewportCallback(self)
   }
 
   private func visibleInViewportState() -> VisibleInViewportState {
@@ -2485,7 +2490,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   private var m_lastChild: RenderObjectWrapper?
 
-  private let m_isRegisteredForVisibleInViewportCallback: Bool
+  private var m_isRegisteredForVisibleInViewportCallback: Bool
   private var m_visibleInViewportState: VisibleInViewportState
   private let m_didContributeToVisuallyNonEmptyPixelCount: Bool
   private var m_layoutIdentifier: LayoutIdentifier = 0

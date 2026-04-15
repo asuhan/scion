@@ -759,6 +759,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  func unregisterForVisibleInViewportCallback(_ renderer: RenderElementWrapper) {
+    assert(isNativeImpl())
+    assert(m_visibleInViewportRenderers.contains(CPtrToInt(renderer.id())))
+    m_visibleInViewportRenderers.remove(CPtrToInt(renderer.id()))
+  }
+
   func resumePausedImageAnimationsIfNeeded(_ visibleRect: IntRect) {
     assert(isNativeImpl())
     // TODO(asuhan): use array with inline storage
@@ -1049,7 +1055,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   private let m_renderersWithPausedImageAnimation: [UInt: [WeakNullableRef<CachedImageWrapper>]] =
     [:]
   private var m_SVGSVGElementsWithPausedImageAnimation: Set<UInt> = []
-  private let m_visibleInViewportRenderers: Set<UInt> = []
+  private var m_visibleInViewportRenderers: Set<UInt> = []
 
   private var m_viewTransitionRoot: RenderElementWrapper? = nil
 
