@@ -63,30 +63,6 @@ public:
 
     ~RenderViewScion();
 
-    const RenderStyle& style() const;
-
-    RenderStyle& mutableStyle();
-
-    const RenderStyle* parentStyle() const;
-
-    void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference = StyleDifference::Equal);
-
-    RenderObject* firstChild();
-
-    bool needsLayout() const;
-
-    Document& document() const;
-
-    LocalFrame& frame() const;
-
-    VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*);
-
-    void repaint(RenderObject::ForceRepaint = RenderObject::ForceRepaint::No) const;
-
-    RenderMultiColumnFlow* multiColumnFlow() const;
-
-    void updateColumnProgressionFromStyle(const RenderStyle&);
-
     RenderSelection& selection();
 
     bool printing() const;
@@ -129,8 +105,6 @@ public:
 
     void repaintRootContents();
 
-    void repaintViewAndCompositedLayers();
-
     void paint(PaintInfo&, const LayoutPoint&);
 
     RenderElement* rendererForRootBackground() const;
@@ -154,8 +128,6 @@ public:
     bool rootElementShouldPaintBaseBackground() const;
 
     bool shouldPaintBaseBackground() const;
-
-    FloatSize sizeForCSSLargeViewportUnits() const;
 
     bool hasQuotesNeedingUpdate() const;
 

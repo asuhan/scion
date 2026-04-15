@@ -207,77 +207,6 @@ RenderViewScion::~RenderViewScion()
     // TODO(asuhan): implement this
 }
 
-const RenderStyle& RenderViewScion::style() const
-{
-    ASSERT_NOT_REACHED();
-    return RenderStyle::defaultStyle();
-}
-
-RenderStyle& RenderViewScion::mutableStyle()
-{
-    ASSERT_NOT_REACHED();
-    return RenderStyle::defaultStyle();
-}
-
-const RenderStyle* RenderViewScion::parentStyle() const
-{
-    ASSERT_NOT_REACHED();
-    return nullptr;
-}
-
-void RenderViewScion::setStyle(RenderStyle&&, StyleDifference)
-{
-    ASSERT_NOT_REACHED();
-}
-
-RenderObject* RenderViewScion::firstChild()
-{
-    ASSERT_NOT_REACHED();
-    return nullptr;
-}
-
-bool RenderViewScion::needsLayout() const
-{
-    ASSERT_NOT_REACHED();
-    return false;
-}
-
-Document& RenderViewScion::document() const
-{
-    static Document* unused = nullptr;
-    ASSERT_NOT_REACHED();
-    return *unused;
-}
-
-LocalFrame& RenderViewScion::frame() const
-{
-    static LocalFrame* unused = nullptr;
-    ASSERT_NOT_REACHED();
-    return *unused;
-}
-
-VisiblePosition RenderViewScion::positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*)
-{
-    ASSERT_NOT_REACHED();
-    return {};
-}
-
-void RenderViewScion::repaint(RenderObject::ForceRepaint) const
-{
-    ASSERT_NOT_REACHED();
-}
-
-RenderMultiColumnFlow* RenderViewScion::multiColumnFlow() const
-{
-    ASSERT_NOT_REACHED();
-    return nullptr;
-}
-
-void RenderViewScion::updateColumnProgressionFromStyle(const RenderStyle&)
-{
-    ASSERT_NOT_REACHED();
-}
-
 RenderSelection& RenderViewScion::selection()
 {
     return *static_cast<RenderSelection*>(RenderViewScion_selection(m_handle));
@@ -426,11 +355,6 @@ void RenderViewScion::repaintRootContents()
     RenderViewScion_repaintRootContents(m_handle);
 }
 
-void RenderViewScion::repaintViewAndCompositedLayers()
-{
-    ASSERT_NOT_REACHED();
-}
-
 namespace {
 
 LayoutPointRaw convertLayoutPoint(const LayoutPoint& point) { return { point.x().rawValue(), point.y().rawValue() }; }
@@ -499,12 +423,6 @@ bool RenderViewScion::rootElementShouldPaintBaseBackground() const
 bool RenderViewScion::shouldPaintBaseBackground() const
 {
     return RenderViewScion_shouldPaintBaseBackground(m_handle);
-}
-
-FloatSize RenderViewScion::sizeForCSSLargeViewportUnits() const
-{
-    ASSERT_NOT_REACHED();
-    return {};
 }
 
 bool RenderViewScion::hasQuotesNeedingUpdate() const
