@@ -953,8 +953,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentBoxLocation() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let verticalScrollbarSpace = LayoutUnit(
+      value: (shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
+        || style().scrollbarGutter().bothEdges)
+        ? verticalScrollbarWidth() : 0)
+    let horizontalScrollbarSpace = LayoutUnit(
+      value: style().scrollbarGutter().bothEdges ? horizontalScrollbarHeight() : 0)
+    return LayoutPointWrapper(
+      x: borderLeft() + paddingLeft() + verticalScrollbarSpace,
+      y: borderTop() + paddingTop() + horizontalScrollbarSpace)
   }
 
   // This returns the content area of the box (excluding padding and border). The only difference with contentBoxRect is that computedCSSContentBoxRect
