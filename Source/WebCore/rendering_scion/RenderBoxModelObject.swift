@@ -936,6 +936,15 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    if !renderTreeBeingDestroyed() {
+      view().imageQualityController().rendererWillBeDestroyed(self)
+    }
+
+    super.willBeDestroyed()
+  }
+
   func hasVisibleBoxDecorationStyle() -> Bool {
     assert(isNativeImpl())
     return hasBackground() || style().hasVisibleBorderDecoration() || style().hasUsedAppearance()

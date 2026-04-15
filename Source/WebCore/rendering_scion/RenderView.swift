@@ -718,6 +718,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return m_renderersWithOutlineCount != 0
   }
 
+  func imageQualityController() -> ImageQualityController {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSoftwareFilters() -> Bool {
     assert(isNativeImpl())
     return m_hasSoftwareFilters

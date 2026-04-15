@@ -41,4 +41,9 @@ class ImageQualityController {
       return nil
     }
   }
+
+  func rendererWillBeDestroyed(_ renderer: RenderBoxModelObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
