@@ -64,8 +64,7 @@ struct GridTrackSize: Equatable {
   }
 
   func isContentSized() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return minTrackBreadth.isContentSized() || maxTrackBreadth.isContentSized()
   }
 
   func isFitContent() -> Bool {
