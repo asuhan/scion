@@ -132,8 +132,7 @@ final class Grid {
   }
 
   func autoRepeatTracks(direction: GridTrackSizingDirection) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForRows ? m_autoRepeatRows : m_autoRepeatColumns
   }
 
   func setAutoRepeatTracks(autoRepeatRows: UInt32, autoRepeatColumns: UInt32) {
