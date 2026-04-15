@@ -200,10 +200,7 @@ final class Grid {
     fatalError("Not implemented")
   }
 
-  func needsItemsPlacement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func needsItemsPlacement() -> Bool { return m_needsItemsPlacement }
 
   func setupGridForMasonryLayout() {
     // TODO(asuhan): implement this
@@ -219,6 +216,8 @@ final class Grid {
 
   private let maxColumns: Int32 = 0
   private let maxRows: Int32 = 0
+
+  private var m_needsItemsPlacement = true
 
   private var grid: GridAsMatrix = []
 }
