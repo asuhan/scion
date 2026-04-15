@@ -613,6 +613,11 @@ extern "C" WEBCORE_EXPORT bool Settings_forceCompositingMode(const void* raw)
     return static_cast<const WebCore::Settings*>(raw)->forceCompositingMode();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_grammarAndSpellingPseudoElementsEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->grammarAndSpellingPseudoElementsEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_layerBasedSVGEngineEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->layerBasedSVGEngineEnabled();

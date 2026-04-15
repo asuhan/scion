@@ -81,8 +81,7 @@ class SettingsWrapper {
   func forceCompositingMode() -> Bool { return wk_interop.Settings_forceCompositingMode(p) }
 
   func grammarAndSpellingPseudoElementsEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_grammarAndSpellingPseudoElementsEnabled(p)
   }
 
   func highlightAPIEnabled() -> Bool {
