@@ -136,8 +136,10 @@ final class Grid {
   }
 
   func setAutoRepeatTracks(autoRepeatRows: UInt32, autoRepeatColumns: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(GridPosition.max() >= numTracks(direction: .ForRows) + autoRepeatRows)
+    assert(GridPosition.max() >= numTracks(direction: .ForColumns) + autoRepeatColumns)
+    m_autoRepeatRows = autoRepeatRows
+    m_autoRepeatColumns = autoRepeatColumns
   }
 
   func setClampingForSubgrid(maxRows: UInt32, maxColumns: UInt32) {
