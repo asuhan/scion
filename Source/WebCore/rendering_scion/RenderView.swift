@@ -787,6 +787,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  func removeRendererWithPausedImageAnimations(_ renderer: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func removeRendererWithPausedImageAnimations(
     _ renderer: RenderElementWrapper, _ image: CachedImageWrapper
   ) {

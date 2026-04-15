@@ -1166,6 +1166,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return style().hasBlendMode()
   }
 
+  private func unregisterForVisibleInViewportCallback() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func visibleInViewportState() -> VisibleInViewportState {
     assert(isNativeImpl())
     return m_visibleInViewportState
@@ -1188,6 +1193,8 @@ class RenderElementWrapper: RenderObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func hasCounterNodeMap() -> Bool { return m_hasCounterNodeMap }
 
   func imageOrientation() -> ImageOrientation {
     // TODO(asuhan): implement this
@@ -2006,6 +2013,68 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
   }
 
+  override func willBeDestroyed() {
+    // TODO(asuhan): support change observer
+    assert(isNativeImpl())
+    if style!.hasAnyFixedBackground() && !settings().fixedBackgroundsPaintRelativeToDocument() {
+      view().protectedFrameView().removeSlowRepaintObject(self)
+    }
+
+    unregisterForVisibleInViewportCallback()
+
+    if hasCounterNodeMap() {
+      RenderCounter.destroyCounterNodes(self)
+    }
+
+    super.willBeDestroyed()
+
+    clearSubtreeLayoutRootIfNeeded()
+
+    let unregisterImage = { (image: StyleImage?) in
+      image?.removeClient(self)
+    }
+
+    let unregisterImages = { (style: RenderStyleWrapper) in
+      var backgroundLayer: FillLayerWrapper? = style.backgroundLayers()
+      while backgroundLayer != nil {
+        unregisterImage(backgroundLayer!.protectedImage())
+        backgroundLayer = backgroundLayer!.next()
+      }
+      var maskLayer: FillLayerWrapper? = style.maskLayers()
+      while maskLayer != nil {
+        unregisterImage(maskLayer!.protectedImage())
+        maskLayer = maskLayer!.next()
+      }
+      unregisterImage(style.borderImage().protectedImage())
+      unregisterImage(style.maskBorder().protectedImage())
+      if let shapeValue = style.shapeOutside() {
+        unregisterImage(shapeValue.protectedImage())
+      }
+    }
+
+    if hasInitializedStyle {
+      unregisterImages(style!)
+
+      if style().hasOutline() {
+        checkedView().decrementRendersWithOutline()
+      }
+
+      if let firstLineStyle = style().getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine))
+      {
+        unregisterImages(firstLineStyle)
+      }
+    }
+
+    if m_hasPausedImageAnimations {
+      checkedView().removeRendererWithPausedImageAnimations(self)
+    }
+
+    if style().contentVisibility() == .Auto && element() != nil {
+      ContentVisibilityDocumentState.unobserve(protectedElement()!)
+    }
+  }
+
   func setRenderBlockFlowLineLayoutPath(_ u: RenderBlockFlowWrapper.LineLayoutPath) {
     assert(isNativeImpl())
     m_renderBlockFlowLineLayoutPath = u
@@ -2347,6 +2416,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
 
     return diff
+  }
+
+  private func clearSubtreeLayoutRootIfNeeded() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func issueRepaintForOutlineAuto(_ outlineSize: Float32) {

@@ -21,6 +21,11 @@
  */
 
 final class RenderCounter: RenderTextWrapper {
+  static func destroyCounterNodes(_ owner: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func rendererStyleChanged(
     renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?, newStyle: RenderStyleWrapper
   ) {
