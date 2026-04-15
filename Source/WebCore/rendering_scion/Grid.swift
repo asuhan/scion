@@ -148,8 +148,8 @@ final class Grid {
   }
 
   func setExplicitGridStart(rowStart: UInt32, columnStart: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_explicitRowStart = rowStart
+    m_explicitColumnStart = columnStart
   }
 
   func clampAreaToSubgridIfNeeded(area: inout GridArea) {
