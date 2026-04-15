@@ -176,8 +176,8 @@ final class Grid {
   }
 
   func hasAutoRepeatEmptyTracks(direction: GridTrackSizingDirection) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? (m_autoRepeatEmptyColumns != nil) : (m_autoRepeatEmptyRows != nil)
   }
 
   func isEmptyAutoRepeatTrack(direction: GridTrackSizingDirection, line: UInt32) -> Bool {
