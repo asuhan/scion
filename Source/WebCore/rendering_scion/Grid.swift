@@ -128,8 +128,7 @@ final class Grid {
   }
 
   func explicitGridStart(direction: GridTrackSizingDirection) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForRows ? m_explicitRowStart : m_explicitColumnStart
   }
 
   func autoRepeatTracks(direction: GridTrackSizingDirection) -> UInt32 {
