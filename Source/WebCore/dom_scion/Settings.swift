@@ -56,10 +56,7 @@ class SettingsWrapper {
     return wk_interop.Settings_backgroundShouldExtendBeyondPage(p)
   }
 
-  func caretBrowsingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func caretBrowsingEnabled() -> Bool { return wk_interop.Settings_caretBrowsingEnabled(p) }
 
   func clientCoordinatesRelativeToLayoutViewport() -> Bool {
     // TODO(asuhan): implement this
