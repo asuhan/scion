@@ -1195,6 +1195,7 @@ bool Settings_animatedImageAsyncDecodingEnabled(const void*);
 bool Settings_asyncOverflowScrollingEnabled(const void*);
 bool Settings_backgroundShouldExtendBeyondPage(const void*);
 bool Settings_caretBrowsingEnabled(const void*);
+bool Settings_clientCoordinatesRelativeToLayoutViewport(const void*);
 bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void*);
 bool Settings_cssScrollAnchoringEnabled(const void*);
 bool Settings_cssUnprefixedBackdropFilterEnabled(const void*);

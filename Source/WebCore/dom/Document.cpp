@@ -583,6 +583,11 @@ extern "C" WEBCORE_EXPORT bool Settings_caretBrowsingEnabled(const void* raw)
     return static_cast<const WebCore::Settings*>(raw)->caretBrowsingEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_clientCoordinatesRelativeToLayoutViewport(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->clientCoordinatesRelativeToLayoutViewport();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->css3DTransformBackfaceVisibilityInteroperabilityEnabled();

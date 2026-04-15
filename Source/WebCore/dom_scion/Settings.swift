@@ -59,8 +59,7 @@ class SettingsWrapper {
   func caretBrowsingEnabled() -> Bool { return wk_interop.Settings_caretBrowsingEnabled(p) }
 
   func clientCoordinatesRelativeToLayoutViewport() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_clientCoordinatesRelativeToLayoutViewport(p)
   }
 
   func css3DTransformBackfaceVisibilityInteroperabilityEnabled() -> Bool {
