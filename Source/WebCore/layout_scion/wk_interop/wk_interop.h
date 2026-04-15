@@ -1208,6 +1208,7 @@ bool Settings_incompleteImageBorderEnabled(const void*);
 bool Settings_largeImageAsyncDecodingEnabled(const void*);
 bool Settings_layerBasedSVGEngineEnabled(const void*);
 bool Settings_overlappingBackingStoreProvidersEnabled(const void*);
+bool Settings_scrollToTextFragmentEnabled(const void*);
 bool Settings_shouldAllowUserInstalledFonts(const void*);
 bool Settings_systemLayoutDirection(const void*);
 bool Settings_userInterfaceDirectionPolicy(const void*);
