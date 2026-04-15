@@ -95,8 +95,8 @@ final class Grid {
   }
 
   func gridItemSpan(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let area = gridItemArea(item: gridItem)
+    return direction == .ForColumns ? area.columns : area.rows
   }
 
   func gridItemSpanIgnoringCollapsedTracks(
