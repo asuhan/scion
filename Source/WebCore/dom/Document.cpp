@@ -608,6 +608,11 @@ extern "C" WEBCORE_EXPORT bool Settings_fixedBackgroundsPaintRelativeToDocument(
     return static_cast<const WebCore::Settings*>(raw)->fixedBackgroundsPaintRelativeToDocument();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_forceCompositingMode(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->forceCompositingMode();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_layerBasedSVGEngineEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->layerBasedSVGEngineEnabled();

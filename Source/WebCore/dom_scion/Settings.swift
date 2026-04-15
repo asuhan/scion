@@ -78,10 +78,7 @@ class SettingsWrapper {
     return wk_interop.Settings_fixedBackgroundsPaintRelativeToDocument(p)
   }
 
-  func forceCompositingMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func forceCompositingMode() -> Bool { return wk_interop.Settings_forceCompositingMode(p) }
 
   func grammarAndSpellingPseudoElementsEnabled() -> Bool {
     // TODO(asuhan): implement this
