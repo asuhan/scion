@@ -1216,6 +1216,7 @@ bool Settings_showDebugBorders(const void*);
 bool Settings_showRepaintCounter(const void*);
 bool Settings_systemLayoutDirection(const void*);
 bool Settings_userInterfaceDirectionPolicy(const void*);
+bool Settings_visualViewportEnabled(const void*);
 bool Node_hasChildNodes(const void*);
 bool Node_isSVGElement(const void*);
 bool Node_isPseudoElement(const void*);

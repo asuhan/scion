@@ -688,6 +688,11 @@ extern "C" WEBCORE_EXPORT bool Settings_userInterfaceDirectionPolicy(const void*
     return static_cast<const WebCore::Settings*>(raw)->userInterfaceDirectionPolicy() == WebCore::UserInterfaceDirectionPolicy::System;
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_visualViewportEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->visualViewportEnabled();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Document);

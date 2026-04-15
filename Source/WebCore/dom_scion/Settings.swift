@@ -130,10 +130,7 @@ class SettingsWrapper {
     return wk_interop.Settings_userInterfaceDirectionPolicy(p) ? .System : .Content
   }
 
-  func visualViewportEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func visualViewportEnabled() -> Bool { return wk_interop.Settings_visualViewportEnabled(p) }
 
   private let p: UnsafeRawPointer
 }
