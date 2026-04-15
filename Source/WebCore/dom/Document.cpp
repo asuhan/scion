@@ -463,6 +463,11 @@ extern "C" WEBCORE_EXPORT bool Document_renderTreeBeingDestroyed(const void* raw
     return static_cast<const WebCore::Document*>(raw)->renderTreeBeingDestroyed();
 }
 
+extern "C" WEBCORE_EXPORT void* Document_existingAXObjectCache(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->existingAXObjectCache();
+}
+
 extern "C" WEBCORE_EXPORT bool Document_printing(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->printing();

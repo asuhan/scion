@@ -87,6 +87,9 @@ class Document: TreeScopeWrapper {
   func renderTreeBeingDestroyed() -> Bool { return wk_interop.Document_renderTreeBeingDestroyed(p) }
 
   func existingAXObjectCache() -> AXObjectCacheWrapper? {
+    if wk_interop.Document_existingAXObjectCache(p) == nil {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
