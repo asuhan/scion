@@ -50,6 +50,7 @@
 #include "RenderBlockFlowInlines.h"
 #include "RenderBlockInlines.h"
 #include "RenderBoxInlines.h"
+#include "RenderBoxScion.h"
 #include "RenderCombineText.h"
 #include "RenderCounter.h"
 #include "RenderDeprecatedFlexibleBox.h"
@@ -223,8 +224,16 @@ RenderBlockFlow::RenderBlockFlow(Type type, Document& document, RenderStyle&& st
 // Do not add any code in below destructor. Add it to willBeDestroyed() instead.
 RenderBlockFlow::~RenderBlockFlow() = default;
 
+void RenderBlockFlow::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderBlockFlowScion>(handle);
+}
+
 void RenderBlockFlow::willBeDestroyed()
 {
+    if (m_scion) {
+        m_scion->willBeDestroyed();
+        return;
+    }
     if (!renderTreeBeingDestroyed()) {
         if (legacyRootBox()) {
             // We can't wait for RenderBox::destroy to clear the selection,

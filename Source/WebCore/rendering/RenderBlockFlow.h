@@ -121,6 +121,8 @@ public:
     bool m_didBreakAtLineToAvoidWidow : 1;
 };
 
+class RenderBlockFlowScion;
+
 class RenderBlockFlow : public RenderBlock {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderBlockFlow);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderBlockFlow);
@@ -128,7 +130,9 @@ public:
     RenderBlockFlow(Type, Element&, RenderStyle&&, OptionSet<BlockFlowFlag> = { });
     RenderBlockFlow(Type, Document&, RenderStyle&&, OptionSet<BlockFlowFlag> = { });
     virtual ~RenderBlockFlow();
-        
+
+    void setScionHandle(void* handle);
+
     void layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight = 0_lu) override;
 
 protected:
@@ -582,6 +586,8 @@ private:
     friend class LineBreaker;
     friend class LineWidth; // Needs to know FloatingObject
     friend class LegacyLineLayout;
+
+    std::unique_ptr<RenderBlockFlowScion> m_scion;
 };
 
 inline bool RenderBlockFlow::hasSvgTextLayout() const

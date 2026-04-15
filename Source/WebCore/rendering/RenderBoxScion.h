@@ -88,4 +88,20 @@ private:
     void* m_handle;
 };
 
+class RenderBlockFlowScion final : public CanMakeCheckedPtr<RenderBlockFlowScion> {
+    WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(WebCore_RenderBlockFlowScion);
+    WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderBlockFlowScion);
+
+public:
+    RenderBlockFlowScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void willBeDestroyed();
+
+private:
+    void* m_handle;
+};
+
 }

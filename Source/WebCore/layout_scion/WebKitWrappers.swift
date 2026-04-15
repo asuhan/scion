@@ -1159,3 +1159,9 @@ func RenderBoxScion_shouldTrimChildMargin(
   let child = createRenderObjectWrapper(childRaw) as! RenderBoxWrapper
   return box.shouldTrimChildMarginForBox(type: type, child: child)
 }
+
+@_cdecl("RenderBlockFlowScion_willBeDestroyed")
+func RenderBlockFlowScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.willBeDestroyed()
+}
