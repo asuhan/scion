@@ -186,8 +186,8 @@ final class Grid {
   }
 
   func autoRepeatEmptyTracks(direction: GridTrackSizingDirection) -> OrderedTrackIndexSet {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasAutoRepeatEmptyTracks(direction: direction))
+    return direction == .ForColumns ? m_autoRepeatEmptyColumns! : m_autoRepeatEmptyRows!
   }
 
   func setNeedsItemsPlacement(needsItemsPlacement: Bool) {
