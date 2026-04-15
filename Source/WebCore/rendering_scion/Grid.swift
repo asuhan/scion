@@ -61,10 +61,10 @@ final class Grid {
   func insert(gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
     var clampedArea = area
     if maxRows != 0 {
-      clampedArea.rows.clamp(max: maxRows)
+      clampedArea.rows.clamp(max: Int32(maxRows))
     }
     if maxColumns != 0 {
-      clampedArea.columns.clamp(max: maxColumns)
+      clampedArea.columns.clamp(max: Int32(maxColumns))
     }
 
     assert(clampedArea.rows.isTranslatedDefinite() && clampedArea.columns.isTranslatedDefinite())
@@ -143,8 +143,8 @@ final class Grid {
   }
 
   func setClampingForSubgrid(maxRows: UInt32, maxColumns: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.maxRows = maxRows
+    self.maxColumns = maxColumns
   }
 
   func setExplicitGridStart(rowStart: UInt32, columnStart: UInt32) {
@@ -155,12 +155,12 @@ final class Grid {
   func clampAreaToSubgridIfNeeded(area: inout GridArea) {
     if !area.rows.isIndefinite() {
       if maxRows != 0 {
-        area.rows.clamp(max: maxRows)
+        area.rows.clamp(max: Int32(maxRows))
       }
     }
     if !area.columns.isIndefinite() {
       if maxColumns != 0 {
-        area.columns.clamp(max: maxColumns)
+        area.columns.clamp(max: Int32(maxColumns))
       }
     }
   }
@@ -230,8 +230,8 @@ final class Grid {
   private var m_autoRepeatColumns: UInt32 = 0
   private var m_autoRepeatRows: UInt32 = 0
 
-  private var maxColumns: Int32 = 0
-  private var maxRows: Int32 = 0
+  private var maxColumns: UInt32 = 0
+  private var maxRows: UInt32 = 0
 
   private var m_needsItemsPlacement = true
 
