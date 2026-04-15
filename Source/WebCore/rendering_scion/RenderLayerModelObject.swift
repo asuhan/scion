@@ -497,6 +497,19 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     m_layer!.insertOnlyThisLayer(.StyleChange)
   }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    if isPositioned() {
+      if style().hasViewportConstrainedPosition() {
+        view().frameView().removeViewportConstrainedObject(self)
+      }
+    }
+
+    destroyLayer()
+
+    super.willBeDestroyed()
+  }
+
   func updateFromStyle() {}
 
   private var m_layer: RenderLayerWrapper? = nil
