@@ -2419,8 +2419,18 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func clearSubtreeLayoutRootIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if renderTreeBeingDestroyed() {
+      return
+    }
+
+    if CPtrToInt(view().frameView().layoutContext().subtreeLayoutRoot()?.id()) != CPtrToInt(id()) {
+      return
+    }
+
+    // Normally when a renderer is detached from the tree, the appropriate dirty bits get set
+    // which ensures that this renderer is no longer the layout root.
+    fatalError("Not reached")
   }
 
   private func issueRepaintForOutlineAuto(_ outlineSize: Float32) {
