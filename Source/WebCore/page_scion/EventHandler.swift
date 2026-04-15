@@ -27,6 +27,16 @@
  */
 
 final class EventHandler {
+  func stopAutoscrollTimer(_ rendererIsBeingDestroyed: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoscrollRenderer() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scheduleCursorUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

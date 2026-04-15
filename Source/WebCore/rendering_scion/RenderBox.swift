@@ -5451,6 +5451,24 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     setHasReflection(styleToUse.boxReflect() != nil)
   }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    if CPtrToInt(frame().eventHandler().autoscrollRenderer()?.id()) == CPtrToInt(id()) {
+      frame().eventHandler().stopAutoscrollTimer(true)
+    }
+
+    if hasInitializedStyle {
+      if style().hasSnapPosition() {
+        view().unregisterBoxWithScrollSnapPositions(self)
+      }
+      if style().containerType() != .Normal {
+        view().unregisterContainerQueryBox(self)
+      }
+    }
+
+    super.willBeDestroyed()
+  }
+
   func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
     assert(isNativeImpl())
     return style().marginTrim().contains(type) && isChildEligibleForMarginTrim(type, child)

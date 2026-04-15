@@ -43,6 +43,11 @@ final class LocalFrameWrapper: FrameWrapper {
     fatalError("Not implemented")
   }
 
+  func eventHandler() -> EventHandler {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func checkedEventHandler() -> EventHandler {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
