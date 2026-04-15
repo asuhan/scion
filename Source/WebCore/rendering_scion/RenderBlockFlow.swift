@@ -489,6 +489,33 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     clearNeedsLayout()
   }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    if !renderTreeBeingDestroyed() {
+      if legacyRootBox() != nil {
+        // We can't wait for RenderBox::destroy to clear the selection,
+        // because by then we will have nuked the line boxes.
+        if isSelectionBorder() {
+          frame().selection().setNeedsSelectionUpdate()
+        }
+
+        // If we are an anonymous block, then our line boxes might have children
+        // that will outlast this block. In the non-anonymous block case those
+        // children will be destroyed by the time we return from this function.
+        if isAnonymousBlock() {
+          legacyRootBox()!.firstChild()?.removeFromParent()
+        }
+      } else if let parent = parent(), parent.isSVGRenderer() {
+        parent.dirtyLineFromChangedChild()
+      }
+    }
+
+    (svgTextLayout()?.lineBoxes)?.deleteLineBoxes()
+
+    // NOTE: This jumps down to RenderBox, bypassing RenderBlock since it would do duplicate work.
+    renderBoxWillBeDestroyed()
+  }
+
   private func isPaginated() -> Bool {
     assert(isNativeImpl())
     // FIXME: Grid calls into layout outside of regular layout phase (during preferred width computation).

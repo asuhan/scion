@@ -994,6 +994,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func isLegacyRenderSVGModelObject() -> Bool {
+    assert(isNativeImpl())
+    return m_typeSpecificFlags.kind == .SVGModelObject
+      && m_typeSpecificFlags.svgFlags().contains(.IsLegacy)
+  }
+
   func isRenderSVGModelObject() -> Bool {
     assert(isNativeImpl())
     return m_typeSpecificFlags.kind == .SVGModelObject
@@ -1080,10 +1086,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderSVGForeignObject() || isLegacyRenderSVGForeignObject()
   }
 
+  private func isRenderOrLegacyRenderSVGModelObject() -> Bool {
+    assert(isNativeImpl())
+    return isRenderSVGModelObject() || isLegacyRenderSVGModelObject()
+  }
+
   func isSVGLayerAwareRenderer() -> Bool {
     assert(isNativeImpl())
     return isRenderSVGRoot() || isRenderSVGModelObject() || isRenderSVGText() || isRenderSVGInline()
       || isRenderSVGForeignObject()
+  }
+
+  func isSVGRenderer() -> Bool {
+    assert(isNativeImpl())
+    return isRenderOrLegacyRenderSVGRoot() || isRenderOrLegacyRenderSVGModelObject()
+      || isRenderSVGBlock() || isRenderSVGInline()
   }
 
   // FIXME: Those belong into a SVG specific base-class for all renderers (see above)

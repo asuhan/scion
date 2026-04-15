@@ -5453,6 +5453,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   override func willBeDestroyed() {
     assert(isNativeImpl())
+    renderBoxWillBeDestroyed()
+  }
+
+  func renderBoxWillBeDestroyed() {
+    assert(isNativeImpl())
     if CPtrToInt(frame().eventHandler().autoscrollRenderer()?.id()) == CPtrToInt(id()) {
       frame().eventHandler().stopAutoscrollTimer(true)
     }

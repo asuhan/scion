@@ -31,6 +31,11 @@ class RenderLineBoxList {
 
   func lastLegacyLineBox() -> LegacyInlineFlowBox? { return lastLineBox }
 
+  func deleteLineBoxes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shiftLinesBy(shiftX: LayoutUnit, shiftY: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

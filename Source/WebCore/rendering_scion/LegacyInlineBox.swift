@@ -45,6 +45,11 @@ class LegacyInlineBox {
 
   func setIsHorizontal(_ isHorizontal: Bool) { m_bitfields.isHorizontal = isHorizontal }
 
+  func removeFromParent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextOnLine() -> LegacyInlineBox? { return m_nextOnLine }
 
   // FIXME: Hide this once all callers are using tighter types.
