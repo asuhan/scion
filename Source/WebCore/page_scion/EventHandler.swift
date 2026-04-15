@@ -26,6 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 final class EventHandler {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -35,8 +37,11 @@ final class EventHandler {
   }
 
   func autoscrollRenderer() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if wk_interop.EventHandler_autoscrollRenderer(p) != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return nil
   }
 
   func scheduleCursorUpdate() {
