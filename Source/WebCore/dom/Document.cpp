@@ -603,6 +603,11 @@ extern "C" WEBCORE_EXPORT bool Settings_cssUnprefixedBackdropFilterEnabled(const
     return static_cast<const WebCore::Settings*>(raw)->cssUnprefixedBackdropFilterEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_fixedBackgroundsPaintRelativeToDocument(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->fixedBackgroundsPaintRelativeToDocument();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_layerBasedSVGEngineEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->layerBasedSVGEngineEnabled();
