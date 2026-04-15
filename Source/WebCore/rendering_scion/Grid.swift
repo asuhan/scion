@@ -121,8 +121,10 @@ final class Grid {
         startLine: currentLine + 1, endLine: span.integerSpan())
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Still need to check if the first track is empty
+    return isEmptyAutoRepeatTrack(direction: direction, line: currentLine)
+      ? GridSpan.translatedDefiniteGridSpan(startLine: currentLine, endLine: span.integerSpan())
+      : GridSpan.translatedDefiniteGridSpan(startLine: currentLine + 1, endLine: span.integerSpan())
   }
 
   func cell(row: UInt32, column: UInt32) -> GridCell {
