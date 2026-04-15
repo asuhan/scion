@@ -86,10 +86,7 @@ class SettingsWrapper {
 
   func highlightAPIEnabled() -> Bool { return wk_interop.Settings_highlightAPIEnabled(p) }
 
-  func imageSubsamplingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func imageSubsamplingEnabled() -> Bool { return wk_interop.Settings_imageSubsamplingEnabled(p) }
 
   func incompleteImageBorderEnabled() -> Bool {
     // TODO(asuhan): implement this
