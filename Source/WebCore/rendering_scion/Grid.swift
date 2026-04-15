@@ -196,8 +196,23 @@ final class Grid {
   }
 
   func setNeedsItemsPlacement(needsItemsPlacement: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_needsItemsPlacement = needsItemsPlacement
+
+    if !needsItemsPlacement {
+      // TODO(asuhan): shrink grid array to capacity.
+      return
+    }
+
+    grid.removeAll()
+    m_gridItemArea.removeAll()
+    m_explicitRowStart = 0
+    m_explicitColumnStart = 0
+    m_autoRepeatEmptyColumns = nil
+    m_autoRepeatEmptyRows = nil
+    m_autoRepeatColumns = 0
+    m_autoRepeatRows = 0
+    maxColumns = 0
+    maxRows = 0
   }
 
   func needsItemsPlacement() -> Bool { return m_needsItemsPlacement }
@@ -214,12 +229,23 @@ final class Grid {
 
   let orderIterator: OrderIterator
 
-  private let maxColumns: Int32 = 0
-  private let maxRows: Int32 = 0
+  private var m_explicitColumnStart: UInt32 = 0
+  private var m_explicitRowStart: UInt32 = 0
+
+  private var m_autoRepeatColumns: UInt32 = 0
+  private var m_autoRepeatRows: UInt32 = 0
+
+  private var maxColumns: Int32 = 0
+  private var maxRows: Int32 = 0
 
   private var m_needsItemsPlacement = true
 
   private var grid: GridAsMatrix = []
+
+  private var m_gridItemArea: [UInt: GridArea] = [:]
+
+  private var m_autoRepeatEmptyColumns: OrderedTrackIndexSet? = nil
+  private var m_autoRepeatEmptyRows: OrderedTrackIndexSet? = nil
 }
 
 class GridIterator {
