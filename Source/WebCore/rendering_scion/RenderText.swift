@@ -304,8 +304,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   override func layoutBox() -> InlineTextBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.layoutBox() as! InlineTextBoxWrapper?
   }
 
   func textNode() -> TextWrapper? {
