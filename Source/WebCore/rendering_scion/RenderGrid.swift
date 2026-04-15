@@ -2936,6 +2936,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   )
     -> Bool
   {
+    assert(isNativeImpl())
     assert(style().marginTrim().contains(marginTrimType))
     let isTrimmingBlockDirection = marginTrimType == .BlockStart || marginTrimType == .BlockEnd
     let itemGridSpan =
