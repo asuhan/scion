@@ -80,6 +80,8 @@ public:
 
     void styleWillChange(StyleDifference, const RenderStyle&);
 
+    void willBeDestroyed();
+
     bool shouldTrimChildMargin(MarginTrimType, const RenderBox&) const;
 
 private:

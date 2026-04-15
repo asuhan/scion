@@ -1144,6 +1144,12 @@ func RenderBoxScion_styleWillChange(
   box.styleWillChange(diff: diff, newStyle: newStyle)
 }
 
+@_cdecl("RenderBoxScion_willBeDestroyed")
+func RenderBoxScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.willBeDestroyed()
+}
+
 @_cdecl("RenderBoxScion_shouldTrimChildMargin")
 func RenderBoxScion_shouldTrimChildMargin(
   _ boxRaw: UnsafeRawPointer, _ typeRaw: UInt8, _ childRaw: UnsafeMutableRawPointer

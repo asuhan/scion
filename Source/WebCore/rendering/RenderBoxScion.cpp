@@ -65,6 +65,8 @@ extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
+extern "C" void RenderBoxScion_willBeDestroyed(void*);
+
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
 namespace WebCore {
@@ -164,6 +166,11 @@ LayoutPoint RenderBoxScion::topLeftLocation() const
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
     RenderBoxScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+}
+
+void RenderBoxScion::willBeDestroyed()
+{
+    RenderBoxScion_willBeDestroyed(m_handle);
 }
 
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
