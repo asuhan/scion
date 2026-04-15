@@ -5444,8 +5444,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().marginTrim().contains(type) && isChildEligibleForMarginTrim(type, child)
   }
 
   func isChildEligibleForMarginTrim(_ marginTrimType: MarginTrimType, _ child: RenderBoxWrapper)
