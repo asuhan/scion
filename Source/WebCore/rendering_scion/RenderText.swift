@@ -309,8 +309,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func textNode() -> TextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.node() as! TextWrapper?
   }
 
   func getCachedPseudoStyle(
