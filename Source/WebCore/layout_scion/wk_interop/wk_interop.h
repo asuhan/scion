@@ -1213,6 +1213,7 @@ bool Settings_scrollingPerformanceTestingEnabled(const void*);
 bool Settings_shouldAllowUserInstalledFonts(const void*);
 bool Settings_shouldPrintBackgrounds(const void*);
 bool Settings_showDebugBorders(const void*);
+bool Settings_showRepaintCounter(const void*);
 bool Settings_systemLayoutDirection(const void*);
 bool Settings_userInterfaceDirectionPolicy(const void*);
 bool Node_hasChildNodes(const void*);

@@ -120,10 +120,7 @@ class SettingsWrapper {
 
   func showDebugBorders() -> Bool { return wk_interop.Settings_showDebugBorders(p) }
 
-  func showRepaintCounter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func showRepaintCounter() -> Bool { return wk_interop.Settings_showRepaintCounter(p) }
 
   func systemLayoutDirection() -> TextDirection {
     return wk_interop.Settings_systemLayoutDirection(p) ? .RTL : .LTR
