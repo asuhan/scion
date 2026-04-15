@@ -65,6 +65,8 @@ extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
+extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
+
 namespace WebCore {
 
 bool RenderBoxScion::requiresLayerWithScrollableArea() const
@@ -148,7 +150,8 @@ bool RenderBoxScion::scrollsOverflow() const
     return RenderBoxScion_scrollsOverflow(m_handle);
 }
 
-bool RenderBoxScion::isUnsplittableForPagination() const {
+bool RenderBoxScion::isUnsplittableForPagination() const
+{
     return RenderBoxScion_isUnsplittableForPagination(m_handle);
 }
 
@@ -161,6 +164,11 @@ LayoutPoint RenderBoxScion::topLeftLocation() const
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
     RenderBoxScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+}
+
+bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
+{
+    return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
 }
 
 }

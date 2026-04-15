@@ -242,7 +242,7 @@ inline void RenderBox::setLogicalSize(LayoutSize size)
 }
 inline bool RenderBox::shouldTrimChildMargin(MarginTrimType type, const RenderBox& child) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->shouldTrimChildMargin(type, child); }
     return style().marginTrim().contains(type) && isChildEligibleForMarginTrim(type, child);
 }
 inline bool RenderBox::stretchesToViewport() const

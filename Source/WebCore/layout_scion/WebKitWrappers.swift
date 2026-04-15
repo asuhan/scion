@@ -1143,3 +1143,13 @@ func RenderBoxScion_styleWillChange(
   let newStyle = convert_render_style(p: newStyleRaw)
   box.styleWillChange(diff: diff, newStyle: newStyle)
 }
+
+@_cdecl("RenderBoxScion_shouldTrimChildMargin")
+func RenderBoxScion_shouldTrimChildMargin(
+  _ boxRaw: UnsafeRawPointer, _ typeRaw: UInt8, _ childRaw: UnsafeMutableRawPointer
+) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let type = MarginTrimType(rawValue: typeRaw)
+  let child = createRenderObjectWrapper(childRaw) as! RenderBoxWrapper
+  return box.shouldTrimChildMarginForBox(type: type, child: child)
+}
