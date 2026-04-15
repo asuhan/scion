@@ -181,8 +181,8 @@ final class Grid {
   }
 
   func isEmptyAutoRepeatTrack(direction: GridTrackSizingDirection, line: UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasAutoRepeatEmptyTracks(direction: direction))
+    return autoRepeatEmptyTracks(direction: direction).contains(UInt64(line))
   }
 
   func autoRepeatEmptyTracks(direction: GridTrackSizingDirection) -> OrderedTrackIndexSet {
