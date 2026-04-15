@@ -101,8 +101,7 @@ class SettingsWrapper {
   }
 
   func overlappingBackingStoreProvidersEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_overlappingBackingStoreProvidersEnabled(p)
   }
 
   func scrollToTextFragmentEnabled() -> Bool {
