@@ -116,10 +116,7 @@ class SettingsWrapper {
     return wk_interop.Settings_shouldAllowUserInstalledFonts(p)
   }
 
-  func shouldPrintBackgrounds() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func shouldPrintBackgrounds() -> Bool { return wk_interop.Settings_shouldPrintBackgrounds(p) }
 
   func showDebugBorders() -> Bool {
     // TODO(asuhan): implement this

@@ -1211,6 +1211,7 @@ bool Settings_overlappingBackingStoreProvidersEnabled(const void*);
 bool Settings_scrollToTextFragmentEnabled(const void*);
 bool Settings_scrollingPerformanceTestingEnabled(const void*);
 bool Settings_shouldAllowUserInstalledFonts(const void*);
+bool Settings_shouldPrintBackgrounds(const void*);
 bool Settings_systemLayoutDirection(const void*);
 bool Settings_userInterfaceDirectionPolicy(const void*);
 bool Node_hasChildNodes(const void*);
