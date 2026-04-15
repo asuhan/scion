@@ -2630,6 +2630,22 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return LayoutUnit.fromRawValue(value: raw.value)
   }
 
+  override func isChildEligibleForMarginTrim(
+    _ marginTrimType: MarginTrimType, _ child: RenderBoxWrapper
+  )
+    -> Bool
+  {
+    assert(isNativeImpl())
+    assert(style().marginTrim().contains(marginTrimType))
+    if !child.style().isDisplayBlockLevel() {
+      return false
+    }
+    if marginTrimType == .BlockStart {
+      return CPtrToInt(firstInFlowChildBox()?.id()) == CPtrToInt(child.id())
+    }
+    return CPtrToInt(lastInFlowChildBox()?.id()) == CPtrToInt(child.id())
+  }
+
   override func shouldResetLogicalHeightBeforeLayout() -> Bool { return true }
 
   override func computeIntrinsicLogicalWidths(

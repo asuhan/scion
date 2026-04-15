@@ -104,6 +104,27 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  func gridItemSpanIgnoringCollapsedTracks(
+    _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection
+  ) -> GridSpan {
+    let span = gridItemSpan(gridItem: gridItem, direction: direction)
+    if span.startLine() == 0 || !hasAutoRepeatEmptyTracks(direction: direction) {
+      return span
+    }
+    var currentLine = span.startLine() - 1
+
+    while currentLine > 0 && isEmptyAutoRepeatTrack(direction: direction, line: currentLine) {
+      currentLine -= 1
+    }
+    if currentLine > 0 {
+      return GridSpan.translatedDefiniteGridSpan(
+        startLine: currentLine + 1, endLine: span.integerSpan())
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func cell(row: UInt32, column: UInt32) -> GridCell {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

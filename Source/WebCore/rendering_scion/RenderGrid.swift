@@ -1592,8 +1592,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let crossDirectionSpanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
       gridItem: gridItem, direction: crossDirection)
     let crossDirectionPositions = GridSpan.translatedDefiniteGridSpan(
-      startLine: Int32(endOfCrossDirection),
-      endLine: Int32(endOfCrossDirection + crossDirectionSpanSize))
+      startLine: endOfCrossDirection, endLine: endOfCrossDirection + crossDirectionSpanSize)
     return GridArea(
       r: specifiedDirection == .ForColumns ? crossDirectionPositions : specifiedPositions,
       c: specifiedDirection == .ForColumns ? specifiedPositions : crossDirectionPositions)
@@ -1731,7 +1730,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
         emptyGridArea = createEmptyGridAreaAtSpecifiedPositionsOutsideGrid(
           gridItem: gridItem, specifiedDirection: autoPlacementMinorAxisDirection(),
           specifiedPositions: GridSpan.translatedDefiniteGridSpan(
-            startLine: 0, endLine: Int32(minorAxisSpanSize)))
+            startLine: 0, endLine: UInt32(minorAxisSpanSize)))
       }
     }
 
@@ -2932,6 +2931,29 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  override func isChildEligibleForMarginTrim(
+    _ marginTrimType: MarginTrimType, _ gridItem: RenderBoxWrapper
+  )
+    -> Bool
+  {
+    assert(style().marginTrim().contains(marginTrimType))
+    let isTrimmingBlockDirection = marginTrimType == .BlockStart || marginTrimType == .BlockEnd
+    let itemGridSpan =
+      isTrimmingBlockDirection
+      ? currentGrid().gridItemSpanIgnoringCollapsedTracks(gridItem, .ForRows)
+      : currentGrid().gridItemSpanIgnoringCollapsedTracks(gridItem, .ForColumns)
+    switch marginTrimType {
+    case .BlockStart, .InlineStart:
+      return itemGridSpan.startLine() == 0
+    case .BlockEnd:
+      return itemGridSpan.endLine() == currentGrid().numTracks(direction: .ForRows)
+    case .InlineEnd:
+      return itemGridSpan.endLine() == currentGrid().numTracks(direction: .ForColumns)
+    default:
+      fatalError("Not reached")
+    }
+  }
+
   override func firstLineBaseline() -> LayoutUnit? {
     if (isWritingModeRoot() && !isFlexItem()) || !currentGrid().hasGridItems()
       || shouldApplyLayoutContainment()
@@ -3145,13 +3167,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func gridSpanForOutOfFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> GridSpan {
-    let lastLine = Int32(numTracks(direction: direction))
+    let lastLine = UInt32(numTracks(direction: direction))
     if let gridPositions = computeGridPositionsForOutOfFlowGridItem(
       gridItem: gridItem, direction: direction)
     {
       return GridSpan.translatedDefiniteGridSpan(
-        startLine: gridPositions.startIsAuto ? 0 : gridPositions.startLine,
-        endLine: gridPositions.endIsAuto ? lastLine : gridPositions.endLine)
+        startLine: gridPositions.startIsAuto ? 0 : UInt32(gridPositions.startLine),
+        endLine: gridPositions.endIsAuto ? lastLine : UInt32(gridPositions.endLine))
     }
     return GridSpan.translatedDefiniteGridSpan(startLine: 0, endLine: lastLine)
   }

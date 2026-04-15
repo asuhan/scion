@@ -238,7 +238,7 @@ class NamedLineCollection: NamedLineCollectionBase {
     if lastLine == 0 {
       return
     }
-    var search = GridSpan.translatedDefiniteGridSpan(startLine: 0, endLine: Int32(lastLine))
+    var search = GridSpan.translatedDefiniteGridSpan(startLine: 0, endLine: lastLine)
     var currentSide = side
     var direction = directionFromSide(side: currentSide)
     let initialFlipped = GridLayoutFunctions.isFlippedDirection(

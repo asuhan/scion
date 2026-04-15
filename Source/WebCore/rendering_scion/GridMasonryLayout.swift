@@ -92,7 +92,7 @@ class GridMasonryLayout {
       }
     }
     return GridSpan.translatedDefiniteGridSpan(
-      startLine: Int32(smallestMaxPosLine), endLine: Int32(smallestMaxPosLine + itemSpanLength))
+      startLine: smallestMaxPosLine, endLine: smallestMaxPosLine + itemSpanLength)
   }
 
   private func gridAxisPositionUsingNextAutoFlow(item: RenderBoxWrapper) -> GridSpan {
@@ -102,7 +102,7 @@ class GridMasonryLayout {
       autoFlowNextCursor = 0
     }
     return GridSpan.translatedDefiniteGridSpan(
-      startLine: Int32(autoFlowNextCursor), endLine: Int32(autoFlowNextCursor + itemSpanLength))
+      startLine: autoFlowNextCursor, endLine: autoFlowNextCursor + itemSpanLength)
   }
 
   private func gridAreaForIndefiniteGridAxisItem(item: RenderBoxWrapper) -> GridArea {

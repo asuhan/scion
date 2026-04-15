@@ -2107,6 +2107,29 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     marginTrimItems.itemsOnLastFlexLine.add(value: flexLayoutItem.renderer)
   }
 
+  override func isChildEligibleForMarginTrim(
+    _ marginTrimType: MarginTrimType, _ flexItem: RenderBoxWrapper
+  )
+    -> Bool
+  {
+    assert(isNativeImpl())
+    assert(style().marginTrim().contains(marginTrimType))
+    let isMarginParallelWithMainAxis = { [self] (marginTrimType: MarginTrimType) in
+      if isHorizontalFlow() {
+        return marginTrimType == .BlockStart || marginTrimType == .BlockEnd
+      }
+      return marginTrimType == .InlineStart || marginTrimType == .InlineEnd
+    }
+    if isMarginParallelWithMainAxis(marginTrimType) {
+      return (marginTrimType == .BlockStart || marginTrimType == .InlineStart)
+        ? marginTrimItems.itemsOnFirstFlexLine.contains(value: flexItem)
+        : marginTrimItems.itemsOnLastFlexLine.contains(value: flexItem)
+    }
+    return (marginTrimType == .BlockStart || marginTrimType == .InlineStart)
+      ? marginTrimItems.itemsAtFlexLineStart.contains(value: flexItem)
+      : marginTrimItems.itemsAtFlexLineEnd.contains(value: flexItem)
+  }
+
   private func hasAutoMarginsInCrossAxis(flexItem: RenderBoxWrapper) -> Bool {
     if isHorizontalFlow() {
       return flexItem.style().marginTop().isAuto() || flexItem.style().marginBottom().isAuto()

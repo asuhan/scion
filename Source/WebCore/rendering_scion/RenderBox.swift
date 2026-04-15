@@ -5448,6 +5448,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isChildEligibleForMarginTrim(_ marginTrimType: MarginTrimType, _ child: RenderBoxWrapper)
+    -> Bool
+  {
+    assert(isNativeImpl())
+    return false
+  }
+
   func shouldResetLogicalHeightBeforeLayout() -> Bool { return false }
 
   func resetLogicalHeightBeforeLayoutIfNeeded() {

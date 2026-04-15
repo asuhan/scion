@@ -1406,7 +1406,7 @@ final class GridTrackSizingAlgorithm {
       for trackIndex in 0..<allTracks.count {
         let endLine = trackIndex + Int(indefiniteItemKey)
         let itemSpan = GridSpan.translatedDefiniteGridSpan(
-          startLine: Int32(trackIndex), endLine: Int32(endLine))
+          startLine: UInt32(trackIndex), endLine: UInt32(endLine))
 
         if endLine > allTracks.count {
           continue
@@ -1883,7 +1883,7 @@ final class GridTrackSizingAlgorithm {
         let track = allTracks[Int(trackIndex)]
 
         let itemSpan = GridSpan.translatedDefiniteGridSpan(
-          startLine: Int32(trackIndex), endLine: Int32(trackIndex + 1))
+          startLine: trackIndex, endLine: trackIndex + 1)
         if spanningItemCrossesFlexibleSizedTracks(itemSpan: itemSpan) {
           continue
         }
