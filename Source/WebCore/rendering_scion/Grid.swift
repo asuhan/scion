@@ -91,8 +91,7 @@ final class Grid {
   }
 
   func setGridItemArea(item: RenderBoxWrapper, area: GridArea) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_gridItemArea[CPtrToInt(item.id())] = area
   }
 
   func gridItemSpan(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection) -> GridSpan {
