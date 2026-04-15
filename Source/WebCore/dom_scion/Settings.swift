@@ -45,8 +45,7 @@ class SettingsWrapper {
   }
 
   func animatedImageAsyncDecodingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_animatedImageAsyncDecodingEnabled(p)
   }
 
   func asyncOverflowScrollingEnabled() -> Bool {

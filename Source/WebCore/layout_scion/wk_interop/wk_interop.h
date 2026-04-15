@@ -1191,6 +1191,7 @@ bool Settings_acceleratedCompositingEnabled(const void*);
 bool Settings_acceleratedCompositingForFixedPositionEnabled(const void*);
 bool Settings_acceleratedDrawingEnabled(const void*);
 bool Settings_alignContentOnBlocksEnabled(const void*);
+bool Settings_animatedImageAsyncDecodingEnabled(const void*);
 bool Settings_asyncOverflowScrollingEnabled(const void*);
 bool Settings_backgroundShouldExtendBeyondPage(const void*);
 bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void*);
