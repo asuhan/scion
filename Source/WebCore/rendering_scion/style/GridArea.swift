@@ -143,11 +143,6 @@ struct GridSpan: Sequence, IteratorProtocol {
 
 // This represents a grid area that spans in both rows' and columns' direction.
 struct GridArea {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   init(r: GridSpan, c: GridSpan) {
     columns = c
     rows = r
