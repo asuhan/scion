@@ -121,10 +121,7 @@ struct GridTrackSize: Equatable {
     return m_maxTrackBreadthIsMaxContent || m_maxTrackBreadthIsAuto
   }
 
-  func hasMinContentMaxTrackBreadth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasMinContentMaxTrackBreadth() -> Bool { return m_maxTrackBreadthIsMinContent }
 
   func hasMaxContentMinTrackBreadth() -> Bool { return m_minTrackBreadthIsMaxContent }
 
