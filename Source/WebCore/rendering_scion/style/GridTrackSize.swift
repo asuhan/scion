@@ -49,8 +49,19 @@ enum GridTrackSizeType {
 // case) was causing a severe performance drop.
 struct GridTrackSize: Equatable {
   init(length: GridLength, trackSizeType: GridTrackSizeType = .LengthTrackSizing) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_type = trackSizeType
+    minTrackBreadth =
+      trackSizeType == .FitContentTrackSizing
+      ? GridLength(length: LengthWrapper(type: .Auto)) : length
+    maxTrackBreadth =
+      trackSizeType == .FitContentTrackSizing
+      ? GridLength(length: LengthWrapper(type: .Auto)) : length
+    m_fitContentTrackBreadth =
+      trackSizeType == .FitContentTrackSizing
+      ? length : GridLength(length: LengthWrapper(type: .Fixed))
+    assert(trackSizeType == .LengthTrackSizing || trackSizeType == .FitContentTrackSizing)
+    assert(trackSizeType != .FitContentTrackSizing || length.isLength())
+    cacheMinMaxTrackBreadthTypes()
   }
 
   init(minTrackBreadth: GridLength, maxTrackBreadth: GridLength) {
@@ -70,6 +81,28 @@ struct GridTrackSize: Equatable {
   func isFitContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private mutating func cacheMinMaxTrackBreadthTypes() {
+    m_minTrackBreadthIsAuto = minTrackBreadth.isLength() && minTrackBreadth.length().isAuto()
+    m_minTrackBreadthIsMinContent =
+      minTrackBreadth.isLength() && minTrackBreadth.length().isMinContent()
+    m_minTrackBreadthIsMaxContent =
+      minTrackBreadth.isLength() && minTrackBreadth.length().isMaxContent()
+    m_maxTrackBreadthIsMaxContent =
+      maxTrackBreadth.isLength() && maxTrackBreadth.length().isMaxContent()
+    m_maxTrackBreadthIsMinContent =
+      maxTrackBreadth.isLength() && maxTrackBreadth.length().isMinContent()
+    m_maxTrackBreadthIsAuto = maxTrackBreadth.isLength() && maxTrackBreadth.length().isAuto()
+    m_maxTrackBreadthIsFixed = maxTrackBreadth.isLength() && maxTrackBreadth.length().isSpecified()
+
+    // These values depend on the above ones so keep them here.
+    m_minTrackBreadthIsIntrinsic =
+      m_minTrackBreadthIsMaxContent || m_minTrackBreadthIsMinContent
+      || m_minTrackBreadthIsAuto || isFitContent()
+    m_maxTrackBreadthIsIntrinsic =
+      m_maxTrackBreadthIsMaxContent || m_maxTrackBreadthIsMinContent
+      || m_maxTrackBreadthIsAuto || isFitContent()
   }
 
   func hasIntrinsicMinTrackBreadth() -> Bool { return m_minTrackBreadthIsIntrinsic }
@@ -124,11 +157,18 @@ struct GridTrackSize: Equatable {
     fatalError("Not implemented")
   }
 
+  private let m_type: GridTrackSizeType
   let minTrackBreadth: GridLength
   let maxTrackBreadth: GridLength
+  private let m_fitContentTrackBreadth: GridLength
 
-  private let m_minTrackBreadthIsMaxContent = false
-  private let m_minTrackBreadthIsMinContent = false
-  private let m_minTrackBreadthIsIntrinsic = false
-  private let m_maxTrackBreadthIsIntrinsic = false
+  private var m_minTrackBreadthIsAuto = false
+  private var m_maxTrackBreadthIsAuto = false
+  private var m_minTrackBreadthIsMaxContent = false
+  private var m_minTrackBreadthIsMinContent = false
+  private var m_maxTrackBreadthIsMaxContent = false
+  private var m_maxTrackBreadthIsMinContent = false
+  private var m_minTrackBreadthIsIntrinsic = false
+  private var m_maxTrackBreadthIsIntrinsic = false
+  private var m_maxTrackBreadthIsFixed = false
 }
