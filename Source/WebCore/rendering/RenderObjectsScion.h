@@ -160,6 +160,8 @@ public:
 
     RenderMultiColumnFlow* multiColumnFlow() const;
 
+    bool containsFloats() const;
+
     void setChildrenInline(bool);
 
     LayoutIntegration::LineLayout* inlineLayout();

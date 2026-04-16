@@ -96,6 +96,8 @@ extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
 extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
+extern "C" bool RenderBlockFlowScion_containsFloats(const void*);
+
 extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
 
 extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
@@ -390,6 +392,11 @@ void RenderBlockFlowScion::willBeDestroyed()
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
 {
     return static_cast<RenderMultiColumnFlow*>(RenderBlockFlowScion_multiColumnFlow(m_handle));
+}
+
+bool RenderBlockFlowScion::containsFloats() const
+{
+    return RenderBlockFlowScion_containsFloats(m_handle);
 }
 
 void RenderBlockFlowScion::setChildrenInline(bool value)

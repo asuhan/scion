@@ -300,11 +300,7 @@ public:
     bool willCreateColumns(std::optional<unsigned> desiredColumnCount = std::nullopt) const;
     virtual bool requiresColumns(int) const;
 
-    bool containsFloats() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_floatingObjects && !m_floatingObjects->set().isEmpty();
-    }
+    bool containsFloats() const override;
     bool containsFloat(RenderBox&) const;
     bool subtreeContainsFloats() const;
     bool subtreeContainsFloat(RenderBox&) const;

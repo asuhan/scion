@@ -1175,6 +1175,12 @@ func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
   return nil
 }
 
+@_cdecl("RenderBlockFlowScion_containsFloats")
+func RenderBlockFlowScion_containsFloats(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.containsFloats()
+}
+
 @_cdecl("RenderBlockFlowScion_setChildrenInline")
 func RenderBlockFlowScion_setChildrenInline(_ blockFlowRaw: UnsafeMutableRawPointer, _ value: Bool)
 {

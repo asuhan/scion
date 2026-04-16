@@ -271,6 +271,12 @@ RenderMultiColumnFlow* RenderBlockFlow::multiColumnFlowSlowCase() const
     return rareBlockFlowData()->m_multiColumnFlow.get();
 }
 
+bool RenderBlockFlow::containsFloats() const
+{
+    if (m_scion) { return m_scion->containsFloats(); }
+    return m_floatingObjects && !m_floatingObjects->set().isEmpty();
+}
+
 RenderBlockFlow* RenderBlockFlow::previousSiblingWithOverhangingFloats(bool& parentHasFloats) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
