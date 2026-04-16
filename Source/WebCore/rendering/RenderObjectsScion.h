@@ -151,6 +151,8 @@ public:
     {
     }
 
+    void styleWillChange(StyleDifference, const RenderStyle&);
+
     void willBeDestroyed();
 
 private:

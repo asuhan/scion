@@ -93,6 +93,8 @@ extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*
 
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
+extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;
@@ -371,6 +373,11 @@ void RenderBoxScion::willBeDestroyed()
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
 {
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
+{
+    RenderBlockFlowScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
 }
 
 void RenderBlockFlowScion::willBeDestroyed()

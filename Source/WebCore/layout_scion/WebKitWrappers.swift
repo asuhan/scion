@@ -1165,3 +1165,13 @@ func RenderBlockFlowScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
   let box = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   box.willBeDestroyed()
 }
+
+@_cdecl("RenderBlockFlowScion_styleWillChange")
+func RenderBlockFlowScion_styleWillChange(
+  _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
+) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let diff = StyleDifference(rawValue: diffRaw)!
+  let newStyle = convert_render_style(p: newStyleRaw)
+  blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
+}
