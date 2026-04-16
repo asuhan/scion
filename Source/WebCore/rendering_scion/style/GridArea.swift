@@ -51,13 +51,13 @@ struct GridSpan: Sequence, IteratorProtocol {
   }
 
   func untranslatedStartLine() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_type == .UntranslatedDefinite)
+    return m_startLine
   }
 
   func untranslatedEndLine() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_type == .UntranslatedDefinite)
+    return m_endLine
   }
 
   func startLine() -> UInt32 {
