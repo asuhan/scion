@@ -95,6 +95,8 @@ extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
 extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
+extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
+
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
 struct IntPointRaw {
@@ -385,6 +387,11 @@ void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderSty
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
 {
     return static_cast<RenderMultiColumnFlow*>(RenderBlockFlowScion_multiColumnFlow(m_handle));
+}
+
+void RenderBlockFlowScion::setChildrenInline(bool value)
+{
+    RenderBlockFlowScion_setChildrenInline(m_handle, value);
 }
 
 void RenderBlockFlowScion::willBeDestroyed()

@@ -1175,6 +1175,13 @@ func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
   return nil
 }
 
+@_cdecl("RenderBlockFlowScion_setChildrenInline")
+func RenderBlockFlowScion_setChildrenInline(_ blockFlowRaw: UnsafeMutableRawPointer, _ value: Bool)
+{
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  blockFlow.setChildrenInline(b: value)
+}
+
 @_cdecl("RenderBlockFlowScion_styleWillChange")
 func RenderBlockFlowScion_styleWillChange(
   _ blockFlowRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer

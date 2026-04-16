@@ -156,6 +156,8 @@ public:
 
     RenderMultiColumnFlow* multiColumnFlow() const;
 
+    void setChildrenInline(bool);
+
     void styleWillChange(StyleDifference, const RenderStyle&);
 
 private:

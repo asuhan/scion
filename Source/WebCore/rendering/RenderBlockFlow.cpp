@@ -521,7 +521,10 @@ bool RenderBlockFlow::willCreateColumns(std::optional<unsigned> desiredColumnCou
 
 void RenderBlockFlow::setChildrenInline(bool value)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setChildrenInline(value);
+        return;
+    }
     if (childrenInline() && !value) {
         setLineLayoutPath(UndeterminedPath);
         m_lineLayout = std::monostate();
