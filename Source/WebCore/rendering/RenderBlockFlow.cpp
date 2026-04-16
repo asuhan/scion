@@ -539,6 +539,12 @@ void RenderBlockFlow::setChildrenInline(bool value)
     RenderBlock::setChildrenInline(value);
 }
 
+const LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout() const
+{
+    if (m_scion) { return m_scion->inlineLayout(); }
+    return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
+}
+
 LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout()
 {
     if (m_scion) { return m_scion->inlineLayout(); }

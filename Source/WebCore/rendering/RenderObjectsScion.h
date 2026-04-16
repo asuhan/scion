@@ -164,6 +164,8 @@ public:
 
     void setChildrenInline(bool);
 
+    const LayoutIntegration::LineLayout* inlineLayout() const;
+
     LayoutIntegration::LineLayout* inlineLayout();
 
     void styleWillChange(StyleDifference, const RenderStyle&);

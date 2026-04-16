@@ -404,6 +404,11 @@ void RenderBlockFlowScion::setChildrenInline(bool value)
     RenderBlockFlowScion_setChildrenInline(m_handle, value);
 }
 
+const LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout() const
+{
+    return static_cast<const LayoutIntegration::LineLayout*>(RenderBlockFlowScion_inlineLayout(m_handle));
+}
+
 LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
 {
     return static_cast<LayoutIntegration::LineLayout*>(RenderBlockFlowScion_inlineLayout(m_handle));
