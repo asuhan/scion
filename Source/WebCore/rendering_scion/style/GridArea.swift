@@ -38,8 +38,7 @@ struct GridSpan: Sequence, IteratorProtocol {
   }
 
   static func translatedDefiniteGridSpan(startLine: UInt32, endLine: UInt32) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return GridSpan(startLine: Int32(startLine), endLine: Int32(endLine), type: .TranslatedDefinite)
   }
 
   static func indefiniteGridSpan() -> GridSpan {
