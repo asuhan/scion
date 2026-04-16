@@ -65,8 +65,11 @@ struct GridTrackSize: Equatable {
   }
 
   init(minTrackBreadth: GridLength, maxTrackBreadth: GridLength) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_type = .MinMaxTrackSizing
+    self.minTrackBreadth = minTrackBreadth
+    self.maxTrackBreadth = maxTrackBreadth
+    m_fitContentTrackBreadth = GridLength(length: LengthWrapper(type: .Fixed))
+    cacheMinMaxTrackBreadthTypes()
   }
 
   func fitContentTrackBreadth() -> GridLength {
