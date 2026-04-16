@@ -20,7 +20,7 @@
 #pragma once
 
 #include "RenderBox.h"
-#include "RenderBoxScion.h"
+#include "RenderObjectsScion.h"
 #include "RenderBoxModelObjectInlines.h"
 
 namespace WebCore {

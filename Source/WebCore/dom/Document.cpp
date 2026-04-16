@@ -217,6 +217,7 @@
 #include "RenderLayerCompositor.h"
 #include "RenderLayoutState.h"
 #include "RenderLineBreak.h"
+#include "RenderObjectsScion.h"
 #include "RenderTreeUpdater.h"
 #include "RenderView.h"
 #include "RenderWidget.h"

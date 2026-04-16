@@ -2739,7 +2739,6 @@ rendering/RenderAttachment.cpp
 rendering/RenderBlock.cpp
 rendering/RenderBlockFlow.cpp
 rendering/RenderBox.cpp
-rendering/RenderBoxScion.cpp
 rendering/RenderBoxModelObject.cpp
 rendering/RenderButton.cpp
 rendering/RenderCombineText.cpp
@@ -2747,7 +2746,6 @@ rendering/RenderCounter.cpp
 rendering/RenderDeprecatedFlexibleBox.cpp
 rendering/RenderDetailsMarker.cpp
 rendering/RenderElement.cpp
-rendering/RenderElementScion.cpp
 rendering/RenderEmbeddedObject.cpp
 rendering/RenderFileUploadControl.cpp
 rendering/RenderFlexibleBox.cpp
@@ -2771,7 +2769,6 @@ rendering/RenderLayerBacking.cpp
 rendering/RenderLayerCompositor.cpp
 rendering/RenderLayerFilters.cpp
 rendering/RenderLayerModelObject.cpp
-rendering/RenderLayerModelObjectScion.cpp
 rendering/RenderLayerScrollableArea.cpp
 rendering/RenderLayoutState.cpp
 rendering/RenderLineBoxList.cpp
@@ -2788,7 +2785,7 @@ rendering/RenderMultiColumnFlow.cpp
 rendering/RenderMultiColumnSet.cpp
 rendering/RenderMultiColumnSpannerPlaceholder.cpp
 rendering/RenderObject.cpp
-rendering/RenderObjectScion.cpp
+rendering/RenderObjectsScion.cpp
 rendering/RenderProgress.cpp
 rendering/RenderQuote.cpp
 rendering/RenderReplaced.cpp
@@ -2818,7 +2815,6 @@ rendering/RenderTreeMutationDisallowedScope.cpp
 rendering/RenderVTTCue.cpp
 rendering/RenderVideo.cpp
 rendering/RenderView.cpp
-rendering/RenderViewScion.cpp
 rendering/RenderViewTransitionCapture.cpp
 rendering/RenderWidget.cpp
 rendering/StyledMarkedText.cpp

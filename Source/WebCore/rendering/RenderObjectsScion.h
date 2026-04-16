@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Scion authors. All rights reserved.
+ * Copyright (C) 2026 Scion authors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,35 +25,139 @@
 
 #pragma once
 
-#include <wtf/CheckedRef.h>
-#include <wtf/FastMalloc.h>
-
-#include "FloatSize.h"
-#include "LayoutPoint.h"
-#include "LocalFrameView.h"
+#include "LayoutUnit.h"
+#include "RenderObject.h"
 #include "RenderStyle.h"
-#include "VisiblePosition.h"
+#include "ScrollTypes.h"
 
 extern "C" void* RenderViewScion_create(void*, const void*);
 
 namespace WebCore {
 
+class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
-class RenderFragmentContainer;
+class RenderObject;
+class RenderSelection;
 
 namespace Layout {
 class InitialContainingBlock;
 class LayoutState;
 }
 
-DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(WebCore_RenderViewScion);
+class RenderObjectScion final {
+public:
+    RenderObjectScion(void* handle)
+        : m_handle(handle)
+    {
+    }
 
-class RenderViewScion final : public CanMakeCheckedPtr<RenderViewScion> {
-    WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(WebCore_RenderViewScion);
-    WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderViewScion);
+    RenderLayer* enclosingLayer() const;
 
+    void setChildrenInline(bool b);
+
+    bool hasLayer() const;
+
+    bool needsLayout() const;
+
+    void setNormalChildNeedsLayoutBit(bool b);
+
+private:
+    void* m_handle;
+};
+
+class RenderElementScion final {
+public:
+    RenderElementScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
+
+private:
+    void* m_handle;
+};
+
+class RenderLayerModelObjectScion final {
+public:
+    RenderLayerModelObjectScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    RenderLayer* layer() const;
+
+    CheckedPtr<RenderLayer> checkedLayer() const;
+
+    void* handle() const { return m_handle; }
+
+private:
+    void* m_handle;
+};
+
+class RenderBoxScion final {
+public:
+    RenderBoxScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    bool requiresLayerWithScrollableArea() const;
+
+    LayoutUnit width() const;
+
+    LayoutPoint location() const;
+
+    LayoutSize size() const;
+
+    LayoutRect frameRect() const;
+
+    LayoutRect layoutOverflowRect() const;
+
+    LayoutRect visualOverflowRect() const;
+
+    LayoutRect paddingBoxRectIncludingScrollbar() const;
+
+    RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
+
+    LayoutUnit availableLogicalWidth() const;
+
+    bool hasAutoScrollbar(ScrollbarOrientation) const;
+
+    bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;
+
+    bool scrollsOverflow() const;
+
+    bool isUnsplittableForPagination() const;
+
+    LayoutPoint topLeftLocation() const;
+
+    void styleWillChange(StyleDifference, const RenderStyle&);
+
+    void willBeDestroyed();
+
+    bool shouldTrimChildMargin(MarginTrimType, const RenderBox&) const;
+
+private:
+    void* m_handle;
+};
+
+class RenderBlockFlowScion final {
+public:
+    RenderBlockFlowScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void willBeDestroyed();
+
+private:
+    void* m_handle;
+};
+
+class RenderViewScion final {
 public:
     RenderViewScion(void* handle)
         : m_handle(handle)

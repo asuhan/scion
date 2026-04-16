@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Scion authors. All rights reserved.
+ * Copyright (C) 2026 Scion authors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,14 +23,75 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "RenderViewScion.h"
+#include "RenderObjectsScion.h"
 #include "Document.h"
 #include "LayoutInitialContainingBlock.h"
+#include "LayoutRect.h"
+#include "LayoutRectRaw.h"
 #include "RenderFragmentContainer.h"
 #include "RenderLayer.h"
 #include "RenderSelection.h"
-#include "RenderViewScion.h"
+#include "ScrollTypes.h"
 #include <wtf/Assertions.h>
+#include <wtf/CheckedRef.h>
+#include <wtf/FastMalloc.h>
+
+extern "C" void* RenderObjectScion_enclosingLayer(const void*);
+
+extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
+
+extern "C" bool RenderObjectScion_hasLayer(const void*);
+
+extern "C" bool RenderObjectScion_needsLayout(const void*);
+
+extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
+
+extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
+
+extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
+
+extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
+
+extern "C" int32_t RenderBoxScion_width(const void*);
+
+extern "C" LayoutPointRaw RenderBoxScion_location(const void*);
+
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
+
+extern "C" LayoutRectRaw RenderBoxScion_frameRect(const void*);
+
+extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
+
+extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
+
+extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
+
+extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
+
+extern "C" int32_t RenderBoxScion_availableLogicalWidth(const void*);
+
+extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
+
+extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
+
+extern "C" bool RenderBoxScion_scrollsOverflow(const void*);
+
+extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
+
+extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
+
+extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
+
+extern "C" void RenderBoxScion_willBeDestroyed(void*);
+
+extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
+
+extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
 struct IntPointRaw {
     int32_t x;
@@ -96,23 +157,6 @@ extern "C" void RenderViewScion_updateQuirksMode(const void*);
 
 extern "C" bool RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(const void*);
 
-struct LayoutRectRaw {
-    int32_t x;
-    int32_t y;
-    int32_t width;
-    int32_t height;
-};
-
-struct OptionalLayoutRectRaw {
-    LayoutRectRaw rect;
-    bool is_valid;
-};
-
-struct RepaintRectsRaw {
-    LayoutRectRaw clippedOverflowRect;
-    OptionalLayoutRectRaw outlineBoundsRect;
-};
-
 struct OptionalRepaintRectsRaw {
     RepaintRectsRaw rects;
     bool is_valid;
@@ -123,11 +167,6 @@ struct VisibleRectContextRaw {
     bool dirtyRectIsFlipped;
     bool descendantNeedsEnclosingIntRect;
     uint8_t options;
-};
-
-struct LayoutPointRaw {
-    int32_t x;
-    int32_t y;
 };
 
 extern "C" OptionalRepaintRectsRaw RenderViewScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
@@ -201,6 +240,143 @@ extern "C" void RepaintRegionAccumulator_destroy(void*);
 extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 
 namespace WebCore {
+
+RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
+
+void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
+
+bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
+
+bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
+
+void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)
+{
+    RenderElementScion_attachRendererInternal(m_handle, child, beforeChild);
+}
+
+RenderLayer* RenderLayerModelObjectScion::layer() const
+{
+    return static_cast<RenderLayer*>(RenderLayerModelObjectNative_layer(m_handle));
+}
+
+CheckedPtr<RenderLayer> RenderLayerModelObjectScion::checkedLayer() const
+{
+    return layer();
+}
+
+bool RenderBoxScion::requiresLayerWithScrollableArea() const
+{
+    return RenderBoxScion_requiresLayerWithScrollableArea(m_handle);
+}
+
+LayoutUnit RenderBoxScion::width() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+LayoutPoint RenderBoxScion::location() const
+{
+    const auto point = RenderBoxScion_location(m_handle);
+    return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
+}
+
+LayoutSize RenderBoxScion::size() const
+{
+    const auto sizeRaw = RenderBoxScion_size(m_handle);
+    return { LayoutUnit::fromRawValue(sizeRaw.width), LayoutUnit::fromRawValue(sizeRaw.height) };
+}
+
+namespace {
+
+LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
+}
+
+RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
+{
+    return { convertLayoutRectRaw(rects.clippedOverflowRect), rects.outlineBoundsRect.is_valid ? convertLayoutRectRaw(rects.outlineBoundsRect.rect) : LayoutRect {} };
+}
+
+} // namespace
+
+LayoutRect RenderBoxScion::frameRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_frameRect(m_handle));
+}
+
+LayoutRect RenderBoxScion::layoutOverflowRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_layoutOverflowRect(m_handle));
+}
+
+LayoutRect RenderBoxScion::visualOverflowRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_visualOverflowRect(m_handle));
+}
+
+LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
+}
+
+RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const
+{
+    return convertRepaintRectsRaw(RenderBoxScion_localRectsForRepaint(m_handle, repaintOutlineBounds == RepaintOutlineBounds::Yes));
+}
+
+LayoutUnit RenderBoxScion::availableLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_availableLogicalWidth(m_handle));
+}
+
+bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const
+{
+    return RenderBoxScion_hasAutoScrollbar(m_handle, static_cast<uint8_t>(orientation));
+}
+
+bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation) const
+{
+    return RenderBoxScion_hasAlwaysPresentScrollbar(m_handle, static_cast<uint8_t>(orientation));
+}
+
+bool RenderBoxScion::scrollsOverflow() const
+{
+    return RenderBoxScion_scrollsOverflow(m_handle);
+}
+
+bool RenderBoxScion::isUnsplittableForPagination() const
+{
+    return RenderBoxScion_isUnsplittableForPagination(m_handle);
+}
+
+LayoutPoint RenderBoxScion::topLeftLocation() const
+{
+    const auto point = RenderBoxScion_topLeftLocation(m_handle);
+    return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
+}
+
+void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
+{
+    RenderBoxScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+}
+
+void RenderBoxScion::willBeDestroyed()
+{
+    RenderBoxScion_willBeDestroyed(m_handle);
+}
+
+bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
+{
+    return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderBlockFlowScion::willBeDestroyed()
+{
+    RenderBlockFlowScion_willBeDestroyed(m_handle);
+}
 
 RenderViewScion::~RenderViewScion()
 {
@@ -322,16 +498,6 @@ RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
 VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRectContext context)
 {
     return { context.hasPositionFixedDescendant, context.dirtyRectIsFlipped, context.descendantNeedsEnclosingIntRect, static_cast<uint8_t>(context.options.toRaw()) };
-}
-
-LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
-{
-    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
-}
-
-RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
-{
-    return { convertLayoutRectRaw(rects.clippedOverflowRect), rects.outlineBoundsRect.is_valid ? convertLayoutRectRaw(rects.outlineBoundsRect.rect) : LayoutRect {} };
 }
 
 } // namespace
