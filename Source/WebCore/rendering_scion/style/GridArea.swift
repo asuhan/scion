@@ -77,15 +77,9 @@ struct GridSpan: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
-  func isTranslatedDefinite() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isTranslatedDefinite() -> Bool { return m_type == .TranslatedDefinite }
 
-  func isIndefinite() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isIndefinite() -> Bool { return m_type == .Indefinite }
 
   mutating func translate(offset: UInt32) {
     assert(m_type == .UntranslatedDefinite)
