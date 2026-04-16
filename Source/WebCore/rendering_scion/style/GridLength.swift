@@ -45,8 +45,8 @@ struct GridLength {
   func isFlex() -> Bool { return m_type == .FlexType }
 
   func length() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isLength())
+    return m_length
   }
 
   func flex() -> Float64 {
