@@ -85,8 +85,12 @@ struct GridLength {
   }
 
   func isContentSized() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch m_lengthOrFlex {
+    case .LengthType(let length):
+      return length.isAuto() || length.isMinContent() || length.isMaxContent()
+    default:
+      return false
+    }
   }
 
   private enum GridLengthType {
