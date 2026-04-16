@@ -32,7 +32,7 @@
 // This class wraps the <track-breadth> which can be either a <percentage>, <length>, min-content, max-content
 // or <flex>. This class avoids spreading the knowledge of <flex> throughout the rendering directory by adding
 // an new unit to Length.h.
-struct GridLength {
+struct GridLength: Equatable {
   init(length: LengthWrapper) {
     // TODO(asuhan): deep copy might be needed here
     m_lengthOrFlex = .Length(length)
@@ -90,6 +90,25 @@ struct GridLength {
       return length.isAuto() || length.isMinContent() || length.isMaxContent()
     default:
       return false
+    }
+  }
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    switch lhs.m_lengthOrFlex {
+    case .Length(let lhsLength):
+      switch rhs.m_lengthOrFlex {
+      case .Length(let rhsLength):
+        return lhsLength == rhsLength
+      default:
+        return false
+      }
+    case .Flex(let lhsFlex):
+      switch rhs.m_lengthOrFlex {
+      case .Flex(let rhsFlex):
+        return lhsFlex == rhsFlex
+      default:
+        return false
+      }
     }
   }
 
