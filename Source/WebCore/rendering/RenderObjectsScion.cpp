@@ -382,9 +382,9 @@ bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const 
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
 }
 
-void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
+void RenderBlockFlowScion::willBeDestroyed()
 {
-    RenderBlockFlowScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+    RenderBlockFlowScion_willBeDestroyed(m_handle);
 }
 
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
@@ -402,9 +402,9 @@ LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
     return static_cast<LayoutIntegration::LineLayout*>(RenderBlockFlowScion_inlineLayout(m_handle));
 }
 
-void RenderBlockFlowScion::willBeDestroyed()
+void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
-    RenderBlockFlowScion_willBeDestroyed(m_handle);
+    RenderBlockFlowScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
 }
 
 RenderViewScion::~RenderViewScion()
