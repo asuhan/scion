@@ -34,8 +34,10 @@
 // an new unit to Length.h.
 struct GridLength {
   init(length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_length = length  // TODO(asuhan): deep copy might be needed here
+    m_flex = 0
+    m_type = .LengthType
+    assert((!length.isUndefined()))
   }
 
   func isLength() -> Bool {
@@ -67,4 +69,13 @@ struct GridLength {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private enum GridLengthType {
+    case LengthType
+    case FlexType
+  }
+  // Ideally we would put the 2 following fields in a union.
+  private let m_length: LengthWrapper
+  private let m_flex: Float64
+  private let m_type: GridLengthType
 }
