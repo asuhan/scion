@@ -34,19 +34,36 @@
 // an new unit to Length.h.
 struct GridLength {
   init(length: LengthWrapper) {
-    m_length = length  // TODO(asuhan): deep copy might be needed here
-    m_flex = 0
-    m_type = .LengthType
-    assert((!length.isUndefined()))
+    // TODO(asuhan): deep copy might be needed here
+    m_lengthOrFlex = .LengthType(length)
+    assert(!length.isUndefined())
   }
 
-  func isLength() -> Bool { return m_type == .LengthType }
+  func isLength() -> Bool {
+    switch m_lengthOrFlex {
+    case .LengthType:
+      return true
+    default:
+      return false
+    }
+  }
 
-  func isFlex() -> Bool { return m_type == .FlexType }
+  func isFlex() -> Bool {
+    switch m_lengthOrFlex {
+    case .FlexType:
+      return true
+    default:
+      return false
+    }
+  }
 
   func length() -> LengthWrapper {
-    assert(isLength())
-    return m_length
+    switch m_lengthOrFlex {
+    case .LengthType(let length):
+      return length
+    default:
+      fatalError("Not reached")
+    }
   }
 
   func flex() -> Float64 {
@@ -65,11 +82,8 @@ struct GridLength {
   }
 
   private enum GridLengthType {
-    case LengthType
-    case FlexType
+    case LengthType(LengthWrapper)
+    case FlexType(Float64)
   }
-  // Ideally we would put the 2 following fields in a union.
-  private let m_length: LengthWrapper
-  private let m_flex: Float64
-  private let m_type: GridLengthType
+  private let m_lengthOrFlex: GridLengthType
 }
