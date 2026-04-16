@@ -1161,8 +1161,8 @@ func RenderBoxScion_shouldTrimChildMargin(
 }
 
 @_cdecl("RenderBlockFlowScion_willBeDestroyed")
-func RenderBlockFlowScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
-  let box = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+func RenderBlockFlowScion_willBeDestroyed(_ blockFlowRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
   box.willBeDestroyed()
 }
 
@@ -1177,9 +1177,9 @@ func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
 
 @_cdecl("RenderBlockFlowScion_styleWillChange")
 func RenderBlockFlowScion_styleWillChange(
-  _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
+  _ blockFlowRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
 ) {
-  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
   let diff = StyleDifference(rawValue: diffRaw)!
   let newStyle = convert_render_style(p: newStyleRaw)
   blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
