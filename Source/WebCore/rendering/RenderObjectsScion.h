@@ -38,6 +38,7 @@ class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
+class RenderMultiColumnFlow;
 class RenderObject;
 class RenderSelection;
 
@@ -151,9 +152,11 @@ public:
     {
     }
 
-    void styleWillChange(StyleDifference, const RenderStyle&);
-
     void willBeDestroyed();
+
+    RenderMultiColumnFlow* multiColumnFlow() const;
+
+    void styleWillChange(StyleDifference, const RenderStyle&);
 
 private:
     void* m_handle;

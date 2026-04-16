@@ -93,6 +93,8 @@ extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*
 
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
+extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
+
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
 struct IntPointRaw {
@@ -378,6 +380,11 @@ bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const 
 void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
     RenderBlockFlowScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+}
+
+RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
+{
+    return static_cast<RenderMultiColumnFlow*>(RenderBlockFlowScion_multiColumnFlow(m_handle));
 }
 
 void RenderBlockFlowScion::willBeDestroyed()

@@ -259,6 +259,12 @@ void RenderBlockFlow::willBeDestroyed()
     RenderBox::willBeDestroyed();
 }
 
+RenderMultiColumnFlow* RenderBlockFlow::multiColumnFlow() const
+{
+    if (m_scion) { return m_scion->multiColumnFlow(); }
+    return hasRareBlockFlowData() ? multiColumnFlowSlowCase() : nullptr;
+}
+
 RenderMultiColumnFlow* RenderBlockFlow::multiColumnFlowSlowCase() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

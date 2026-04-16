@@ -293,11 +293,7 @@ public:
         return hasRareBlockFlowData() && rareBlockFlowData()->m_didBreakAtLineToAvoidWidow;
     }
 
-    RenderMultiColumnFlow* multiColumnFlow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasRareBlockFlowData() ? multiColumnFlowSlowCase() : nullptr;
-    }
+    RenderMultiColumnFlow* multiColumnFlow() const;
     RenderMultiColumnFlow* multiColumnFlowSlowCase() const;
     void setMultiColumnFlow(RenderMultiColumnFlow&);
     void clearMultiColumnFlow();

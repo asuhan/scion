@@ -1166,6 +1166,15 @@ func RenderBlockFlowScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
   box.willBeDestroyed()
 }
 
+@_cdecl("RenderBlockFlowScion_multiColumnFlow")
+func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  assert(blockFlow.multiColumnFlowForBlockFlow() == nil)
+  return nil
+}
+
 @_cdecl("RenderBlockFlowScion_styleWillChange")
 func RenderBlockFlowScion_styleWillChange(
   _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
