@@ -73,8 +73,8 @@ struct GridTrackSize: Equatable {
   }
 
   func fitContentTrackBreadth() -> GridLength {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_type == .FitContentTrackSizing)
+    return m_fitContentTrackBreadth
   }
 
   func isContentSized() -> Bool {
