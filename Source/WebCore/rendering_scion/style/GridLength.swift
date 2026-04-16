@@ -40,15 +40,9 @@ struct GridLength {
     assert((!length.isUndefined()))
   }
 
-  func isLength() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isLength() -> Bool { return m_type == .LengthType }
 
-  func isFlex() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isFlex() -> Bool { return m_type == .FlexType }
 
   func length() -> LengthWrapper {
     // TODO(asuhan): implement this
