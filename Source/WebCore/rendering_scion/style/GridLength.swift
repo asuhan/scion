@@ -67,8 +67,12 @@ struct GridLength {
   }
 
   func flex() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch m_lengthOrFlex {
+    case .FlexType(let flex):
+      return flex
+    default:
+      fatalError("Not reached")
+    }
   }
 
   func isPercentage() -> Bool {
