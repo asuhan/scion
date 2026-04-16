@@ -46,8 +46,8 @@ struct GridSpan: Sequence, IteratorProtocol {
   }
 
   func integerSpan() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isIndefinite())
+    return UInt32(m_endLine - m_startLine)
   }
 
   func untranslatedStartLine() -> Int32 {
