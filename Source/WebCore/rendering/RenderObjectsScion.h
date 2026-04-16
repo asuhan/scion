@@ -47,6 +47,10 @@ class InitialContainingBlock;
 class LayoutState;
 }
 
+namespace LayoutIntegration {
+class LineLayout;
+}
+
 class RenderObjectScion final {
 public:
     RenderObjectScion(void* handle)
@@ -157,6 +161,8 @@ public:
     RenderMultiColumnFlow* multiColumnFlow() const;
 
     void setChildrenInline(bool);
+
+    LayoutIntegration::LineLayout* inlineLayout();
 
     void styleWillChange(StyleDifference, const RenderStyle&);
 

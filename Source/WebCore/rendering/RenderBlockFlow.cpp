@@ -533,6 +533,12 @@ void RenderBlockFlow::setChildrenInline(bool value)
     RenderBlock::setChildrenInline(value);
 }
 
+LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout()
+{
+    if (m_scion) { return m_scion->inlineLayout(); }
+    return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
+}
+
 void RenderBlockFlow::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

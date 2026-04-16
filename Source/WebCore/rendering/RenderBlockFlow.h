@@ -727,12 +727,6 @@ inline const LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout() cons
     return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
 }
 
-inline LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout()
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
-}
-
 } // namespace WebCore
 
 SPECIALIZE_TYPE_TRAITS_RENDER_OBJECT(RenderBlockFlow, isRenderBlockFlow())

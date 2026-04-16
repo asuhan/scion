@@ -26,6 +26,7 @@
 #include "RenderObjectsScion.h"
 #include "Document.h"
 #include "LayoutInitialContainingBlock.h"
+#include "LayoutIntegrationLineLayout.h"
 #include "LayoutRect.h"
 #include "LayoutRectRaw.h"
 #include "RenderFragmentContainer.h"
@@ -96,6 +97,8 @@ extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
 extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
+
+extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
 
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
@@ -392,6 +395,11 @@ RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
 void RenderBlockFlowScion::setChildrenInline(bool value)
 {
     RenderBlockFlowScion_setChildrenInline(m_handle, value);
+}
+
+LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
+{
+    return static_cast<LayoutIntegration::LineLayout*>(RenderBlockFlowScion_inlineLayout(m_handle));
 }
 
 void RenderBlockFlowScion::willBeDestroyed()

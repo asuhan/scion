@@ -1182,6 +1182,15 @@ func RenderBlockFlowScion_setChildrenInline(_ blockFlowRaw: UnsafeMutableRawPoin
   blockFlow.setChildrenInline(b: value)
 }
 
+@_cdecl("RenderBlockFlowScion_inlineLayout")
+func RenderBlockFlowScion_inlineLayout(_ blockFlowRaw: UnsafeMutableRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  assert(blockFlow.inlineLayout() == nil)
+  return nil
+}
+
 @_cdecl("RenderBlockFlowScion_styleWillChange")
 func RenderBlockFlowScion_styleWillChange(
   _ blockFlowRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
