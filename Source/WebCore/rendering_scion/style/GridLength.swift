@@ -35,13 +35,13 @@
 struct GridLength {
   init(length: LengthWrapper) {
     // TODO(asuhan): deep copy might be needed here
-    m_lengthOrFlex = .LengthType(length)
+    m_lengthOrFlex = .Length(length)
     assert(!length.isUndefined())
   }
 
   func isLength() -> Bool {
     switch m_lengthOrFlex {
-    case .LengthType:
+    case .Length:
       return true
     default:
       return false
@@ -50,7 +50,7 @@ struct GridLength {
 
   func isFlex() -> Bool {
     switch m_lengthOrFlex {
-    case .FlexType:
+    case .Flex:
       return true
     default:
       return false
@@ -59,7 +59,7 @@ struct GridLength {
 
   func length() -> LengthWrapper {
     switch m_lengthOrFlex {
-    case .LengthType(let length):
+    case .Length(let length):
       return length
     default:
       fatalError("Not reached")
@@ -68,7 +68,7 @@ struct GridLength {
 
   func flex() -> Float64 {
     switch m_lengthOrFlex {
-    case .FlexType(let flex):
+    case .Flex(let flex):
       return flex
     default:
       fatalError("Not reached")
@@ -77,7 +77,7 @@ struct GridLength {
 
   func isPercentage() -> Bool {
     switch m_lengthOrFlex {
-    case .LengthType(let length):
+    case .Length(let length):
       return length.isPercentOrCalculated()
     default:
       return false
@@ -86,16 +86,16 @@ struct GridLength {
 
   func isContentSized() -> Bool {
     switch m_lengthOrFlex {
-    case .LengthType(let length):
+    case .Length(let length):
       return length.isAuto() || length.isMinContent() || length.isMaxContent()
     default:
       return false
     }
   }
 
-  private enum GridLengthType {
-    case LengthType(LengthWrapper)
-    case FlexType(Float64)
+  private enum LengthOrFlex {
+    case Length(LengthWrapper)
+    case Flex(Float64)
   }
-  private let m_lengthOrFlex: GridLengthType
+  private let m_lengthOrFlex: LengthOrFlex
 }
