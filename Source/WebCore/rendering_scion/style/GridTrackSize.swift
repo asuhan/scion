@@ -81,10 +81,7 @@ struct GridTrackSize: Equatable {
     return minTrackBreadth.isContentSized() || maxTrackBreadth.isContentSized()
   }
 
-  func isFitContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isFitContent() -> Bool { return m_type == .FitContentTrackSizing }
 
   private mutating func cacheMinMaxTrackBreadthTypes() {
     m_minTrackBreadthIsAuto = minTrackBreadth.isLength() && minTrackBreadth.length().isAuto()
