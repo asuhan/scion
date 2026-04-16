@@ -76,8 +76,12 @@ struct GridLength {
   }
 
   func isPercentage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch m_lengthOrFlex {
+    case .LengthType(let length):
+      return length.isPercentOrCalculated()
+    default:
+      return false
+    }
   }
 
   func isContentSized() -> Bool {
