@@ -261,11 +261,13 @@ void RenderBlockFlow::willBeDestroyed()
 
 RenderMultiColumnFlow* RenderBlockFlow::multiColumnFlowSlowCase() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return rareBlockFlowData()->m_multiColumnFlow.get();
 }
 
 RenderBlockFlow* RenderBlockFlow::previousSiblingWithOverhangingFloats(bool& parentHasFloats) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Attempt to locate a previous sibling with overhanging floats. We skip any elements that are
     // out of flow (like floating/positioned elements), and we also skip over any objects that may have shifted
     // to avoid floats.
@@ -283,6 +285,7 @@ RenderBlockFlow* RenderBlockFlow::previousSiblingWithOverhangingFloats(bool& par
 
 void RenderBlockFlow::rebuildFloatingObjectSetFromIntrudingFloats()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_floatingObjects)
         m_floatingObjects->setHorizontalWritingMode(isHorizontalWritingMode());
 
@@ -350,6 +353,7 @@ void RenderBlockFlow::rebuildFloatingObjectSetFromIntrudingFloats()
 
 void RenderBlockFlow::adjustIntrinsicLogicalWidthsForColumns(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!style().hasAutoColumnCount() || !style().hasAutoColumnWidth()) {
         // The min/max intrinsic widths calculated really tell how much space elements need when
         // laid out inside the columns. In order to eventually end up with the desired column width,
@@ -375,6 +379,7 @@ void RenderBlockFlow::adjustIntrinsicLogicalWidthsForColumns(LayoutUnit& minLogi
 
 void RenderBlockFlow::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool needAdjustIntrinsicLogicalWidthsForColumns = true;
     if (shouldApplySizeOrInlineSizeContainment()) {
         if (auto width = explicitIntrinsicInnerLogicalWidth()) {
@@ -412,6 +417,7 @@ void RenderBlockFlow::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth,
 
 bool RenderBlockFlow::recomputeLogicalWidthAndColumnWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool changed = recomputeLogicalWidth();
 
     LayoutUnit oldColumnWidth = computedColumnWidth();
@@ -422,6 +428,7 @@ bool RenderBlockFlow::recomputeLogicalWidthAndColumnWidth()
 
 LayoutUnit RenderBlockFlow::columnGap() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().columnGap().isNormal())
         return LayoutUnit(style().fontDescription().computedSize()); // "1em" is recommended as the normal gap setting. Matches <p> margins.
     return valueForLength(style().columnGap().length(), availableLogicalWidth());
@@ -429,6 +436,7 @@ LayoutUnit RenderBlockFlow::columnGap() const
 
 void RenderBlockFlow::computeColumnCountAndWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Calculate our column width and column count.
     // FIXME: Can overflow on fast/block/float/float-not-removed-from-next-sibling4.html, see https://bugs.webkit.org/show_bug.cgi?id=68744
     unsigned desiredColumnCount = 1;
@@ -460,6 +468,7 @@ void RenderBlockFlow::computeColumnCountAndWidth()
 
 bool RenderBlockFlow::willCreateColumns(std::optional<unsigned> desiredColumnCount) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The following types are not supposed to create multicol context.
     if (isRenderFileUploadControl() || isRenderTextControl() || isRenderListBox())
         return false;
@@ -506,6 +515,7 @@ bool RenderBlockFlow::willCreateColumns(std::optional<unsigned> desiredColumnCou
 
 void RenderBlockFlow::setChildrenInline(bool value)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (childrenInline() && !value) {
         setLineLayoutPath(UndeterminedPath);
         m_lineLayout = std::monostate();
@@ -516,6 +526,7 @@ void RenderBlockFlow::setChildrenInline(bool value)
 
 void RenderBlockFlow::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(needsLayout());
 
     if (!relayoutChildren && simplifiedLayout())
@@ -699,6 +710,7 @@ void RenderBlockFlow::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalH
 
 inline LayoutUnit RenderBlockFlow::shiftForAlignContent(LayoutUnit intrinsicLogicalHeight, LayoutUnit& repaintLogicalTop, LayoutUnit& repaintLogicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& alignment = style().alignContent();
 
     // Exit if no alignment necessary.
@@ -751,6 +763,7 @@ inline LayoutUnit RenderBlockFlow::shiftForAlignContent(LayoutUnit intrinsicLogi
 
 void RenderBlockFlow::layoutInFlowChildren(bool relayoutChildren, LayoutUnit& repaintLogicalTop, LayoutUnit& repaintLogicalBottom, LayoutUnit& maxFloatLogicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!firstChild()) {
         // Empty block containers produce empty formatting lines which may affect trim-start/end.
         auto textBoxTrimmer = TextBoxTrimmer { *this };
@@ -795,6 +808,7 @@ void RenderBlockFlow::layoutInFlowChildren(bool relayoutChildren, LayoutUnit& re
 
 void RenderBlockFlow::layoutBlockChildren(bool relayoutChildren, LayoutUnit& maxFloatLogicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(firstChild());
 
     LayoutUnit beforeEdge = borderAndPaddingBefore();
@@ -891,6 +905,7 @@ void RenderBlockFlow::layoutBlockChildren(bool relayoutChildren, LayoutUnit& max
 
 void RenderBlockFlow::trimBlockEndChildrenMargins()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto trimSelfCollapsingChildDescendants = [&](RenderBox& child) {
         ASSERT(child.isSelfCollapsingBlock());
         for (auto itr = RenderIterator<RenderBox>(&child, child.firstChildBox()); itr; itr = itr.traverseNext()) {
@@ -939,6 +954,7 @@ void RenderBlockFlow::trimBlockEndChildrenMargins()
 
 void RenderBlockFlow::simplifiedNormalFlowLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!childrenInline()) {
         RenderBlock::simplifiedNormalFlowLayout();
         return;
@@ -966,6 +982,7 @@ void RenderBlockFlow::simplifiedNormalFlowLayout()
 
 void RenderBlockFlow::computeAndSetLineLayoutPath()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (lineLayoutPath() != UndeterminedPath)
         return;
     setLineLayoutPath(LayoutIntegration::LineLayout::canUseFor(*this) ? InlinePath : SvgTextPath);
@@ -973,6 +990,7 @@ void RenderBlockFlow::computeAndSetLineLayoutPath()
 
 void RenderBlockFlow::layoutInlineChildren(bool relayoutChildren, LayoutUnit& repaintLogicalTop, LayoutUnit& repaintLogicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     computeAndSetLineLayoutPath();
 
     if (lineLayoutPath() == InlinePath) {
@@ -989,6 +1007,7 @@ void RenderBlockFlow::layoutInlineChildren(bool relayoutChildren, LayoutUnit& re
 
 void RenderBlockFlow::layoutBlockChild(RenderBox& child, MarginInfo& marginInfo, LayoutUnit& previousFloatLogicalBottom, LayoutUnit& maxFloatLogicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit oldPosMarginBefore = maxPositiveMarginBefore();
     LayoutUnit oldNegMarginBefore = maxNegativeMarginBefore();
 
@@ -1134,6 +1153,7 @@ void RenderBlockFlow::layoutBlockChild(RenderBox& child, MarginInfo& marginInfo,
 
 void RenderBlockFlow::adjustPositionedBlock(RenderBox& child, const MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool isHorizontal = isHorizontalWritingMode();
     bool hasStaticBlockPosition = child.style().hasStaticBlockPosition(isHorizontal);
     
@@ -1158,6 +1178,7 @@ void RenderBlockFlow::adjustPositionedBlock(RenderBox& child, const MarginInfo& 
 
 void RenderBlockFlow::determineLogicalLeftPositionForChild(RenderBox& child, ApplyLayoutDeltaMode applyDelta)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit startPosition = borderAndPaddingStart();
     LayoutUnit initialStartPosition = startPosition;
     if ((shouldPlaceVerticalScrollbarOnLeft() || style().scrollbarGutter().bothEdges) && isHorizontalWritingMode())
@@ -1189,6 +1210,7 @@ void RenderBlockFlow::determineLogicalLeftPositionForChild(RenderBox& child, App
 
 void RenderBlockFlow::adjustFloatingBlock(const MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The float should be positioned taking into account the bottom margin
     // of the previous flow. We add that margin into the height, get the
     // float positioned properly, and then subtract the margin out of the
@@ -1210,6 +1232,7 @@ void RenderBlockFlow::adjustFloatingBlock(const MarginInfo& marginInfo)
 
 void RenderBlockFlow::updateStaticInlinePositionForChild(RenderBox& child, LayoutUnit logicalTop)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (child.style().isOriginalDisplayInlineType())
         setStaticInlinePositionForChild(child, logicalTop, staticInlinePositionForOriginalDisplayInline(logicalTop));
     else
@@ -1218,6 +1241,7 @@ void RenderBlockFlow::updateStaticInlinePositionForChild(RenderBox& child, Layou
 
 void RenderBlockFlow::setStaticInlinePositionForChild(RenderBox& child, LayoutUnit blockOffset, LayoutUnit inlinePosition)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (enclosingFragmentedFlow()) {
         // Shift the inline position to exclude the fragment offset.
         inlinePosition += startOffsetForContent() - startOffsetForContent(blockOffset);
@@ -1227,6 +1251,7 @@ void RenderBlockFlow::setStaticInlinePositionForChild(RenderBox& child, LayoutUn
 
 LayoutUnit RenderBlockFlow::staticInlinePositionForOriginalDisplayInline(LayoutUnit logicalTop)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     TextAlignMode textAlign = style().textAlign();
     bool isLeftToRightDirection = style().isLeftToRightDirection();
 
@@ -1264,6 +1289,7 @@ LayoutUnit RenderBlockFlow::staticInlinePositionForOriginalDisplayInline(LayoutU
 
 MarginValues RenderBlockFlow::marginValuesForChild(RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit childBeforePositive;
     LayoutUnit childBeforeNegative;
     LayoutUnit childAfterPositive;
@@ -1324,6 +1350,7 @@ MarginValues RenderBlockFlow::marginValuesForChild(RenderBox& child) const
 
 bool RenderBlockFlow::childrenPreventSelfCollapsing() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!childrenInline())
         return RenderBlock::childrenPreventSelfCollapsing();
 
@@ -1332,11 +1359,13 @@ bool RenderBlockFlow::childrenPreventSelfCollapsing() const
 
 LayoutUnit RenderBlockFlow::collapseMargins(RenderBox& child, MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return collapseMarginsWithChildInfo(&child, child.previousSibling(), marginInfo);
 }
 
 std::optional<LayoutUnit> RenderBlockFlow::selfCollapsingMarginBeforeWithClear(RenderObject* candidate)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CheckedPtr candidateBlockFlow = dynamicDowncast<RenderBlockFlow>(candidate);
     if (!candidateBlockFlow)
         return { };
@@ -1357,6 +1386,7 @@ std::optional<LayoutUnit> RenderBlockFlow::selfCollapsingMarginBeforeWithClear(R
 
 LayoutUnit RenderBlockFlow::collapseMarginsWithChildInfo(RenderBox* child, RenderObject* prevSibling, MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool childIsSelfCollapsing = child ? child->isSelfCollapsingBlock() : false;
     bool beforeQuirk = child ? hasMarginBeforeQuirk(*child) : false;
     bool afterQuirk = child ? hasMarginAfterQuirk(*child) : false;
@@ -1499,6 +1529,7 @@ LayoutUnit RenderBlockFlow::collapseMarginsWithChildInfo(RenderBox* child, Rende
 
 bool RenderBlockFlow::isChildEligibleForMarginTrim(MarginTrimType marginTrimType, const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(style().marginTrim().contains(marginTrimType));
     if (!child.style().isDisplayBlockLevel())
         return false;
@@ -1509,6 +1540,7 @@ bool RenderBlockFlow::isChildEligibleForMarginTrim(MarginTrimType marginTrimType
 
 LayoutUnit RenderBlockFlow::clearFloatsIfNeeded(RenderBox& child, MarginInfo& marginInfo, LayoutUnit oldTopPosMargin, LayoutUnit oldTopNegMargin, LayoutUnit yPos)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit heightIncrease = getClearDelta(child, yPos);
     if (!heightIncrease)
         return yPos;
@@ -1560,6 +1592,7 @@ LayoutUnit RenderBlockFlow::clearFloatsIfNeeded(RenderBox& child, MarginInfo& ma
 
 void RenderBlockFlow::marginBeforeEstimateForChild(RenderBox& child, LayoutUnit& positiveMarginBefore, LayoutUnit& negativeMarginBefore) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Give up if in quirks mode and we're a body/table cell and the top margin of the child box is quirky.
     // Give up if the child specified -webkit-margin-collapse: separate that prevents collapsing.
     if (document().inQuirksMode() && hasMarginBeforeQuirk(child) && (isRenderTableCell() || isBody()))
@@ -1610,6 +1643,7 @@ void RenderBlockFlow::marginBeforeEstimateForChild(RenderBox& child, LayoutUnit&
 
 LayoutUnit RenderBlockFlow::estimateLogicalTopPosition(RenderBox& child, const MarginInfo& marginInfo, LayoutUnit& estimateWithoutPagination)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We need to eliminate the estimation of vertical position, because when it's wrong we sometimes trigger a pathological
     // relayout if there are intruding floats.
     LayoutUnit logicalTopEstimate = logicalHeight();
@@ -1660,6 +1694,7 @@ LayoutUnit RenderBlockFlow::estimateLogicalTopPosition(RenderBox& child, const M
 
 void RenderBlockFlow::setCollapsedBottomMargin(const MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (marginInfo.canCollapseWithMarginAfter() && !marginInfo.canCollapseWithMarginBefore()) {
         // Update our max pos/neg bottom margins, since we collapsed our bottom margins
         // with our children.
@@ -1681,6 +1716,7 @@ void RenderBlockFlow::setCollapsedBottomMargin(const MarginInfo& marginInfo)
 
 void RenderBlockFlow::handleAfterSideOfBlock(LayoutUnit beforeSide, LayoutUnit afterSide, MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     marginInfo.setAtAfterSideOfBlock(true);
 
     // If our last child was a self-collapsing block with clearance then our logical height is flush with the
@@ -1708,6 +1744,7 @@ void RenderBlockFlow::handleAfterSideOfBlock(LayoutUnit beforeSide, LayoutUnit a
 
 void RenderBlockFlow::setMaxMarginBeforeValues(LayoutUnit pos, LayoutUnit neg)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasRareBlockFlowData()) {
         if (pos == RenderBlockFlowRareData::positiveMarginBeforeDefault(*this) && neg == RenderBlockFlowRareData::negativeMarginBeforeDefault(*this))
             return;
@@ -1720,6 +1757,7 @@ void RenderBlockFlow::setMaxMarginBeforeValues(LayoutUnit pos, LayoutUnit neg)
 
 void RenderBlockFlow::setMaxMarginAfterValues(LayoutUnit pos, LayoutUnit neg)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasRareBlockFlowData()) {
         if (pos == RenderBlockFlowRareData::positiveMarginAfterDefault(*this) && neg == RenderBlockFlowRareData::negativeMarginAfterDefault(*this))
             return;
@@ -1745,6 +1783,7 @@ static bool inNormalFlow(RenderBox& child)
 
 LayoutUnit RenderBlockFlow::applyBeforeBreak(RenderBox& child, LayoutUnit logicalOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Add page break checking here when we support printing.
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     bool isInsideMulticolFlow = fragmentedFlow;
@@ -1770,6 +1809,7 @@ LayoutUnit RenderBlockFlow::applyBeforeBreak(RenderBox& child, LayoutUnit logica
 
 LayoutUnit RenderBlockFlow::applyAfterBreak(RenderBox& child, LayoutUnit logicalOffset, MarginInfo& marginInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Add page break checking here when we support printing.
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     bool isInsideMulticolFlow = fragmentedFlow;
@@ -1799,6 +1839,7 @@ LayoutUnit RenderBlockFlow::applyAfterBreak(RenderBox& child, LayoutUnit logical
 
 LayoutUnit RenderBlockFlow::adjustBlockChildForPagination(LayoutUnit logicalTopAfterClear, LayoutUnit estimateWithoutPagination, RenderBox& child, bool atBeforeSideOfBlock)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* childRenderBlock = dynamicDowncast<RenderBlock>(child);
 
     if (estimateWithoutPagination != logicalTopAfterClear) {
@@ -1924,6 +1965,7 @@ static void clearShouldBreakAtLineToAvoidWidowIfNeeded(RenderBlockFlow& blockFlo
 
 RenderBlockFlow::LinePaginationAdjustment RenderBlockFlow::computeLineAdjustmentForPagination(const InlineIterator::LineBoxIterator& lineBox, LayoutUnit delta, LayoutUnit floatMinimumBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: For now we paginate using line overflow. This ensures that lines don't overlap at all when we
     // put a strut between them for pagination purposes. However, this really isn't the desired rendering, since
     // the line on the top of the next page will appear too far down relative to the same kind of line at the top
@@ -2055,6 +2097,7 @@ RenderBlockFlow::LinePaginationAdjustment RenderBlockFlow::computeLineAdjustment
 
 void RenderBlockFlow::setBreakAtLineToAvoidWidow(int lineToBreak)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(lineToBreak >= 0);
     ASSERT(!ensureRareBlockFlowData().m_didBreakAtLineToAvoidWidow);
     ensureRareBlockFlowData().m_lineBreakToAvoidWidow = lineToBreak;
@@ -2062,6 +2105,7 @@ void RenderBlockFlow::setBreakAtLineToAvoidWidow(int lineToBreak)
 
 void RenderBlockFlow::setDidBreakAtLineToAvoidWidow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!shouldBreakAtLineToAvoidWidow());
     if (!hasRareBlockFlowData())
         return;
@@ -2071,6 +2115,7 @@ void RenderBlockFlow::setDidBreakAtLineToAvoidWidow()
 
 void RenderBlockFlow::clearDidBreakAtLineToAvoidWidow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasRareBlockFlowData())
         return;
 
@@ -2079,6 +2124,7 @@ void RenderBlockFlow::clearDidBreakAtLineToAvoidWidow()
 
 void RenderBlockFlow::clearShouldBreakAtLineToAvoidWidow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(shouldBreakAtLineToAvoidWidow());
     if (!hasRareBlockFlowData())
         return;
@@ -2088,6 +2134,7 @@ void RenderBlockFlow::clearShouldBreakAtLineToAvoidWidow() const
 
 bool RenderBlockFlow::hasNextPage(LayoutUnit logicalOffset, PageBoundaryRule pageBoundaryRule) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(view().frameView().layoutContext().layoutState() && view().frameView().layoutContext().layoutState()->isPaginated());
 
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
@@ -2111,6 +2158,7 @@ bool RenderBlockFlow::hasNextPage(LayoutUnit logicalOffset, PageBoundaryRule pag
 
 LayoutUnit RenderBlockFlow::adjustForUnsplittableChild(RenderBox& child, LayoutUnit logicalOffset, LayoutUnit childBeforeMargin, LayoutUnit childAfterMargin)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // When flexboxes are embedded inside a block flow, they don't perform any adjustments for unsplittable
     // children. We'll treat flexboxes themselves as unsplittable just to get them to paginate properly inside
     // a block flow.
@@ -2148,6 +2196,7 @@ LayoutUnit RenderBlockFlow::adjustForUnsplittableChild(RenderBox& child, LayoutU
 
 bool RenderBlockFlow::pushToNextPageWithMinimumLogicalHeight(LayoutUnit& adjustment, LayoutUnit logicalOffset, LayoutUnit minimumLogicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool checkFragment = false;
     auto* fragmentedFlow = enclosingFragmentedFlow();
     RenderFragmentContainer* currentFragmentContainer = nullptr;
@@ -2173,18 +2222,21 @@ bool RenderBlockFlow::pushToNextPageWithMinimumLogicalHeight(LayoutUnit& adjustm
 
 void RenderBlockFlow::setPageBreak(LayoutUnit offset, LayoutUnit spaceShortage)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow())
         fragmentedFlow->setPageBreak(this, offsetFromLogicalTopOfFirstPage() + offset, spaceShortage);
 }
 
 void RenderBlockFlow::updateMinimumPageHeight(LayoutUnit offset, LayoutUnit minHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow())
         fragmentedFlow->updateMinimumPageHeight(this, offsetFromLogicalTopOfFirstPage() + offset, minHeight);
 }
 
 LayoutUnit RenderBlockFlow::nextPageLogicalTop(LayoutUnit logicalOffset, PageBoundaryRule pageBoundaryRule) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit pageLogicalHeight = pageLogicalHeightForOffset(logicalOffset);
     if (!pageLogicalHeight)
         return logicalOffset;
@@ -2198,6 +2250,7 @@ LayoutUnit RenderBlockFlow::nextPageLogicalTop(LayoutUnit logicalOffset, PageBou
 
 LayoutUnit RenderBlockFlow::pageLogicalTopForOffset(LayoutUnit offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
     // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
     auto* layoutState = view().frameView().layoutContext().layoutState();
@@ -2217,6 +2270,7 @@ LayoutUnit RenderBlockFlow::pageLogicalTopForOffset(LayoutUnit offset) const
 
 LayoutUnit RenderBlockFlow::pageLogicalHeightForOffset(LayoutUnit offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
     // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
     LayoutUnit pageLogicalHeight = view().frameView().layoutContext().layoutState()->pageLogicalHeight();
@@ -2232,6 +2286,7 @@ LayoutUnit RenderBlockFlow::pageLogicalHeightForOffset(LayoutUnit offset) const
 
 LayoutUnit RenderBlockFlow::pageRemainingLogicalHeightForOffset(LayoutUnit offset, PageBoundaryRule pageBoundaryRule) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     offset += offsetFromLogicalTopOfFirstPage();
     
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
@@ -2251,11 +2306,13 @@ LayoutUnit RenderBlockFlow::pageRemainingLogicalHeightForOffset(LayoutUnit offse
 
 LayoutUnit RenderBlockFlow::logicalHeightForChildForFragmentation(const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return logicalHeightForChild(child);
 }
 
 void RenderBlockFlow::adjustSizeContainmentChildForPagination(RenderBox& child, LayoutUnit offset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!child.shouldApplySizeContainment())
         return;
 
@@ -2274,11 +2331,13 @@ void RenderBlockFlow::adjustSizeContainmentChildForPagination(RenderBox& child, 
 
 bool RenderBlockFlow::containsFloat(RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_floatingObjects && m_floatingObjects->set().contains<FloatingObjectHashTranslator>(renderer);
 }
 
 bool RenderBlockFlow::subtreeContainsFloat(RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (containsFloat(renderer))
         return true;
 
@@ -2293,6 +2352,7 @@ bool RenderBlockFlow::subtreeContainsFloat(RenderBox& renderer) const
 
 bool RenderBlockFlow::subtreeContainsFloats() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (containsFloats())
         return true;
 
@@ -2307,6 +2367,7 @@ bool RenderBlockFlow::subtreeContainsFloats() const
 
 void RenderBlockFlow::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlock::styleDidChange(diff, oldStyle);
     
     // After our style changed, if we lose our ability to propagate floats into next sibling
@@ -2347,6 +2408,7 @@ void RenderBlockFlow::styleDidChange(StyleDifference diff, const RenderStyle* ol
 
 void RenderBlockFlow::updateStylesForColumnChildren(const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto columnsNeedLayout = oldStyle && (oldStyle->columnCount() != style().columnCount() || oldStyle->columnWidth() != style().columnWidth()); 
     for (auto* child = firstChildBox(); child && (child->isRenderFragmentedFlow() || child->isRenderMultiColumnSet()); child = child->nextSiblingBox()) {
         child->setStyle(RenderStyle::createAnonymousStyleWithDisplay(style(), DisplayType::Block));
@@ -2357,6 +2419,7 @@ void RenderBlockFlow::updateStylesForColumnChildren(const RenderStyle* oldStyle)
 
 void RenderBlockFlow::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle* oldStyle = hasInitializedStyle() ? &style() : nullptr;
     s_canPropagateFloatIntoSibling = oldStyle ? !isFloatingOrOutOfFlowPositioned() && !avoidsFloats() : false;
 
@@ -2375,6 +2438,7 @@ void RenderBlockFlow::styleWillChange(StyleDifference diff, const RenderStyle& n
 
 void RenderBlockFlow::deleteLines()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_lineLayout = std::monostate();
 
     RenderBlock::deleteLines();
@@ -2382,6 +2446,7 @@ void RenderBlockFlow::deleteLines()
 
 void RenderBlockFlow::addFloatsToNewParent(RenderBlockFlow& toBlockFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // When a portion of the render tree is being detached, anonymous blocks
     // will be combined as their children are deleted. In this process, the
     // anonymous block later in the tree is merged into the one preceeding it.
@@ -2414,6 +2479,7 @@ void RenderBlockFlow::addFloatsToNewParent(RenderBlockFlow& toBlockFlow) const
 
 void RenderBlockFlow::addOverflowFromFloats()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return;
 
@@ -2428,6 +2494,7 @@ void RenderBlockFlow::addOverflowFromFloats()
 
 void RenderBlockFlow::computeOverflow(LayoutUnit oldClientAfterEdge, bool recomputeFloats)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlock::computeOverflow(oldClientAfterEdge, recomputeFloats);
 
     if (!multiColumnFlow() && (recomputeFloats || createsNewFormattingContext() || hasSelfPaintingLayer()))
@@ -2436,6 +2503,7 @@ void RenderBlockFlow::computeOverflow(LayoutUnit oldClientAfterEdge, bool recomp
 
 void RenderBlockFlow::repaintOverhangingFloats(bool paintAllDescendants)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Repaint any overhanging floats (if we know we're the one to paint them).
     // Otherwise, bail out.
     if (!hasOverhangingFloats())
@@ -2463,6 +2531,7 @@ void RenderBlockFlow::repaintOverhangingFloats(bool paintAllDescendants)
 
 void RenderBlockFlow::paintColumnRules(PaintInfo& paintInfo, const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlock::paintColumnRules(paintInfo, point);
     
     if (!multiColumnFlow() || paintInfo.context().paintingDisabled())
@@ -2477,6 +2546,7 @@ void RenderBlockFlow::paintColumnRules(PaintInfo& paintInfo, const LayoutPoint& 
 
 void RenderBlockFlow::paintFloats(PaintInfo& paintInfo, const LayoutPoint& paintOffset, bool preservePhase)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return;
 
@@ -2506,6 +2576,7 @@ void RenderBlockFlow::paintFloats(PaintInfo& paintInfo, const LayoutPoint& paint
 
 void RenderBlockFlow::clipOutFloatingObjects(RenderBlock& rootBlock, const PaintInfo* paintInfo, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_floatingObjects) {
         const FloatingObjectSet& floatingObjectSet = m_floatingObjects->set();
         auto end = floatingObjectSet.end();
@@ -2522,11 +2593,13 @@ void RenderBlockFlow::clipOutFloatingObjects(RenderBlock& rootBlock, const Paint
 
 void RenderBlockFlow::createFloatingObjects()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_floatingObjects = makeUnique<FloatingObjects>(*this);
 }
 
 void RenderBlockFlow::removeFloatingObjects()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return;
 
@@ -2537,6 +2610,7 @@ void RenderBlockFlow::removeFloatingObjects()
 
 FloatingObject* RenderBlockFlow::insertFloatingObject(RenderBox& floatBox)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(floatBox.isFloating());
 
     // Create the list of special objects if we don't aleady have one
@@ -2575,6 +2649,7 @@ FloatingObject* RenderBlockFlow::insertFloatingObject(RenderBox& floatBox)
 
 FloatingObject& RenderBlockFlow::insertFloatingObjectForIFC(RenderBox& floatBox)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(floatBox.isFloating());
 
     if (!m_floatingObjects)
@@ -2590,6 +2665,7 @@ FloatingObject& RenderBlockFlow::insertFloatingObjectForIFC(RenderBox& floatBox)
 
 void RenderBlockFlow::removeFloatingObject(RenderBox& floatBox)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return;
 
@@ -2601,6 +2677,7 @@ void RenderBlockFlow::removeFloatingObject(RenderBox& floatBox)
 
 void RenderBlockFlow::removeFloatingObjectsBelow(FloatingObject* lastFloat, int logicalOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!containsFloats())
         return;
     
@@ -2616,6 +2693,7 @@ void RenderBlockFlow::removeFloatingObjectsBelow(FloatingObject* lastFloat, int 
 
 LayoutUnit RenderBlockFlow::logicalLeftOffsetForPositioningFloat(LayoutUnit logicalTop, LayoutUnit fixedOffset, LayoutUnit* heightRemaining) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit offset = fixedOffset;
     if (m_floatingObjects && m_floatingObjects->hasLeftObjects())
         offset = m_floatingObjects->logicalLeftOffsetForPositioningFloat(fixedOffset, logicalTop, heightRemaining);
@@ -2624,6 +2702,7 @@ LayoutUnit RenderBlockFlow::logicalLeftOffsetForPositioningFloat(LayoutUnit logi
 
 LayoutUnit RenderBlockFlow::logicalRightOffsetForPositioningFloat(LayoutUnit logicalTop, LayoutUnit fixedOffset, LayoutUnit* heightRemaining) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit offset = fixedOffset;
     if (m_floatingObjects && m_floatingObjects->hasRightObjects())
         offset = m_floatingObjects->logicalRightOffsetForPositioningFloat(fixedOffset, logicalTop, heightRemaining);
@@ -2632,6 +2711,7 @@ LayoutUnit RenderBlockFlow::logicalRightOffsetForPositioningFloat(LayoutUnit log
 
 void RenderBlockFlow::computeLogicalLocationForFloat(FloatingObject& floatingObject, LayoutUnit& logicalTopOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& childBox = floatingObject.renderer();
     LayoutUnit logicalLeftOffset = logicalLeftOffsetForContent(logicalTopOffset); // Constant part of left offset.
     LayoutUnit logicalRightOffset = logicalRightOffsetForContent(logicalTopOffset); // Constant part of right offset.
@@ -2705,6 +2785,7 @@ void RenderBlockFlow::computeLogicalLocationForFloat(FloatingObject& floatingObj
 
 void RenderBlockFlow::adjustInitialLetterPosition(RenderBox& childBox, LayoutUnit& logicalTopOffset, LayoutUnit& marginBeforeOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle& style = firstLineStyle();
     const FontMetrics& fontMetrics = style.metricsOfPrimaryFont();
     if (!fontMetrics.capHeight())
@@ -2733,6 +2814,7 @@ void RenderBlockFlow::adjustInitialLetterPosition(RenderBox& childBox, LayoutUni
 
 bool RenderBlockFlow::positionNewFloats()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return false;
 
@@ -2837,6 +2919,7 @@ bool RenderBlockFlow::positionNewFloats()
 
 void RenderBlockFlow::clearFloats(UsedClear usedClear)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     positionNewFloats();
     // set y position
     LayoutUnit newY;
@@ -2861,6 +2944,7 @@ void RenderBlockFlow::clearFloats(UsedClear usedClear)
 
 LayoutUnit RenderBlockFlow::logicalLeftFloatOffsetForLine(LayoutUnit logicalTop, LayoutUnit fixedOffset, LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_floatingObjects && m_floatingObjects->hasLeftObjects())
         return m_floatingObjects->logicalLeftOffset(fixedOffset, logicalTop, logicalHeight);
 
@@ -2869,6 +2953,7 @@ LayoutUnit RenderBlockFlow::logicalLeftFloatOffsetForLine(LayoutUnit logicalTop,
 
 LayoutUnit RenderBlockFlow::logicalRightFloatOffsetForLine(LayoutUnit logicalTop, LayoutUnit fixedOffset, LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_floatingObjects && m_floatingObjects->hasRightObjects())
         return m_floatingObjects->logicalRightOffset(fixedOffset, logicalTop, logicalHeight);
 
@@ -2877,6 +2962,7 @@ LayoutUnit RenderBlockFlow::logicalRightFloatOffsetForLine(LayoutUnit logicalTop
 
 LayoutUnit RenderBlockFlow::nextFloatLogicalBottomBelow(LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return logicalHeight;
 
@@ -2885,6 +2971,7 @@ LayoutUnit RenderBlockFlow::nextFloatLogicalBottomBelow(LayoutUnit logicalHeight
 
 LayoutUnit RenderBlockFlow::nextFloatLogicalBottomBelowForBlock(LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return logicalHeight;
 
@@ -2893,6 +2980,7 @@ LayoutUnit RenderBlockFlow::nextFloatLogicalBottomBelowForBlock(LayoutUnit logic
 
 LayoutUnit RenderBlockFlow::lowestFloatLogicalBottom(FloatingObject::Type floatType) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return 0;
     LayoutUnit lowestFloatBottom;
@@ -2908,6 +2996,7 @@ LayoutUnit RenderBlockFlow::lowestFloatLogicalBottom(FloatingObject::Type floatT
 
 std::optional<LayoutUnit> RenderBlockFlow::lowestInitialLetterLogicalBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return { };
     auto lowestFloatBottom = std::optional<LayoutUnit> { };
@@ -2923,6 +3012,7 @@ std::optional<LayoutUnit> RenderBlockFlow::lowestInitialLetterLogicalBottom() co
 
 LayoutUnit RenderBlockFlow::addOverhangingFloats(RenderBlockFlow& child, bool makeChildPaintOtherFloats)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Prevent floats from being added to the canvas by the root element, e.g., <html>.
     if (!child.containsFloats() || child.createsNewFormattingContext())
         return 0;
@@ -2983,6 +3073,7 @@ LayoutUnit RenderBlockFlow::addOverhangingFloats(RenderBlockFlow& child, bool ma
 
 bool RenderBlockFlow::hasOverhangingFloat(RenderBox& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects || !parent())
         return false;
 
@@ -2996,6 +3087,7 @@ bool RenderBlockFlow::hasOverhangingFloat(RenderBox& renderer)
 
 void RenderBlockFlow::addIntrudingFloats(RenderBlockFlow* prev, RenderBlockFlow* container, LayoutUnit logicalLeftOffset, LayoutUnit logicalTopOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!avoidsFloats());
 
     // If we create our own block formatting context then our contents don't interact with floats outside it, even those from our parent.
@@ -3035,6 +3127,7 @@ void RenderBlockFlow::addIntrudingFloats(RenderBlockFlow* prev, RenderBlockFlow*
 
 void RenderBlockFlow::markAllDescendantsWithFloatsForLayout(RenderBox* floatToRemove, bool inLayout)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!everHadLayout() && !containsFloats())
         return;
 
@@ -3063,6 +3156,7 @@ void RenderBlockFlow::markAllDescendantsWithFloatsForLayout(RenderBox* floatToRe
 
 void RenderBlockFlow::markSiblingsWithFloatsForLayout(RenderBox* floatToRemove)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return;
 
@@ -3086,6 +3180,7 @@ void RenderBlockFlow::markSiblingsWithFloatsForLayout(RenderBox* floatToRemove)
 
 LayoutPoint RenderBlockFlow::flipFloatForWritingModeForChild(const FloatingObject& child, const LayoutPoint& point) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!style().isFlippedBlocksWritingMode())
         return point;
     
@@ -3099,6 +3194,7 @@ LayoutPoint RenderBlockFlow::flipFloatForWritingModeForChild(const FloatingObjec
 
 LayoutUnit RenderBlockFlow::getClearDelta(RenderBox& child, LayoutUnit logicalTop)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // There is no need to compute clearance if we have no floats.
     if (!containsFloats())
         return 0;
@@ -3172,6 +3268,7 @@ LayoutUnit RenderBlockFlow::getClearDelta(RenderBox& child, LayoutUnit logicalTo
 
 bool RenderBlockFlow::hitTestFloats(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_floatingObjects)
         return false;
 
@@ -3199,6 +3296,7 @@ bool RenderBlockFlow::hitTestFloats(const HitTestRequest& request, HitTestResult
 
 bool RenderBlockFlow::hitTestInlineChildren(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(childrenInline());
 
     if (inlineLayout())
@@ -3209,6 +3307,7 @@ bool RenderBlockFlow::hitTestInlineChildren(const HitTestRequest& request, HitTe
 
 void RenderBlockFlow::addOverflowFromInlineChildren()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (inlineLayout()) {
         inlineLayout()->collectOverflow();
         return;
@@ -3220,6 +3319,7 @@ void RenderBlockFlow::addOverflowFromInlineChildren()
 
 std::optional<LayoutUnit> RenderBlockFlow::firstLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isWritingModeRoot() && !isGridItem() && !isFlexItem())
         return { };
 
@@ -3241,6 +3341,7 @@ std::optional<LayoutUnit> RenderBlockFlow::firstLineBaseline() const
 
 std::optional<LayoutUnit> RenderBlockFlow::lastLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isWritingModeRoot() && !isGridItem() && !isFlexItem())
         return { };
 
@@ -3262,6 +3363,7 @@ std::optional<LayoutUnit> RenderBlockFlow::lastLineBaseline() const
 
 std::optional<LayoutUnit> RenderBlockFlow::inlineBlockBaseline(LineDirectionMode lineDirection) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isWritingModeRoot())
         return std::nullopt;
 
@@ -3309,6 +3411,7 @@ std::optional<LayoutUnit> RenderBlockFlow::inlineBlockBaseline(LineDirectionMode
 
 LayoutUnit RenderBlockFlow::adjustEnclosingTopForPrecedingBlock(LayoutUnit top) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (selectionState() != RenderObject::HighlightState::Inside && selectionState() != RenderObject::HighlightState::End)
         return top;
 
@@ -3372,6 +3475,7 @@ LayoutUnit RenderBlockFlow::adjustEnclosingTopForPrecedingBlock(LayoutUnit top) 
 GapRects RenderBlockFlow::inlineSelectionGaps(RenderBlock& rootBlock, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock,
     LayoutUnit& lastLogicalTop, LayoutUnit& lastLogicalLeft, LayoutUnit& lastLogicalRight, const LogicalSelectionOffsetCaches& cache, const PaintInfo* paintInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool containsStart = selectionState() == HighlightState::Start || selectionState() == HighlightState::Both;
 
     if (!hasLines()) {
@@ -3497,6 +3601,7 @@ GapRects RenderBlockFlow::inlineSelectionGaps(RenderBlock& rootBlock, const Layo
 
 bool RenderBlockFlow::needsLayoutAfterFragmentRangeChange() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // A block without floats or that expands to enclose them won't need a relayout
     // after a fragment range change. There is no overflow content needing relayout
     // in the fragment chain because the fragment range can only shrink after the estimation.
@@ -3508,12 +3613,14 @@ bool RenderBlockFlow::needsLayoutAfterFragmentRangeChange() const
 
 void RenderBlockFlow::setMultiColumnFlow(RenderMultiColumnFlow& fragmentedFlow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!hasRareBlockFlowData() || !rareBlockFlowData()->m_multiColumnFlow);
     ensureRareBlockFlowData().m_multiColumnFlow = fragmentedFlow;
 }
 
 void RenderBlockFlow::clearMultiColumnFlow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasRareBlockFlowData());
     ASSERT(rareBlockFlowData()->m_multiColumnFlow);
     rareBlockFlowData()->m_multiColumnFlow.clear();
@@ -3521,6 +3628,7 @@ void RenderBlockFlow::clearMultiColumnFlow()
 
 int RenderBlockFlow::lineCount() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!childrenInline()) {
         ASSERT_NOT_REACHED();
         return 0;
@@ -3535,6 +3643,7 @@ int RenderBlockFlow::lineCount() const
 
 bool RenderBlockFlow::containsNonZeroBidiLevel() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto lineBox = InlineIterator::firstLineBoxFor(*this); lineBox; lineBox.traverseNext()) {
         for (auto box = lineBox->firstLeafBox(); box; box = box.traverseNextOnLine()) {
             if (box->bidiLevel())
@@ -3561,6 +3670,7 @@ static Position positionForRun(const RenderBlockFlow& flow, InlineIterator::BoxI
 
 RenderText* RenderBlockFlow::findClosestTextAtAbsolutePoint(const FloatPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // A light, non-recursive version of RenderBlock::positionForCoordinates that looks at
     // whether a point lies within the gaps between its root line boxes, to be called against
     // a node returned from elementAtPoint. We make the assumption that either the node or one
@@ -3630,6 +3740,7 @@ RenderText* RenderBlockFlow::findClosestTextAtAbsolutePoint(const FloatPoint& po
 
 VisiblePosition RenderBlockFlow::positionForPointWithInlineChildren(const LayoutPoint& pointInLogicalContents, HitTestSource source, const RenderFragmentContainer* fragment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(childrenInline());
 
     auto firstLineBox = InlineIterator::firstLineBoxFor(*this);
@@ -3724,16 +3835,19 @@ VisiblePosition RenderBlockFlow::positionForPointWithInlineChildren(const Layout
 
 Position RenderBlockFlow::positionForPoint(const LayoutPoint& point, HitTestSource source)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return positionForPoint(point, source, nullptr).deepEquivalent();
 }
 
 VisiblePosition RenderBlockFlow::positionForPoint(const LayoutPoint& point, HitTestSource source, const RenderFragmentContainer*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderBlock::positionForPoint(point, source, nullptr);
 }
 
 void RenderBlockFlow::addFocusRingRectsForInlineChildren(Vector<LayoutRect>& rects, const LayoutPoint& additionalOffset, const RenderLayerModelObject*) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(childrenInline());
     for (auto box = InlineIterator::firstRootInlineBoxFor(*this); box; box.traverseNextInlineBox()) {
         auto lineBox = box->lineBox();
@@ -3752,6 +3866,7 @@ void RenderBlockFlow::addFocusRingRectsForInlineChildren(Vector<LayoutRect>& rec
 
 void RenderBlockFlow::paintInlineChildren(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(childrenInline());
 
     if (inlineLayout()) {
@@ -3765,6 +3880,7 @@ void RenderBlockFlow::paintInlineChildren(PaintInfo& paintInfo, const LayoutPoin
 
 bool RenderBlockFlow::relayoutForPagination()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!multiColumnFlow() || !multiColumnFlow()->shouldRelayoutForPagination())
         return false;
     
@@ -3809,11 +3925,13 @@ bool RenderBlockFlow::relayoutForPagination()
 
 bool RenderBlockFlow::hasLines() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return childrenInline() ? lineCount() : false;
 }
 
 void RenderBlockFlow::invalidateLineLayoutPath(InvalidationReason invalidationReason)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     switch (lineLayoutPath()) {
     case UndeterminedPath:
         return;
@@ -3885,6 +4003,7 @@ static void setFullRepaintOnParentInlineBoxLayerIfNeeded(const RenderText& rende
 
 void RenderBlockFlow::layoutInlineContent(bool relayoutChildren, LayoutUnit& repaintLogicalTop, LayoutUnit& repaintLogicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& layoutState = *view().frameView().layoutContext().layoutState();
 
     auto hasSimpleOutOfFlowContentOnly = !hasLineIfEmpty();
@@ -4059,6 +4178,7 @@ void RenderBlockFlow::layoutInlineContent(bool relayoutChildren, LayoutUnit& rep
 
 void RenderBlockFlow::setStaticPositionsForSimpleOutOfFlowContent()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(childrenInline());
 #ifndef NDEBUG
     ASSERT(!hasLineIfEmpty());
@@ -4097,6 +4217,7 @@ void RenderBlockFlow::setStaticPositionsForSimpleOutOfFlowContent()
 #if ENABLE(TREE_DEBUGGING)
 void RenderBlockFlow::outputFloatingObjects(WTF::TextStream& stream, int depth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!floatingObjectSet())
         return;
 
@@ -4113,6 +4234,7 @@ void RenderBlockFlow::outputFloatingObjects(WTF::TextStream& stream, int depth) 
 
 void RenderBlockFlow::outputLineTreeAndMark(WTF::TextStream& stream, const LegacyInlineBox* markedBox, int depth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* inlineLayout = this->inlineLayout()) {
         inlineLayout->outputLineTree(stream, depth);
         return;
@@ -4124,6 +4246,7 @@ void RenderBlockFlow::outputLineTreeAndMark(WTF::TextStream& stream, const Legac
 
 RenderBlockFlowRareData& RenderBlockFlow::ensureRareBlockFlowData()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasRareBlockFlowData())
         return *m_rareBlockFlowData;
     materializeRareBlockFlowData();
@@ -4132,6 +4255,7 @@ RenderBlockFlowRareData& RenderBlockFlow::ensureRareBlockFlowData()
 
 void RenderBlockFlow::materializeRareBlockFlowData()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!hasRareBlockFlowData());
     m_rareBlockFlowData = makeUnique<RenderBlockFlowRareData>(*this);
 }
@@ -4183,6 +4307,7 @@ static inline float textMultiplier(RenderObject& renderer, float specifiedSize)
 
 void RenderBlockFlow::adjustComputedFontSizes(float size, float visibleWidth)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LOG(TextAutosizing, "RenderBlockFlow %p adjustComputedFontSizes, size=%f visibleWidth=%f, width()=%f. Bailing: %d", this, size, visibleWidth, width().toFloat(), visibleWidth >= width());
 
     // Don't do any work if the block is smaller than the visible area.
@@ -4256,6 +4381,7 @@ void RenderBlockFlow::adjustComputedFontSizes(float size, float visibleWidth)
 
 void RenderBlockFlow::layoutExcludedChildren(bool relayoutChildren)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlock::layoutExcludedChildren(relayoutChildren);
 
     auto* fragmentedFlow = multiColumnFlow();
@@ -4292,6 +4418,7 @@ void RenderBlockFlow::layoutExcludedChildren(bool relayoutChildren)
 
 void RenderBlockFlow::checkForPaginationLogicalHeightChange(bool& relayoutChildren, LayoutUnit& pageLogicalHeight, bool& pageLogicalHeightChanged)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If we don't use columns or flow threads, then bail.
     if (!isRenderFragmentedFlow() && !multiColumnFlow())
         return;
@@ -4324,11 +4451,13 @@ void RenderBlockFlow::checkForPaginationLogicalHeightChange(bool& relayoutChildr
 
 bool RenderBlockFlow::requiresColumns(int desiredColumnCount) const
 {    
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return willCreateColumns(desiredColumnCount);
 }
 
 void RenderBlockFlow::setComputedColumnCountAndWidth(int count, LayoutUnit width)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!!multiColumnFlow() == requiresColumns(count));
     if (!multiColumnFlow())
         return;
@@ -4339,6 +4468,7 @@ void RenderBlockFlow::setComputedColumnCountAndWidth(int count, LayoutUnit width
 
 void RenderBlockFlow::updateColumnProgressionFromStyle(const RenderStyle& style)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!multiColumnFlow())
         return;
     
@@ -4363,6 +4493,7 @@ void RenderBlockFlow::updateColumnProgressionFromStyle(const RenderStyle& style)
 
 LayoutUnit RenderBlockFlow::computedColumnWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (multiColumnFlow())
         return multiColumnFlow()->computedColumnWidth();
     return contentLogicalWidth();
@@ -4370,6 +4501,7 @@ LayoutUnit RenderBlockFlow::computedColumnWidth() const
 
 unsigned RenderBlockFlow::computedColumnCount() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (multiColumnFlow())
         return multiColumnFlow()->computedColumnCount();
     
@@ -4378,6 +4510,7 @@ unsigned RenderBlockFlow::computedColumnCount() const
 
 LayoutOptionalOutsets RenderBlockFlow::allowedLayoutOverflow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutOptionalOutsets allowance = RenderBox::allowedLayoutOverflow();
 
     if (style().alignContent().position() != ContentPosition::Normal) {
@@ -4512,6 +4645,7 @@ static inline LayoutUnit preferredWidth(LayoutUnit preferredWidth, float result)
 
 void RenderBlockFlow::computeInlinePreferredLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!shouldApplyInlineSizeContainment());
 
     if (const_cast<RenderBlockFlow&>(*this).tryComputePreferredWidthsUsingInlinePath(minLogicalWidth, maxLogicalWidth))
@@ -4890,6 +5024,7 @@ void RenderBlockFlow::computeInlinePreferredLogicalWidths(LayoutUnit& minLogical
 
 bool RenderBlockFlow::tryComputePreferredWidthsUsingInlinePath(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!firstInFlowChild())
         return false;
 

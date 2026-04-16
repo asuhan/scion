@@ -23,10 +23,15 @@
 
 namespace WebCore {
 
-inline bool RenderBlockFlow::hasOverhangingFloats() const { return parent() && containsFloats() && lowestFloatLogicalBottom() > logicalHeight(); }
+inline bool RenderBlockFlow::hasOverhangingFloats() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return parent() && containsFloats() && lowestFloatLogicalBottom() > logicalHeight();
+}
 
 inline LayoutUnit RenderBlockFlow::endPaddingWidthForCaret() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (element() && element()->isRootEditableElement() && hasNonVisibleOverflow() && style().isLeftToRightDirection() && !paddingEnd())
         return caretWidth();
     return { };

@@ -154,11 +154,19 @@ protected:
     LayoutUnit shiftForAlignContent(LayoutUnit intrinsicLogicalHeight, LayoutUnit& repaintLogicalTop, LayoutUnit& repaintLogicalBottom);
 
     // RenderBlockFlows override these methods, since they are the only class that supports margin collapsing.
-    LayoutUnit collapsedMarginBefore() const final { return maxPositiveMarginBefore() - maxNegativeMarginBefore(); }
-    LayoutUnit collapsedMarginAfter() const final { return maxPositiveMarginAfter() - maxNegativeMarginAfter(); }
+    LayoutUnit collapsedMarginBefore() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return maxPositiveMarginBefore() - maxNegativeMarginBefore();
+    }
+    LayoutUnit collapsedMarginAfter() const final {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return maxPositiveMarginAfter() - maxNegativeMarginAfter();
+    }
 
     void dirtyLineFromChangedChild() final
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (svgTextLayout())
             svgTextLayout()->lineBoxes().dirtyLineFromChangedChild(*this);
     }
@@ -265,22 +273,42 @@ public:
 
     bool childrenPreventSelfCollapsing() const final;
 
-    bool shouldBreakAtLineToAvoidWidow() const { return hasRareBlockFlowData() && rareBlockFlowData()->m_lineBreakToAvoidWidow >= 0; }
+    bool shouldBreakAtLineToAvoidWidow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() && rareBlockFlowData()->m_lineBreakToAvoidWidow >= 0;
+    }
     void clearShouldBreakAtLineToAvoidWidow() const;
-    int lineBreakToAvoidWidow() const { return hasRareBlockFlowData() ? rareBlockFlowData()->m_lineBreakToAvoidWidow : -1; }
+    int lineBreakToAvoidWidow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() ? rareBlockFlowData()->m_lineBreakToAvoidWidow : -1;
+    }
     void setBreakAtLineToAvoidWidow(int);
     void clearDidBreakAtLineToAvoidWidow();
     void setDidBreakAtLineToAvoidWidow();
-    bool didBreakAtLineToAvoidWidow() const { return hasRareBlockFlowData() && rareBlockFlowData()->m_didBreakAtLineToAvoidWidow; }
+    bool didBreakAtLineToAvoidWidow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() && rareBlockFlowData()->m_didBreakAtLineToAvoidWidow;
+    }
 
-    RenderMultiColumnFlow* multiColumnFlow() const { return hasRareBlockFlowData() ? multiColumnFlowSlowCase() : nullptr; }
+    RenderMultiColumnFlow* multiColumnFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() ? multiColumnFlowSlowCase() : nullptr;
+    }
     RenderMultiColumnFlow* multiColumnFlowSlowCase() const;
     void setMultiColumnFlow(RenderMultiColumnFlow&);
     void clearMultiColumnFlow();
     bool willCreateColumns(std::optional<unsigned> desiredColumnCount = std::nullopt) const;
     virtual bool requiresColumns(int) const;
 
-    bool containsFloats() const override { return m_floatingObjects && !m_floatingObjects->set().isEmpty(); }
+    bool containsFloats() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_floatingObjects && !m_floatingObjects->set().isEmpty();
+    }
     bool containsFloat(RenderBox&) const;
     bool subtreeContainsFloats() const;
     bool subtreeContainsFloat(RenderBox&) const;
@@ -296,19 +324,48 @@ public:
     void markAllDescendantsWithFloatsForLayout(RenderBox* floatToRemove = nullptr, bool inLayout = true);
     void markSiblingsWithFloatsForLayout(RenderBox* floatToRemove = nullptr);
 
-    const FloatingObjectSet* floatingObjectSet() const { return m_floatingObjects ? &m_floatingObjects->set() : nullptr; }
+    const FloatingObjectSet* floatingObjectSet() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_floatingObjects ? &m_floatingObjects->set() : nullptr;
+    }
 
     FloatingObject& insertFloatingObjectForIFC(RenderBox&);
 
-    LayoutUnit logicalTopForFloat(const FloatingObject& floatingObject) const { return isHorizontalWritingMode() ? floatingObject.y() : floatingObject.x(); }
-    LayoutUnit logicalBottomForFloat(const FloatingObject& floatingObject) const { return isHorizontalWritingMode() ? floatingObject.maxY() : floatingObject.maxX(); }
-    LayoutUnit logicalLeftForFloat(const FloatingObject& floatingObject) const { return isHorizontalWritingMode() ? floatingObject.x() : floatingObject.y(); }
-    LayoutUnit logicalRightForFloat(const FloatingObject& floatingObject) const { return isHorizontalWritingMode() ? floatingObject.maxX() : floatingObject.maxY(); }
-    LayoutUnit logicalWidthForFloat(const FloatingObject& floatingObject) const { return isHorizontalWritingMode() ? floatingObject.width() : floatingObject.height(); }
-    LayoutUnit logicalHeightForFloat(const FloatingObject& floatingObject) const { return isHorizontalWritingMode() ? floatingObject.height() : floatingObject.width(); }
+    LayoutUnit logicalTopForFloat(const FloatingObject& floatingObject) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? floatingObject.y() : floatingObject.x();
+    }
+    LayoutUnit logicalBottomForFloat(const FloatingObject& floatingObject) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? floatingObject.maxY() : floatingObject.maxX();
+    }
+    LayoutUnit logicalLeftForFloat(const FloatingObject& floatingObject) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? floatingObject.x() : floatingObject.y();
+    }
+    LayoutUnit logicalRightForFloat(const FloatingObject& floatingObject) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? floatingObject.maxX() : floatingObject.maxY();
+    }
+    LayoutUnit logicalWidthForFloat(const FloatingObject& floatingObject) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? floatingObject.width() : floatingObject.height();
+    }
+    LayoutUnit logicalHeightForFloat(const FloatingObject& floatingObject) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? floatingObject.height() : floatingObject.width();
+    }
 
     void setLogicalTopForFloat(FloatingObject& floatingObject, LayoutUnit logicalTop)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (isHorizontalWritingMode())
             floatingObject.setY(logicalTop);
         else
@@ -316,6 +373,7 @@ public:
     }
     void setLogicalLeftForFloat(FloatingObject& floatingObject, LayoutUnit logicalLeft)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (isHorizontalWritingMode())
             floatingObject.setX(logicalLeft);
         else
@@ -323,6 +381,7 @@ public:
     }
     void setLogicalHeightForFloat(FloatingObject& floatingObject, LayoutUnit logicalHeight)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (isHorizontalWritingMode())
             floatingObject.setHeight(logicalHeight);
         else
@@ -330,6 +389,7 @@ public:
     }
     void setLogicalWidthForFloat(FloatingObject& floatingObject, LayoutUnit logicalWidth)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (isHorizontalWritingMode())
             floatingObject.setWidth(logicalWidth);
         else
@@ -337,6 +397,7 @@ public:
     }
     void setLogicalMarginsForFloat(FloatingObject& floatingObject, LayoutUnit logicalLeftMargin, LayoutUnit logicalBeforeMargin)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (isHorizontalWritingMode())
             floatingObject.setMarginOffset(LayoutSize(logicalLeftMargin, logicalBeforeMargin));
         else
@@ -345,7 +406,11 @@ public:
 
     LayoutPoint flipFloatForWritingModeForChild(const FloatingObject&, const LayoutPoint&) const;
 
-    LegacyRootInlineBox* legacyRootBox() const { return svgTextLayout() ? svgTextLayout()->legacyRootBox() : nullptr; }
+    LegacyRootInlineBox* legacyRootBox() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return svgTextLayout() ? svgTextLayout()->legacyRootBox() : nullptr;
+    }
 
     void setChildrenInline(bool) final;
 
@@ -360,8 +425,16 @@ public:
     void computeAndSetLineLayoutPath();
 
     enum LineLayoutPath { UndeterminedPath = 0, InlinePath, SvgTextPath };
-    LineLayoutPath lineLayoutPath() const { return static_cast<LineLayoutPath>(renderBlockFlowLineLayoutPath()); }
-    void setLineLayoutPath(LineLayoutPath path) { setRenderBlockFlowLineLayoutPath(path); }
+    LineLayoutPath lineLayoutPath() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return static_cast<LineLayoutPath>(renderBlockFlowLineLayoutPath());
+    }
+    void setLineLayoutPath(LineLayoutPath path)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        setRenderBlockFlowLineLayoutPath(path);
+    }
 
     int lineCount() const;
 
@@ -416,7 +489,11 @@ public:
 protected:
     bool isChildEligibleForMarginTrim(MarginTrimType, const RenderBox&) const final;
 
-    bool shouldResetLogicalHeightBeforeLayout() const override { return true; }
+    bool shouldResetLogicalHeightBeforeLayout() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return true;
+    }
 
     void computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const override;
     
@@ -429,14 +506,31 @@ protected:
     LayoutUnit applyAfterBreak(RenderBox& child, LayoutUnit logicalOffset, MarginInfo&); // If the child has an after break, then return a new offset that shifts to the top of the next page/column.
 
 public:
-    LayoutUnit maxPositiveMarginBefore() const { return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginBefore() : RenderBlockFlowRareData::positiveMarginBeforeDefault(*this); }
-    LayoutUnit maxNegativeMarginBefore() const { return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginBefore() : RenderBlockFlowRareData::negativeMarginBeforeDefault(*this); }
-    LayoutUnit maxPositiveMarginAfter() const { return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginAfter() : RenderBlockFlowRareData::positiveMarginAfterDefault(*this); }
-    LayoutUnit maxNegativeMarginAfter() const { return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginAfter() : RenderBlockFlowRareData::negativeMarginAfterDefault(*this); }
+    LayoutUnit maxPositiveMarginBefore() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginBefore() : RenderBlockFlowRareData::positiveMarginBeforeDefault(*this);
+    }
+    LayoutUnit maxNegativeMarginBefore() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginBefore() : RenderBlockFlowRareData::negativeMarginBeforeDefault(*this);
+    }
+    LayoutUnit maxPositiveMarginAfter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginAfter() : RenderBlockFlowRareData::positiveMarginAfterDefault(*this);
+    }
+    LayoutUnit maxNegativeMarginAfter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginAfter() : RenderBlockFlowRareData::negativeMarginAfterDefault(*this);
+    }
 
 protected:
     void initMaxMarginValues()
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (!hasRareBlockFlowData())
             return;
 
@@ -465,7 +559,10 @@ protected:
 
     virtual void computeColumnCountAndWidth();
 
-    virtual void cachePriorCharactersIfNeeded(const CachedLineBreakIteratorFactory&) { }
+    virtual void cachePriorCharactersIfNeeded(const CachedLineBreakIteratorFactory&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
 protected:
     // Called to lay out the legend for a fieldset or the ruby text of a ruby run. Also used by multi-column layout to handle
@@ -496,7 +593,11 @@ private:
     // Returns true if and only if it has positioned any floats.
     bool positionNewFloats();
     void clearFloats(UsedClear);
-    FloatingObjects* floatingObjects() { return m_floatingObjects.get(); }
+    FloatingObjects* floatingObjects()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_floatingObjects.get();
+    }
 
     LayoutUnit logicalRightFloatOffsetForLine(LayoutUnit logicalTop, LayoutUnit fixedOffset, LayoutUnit logicalHeight) const override;
     LayoutUnit logicalLeftFloatOffsetForLine(LayoutUnit logicalTop, LayoutUnit fixedOffset, LayoutUnit logicalHeight) const override;
@@ -558,8 +659,17 @@ public:
     LinePaginationAdjustment computeLineAdjustmentForPagination(const InlineIterator::LineBoxIterator&, LayoutUnit deltaOffset, LayoutUnit floatMinimumBottom = { });
     bool relayoutForPagination();
 
-    bool hasRareBlockFlowData() const { return m_rareBlockFlowData.get(); }
-    RenderBlockFlowRareData* rareBlockFlowData() const { ASSERT_WITH_SECURITY_IMPLICATION(hasRareBlockFlowData()); return m_rareBlockFlowData.get(); }
+    bool hasRareBlockFlowData() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_rareBlockFlowData.get();
+    }
+    RenderBlockFlowRareData* rareBlockFlowData() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        ASSERT_WITH_SECURITY_IMPLICATION(hasRareBlockFlowData());
+        return m_rareBlockFlowData.get();
+    }
     RenderBlockFlowRareData& ensureRareBlockFlowData();
     void materializeRareBlockFlowData();
 
@@ -567,6 +677,7 @@ public:
     void adjustComputedFontSizes(float size, float visibleWidth);
     void resetComputedFontSize()
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         m_widthForTextAutosizing = -1;
         m_lineCountForTextAutosizing = NOT_SET;
     }
@@ -592,31 +703,37 @@ private:
 
 inline bool RenderBlockFlow::hasSvgTextLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return std::holds_alternative<std::unique_ptr<LegacyLineLayout>>(m_lineLayout);
 }
 
 inline const LegacyLineLayout* RenderBlockFlow::svgTextLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasSvgTextLayout() ? std::get<std::unique_ptr<LegacyLineLayout>>(m_lineLayout).get() : nullptr;
 }
 
 inline LegacyLineLayout* RenderBlockFlow::svgTextLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasSvgTextLayout() ? std::get<std::unique_ptr<LegacyLineLayout>>(m_lineLayout).get() : nullptr;
 }
 
 inline bool RenderBlockFlow::hasInlineLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return std::holds_alternative<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout);
 }
 
 inline const LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
 }
 
 inline LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
 }
 
