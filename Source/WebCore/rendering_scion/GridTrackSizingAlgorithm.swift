@@ -193,7 +193,7 @@ private func setOverridingContainingBlockContentSizeForGridItem(
   }
 }
 
-struct GridItemWithSpan: Comparable, Equatable {
+struct GridItemWithSpan: Comparable {
   let gridItem: RenderBoxWrapper
   let span: GridSpan
 
@@ -202,8 +202,7 @@ struct GridItemWithSpan: Comparable, Equatable {
   }
 
   static func == (this: GridItemWithSpan, other: GridItemWithSpan) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !(this < other) && !(other < this)
   }
 }
 
