@@ -71,10 +71,7 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
-  func growthLimitIsInfinite() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func growthLimitIsInfinite() -> Bool { return m_growthLimit == infinity }
 
   func setGrowthLimit(growthLimit: LayoutUnit) {
     // TODO(asuhan): implement this
@@ -136,6 +133,7 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  private let m_growthLimit = LayoutUnit(value: 0)
   var growthLimitCap: LayoutUnit? = nil
 }
 
