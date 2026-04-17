@@ -102,6 +102,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     updateMargins()
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if paintInfo.phase != .Foreground && paintInfo.phase != .Accessibility {
       return

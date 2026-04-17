@@ -36,6 +36,11 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override final func objectBoundingBox() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

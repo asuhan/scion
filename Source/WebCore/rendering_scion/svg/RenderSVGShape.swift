@@ -149,6 +149,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper, RenderSVGShapeProto {
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
 

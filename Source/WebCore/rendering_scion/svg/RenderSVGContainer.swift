@@ -73,6 +73,11 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())

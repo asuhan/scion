@@ -100,6 +100,11 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func layout() {
     legacyRenderSVGContainerLayout()
   }

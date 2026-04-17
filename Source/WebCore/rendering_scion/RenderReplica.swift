@@ -69,6 +69,11 @@ final class RenderReplicaWrapper: RenderBoxWrapper {
     }
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func computePreferredLogicalWidths() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -216,6 +216,11 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
     }
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
     -> Bool
   {

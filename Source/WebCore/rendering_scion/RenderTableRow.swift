@@ -172,6 +172,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     }
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())

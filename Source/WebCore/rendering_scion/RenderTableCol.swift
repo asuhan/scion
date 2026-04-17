@@ -128,6 +128,13 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     return style.display() == .TableColumn && child.isRenderTableCol()
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    // Cols cannot have children. This is actually necessary to fix a bug
+    // with libraries.uc.edu, which makes a <p> be a table-column.
+    return isTableColumnGroup()
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -63,6 +63,11 @@ final class RenderSVGGradientStopWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
 
   private func gradientElement() -> SVGGradientElementWrapper? {

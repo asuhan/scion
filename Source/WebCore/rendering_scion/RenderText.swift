@@ -900,6 +900,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func positionForPoint(
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?

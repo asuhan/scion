@@ -38,6 +38,11 @@ class RenderMediaWrapper: RenderImageWrapper {
 
   override func visibleInViewportStateChanged() {}
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {

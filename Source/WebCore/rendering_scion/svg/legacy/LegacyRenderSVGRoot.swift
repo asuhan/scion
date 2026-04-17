@@ -393,6 +393,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   private func shouldApplyViewportClip() -> Bool {
     // the outermost svg is clipped if auto, and svg document roots are always clipped
     // When the svg is stand-alone (isDocumentElement() == true) the viewport clipping should always

@@ -250,6 +250,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return hasShadowContent()
+  }
+
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {

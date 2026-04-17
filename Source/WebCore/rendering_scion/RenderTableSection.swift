@@ -1067,6 +1067,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   private enum ShouldIncludeAllIntersectingCells {
     case IncludeAllIntersectingCells
     case DoNotIncludeAllIntersectingCells

@@ -268,6 +268,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return fragmentedFlow!.mapFromFragmentedFlowToLocal(box, mappedRect)
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func positionForPoint(
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?

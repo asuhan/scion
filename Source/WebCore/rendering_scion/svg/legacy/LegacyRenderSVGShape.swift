@@ -110,6 +110,11 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     let checkForRepaintOverride: LayoutRepainter.CheckForRepaint =

@@ -44,6 +44,11 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func localToParentTransform() -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

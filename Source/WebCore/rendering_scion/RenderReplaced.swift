@@ -652,6 +652,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   func embeddedContentBox() -> RenderBoxWrapper? { return nil }
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override final func computePreferredLogicalWidths() {
     assert(preferredLogicalWidthsDirty())
 

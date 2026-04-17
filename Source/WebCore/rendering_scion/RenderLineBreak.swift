@@ -30,6 +30,11 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return enclosingIntRect(rect: run.get().visualRectIgnoringBlockDirection())
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     assert(isNativeImpl())
   }

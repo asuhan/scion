@@ -521,6 +521,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     setHasReflection(false)
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   private func generateLineBoxRects(_ context: AbsoluteRectsGeneratorContext) {
     if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
       let inlineBoxRects = lineLayout.collectInlineBoxRects(renderInline: self)

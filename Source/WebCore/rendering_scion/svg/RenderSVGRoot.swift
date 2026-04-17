@@ -537,6 +537,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   var inLayout = false
   var didTransformToRootUpdate = false
   var isLayoutSizeChanged = false

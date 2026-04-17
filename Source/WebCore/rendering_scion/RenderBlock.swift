@@ -1234,6 +1234,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   #endif
 
+  override func canHaveChildren() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   func canDropAnonymousBlockChild() -> Bool {
     assert(isNativeImpl())
     return true
