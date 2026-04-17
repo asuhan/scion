@@ -88,15 +88,9 @@ class GridTrack {
     return m_growthLimit == infinity ? baseSize() : m_growthLimit
   }
 
-  func plannedSize() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func plannedSize() -> LayoutUnit { return m_plannedSize }
 
-  func setPlannedSize(plannedSize: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setPlannedSize(plannedSize: LayoutUnit) { m_plannedSize = plannedSize }
 
   func tempSize() -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -145,6 +139,7 @@ class GridTrack {
 
   private var m_baseSize = LayoutUnit(value: 0)
   private var m_growthLimit = LayoutUnit(value: 0)
+  private var m_plannedSize = LayoutUnit(value: 0)
   var growthLimitCap: LayoutUnit? = nil
   private let m_infinitelyGrowable = false
 
