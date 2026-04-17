@@ -272,6 +272,10 @@ struct TextRunFlags: OptionSet {
   static let RespectDirectionOverride = TextRunFlags(rawValue: 1 << 1)
 }
 
+private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<
+  RenderInlineWrapper, ObjectIdentifier
+>?]
+
 // Allocated only when some of these fields have non-default values
 
 class RenderBlockRareData {
@@ -279,6 +283,8 @@ class RenderBlockRareData {
   var m_pageLogicalOffset = LayoutUnit()
   let m_intrinsicBorderForFieldset = LayoutUnit()
 }
+
+private let continuationOutlineTable: ContinuationOutlineTableMap = [:]
 
 class RenderBlockWrapper: RenderBoxWrapper {
   override init(
@@ -3258,6 +3264,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
+    if continuationOutlineTable.isEmpty {
+      return
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
