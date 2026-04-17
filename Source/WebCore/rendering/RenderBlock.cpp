@@ -3518,6 +3518,12 @@ LayoutRect RenderBlock::paintRectToClipOutFromBorder(const LayoutRect& paintRect
     return clipRect;
 }
 
+bool RenderBlock::isInlineBlockOrInlineTable() const
+{
+    if (m_scion) { return m_scion->isInlineBlockOrInlineTable(); }
+    return isInline() && isReplacedOrInlineBlock();
+}
+
 LayoutUnit RenderBlock::intrinsicBorderForFieldset() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

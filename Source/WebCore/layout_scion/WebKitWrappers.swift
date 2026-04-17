@@ -1212,3 +1212,9 @@ func RenderBlockFlowScion_styleWillChange(
   let newStyle = convert_render_style(p: newStyleRaw)
   blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
 }
+
+@_cdecl("RenderBlockScion_isInlineBlockOrInlineTable")
+func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -> Bool {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.isInlineBlockOrInlineTable()
+}

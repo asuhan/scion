@@ -156,6 +156,8 @@ public:
     {
     }
 
+    bool isInlineBlockOrInlineTable() const;
+
 private:
     void* m_handle;
 };

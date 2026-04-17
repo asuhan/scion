@@ -477,11 +477,7 @@ public:
     
     void adjustBorderBoxRectForPainting(LayoutRect&) override;
     LayoutRect paintRectToClipOutFromBorder(const LayoutRect&) override;
-    bool isInlineBlockOrInlineTable() const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isInline() && isReplacedOrInlineBlock();
-    }
+    bool isInlineBlockOrInlineTable() const final;
     
     void boundingRects(Vector<LayoutRect>&, const LayoutPoint& accumulatedOffset) const override;
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const override;
