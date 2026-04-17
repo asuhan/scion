@@ -2102,8 +2102,7 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func isDirectionInMasonryDirection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderGrid!.isMasonry(direction: direction)
   }
 
   // Data.
