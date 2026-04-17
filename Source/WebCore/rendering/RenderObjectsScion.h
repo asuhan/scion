@@ -162,6 +162,8 @@ public:
 
     void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const;
 
+    bool canHaveChildren() const;
+
     bool isInlineBlockOrInlineTable() const;
 
 private:

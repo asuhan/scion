@@ -1233,6 +1233,12 @@ func RenderBlockScion_setMarginAfterForChild(
     value: LayoutUnit.fromRawValue(value: valueRaw))
 }
 
+@_cdecl("RenderBlockScion_canHaveChildren")
+func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.canHaveChildren()
+}
+
 @_cdecl("RenderBlockScion_isInlineBlockOrInlineTable")
 func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -> Bool {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

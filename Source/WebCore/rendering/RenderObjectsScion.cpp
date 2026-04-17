@@ -96,6 +96,8 @@ extern "C" void RenderBlockScion_setMarginBeforeForChild(const void*, void*, int
 
 extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int32_t);
 
+extern "C" bool RenderBlockScion_canHaveChildren(const void*);
+
 extern "C" bool RenderBlockScion_isInlineBlockOrInlineTable(const void*);
 
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
@@ -400,6 +402,11 @@ void RenderBlockScion::setMarginBeforeForChild(RenderBox& child, LayoutUnit valu
 void RenderBlockScion::setMarginAfterForChild(RenderBox& child, LayoutUnit value) const
 {
     RenderBlockScion_setMarginAfterForChild(m_handle, &child, value.rawValue());
+}
+
+bool RenderBlockScion::canHaveChildren() const
+{
+    return RenderBlockScion_canHaveChildren(m_handle);
 }
 
 bool RenderBlockScion::isInlineBlockOrInlineTable() const

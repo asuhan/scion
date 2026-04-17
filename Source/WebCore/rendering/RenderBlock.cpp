@@ -2916,6 +2916,12 @@ void RenderBlock::updateHitTestResult(HitTestResult& result, const LayoutPoint& 
     }
 }
 
+bool RenderBlock::canHaveChildren() const
+{
+    if (m_scion) { return m_scion->canHaveChildren(); }
+    return true;
+}
+
 void RenderBlock::addFocusRingRectsForInlineChildren(Vector<LayoutRect>&, const LayoutPoint&, const RenderLayerModelObject*) const
 {
     ASSERT_NOT_REACHED();

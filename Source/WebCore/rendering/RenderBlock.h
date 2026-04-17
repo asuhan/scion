@@ -374,11 +374,7 @@ public:
 
     void updateHitTestResult(HitTestResult&, const LayoutPoint&) override;
 
-    bool canHaveChildren() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return true;
-    }
+    bool canHaveChildren() const override;
     virtual bool canDropAnonymousBlockChild() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
