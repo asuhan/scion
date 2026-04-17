@@ -1827,7 +1827,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       sizingOperation: .IntrinsicSizeComputation, availableSpace: nil,
       gridLayoutState: &gridLayoutState)
 
-    let numberOfTracks = UInt32(algorithm.tracks(direction: direction).count)
+    let numberOfTracks = UInt32(algorithm.tracks(direction: direction).a.count)
     let totalGuttersSize =
       direction == .ForColumns && explicitIntrinsicInnerLogicalSize(direction: direction) != nil
       ? LayoutUnit(value: UInt64(0))
@@ -2032,7 +2032,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     // allows us to use the same indexes to identify the columns independently on the inline-axis direction.
     let isRowAxis = direction == .ForColumns
     let tracks = trackSizingAlgorithm!.tracks(direction: direction)
-    let numberOfTracks = tracks.count
+    let numberOfTracks = tracks.a.count
     let numberOfLines = numberOfTracks + 1
     let lastLine = numberOfLines - 1
     let hasCollapsedTracks = currentGrid().hasAutoRepeatEmptyTracks(direction: direction)
@@ -2056,9 +2056,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
       for i in 0..<nextToLastLine {
         positions[i + 1] =
-          positions[i] + offset.distributionOffset + tracks[i].unclampedBaseSize() + gap
+          positions[i] + offset.distributionOffset + tracks.a[i].unclampedBaseSize() + gap
       }
-      positions[lastLine] = positions[nextToLastLine] + tracks[nextToLastLine].unclampedBaseSize()
+      positions[lastLine] = positions[nextToLastLine] + tracks.a[nextToLastLine].unclampedBaseSize()
 
       // Adjust collapsed gaps. Collapsed tracks cause the surrounding gutters to collapse (they
       // coincide exactly) except on the edges of the grid where they become 0.
@@ -2583,7 +2583,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let finalTrackPosition = linePositions[Int(span.endLine() - 1)]
 
     // Track Positions vector stores the 'start' grid line of each track, so we have to add last track's baseSize.
-    return finalTrackPosition - initialTrackPosition + tracks[Int(span.endLine() - 1)].baseSize()
+    return finalTrackPosition - initialTrackPosition + tracks.a[Int(span.endLine() - 1)].baseSize()
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
@@ -3083,7 +3083,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   private func nonCollapsedTracks(direction: GridTrackSizingDirection) -> UInt32 {
     let tracks = trackSizingAlgorithm!.tracks(direction: direction)
-    let numberOfTracks = UInt32(tracks.count)
+    let numberOfTracks = UInt32(tracks.a.count)
     let hasCollapsedTracks = currentGrid().hasAutoRepeatEmptyTracks(direction: direction)
     let numberOfCollapsedTracks =
       hasCollapsedTracks ? currentGrid().autoRepeatEmptyTracks(direction: direction).size() : 0

@@ -328,7 +328,7 @@ private func sortByGridTrackGrowthPotential(_ track1: GridTrack, _ track2: GridT
   return (track1Limit - track1.baseSize()) < (track2Limit - track2.baseSize())
 }
 
-private class GridTrackArrayRef {
+class GridTrackArrayRef {
   var a: [GridTrack] = []
 }
 
@@ -497,13 +497,13 @@ private func extraMarginFromSubgridAncestorGutters(
 }
 
 private func removeSubgridMarginBorderPaddingFromTracks(
-  tracks: inout ArraySlice<GridTrack>, mbp: LayoutUnit, forwards: Bool
+  tracks: GridTrackArrayRef, mbp: LayoutUnit, forwards: Bool
 ) {
-  let numTracks = tracks.count
+  let numTracks = tracks.a.count
   var i = forwards ? 0 : numTracks - 1
   var mbp = mbp
   while mbp > 0 && (forwards ? i < numTracks : i >= 0) {
-    var size = tracks[i].baseSize()
+    var size = tracks.a[i].baseSize()
     if size > mbp {
       size -= mbp
       mbp = LayoutUnit(value: 0)
@@ -511,7 +511,7 @@ private func removeSubgridMarginBorderPaddingFromTracks(
       mbp -= size
       size = LayoutUnit(value: 0)
     }
-    tracks[i].setBaseSize(size)
+    tracks.a[i].setBaseSize(size)
 
     if forwards {
       i += 1
@@ -572,7 +572,7 @@ final class GridTrackSizingAlgorithm {
 
     // Step 3.
     strategy!.maximizeTracks(
-      tracks: tracks(direction: direction),
+      tracks: tracks(direction: direction).a[...],
       freeSpace: direction == .ForColumns ? freeSpaceColumns : freeSpaceRows)
 
     // Step 4.
@@ -599,7 +599,7 @@ final class GridTrackSizingAlgorithm {
   func baselineOffsetForGridItem(gridItem: RenderBoxWrapper, baselineAxis: GridAxis) -> LayoutUnit {
     // If we haven't yet initialized this axis (which can be the case if we're doing
     // prelayout of a subgrid), then we can't know the baseline offset.
-    if tracks(direction: gridDirectionForAxis(axis: baselineAxis)).isEmpty {
+    if tracks(direction: gridDirectionForAxis(axis: baselineAxis)).a.isEmpty {
       return LayoutUnit()
     }
 
@@ -652,7 +652,7 @@ final class GridTrackSizingAlgorithm {
 
     let span = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
     return computeGridSpanSize(
-      tracks: tracks(direction: direction), gridSpan: span,
+      tracks: tracks(direction: direction).a[...], gridSpan: span,
       gridItemOffset: addContentAlignmentOffset
         ? renderGrid!.gridItemOffset(direction: direction) : nil,
       totalGuttersSize: renderGrid!.guttersSize(
@@ -738,9 +738,8 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
-  func tracks(direction: GridTrackSizingDirection) -> ArraySlice<GridTrack> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func tracks(direction: GridTrackSizingDirection) -> GridTrackArrayRef {
+    return direction == .ForColumns ? m_columns : m_rows
   }
 
   func freeSpace(direction: GridTrackSizingDirection) -> LayoutUnit? {
@@ -771,12 +770,12 @@ final class GridTrackSizingAlgorithm {
 
     var size = LayoutUnit()
     let allTracks = tracks(direction: direction)
-    for track in allTracks {
+    for track in allTracks.a {
       size += track.baseSize()
     }
 
     size += renderGrid!.guttersSize(
-      direction: direction, startLine: 0, span: UInt32(allTracks.count),
+      direction: direction, startLine: 0, span: UInt32(allTracks.a.count),
       availableSize: availableSpace())
 
     return size
@@ -809,7 +808,7 @@ final class GridTrackSizingAlgorithm {
     }
 
     let allTracks = tracks(direction: direction)
-    for track in allTracks {
+    for track in allTracks.a {
       let trackSize = track.cachedTrackSize()
       if initialBaseSize(trackSize: trackSize) > track.baseSize() {
         return false
@@ -872,7 +871,7 @@ final class GridTrackSizingAlgorithm {
             value: minimumValueForLength(
               length: subgridRowStartMargin,
               maximumValue: computeGridSpanSize(
-                tracks: tracks(direction: .ForColumns), gridSpan: subgridSpan,
+                tracks: tracks(direction: .ForColumns).a[...], gridSpan: subgridSpan,
                 gridItemOffset: renderGrid!.gridItemOffset(direction: direction),
                 totalGuttersSize: renderGrid!.guttersSize(
                   direction: .ForColumns, startLine: subgridSpan.startLine(),
@@ -1038,7 +1037,7 @@ final class GridTrackSizingAlgorithm {
     _ gridLayoutState: inout GridLayoutState
   ) {
     let trackPosition = Int(span.startLine())
-    let trackSize = tracks(direction: direction)[trackPosition].cachedTrackSize()
+    let trackSize = tracks(direction: direction).a[trackPosition].cachedTrackSize()
 
     if trackSize.hasMinContentMinTrackBreadth() {
       track.setBaseSize(
@@ -1078,7 +1077,7 @@ final class GridTrackSizingAlgorithm {
     span: GridSpan, masonryIndefiniteItems: MasonryMinMaxTrackSize, track: GridTrack
   ) {
     let trackPosition = Int(span.startLine())
-    let trackSize = tracks(direction: direction)[trackPosition].cachedTrackSize()
+    let trackSize = tracks(direction: direction).a[trackPosition].cachedTrackSize()
 
     if trackSize.hasMinContentMinTrackBreadth() {
       track.setBaseSize(max(track.baseSize(), masonryIndefiniteItems.minContentSize))
@@ -1107,7 +1106,7 @@ final class GridTrackSizingAlgorithm {
   private func spanningItemCrossesFlexibleSizedTracks(itemSpan: GridSpan) -> Bool {
     let trackList = tracks(direction: direction)
     for trackPosition in itemSpan {
-      let trackSize = trackList[Int(trackPosition)].cachedTrackSize()
+      let trackSize = trackList.a[Int(trackPosition)].cachedTrackSize()
       if trackSize.minTrackBreadth.isFlex() || trackSize.maxTrackBreadth.isFlex() {
         return true
       }
@@ -1122,7 +1121,7 @@ final class GridTrackSizingAlgorithm {
   ) {
     let allTracks = tracks(direction: direction)
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       track.setPlannedSize(
         plannedSize: trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity))
     }
@@ -1139,7 +1138,7 @@ final class GridTrackSizingAlgorithm {
       growBeyondGrowthLimitsTracks.a.removeAll()
       var spanningTracksSize = LayoutUnit()
       for trackPosition in itemSpan {
-        let track = allTracks[Int(trackPosition)]
+        let track = allTracks.a[Int(trackPosition)]
         let trackSize = track.cachedTrackSize()
         spanningTracksSize += trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity)
         if variant == .CrossingFlexibleTracks && !trackSize.maxTrackBreadth.isFlex() {
@@ -1177,7 +1176,7 @@ final class GridTrackSizingAlgorithm {
     }
 
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       markAsInfinitelyGrowableForTrackSizeComputationPhase(phase, track)
       updateTrackSizeForTrackSizeComputationPhase(phase, track)
     }
@@ -1237,7 +1236,7 @@ final class GridTrackSizingAlgorithm {
   ) {
     let allTracks = tracks(direction: direction)
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       track.setPlannedSize(
         plannedSize: trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity))
     }
@@ -1253,7 +1252,7 @@ final class GridTrackSizingAlgorithm {
       growBeyondGrowthLimitsTracks.a.removeAll()
       var spanningTracksSize = LayoutUnit()
       for trackPosition in itemSpan {
-        let track = allTracks[Int(trackPosition)]
+        let track = allTracks.a[Int(trackPosition)]
         let trackSize = track.cachedTrackSize()
         spanningTracksSize += trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity)
 
@@ -1290,7 +1289,7 @@ final class GridTrackSizingAlgorithm {
     }
 
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       markAsInfinitelyGrowableForTrackSizeComputationPhase(phase, track)
       updateTrackSizeForTrackSizeComputationPhase(phase, track)
     }
@@ -1336,7 +1335,7 @@ final class GridTrackSizingAlgorithm {
   ) {
     let allTracks = tracks(direction: direction)
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       track.setPlannedSize(
         plannedSize: trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity))
     }
@@ -1351,7 +1350,7 @@ final class GridTrackSizingAlgorithm {
       growBeyondGrowthLimitsTracks.a.removeAll()
       var spanningTracksSize = LayoutUnit()
       for trackPosition in itemSpan {
-        let track = allTracks[Int(trackPosition)]
+        let track = allTracks.a[Int(trackPosition)]
         let trackSize = track.cachedTrackSize()
         spanningTracksSize += trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity)
         if !trackSize.maxTrackBreadth.isFlex() {
@@ -1389,7 +1388,7 @@ final class GridTrackSizingAlgorithm {
     }
 
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       markAsInfinitelyGrowableForTrackSizeComputationPhase(phase, track)
       updateTrackSizeForTrackSizeComputationPhase(phase, track)
     }
@@ -1403,12 +1402,12 @@ final class GridTrackSizingAlgorithm {
     let allTracks = tracks(direction: direction)
 
     for (indefiniteItemKey, indefiniteItemVal) in indefiniteSpanSizes {
-      for trackIndex in 0..<allTracks.count {
+      for trackIndex in 0..<allTracks.a.count {
         let endLine = trackIndex + Int(indefiniteItemKey)
         let itemSpan = GridSpan.translatedDefiniteGridSpan(
           startLine: UInt32(trackIndex), endLine: UInt32(endLine))
 
-        if endLine > allTracks.count {
+        if endLine > allTracks.a.count {
           continue
         }
 
@@ -1605,7 +1604,7 @@ final class GridTrackSizingAlgorithm {
     maxContentSize = LayoutUnit(value: UInt64(0))
 
     let allTracks = tracks(direction: direction)
-    for track in allTracks {
+    for track in allTracks.a {
       assert(strategy!.isComputingSizeOrInlineSizeContainment() || !track.infiniteGrowthPotential())
       minContentSize += track.baseSize()
       maxContentSize += track.growthLimitIsInfinite() ? track.baseSize() : track.growthLimit()
@@ -1627,9 +1626,9 @@ final class GridTrackSizingAlgorithm {
     var leftOverSize: Float64 = 0
     for i in 0..<numFlexTracks {
       let trackIndex = Int(flexibleSizedTracksIndex[i])
-      let trackSize = allTracks[trackIndex].cachedTrackSize()
+      let trackSize = allTracks.a[trackIndex].cachedTrackSize()
       assert(trackSize.maxTrackBreadth.isFlex())
-      let oldBaseSize = allTracks[trackIndex].baseSize()
+      let oldBaseSize = allTracks.a[trackIndex].baseSize()
       let frShare = flexFraction * trackSize.maxTrackBreadth.flex() + leftOverSize
       let stretchedSize = LayoutUnit(value: frShare)
       let newBaseSize = max(oldBaseSize, stretchedSize)
@@ -1643,7 +1642,7 @@ final class GridTrackSizingAlgorithm {
   private func handleInfinityGrowthLimit() {
     let allTracks = tracks(direction: direction)
     for trackIndex in contentSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       if track.growthLimit() == infinity {
         track.setGrowthLimit(growthLimit: track.baseSize())
       }
@@ -1666,7 +1665,7 @@ final class GridTrackSizingAlgorithm {
     var definiteItemSizesSpanFlexTrack: [MasonryMinMaxTrackSizeWithGridSpan] = []
 
     let allTracks = tracks(direction: direction)
-    let trackLength = UInt32(allTracks.count)
+    let trackLength = UInt32(allTracks.a.count)
     for trackIndex in 0..<trackLength {
       let iterator = GridIterator(grid: grid, direction: direction, fixedTrackIndex: trackIndex)
 
@@ -1680,7 +1679,7 @@ final class GridTrackSizingAlgorithm {
         )
         .isIndefinite() {
           populateDefiniteItems(
-            trackIndex, gridSpan, spanLength, gridItem, allTracks, &definiteItemSizes,
+            trackIndex, gridSpan, spanLength, gridItem, allTracks.a[...], &definiteItemSizes,
             &definiteItemSizesSpanFlexTrack, &gridLayoutState)
           continue
         }
@@ -1775,7 +1774,7 @@ final class GridTrackSizingAlgorithm {
     let zero = LayoutUnit(value: UInt64(0))
     let maxSize = max(zero, availableSpace() ?? zero)
     // 1. Initialize per Grid track variables.
-    for (i, track) in allTracks.enumerated() {
+    for (i, track) in allTracks.a.enumerated() {
       let trackSize = calculateGridTrackSize(direction: direction, translatedIndex: UInt32(i))
       track.setCachedTrackSize(cachedTrackSize: trackSize)
       track.setBaseSize(initialBaseSize(trackSize: trackSize))
@@ -1829,7 +1828,7 @@ final class GridTrackSizingAlgorithm {
     if grid.hasGridItems() {
       for trackIndex in contentSizedTracksIndex {
         let iterator = GridIterator(grid: grid, direction: direction, fixedTrackIndex: trackIndex)
-        let track = allTracks[Int(trackIndex)]
+        let track = allTracks.a[Int(trackIndex)]
 
         accumulateIntrinsicSizesForTrack(
           track, trackIndex, iterator, &itemsSortedByIncreasingSpan,
@@ -1880,7 +1879,7 @@ final class GridTrackSizingAlgorithm {
 
     if let singleTrackSpanSize = definiteAndIndefiniteItemsForMasonry.indefiniteSpanSizes[1] {
       for trackIndex in contentSizedTracksIndex {
-        let track = allTracks[Int(trackIndex)]
+        let track = allTracks.a[Int(trackIndex)]
 
         let itemSpan = GridSpan.translatedDefiniteGridSpan(
           startLine: trackIndex, endLine: trackIndex + 1)
@@ -1935,7 +1934,7 @@ final class GridTrackSizingAlgorithm {
     var i = 0
     let allTracks = tracks(direction: direction)
     for trackIndex in flexibleSizedTracksIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       let increment = increments[i]
       if increment.bool() {
         track.setBaseSize(track.baseSize() + increment)
@@ -1960,7 +1959,7 @@ final class GridTrackSizingAlgorithm {
     let numberOfAutoSizedTracks = UInt32(autoSizedTracksForStretchIndex.count)
     let sizeToIncrease = currentFreeSpace / numberOfAutoSizedTracks
     for trackIndex in autoSizedTracksForStretchIndex {
-      let track = allTracks[Int(trackIndex)]
+      let track = allTracks.a[Int(trackIndex)]
       track.setBaseSize(track.baseSize() + sizeToIncrease)
     }
     setFreeSpace(direction: direction, freeSpace: LayoutUnit(value: UInt64(0)))
@@ -2036,46 +2035,46 @@ final class GridTrackSizingAlgorithm {
       grid: renderGrid!, parent: outer, direction: direction)
     let parentTracks = parentAlgo.tracks(direction: direction)
 
-    if parentTracks.isEmpty {
+    if parentTracks.a.isEmpty {
       return false
     }
 
     let span = outer.gridSpanForGridItem(gridItem: renderGrid!, direction: direction)
-    var allTracks = tracks(direction: direction)
-    let numTracks = allTracks.count
-    assert((parentTracks.count - 1) >= (numTracks - 1 + Int(span.startLine())))
+    let allTracks = tracks(direction: direction)
+    let numTracks = allTracks.a.count
+    assert((parentTracks.a.count - 1) >= (numTracks - 1 + Int(span.startLine())))
     for i in 0..<numTracks {
-      allTracks[i] = parentTracks[i + Int(span.startLine())]
+      allTracks.a[i] = parentTracks.a[i + Int(span.startLine())]
     }
 
     if GridLayoutFunctions.isSubgridReversedDirection(
       grid: outer, outerDirection: direction, subgrid: renderGrid!)
     {
-      allTracks.reverse()
+      allTracks.a.reverse()
     }
 
     let startMBP =
       (direction == .ForColumns)
       ? renderGrid!.marginAndBorderAndPaddingStart() : renderGrid!.marginAndBorderAndPaddingBefore()
-    removeSubgridMarginBorderPaddingFromTracks(tracks: &allTracks, mbp: startMBP, forwards: true)
+    removeSubgridMarginBorderPaddingFromTracks(tracks: allTracks, mbp: startMBP, forwards: true)
     let endMBP =
       (direction == .ForColumns)
       ? renderGrid!.marginAndBorderAndPaddingEnd() : renderGrid!.marginAndBorderAndPaddingAfter()
-    removeSubgridMarginBorderPaddingFromTracks(tracks: &allTracks, mbp: endMBP, forwards: false)
+    removeSubgridMarginBorderPaddingFromTracks(tracks: allTracks, mbp: endMBP, forwards: false)
 
     let gapDifference =
       (renderGrid!.gridGap(
         direction: direction, availableSize: availableSpace(direction: direction))
         - outer.gridGap(direction: direction)) / 2
     for i in 0..<numTracks {
-      var size = allTracks[i].baseSize()
+      var size = allTracks.a[i].baseSize()
       if i != 0 {
         size -= gapDifference
       }
       if i != numTracks - 1 {
         size -= gapDifference
       }
-      allTracks[i].setBaseSize(size)
+      allTracks.a[i].setBaseSize(size)
     }
     return true
   }
@@ -2349,7 +2348,7 @@ private class GridTrackSizingAlgorithmStrategy {
       let allTracks = algorithm.tracks(direction: direction())
       var allFixed = true
       for trackPosition in span {
-        let trackSize = allTracks[Int(trackPosition)].cachedTrackSize()
+        let trackSize = allTracks.a[Int(trackPosition)].cachedTrackSize()
         if trackSize.maxTrackBreadth.isFlex() && span.integerSpan() > 1 {
           return LayoutUnit()
         }
