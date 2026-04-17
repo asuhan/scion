@@ -782,8 +782,7 @@ final class GridTrackSizingAlgorithm {
   }
 
   func hasAnyPercentSizedRowsIndefiniteHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasPercentSizedRowsIndefiniteHeight
   }
 
   func hasAnyFlexibleMaxTrackBreadth() -> Bool {
