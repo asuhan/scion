@@ -898,10 +898,7 @@ final class GridTrackSizingAlgorithm {
 
   private func isRelativeGridLengthAsAuto(length: GridLength, direction: GridTrackSizingDirection)
     -> Bool
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  { return length.isPercentage() && availableSpace(direction: direction) == nil }
 
   private func calculateGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)
     -> GridTrackSize
