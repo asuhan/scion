@@ -316,8 +316,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func deleteLines() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    document().existingAXObjectCache()?.deferRecomputeIsIgnored(element())
   }
 
   func layoutBlock(

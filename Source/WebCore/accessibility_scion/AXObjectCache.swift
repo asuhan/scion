@@ -47,4 +47,9 @@ final class AXObjectCacheWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func deferRecomputeIsIgnored(_ element: ElementWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
