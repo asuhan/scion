@@ -101,8 +101,8 @@ class GridTrack {
   }
 
   func growTempSize(_ tempSize: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(tempSize >= Int32(0))
+    m_tempSize += tempSize
   }
 
   func infinitelyGrowable() -> Bool {
