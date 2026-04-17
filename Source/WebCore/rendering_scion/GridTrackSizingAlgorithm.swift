@@ -57,8 +57,8 @@ class GridTrack {
   }
 
   func unclampedBaseSize() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isGrowthLimitBiggerThanBaseSize())
+    return m_baseSize
   }
 
   func setBaseSize(_ baseSize: LayoutUnit) {
