@@ -785,10 +785,7 @@ final class GridTrackSizingAlgorithm {
     return hasPercentSizedRowsIndefiniteHeight
   }
 
-  func hasAnyFlexibleMaxTrackBreadth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasAnyFlexibleMaxTrackBreadth() -> Bool { return hasFlexibleMaxTrackBreadth }
 
   func hasAnyBaselineAlignmentItem() -> Bool {
     // TODO(asuhan): implement this
