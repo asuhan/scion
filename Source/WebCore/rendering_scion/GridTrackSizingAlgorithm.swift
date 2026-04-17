@@ -198,8 +198,7 @@ struct GridItemWithSpan: Comparable, Equatable {
   let span: GridSpan
 
   static func < (this: GridItemWithSpan, other: GridItemWithSpan) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return this.span.integerSpan() < other.span.integerSpan()
   }
 
   static func == (this: GridItemWithSpan, other: GridItemWithSpan) -> Bool {
