@@ -105,15 +105,9 @@ class GridTrack {
     m_tempSize += tempSize
   }
 
-  func infinitelyGrowable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func infinitelyGrowable() -> Bool { return m_infinitelyGrowable }
 
-  func setInfinitelyGrowable(infinitelyGrowable: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setInfinitelyGrowable(infinitelyGrowable: Bool) { m_infinitelyGrowable = infinitelyGrowable }
 
   func cachedTrackSize() -> GridTrackSize {
     // TODO(asuhan): implement this
@@ -140,7 +134,7 @@ class GridTrack {
   private var m_plannedSize = LayoutUnit(value: 0)
   private var m_tempSize = LayoutUnit(value: 0)
   var growthLimitCap: LayoutUnit? = nil
-  private let m_infinitelyGrowable = false
+  private var m_infinitelyGrowable = false
 
   private static let zero = LayoutUnit(value: UInt64(0))
 }
