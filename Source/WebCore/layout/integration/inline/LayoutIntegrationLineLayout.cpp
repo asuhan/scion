@@ -63,6 +63,7 @@
 #include "TextBreakingPositionCache.h"
 #include <wtf/Assertions.h>
 #include <wtf/Range.h>
+#include <wtf/text/StringToIntegerConversion.h>
 
 // TODO(asuhan): Fix leaks
 
@@ -721,27 +722,27 @@ std::optional<LayoutRect> LineLayout::layout()
 
     auto constraints = inlineContentConstraints();
     auto lineDamage = m_lineDamage.get();
-#if 1
-    auto layoutResult = inlineFormattingContext.layout(constraints, lineDamage);
-#else
-    std::vector<const Layout::ElementBox*> nested_list_markers;
-    std::vector<int32_t> nested_list_marker_offsets_raw;
-    for (const auto& pair : inlineFormattingContext.layoutState().nestedListMarkerOffsets()) {
-        nested_list_markers.push_back(pair.key);
-        nested_list_marker_offsets_raw.push_back(pair.value.rawValue());
-    }
-    const auto placedFloatsRaw = convertPlacedFloats(m_blockFormattingState.placedFloats());
-    const auto lineClampRaw = convertLineClampRaw(inlineFormattingContext.layoutState().parentBlockLayoutState().lineClamp());
     Layout::InlineLayoutResult layoutResult;
-    InlineFormattingContext_layout(
-        &inlineFormattingContext, &constraints, lineDamage,
-        nested_list_markers.empty() ? nullptr : &nested_list_markers[0],
-        nested_list_marker_offsets_raw.empty() ? nullptr : &nested_list_marker_offsets_raw[0],
-        static_cast<uint64_t>(nested_list_markers.size()),
-        placedFloatsRaw,
-        lineClampRaw,
-        &layoutResult);
-#endif
+    if (s_useScionIfcLayout) {
+        std::vector<const Layout::ElementBox*> nested_list_markers;
+        std::vector<int32_t> nested_list_marker_offsets_raw;
+        for (const auto& pair : inlineFormattingContext.layoutState().nestedListMarkerOffsets()) {
+            nested_list_markers.push_back(pair.key);
+            nested_list_marker_offsets_raw.push_back(pair.value.rawValue());
+        }
+        const auto placedFloatsRaw = convertPlacedFloats(m_blockFormattingState.placedFloats());
+        const auto lineClampRaw = convertLineClampRaw(inlineFormattingContext.layoutState().parentBlockLayoutState().lineClamp());
+        InlineFormattingContext_layout(
+            &inlineFormattingContext, &constraints, lineDamage,
+            nested_list_markers.empty() ? nullptr : &nested_list_markers[0],
+            nested_list_marker_offsets_raw.empty() ? nullptr : &nested_list_marker_offsets_raw[0],
+            static_cast<uint64_t>(nested_list_markers.size()),
+            placedFloatsRaw,
+            lineClampRaw,
+            &layoutResult);
+    } else {
+        layoutResult = inlineFormattingContext.layout(constraints, lineDamage);
+    }
     auto repaintRect = LayoutRect { constructContent(inlineFormattingContext.layoutState(), WTFMove(layoutResult)) };
 
     m_lineDamage = { };
@@ -1504,6 +1505,8 @@ void LineLayout::outputLineTree(WTF::TextStream& stream, size_t depth) const
         showInlineContent(stream, *m_inlineContent, depth, isDamaged());
 }
 #endif
+
+bool LineLayout::s_useScionIfcLayout = parseInteger<uint8_t>(StringView::fromLatin1(getenv("USE_SCION_IFC_LAYOUT"))).value_or(0);
 
 }
 }

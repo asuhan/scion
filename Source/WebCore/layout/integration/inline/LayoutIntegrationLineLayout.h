@@ -182,6 +182,8 @@ private:
     std::unique_ptr<Layout::InlineDamage> m_lineDamage;
     std::unique_ptr<InlineContent> m_inlineContent;
     BoxGeometryUpdater m_boxGeometryUpdater;
+
+    static bool s_useScionIfcLayout;
 };
 
 }
