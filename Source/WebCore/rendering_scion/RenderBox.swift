@@ -1567,12 +1567,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setMarginBefore(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setMarginBefore(id(), value.rawValue(), overrideStyle?.p)
+      return
+    }
     marginBox.setBefore(value, (overrideStyle ?? style()).writingMode())
   }
 
   func setMarginAfter(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setMarginAfter(id(), value.rawValue(), overrideStyle?.p)
+      return
+    }
     marginBox.setAfter(value, (overrideStyle ?? style()).writingMode())
   }
 
