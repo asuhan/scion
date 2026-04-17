@@ -67,8 +67,10 @@ class GridTrack {
   }
 
   func growthLimit() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isGrowthLimitBiggerThanBaseSize())
+    assert(
+      growthLimitCap == nil || growthLimitCap! >= m_growthLimit || baseSize() >= growthLimitCap!)
+    return m_growthLimit
   }
 
   func growthLimitIsInfinite() -> Bool { return m_growthLimit == infinity }
