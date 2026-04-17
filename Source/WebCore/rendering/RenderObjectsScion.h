@@ -162,6 +162,8 @@ public:
 
     bool containsFloats() const;
 
+    void deleteLines();
+
     void setChildrenInline(bool);
 
     const LayoutIntegration::LineLayout* inlineLayout() const;

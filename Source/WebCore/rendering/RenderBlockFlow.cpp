@@ -2468,7 +2468,10 @@ void RenderBlockFlow::styleWillChange(StyleDifference diff, const RenderStyle& n
 
 void RenderBlockFlow::deleteLines()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->deleteLines();
+        return;
+    }
     m_lineLayout = std::monostate();
 
     RenderBlock::deleteLines();
