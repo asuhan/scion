@@ -100,6 +100,10 @@ class SettingsWrapper {
     return wk_interop.Settings_layerBasedSVGEngineEnabled(p)
   }
 
+  func legacyLineLayoutVisualCoverageEnabled() -> Bool {
+    return wk_interop.Settings_legacyLineLayoutVisualCoverageEnabled(p)
+  }
+
   func overlappingBackingStoreProvidersEnabled() -> Bool {
     return wk_interop.Settings_overlappingBackingStoreProvidersEnabled(p)
   }

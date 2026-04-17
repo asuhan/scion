@@ -761,6 +761,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return nil
   }
 
+  func hasModernLayout() -> Bool {
+    assert(isNativeImpl())
+    return hasFlexFormattingContextLayout
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {

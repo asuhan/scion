@@ -3325,8 +3325,31 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func paintDebugBoxShadowIfApplicable(
     context: GraphicsContextWrapper, paintRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // FIXME: Use a more generic, modern-layout wide setting instead.
+    if !settings().legacyLineLayoutVisualCoverageEnabled() {
+      return
+    }
+
+    guard let flexBox = self as? RenderFlexibleBoxWrapper else { return }
+
+    let shadowExtent: UInt64 = 3
+    let stateSaver = GraphicsContextStateSaver(context: context)
+    use(stateSaver)
+
+    var shadowRect = paintRect
+    shadowRect.inflate(d: shadowExtent)
+    context.clip(rect: shadowRect.FloatRect())
+    context.setDropShadow(
+      dropShadow: GraphicsDropShadow(
+        offset: FloatSize(width: -shadowRect.width().float(), height: 0), radius: 30,
+        color: flexBox.hasModernLayout()
+          ? ColorWrapper(SRGBA(red: 0, green: 180, blue: 230, alpha: 200))
+          : ColorWrapper(SRGBA(red: 200, green: 100, blue: 100, alpha: 200)),
+        radiusMode: .Default))
+    context.clipOut(rect: paintRect.FloatRect())
+    shadowRect.move(dx: shadowRect.width(), dy: 0)
+    context.fillRect(rect: shadowRect.FloatRect(), color: ColorWrapper.black)
   }
 
   func dirtyForLayoutFromPercentageHeightDescendants() {

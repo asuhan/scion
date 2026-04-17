@@ -1210,6 +1210,7 @@ bool Settings_imageSubsamplingEnabled(const void*);
 bool Settings_incompleteImageBorderEnabled(const void*);
 bool Settings_largeImageAsyncDecodingEnabled(const void*);
 bool Settings_layerBasedSVGEngineEnabled(const void*);
+bool Settings_legacyLineLayoutVisualCoverageEnabled(const void*);
 bool Settings_overlappingBackingStoreProvidersEnabled(const void*);
 bool Settings_scrollToTextFragmentEnabled(const void*);
 bool Settings_scrollingPerformanceTestingEnabled(const void*);

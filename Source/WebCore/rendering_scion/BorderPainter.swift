@@ -1575,7 +1575,7 @@ class BorderPainter {
         use(unused)
         var outerRect = borderRect
         if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
-          outerRect.inflate(d: 1)
+          outerRect.inflate(d: Int32(1))
           ++outerBorderTopWidth
           ++outerBorderBottomWidth
           ++outerBorderLeftWidth

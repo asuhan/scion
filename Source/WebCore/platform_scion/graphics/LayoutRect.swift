@@ -119,6 +119,8 @@ struct LayoutRectWrapper: Equatable {
 
   mutating func move(dx: Int32, dy: Int32) { m_location.move(dx: dx, dy: dy) }
 
+  mutating func move(dx: LayoutUnit, dy: Int32) { m_location.move(dx: dx, dy: dy) }
+
   mutating func expand(size: LayoutSizeWrapper) { m_size += size }
 
   mutating func expand(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: dw, height: dh) }
@@ -284,6 +286,14 @@ struct LayoutRectWrapper: Equatable {
     m_size.setHeight(height: m_size.height() + dy + dy)
   }
 
+  mutating func inflateX(dx: Int32) {
+    inflateX(dx: LayoutUnit(value: dx))
+  }
+
+  mutating func inflateY(dy: Int32) {
+    inflateY(dy: LayoutUnit(value: dy))
+  }
+
   mutating func inflateX(dx: Float32) {
     inflateX(dx: LayoutUnit(value: dx))
   }
@@ -292,12 +302,30 @@ struct LayoutRectWrapper: Equatable {
     inflateY(dy: LayoutUnit(value: dy))
   }
 
+  mutating func inflateX(dx: UInt64) {
+    inflateX(dx: LayoutUnit(value: dx))
+  }
+
+  mutating func inflateY(dy: UInt64) {
+    inflateY(dy: LayoutUnit(value: dy))
+  }
+
   mutating func inflate(d: LayoutUnit) {
     inflateX(dx: d)
     inflateY(dy: d)
   }
 
+  mutating func inflate(d: Int32) {
+    inflateX(dx: d)
+    inflateY(dy: d)
+  }
+
   mutating func inflate(d: Float32) {
+    inflateX(dx: d)
+    inflateY(dy: d)
+  }
+
+  mutating func inflate(d: UInt64) {
     inflateX(dx: d)
     inflateY(dy: d)
   }
