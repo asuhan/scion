@@ -133,6 +133,7 @@ public:
     UpdateScrollInfoAfterLayoutTransaction* updateScrollInfoAfterLayoutTransactionIfExists() { return m_updateScrollInfoAfterLayoutTransaction.get(); }
     void setBoxNeedsTransformUpdateAfterContainerLayout(RenderBox&, RenderBlock& container);
     Vector<SingleThreadWeakPtr<RenderBox>> takeBoxesNeedingTransformUpdateAfterContainerLayout(RenderBlock&);
+    bool hasBoxesNeedingTransformUpdateAfterContainerLayout() const;
 
     RenderElement::LayoutIdentifier layoutIdentifier() const { return m_layoutIdentifier; }
 

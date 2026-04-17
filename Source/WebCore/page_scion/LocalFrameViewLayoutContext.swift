@@ -118,6 +118,12 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
+  // TODO(asuhan): remove this
+  func hasBoxesNeedingTransformUpdateAfterContainerLayout() -> Bool {
+    return
+      wk_interop.LocalFrameViewLayoutContext_hasBoxesNeedingTransformUpdateAfterContainerLayout(p)
+  }
+
   func layoutIdentifier() -> RenderElementWrapper.LayoutIdentifier {
     return wk_interop.LocalFrameViewLayoutContext_layoutIdentifier(p)
   }

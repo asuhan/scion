@@ -91,6 +91,11 @@ extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfte
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransactionIfExists();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_hasBoxesNeedingTransformUpdateAfterContainerLayout(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->hasBoxesNeedingTransformUpdateAfterContainerLayout();
+}
+
 extern "C" WEBCORE_EXPORT uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutIdentifier();
@@ -708,6 +713,10 @@ void LocalFrameViewLayoutContext::setBoxNeedsTransformUpdateAfterContainerLayout
 Vector<SingleThreadWeakPtr<RenderBox>> LocalFrameViewLayoutContext::takeBoxesNeedingTransformUpdateAfterContainerLayout(RenderBlock& container)
 {
     return m_containersWithDescendantsNeedingTransformUpdate.take(container);
+}
+
+bool LocalFrameViewLayoutContext::hasBoxesNeedingTransformUpdateAfterContainerLayout() const {
+    return !m_containersWithDescendantsNeedingTransformUpdate.isEmptyIgnoringNullReferences();
 }
 
 #ifndef NDEBUG

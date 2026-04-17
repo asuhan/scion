@@ -1380,6 +1380,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateDescendantTransformsAfterLayout() {
+    if !view().frameView().layoutContext().hasBoxesNeedingTransformUpdateAfterContainerLayout() {
+      return
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

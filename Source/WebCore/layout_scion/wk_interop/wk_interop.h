@@ -560,6 +560,7 @@ void LocalFrameViewLayoutContext_checkLayoutState(void*);
 struct LayoutSizeRaw LocalFrameViewLayoutContext_layoutDelta(const void*);
 void LocalFrameViewLayoutContext_addLayoutDelta(void*, struct LayoutSizeRaw);
 void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void*);
+bool LocalFrameViewLayoutContext_hasBoxesNeedingTransformUpdateAfterContainerLayout(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSizeRaw, int32_t, bool);
 void LocalFrameViewLayoutContext_popLayoutState(void*);
