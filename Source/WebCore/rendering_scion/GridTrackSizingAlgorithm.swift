@@ -523,8 +523,9 @@ private func removeSubgridMarginBorderPaddingFromTracks(
 
 final class GridTrackSizingAlgorithm {
   init(renderGrid: RenderGridWrapper, grid: Grid) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.grid = grid
+    self.renderGrid = renderGrid
+    self.sizingState = .ColumnSizingFirstIteration
   }
 
   func run(
@@ -2118,8 +2119,8 @@ final class GridTrackSizingAlgorithm {
   private var flexibleSizedTracksIndex: [UInt32] = []
   private var autoSizedTracksForStretchIndex: [UInt32] = []
 
-  var direction: GridTrackSizingDirection
-  private var sizingOperation: SizingOperation
+  var direction: GridTrackSizingDirection = .ForColumns
+  private var sizingOperation: SizingOperation = .TrackSizing
 
   // Required to be public by RenderGrid. Try to minimize the exposed surface.
   let grid: Grid
@@ -2132,8 +2133,8 @@ final class GridTrackSizingAlgorithm {
   // (a.k.a widths in most of the cases) for the computeIntrinsicLogicalWidths()
   // computations. That's why we don't need to keep around different values for
   // rows/columns.
-  var minContentSize: LayoutUnit
-  var maxContentSize: LayoutUnit
+  var minContentSize = LayoutUnit()
+  var maxContentSize = LayoutUnit()
 
   enum SizingState {
     case ColumnSizingFirstIteration
@@ -2144,7 +2145,7 @@ final class GridTrackSizingAlgorithm {
   }
   var sizingState: SizingState
 
-  private var baselineAlignment: GridBaselineAlignment
+  private var baselineAlignment = GridBaselineAlignment()
 
   private class BaselineItemsCache {
     func set(_ key: RenderBoxWrapper, _ value: Bool) {
@@ -2168,10 +2169,10 @@ final class GridTrackSizingAlgorithm {
     }
   }
 
-  private let columnBaselineItemsMap: BaselineItemsCache
-  private let rowBaselineItemsMap: BaselineItemsCache
+  private let columnBaselineItemsMap = BaselineItemsCache()
+  private let rowBaselineItemsMap = BaselineItemsCache()
 
-  private let rowSubgridsWithBaselineAlignedItems: WeakHashSet<RenderGridWrapper>
+  private let rowSubgridsWithBaselineAlignedItems = WeakHashSet<RenderGridWrapper>()
 
   private static func use(_ x: StateMachine) {}
 
