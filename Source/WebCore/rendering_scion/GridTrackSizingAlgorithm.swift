@@ -81,10 +81,7 @@ class GridTrack {
     ensureGrowthLimitIsBiggerThanBaseSize()
   }
 
-  func infiniteGrowthPotential() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func infiniteGrowthPotential() -> Bool { return growthLimitIsInfinite() || m_infinitelyGrowable }
 
   func growthLimitIfNotInfinite() -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -149,6 +146,7 @@ class GridTrack {
   private var m_baseSize = LayoutUnit(value: 0)
   private var m_growthLimit = LayoutUnit(value: 0)
   var growthLimitCap: LayoutUnit? = nil
+  private let m_infinitelyGrowable = false
 
   private static let zero = LayoutUnit(value: UInt64(0))
 }
