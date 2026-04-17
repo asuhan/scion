@@ -52,8 +52,8 @@ private enum SpaceDistributionLimit {
 
 class GridTrack {
   func baseSize() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isGrowthLimitBiggerThanBaseSize())
+    return max(m_baseSize, LayoutUnit(value: UInt64(0)))
   }
 
   func unclampedBaseSize() -> LayoutUnit {
@@ -133,6 +133,11 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  private func isGrowthLimitBiggerThanBaseSize() -> Bool {
+    return growthLimitIsInfinite() || m_growthLimit >= max(m_baseSize, LayoutUnit(value: UInt64(0)))
+  }
+
+  private let m_baseSize = LayoutUnit(value: 0)
   private let m_growthLimit = LayoutUnit(value: 0)
   var growthLimitCap: LayoutUnit? = nil
 }
