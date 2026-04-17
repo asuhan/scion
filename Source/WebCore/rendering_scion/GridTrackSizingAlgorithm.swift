@@ -747,8 +747,11 @@ final class GridTrackSizingAlgorithm {
   }
 
   func setFreeSpace(direction: GridTrackSizingDirection, freeSpace: LayoutUnit?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForColumns {
+      freeSpaceColumns = freeSpace
+    } else {
+      freeSpaceRows = freeSpace
+    }
   }
 
   private func availableSpace(direction: GridTrackSizingDirection) -> LayoutUnit? {
@@ -2116,8 +2119,8 @@ final class GridTrackSizingAlgorithm {
   private var availableSpaceRows: LayoutUnit? = nil
   private var availableSpaceColumns: LayoutUnit? = nil
 
-  private let freeSpaceColumns: LayoutUnit? = nil
-  private let freeSpaceRows: LayoutUnit? = nil
+  private var freeSpaceColumns: LayoutUnit? = nil
+  private var freeSpaceRows: LayoutUnit? = nil
 
   // We need to keep both alive in order to properly size grids with orthogonal
   // writing modes.
