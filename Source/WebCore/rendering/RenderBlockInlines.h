@@ -24,27 +24,58 @@
 
 namespace WebCore {
 
-inline LayoutUnit RenderBlock::endOffsetForContent() const { return !style().isLeftToRightDirection() ? logicalLeftOffsetForContent() : logicalWidth() - logicalRightOffsetForContent(); }
-inline LayoutUnit RenderBlock::endOffsetForContent(LayoutUnit blockOffset) const { return endOffsetForContent(fragmentAtBlockOffset(blockOffset)); }
-inline LayoutUnit RenderBlock::logicalLeftOffsetForContent() const { return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop(); }
-inline LayoutUnit RenderBlock::logicalMarginBoxHeightForChild(const RenderBox& child) const { return isHorizontalWritingMode() ? child.marginBoxRect().height() : child.marginBoxRect().width(); }
-inline LayoutUnit RenderBlock::logicalRightOffsetForContent() const { return logicalLeftOffsetForContent() + availableLogicalWidth(); }
-inline LayoutUnit RenderBlock::startOffsetForContent() const { return style().isLeftToRightDirection() ? logicalLeftOffsetForContent() : logicalWidth() - logicalRightOffsetForContent(); }
-inline LayoutUnit RenderBlock::startOffsetForContent(LayoutUnit blockOffset) const { return startOffsetForContent(fragmentAtBlockOffset(blockOffset)); }
+inline LayoutUnit RenderBlock::endOffsetForContent() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return !style().isLeftToRightDirection() ? logicalLeftOffsetForContent() : logicalWidth() - logicalRightOffsetForContent();
+}
+inline LayoutUnit RenderBlock::endOffsetForContent(LayoutUnit blockOffset) const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return endOffsetForContent(fragmentAtBlockOffset(blockOffset));
+}
+inline LayoutUnit RenderBlock::logicalLeftOffsetForContent() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop();
+}
+inline LayoutUnit RenderBlock::logicalMarginBoxHeightForChild(const RenderBox& child) const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return isHorizontalWritingMode() ? child.marginBoxRect().height() : child.marginBoxRect().width();
+}
+inline LayoutUnit RenderBlock::logicalRightOffsetForContent() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return logicalLeftOffsetForContent() + availableLogicalWidth();
+}
+inline LayoutUnit RenderBlock::startOffsetForContent() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().isLeftToRightDirection() ? logicalLeftOffsetForContent() : logicalWidth() - logicalRightOffsetForContent();
+}
+inline LayoutUnit RenderBlock::startOffsetForContent(LayoutUnit blockOffset) const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return startOffsetForContent(fragmentAtBlockOffset(blockOffset));
+}
 
 inline LayoutUnit RenderBlock::endOffsetForContent(RenderFragmentContainer* fragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !style().isLeftToRightDirection() ? logicalLeftOffsetForContent(fragment) : logicalWidth() - logicalRightOffsetForContent(fragment);
 }
 
 inline LayoutUnit RenderBlock::endOffsetForLine(LayoutUnit position, LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !style().isLeftToRightDirection() ? logicalLeftOffsetForLine(position, logicalHeight)
         : logicalWidth() - logicalRightOffsetForLine(position, logicalHeight);
 }
 
 inline LayoutUnit RenderBlock::endOffsetForLineInFragment(LayoutUnit position, RenderFragmentContainer* fragment, LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !style().isLeftToRightDirection()
         ? logicalLeftOffsetForLineInFragment(position, fragment, logicalHeight)
         : logicalWidth() - logicalRightOffsetForLineInFragment(position, fragment, logicalHeight);
@@ -57,17 +88,20 @@ inline bool RenderBlock::shouldSkipCreatingRunsForObject(RenderObject& object)
 
 inline LayoutUnit RenderBlock::startOffsetForContent(RenderFragmentContainer* fragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isLeftToRightDirection() ? logicalLeftOffsetForContent(fragment) : logicalWidth() - logicalRightOffsetForContent(fragment);
 }
 
 inline LayoutUnit RenderBlock::startOffsetForLine(LayoutUnit position, LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isLeftToRightDirection() ? logicalLeftOffsetForLine(position, logicalHeight)
         : logicalWidth() - logicalRightOffsetForLine(position, logicalHeight);
 }
 
 inline LayoutUnit RenderBlock::startOffsetForLineInFragment(LayoutUnit position, RenderFragmentContainer* fragment, LayoutUnit logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isLeftToRightDirection()
         ? logicalLeftOffsetForLineInFragment(position, fragment, logicalHeight)
         : logicalWidth() - logicalRightOffsetForLineInFragment(position, fragment, logicalHeight);

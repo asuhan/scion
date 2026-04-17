@@ -87,6 +87,7 @@ public:
     TrackedRendererListHashSet* positionedObjects() const;
     bool hasPositionedObjects() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         auto* objects = positionedObjects();
         return objects && !objects->isEmptyIgnoringNullReferences();
     }
@@ -96,6 +97,7 @@ public:
     TrackedRendererListHashSet* percentHeightDescendants() const;
     bool hasPercentHeightDescendants() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         auto* objects = percentHeightDescendants();
         return objects && !objects->isEmptyIgnoringNullReferences();
     }
@@ -106,38 +108,73 @@ public:
 
     bool isContainingBlockAncestorFor(RenderObject&) const;
 
-    void setHasMarginBeforeQuirk(bool b) { setRenderBlockHasMarginBeforeQuirk(b); }
-    void setHasMarginAfterQuirk(bool b) { setRenderBlockHasMarginAfterQuirk(b); }
-    void setShouldForceRelayoutChildren(bool b) { setRenderBlockShouldForceRelayoutChildren(b); }
+    void setHasMarginBeforeQuirk(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        setRenderBlockHasMarginBeforeQuirk(b);
+    }
+    void setHasMarginAfterQuirk(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        setRenderBlockHasMarginAfterQuirk(b);
+    }
+    void setShouldForceRelayoutChildren(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        setRenderBlockShouldForceRelayoutChildren(b);
+    }
 
-    bool hasMarginBeforeQuirk() const { return renderBlockHasMarginBeforeQuirk(); }
-    bool hasMarginAfterQuirk() const { return renderBlockHasMarginAfterQuirk(); }
-    bool hasBorderOrPaddingLogicalWidthChanged() const { return renderBlockShouldForceRelayoutChildren(); }
+    bool hasMarginBeforeQuirk() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return renderBlockHasMarginBeforeQuirk();
+    }
+    bool hasMarginAfterQuirk() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return renderBlockHasMarginAfterQuirk();
+    }
+    bool hasBorderOrPaddingLogicalWidthChanged() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return renderBlockShouldForceRelayoutChildren();
+    }
 
     bool hasMarginBeforeQuirk(const RenderBox& child) const;
     bool hasMarginAfterQuirk(const RenderBox& child) const;
 
-    virtual bool shouldChildInlineMarginContributeToContainerIntrinsicSize(MarginTrimType /* marginSide */, const RenderElement&) const { return true; }
+    virtual bool shouldChildInlineMarginContributeToContainerIntrinsicSize(MarginTrimType /* marginSide */, const RenderElement&) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return true;
+    }
 
     void markPositionedObjectsForLayout();
     void markForPaginationRelayoutIfNeeded() override;
     
     // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
-    virtual bool containsFloats() const { return false; }
+    virtual bool containsFloats() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
     // Versions that can compute line offsets with the fragment and page offset passed in. Used for speed to avoid having to
     // compute the fragment all over again when you already know it.
     LayoutUnit availableLogicalWidthForLineInFragment(LayoutUnit position, RenderFragmentContainer* fragment, LayoutUnit logicalHeight = 0_lu) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return std::max<LayoutUnit>(0, logicalRightOffsetForLineInFragment(position, fragment, logicalHeight)
             - logicalLeftOffsetForLineInFragment(position, fragment, logicalHeight));
     }
     LayoutUnit logicalRightOffsetForLineInFragment(LayoutUnit position, RenderFragmentContainer* fragment, LayoutUnit logicalHeight = 0_lu) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return adjustLogicalRightOffsetForLine(logicalRightFloatOffsetForLine(position, logicalRightOffsetForContent(fragment), logicalHeight));
     }
     LayoutUnit logicalLeftOffsetForLineInFragment(LayoutUnit position, RenderFragmentContainer* fragment, LayoutUnit logicalHeight = 0_lu) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return adjustLogicalLeftOffsetForLine(logicalLeftFloatOffsetForLine(position, logicalLeftOffsetForContent(fragment), logicalHeight));
     }
     inline LayoutUnit startOffsetForLineInFragment(LayoutUnit position, RenderFragmentContainer*, LayoutUnit logicalHeight = 0_lu) const;
@@ -145,14 +182,17 @@ public:
 
     LayoutUnit availableLogicalWidthForLine(LayoutUnit position, LayoutUnit logicalHeight = 0_lu) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return availableLogicalWidthForLineInFragment(position, fragmentAtBlockOffset(position), logicalHeight);
     }
     LayoutUnit logicalRightOffsetForLine(LayoutUnit position, LayoutUnit logicalHeight = 0_lu) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return adjustLogicalRightOffsetForLine(logicalRightFloatOffsetForLine(position, logicalRightOffsetForContent(position), logicalHeight));
     }
     LayoutUnit logicalLeftOffsetForLine(LayoutUnit position, LayoutUnit logicalHeight = 0_lu) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return adjustLogicalLeftOffsetForLine(logicalLeftFloatOffsetForLine(position, logicalLeftOffsetForContent(position), logicalHeight));
     }
     inline LayoutUnit startOffsetForLine(LayoutUnit position, LayoutUnit logicalHeight = 0_lu) const;
@@ -223,48 +263,107 @@ public:
     
     // Accessors for logical width/height and margins in the containing block's block-flow direction.
     enum ApplyLayoutDeltaMode { ApplyLayoutDelta, DoNotApplyLayoutDelta };
-    LayoutUnit logicalWidthForChild(const RenderBox& child) const { return isHorizontalWritingMode() ? child.width() : child.height(); }
-    LayoutUnit logicalHeightForChild(const RenderBox& child) const { return isHorizontalWritingMode() ? child.height() : child.width(); }
+    LayoutUnit logicalWidthForChild(const RenderBox& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? child.width() : child.height();
+    }
+    LayoutUnit logicalHeightForChild(const RenderBox& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? child.height() : child.width();
+    }
     inline LayoutUnit logicalMarginBoxHeightForChild(const RenderBox& child) const;
-    LayoutSize logicalSizeForChild(const RenderBox& child) const { return isHorizontalWritingMode() ? child.size() : child.size().transposedSize(); }
-    LayoutUnit logicalTopForChild(const RenderBox& child) const { return isHorizontalWritingMode() ? child.y() : child.x(); }
-    LayoutUnit logicalLeftForChild(const RenderBox& child) const { return isHorizontalWritingMode() ? child.x() : child.y(); }
+    LayoutSize logicalSizeForChild(const RenderBox& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? child.size() : child.size().transposedSize();
+    }
+    LayoutUnit logicalTopForChild(const RenderBox& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? child.y() : child.x();
+    }
+    LayoutUnit logicalLeftForChild(const RenderBox& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? child.x() : child.y();
+    }
     void setLogicalLeftForChild(RenderBox& child, LayoutUnit logicalLeft, ApplyLayoutDeltaMode = DoNotApplyLayoutDelta);
     void setLogicalTopForChild(RenderBox& child, LayoutUnit logicalTop, ApplyLayoutDeltaMode = DoNotApplyLayoutDelta);
-    LayoutUnit marginBeforeForChild(const RenderBoxModelObject& child) const { return child.marginBefore(&style()); }
-    LayoutUnit marginAfterForChild(const RenderBoxModelObject& child) const { return child.marginAfter(&style()); }
-    LayoutUnit marginStartForChild(const RenderBoxModelObject& child) const { return child.marginStart(&style()); }
-    LayoutUnit marginEndForChild(const RenderBoxModelObject& child) const { return child.marginEnd(&style()); }
-    void setMarginStartForChild(RenderBox& child, LayoutUnit value) const { child.setMarginStart(value, &style()); }
-    void setMarginEndForChild(RenderBox& child, LayoutUnit value) const { child.setMarginEnd(value, &style()); }
-    void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const { child.setMarginBefore(value, &style()); }
-    void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const { child.setMarginAfter(value, &style()); }
+    LayoutUnit marginBeforeForChild(const RenderBoxModelObject& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return child.marginBefore(&style());
+    }
+    LayoutUnit marginAfterForChild(const RenderBoxModelObject& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return child.marginAfter(&style());
+    }
+    LayoutUnit marginStartForChild(const RenderBoxModelObject& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return child.marginStart(&style());
+    }
+    LayoutUnit marginEndForChild(const RenderBoxModelObject& child) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return child.marginEnd(&style());
+    }
+    void setMarginStartForChild(RenderBox& child, LayoutUnit value) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        child.setMarginStart(value, &style());
+    }
+    void setMarginEndForChild(RenderBox& child, LayoutUnit value) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        child.setMarginEnd(value, &style());
+    }
+    void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        child.setMarginBefore(value, &style());
+    }
+    void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        child.setMarginAfter(value, &style());
+    }
     void setTrimmedMarginForChild(RenderBox& child, MarginTrimType);
     LayoutUnit collapsedMarginBeforeForChild(const RenderBox& child) const;
     LayoutUnit collapsedMarginAfterForChild(const RenderBox& child) const;
 
     void getFirstLetter(RenderObject*& firstLetter, RenderElement*& firstLetterContainer, RenderObject* skipObject = nullptr);
 
-    virtual void scrollbarsChanged(bool /*horizontalScrollbarChanged*/, bool /*verticalScrollbarChanged*/) { }
+    virtual void scrollbarsChanged(bool /*horizontalScrollbarChanged*/, bool /*verticalScrollbarChanged*/)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
     LayoutUnit logicalLeftOffsetForContent(RenderFragmentContainer*) const;
     LayoutUnit logicalRightOffsetForContent(RenderFragmentContainer*) const;
     LayoutUnit availableLogicalWidthForContent(RenderFragmentContainer* fragment) const
-    { 
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); } 
         return std::max<LayoutUnit>(0, logicalRightOffsetForContent(fragment) - logicalLeftOffsetForContent(fragment));
     }
     inline LayoutUnit startOffsetForContent(RenderFragmentContainer*) const;
     inline LayoutUnit endOffsetForContent(RenderFragmentContainer*) const;
     LayoutUnit logicalLeftOffsetForContent(LayoutUnit blockOffset) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return logicalLeftOffsetForContent(fragmentAtBlockOffset(blockOffset));
     }
     LayoutUnit logicalRightOffsetForContent(LayoutUnit blockOffset) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return logicalRightOffsetForContent(fragmentAtBlockOffset(blockOffset));
     }
     LayoutUnit availableLogicalWidthForContent(LayoutUnit blockOffset) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return availableLogicalWidthForContent(fragmentAtBlockOffset(blockOffset));
     }
     inline LayoutUnit startOffsetForContent(LayoutUnit blockOffset) const;
@@ -283,8 +382,16 @@ public:
 
     void updateHitTestResult(HitTestResult&, const LayoutPoint&) override;
 
-    bool canHaveChildren() const override { return true; }
-    virtual bool canDropAnonymousBlockChild() const { return true; }
+    bool canHaveChildren() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return true;
+    }
+    virtual bool canDropAnonymousBlockChild() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return true;
+    }
 
     RenderFragmentedFlow* cachedEnclosingFragmentedFlow() const;
     void setCachedEnclosingFragmentedFlowNeedsUpdate();
@@ -294,7 +401,11 @@ public:
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
     bool hasDefiniteLogicalHeight() const;
 
-    virtual bool shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const { return false; }
+    virtual bool shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
     static String updateSecurityDiscCharacters(const RenderStyle&, String&&);
 
@@ -366,7 +477,11 @@ public:
     
     void adjustBorderBoxRectForPainting(LayoutRect&) override;
     LayoutRect paintRectToClipOutFromBorder(const LayoutRect&) override;
-    bool isInlineBlockOrInlineTable() const final { return isInline() && isReplacedOrInlineBlock(); }
+    bool isInlineBlockOrInlineTable() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isInline() && isReplacedOrInlineBlock();
+    }
     
     void boundingRects(Vector<LayoutRect>&, const LayoutPoint& accumulatedOffset) const override;
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const override;
@@ -376,7 +491,10 @@ protected:
 
     virtual void addOverflowFromChildren();
     // FIXME-BLOCKFLOW: Remove virtualization when all callers have moved to RenderBlockFlow
-    virtual void addOverflowFromInlineChildren() { }
+    virtual void addOverflowFromInlineChildren()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
     void addOverflowFromBlockChildren();
     void addOverflowFromPositionedObjects();
     void addVisualOverflowFromTheme();
@@ -401,9 +519,17 @@ private:
     static RenderPtr<RenderBlock> createAnonymousBlockWithStyleAndDisplay(Document&, const RenderStyle&, DisplayType);
 
     // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
-    virtual LayoutUnit logicalRightFloatOffsetForLine(LayoutUnit, LayoutUnit fixedOffset, LayoutUnit) const { return fixedOffset; };
+    virtual LayoutUnit logicalRightFloatOffsetForLine(LayoutUnit, LayoutUnit fixedOffset, LayoutUnit) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return fixedOffset;
+    };
     // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
-    virtual LayoutUnit logicalLeftFloatOffsetForLine(LayoutUnit, LayoutUnit fixedOffset, LayoutUnit) const { return fixedOffset; }
+    virtual LayoutUnit logicalLeftFloatOffsetForLine(LayoutUnit, LayoutUnit fixedOffset, LayoutUnit) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return fixedOffset;
+    }
     LayoutUnit adjustLogicalRightOffsetForLine(LayoutUnit offsetFromFloats) const;
     LayoutUnit adjustLogicalLeftOffsetForLine(LayoutUnit offsetFromFloats) const;
 
@@ -415,10 +541,19 @@ private:
     virtual bool childrenPreventSelfCollapsing() const;
 
     // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
-    virtual void paintFloats(PaintInfo&, const LayoutPoint&, bool) { }
-    virtual void paintInlineChildren(PaintInfo&, const LayoutPoint&) { }
+    virtual void paintFloats(PaintInfo&, const LayoutPoint&, bool)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
+    virtual void paintInlineChildren(PaintInfo&, const LayoutPoint&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
     void paintContents(PaintInfo&, const LayoutPoint&);
-    virtual void paintColumnRules(PaintInfo&, const LayoutPoint&) { };
+    virtual void paintColumnRules(PaintInfo&, const LayoutPoint&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    };
     void paintSelection(PaintInfo&, const LayoutPoint&);
     void paintCaret(PaintInfo&, const LayoutPoint&, CaretType);
     void paintCarets(PaintInfo&, const LayoutPoint&);
@@ -427,9 +562,17 @@ private:
 
     virtual bool hitTestContents(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction);
     // FIXME-BLOCKFLOW: Remove virtualization when all callers have moved to RenderBlockFlow
-    virtual bool hitTestFloats(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&) { return false; }
+    virtual bool hitTestFloats(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
     virtual bool hitTestChildren(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& adjustedLocation, HitTestAction);
-    virtual bool hitTestInlineChildren(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&, HitTestAction) { return false; }
+    virtual bool hitTestInlineChildren(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&, HitTestAction)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
     bool hitTestExcludedChildrenInBorder(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction);
 
     void computeBlockPreferredLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const;
@@ -439,6 +582,7 @@ private:
 
     LayoutRect selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool /*clipToVisibleContent*/) final
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return selectionGapRectsForRepaint(repaintContainer);
     }
     bool shouldPaintSelectionGaps() const final;
@@ -453,7 +597,10 @@ private:
         LayoutUnit lastLogicalTop, LayoutUnit lastLogicalLeft, LayoutUnit lastLogicalRight, LayoutUnit logicalBottom, const LogicalSelectionOffsetCaches&, const PaintInfo*);
 
     // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
-    virtual void clipOutFloatingObjects(RenderBlock&, const PaintInfo*, const LayoutPoint&, const LayoutSize&) { };
+    virtual void clipOutFloatingObjects(RenderBlock&, const PaintInfo*, const LayoutPoint&, const LayoutSize&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    };
     friend class LogicalSelectionOffsetCaches;
 
     void paintContinuationOutlines(PaintInfo&, const LayoutPoint&);
@@ -508,11 +655,13 @@ inline RenderPtr<RenderBlock> RenderBlock::createAnonymousWithParentRendererAndD
 
 inline RenderPtr<RenderBox> RenderBlock::createAnonymousBoxWithSameTypeAs(const RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return createAnonymousBlockWithStyleAndDisplay(document(), renderer.style(), style().display());
 }
 
 inline RenderPtr<RenderBlock> RenderBlock::createAnonymousBlock(DisplayType display) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return createAnonymousBlockWithStyleAndDisplay(document(), style(), display);
 }
 

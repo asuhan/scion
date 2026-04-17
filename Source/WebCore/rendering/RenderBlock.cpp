@@ -127,6 +127,7 @@ using namespace WTF::Unicode;
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBlock);
 
 struct SameSizeAsRenderBlock : public RenderBox {
+    std::unique_ptr<RenderBlockScion> m_scion;
 };
 
 static_assert(sizeof(RenderBlock) == sizeof(SameSizeAsRenderBlock), "RenderBlock should stay small");
@@ -327,6 +328,7 @@ void RenderBlock::setScionHandle(void* handle) {
 
 void RenderBlock::removePositionedObjectsIfNeeded(const RenderStyle& oldStyle, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool hadTransform = oldStyle.hasTransformRelatedProperty();
     bool willHaveTransform = newStyle.hasTransformRelatedProperty();
     bool hadLayoutContainment = oldStyle.containsLayout();
@@ -364,6 +366,7 @@ void RenderBlock::removePositionedObjectsIfNeeded(const RenderStyle& oldStyle, c
 
 void RenderBlock::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle* oldStyle = hasInitializedStyle() ? &style() : nullptr;
     // FIXME: Should change the expression below to newStyle.display() == DisplayType::InlineBlock.
     setReplacedOrInlineBlock(newStyle.isDisplayInlineType());
@@ -392,6 +395,7 @@ static bool borderOrPaddingLogicalWidthChanged(const RenderStyle& oldStyle, cons
 
 void RenderBlock::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::styleDidChange(diff, oldStyle);
 
     if (oldStyle)
@@ -406,6 +410,7 @@ void RenderBlock::styleDidChange(StyleDifference diff, const RenderStyle* oldSty
 
 RenderPtr<RenderBlock> RenderBlock::clone() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderPtr<RenderBlock> cloneBlock;
     if (isAnonymousBlock()) {
         cloneBlock = RenderPtr<RenderBlock>(createAnonymousBlock());
@@ -426,12 +431,14 @@ RenderPtr<RenderBlock> RenderBlock::clone() const
 
 void RenderBlock::deleteLines()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (AXObjectCache* cache = document().existingAXObjectCache())
         cache->deferRecomputeIsIgnored(element());
 }
 
 bool RenderBlock::childrenPreventSelfCollapsing() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Whether or not we collapse is dependent on whether all our normal flow children
     // are also self-collapsing.
     for (RenderBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
@@ -445,6 +452,7 @@ bool RenderBlock::childrenPreventSelfCollapsing() const
 
 bool RenderBlock::isSelfCollapsingBlock() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We are not self-collapsing if we
     // (a) have a non-zero height according to layout (an optimization to avoid wasting time)
     // (b) are a table,
@@ -477,11 +485,13 @@ bool RenderBlock::isSelfCollapsingBlock() const
 
 void RenderBlock::beginUpdateScrollInfoAfterLayoutTransaction()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ++view().frameView().layoutContext().updateScrollInfoAfterLayoutTransaction().nestedCount;
 }
 
 void RenderBlock::endAndCommitUpdateScrollInfoAfterLayoutTransaction()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* transaction = view().frameView().layoutContext().updateScrollInfoAfterLayoutTransactionIfExists();
     ASSERT(transaction);
     if (--transaction->nestedCount)
@@ -502,6 +512,7 @@ void RenderBlock::endAndCommitUpdateScrollInfoAfterLayoutTransaction()
 
 void RenderBlock::updateScrollInfoAfterLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasNonVisibleOverflow())
         return;
     
@@ -521,6 +532,7 @@ void RenderBlock::updateScrollInfoAfterLayout()
 
 void RenderBlock::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
 
     // Table cells call layoutBlock directly, so don't add any logic here.  Put code into
@@ -539,6 +551,7 @@ void RenderBlock::layout()
 
 RenderBlockRareData* RenderBlock::getBlockRareData() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!renderBlockHasRareData())
         return nullptr;
     ASSERT(gRareDataMap);
@@ -547,6 +560,7 @@ RenderBlockRareData* RenderBlock::getBlockRareData() const
 
 RenderBlockRareData& RenderBlock::ensureBlockRareData()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!gRareDataMap)
         gRareDataMap = new RenderBlockRareDataMap;
 
@@ -558,6 +572,7 @@ RenderBlockRareData& RenderBlock::ensureBlockRareData()
 
 void RenderBlock::preparePaginationBeforeBlockLayout(bool& relayoutChildren)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Fragments changing widths can force us to relayout our children.
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     if (fragmentedFlow)
@@ -566,6 +581,7 @@ void RenderBlock::preparePaginationBeforeBlockLayout(bool& relayoutChildren)
 
 bool RenderBlock::recomputeLogicalWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit oldWidth = logicalWidth();
 
     updateLogicalWidth();
@@ -584,6 +600,7 @@ void RenderBlock::layoutBlock(bool, LayoutUnit)
 
 void RenderBlock::addOverflowFromChildren()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (childrenInline()) {
         addOverflowFromInlineChildren();
     
@@ -600,6 +617,7 @@ void RenderBlock::addOverflowFromChildren()
 // Therefore, if the element has a vertical scrollbar placed on the left, an overflow rect at x=2px would conceptually intersect the scrollbar.
 void RenderBlock::computeOverflow(LayoutUnit oldClientAfterEdge, bool)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     clearOverflow();
     addOverflowFromChildren();
 
@@ -668,6 +686,7 @@ void RenderBlock::computeOverflow(LayoutUnit oldClientAfterEdge, bool)
 
 void RenderBlock::clearLayoutOverflow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_overflow)
         return;
     
@@ -682,6 +701,7 @@ void RenderBlock::clearLayoutOverflow()
 
 void RenderBlock::addOverflowFromBlockChildren()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto* child = firstChildBox(); child; child = child->nextSiblingBox()) {
         if (!child->isFloatingOrOutOfFlowPositioned())
             addOverflowFromChild(*child);
@@ -690,6 +710,7 @@ void RenderBlock::addOverflowFromBlockChildren()
 
 void RenderBlock::addOverflowFromPositionedObjects()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     TrackedRendererListHashSet* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;
@@ -704,6 +725,7 @@ void RenderBlock::addOverflowFromPositionedObjects()
 
 void RenderBlock::addVisualOverflowFromTheme()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!style().hasUsedAppearance())
         return;
 
@@ -717,6 +739,7 @@ void RenderBlock::addVisualOverflowFromTheme()
 
 void RenderBlock::setLogicalLeftForChild(RenderBox& child, LayoutUnit logicalLeft, ApplyLayoutDeltaMode applyDelta)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isHorizontalWritingMode()) {
         if (applyDelta == ApplyLayoutDelta)
             view().frameView().layoutContext().addLayoutDelta(LayoutSize(child.x() - logicalLeft, 0_lu));
@@ -730,6 +753,7 @@ void RenderBlock::setLogicalLeftForChild(RenderBox& child, LayoutUnit logicalLef
 
 void RenderBlock::setLogicalTopForChild(RenderBox& child, LayoutUnit logicalTop, ApplyLayoutDeltaMode applyDelta)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isHorizontalWritingMode()) {
         if (applyDelta == ApplyLayoutDelta)
             view().frameView().layoutContext().addLayoutDelta(LayoutSize(0_lu, child.y() - logicalTop));
@@ -743,6 +767,7 @@ void RenderBlock::setLogicalTopForChild(RenderBox& child, LayoutUnit logicalTop,
 
 void RenderBlock::updateBlockChildDirtyBitsBeforeLayout(bool relayoutChildren, RenderBox& child)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (child.isOutOfFlowPositioned())
         return;
 
@@ -758,6 +783,7 @@ void RenderBlock::updateBlockChildDirtyBitsBeforeLayout(bool relayoutChildren, R
 
 void RenderBlock::dirtyForLayoutFromPercentageHeightDescendants()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!percentHeightDescendantsMap)
         return;
 
@@ -798,6 +824,7 @@ void RenderBlock::dirtyForLayoutFromPercentageHeightDescendants()
 
 void RenderBlock::simplifiedNormalFlowLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!childrenInline());
 
     for (auto* box = firstChildBox(); box; box = box->nextSiblingBox()) {
@@ -808,6 +835,7 @@ void RenderBlock::simplifiedNormalFlowLayout()
 
 bool RenderBlock::canPerformSimplifiedLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (selfNeedsLayout() || normalChildNeedsLayout() || outOfFlowChildNeedsStaticPositionLayout())
         return false;
     if (auto wasSkippedDuringLastLayout = wasSkippedDuringLastLayoutDueToContentVisibility(); wasSkippedDuringLastLayout && *wasSkippedDuringLastLayout)
@@ -817,6 +845,7 @@ bool RenderBlock::canPerformSimplifiedLayout() const
 
 bool RenderBlock::simplifiedLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!canPerformSimplifiedLayout())
         return false;
 
@@ -865,6 +894,7 @@ bool RenderBlock::simplifiedLayout()
 
 void RenderBlock::markFixedPositionObjectForLayoutIfNeeded(RenderBox& positionedChild)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (positionedChild.style().position() != PositionType::Fixed)
         return;
 
@@ -895,6 +925,7 @@ void RenderBlock::markFixedPositionObjectForLayoutIfNeeded(RenderBox& positioned
 
 LayoutUnit RenderBlock::marginIntrinsicLogicalWidthForChild(RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // A margin has three types: fixed, percentage, and auto (variable).
     // Auto and percentage margins become 0 when computing min/max width.
     // Fixed margins can be added in as is.
@@ -910,6 +941,7 @@ LayoutUnit RenderBlock::marginIntrinsicLogicalWidthForChild(RenderBox& child) co
 
 void RenderBlock::layoutPositionedObject(RenderBox& r, bool relayoutChildren, bool fixedPositionObjectsOnly)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isSkippedContentRoot()) {
         r.clearNeedsLayoutForSkippedContent();
         return;
@@ -988,6 +1020,7 @@ void RenderBlock::layoutPositionedObject(RenderBox& r, bool relayoutChildren, bo
 
 void RenderBlock::layoutPositionedObjects(bool relayoutChildren, bool fixedPositionObjectsOnly)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;
@@ -1000,6 +1033,7 @@ void RenderBlock::layoutPositionedObjects(bool relayoutChildren, bool fixedPosit
 
 void RenderBlock::markPositionedObjectsForLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;
@@ -1010,6 +1044,7 @@ void RenderBlock::markPositionedObjectsForLayout()
 
 void RenderBlock::markForPaginationRelayoutIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* layoutState = view().frameView().layoutContext().layoutState();
     if (needsLayout() || !layoutState || !layoutState->isPaginated())
         return;
@@ -1020,6 +1055,7 @@ void RenderBlock::markForPaginationRelayoutIfNeeded()
 
 void RenderBlock::paintCarets(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (paintInfo.phase == PaintPhase::Foreground) {
         paintCaret(paintInfo, paintOffset, CursorCaret);
         paintCaret(paintInfo, paintOffset, DragCaret);
@@ -1028,6 +1064,7 @@ void RenderBlock::paintCarets(PaintInfo& paintInfo, const LayoutPoint& paintOffs
 
 void RenderBlock::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto adjustedPaintOffset = paintOffset + location();
     PaintPhase phase = paintInfo.phase;
 
@@ -1063,6 +1100,7 @@ void RenderBlock::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 void RenderBlock::paintContents(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isSkippedContentRoot())
         return;
 
@@ -1089,6 +1127,7 @@ void RenderBlock::paintContents(PaintInfo& paintInfo, const LayoutPoint& paintOf
 
 void RenderBlock::paintChildren(PaintInfo& paintInfo, const LayoutPoint& paintOffset, PaintInfo& paintInfoForChild, bool usePrintRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto* child = firstChildBox(); child; child = child->nextSiblingBox()) {
         if (!paintChild(*child, paintInfo, paintOffset, paintInfoForChild, usePrintRect))
             return;
@@ -1097,6 +1136,7 @@ void RenderBlock::paintChildren(PaintInfo& paintInfo, const LayoutPoint& paintOf
 
 bool RenderBlock::paintChild(RenderBox& child, PaintInfo& paintInfo, const LayoutPoint& paintOffset, PaintInfo& paintInfoForChild, bool usePrintRect, PaintBlockType paintType)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (child.isExcludedAndPlacedInBorder())
         return true;
 
@@ -1143,6 +1183,7 @@ bool RenderBlock::paintChild(RenderBox& child, PaintInfo& paintInfo, const Layou
 
 void RenderBlock::paintCaret(PaintInfo& paintInfo, const LayoutPoint& paintOffset, CaretType type)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto shouldPaintCaret = [&](RenderBlock* caretPainter, bool isContentEditable) {
         if (caretPainter != this)
             return false;
@@ -1178,6 +1219,7 @@ void RenderBlock::paintCaret(PaintInfo& paintInfo, const LayoutPoint& paintOffse
 
 void RenderBlock::paintDebugBoxShadowIfApplicable(GraphicsContext& context, const LayoutRect& paintRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Use a more generic, modern-layout wide setting instead.
     if (!settings().legacyLineLayoutVisualCoverageEnabled())
         return;
@@ -1200,6 +1242,7 @@ void RenderBlock::paintDebugBoxShadowIfApplicable(GraphicsContext& context, cons
 
 void RenderBlock::paintObject(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     PaintPhase paintPhase = paintInfo.phase;
 
     // 1. paint background, borders etc
@@ -1349,6 +1392,7 @@ static ContinuationOutlineTableMap* continuationOutlineTable()
 
 void RenderBlock::addContinuationWithOutline(RenderInline* flow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We can't make this work if the inline is in a layer.  We'll just rely on the broken
     // way of painting.
     ASSERT(!flow->layer() && !flow->isContinuation());
@@ -1365,6 +1409,7 @@ void RenderBlock::addContinuationWithOutline(RenderInline* flow)
 
 bool RenderBlock::paintsContinuationOutline(RenderInline* flow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* table = continuationOutlineTable();
     auto* continuations = table->get(this);
     if (!continuations)
@@ -1375,6 +1420,7 @@ bool RenderBlock::paintsContinuationOutline(RenderInline* flow)
 
 void RenderBlock::paintContinuationOutlines(PaintInfo& info, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* table = continuationOutlineTable();
     auto continuations = table->take(this);
     if (!continuations)
@@ -1394,11 +1440,13 @@ void RenderBlock::paintContinuationOutlines(PaintInfo& info, const LayoutPoint& 
 
 bool RenderBlock::shouldPaintSelectionGaps() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return selectionState() != HighlightState::None && style().usedVisibility() == Visibility::Visible && isSelectionRoot();
 }
 
 bool RenderBlock::isSelectionRoot() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isPseudoElement())
         return false;
     ASSERT(element() || isAnonymous());
@@ -1426,6 +1474,7 @@ bool RenderBlock::isSelectionRoot() const
 
 GapRects RenderBlock::selectionGapRectsForRepaint(const RenderLayerModelObject* repaintContainer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsLayout());
 
     if (!shouldPaintSelectionGaps())
@@ -1444,6 +1493,7 @@ GapRects RenderBlock::selectionGapRectsForRepaint(const RenderLayerModelObject* 
 
 void RenderBlock::paintSelection(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #if ENABLE(TEXT_SELECTION)
     if (shouldPaintSelectionGaps() && paintInfo.phase == PaintPhase::Foreground) {
         LogicalSelectionOffsetCaches cache(*this);
@@ -1494,6 +1544,7 @@ LayoutUnit inlineDirectionOffset(RenderBlock& rootBlock, const LayoutSize& offse
 
 LayoutRect RenderBlock::logicalRectToPhysicalRect(const LayoutPoint& rootBlockPhysicalPosition, const LayoutRect& logicalRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect result;
     if (isHorizontalWritingMode())
         result = logicalRect;
@@ -1507,6 +1558,7 @@ LayoutRect RenderBlock::logicalRectToPhysicalRect(const LayoutPoint& rootBlockPh
 GapRects RenderBlock::selectionGaps(RenderBlock& rootBlock, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock,
     LayoutUnit& lastLogicalTop, LayoutUnit& lastLogicalLeft, LayoutUnit& lastLogicalRight, const LogicalSelectionOffsetCaches& cache, const PaintInfo* paintInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // IMPORTANT: Callers of this method that intend for painting to happen need to do a save/restore.
     // Clip out floating and positioned objects when painting selection gaps.
     if (paintInfo) {
@@ -1559,6 +1611,7 @@ GapRects RenderBlock::inlineSelectionGaps(RenderBlock&, const LayoutPoint&, cons
 GapRects RenderBlock::blockSelectionGaps(RenderBlock& rootBlock, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock,
     LayoutUnit& lastLogicalTop, LayoutUnit& lastLogicalLeft, LayoutUnit& lastLogicalRight, const LogicalSelectionOffsetCaches& cache, const PaintInfo* paintInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     GapRects result;
 
     // Jump right to the first block child that contains some selected objects.
@@ -1630,6 +1683,7 @@ GapRects RenderBlock::blockSelectionGaps(RenderBlock& rootBlock, const LayoutPoi
 LayoutRect RenderBlock::blockSelectionGap(RenderBlock& rootBlock, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock,
     LayoutUnit lastLogicalTop, LayoutUnit lastLogicalLeft, LayoutUnit lastLogicalRight, LayoutUnit logicalBottom, const LogicalSelectionOffsetCaches& cache, const PaintInfo* paintInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalTop = lastLogicalTop;
     LayoutUnit logicalHeight = blockDirectionOffset(rootBlock, offsetFromRootBlock) + logicalBottom - logicalTop;
     if (logicalHeight <= 0)
@@ -1650,6 +1704,7 @@ LayoutRect RenderBlock::blockSelectionGap(RenderBlock& rootBlock, const LayoutPo
 
 LayoutRect RenderBlock::logicalLeftSelectionGap(RenderBlock& rootBlock, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock, RenderElement* selObj, LayoutUnit logicalLeft, LayoutUnit logicalTop, LayoutUnit logicalHeight, const LogicalSelectionOffsetCaches& cache, const PaintInfo* paintInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit rootBlockLogicalTop = blockDirectionOffset(rootBlock, offsetFromRootBlock) + logicalTop;
     LayoutUnit rootBlockLogicalLeft = std::max(logicalLeftSelectionOffset(rootBlock, logicalTop, cache), logicalLeftSelectionOffset(rootBlock, logicalTop + logicalHeight, cache));
     LayoutUnit rootBlockLogicalRight = std::min(inlineDirectionOffset(rootBlock, offsetFromRootBlock) + logicalLeft,
@@ -1666,6 +1721,7 @@ LayoutRect RenderBlock::logicalLeftSelectionGap(RenderBlock& rootBlock, const La
 
 LayoutRect RenderBlock::logicalRightSelectionGap(RenderBlock& rootBlock, const LayoutPoint& rootBlockPhysicalPosition, const LayoutSize& offsetFromRootBlock, RenderElement* selObj, LayoutUnit logicalRight, LayoutUnit logicalTop, LayoutUnit logicalHeight, const LogicalSelectionOffsetCaches& cache, const PaintInfo* paintInfo)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit rootBlockLogicalTop = blockDirectionOffset(rootBlock, offsetFromRootBlock) + logicalTop;
     LayoutUnit rootBlockLogicalLeft = std::max(inlineDirectionOffset(rootBlock, offsetFromRootBlock) + logicalRight,
         std::max(logicalLeftSelectionOffset(rootBlock, logicalTop, cache), logicalLeftSelectionOffset(rootBlock, logicalTop + logicalHeight, cache)));
@@ -1682,6 +1738,7 @@ LayoutRect RenderBlock::logicalRightSelectionGap(RenderBlock& rootBlock, const L
 
 void RenderBlock::getSelectionGapInfo(HighlightState state, bool& leftGap, bool& rightGap)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool ltr = style().isLeftToRightDirection();
     leftGap = (state == RenderObject::HighlightState::Inside) || (state == RenderObject::HighlightState::End && ltr) || (state == RenderObject::HighlightState::Start && !ltr);
     rightGap = (state == RenderObject::HighlightState::Inside) || (state == RenderObject::HighlightState::Start && ltr) || (state == RenderObject::HighlightState::End && !ltr);
@@ -1689,6 +1746,7 @@ void RenderBlock::getSelectionGapInfo(HighlightState state, bool& leftGap, bool&
 
 LayoutUnit RenderBlock::logicalLeftSelectionOffset(RenderBlock& rootBlock, LayoutUnit position, const LogicalSelectionOffsetCaches& cache)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalLeft = logicalLeftOffsetForLine(position);
     if (logicalLeft == logicalLeftOffsetForContent()) {
         if (&rootBlock != this) // The border can potentially be further extended by our containingBlock().
@@ -1713,6 +1771,7 @@ LayoutUnit RenderBlock::logicalLeftSelectionOffset(RenderBlock& rootBlock, Layou
 
 LayoutUnit RenderBlock::logicalRightSelectionOffset(RenderBlock& rootBlock, LayoutUnit position, const LogicalSelectionOffsetCaches& cache)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalRight = logicalRightOffsetForLine(position);
     if (logicalRight == logicalRightOffsetForContent()) {
         if (&rootBlock != this) // The border can potentially be further extended by our containingBlock().
@@ -1737,11 +1796,13 @@ LayoutUnit RenderBlock::logicalRightSelectionOffset(RenderBlock& rootBlock, Layo
 
 TrackedRendererListHashSet* RenderBlock::positionedObjects() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return positionedDescendantsMap().positionedRenderers(*this);
 }
 
 void RenderBlock::insertPositionedObject(RenderBox& positioned)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!isAnonymousBlock());
 
     positioned.clearOverridingContainingBlockContentSize();
@@ -1764,6 +1825,7 @@ void RenderBlock::removePositionedObject(const RenderBox& rendererToRemove)
 
 void RenderBlock::removePositionedObjects(const RenderBlock* newContainingBlockCandidate, ContainingBlockState containingBlockState)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;
@@ -1804,6 +1866,7 @@ void RenderBlock::removePositionedObjects(const RenderBlock* newContainingBlockC
 
 void RenderBlock::addPercentHeightDescendant(RenderBox& descendant)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     insertIntoTrackedRendererMaps(*this, descendant);
 }
 
@@ -1814,6 +1877,7 @@ void RenderBlock::removePercentHeightDescendant(RenderBox& descendant)
 
 TrackedRendererListHashSet* RenderBlock::percentHeightDescendants() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return percentHeightDescendantsMap ? percentHeightDescendantsMap->get(*this) : nullptr;
 }
 
@@ -1862,6 +1926,7 @@ void RenderBlock::clearPercentHeightDescendantsFrom(RenderBox& parent)
 
 bool RenderBlock::isContainingBlockAncestorFor(RenderObject& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (const auto* ancestor = renderer.containingBlock(); ancestor; ancestor = ancestor->containingBlock()) {
         if (ancestor == this)
             return true;
@@ -1871,6 +1936,7 @@ bool RenderBlock::isContainingBlockAncestorFor(RenderObject& renderer) const
 
 LayoutUnit RenderBlock::textIndentOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit cw;
     if (style().textIndent().isPercentOrCalculated())
         cw = availableLogicalWidth();
@@ -1879,6 +1945,7 @@ LayoutUnit RenderBlock::textIndentOffset() const
 
 LayoutUnit RenderBlock::logicalLeftOffsetForContent(RenderFragmentContainer* fragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalLeftOffset = style().isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop();
     if (shouldPlaceVerticalScrollbarOnLeft() && isHorizontalWritingMode())
         logicalLeftOffset += verticalScrollbarWidth();
@@ -1890,6 +1957,7 @@ LayoutUnit RenderBlock::logicalLeftOffsetForContent(RenderFragmentContainer* fra
 
 LayoutUnit RenderBlock::logicalRightOffsetForContent(RenderFragmentContainer* fragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalRightOffset = style().isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop();
     if (shouldPlaceVerticalScrollbarOnLeft() && isHorizontalWritingMode())
         logicalRightOffset += verticalScrollbarWidth();
@@ -1902,6 +1970,7 @@ LayoutUnit RenderBlock::logicalRightOffsetForContent(RenderFragmentContainer* fr
 
 LayoutUnit RenderBlock::adjustLogicalLeftOffsetForLine(LayoutUnit offsetFromFloats) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit left = offsetFromFloats;
 
     if (style().lineAlign() == LineAlign::None)
@@ -1939,6 +2008,7 @@ LayoutUnit RenderBlock::adjustLogicalLeftOffsetForLine(LayoutUnit offsetFromFloa
 
 LayoutUnit RenderBlock::adjustLogicalRightOffsetForLine(LayoutUnit offsetFromFloats) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit right = offsetFromFloats;
 
     if (style().lineAlign() == LineAlign::None)
@@ -1976,6 +2046,7 @@ LayoutUnit RenderBlock::adjustLogicalRightOffsetForLine(LayoutUnit offsetFromFlo
 
 bool RenderBlock::isPointInOverflowControl(HitTestResult& result, const LayoutPoint& locationInContainer, const LayoutPoint& accumulatedOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!scrollsOverflow())
         return false;
     if (auto* scrollableArea = layer() ? layer()->scrollableArea() : nullptr)
@@ -1985,6 +2056,7 @@ bool RenderBlock::isPointInOverflowControl(HitTestResult& result, const LayoutPo
 
 Node* RenderBlock::nodeForHitTest() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     switch (style().pseudoElementType()) {
     // If we're a ::backdrop pseudo-element, we should hit-test to the element that generated it.
     // This matches the behavior that other browsers have.
@@ -2017,6 +2089,7 @@ Node* RenderBlock::nodeForHitTest() const
 
 bool RenderBlock::hitTestChildren(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& adjustedLocation, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Hit test descendants first.
     const LayoutSize localOffset = toLayoutSize(adjustedLocation);
     const LayoutSize scrolledOffset(localOffset - toLayoutSize(scrollPosition()));
@@ -2032,6 +2105,7 @@ bool RenderBlock::hitTestChildren(const HitTestRequest& request, HitTestResult& 
 
 bool RenderBlock::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const LayoutPoint adjustedLocation(accumulatedOffset + location());
     const LayoutSize localOffset = toLayoutSize(adjustedLocation);
 
@@ -2077,6 +2151,7 @@ bool RenderBlock::nodeAtPoint(const HitTestRequest& request, HitTestResult& resu
 
 bool RenderBlock::hitTestContents(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (childrenInline() && !isRenderTable())
         return hitTestInlineChildren(request, result, locationInContainer, accumulatedOffset, hitTestAction);
 
@@ -2165,6 +2240,7 @@ static inline bool isChildHitTestCandidate(const RenderBox& box, const RenderFra
 
 VisiblePosition RenderBlock::positionForPoint(const LayoutPoint& point, HitTestSource source, const RenderFragmentContainer* fragment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isRenderTable())
         return RenderBox::positionForPoint(point, source, fragment);
 
@@ -2226,6 +2302,7 @@ VisiblePosition RenderBlock::positionForPoint(const LayoutPoint& point, HitTestS
 
 void RenderBlock::offsetForContents(LayoutPoint& offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     offset = flipForWritingMode(offset);
     offset += toLayoutSize(scrollPosition());
     offset = flipForWritingMode(offset);
@@ -2233,6 +2310,7 @@ void RenderBlock::offsetForContents(LayoutPoint& offset) const
 
 void RenderBlock::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!childrenInline());
     if (shouldApplySizeOrInlineSizeContainment()) {
         if (auto width = explicitIntrinsicInnerLogicalWidth()) {
@@ -2251,6 +2329,7 @@ void RenderBlock::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, Lay
 
 void RenderBlock::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
 
     m_minPreferredLogicalWidth = 0;
@@ -2275,6 +2354,7 @@ void RenderBlock::computePreferredLogicalWidths()
 
 void RenderBlock::computeBlockPreferredLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!shouldApplyInlineSizeContainment());
 
     const RenderStyle& styleToUse = style();
@@ -2382,12 +2462,14 @@ void RenderBlock::computeBlockPreferredLogicalWidths(LayoutUnit& minLogicalWidth
 
 void RenderBlock::computeChildIntrinsicLogicalWidths(RenderObject& child, LayoutUnit& minPreferredLogicalWidth, LayoutUnit& maxPreferredLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     minPreferredLogicalWidth = child.minPreferredLogicalWidth();
     maxPreferredLogicalWidth = child.maxPreferredLogicalWidth();
 }
 
 void RenderBlock::computeChildPreferredLogicalWidths(RenderObject& child, LayoutUnit& minPreferredLogicalWidth, LayoutUnit& maxPreferredLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (CheckedPtr box = dynamicDowncast<RenderBox>(child); box && box->isHorizontalWritingMode() != isHorizontalWritingMode()) {
         // If the child is an orthogonal flow, child's height determines the width,
         // but the height is not available until layout.
@@ -2421,6 +2503,7 @@ void RenderBlock::computeChildPreferredLogicalWidths(RenderObject& child, Layout
 
 bool RenderBlock::hasLineIfEmpty() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!element())
         return false;
     
@@ -2432,6 +2515,7 @@ bool RenderBlock::hasLineIfEmpty() const
 
 LayoutUnit RenderBlock::lineHeight(bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Inline blocks are replaced elements. Otherwise, just pass off to
     // the base class.  If we're being queried as though we're the root line
     // box, then the fact that we're an inline-block is irrelevant, and we behave
@@ -2445,6 +2529,7 @@ LayoutUnit RenderBlock::lineHeight(bool firstLine, LineDirectionMode direction, 
 
 LayoutUnit RenderBlock::baselinePosition(FontBaseline baselineType, bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Inline blocks are replaced elements. Otherwise, just pass off to
     // the base class.  If we're being queried as though we're the root line
     // box, then the fact that we're an inline-block is irrelevant, and we behave
@@ -2503,6 +2588,7 @@ LayoutUnit RenderBlock::baselinePosition(FontBaseline baselineType, bool firstLi
 
 LayoutUnit RenderBlock::minLineHeightForReplacedRenderer(bool isFirstLine, LayoutUnit replacedHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().inNoQuirksMode() && replacedHeight)
         return replacedHeight;
 
@@ -2515,6 +2601,7 @@ LayoutUnit RenderBlock::minLineHeightForReplacedRenderer(bool isFirstLine, Layou
 
 std::optional<LayoutUnit> RenderBlock::firstLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldApplyLayoutContainment())
         return { };
 
@@ -2532,6 +2619,7 @@ std::optional<LayoutUnit> RenderBlock::firstLineBaseline() const
 
 std::optional<LayoutUnit> RenderBlock::lastLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldApplyLayoutContainment())
         return { };
 
@@ -2549,6 +2637,7 @@ std::optional<LayoutUnit> RenderBlock::lastLineBaseline() const
 
 std::optional<LayoutUnit> RenderBlock::inlineBlockBaseline(LineDirectionMode lineDirection) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldApplyLayoutContainment())
         return synthesizedBaseline(*this, *parentStyle(), lineDirection, BorderBox) + (lineDirection == HorizontalLine ? marginBottom() : marginLeft());
 
@@ -2607,6 +2696,7 @@ static inline RenderBlock* findFirstLetterBlock(RenderBlock* start)
 
 void RenderBlock::getFirstLetter(RenderObject*& firstLetter, RenderElement*& firstLetterContainer, RenderObject* skipObject)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     firstLetter = nullptr;
     firstLetterContainer = nullptr;
 
@@ -2659,6 +2749,7 @@ void RenderBlock::getFirstLetter(RenderObject*& firstLetter, RenderElement*& fir
 
 RenderFragmentedFlow* RenderBlock::cachedEnclosingFragmentedFlow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
 
     if (!rareData || !rareData->m_enclosingFragmentedFlow)
@@ -2669,6 +2760,7 @@ RenderFragmentedFlow* RenderBlock::cachedEnclosingFragmentedFlow() const
 
 bool RenderBlock::cachedEnclosingFragmentedFlowNeedsUpdate() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
 
     if (!rareData || !rareData->m_enclosingFragmentedFlow)
@@ -2679,12 +2771,14 @@ bool RenderBlock::cachedEnclosingFragmentedFlowNeedsUpdate() const
 
 void RenderBlock::setCachedEnclosingFragmentedFlowNeedsUpdate()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData& rareData = ensureBlockRareData();
     rareData.m_enclosingFragmentedFlow = std::nullopt;
 }
 
 RenderFragmentedFlow* RenderBlock::updateCachedEnclosingFragmentedFlow(RenderFragmentedFlow* fragmentedFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData& rareData = const_cast<RenderBlock&>(*this).ensureBlockRareData();
     rareData.m_enclosingFragmentedFlow = fragmentedFlow;
 
@@ -2693,6 +2787,7 @@ RenderFragmentedFlow* RenderBlock::updateCachedEnclosingFragmentedFlow(RenderFra
 
 RenderFragmentedFlow* RenderBlock::locateEnclosingFragmentedFlow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
     if (!rareData || !rareData->m_enclosingFragmentedFlow)
         return updateCachedEnclosingFragmentedFlow(RenderBox::locateEnclosingFragmentedFlow());
@@ -2703,6 +2798,7 @@ RenderFragmentedFlow* RenderBlock::locateEnclosingFragmentedFlow() const
 
 void RenderBlock::resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(RenderFragmentedFlow* fragmentedFlow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (fragmentedFlowState() == FragmentedFlowState::NotInsideFlow)
         return;
 
@@ -2714,18 +2810,21 @@ void RenderBlock::resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(R
 
 LayoutUnit RenderBlock::paginationStrut() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
     return rareData ? rareData->m_paginationStrut : 0_lu;
 }
 
 LayoutUnit RenderBlock::pageLogicalOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
     return rareData ? rareData->m_pageLogicalOffset : 0_lu;
 }
 
 void RenderBlock::setPaginationStrut(LayoutUnit strut)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
     if (!rareData) {
         if (!strut)
@@ -2737,6 +2836,7 @@ void RenderBlock::setPaginationStrut(LayoutUnit strut)
 
 void RenderBlock::setPageLogicalOffset(LayoutUnit logicalOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockRareData* rareData = getBlockRareData();
     if (!rareData) {
         if (!logicalOffset)
@@ -2748,6 +2848,7 @@ void RenderBlock::setPageLogicalOffset(LayoutUnit logicalOffset)
 
 void RenderBlock::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For blocks inside inlines, we include margins so that we run right up to the inline boxes
     // above and below us (thus getting merged with them to form a single irregular shape).
     if (auto* continuation = this->continuation()) {
@@ -2762,6 +2863,7 @@ void RenderBlock::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& ac
 
 void RenderBlock::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!continuation()) {
         absoluteQuadsIgnoringContinuation({ { }, size() }, quads, wasFixed);
         return;
@@ -2775,6 +2877,7 @@ void RenderBlock::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 
 void RenderBlock::absoluteQuadsIgnoringContinuation(const FloatRect& logicalRect, Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: This is wrong for block-flows that are horizontal.
     // https://bugs.webkit.org/show_bug.cgi?id=46781
     auto* fragmentedFlow = enclosingFragmentedFlow();
@@ -2784,6 +2887,7 @@ void RenderBlock::absoluteQuadsIgnoringContinuation(const FloatRect& logicalRect
 
 LayoutRect RenderBlock::rectWithOutlineForRepaint(const RenderLayerModelObject* repaintContainer, LayoutUnit outlineWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect r(RenderBox::rectWithOutlineForRepaint(repaintContainer, outlineWidth));
     if (isContinuation())
         r.inflateY(collapsedMarginBefore()); // FIXME: This is wrong for block-flows that are horizontal.
@@ -2792,6 +2896,7 @@ LayoutRect RenderBlock::rectWithOutlineForRepaint(const RenderLayerModelObject* 
 
 const RenderStyle& RenderBlock::outlineStyleForRepaint() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* continuation = this->continuation())
         return continuation->style();
     return RenderElement::outlineStyleForRepaint();
@@ -2799,6 +2904,7 @@ const RenderStyle& RenderBlock::outlineStyleForRepaint() const
 
 void RenderBlock::updateHitTestResult(HitTestResult& result, const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (result.innerNode())
         return;
 
@@ -2817,6 +2923,7 @@ void RenderBlock::addFocusRingRectsForInlineChildren(Vector<LayoutRect>&, const 
 
 void RenderBlock::addFocusRingRects(Vector<LayoutRect>& rects, const LayoutPoint& additionalOffset, const RenderLayerModelObject* paintContainer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For blocks inside inlines, we include margins so that we run right up to the inline boxes
     // above and below us (thus getting merged with them to form a single irregular shape).
     auto* inlineContinuation = this->inlineContinuation();
@@ -2872,6 +2979,7 @@ RenderPtr<RenderBlock> RenderBlock::createAnonymousBlockWithStyleAndDisplay(Docu
 
 LayoutUnit RenderBlock::offsetFromLogicalTopOfFirstPage() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* layoutState = view().frameView().layoutContext().layoutState();
     if (layoutState && !layoutState->isPaginated())
         return 0;
@@ -2893,6 +3001,7 @@ LayoutUnit RenderBlock::offsetFromLogicalTopOfFirstPage() const
 
 RenderFragmentContainer* RenderBlock::fragmentAtBlockOffset(LayoutUnit blockOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     if (!fragmentedFlow || !fragmentedFlow->hasValidFragmentInfo())
         return 0;
@@ -2916,6 +3025,7 @@ static bool canComputeFragmentRangeForBox(const RenderBlock& parentBlock, const 
 
 bool RenderBlock::childBoxIsUnsplittableForFragmentation(const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     bool checkColumnBreaks = fragmentedFlow && fragmentedFlow->shouldCheckColumnBreaks();
     bool checkPageBreaks = !checkColumnBreaks && view().frameView().layoutContext().layoutState()->pageLogicalHeight();
@@ -2926,6 +3036,7 @@ bool RenderBlock::childBoxIsUnsplittableForFragmentation(const RenderBox& child)
 
 void RenderBlock::computeFragmentRangeForBoxChild(const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     ASSERT(canComputeFragmentRangeForBox(*this, box, fragmentedFlow));
 
@@ -2944,6 +3055,7 @@ void RenderBlock::computeFragmentRangeForBoxChild(const RenderBox& box) const
 
 void RenderBlock::estimateFragmentRangeForBoxChild(const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     if (!canComputeFragmentRangeForBox(*this, box, fragmentedFlow))
         return;
@@ -2963,6 +3075,7 @@ void RenderBlock::estimateFragmentRangeForBoxChild(const RenderBox& box) const
 
 bool RenderBlock::updateFragmentRangeForBoxChild(const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentedFlow* fragmentedFlow = enclosingFragmentedFlow();
     if (!canComputeFragmentRangeForBox(*this, box, fragmentedFlow))
         return false;
@@ -2992,6 +3105,7 @@ bool RenderBlock::updateFragmentRangeForBoxChild(const RenderBox& box) const
 
 void RenderBlock::setTrimmedMarginForChild(RenderBox &child, MarginTrimType marginTrimType)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     switch (marginTrimType) {
     case MarginTrimType::BlockStart:
         setMarginBeforeForChild(child, 0_lu);
@@ -3016,6 +3130,7 @@ void RenderBlock::setTrimmedMarginForChild(RenderBox &child, MarginTrimType marg
 
 LayoutUnit RenderBlock::collapsedMarginBeforeForChild(const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the child has the same directionality as we do, then we can just return its
     // collapsed margin.
     if (!child.isWritingModeRoot())
@@ -3033,6 +3148,7 @@ LayoutUnit RenderBlock::collapsedMarginBeforeForChild(const RenderBox& child) co
 
 LayoutUnit RenderBlock::collapsedMarginAfterForChild(const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the child has the same directionality as we do, then we can just return its
     // collapsed margin.
     if (!child.isWritingModeRoot())
@@ -3050,6 +3166,7 @@ LayoutUnit RenderBlock::collapsedMarginAfterForChild(const RenderBox& child) con
 
 bool RenderBlock::hasMarginBeforeQuirk(const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the child has the same directionality as we do, then we can just return its
     // margin quirk.
     if (!child.isWritingModeRoot()) {
@@ -3071,6 +3188,7 @@ bool RenderBlock::hasMarginBeforeQuirk(const RenderBox& child) const
 
 bool RenderBlock::hasMarginAfterQuirk(const RenderBox& child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the child has the same directionality as we do, then we can just return its
     // margin quirk.
     if (!child.isWritingModeRoot()) {
@@ -3092,6 +3210,7 @@ bool RenderBlock::hasMarginAfterQuirk(const RenderBox& child) const
 
 ASCIILiteral RenderBlock::renderName() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isBody())
         return "RenderBody"_s; // FIXME: Temporary hack until we know that the regression tests pass.
     if (isFieldset())
@@ -3116,6 +3235,7 @@ ASCIILiteral RenderBlock::renderName() const
 
 String RenderBlock::debugDescription() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isViewTransitionPseudo()) {
         StringBuilder builder;
 
@@ -3186,6 +3306,7 @@ TextRun RenderBlock::constructTextRun(std::span<const UChar> characters, const R
 #if ASSERT_ENABLED
 void RenderBlock::checkPositionedObjectsNeedLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;
@@ -3197,11 +3318,13 @@ void RenderBlock::checkPositionedObjectsNeedLayout()
 
 bool RenderBlock::hasDefiniteLogicalHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return (bool)availableLogicalHeightForPercentageComputation();
 }
 
 std::optional<LayoutUnit> RenderBlock::availableLogicalHeightForPercentageComputation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For anonymous blocks that are skipped during percentage height calculation,
     // we consider them to have an indefinite height.
     if (skipContainingBlockForPercentHeightCalculation(*this, false))
@@ -3257,6 +3380,7 @@ std::optional<LayoutUnit> RenderBlock::availableLogicalHeightForPercentageComput
     
 void RenderBlock::layoutExcludedChildren(bool relayoutChildren)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isFieldset())
         return;
 
@@ -3336,6 +3460,7 @@ void RenderBlock::layoutExcludedChildren(bool relayoutChildren)
 
 RenderBox* RenderBlock::findFieldsetLegend(FieldsetFindLegendOption option) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto& legend : childrenOfType<RenderBox>(*this)) {
         if (option == FieldsetIgnoreFloatingOrOutOfFlow && legend.isFloatingOrOutOfFlowPositioned())
             continue;
@@ -3347,6 +3472,7 @@ RenderBox* RenderBlock::findFieldsetLegend(FieldsetFindLegendOption option) cons
 
 void RenderBlock::adjustBorderBoxRectForPainting(LayoutRect& paintRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isFieldset() || isSkippedContentRoot() || !intrinsicBorderForFieldset())
         return;
     
@@ -3369,6 +3495,7 @@ void RenderBlock::adjustBorderBoxRectForPainting(LayoutRect& paintRect)
 
 LayoutRect RenderBlock::paintRectToClipOutFromBorder(const LayoutRect& paintRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect clipRect;
     if (!isFieldset() || isSkippedContentRoot())
         return clipRect;
@@ -3393,12 +3520,14 @@ LayoutRect RenderBlock::paintRectToClipOutFromBorder(const LayoutRect& paintRect
 
 LayoutUnit RenderBlock::intrinsicBorderForFieldset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* rareData = getBlockRareData();
     return rareData ? rareData->m_intrinsicBorderForFieldset : 0_lu;
 }
 
 void RenderBlock::setIntrinsicBorderForFieldset(LayoutUnit padding)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* rareData = getBlockRareData();
     if (!rareData) {
         if (!padding)
@@ -3410,6 +3539,7 @@ void RenderBlock::setIntrinsicBorderForFieldset(LayoutUnit padding)
 
 RectEdges<LayoutUnit> RenderBlock::borderWidths() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!intrinsicBorderForFieldset())
         return RenderBox::borderWidths();
 
@@ -3423,6 +3553,7 @@ RectEdges<LayoutUnit> RenderBlock::borderWidths() const
 
 LayoutUnit RenderBlock::borderTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().blockFlowDirection() != FlowDirection::TopToBottom || !intrinsicBorderForFieldset())
         return RenderBox::borderTop();
     return RenderBox::borderTop() + intrinsicBorderForFieldset();
@@ -3430,6 +3561,7 @@ LayoutUnit RenderBlock::borderTop() const
 
 LayoutUnit RenderBlock::borderLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().blockFlowDirection() != FlowDirection::LeftToRight || !intrinsicBorderForFieldset())
         return RenderBox::borderLeft();
     return RenderBox::borderLeft() + intrinsicBorderForFieldset();
@@ -3437,6 +3569,7 @@ LayoutUnit RenderBlock::borderLeft() const
 
 LayoutUnit RenderBlock::borderBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().blockFlowDirection() != FlowDirection::BottomToTop || !intrinsicBorderForFieldset())
         return RenderBox::borderBottom();
     return RenderBox::borderBottom() + intrinsicBorderForFieldset();
@@ -3444,6 +3577,7 @@ LayoutUnit RenderBlock::borderBottom() const
 
 LayoutUnit RenderBlock::borderRight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().blockFlowDirection() != FlowDirection::RightToLeft || !intrinsicBorderForFieldset())
         return RenderBox::borderRight();
     return RenderBox::borderRight() + intrinsicBorderForFieldset();
@@ -3451,11 +3585,13 @@ LayoutUnit RenderBlock::borderRight() const
 
 LayoutUnit RenderBlock::borderBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderBox::borderBefore() + intrinsicBorderForFieldset();
 }
 
 bool RenderBlock::computePreferredWidthsForExcludedChildren(LayoutUnit& minWidth, LayoutUnit& maxWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isFieldset())
         return false;
     
@@ -3493,6 +3629,7 @@ bool RenderBlock::computePreferredWidthsForExcludedChildren(LayoutUnit& minWidth
 
 LayoutUnit RenderBlock::adjustBorderBoxLogicalHeightForBoxSizing(LayoutUnit height) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We're doing this to match other browsers even though it's questionable.
     // Shouldn't height:100px mean the fieldset content gets 100px of height even if the
     // resulting fieldset becomes much taller because of the legend?
@@ -3504,6 +3641,7 @@ LayoutUnit RenderBlock::adjustBorderBoxLogicalHeightForBoxSizing(LayoutUnit heig
 
 LayoutUnit RenderBlock::adjustContentBoxLogicalHeightForBoxSizing(std::optional<LayoutUnit> height) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We're doing this to match other browsers even though it's questionable.
     // Shouldn't height:100px mean the fieldset content gets 100px of height even if the
     // resulting fieldset becomes much taller because of the legend?
@@ -3519,6 +3657,7 @@ LayoutUnit RenderBlock::adjustContentBoxLogicalHeightForBoxSizing(std::optional<
 
 LayoutUnit RenderBlock::adjustIntrinsicLogicalHeightForBoxSizing(LayoutUnit height) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().boxSizing() == BoxSizing::BorderBox)
         return height + borderAndPaddingLogicalHeight();
     return height + intrinsicBorderForFieldset();
@@ -3526,6 +3665,7 @@ LayoutUnit RenderBlock::adjustIntrinsicLogicalHeightForBoxSizing(LayoutUnit heig
 
 void RenderBlock::paintExcludedChildrenInBorder(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isFieldset() || isSkippedContentRoot())
         return;
     
@@ -3539,6 +3679,7 @@ void RenderBlock::paintExcludedChildrenInBorder(PaintInfo& paintInfo, const Layo
 
 bool RenderBlock::hitTestExcludedChildrenInBorder(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isFieldset())
         return false;
 
@@ -3593,6 +3734,7 @@ LayoutUnit RenderBlock::layoutOverflowLogicalBottom(const RenderBlock& renderer)
 
 void RenderBlock::updateDescendantTransformsAfterLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto boxes = view().frameView().layoutContext().takeBoxesNeedingTransformUpdateAfterContainerLayout(*this);
     for (auto& box : boxes) {
         if (box && box->hasLayer())
