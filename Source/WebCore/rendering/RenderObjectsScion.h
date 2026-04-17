@@ -149,6 +149,17 @@ private:
     void* m_handle;
 };
 
+class RenderBlockScion final {
+public:
+    RenderBlockScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderBlockFlowScion final {
 public:
     RenderBlockFlowScion(void* handle)

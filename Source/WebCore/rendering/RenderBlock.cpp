@@ -65,6 +65,7 @@
 #include "RenderLayoutState.h"
 #include "RenderListMarker.h"
 #include "RenderMenuList.h"
+#include "RenderObjectsScion.h"
 #include "RenderTableCell.h"
 #include "RenderTextControl.h"
 #include "RenderTextFragment.h"
@@ -318,6 +319,10 @@ RenderBlock::~RenderBlock()
         gRareDataMap->remove(this);
 
     // Do not add any more code here. Add it to willBeDestroyed() instead.
+}
+
+void RenderBlock::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderBlockScion>(handle);
 }
 
 void RenderBlock::removePositionedObjectsIfNeeded(const RenderStyle& oldStyle, const RenderStyle& newStyle)

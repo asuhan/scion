@@ -53,12 +53,16 @@ enum TextRunFlag {
 
 typedef unsigned TextRunFlags;
 
+class RenderBlockScion;
+
 class RenderBlock : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderBlock);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderBlock);
 public:
     friend class LineLayoutState;
     virtual ~RenderBlock();
+
+    void setScionHandle(void* handle);
 
 protected:
     RenderBlock(Type, Element&, RenderStyle&&, OptionSet<TypeFlag>, TypeSpecificFlags = { });
@@ -489,6 +493,8 @@ public:
 private:
     // Used to store state between styleWillChange and styleDidChange
     static bool s_canPropagateFloatIntoSibling;
+
+    std::unique_ptr<RenderBlockScion> m_scion;
 };
 
 LayoutUnit blockDirectionOffset(RenderBlock& rootBlock, const LayoutSize& offsetFromRootBlock);
