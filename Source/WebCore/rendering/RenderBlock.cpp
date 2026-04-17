@@ -3103,6 +3103,28 @@ bool RenderBlock::updateFragmentRangeForBoxChild(const RenderBox& box) const
     return false;
 }
 
+void RenderBlock::setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const
+{
+    if (m_scion)
+    {
+        assert(!child.scion());
+        m_scion->setMarginBeforeForChild(child, value);
+        return;
+    }
+    child.setMarginBefore(value, &style());
+}
+
+void RenderBlock::setMarginAfterForChild(RenderBox& child, LayoutUnit value) const
+{
+    if (m_scion)
+    {
+        assert(!child.scion());
+        m_scion->setMarginAfterForChild(child, value);
+        return;
+    }
+    child.setMarginAfter(value, &style());
+}
+
 void RenderBlock::setTrimmedMarginForChild(RenderBox &child, MarginTrimType marginTrimType)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

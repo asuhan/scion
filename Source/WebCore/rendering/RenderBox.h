@@ -890,6 +890,8 @@ public:
 
     ShapeOutsideInfo* shapeOutsideInfo() const;
 
+    void* scion() const;
+
 protected:
     RenderBox(Type, Element&, RenderStyle&&, OptionSet<TypeFlag> = { }, TypeSpecificFlags = { });
     RenderBox(Type, Document&, RenderStyle&&, OptionSet<TypeFlag> = { }, TypeSpecificFlags = { });

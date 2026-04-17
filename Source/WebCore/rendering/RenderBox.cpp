@@ -4051,6 +4051,11 @@ void RenderBox::computePreferredLogicalWidths(const Length& minWidth, const Leng
     m_maxPreferredLogicalWidth += borderAndPadding;
 }
 
+void* RenderBox::scion() const
+{
+    return m_scion ? m_scion->handle() : nullptr;
+}
+
 bool RenderBox::replacedMinMaxLogicalHeightComputesAsNone(SizeType sizeType) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -92,6 +92,10 @@ extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
+extern "C" void RenderBlockScion_setMarginBeforeForChild(const void*, void*, int32_t);
+
+extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int32_t);
+
 extern "C" bool RenderBlockScion_isInlineBlockOrInlineTable(const void*);
 
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
@@ -386,6 +390,16 @@ void RenderBoxScion::willBeDestroyed()
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
 {
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderBlockScion::setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const
+{
+    RenderBlockScion_setMarginBeforeForChild(m_handle, &child, value.rawValue());
+}
+
+void RenderBlockScion::setMarginAfterForChild(RenderBox& child, LayoutUnit value) const
+{
+    RenderBlockScion_setMarginAfterForChild(m_handle, &child, value.rawValue());
 }
 
 bool RenderBlockScion::isInlineBlockOrInlineTable() const

@@ -145,6 +145,8 @@ public:
 
     bool shouldTrimChildMargin(MarginTrimType, const RenderBox&) const;
 
+    void* handle() const { return m_handle; }
+
 private:
     void* m_handle;
 };
@@ -155,6 +157,10 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const;
+
+    void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const;
 
     bool isInlineBlockOrInlineTable() const;
 

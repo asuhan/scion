@@ -1213,6 +1213,26 @@ func RenderBlockFlowScion_styleWillChange(
   blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
 }
 
+@_cdecl("RenderBlockScion_setMarginBeforeForChild")
+func RenderBlockScion_setMarginBeforeForChild(
+  _ blockRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ valueRaw: Int32
+) {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.setMarginBeforeForChild(
+    child: createRenderObjectWrapper(childRaw) as! RenderBoxWrapper,
+    value: LayoutUnit.fromRawValue(value: valueRaw))
+}
+
+@_cdecl("RenderBlockScion_setMarginAfterForChild")
+func RenderBlockScion_setMarginAfterForChild(
+  _ blockRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ valueRaw: Int32
+) {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.setMarginAfterForChild(
+    child: createRenderObjectWrapper(childRaw) as! RenderBoxWrapper,
+    value: LayoutUnit.fromRawValue(value: valueRaw))
+}
+
 @_cdecl("RenderBlockScion_isInlineBlockOrInlineTable")
 func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -> Bool {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

@@ -321,16 +321,8 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         child.setMarginEnd(value, &style());
     }
-    void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        child.setMarginBefore(value, &style());
-    }
-    void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        child.setMarginAfter(value, &style());
-    }
+    void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const;
+    void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const;
     void setTrimmedMarginForChild(RenderBox& child, MarginTrimType);
     LayoutUnit collapsedMarginBeforeForChild(const RenderBox& child) const;
     LayoutUnit collapsedMarginAfterForChild(const RenderBox& child) const;
