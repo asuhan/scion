@@ -1506,7 +1506,7 @@ void LineLayout::outputLineTree(WTF::TextStream& stream, size_t depth) const
 }
 #endif
 
-bool LineLayout::s_useScionIfcLayout = parseInteger<uint8_t>(StringView::fromLatin1(getenv("USE_SCION_IFC_LAYOUT"))).value_or(0);
+bool LineLayout::s_useScionIfcLayout = parseInteger<uint8_t>(StringView::fromLatin1(getenv("SCION_USE_IFC_LAYOUT"))).value_or(0);
 
 }
 }
