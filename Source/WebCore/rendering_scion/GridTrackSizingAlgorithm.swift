@@ -583,8 +583,17 @@ final class GridTrackSizingAlgorithm {
   }
 
   func reset() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(wasSetup())
+    sizingState = .ColumnSizingFirstIteration
+    m_columns.a.removeAll()
+    m_rows.a.removeAll()
+    contentSizedTracksIndex.removeAll()
+    flexibleSizedTracksIndex.removeAll()
+    autoSizedTracksForStretchIndex.removeAll()
+    setAvailableSpace(direction: .ForRows, availableSpace: nil)
+    setAvailableSpace(direction: .ForColumns, availableSpace: nil)
+    hasPercentSizedRowsIndefiniteHeight = false
+    hasFlexibleMaxTrackBreadth = false
   }
 
   func baselineOffsetForGridItem(gridItem: RenderBoxWrapper, baselineAxis: GridAxis) -> LayoutUnit {
@@ -2115,6 +2124,10 @@ final class GridTrackSizingAlgorithm {
   private let freeSpaceColumns: LayoutUnit? = nil
   private let freeSpaceRows: LayoutUnit? = nil
 
+  // We need to keep both alive in order to properly size grids with orthogonal
+  // writing modes.
+  private var m_columns = GridTrackArrayRef()
+  private var m_rows = GridTrackArrayRef()
   private var contentSizedTracksIndex: [UInt32] = []
   private var flexibleSizedTracksIndex: [UInt32] = []
   private var autoSizedTracksForStretchIndex: [UInt32] = []
