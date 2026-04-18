@@ -489,6 +489,11 @@ extern "C" WEBCORE_EXPORT void StringBuilder_append_StringView(void* builder, co
     static_cast<StringBuilder*>(builder)->append(*static_cast<const StringView*>(s));
 }
 
+extern "C" WEBCORE_EXPORT void StringBuilder_append_literal(void* builder, const char* s)
+{
+    static_cast<StringBuilder*>(builder)->append(WTF::ASCIILiteral::fromLiteralUnsafe(s));
+}
+
 extern "C" WEBCORE_EXPORT const void* StringBuilder_toString(void* builder)
 {
     return new String(static_cast<StringBuilder*>(builder)->toString());

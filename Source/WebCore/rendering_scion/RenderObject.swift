@@ -382,6 +382,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // TODO(asuhan): override in all subclasses
+  func renderName() -> String { fatalError("Not reached") }
+
   func parent() -> RenderElementWrapper? {
     if !isNativeImpl() {
       let unwrapped = wk_interop.RenderObject_parent(id())
@@ -2920,6 +2923,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     setFragmentedFlowStateIncludingDescendants(
       state: computedState, skipDescendentFragmentedFlow: .No)
+  }
+
+  // TODO(asuhan): override in all subclasses
+  func debugDescription() -> StringWrapper {
+    assert(isNativeImpl())
+    let builder = StringBuilderWrapper()
+
+    builder.append(
+      literal: "\(renderName()) 0x\(String(UInt(bitPattern: ObjectIdentifier(self)), radix: 16))")
+    if node() != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    return builder.toString(owner: false)
   }
 
   func addPDFURLRect(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

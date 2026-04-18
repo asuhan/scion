@@ -2256,6 +2256,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return max(renderer.clientLogicalBottom(), maxChildLogicalBottom + renderer.paddingAfter())
   }
 
+  override func debugDescription() -> StringWrapper {
+    assert(isNativeImpl())
+    if isViewTransitionPseudo() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    return super.debugDescription()
+  }
+
   // Overflow is always relative to the border-box of the element in question.
   // Therefore, if the element has a vertical scrollbar placed on the left, an overflow rect at x=2px would conceptually intersect the scrollbar.
   func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
@@ -2967,6 +2977,39 @@ class RenderBlockWrapper: RenderBoxWrapper {
       maxCharWidth)
     left += remainder
     return left
+  }
+
+  override func renderName() -> String {
+    assert(isNativeImpl())
+    if isBody() {
+      return "RenderBody"  // FIXME: Temporary hack until we know that the regression tests pass.
+    }
+    if isFieldset() {
+      return "RenderFieldSet"  // FIXME: Remove eventually, but done to keep tests from breaking.
+    }
+    if isFloating() {
+      return "RenderBlock (floating)"
+    }
+    if isOutOfFlowPositioned() {
+      return "RenderBlock (positioned)"
+    }
+    if isAnonymousBlock() {
+      return "RenderBlock (anonymous)"
+    }
+    // FIXME: Temporary hack while the new generated content system is being implemented.
+    if isPseudoElement() {
+      return "RenderBlock (generated)"
+    }
+    if isAnonymous() {
+      return "RenderBlock (generated)"
+    }
+    if isRelativelyPositioned() {
+      return "RenderBlock (relative positioned)"
+    }
+    if isStickilyPositioned() {
+      return "RenderBlock (sticky positioned)"
+    }
+    return "RenderBlock"
   }
 
   override func isSelfCollapsingBlock() -> Bool {

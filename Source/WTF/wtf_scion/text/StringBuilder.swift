@@ -50,6 +50,8 @@ class StringBuilderWrapper {
     wk_interop.StringBuilder_append_StringView(self.p, string.p)
   }
 
+  func append(literal: String) { wk_interop.StringBuilder_append_literal(self.p, literal) }
+
   // FIXME: Unclear why toString returns String and toStringPreserveCapacity returns const String&. Make them consistent.
   func toString(owner: Bool = true) -> StringWrapper {
     return StringWrapper(p: wk_interop.StringBuilder_toString(p), owner: owner)
