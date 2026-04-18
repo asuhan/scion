@@ -182,6 +182,7 @@ public func InlineFormattingContext_layout(
       line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
     defer { wk_interop.EnclosingTopAndBottom_destroy(enclosing_logical_top_and_bottom) }
     var ellipsisC: UnsafeRawPointer? = nil
+    defer { if ellipsisC != nil { wk_interop.Ellipsis_destroy(ellipsisC!) } }
     if let ellipsis = line.ellipsis {
       if ellipsis.text.p == nil {
         // TODO(asuhan): implement this
@@ -351,6 +352,7 @@ public func LineLayout_layout(
       line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
     defer { wk_interop.EnclosingTopAndBottom_destroy(enclosing_logical_top_and_bottom) }
     var ellipsisC: UnsafeRawPointer? = nil
+    defer { if ellipsisC != nil { wk_interop.Ellipsis_destroy(ellipsisC!) } }
     if let ellipsis = line.ellipsis {
       if ellipsis.text.p == nil {
         // TODO(asuhan): implement this

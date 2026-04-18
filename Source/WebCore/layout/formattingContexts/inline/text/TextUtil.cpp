@@ -727,6 +727,11 @@ extern "C" WEBCORE_EXPORT const void* Ellipsis_new(uint8_t type, float x, float 
         *static_cast<const AtomString*>(text));
 }
 
+extern "C" WEBCORE_EXPORT void Ellipsis_destroy(const void* p)
+{
+    delete static_cast<const WebCore::InlineDisplay::Line::Ellipsis*>(p);
+}
+
 struct WordBreakLeftRaw {
     uint64_t length;
     float logicalWidth;

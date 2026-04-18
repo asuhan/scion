@@ -462,6 +462,7 @@ void InlineLayoutResult_displayContent_addBox(void* inline_layout_result, const 
 void InlineLayoutResult_setRange(void* inline_layout_result, uint8_t range);
 const void* TextUtil_ellipsisTextInInlineDirection(bool is_horizontal);
 const void* Ellipsis_new(uint8_t type, float x, float y, float width, float height, const void* text);
+void Ellipsis_destroy(const void*);
 struct WordBreakLeftRaw TextUtil_breakWord(
     const void* inline_text_box,
     uint64_t start_position,
