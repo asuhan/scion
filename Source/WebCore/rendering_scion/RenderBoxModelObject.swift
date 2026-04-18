@@ -903,6 +903,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func continuation() -> RenderBoxModelObjectWrapper? {
+    if !hasContinuationChainNode() {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -3266,6 +3266,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override final func outlineStyleForRepaint() -> RenderStyleWrapper {
+    if let continuation = continuation() {
+      return continuation.style()
+    }
+    return super.outlineStyleForRepaint()
+  }
+
   override final func shouldPaintSelectionGaps() -> Bool {
     assert(isNativeImpl())
     return selectionState() != .None && style().usedVisibility() == .Visible && isSelectionRoot()
