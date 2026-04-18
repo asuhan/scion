@@ -51,9 +51,8 @@ class StringBuilderWrapper {
   }
 
   // FIXME: Unclear why toString returns String and toStringPreserveCapacity returns const String&. Make them consistent.
-  func toString() -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func toString(owner: Bool = true) -> StringWrapper {
+    return StringWrapper(p: wk_interop.StringBuilder_toString(p), owner: owner)
   }
 
   func isEmpty() -> Bool {

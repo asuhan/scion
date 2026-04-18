@@ -489,6 +489,11 @@ extern "C" WEBCORE_EXPORT void StringBuilder_append_StringView(void* builder, co
     static_cast<StringBuilder*>(builder)->append(*static_cast<const StringView*>(s));
 }
 
+extern "C" WEBCORE_EXPORT const void* StringBuilder_toString(void* builder)
+{
+    return new String(static_cast<StringBuilder*>(builder)->toString());
+}
+
 extern "C" WEBCORE_EXPORT const void* Length_empty_new(uint8_t type)
 {
     return new WebCore::Length(static_cast<WebCore::LengthType>(type));
