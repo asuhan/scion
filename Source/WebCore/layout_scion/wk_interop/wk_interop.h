@@ -423,6 +423,7 @@ uint16_t PriorContext_lastCharacter(const void*);
 uint16_t PriorContext_secondToLastCharacter(const void*);
 void PriorContext_set(void*, uint16_t, uint16_t);
 const void* EnclosingTopAndBottom_new(float top, float bottom);
+void EnclosingTopAndBottom_destroy(const void*);
 const void* InlineDisplayBox_new(
     const void* layout_box,
     const void* unflipped_visual_rect,

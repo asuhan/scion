@@ -609,6 +609,11 @@ extern "C" WEBCORE_EXPORT const void* EnclosingTopAndBottom_new(float top, float
     return new WebCore::InlineDisplay::Line::EnclosingTopAndBottom(top, bottom);
 }
 
+extern "C" WEBCORE_EXPORT void EnclosingTopAndBottom_destroy(const void* p)
+{
+    delete static_cast<const WebCore::InlineDisplay::Line::EnclosingTopAndBottom*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* InlineDisplayBox_new(
     const void* layout_box,
     const void* unflipped_visual_rect,

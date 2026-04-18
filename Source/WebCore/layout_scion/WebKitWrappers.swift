@@ -180,6 +180,7 @@ public func InlineFormattingContext_layout(
     defer { wk_interop.FloatRect_destroy(ink_overflow) }
     let enclosing_logical_top_and_bottom = wk_interop.EnclosingTopAndBottom_new(
       line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
+    defer { wk_interop.EnclosingTopAndBottom_destroy(enclosing_logical_top_and_bottom) }
     var ellipsisC: UnsafeRawPointer? = nil
     if let ellipsis = line.ellipsis {
       if ellipsis.text.p == nil {
@@ -347,6 +348,7 @@ public func LineLayout_layout(
     defer { wk_interop.FloatRect_destroy(ink_overflow) }
     let enclosing_logical_top_and_bottom = wk_interop.EnclosingTopAndBottom_new(
       line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
+    defer { wk_interop.EnclosingTopAndBottom_destroy(enclosing_logical_top_and_bottom) }
     var ellipsisC: UnsafeRawPointer? = nil
     if let ellipsis = line.ellipsis {
       if ellipsis.text.p == nil {
