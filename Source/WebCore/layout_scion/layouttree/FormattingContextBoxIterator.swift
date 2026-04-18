@@ -32,6 +32,11 @@ class FormattingContextBoxIterator: LayoutDescendantIterator<BoxWrapper> {
     self.current = begin
   }
 
+  deinit {
+    wk_interop.FormattingContextBoxIterator_destroy(begin)
+    wk_interop.FormattingContextBoxIterator_destroy(end)
+  }
+
   override func next() -> BoxWrapper? {
     if wk_interop.FormattingContextBoxIterator_equal(current, end) {
       return nil

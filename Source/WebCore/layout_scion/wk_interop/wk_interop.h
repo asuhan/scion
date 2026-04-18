@@ -1150,6 +1150,7 @@ void* FormattingContextBoxIteratorAdapter_new(const void*);
 void FormattingContextBoxIteratorAdapter_destroy(const void*);
 void* FormattingContextBoxIteratorAdapter_begin(void*);
 void* FormattingContextBoxIteratorAdapter_end(void*);
+void FormattingContextBoxIterator_destroy(const void*);
 const void* FormattingContextBoxIterator_deref(void*);
 void* FormattingContextBoxIterator_preinc(void*);
 bool FormattingContextBoxIterator_equal(const void*, const void*);
