@@ -31,9 +31,9 @@ func U16_NEXT_buff(s: UnsafePointer<UChar>, i: inout UInt64, length: UInt32) -> 
 }
 
 internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {
-  i = wk_interop.U16_FWD_1_scion(s.p!, i, length)
+  i = wk_interop.U16_FWD_1_scion(s.p, i, length)
 }
 
 internal func U16_SET_CP_START(s: StringWrapper, start: UInt32, i: UInt32) {
-  wk_interop.U16_SET_CP_START_scion(s.p!, start, i)
+  wk_interop.U16_SET_CP_START_scion(s.p, start, i)
 }

@@ -41,10 +41,6 @@ class StringBuilderWrapper {
   }
 
   func append(string: StringWrapper) {
-    if string.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     wk_interop.StringBuilder_append_String(self.p, string.p)
   }
 

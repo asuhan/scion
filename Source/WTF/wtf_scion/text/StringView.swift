@@ -27,11 +27,7 @@ import wk_interop
 
 class StringWrapperView {
   init(s: StringWrapper) {
-    if s.p != nil {
-      self.p = string_view_from_string(p: s.p!)
-    } else {
-      self.p = nil
-    }
+    self.p = string_view_from_string(p: s.p)
   }
 
   init(p: UnsafeRawPointer?) {

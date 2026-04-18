@@ -41,11 +41,7 @@ class StringWrapper: Hashable {
   }
 
   func isNull() -> Bool {
-    if self.p != nil {
-      return wk_interop.String_isNull(self.p)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.String_isNull(self.p)
   }
 
   func isEmpty() -> Bool {
@@ -54,35 +50,19 @@ class StringWrapper: Hashable {
   }
 
   func length() -> UInt32 {
-    if self.p != nil {
-      return string_length(p: self.p!)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return string_length(p: self.p)
   }
 
   func span8() -> CharSpanWrapper<LChar> {
-    if self.p != nil {
-      return CharSpanWrapper<LChar>(p: wk_interop.String_span8(self.p))
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CharSpanWrapper<LChar>(p: wk_interop.String_span8(self.p))
   }
 
   func span16() -> CharSpanWrapper<UChar> {
-    if self.p != nil {
-      return CharSpanWrapper<UChar>(p: wk_interop.String_span16(self.p))
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CharSpanWrapper<UChar>(p: wk_interop.String_span16(self.p))
   }
 
   func is8Bit() -> Bool {
-    if self.p != nil {
-      return wk_interop.String_is8Bit(self.p)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.String_is8Bit(self.p)
   }
 
   func find(literal: String) -> UInt64? {
@@ -111,35 +91,19 @@ class StringWrapper: Hashable {
   }
 
   func convertTo16Bit() {
-    if self.p != nil {
-      return wk_interop.String_convertTo16Bit(self.p)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.String_convertTo16Bit(self.p)
   }
 
   func hash(into hasher: inout Hasher) {
-    if self.p != nil {
-      hasher.combine(wk_interop.String_hash(self.p))
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    hasher.combine(wk_interop.String_hash(self.p))
   }
 
   subscript(index: UInt32) -> UChar {
-    if self.p != nil {
-      return string_subscript(p: self.p!, index: index)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return string_subscript(p: self.p, index: index)
   }
 
   func substring(position: UInt32, length: UInt32 = UInt32(Int32.max)) -> StringWrapper {
-    if self.p != nil {
-      return StringWrapper(p: wk_interop.String_substring(self.p!, position, length))
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StringWrapper(p: wk_interop.String_substring(self.p, position, length))
   }
 
   // Determines the writing direction using the Unicode Bidi Algorithm rules P2 and P3.
@@ -158,7 +122,7 @@ class StringWrapper: Hashable {
     fatalError("Not implemented")
   }
 
-  var p: UnsafeRawPointer?
+  var p: UnsafeRawPointer
 }
 
 func emptyString() -> StringWrapper {

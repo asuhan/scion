@@ -225,8 +225,7 @@ public func InlineFormattingContext_layout(
         UInt64(box.text().start), UInt64(box.text().length),
         box.text().partiallyVisibleContentLength,
         box.text().hasPartiallyVisibleContentLength, box.text().m_originalContent.p,
-        box.text().adjustedContentToRender.p != nil
-          ? wk_interop.String_new_copy(box.text().adjustedContentToRender.p) : nil,
+        wk_interop.String_new_copy(box.text().adjustedContentToRender.p),
         box.text().hasHyphen) : nil
     var positionWithinInlineLevelBox = InlineDisplay.Box.PositionWithinInlineLevelBox()
     if box.isFirstForLayoutBox {
@@ -385,8 +384,7 @@ public func LineLayout_layout(
         UInt64(box.text().start), UInt64(box.text().length),
         box.text().partiallyVisibleContentLength,
         box.text().hasPartiallyVisibleContentLength, box.text().m_originalContent.p,
-        box.text().adjustedContentToRender.p != nil
-          ? wk_interop.String_new_copy(box.text().adjustedContentToRender.p) : nil,
+        wk_interop.String_new_copy(box.text().adjustedContentToRender.p),
         box.text().hasHyphen) : nil
     var positionWithinInlineLevelBox = InlineDisplay.Box.PositionWithinInlineLevelBox()
     if box.isFirstForLayoutBox {
