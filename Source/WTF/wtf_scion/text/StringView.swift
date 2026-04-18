@@ -39,6 +39,10 @@ class StringWrapperView {
     fatalError("Not implemented")
   }
 
+  deinit {
+    wk_interop.StringView_destroy(p!)
+  }
+
   func length() -> UInt32 {
     if self.p != nil {
       return wk_interop.StringView_length(self.p)

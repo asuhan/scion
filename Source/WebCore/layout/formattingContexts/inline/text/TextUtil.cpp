@@ -409,6 +409,11 @@ extern "C" WEBCORE_EXPORT const void* StringView_substring(const void* p, unsign
     return new StringView(static_cast<const StringView*>(p)->substring(start, length));
 }
 
+extern "C" WEBCORE_EXPORT void StringView_destroy(const void* p)
+{
+    delete static_cast<const StringView*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* StringView_upconvertedCharacters(const void* p)
 {
     return new StringView::UpconvertedCharactersWithSize<32>(static_cast<const StringView*>(p)->upconvertedCharacters());
