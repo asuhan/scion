@@ -397,6 +397,7 @@ void StringBuilder_append_StringView(void*, const void*);
 const void* Length_empty_new(uint8_t type);
 const void* Length_new(int32_t raw_value, uint8_t type, bool has_quirk);
 const void* FloatRect_new(float x, float y, float width, float height);
+void FloatRect_destroy(const void*);
 const void* Expansion_new(uint8_t left, uint8_t right, float horizontal_expansion);
 const void* Text_new(
     uint64_t start,

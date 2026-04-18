@@ -161,18 +161,23 @@ public func InlineFormattingContext_layout(
     let line_box_rect = wk_interop.FloatRect_new(
       line.lineBoxRect.x(), line.lineBoxRect.y(), line.lineBoxRect.width(),
       line.lineBoxRect.height())
+    defer { wk_interop.FloatRect_destroy(line_box_rect) }
     let line_box_logical_rect = wk_interop.FloatRect_new(
       line.lineBoxLogicalRect.x(), line.lineBoxLogicalRect.y(), line.lineBoxLogicalRect.width(),
       line.lineBoxLogicalRect.height())
+    defer { wk_interop.FloatRect_destroy(line_box_logical_rect) }
     let scrollable_overflow = wk_interop.FloatRect_new(
       line.scrollableOverflow.x(), line.scrollableOverflow.y(), line.scrollableOverflow.width(),
       line.scrollableOverflow.height())
+    defer { wk_interop.FloatRect_destroy(scrollable_overflow) }
     let content_overflow = wk_interop.FloatRect_new(
       line.contentOverflow.x(), line.contentOverflow.y(), line.contentOverflow.width(),
       line.contentOverflow.height())
+    defer { wk_interop.FloatRect_destroy(content_overflow) }
     let ink_overflow = wk_interop.FloatRect_new(
       line.inkOverflow.x(), line.inkOverflow.y(), line.inkOverflow.width(),
       line.inkOverflow.height())
+    defer { wk_interop.FloatRect_destroy(ink_overflow) }
     let enclosing_logical_top_and_bottom = wk_interop.EnclosingTopAndBottom_new(
       line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
     var ellipsisC: UnsafeRawPointer? = nil
@@ -213,8 +218,10 @@ public func InlineFormattingContext_layout(
     let unflipped_visual_rect = wk_interop.FloatRect_new(
       box.unflippedVisualRect.x(), box.unflippedVisualRect.y(), box.unflippedVisualRect.width(),
       box.unflippedVisualRect.height())
+    defer { wk_interop.FloatRect_destroy(unflipped_visual_rect) }
     let ink_overflow = wk_interop.FloatRect_new(
       box.inkOverflow.x(), box.inkOverflow.y(), box.inkOverflow.width(), box.inkOverflow.height())
+    defer { wk_interop.FloatRect_destroy(ink_overflow) }
     let expansion = box.expansion()
     let expansionC = wk_interop.Expansion_new(
       expansion.behavior.left.rawValue, expansion.behavior.right.rawValue,
@@ -320,18 +327,23 @@ public func LineLayout_layout(
     let line_box_rect = wk_interop.FloatRect_new(
       line.lineBoxRect.x(), line.lineBoxRect.y(), line.lineBoxRect.width(),
       line.lineBoxRect.height())
+    defer { wk_interop.FloatRect_destroy(line_box_rect) }
     let line_box_logical_rect = wk_interop.FloatRect_new(
       line.lineBoxLogicalRect.x(), line.lineBoxLogicalRect.y(), line.lineBoxLogicalRect.width(),
       line.lineBoxLogicalRect.height())
+    defer { wk_interop.FloatRect_destroy(line_box_logical_rect) }
     let scrollable_overflow = wk_interop.FloatRect_new(
       line.scrollableOverflow.x(), line.scrollableOverflow.y(), line.scrollableOverflow.width(),
       line.scrollableOverflow.height())
+    defer { wk_interop.FloatRect_destroy(scrollable_overflow) }
     let content_overflow = wk_interop.FloatRect_new(
       line.contentOverflow.x(), line.contentOverflow.y(), line.contentOverflow.width(),
       line.contentOverflow.height())
+    defer { wk_interop.FloatRect_destroy(content_overflow) }
     let ink_overflow = wk_interop.FloatRect_new(
       line.inkOverflow.x(), line.inkOverflow.y(), line.inkOverflow.width(),
       line.inkOverflow.height())
+    defer { wk_interop.FloatRect_destroy(ink_overflow) }
     let enclosing_logical_top_and_bottom = wk_interop.EnclosingTopAndBottom_new(
       line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
     var ellipsisC: UnsafeRawPointer? = nil
@@ -372,8 +384,10 @@ public func LineLayout_layout(
     let unflipped_visual_rect = wk_interop.FloatRect_new(
       box.unflippedVisualRect.x(), box.unflippedVisualRect.y(), box.unflippedVisualRect.width(),
       box.unflippedVisualRect.height())
+    defer { wk_interop.FloatRect_destroy(unflipped_visual_rect) }
     let ink_overflow = wk_interop.FloatRect_new(
       box.inkOverflow.x(), box.inkOverflow.y(), box.inkOverflow.width(), box.inkOverflow.height())
+    defer { wk_interop.FloatRect_destroy(ink_overflow) }
     let expansion = box.expansion()
     let expansionC = wk_interop.Expansion_new(
       expansion.behavior.left.rawValue, expansion.behavior.right.rawValue,

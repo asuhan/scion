@@ -504,6 +504,11 @@ extern "C" WEBCORE_EXPORT const void* FloatRect_new(float x, float y, float widt
     return new WebCore::FloatRect(x, y, width, height);
 }
 
+extern "C" WEBCORE_EXPORT void FloatRect_destroy(const void* p)
+{
+    delete static_cast<const WebCore::FloatRect*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* Expansion_new(uint8_t left, uint8_t right, float horizontal_expansion)
 {
     return new WebCore::InlineDisplay::Box::Expansion(
