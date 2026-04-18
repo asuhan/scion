@@ -258,6 +258,7 @@ public func InlineFormattingContext_layout(
       box.isFullyTruncated,
       text
     )
+    defer { wk_interop.InlineDisplayBox_destroy(boxC) }
     wk_interop.InlineLayoutResult_displayContent_addBox(layoutResultCPtr, boxC)
   }
   wk_interop.InlineLayoutResult_setRange(layoutResultCPtr, inlineLayoutResult.range.rawValue)
@@ -426,6 +427,7 @@ public func LineLayout_layout(
       box.isFullyTruncated,
       text
     )
+    defer { wk_interop.InlineDisplayBox_destroy(boxC) }
     wk_interop.InlineLayoutResult_displayContent_addBox(layoutResultCPtr, boxC)
   }
   wk_interop.InlineLayoutResult_setRange(layoutResultCPtr, layoutResult.range.rawValue)

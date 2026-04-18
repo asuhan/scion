@@ -641,6 +641,11 @@ extern "C" WEBCORE_EXPORT const void* InlineDisplayBox_new(
         OptionSet<WebCore::InlineDisplay::Box::PositionWithinInlineLevelBox>::fromRaw(position_within_inline_level_box));
 }
 
+extern "C" WEBCORE_EXPORT void InlineDisplayBox_destroy(const void* p)
+{
+    delete static_cast<const WebCore::InlineDisplay::Box*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* InlineDisplayLine_new(
     uint64_t first_box_index,
     uint64_t box_count,

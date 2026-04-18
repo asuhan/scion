@@ -436,6 +436,7 @@ const void* InlineDisplayBox_new(
     uint8_t position_within_inline_level_box,
     bool is_fully_truncated,
     const void* text);
+void InlineDisplayBox_destroy(const void*);
 const void* InlineDisplayLine_new(
     uint64_t first_box_index,
     uint64_t box_count,
