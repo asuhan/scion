@@ -424,6 +424,11 @@ extern "C" WEBCORE_EXPORT void* TextRun_fromStringView(const void* p, float xpos
     return new WebCore::TextRun(*static_cast<const StringView*>(p), xpos, expansion, WebCore::ExpansionBehavior::defaultBehavior(), static_cast<WebCore::TextDirection>(direction), directionalOverride);
 }
 
+extern "C" WEBCORE_EXPORT void TextRun_destroy(const void* p)
+{
+    delete static_cast<const WebCore::TextRun*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* String_new()
 {
     return new String();

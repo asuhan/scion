@@ -47,6 +47,8 @@ class TextRunWrapper {
       directionalOverride: directionalOverride)
   }
 
+  deinit { wk_interop.TextRun_destroy(p!) }
+
   func subRun(startOffset: UInt32, length: UInt32) -> TextRunWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
