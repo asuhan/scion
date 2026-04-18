@@ -80,6 +80,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  override func renderName() -> String {
+    assert(isNativeImpl())
+    return "RenderView"
+  }
+
   override func requiresLayer() -> Bool { return true }
 
   override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
