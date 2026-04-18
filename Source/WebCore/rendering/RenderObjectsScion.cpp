@@ -100,6 +100,8 @@ extern "C" bool RenderBlockScion_canHaveChildren(const void*);
 
 extern "C" bool RenderBlockScion_isInlineBlockOrInlineTable(const void*);
 
+extern "C" const void* RenderBlockScion_outlineStyleForRepaint(const void*);
+
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
 extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
@@ -412,6 +414,11 @@ bool RenderBlockScion::canHaveChildren() const
 bool RenderBlockScion::isInlineBlockOrInlineTable() const
 {
     return RenderBlockScion_isInlineBlockOrInlineTable(m_handle);
+}
+
+const RenderStyle& RenderBlockScion::outlineStyleForRepaint() const
+{
+    return *static_cast<const RenderStyle*>(RenderBlockScion_outlineStyleForRepaint(m_handle));
 }
 
 void RenderBlockFlowScion::willBeDestroyed()

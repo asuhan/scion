@@ -1264,3 +1264,9 @@ func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.isInlineBlockOrInlineTable()
 }
+
+@_cdecl("RenderBlockScion_outlineStyleForRepaint")
+func RenderBlockScion_outlineStyleForRepaint(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.outlineStyleForRepaint().p!
+}

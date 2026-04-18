@@ -2896,7 +2896,7 @@ LayoutRect RenderBlock::rectWithOutlineForRepaint(const RenderLayerModelObject* 
 
 const RenderStyle& RenderBlock::outlineStyleForRepaint() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->outlineStyleForRepaint(); }
     if (auto* continuation = this->continuation())
         return continuation->style();
     return RenderElement::outlineStyleForRepaint();

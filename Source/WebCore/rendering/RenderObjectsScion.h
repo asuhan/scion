@@ -166,6 +166,8 @@ public:
 
     bool isInlineBlockOrInlineTable() const;
 
+    const RenderStyle& outlineStyleForRepaint() const;
+
 private:
     void* m_handle;
 };
