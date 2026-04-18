@@ -469,6 +469,11 @@ extern "C" WEBCORE_EXPORT void* StringBuilder_new()
     return new StringBuilder();
 }
 
+extern "C" WEBCORE_EXPORT void StringBuilder_destroy(const void* p)
+{
+    delete static_cast<const StringBuilder*>(p);
+}
+
 extern "C" WEBCORE_EXPORT void StringBuilder_append_UChar(void* builder, uint16_t ch)
 {
     static_cast<StringBuilder*>(builder)->append(static_cast<UChar>(ch));

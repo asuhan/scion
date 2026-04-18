@@ -31,6 +31,8 @@ class StringBuilderWrapper {
     self.p = wk_interop.StringBuilder_new()
   }
 
+  deinit { wk_interop.StringBuilder_destroy(p) }
+
   func append(character: UChar) {
     wk_interop.StringBuilder_append_UChar(self.p, character)
   }
