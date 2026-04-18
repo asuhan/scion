@@ -26,44 +26,22 @@
 import wk_interop
 
 class StringWrapperView {
-  init(s: StringWrapper) {
-    self.p = string_view_from_string(p: s.p)
-  }
+  init(s: StringWrapper) { self.p = string_view_from_string(p: s.p) }
 
-  init(p: UnsafeRawPointer?) {
-    self.p = p
-  }
+  init(p: UnsafeRawPointer) { self.p = p }
 
   init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  deinit {
-    wk_interop.StringView_destroy(p!)
-  }
+  deinit { wk_interop.StringView_destroy(p) }
 
-  func length() -> UInt32 {
-    if self.p != nil {
-      return wk_interop.StringView_length(self.p)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func length() -> UInt32 { return wk_interop.StringView_length(p) }
 
-  func isEmpty() -> Bool {
-    if self.p != nil {
-      return wk_interop.StringView_isEmpty(self.p)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return wk_interop.StringView_isEmpty(p) }
 
   func characterAt(index: UInt32) -> UChar {
-    if self.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     if is8Bit() {
       return span8()[UInt64(index)]
     }
@@ -75,34 +53,19 @@ class StringWrapperView {
   }
 
   func is8Bit() -> Bool {
-    if self.p != nil {
-      return wk_interop.StringView_is8Bit(self.p)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StringView_is8Bit(p)
   }
 
   func span8() -> CharSpanWrapper<LChar> {
-    if self.p != nil {
-      return CharSpanWrapper<LChar>(p: wk_interop.StringView_span8(self.p))
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CharSpanWrapper<LChar>(p: wk_interop.StringView_span8(p))
   }
 
   func span16() -> CharSpanWrapper<UChar> {
-    if self.p != nil {
-      return CharSpanWrapper<UChar>(p: wk_interop.StringView_span16(self.p))
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CharSpanWrapper<UChar>(p: wk_interop.StringView_span16(p))
   }
 
   func substring(start: UInt32, length: UInt32 = UInt32.max) -> StringWrapperView {
-    if self.p != nil {
-      return string_view_substring(s: self, start: start, length: length)
-    }
-    return StringWrapperView(s: StringWrapper())
+    return string_view_substring(s: self, start: start, length: length)
   }
 
   func left(length: UInt32) -> StringWrapperView {
@@ -136,7 +99,7 @@ class StringWrapperView {
     fatalError("Not implemented")
   }
 
-  var p: UnsafeRawPointer?
+  var p: UnsafeRawPointer
 }
 
 func makeStringByReplacingAll(_ string: StringWrapper, target: UChar, replacement: UChar)

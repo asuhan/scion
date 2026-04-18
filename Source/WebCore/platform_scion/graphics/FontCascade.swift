@@ -111,9 +111,9 @@ class FontCascadeWrapper: Equatable {
   func widthForTextUsingSimplifiedMeasuring(
     text: StringWrapperView, textDirection: TextDirection = .LTR
   ) -> Float32 {
-    if p != nil && text.p != nil {
+    if p != nil {
       return font_cascade_width_for_text_using_simplified_measuring(
-        fontCascadePtr: p!, textPtr: text.p!, textDirection: textDirection == .LTR)
+        fontCascadePtr: p!, textPtr: text.p, textDirection: textDirection == .LTR)
     }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -122,9 +122,9 @@ class FontCascadeWrapper: Equatable {
   func widthForSimpleTextWithFixedPitch(
     text: StringWrapperView, whitespaceIsCollapsed: Bool
   ) -> Float32 {
-    if p != nil && text.p != nil {
+    if p != nil {
       return font_cascade_width_for_simple_text_with_fixed_pitch(
-        fontCascadePtr: p!, textPtr: text.p!, whitespaceIsCollapsed: whitespaceIsCollapsed)
+        fontCascadePtr: p!, textPtr: text.p, whitespaceIsCollapsed: whitespaceIsCollapsed)
     }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -257,10 +257,6 @@ class FontCascadeWrapper: Equatable {
     stringView: StringWrapperView, direction: TextDirection,
     expansionBehavior: ExpansionBehaviorWrapper
   ) -> (UInt64, Bool) {
-    if stringView.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     let raw = wk_interop.FontCascade_expansionOpportunityCount(
       stringView.p, direction.rawValue, expansionBehavior.left.rawValue,
       expansionBehavior.right.rawValue)

@@ -1092,7 +1092,6 @@ struct InlineDisplayContentBuilder {
     if text!.needsHyphen {
       let contentSlice = StringWrapperView(s: content).substring(
         start: UInt32(text!.start), length: UInt32(text!.length))
-      assert(contentSlice.p != nil)
       let hyphenString = style.hyphenString()
       assert(hyphenString.p != nil)
       return StringWrapper(

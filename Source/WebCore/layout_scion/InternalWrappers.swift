@@ -171,7 +171,7 @@ func string_view_from_string(p: UnsafeRawPointer) -> UnsafeRawPointer {
 
 func string_view_substring(s: StringWrapperView, start: UInt32, length: UInt32) -> StringWrapperView
 {
-  return StringWrapperView(p: StringView_substring(s.p!, start, length))
+  return StringWrapperView(p: StringView_substring(s.p, start, length))
 }
 
 func text_run_from_string_view(
