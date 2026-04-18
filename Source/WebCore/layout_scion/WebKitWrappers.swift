@@ -1259,6 +1259,12 @@ func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
   return block.canHaveChildren()
 }
 
+@_cdecl("RenderBlockScion_debugDescription")
+func RenderBlockScion_debugDescription(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.debugDescription().p
+}
+
 @_cdecl("RenderBlockScion_isInlineBlockOrInlineTable")
 func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -> Bool {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

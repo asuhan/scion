@@ -164,6 +164,8 @@ public:
 
     bool canHaveChildren() const;
 
+    String debugDescription() const;
+
     bool isInlineBlockOrInlineTable() const;
 
     const RenderStyle& outlineStyleForRepaint() const;

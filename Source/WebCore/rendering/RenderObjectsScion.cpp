@@ -98,6 +98,8 @@ extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int3
 
 extern "C" bool RenderBlockScion_canHaveChildren(const void*);
 
+extern "C" const void* RenderBlockScion_debugDescription(const void*);
+
 extern "C" bool RenderBlockScion_isInlineBlockOrInlineTable(const void*);
 
 extern "C" const void* RenderBlockScion_outlineStyleForRepaint(const void*);
@@ -409,6 +411,14 @@ void RenderBlockScion::setMarginAfterForChild(RenderBox& child, LayoutUnit value
 bool RenderBlockScion::canHaveChildren() const
 {
     return RenderBlockScion_canHaveChildren(m_handle);
+}
+
+String RenderBlockScion::debugDescription() const
+{
+    const auto original = static_cast<const String*>(RenderBlockScion_debugDescription(m_handle));
+    const auto copy = *original;
+    delete original;
+    return copy;
 }
 
 bool RenderBlockScion::isInlineBlockOrInlineTable() const
