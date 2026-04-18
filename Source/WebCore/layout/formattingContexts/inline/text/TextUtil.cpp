@@ -519,6 +519,11 @@ extern "C" WEBCORE_EXPORT const void* Expansion_new(uint8_t left, uint8_t right,
         horizontal_expansion);
 }
 
+extern "C" WEBCORE_EXPORT void Expansion_destroy(const void* p)
+{
+    delete static_cast<const WebCore::InlineDisplay::Box::Expansion*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* Text_new(
     uint64_t start,
     uint64_t length,

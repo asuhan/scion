@@ -226,6 +226,7 @@ public func InlineFormattingContext_layout(
     let expansionC = wk_interop.Expansion_new(
       expansion.behavior.left.rawValue, expansion.behavior.right.rawValue,
       expansion.horizontalExpansion)
+    defer { Expansion_destroy(expansionC) }
     let text =
       box.isTextOrSoftLineBreak()
       ? wk_interop.Text_new(
@@ -392,6 +393,7 @@ public func LineLayout_layout(
     let expansionC = wk_interop.Expansion_new(
       expansion.behavior.left.rawValue, expansion.behavior.right.rawValue,
       expansion.horizontalExpansion)
+    defer { Expansion_destroy(expansionC) }
     let text =
       box.isTextOrSoftLineBreak()
       ? wk_interop.Text_new(
