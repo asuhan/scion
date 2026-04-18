@@ -280,7 +280,7 @@ class TextUtil {
   static func enclosingGlyphBoundsForText(textContent: StringWrapperView, style: RenderStyleWrapper)
     -> EnclosingAscentDescent
   {
-    if textContent.p == nil || style.p == nil {
+    if style.p == nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
