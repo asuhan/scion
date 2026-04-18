@@ -2259,8 +2259,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
   override func debugDescription() -> StringWrapper {
     assert(isNativeImpl())
     if isViewTransitionPseudo() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let builder = StringBuilderWrapper()
+
+      builder.append(
+        literal: "\(renderName()) 0x\(String(UInt(bitPattern: ObjectIdentifier(self)), radix: 16))")
+
+      builder.append(literal: " ::view-transition")
+      if style().pseudoElementType() != .ViewTransition {
+        builder.append(
+          literal:
+            "-\(style().pseudoElementType() == .ViewTransitionGroup ? "group(" : "image-pair(")")
+        builder.append(string: style().pseudoElementNameArgument())
+        builder.append(literal: ")")
+      }
+      return builder.toString(owner: false)
     }
 
     return super.debugDescription()
