@@ -39,7 +39,7 @@ class AtomStringWrapper: Hashable, CustomStringConvertible {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    return StringWrapper(p: wk_interop.AtomString_string(p))
+    return StringWrapper(p: wk_interop.AtomString_string(p), owner: false)
   }
 
   func isNull() -> Bool {

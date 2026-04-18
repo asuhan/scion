@@ -1095,7 +1095,8 @@ struct InlineDisplayContentBuilder {
       assert(contentSlice.p != nil)
       let hyphenString = style.hyphenString()
       assert(hyphenString.p != nil)
-      return StringWrapper(p: wk_interop.makeString_scion(contentSlice.p, hyphenString.p))
+      return StringWrapper(
+        p: wk_interop.makeString_scion(contentSlice.p, hyphenString.p), owner: true)
     }
     return StringWrapper()
   }

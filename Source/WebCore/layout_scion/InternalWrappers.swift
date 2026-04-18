@@ -118,7 +118,7 @@ func font_cascade_width(fontCascadePtr: UnsafeRawPointer, textRunPtr: UnsafeRawP
 }
 
 func inline_text_box_content(p: UnsafeRawPointer) -> StringWrapper {
-  return StringWrapper(p: InlineTextBox_content(p))
+  return StringWrapper(p: InlineTextBox_content(p), owner: false)
 }
 
 func inline_text_box_is_combined(p: UnsafeRawPointer) -> Bool {

@@ -25,19 +25,32 @@ typealias UChar = UInt16
 typealias LChar = UInt8
 
 class StringWrapper: Hashable {
-  init(p: UnsafeRawPointer? = nil) {
-    self.p = p ?? wk_interop.String_new()
+  init(p: UnsafeRawPointer, owner: Bool) {
+    self.p = p
+    self.owner = owner
+  }
+
+  init() {
+    p = wk_interop.String_new()
+    owner = true
   }
 
   // Construct a string with UTF-16 data.
   init(characters: CharSpanWrapper<UChar>) {
-    self.p = wk_interop.String_new_span(characters.p)
+    p = wk_interop.String_new_span(characters.p)
+    owner = true
   }
 
   // Construct a string from a constant string literal.
   init(_ characters: ASCIILiteral) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  deinit {
+    if owner {
+      wk_interop.StringWrapper_destroy(p)
+    }
   }
 
   func isNull() -> Bool {
@@ -103,7 +116,7 @@ class StringWrapper: Hashable {
   }
 
   func substring(position: UInt32, length: UInt32 = UInt32(Int32.max)) -> StringWrapper {
-    return StringWrapper(p: wk_interop.String_substring(self.p, position, length))
+    return StringWrapper(p: wk_interop.String_substring(self.p, position, length), owner: true)
   }
 
   // Determines the writing direction using the Unicode Bidi Algorithm rules P2 and P3.
@@ -123,6 +136,7 @@ class StringWrapper: Hashable {
   }
 
   var p: UnsafeRawPointer
+  private let owner: Bool
 }
 
 func emptyString() -> StringWrapper {
