@@ -30,6 +30,17 @@ class CharSpanWrapper<CharacterType> {
     self.p = p
   }
 
+  deinit {
+    switch MemoryLayout<CharacterType>.size {
+    case 1:
+      wk_interop.CharSpanWrapper8_destroy(p)
+    case 2:
+      wk_interop.CharSpanWrapper16_destroy(p)
+    default:
+      fatalError("Not reached")
+    }
+  }
+
   func size() -> UInt64 {
     switch MemoryLayout<CharacterType>.size {
     case 1:

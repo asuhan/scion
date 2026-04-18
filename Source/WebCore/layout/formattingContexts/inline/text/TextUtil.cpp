@@ -444,6 +444,16 @@ extern "C" WEBCORE_EXPORT const void* WTF_span_from_uchar(uint16_t character)
     return new std::span<const UChar>(new UChar(character), 1);
 }
 
+extern "C" WEBCORE_EXPORT void CharSpanWrapper8_destroy(const void* p)
+{
+    delete static_cast<const std::span<const LChar>*>(p);
+}
+
+extern "C" WEBCORE_EXPORT void CharSpanWrapper16_destroy(const void* p)
+{
+    delete static_cast<const std::span<const UChar>*>(p);
+}
+
 extern "C" WEBCORE_EXPORT void* StringBuilder_new()
 {
     return new StringBuilder();
