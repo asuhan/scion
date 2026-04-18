@@ -1147,6 +1147,7 @@ const void* ShapeOutsideInfo_computedShape(const void*);
 bool Shape_lineOverlapsShapeMarginBounds(const void* p, int32_t line_top_raw, int32_t line_height_raw);
 struct LineSegmentRaw Shape_getExcludedInterval(const void* p, int32_t logical_top_raw, int32_t logical_height_raw);
 void* FormattingContextBoxIteratorAdapter_new(const void*);
+void FormattingContextBoxIteratorAdapter_destroy(const void*);
 void* FormattingContextBoxIteratorAdapter_begin(void*);
 void* FormattingContextBoxIteratorAdapter_end(void*);
 const void* FormattingContextBoxIterator_deref(void*);

@@ -60,6 +60,8 @@ class FormattingContextBoxIteratorAdapter: Sequence {
     self.p = wk_interop.FormattingContextBoxIteratorAdapter_new(root.p)
   }
 
+  deinit { wk_interop.FormattingContextBoxIteratorAdapter_destroy(p) }
+
   func makeIterator() -> FormattingContextBoxIterator {
     let begin = wk_interop.FormattingContextBoxIteratorAdapter_begin(p)
     let end = wk_interop.FormattingContextBoxIteratorAdapter_end(p)

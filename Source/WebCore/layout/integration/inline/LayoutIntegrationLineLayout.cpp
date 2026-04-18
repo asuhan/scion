@@ -72,6 +72,11 @@ extern "C" WEBCORE_EXPORT void* FormattingContextBoxIteratorAdapter_new(const vo
     return new WebCore::Layout::FormattingContextBoxIteratorAdapter(*static_cast<const WebCore::Layout::ElementBox*>(p));
 }
 
+extern "C" WEBCORE_EXPORT void FormattingContextBoxIteratorAdapter_destroy(const void* p)
+{
+    delete static_cast<const WebCore::Layout::FormattingContextBoxIteratorAdapter*>(p);
+}
+
 extern "C" WEBCORE_EXPORT void* FormattingContextBoxIteratorAdapter_begin(void* p)
 {
     auto adapter = static_cast<WebCore::Layout::FormattingContextBoxIteratorAdapter*>(p);
