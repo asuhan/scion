@@ -119,8 +119,8 @@ class LayoutIntegration {
   }
 
   static func isContentRenderer(renderer: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: These fake renderers have their parent set but are not actually in the tree.
+    return !renderer.isRenderReplica() && !renderer.isRenderScrollbarPart()
   }
 
   static func lineClamp(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.LineClamp? {

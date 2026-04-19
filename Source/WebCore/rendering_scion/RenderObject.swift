@@ -836,6 +836,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .MultiColumnFlow
   }
 
+  func isRenderScrollbarPart() -> Bool {
+    assert(isNativeImpl())
+    return type() == .ScrollbarPart
+  }
+
   func isDocumentElementRenderer() -> Bool {
     assert(isNativeImpl())
     return CPtrToInt(document().documentElement()?.p) == CPtrToInt(m_node?.p)
