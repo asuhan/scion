@@ -103,6 +103,7 @@ void RenderLayerModelObject::setScionHandle(void* handle) {
 
 void RenderLayerModelObject::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isPositioned()) {
         if (style().hasViewportConstrainedPosition())
             view().frameView().removeViewportConstrainedObject(*this);
@@ -115,12 +116,14 @@ void RenderLayerModelObject::willBeDestroyed()
 
 void RenderLayerModelObject::destroyLayer()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setHasLayer(false);
     m_layer = nullptr;
 }
 
 void RenderLayerModelObject::createLayer()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_layer);
     m_layer = makeUnique<RenderLayer>(*this);
     setHasLayer(true);
@@ -129,6 +132,7 @@ void RenderLayerModelObject::createLayer()
 
 bool RenderLayerModelObject::hasSelfPaintingLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_layer && m_layer->isSelfPaintingLayer();
 }
 
@@ -140,6 +144,7 @@ RenderLayer* RenderLayerModelObject::layer() const
 
 void RenderLayerModelObject::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     s_wasFloating = isFloating();
     s_hadLayer = hasLayer();
     s_wasTransformed = isTransformed();
@@ -154,6 +159,7 @@ void RenderLayerModelObject::styleWillChange(StyleDifference diff, const RenderS
 
 void RenderLayerModelObject::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderElement::styleDidChange(diff, oldStyle);
     updateFromStyle();
 
@@ -239,6 +245,7 @@ void RenderLayerModelObject::styleDidChange(StyleDifference diff, const RenderSt
 
 bool RenderLayerModelObject::shouldPlaceVerticalScrollbarOnLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 // RTL Scrollbars require some system support, and this system support does not exist on certain versions of OS X. iOS uses a separate mechanism.
 #if PLATFORM(IOS_FAMILY)
     return false;
@@ -256,11 +263,13 @@ bool RenderLayerModelObject::shouldPlaceVerticalScrollbarOnLeft() const
 
 std::optional<LayoutRect> RenderLayerModelObject::cachedLayerClippedOverflowRect() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasLayer() ? layer()->cachedClippedOverflowRect() : std::nullopt;
 }
 
 bool RenderLayerModelObject::startAnimation(double timeOffset, const Animation& animation, const BlendingKeyframes& keyframes)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!layer() || !layer()->backing())
         return false;
     return layer()->backing()->startAnimation(timeOffset, animation, keyframes);
@@ -268,6 +277,7 @@ bool RenderLayerModelObject::startAnimation(double timeOffset, const Animation& 
 
 void RenderLayerModelObject::animationPaused(double timeOffset, const String& name)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!layer() || !layer()->backing())
         return;
     layer()->backing()->animationPaused(timeOffset, name);
@@ -275,6 +285,7 @@ void RenderLayerModelObject::animationPaused(double timeOffset, const String& na
 
 void RenderLayerModelObject::animationFinished(const String& name)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!layer() || !layer()->backing())
         return;
     layer()->backing()->animationFinished(name);
@@ -282,6 +293,7 @@ void RenderLayerModelObject::animationFinished(const String& name)
 
 void RenderLayerModelObject::transformRelatedPropertyDidChange()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!layer() || !layer()->backing())
         return;
     layer()->backing()->transformRelatedPropertyDidChange();
@@ -289,6 +301,7 @@ void RenderLayerModelObject::transformRelatedPropertyDidChange()
 
 void RenderLayerModelObject::suspendAnimations(MonotonicTime time)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!layer() || !layer()->backing())
         return;
     layer()->backing()->suspendAnimations(time);
@@ -296,6 +309,7 @@ void RenderLayerModelObject::suspendAnimations(MonotonicTime time)
 
 TransformationMatrix* RenderLayerModelObject::layerTransform() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasLayer())
         return layer()->transform();
     return nullptr;
@@ -303,6 +317,7 @@ TransformationMatrix* RenderLayerModelObject::layerTransform() const
 
 void RenderLayerModelObject::updateLayerTransform()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* box = dynamicDowncast<RenderBox>(this); box && style().offsetPath() && MotionPath::needsUpdateAfterContainingBlockLayout(*style().offsetPath())) {
         if (auto* containingBlock = this->containingBlock()) {
             view().frameView().layoutContext().setBoxNeedsTransformUpdateAfterContainerLayout(*box, *containingBlock);
@@ -316,6 +331,7 @@ void RenderLayerModelObject::updateLayerTransform()
 
 bool RenderLayerModelObject::shouldPaintSVGRenderer(const PaintInfo& paintInfo, const OptionSet<PaintPhase> relevantPaintPhases) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (paintInfo.context().paintingDisabled())
         return false;
 
@@ -333,6 +349,7 @@ bool RenderLayerModelObject::shouldPaintSVGRenderer(const PaintInfo& paintInfo, 
 
 auto RenderLayerModelObject::computeVisibleRectsInSVGContainer(const RepaintRects& rects, const RenderLayerModelObject* container, RenderObject::VisibleRectContext context) const -> std::optional<RepaintRects>
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(is<RenderSVGModelObject>(this) || is<RenderSVGBlock>(this));
     ASSERT(!style().hasInFlowPosition());
     ASSERT(!view().frameView().layoutContext().isPaintOffsetCacheEnabled());
@@ -377,6 +394,7 @@ auto RenderLayerModelObject::computeVisibleRectsInSVGContainer(const RepaintRect
 
 void RenderLayerModelObject::mapLocalToSVGContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(is<RenderSVGModelObject>(this) || is<RenderSVGBlock>(this));
     ASSERT(style().position() == PositionType::Static);
 
@@ -411,6 +429,7 @@ void RenderLayerModelObject::mapLocalToSVGContainer(const RenderLayerModelObject
 
 void RenderLayerModelObject::applySVGTransform(TransformationMatrix& transform, const SVGGraphicsElement& graphicsElement, const RenderStyle& style, const FloatRect& boundingBox, const std::optional<AffineTransform>& preApplySVGTransformMatrix, const std::optional<AffineTransform>& postApplySVGTransformMatrix, OptionSet<RenderStyle::TransformOperationOption> options) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto svgTransform = graphicsElement.transform().concatenate();
     auto* supplementalTransform = graphicsElement.supplementalTransform(); // SMIL <animateMotion>
 
@@ -464,6 +483,7 @@ void RenderLayerModelObject::applySVGTransform(TransformationMatrix& transform, 
 
 void RenderLayerModelObject::updateHasSVGTransformFlags()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(document().settings().layerBasedSVGEngineEnabled());
 
     bool hasSVGTransform = needsHasSVGTransformFlags();
@@ -473,6 +493,7 @@ void RenderLayerModelObject::updateHasSVGTransformFlags()
 
 RenderSVGResourceClipper* RenderLayerModelObject::svgClipperResourceFromStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().settings().layerBasedSVGEngineEnabled())
         return nullptr;
 
@@ -493,6 +514,7 @@ RenderSVGResourceClipper* RenderLayerModelObject::svgClipperResourceFromStyle() 
 
 RenderSVGResourceFilter* RenderLayerModelObject::svgFilterResourceFromStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().settings().layerBasedSVGEngineEnabled())
         return nullptr;
 
@@ -517,6 +539,7 @@ RenderSVGResourceFilter* RenderLayerModelObject::svgFilterResourceFromStyle() co
 
 RenderSVGResourceMasker* RenderLayerModelObject::svgMaskerResourceFromStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().settings().layerBasedSVGEngineEnabled())
         return nullptr;
 
@@ -540,21 +563,25 @@ RenderSVGResourceMasker* RenderLayerModelObject::svgMaskerResourceFromStyle() co
 
 RenderSVGResourceMarker* RenderLayerModelObject::svgMarkerStartResourceFromStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return svgMarkerResourceFromStyle(style().svgStyle().markerStartResource());
 }
 
 RenderSVGResourceMarker* RenderLayerModelObject::svgMarkerMidResourceFromStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return svgMarkerResourceFromStyle(style().svgStyle().markerMidResource());
 }
 
 RenderSVGResourceMarker* RenderLayerModelObject::svgMarkerEndResourceFromStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return svgMarkerResourceFromStyle(style().svgStyle().markerEndResource());
 }
 
 RenderSVGResourceMarker* RenderLayerModelObject::svgMarkerResourceFromStyle(const String& markerResource) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (markerResource.isEmpty() || !document().settings().layerBasedSVGEngineEnabled())
         return nullptr;
 
@@ -571,6 +598,7 @@ RenderSVGResourceMarker* RenderLayerModelObject::svgMarkerResourceFromStyle(cons
 
 RenderSVGResourcePaintServer* RenderLayerModelObject::svgFillPaintServerResourceFromStyle(const RenderStyle& style) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().settings().layerBasedSVGEngineEnabled())
         return nullptr;
 
@@ -591,6 +619,7 @@ RenderSVGResourcePaintServer* RenderLayerModelObject::svgFillPaintServerResource
 
 RenderSVGResourcePaintServer* RenderLayerModelObject::svgStrokePaintServerResourceFromStyle(const RenderStyle& style) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().settings().layerBasedSVGEngineEnabled())
         return nullptr;
 
@@ -611,6 +640,7 @@ RenderSVGResourcePaintServer* RenderLayerModelObject::svgStrokePaintServerResour
 
 bool RenderLayerModelObject::pointInSVGClippingArea(const FloatPoint& point) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* clipPathOperation = style().clipPath();
 
     auto clipPathReferenceBox = [&](CSSBoxType boxType) -> FloatRect {
@@ -669,6 +699,7 @@ CheckedPtr<RenderLayer> RenderLayerModelObject::checkedLayer() const
 
 void RenderLayerModelObject::repaintOrRelayoutAfterSVGTransformChange()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(document().settings().layerBasedSVGEngineEnabled());
 
     updateHasSVGTransformFlags();
@@ -740,6 +771,7 @@ void RenderLayerModelObject::repaintOrRelayoutAfterSVGTransformChange()
 
 void RenderLayerModelObject::paintSVGClippingMask(PaintInfo& paintInfo, const FloatRect& objectBoundingBox) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(paintInfo.phase == PaintPhase::ClippingMask);
     auto& context = paintInfo.context();
     if (!paintInfo.shouldPaintWithinRoot(*this) || style().usedVisibility() != Visibility::Visible || context.paintingDisabled())
@@ -752,6 +784,7 @@ void RenderLayerModelObject::paintSVGClippingMask(PaintInfo& paintInfo, const Fl
 
 void RenderLayerModelObject::paintSVGMask(PaintInfo& paintInfo, const LayoutPoint& adjustedPaintOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(paintInfo.phase == PaintPhase::Mask);
     auto& context = paintInfo.context();
     if (!paintInfo.shouldPaintWithinRoot(*this) || context.paintingDisabled())

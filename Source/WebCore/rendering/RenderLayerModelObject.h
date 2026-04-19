@@ -59,13 +59,25 @@ public:
 
     // Returns true if the background is painted opaque in the given rect.
     // The query rect is given in local coordinate system.
-    virtual bool backgroundIsKnownToBeOpaqueInRect(const LayoutRect&) const { return false; }
+    virtual bool backgroundIsKnownToBeOpaqueInRect(const LayoutRect&) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
     // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
     // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
-    virtual bool applyCachedClipAndScrollPosition(RepaintRects&, const RenderLayerModelObject*, VisibleRectContext) const { return false; }
+    virtual bool applyCachedClipAndScrollPosition(RepaintRects&, const RenderLayerModelObject*, VisibleRectContext) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
-    virtual bool isScrollableOrRubberbandableBox() const { return false; }
+    virtual bool isScrollableOrRubberbandableBox() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
     bool shouldPlaceVerticalScrollbarOnLeft() const;
 
@@ -96,7 +108,11 @@ public:
 
     void repaintOrRelayoutAfterSVGTransformChange();
 
-    LayoutPoint nominalSVGLayoutLocation() const { return flooredLayoutPoint(objectBoundingBoxWithoutTransformations().minXMinYCorner()); }
+    LayoutPoint nominalSVGLayoutLocation() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return flooredLayoutPoint(objectBoundingBoxWithoutTransformations().minXMinYCorner());
+    }
     virtual LayoutPoint currentSVGLayoutLocation() const { ASSERT_NOT_REACHED(); return { }; }
     virtual void setCurrentSVGLayoutLocation(const LayoutPoint&) { ASSERT_NOT_REACHED(); }
 
@@ -130,7 +146,10 @@ protected:
     void createLayer();
     void willBeDestroyed() override;
 
-    virtual void updateFromStyle() { }
+    virtual void updateFromStyle()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
 private:
     RenderSVGResourceMarker* svgMarkerResourceFromStyle(const String& markerResource) const;
