@@ -74,10 +74,7 @@ class PageWrapper {
 
   func isVisible() -> Bool { return wk_interop.Page_isVisible(p) }
 
-  func isInWindow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInWindow() -> Bool { return wk_interop.Page_isInWindow(p) }
 
   func addRelevantRepaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this

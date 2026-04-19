@@ -1285,6 +1285,7 @@ bool Page_delegatesScaling(const void*);
 float Page_deviceScaleFactor(const void*);
 bool Page_useSystemAppearance(const void*);
 bool Page_isVisible(const void*);
+bool Page_isInWindow(const void*);
 const void* FilterOperations_create();
 void FilterOperations_destroy(const void*);
 bool FilterOperations_eq(const void*, const void*);
