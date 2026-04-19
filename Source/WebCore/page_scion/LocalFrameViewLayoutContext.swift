@@ -69,8 +69,7 @@ class LocalFrameViewLayoutContextWrapper {
 
   // Returns true if layoutState should be used for its cached offset and clip.
   func isPaintOffsetCacheEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameViewLayoutContext_isPaintOffsetCacheEnabled(p)
   }
 
   func checkLayoutState() {

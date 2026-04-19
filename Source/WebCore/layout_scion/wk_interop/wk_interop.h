@@ -575,6 +575,7 @@ bool LocalFrameViewLayoutContext_isInLayout(const void*);
 bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void*);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 void* LocalFrameViewLayoutContext_layoutState(const void*);
+bool LocalFrameViewLayoutContext_isPaintOffsetCacheEnabled(const void*);
 void LocalFrameViewLayoutContext_checkLayoutState(void*);
 struct LayoutSizeRaw LocalFrameViewLayoutContext_layoutDelta(const void*);
 void LocalFrameViewLayoutContext_addLayoutDelta(void*, struct LayoutSizeRaw);

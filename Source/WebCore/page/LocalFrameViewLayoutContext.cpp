@@ -72,6 +72,11 @@ extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_layoutState(const vo
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutState();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_isPaintOffsetCacheEnabled(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->isPaintOffsetCacheEnabled();
+}
+
 extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_checkLayoutState([[maybe_unused]] void* p)
 {
 #ifndef NDEBUG
