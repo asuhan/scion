@@ -1261,6 +1261,7 @@ void* Node_renderer(const void*);
 const void* BoxTree_handleNullRootBox(void*);
 void BoxTree_buildTreeForInlineContent(void*);
 void* InlineWalker_new(const void*);
+void InlineWalker_destroy(const void*);
 void* InlineWalker_current(void*);
 bool InlineWalker_atEnd(void*);
 void InlineWalker_advance(void*);

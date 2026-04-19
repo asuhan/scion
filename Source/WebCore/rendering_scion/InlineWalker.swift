@@ -24,8 +24,10 @@
 
 import wk_interop
 
-struct InlineWalker {
+struct InlineWalker: ~Copyable {
   init(root: RenderBlockFlowWrapper) { p = InlineWalker_new(root.id()) }
+
+  deinit { wk_interop.InlineWalker_destroy(p) }
 
   func current() -> RenderObjectWrapper? {
     if let raw = InlineWalker_current(p) {

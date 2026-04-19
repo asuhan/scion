@@ -83,6 +83,11 @@ extern "C" WEBCORE_EXPORT void* InlineWalker_new(const void* root_raw)
     return new WebCore::InlineWalker(root);
 }
 
+extern "C" WEBCORE_EXPORT void InlineWalker_destroy(const void* p)
+{
+    delete static_cast<const WebCore::InlineWalker*>(p);
+}
+
 extern "C" WEBCORE_EXPORT void* InlineWalker_current(void* walker_raw)
 {
     return static_cast<WebCore::InlineWalker*>(walker_raw)->current();
