@@ -56,6 +56,7 @@
 #include "RenderLayerCompositor.h"
 #include "RenderLayerScrollableArea.h"
 #include "RenderMultiColumnFlow.h"
+#include "RenderObjectsScion.h"
 #include "RenderTable.h"
 #include "RenderTableRow.h"
 #include "RenderText.h"
@@ -182,6 +183,7 @@ static FirstLetterRemainingTextMap& firstLetterRemainingTextMap()
 
 void RenderBoxModelObject::setSelectionState(HighlightState state)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (state == HighlightState::Inside && selectionState() != HighlightState::None)
         return;
 
@@ -201,6 +203,7 @@ void RenderBoxModelObject::setSelectionState(HighlightState state)
 
 void RenderBoxModelObject::contentChanged(ContentChangeType changeType)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasLayer())
         return;
 
@@ -209,6 +212,7 @@ void RenderBoxModelObject::contentChanged(ContentChangeType changeType)
 
 bool RenderBoxModelObject::hasAcceleratedCompositing() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return view().compositor().hasAcceleratedCompositing();
 }
 
@@ -230,8 +234,13 @@ RenderBoxModelObject::~RenderBoxModelObject()
     ASSERT(!continuation());
 }
 
+void RenderBoxModelObject::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderBoxModelObjectScion>(handle);
+}
+
 void RenderBoxModelObject::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!renderTreeBeingDestroyed())
         view().imageQualityController().rendererWillBeDestroyed(*this);
 
@@ -240,11 +249,13 @@ void RenderBoxModelObject::willBeDestroyed()
 
 bool RenderBoxModelObject::hasVisibleBoxDecorationStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasBackground() || style().hasVisibleBorderDecoration() || style().hasUsedAppearance() || style().boxShadow();
 }
 
 void RenderBoxModelObject::updateFromStyle()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderLayerModelObject::updateFromStyle();
 
     // Set the appropriate bits for a box model object.  Since all bits are cleared in styleWillChange,
@@ -281,6 +292,7 @@ static inline bool isOutOfFlowPositionedWithImplicitHeight(const RenderBoxModelO
     
 RenderBlock* RenderBoxModelObject::containingBlockForAutoHeightDetection(Length logicalHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For percentage heights: The percentage is calculated with respect to the
     // height of the generated box's containing block. If the height of the
     // containing block is not specified explicitly (i.e., it depends on content
@@ -317,6 +329,7 @@ RenderBlock* RenderBoxModelObject::containingBlockForAutoHeightDetection(Length 
     
 bool RenderBoxModelObject::hasAutoHeightOrContainingBlockWithAutoHeight(UpdatePercentageHeightDescendants updatePercentageDescendants) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* thisBox = dynamicDowncast<RenderBox>(this);
     Length logicalHeightLength = style().logicalHeight();
     auto* cb = containingBlockForAutoHeightDetection(logicalHeightLength);
@@ -348,6 +361,7 @@ bool RenderBoxModelObject::hasAutoHeightOrContainingBlockWithAutoHeight(UpdatePe
 
 DecodingMode RenderBoxModelObject::decodingModeForImageDraw(const Image& image, const PaintInfo& paintInfo) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Some document types force synchronous decoding.
 #if PLATFORM(IOS_FAMILY)
     if (IOSApplication::isIBooksStorytime())
@@ -420,6 +434,7 @@ DecodingMode RenderBoxModelObject::decodingModeForImageDraw(const Image& image, 
 
 LayoutSize RenderBoxModelObject::relativePositionOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // This function has been optimized to avoid calls to containingBlock() in the common case
     // where all values are either auto or fixed.
     auto* containingBlock = this->containingBlock();
@@ -497,6 +512,7 @@ LayoutSize RenderBoxModelObject::relativePositionOffset() const
 
 LayoutPoint RenderBoxModelObject::adjustedPositionRelativeToOffsetParent(const LayoutPoint& startPoint) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the element is the HTML body element or doesn't have a parent
     // return 0 and stop this algorithm.
     if (isBody() || !parent())
@@ -560,6 +576,7 @@ LayoutPoint RenderBoxModelObject::adjustedPositionRelativeToOffsetParent(const L
 
 std::pair<const RenderBox&, const RenderLayer*> RenderBoxModelObject::enclosingClippingBoxForStickyPosition() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isStickilyPositioned());
     RenderLayer* clipLayer = hasLayer() ? layer()->enclosingOverflowClipLayer(ExcludeSelf) : nullptr;
     const RenderBox& box = clipLayer ? downcast<RenderBox>(clipLayer->renderer()) : view();
@@ -568,6 +585,7 @@ std::pair<const RenderBox&, const RenderLayer*> RenderBoxModelObject::enclosingC
 
 void RenderBoxModelObject::computeStickyPositionConstraints(StickyPositionViewportConstraints& constraints, const FloatRect& constrainingRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     constraints.setConstrainingRectAtLastLayout(constrainingRect);
 
     // Do not use anonymous containing blocks to determine sticky constraints. We want the size
@@ -672,6 +690,7 @@ void RenderBoxModelObject::computeStickyPositionConstraints(StickyPositionViewpo
 
 FloatRect RenderBoxModelObject::constrainingRectForStickyPosition() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderLayer* enclosingClippingLayer = hasLayer() ? layer()->enclosingOverflowClipLayer(ExcludeSelf) : nullptr;
 
     if (enclosingClippingLayer) {
@@ -700,6 +719,7 @@ FloatRect RenderBoxModelObject::constrainingRectForStickyPosition() const
 
 LayoutSize RenderBoxModelObject::stickyPositionOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     FloatRect constrainingRect = constrainingRectForStickyPosition();
     StickyPositionViewportConstraints constraints;
     computeStickyPositionConstraints(constraints, constrainingRect);
@@ -710,6 +730,7 @@ LayoutSize RenderBoxModelObject::stickyPositionOffset() const
 
 LayoutSize RenderBoxModelObject::offsetForInFlowPosition() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isRelativelyPositioned())
         return relativePositionOffset();
 
@@ -721,6 +742,7 @@ LayoutSize RenderBoxModelObject::offsetForInFlowPosition() const
 
 LayoutUnit RenderBoxModelObject::offsetLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Note that RenderInline and RenderBox override this to pass a different
     // startPoint to adjustedPositionRelativeToOffsetParent.
     return adjustedPositionRelativeToOffsetParent(LayoutPoint()).x();
@@ -728,6 +750,7 @@ LayoutUnit RenderBoxModelObject::offsetLeft() const
 
 LayoutUnit RenderBoxModelObject::offsetTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Note that RenderInline and RenderBox override this to pass a different
     // startPoint to adjustedPositionRelativeToOffsetParent.
     return adjustedPositionRelativeToOffsetParent(LayoutPoint()).y();
@@ -735,11 +758,13 @@ LayoutUnit RenderBoxModelObject::offsetTop() const
 
 InterpolationQuality RenderBoxModelObject::chooseInterpolationQuality(GraphicsContext& context, Image& image, const void* layer, const LayoutSize& size) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return view().imageQualityController().chooseInterpolationQuality(context, const_cast<RenderBoxModelObject*>(this), image, layer, size);
 }
 
 void RenderBoxModelObject::paintMaskForTextFillBox(GraphicsContext& context, const FloatRect& paintRect, const InlineIterator::InlineBoxIterator& inlineBox, const LayoutRect& scrolledPaintRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Now add the text to the clip. We do this by painting using a special paint phase that signals to
     // the painter it should just modify the clip.
     PaintInfo maskInfo(context, LayoutRect { paintRect }, PaintPhase::TextClip, PaintBehavior::ForceBlackText);
@@ -816,6 +841,7 @@ static inline LayoutSize resolveAgainstIntrinsicRatio(const LayoutSize& size, co
 
 LayoutSize RenderBoxModelObject::calculateImageIntrinsicDimensions(StyleImage* image, const LayoutSize& positioningAreaSize, ScaleByUsedZoom scaleByUsedZoom) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // A generated image without a fixed size, will always return the container size as intrinsic size.
     if (!image->imageHasNaturalDimensions())
         return LayoutSize(positioningAreaSize.width(), positioningAreaSize.height());
@@ -858,6 +884,7 @@ LayoutSize RenderBoxModelObject::calculateImageIntrinsicDimensions(StyleImage* i
 
 bool RenderBoxModelObject::fixedBackgroundPaintsInLocalCoordinates() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isDocumentElementRenderer())
         return false;
 
@@ -873,6 +900,7 @@ bool RenderBoxModelObject::fixedBackgroundPaintsInLocalCoordinates() const
 
 bool RenderBoxModelObject::borderObscuresBackgroundEdge(const FloatSize& contextScale) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto edges = borderEdges(style(), document().deviceScaleFactor());
 
     for (auto side : allBoxSides) {
@@ -888,6 +916,7 @@ bool RenderBoxModelObject::borderObscuresBackgroundEdge(const FloatSize& context
 
 bool RenderBoxModelObject::borderObscuresBackground() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!style().hasBorder())
         return false;
 
@@ -907,6 +936,7 @@ bool RenderBoxModelObject::borderObscuresBackground() const
 
 BorderShape RenderBoxModelObject::borderShapeForContentClipping(const LayoutRect& borderBoxRect, bool includeLeftEdge, bool includeRightEdge) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto borderWidths = this->borderWidths();
     auto padding = this->padding();
 
@@ -922,6 +952,7 @@ BorderShape RenderBoxModelObject::borderShapeForContentClipping(const LayoutRect
 
 LayoutUnit RenderBoxModelObject::containingBlockLogicalWidthForContent() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* containingBlock = this->containingBlock())
         return containingBlock->availableLogicalWidth();
     return { };
@@ -929,6 +960,7 @@ LayoutUnit RenderBoxModelObject::containingBlockLogicalWidthForContent() const
 
 RenderBoxModelObject* RenderBoxModelObject::continuation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasContinuationChainNode())
         return nullptr;
 
@@ -940,6 +972,7 @@ RenderBoxModelObject* RenderBoxModelObject::continuation() const
 
 RenderInline* RenderBoxModelObject::inlineContinuation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasContinuationChainNode())
         return nullptr;
 
@@ -965,11 +998,13 @@ void RenderBoxModelObject::forRendererAndContinuations(RenderBoxModelObject& ren
 
 RenderBoxModelObject::ContinuationChainNode* RenderBoxModelObject::continuationChainNode() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return continuationChainNodeMap().get(*this);
 }
 
 void RenderBoxModelObject::insertIntoContinuationChainAfter(RenderBoxModelObject& afterRenderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isContinuation());
     ASSERT(!continuationChainNodeMap().contains(*this));
 
@@ -979,6 +1014,7 @@ void RenderBoxModelObject::insertIntoContinuationChainAfter(RenderBoxModelObject
 
 void RenderBoxModelObject::removeFromContinuationChain()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasContinuationChainNode());
     ASSERT(continuationChainNodeMap().contains(*this));
     setHasContinuationChainNode(false);
@@ -987,6 +1023,7 @@ void RenderBoxModelObject::removeFromContinuationChain()
 
 auto RenderBoxModelObject::ensureContinuationChainNode() -> ContinuationChainNode&
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setHasContinuationChainNode(true);
     return *continuationChainNodeMap().ensure(*this, [&] {
         return makeUnique<ContinuationChainNode>(*this);
@@ -995,6 +1032,7 @@ auto RenderBoxModelObject::ensureContinuationChainNode() -> ContinuationChainNod
 
 RenderTextFragment* RenderBoxModelObject::firstLetterRemainingText() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isFirstLetter())
         return nullptr;
     return firstLetterRemainingTextMap().get(*this).get();
@@ -1002,18 +1040,21 @@ RenderTextFragment* RenderBoxModelObject::firstLetterRemainingText() const
 
 void RenderBoxModelObject::setFirstLetterRemainingText(RenderTextFragment& remainingText)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isFirstLetter());
     firstLetterRemainingTextMap().set(*this, remainingText);
 }
 
 void RenderBoxModelObject::clearFirstLetterRemainingText()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isFirstLetter());
     firstLetterRemainingTextMap().remove(*this);
 }
 
 void RenderBoxModelObject::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, TransformState& transformState) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderElement* container = this->container();
     if (!container)
         return;
@@ -1027,6 +1068,7 @@ void RenderBoxModelObject::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode>
 
 bool RenderBoxModelObject::hasRunningAcceleratedAnimations() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto styleable = Styleable::fromRenderer(*this))
         return styleable->hasRunningAcceleratedAnimations();
     return false;
@@ -1034,6 +1076,7 @@ bool RenderBoxModelObject::hasRunningAcceleratedAnimations() const
 
 void RenderBoxModelObject::collectAbsoluteQuadsForContinuation(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(continuation());
     for (auto* nextInContinuation = this->continuation(); nextInContinuation; nextInContinuation = nextInContinuation->continuation()) {
         if (auto blockBox = dynamicDowncast<RenderBlock>(*nextInContinuation)) {
@@ -1050,6 +1093,7 @@ void RenderBoxModelObject::collectAbsoluteQuadsForContinuation(Vector<FloatQuad>
 
 void RenderBoxModelObject::applyTransform(TransformationMatrix&, const RenderStyle&, const FloatRect&, OptionSet<RenderStyle::TransformOperationOption>) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // applyTransform() is only used through RenderLayer*, which only invokes this for RenderBox derived renderers, thus not for
     // RenderInline/RenderLineBreak - the other two renderers that inherit from RenderBoxModelObject.
     ASSERT_NOT_REACHED();
@@ -1057,6 +1101,7 @@ void RenderBoxModelObject::applyTransform(TransformationMatrix&, const RenderSty
 
 bool RenderBoxModelObject::requiresLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isDocumentElementRenderer() || isPositioned() || createsGroup() || hasTransformRelatedProperty() || hasHiddenBackface() || hasReflection() || requiresRenderingConsolidationForViewTransition() || isRenderViewTransitionCapture();
 }
 

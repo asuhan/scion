@@ -171,6 +171,7 @@ void RenderView::setScionHandle(void* handle) {
     RenderObject::setScionHandle(handle);
     RenderElement::setScionHandle(handle);
     RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
     RenderBox::setScionHandle(handle);
     RenderBlock::setScionHandle(handle);
     RenderBlockFlow::setScionHandle(handle);

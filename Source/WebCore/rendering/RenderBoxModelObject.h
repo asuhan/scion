@@ -61,6 +61,7 @@ enum ContentChangeType {
 class BorderEdge;
 class BorderShape;
 class ImageBuffer;
+class RenderBoxModelObjectScion;
 class RenderTextFragment;
 class StickyPositionViewportConstraints;
 class TransformationMatrix;
@@ -81,7 +82,9 @@ class RenderBoxModelObject : public RenderLayerModelObject {
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderBoxModelObject);
 public:
     virtual ~RenderBoxModelObject();
-    
+
+    void setScionHandle(void* handle);
+
     LayoutSize relativePositionOffset() const;
     inline LayoutSize relativePositionLogicalOffset() const;
 
@@ -178,10 +181,26 @@ public:
     virtual LayoutUnit marginAfter(const RenderStyle* otherStyle = nullptr) const = 0;
     virtual LayoutUnit marginStart(const RenderStyle* otherStyle = nullptr) const = 0;
     virtual LayoutUnit marginEnd(const RenderStyle* otherStyle = nullptr) const = 0;
-    LayoutUnit verticalMarginExtent() const { return marginTop() + marginBottom(); }
-    LayoutUnit horizontalMarginExtent() const { return marginLeft() + marginRight(); }
-    LayoutUnit marginLogicalHeight() const { return marginBefore() + marginAfter(); }
-    LayoutUnit marginLogicalWidth() const { return marginStart() + marginEnd(); }
+    LayoutUnit verticalMarginExtent() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return marginTop() + marginBottom();
+    }
+    LayoutUnit horizontalMarginExtent() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return marginLeft() + marginRight();
+    }
+    LayoutUnit marginLogicalHeight() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return marginBefore() + marginAfter();
+    }
+    LayoutUnit marginLogicalWidth() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return marginStart() + marginEnd();
+    }
 
     BorderShape borderShapeForContentClipping(const LayoutRect& borderBoxRect, bool includeLeftEdge = true, bool includeRightEdge = true) const;
 
@@ -198,7 +217,11 @@ public:
 
     void setSelectionState(HighlightState) override;
 
-    bool canHaveBoxInfoInFragment() const { return !isFloating() && !isReplacedOrInlineBlock() && !isInline() && !isRenderTableCell() && isRenderBlock() && !isRenderSVGBlock(); }
+    bool canHaveBoxInfoInFragment() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !isFloating() && !isReplacedOrInlineBlock() && !isInline() && !isRenderTableCell() && isRenderBlock() && !isRenderSVGBlock();
+    }
 
     void contentChanged(ContentChangeType);
     bool hasAcceleratedCompositing() const;
@@ -271,6 +294,8 @@ private:
     ContinuationChainNode& ensureContinuationChainNode();
     
     virtual LayoutRect frameRectForStickyPositioning() const = 0;
+
+    std::unique_ptr<RenderBoxModelObjectScion> m_scion;
 };
 
 } // namespace WebCore

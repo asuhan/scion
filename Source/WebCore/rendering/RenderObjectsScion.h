@@ -102,6 +102,17 @@ private:
     void* m_handle;
 };
 
+class RenderBoxModelObjectScion final {
+public:
+    RenderBoxModelObjectScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderBoxScion final {
 public:
     RenderBoxScion(void* handle)
