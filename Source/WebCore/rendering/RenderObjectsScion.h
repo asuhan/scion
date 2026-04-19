@@ -96,6 +96,8 @@ public:
 
     CheckedPtr<RenderLayer> checkedLayer() const;
 
+    bool shouldPlaceVerticalScrollbarOnLeft() const;
+
     void* handle() const { return m_handle; }
 
 private:

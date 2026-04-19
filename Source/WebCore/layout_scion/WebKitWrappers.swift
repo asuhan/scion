@@ -988,6 +988,15 @@ func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawP
   return layer.layerId()
 }
 
+@_cdecl("RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft")
+func RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(
+  _ layerModelObjectRaw: UnsafeMutableRawPointer
+) -> Bool {
+  let layerModelObject = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(layerModelObjectRaw)
+    .takeUnretainedValue()
+  return layerModelObject.shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
+}
+
 @_cdecl("RenderObjectScion_enclosingLayer")
 func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -51,6 +51,8 @@ extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
 
+extern "C" bool RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(const void* p);
+
 extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
@@ -291,6 +293,11 @@ RenderLayer* RenderLayerModelObjectScion::layer() const
 CheckedPtr<RenderLayer> RenderLayerModelObjectScion::checkedLayer() const
 {
     return layer();
+}
+
+bool RenderLayerModelObjectScion::shouldPlaceVerticalScrollbarOnLeft() const
+{
+    return RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(m_handle);
 }
 
 RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
