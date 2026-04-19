@@ -69,8 +69,5 @@ final class LocalFrameWrapper: FrameWrapper {
   }
 
   // Scale factor of this frame with respect to the container.
-  func frameScaleFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func frameScaleFactor() -> Float32 { return wk_interop.LocalFrame_frameScaleFactor(p) }
 }

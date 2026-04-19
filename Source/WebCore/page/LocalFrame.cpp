@@ -127,6 +127,11 @@ extern "C" bool LocalFrame_shouldUsePrintingLayout(const void* p)
     return static_cast<const WebCore::LocalFrame*>(p)->shouldUsePrintingLayout();
 }
 
+extern "C" float LocalFrame_frameScaleFactor(const void* p)
+{
+    return static_cast<const WebCore::LocalFrame*>(p)->frameScaleFactor();
+}
+
 extern "C" void* LocalFrame_view(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->view();
