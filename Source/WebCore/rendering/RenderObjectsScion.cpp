@@ -51,6 +51,8 @@ extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
 
+extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
+
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" int32_t RenderBoxScion_width(const void*);
@@ -289,6 +291,11 @@ RenderLayer* RenderLayerModelObjectScion::layer() const
 CheckedPtr<RenderLayer> RenderLayerModelObjectScion::checkedLayer() const
 {
     return layer();
+}
+
+RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
+{
+    return static_cast<RenderBoxModelObject*>(RenderBoxModelObjectScion_continuation(m_handle));
 }
 
 bool RenderBoxScion::requiresLayerWithScrollableArea() const

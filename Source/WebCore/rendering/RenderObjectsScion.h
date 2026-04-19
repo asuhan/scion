@@ -109,6 +109,8 @@ public:
     {
     }
 
+    RenderBoxModelObject* continuation() const;
+
 private:
     void* m_handle;
 };

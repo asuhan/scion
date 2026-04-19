@@ -960,7 +960,7 @@ LayoutUnit RenderBoxModelObject::containingBlockLogicalWidthForContent() const
 
 RenderBoxModelObject* RenderBoxModelObject::continuation() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->continuation(); }
     if (!hasContinuationChainNode())
         return nullptr;
 

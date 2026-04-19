@@ -1056,6 +1056,17 @@ func RenderElementScion_attachRendererInternal(
   element.attachRendererInternal(child: child, beforeChild: beforeChild)
 }
 
+@_cdecl("RenderBoxModelObjectScion_continuation")
+func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  guard let continuation = boxModelObject.continuation() else { return nil }
+  assert(!continuation.isNativeImpl())
+  return continuation.id()
+}
+
 @_cdecl("RenderBoxScion_requiresLayerWithScrollableArea")
 func RenderBoxScion_requiresLayerWithScrollableArea(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
