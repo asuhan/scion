@@ -97,8 +97,7 @@ class PageWrapper {
   }
 
   func hasEverSetVisibilityAdjustment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Page_hasEverSetVisibilityAdjustment(p)
   }
 
   private let p: UnsafeRawPointer

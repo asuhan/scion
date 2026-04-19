@@ -273,6 +273,11 @@ extern "C" WEBCORE_EXPORT bool Page_isInWindow(const void* raw)
     return static_cast<const WebCore::Page*>(raw)->isInWindow();
 }
 
+extern "C" WEBCORE_EXPORT bool Page_hasEverSetVisibilityAdjustment(const void* raw)
+{
+    return static_cast<const WebCore::Page*>(raw)->hasEverSetVisibilityAdjustment();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Page);
