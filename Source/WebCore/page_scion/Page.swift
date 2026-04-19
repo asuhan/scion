@@ -56,10 +56,7 @@ class PageWrapper {
 
   func pageScaleFactor() -> Float32 { return wk_interop.Page_pageScaleFactor(p) }
 
-  func delegatesScaling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func delegatesScaling() -> Bool { return wk_interop.Page_delegatesScaling(p) }
 
   func deviceScaleFactor() -> Float32 {
     // TODO(asuhan): implement this

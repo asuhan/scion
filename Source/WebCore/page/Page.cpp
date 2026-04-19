@@ -248,6 +248,11 @@ extern "C" WEBCORE_EXPORT float Page_pageScaleFactor(const void* raw)
     return static_cast<const WebCore::Page*>(raw)->pageScaleFactor();
 }
 
+extern "C" WEBCORE_EXPORT bool Page_delegatesScaling(const void* raw)
+{
+    return static_cast<const WebCore::Page*>(raw)->delegatesScaling();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Page);

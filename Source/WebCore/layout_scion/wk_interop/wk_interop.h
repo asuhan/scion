@@ -1281,6 +1281,7 @@ bool Frame_isRootFrame(const void*);
 const void* Page_dragCaretController(const void*);
 void* Page_settings(const void*);
 float Page_pageScaleFactor(const void*);
+bool Page_delegatesScaling(const void*);
 const void* FilterOperations_create();
 void FilterOperations_destroy(const void*);
 bool FilterOperations_eq(const void*, const void*);
