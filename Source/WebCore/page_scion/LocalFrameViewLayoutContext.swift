@@ -48,8 +48,7 @@ class LocalFrameViewLayoutContextWrapper {
   func isInLayout() -> Bool { return wk_interop.LocalFrameViewLayoutContext_isInLayout(p) }
 
   func needsSkippedContentLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameViewLayoutContext_needsSkippedContentLayout(p)
   }
 
   func subtreeLayoutRoot() -> RenderElementWrapper? {

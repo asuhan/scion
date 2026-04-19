@@ -57,6 +57,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_isInLayout(const void
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->isInLayout();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->needsSkippedContentLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_needsFullRepaint(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->needsFullRepaint();
