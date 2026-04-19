@@ -50,6 +50,11 @@ extern "C" WEBCORE_EXPORT bool Frame_isMainFrame(const void* raw)
     return static_cast<const WebCore::Frame*>(raw)->isMainFrame();
 }
 
+extern "C" WEBCORE_EXPORT bool Frame_isRootFrame(const void* raw)
+{
+    return static_cast<const WebCore::Frame*>(raw)->isRootFrame();
+}
+
 namespace WebCore {
 
 #if ASSERT_ENABLED

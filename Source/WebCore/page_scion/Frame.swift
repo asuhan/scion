@@ -47,10 +47,7 @@ class FrameWrapper {
 
   func isMainFrame() -> Bool { return wk_interop.Frame_isMainFrame(p) }
 
-  func isRootFrame() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRootFrame() -> Bool { return wk_interop.Frame_isRootFrame(p) }
 
   func ownerElement() -> HTMLFrameOwnerElementWrapper? {
     // TODO(asuhan): implement this
