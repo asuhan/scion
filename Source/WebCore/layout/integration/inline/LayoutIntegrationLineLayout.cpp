@@ -65,8 +65,6 @@
 #include <wtf/Range.h>
 #include <wtf/text/StringToIntegerConversion.h>
 
-// TODO(asuhan): Fix leaks
-
 extern "C" WEBCORE_EXPORT void* FormattingContextBoxIteratorAdapter_new(const void* p)
 {
     return new WebCore::Layout::FormattingContextBoxIteratorAdapter(*static_cast<const WebCore::Layout::ElementBox*>(p));

@@ -79,7 +79,6 @@ extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void* root_rend
 extern "C" WEBCORE_EXPORT void* InlineWalker_new(const void* root_raw)
 {
     auto& root = *static_cast<const WebCore::RenderBlockFlow*>(root_raw);
-    // TODO(asuhan): Fix leaks
     return new WebCore::InlineWalker(root);
 }
 
