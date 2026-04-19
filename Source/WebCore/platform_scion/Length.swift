@@ -39,9 +39,10 @@ enum LengthType: UInt8 {
   case Undefined
 }
 
-struct LengthWrapper: Equatable {
+class LengthWrapper: Equatable {
   init(type: LengthType = .Auto) {
     self.p = wk_interop.Length_empty_new(type.rawValue)
+    self.owner = true
   }
 
   init(value: Int32, type: LengthType, hasQuirk: Bool = false) {
@@ -51,6 +52,7 @@ struct LengthWrapper: Equatable {
 
   init(value: LayoutUnit, type: LengthType, hasQuirk: Bool = false) {
     self.p = wk_interop.Length_new(value.rawValue(), type.rawValue, hasQuirk)
+    self.owner = true
   }
 
   init(value: Float32, type: LengthType, hasQuirk: Bool = false) {
@@ -65,7 +67,10 @@ struct LengthWrapper: Equatable {
 
   init(p: UnsafeRawPointer) {
     self.p = p
+    self.owner = false
   }
+
+  deinit { if self.owner { wk_interop.Length_destroy(p) } }
 
   func setValue(type: LengthType, value: Int32) {
     // TODO(asuhan): implement this
@@ -211,4 +216,5 @@ struct LengthWrapper: Equatable {
   }
 
   var p: UnsafeRawPointer
+  private let owner: Bool
 }
