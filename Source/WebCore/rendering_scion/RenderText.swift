@@ -1028,7 +1028,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     let length = string.length()
     let iteratorMode = mapLineBreakToIteratorMode(style.lineBreak())
     let contentAnalysis = mapWordBreakToContentAnalysis(style.wordBreak())
-    let lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
+    var lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
       stringView: StringWrapperView(s: string), locale: style.computedLocale(), mode: iteratorMode,
       contentAnalysis: contentAnalysis)
     var needsWordSpacing = false
@@ -1128,7 +1128,7 @@ class RenderTextWrapper: RenderObjectWrapper {
       let hasBreak =
         breakAll
         || BreakLines.isBreakable(
-          lineBreakIteratorFactory, i, nil, breakNBSP: breakNBSP,
+          &lineBreakIteratorFactory, i, nil, breakNBSP: breakNBSP,
           canUseShortcut: canUseLineBreakShortcut,
           keepAllWords: keepAllWords, breakAnywhere: breakAnywhere)
       var betweenWords = true
@@ -1147,7 +1147,7 @@ class RenderTextWrapper: RenderObjectWrapper {
           continue
         }
         if BreakLines.isBreakable(
-          lineBreakIteratorFactory, j, nil, breakNBSP: breakNBSP,
+          &lineBreakIteratorFactory, j, nil, breakNBSP: breakNBSP,
           canUseShortcut: canUseLineBreakShortcut,
           keepAllWords: keepAllWords, breakAnywhere: breakAnywhere)
           && characterAt(j - 1) != CharacterNames.Unicode.softHyphen

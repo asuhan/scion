@@ -52,7 +52,7 @@ struct CachedTextBreakIteratorWrapper {
   private var p: UnsafeRawPointer
 }
 
-struct CachedLineBreakIteratorFactoryWrapper {
+struct CachedLineBreakIteratorFactoryWrapper: ~Copyable {
   class PriorContextWrapper {
     init(p: UnsafeMutableRawPointer) {
       self.p = p
@@ -80,6 +80,8 @@ struct CachedLineBreakIteratorFactoryWrapper {
 
     private var p: UnsafeMutableRawPointer
   }
+
+  deinit { wk_interop.CachedLineBreakIteratorFactory_destroy(p) }
 
   init(
     stringView: StringWrapperView, locale: AtomStringWrapper = AtomStringWrapper(),

@@ -343,7 +343,7 @@ class TextUtil {
     }
     let previousContentStyle = previousInlineItem.style()
     let nextContentStyle = nextInlineItem.style()
-    let lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
+    var lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
       stringView: StringWrapperView(s: nextContent),
       locale: nextContentStyle.computedLocale(),
       mode: TextUtil.lineBreakIteratorMode(lineBreak: nextContentStyle.lineBreak()),
@@ -365,12 +365,13 @@ class TextUtil {
     // With the [ex-ample], findNextBreakablePosition should return the startPosition (0).
     // FIXME: Check if there's a more correct way of finding breaking opportunities.
     return findNextBreakablePosition(
-      lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: 0, style: nextContentStyle)
+      lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: 0, style: nextContentStyle
+    )
       == 0
   }
 
   static func findNextBreakablePosition(
-    lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper, startPosition: UInt32,
+    lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper, startPosition: UInt32,
     style: RenderStyleWrapper
   ) -> UInt32 {
     let wordBreak = style.wordBreak()
@@ -380,39 +381,39 @@ class TextUtil {
       if breakNBSP {
         return BreakLines.nextBreakablePosition(
           rules: .Special, words: .KeepAll, spaces: .Break,
-          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+          lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
       }
       return BreakLines.nextBreakablePosition(
         rules: .Special, words: .KeepAll, spaces: .Normal,
-        lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+        lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     if wordBreak == .AutoPhrase {
       return BreakLines.nextBreakablePosition(
         rules: .Special, words: .AutoPhrase, spaces: .Normal,
-        lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+        lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     if lineBreakIteratorFactory.mode() == .Default {
       if breakNBSP {
         return BreakLines.nextBreakablePosition(
           rules: .Normal, words: .Normal, spaces: .Break,
-          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+          lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
       }
       return BreakLines.nextBreakablePosition(
         rules: .Normal, words: .Normal, spaces: .Normal,
-        lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+        lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     if breakNBSP {
       return BreakLines.nextBreakablePosition(
         rules: .Special, words: .Normal, spaces: .Break,
-        lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+        lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     return BreakLines.nextBreakablePosition(
       rules: .Special, words: .Normal, spaces: .Normal,
-      lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+      lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
   }
 
   static func lineBreakIteratorMode(lineBreak: LineBreak)

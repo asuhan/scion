@@ -74,14 +74,14 @@ func moveToNextNonWhitespacePosition<CharacterType>(
 }
 
 func moveToNextBreakablePosition(
-  startPosition: UInt32, lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper,
+  startPosition: UInt32, lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper,
   style: RenderStyleWrapper
 ) -> UInt32 {
   let textLength = lineBreakIteratorFactory.stringView().length()
   var startPositionForNextBreakablePosition = startPosition
   while startPositionForNextBreakablePosition < textLength {
     let nextBreakablePosition = TextUtil.findNextBreakablePosition(
-      lineBreakIteratorFactory: lineBreakIteratorFactory,
+      lineBreakIteratorFactory: &lineBreakIteratorFactory,
       startPosition: startPositionForNextBreakablePosition, style: style)
     // Oftentimes the next breakable position comes back as the start position (most notably hyphens).
     if nextBreakablePosition != startPosition {
@@ -944,7 +944,7 @@ struct InlineItemsBuilder {
   private func handleNonWhitespace(
     inlineTextBox: InlineTextBoxWrapper,
     text: StringWrapper, contentLength: UInt32, style: RenderStyleWrapper,
-    lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper,
+    lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper,
     inlineItemList: inout InlineItemList,
     currentPosition: inout UInt64
   ) -> Bool {
@@ -956,7 +956,7 @@ struct InlineItemsBuilder {
       repeat {
         endPosition += UInt64(
           moveToNextBreakablePosition(
-            startPosition: UInt32(endPosition), lineBreakIteratorFactory: lineBreakIteratorFactory,
+            startPosition: UInt32(endPosition), lineBreakIteratorFactory: &lineBreakIteratorFactory,
             style: style))
         assert(startPosition < endPosition)
       } while endPosition < contentLength
@@ -964,7 +964,7 @@ struct InlineItemsBuilder {
     } else {
       endPosition += UInt64(
         moveToNextBreakablePosition(
-          startPosition: UInt32(startPosition), lineBreakIteratorFactory: lineBreakIteratorFactory,
+          startPosition: UInt32(startPosition), lineBreakIteratorFactory: &lineBreakIteratorFactory,
           style: style))
       assert(startPosition < endPosition)
       hasTrailingSoftHyphen = text[UInt32(endPosition - 1)] == CharacterNames.Unicode.softHyphen
@@ -1012,7 +1012,7 @@ struct InlineItemsBuilder {
     let style = inlineTextBox.style
     let shouldPreserveSpacesAndTabs = TextUtil.shouldPreserveSpacesAndTabs(layoutBox: inlineTextBox)
     let shouldPreserveNewline = TextUtil.shouldPreserveNewline(layoutBox: inlineTextBox)
-    let lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
+    var lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
       stringView: StringWrapperView(s: text), locale: style.computedLocale(),
       mode: TextUtil.lineBreakIteratorMode(lineBreak: style.lineBreak()),
       contentAnalysis: TextUtil.contentAnalysis(wordBreak: style.wordBreak()))
@@ -1048,7 +1048,7 @@ struct InlineItemsBuilder {
       if handleNonWhitespace(
         inlineTextBox: inlineTextBox,
         text: text, contentLength: contentLength, style: style,
-        lineBreakIteratorFactory: lineBreakIteratorFactory, inlineItemList: &inlineItemList,
+        lineBreakIteratorFactory: &lineBreakIteratorFactory, inlineItemList: &inlineItemList,
         currentPosition: &currentPosition)
       {
         continue

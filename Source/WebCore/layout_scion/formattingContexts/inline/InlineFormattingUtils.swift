@@ -42,7 +42,7 @@ internal func endsWithSoftWrapOpportunity(
     // The bidi boundary may or may not be the reason for splitting the inline text box content.
     // FIXME: We could add a "reason flag" to InlineTextItem to tell why the split happened.
     let style = previousInlineTextItem.style()
-    let lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
+    var lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
       stringView: StringWrapperView(s: previousInlineTextItem.inlineTextBox().content),
       locale: style.computedLocale(),
       mode: TextUtil.lineBreakIteratorMode(lineBreak: style.lineBreak()),
@@ -50,7 +50,7 @@ internal func endsWithSoftWrapOpportunity(
     )
     let softWrapOpportunityCandidate = nextInlineTextItem.start()
     return TextUtil.findNextBreakablePosition(
-      lineBreakIteratorFactory: lineBreakIteratorFactory,
+      lineBreakIteratorFactory: &lineBreakIteratorFactory,
       startPosition: softWrapOpportunityCandidate, style: style) == softWrapOpportunityCandidate
   }
   return TextUtil.mayBreakInBetween(

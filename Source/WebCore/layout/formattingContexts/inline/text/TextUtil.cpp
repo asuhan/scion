@@ -568,6 +568,11 @@ extern "C" WEBCORE_EXPORT void* CachedLineBreakIteratorFactory_new(
         static_cast<TextBreakIterator::ContentAnalysis>(content_analysis));
 }
 
+extern "C" WEBCORE_EXPORT void CachedLineBreakIteratorFactory_destroy(const void* p)
+{
+    delete static_cast<const CachedLineBreakIteratorFactory*>(p);
+}
+
 extern "C" WEBCORE_EXPORT void* CachedLineBreakIteratorFactory_stringView(const void* p)
 {
     return new StringView(static_cast<const CachedLineBreakIteratorFactory*>(p)->stringView());

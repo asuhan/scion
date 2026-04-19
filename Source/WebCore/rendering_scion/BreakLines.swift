@@ -39,7 +39,7 @@ struct BreakLines {
 
   static func nextBreakablePosition(
     rules: LineBreakRules, words: WordBreakBehavior, spaces: NoBreakSpaceBehavior,
-    lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper, startPosition: UInt64
+    lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper, startPosition: UInt64
   ) -> UInt32 {
     let stringView = lineBreakIteratorFactory.stringView()
 
@@ -51,7 +51,7 @@ struct BreakLines {
             startPosition: startPosition)
           : nextBreakablePosition(
             shortcutRules: rules, words: words, nonBreakingSpaceBehavior: spaces,
-            lineBreakIteratorFactory: lineBreakIteratorFactory, string: stringView.span8(),
+            lineBreakIteratorFactory: &lineBreakIteratorFactory, string: stringView.span8(),
             startPositionIn: startPosition))
     }
     return UInt32(
@@ -61,14 +61,14 @@ struct BreakLines {
           startPosition: startPosition)
         : nextBreakablePosition(
           shortcutRules: rules, words: words, nonBreakingSpaceBehavior: spaces,
-          lineBreakIteratorFactory: lineBreakIteratorFactory, string: stringView.span16(),
+          lineBreakIteratorFactory: &lineBreakIteratorFactory, string: stringView.span16(),
           startPositionIn: startPosition))
   }
 
   static func nextBreakablePosition<CharacterType>(
     shortcutRules: LineBreakRules, words: WordBreakBehavior,
     nonBreakingSpaceBehavior: NoBreakSpaceBehavior,
-    lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper,
+    lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper,
     string: CharSpanWrapper<CharacterType>, startPositionIn: UInt64
   ) -> UInt64 where CharacterType: BinaryInteger {
     var startPosition = startPositionIn
@@ -247,7 +247,8 @@ struct BreakLines {
   }
 
   static func isBreakable(
-    _ lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper, _ startPosition: UInt32,
+    _ lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper,
+    _ startPosition: UInt32,
     _ nextBreakable: UInt32?, breakNBSP: Bool, canUseShortcut: Bool, keepAllWords: Bool,
     breakAnywhere: Bool
   ) -> Bool {
@@ -256,7 +257,7 @@ struct BreakLines {
     }
 
     if breakAnywhere {
-      return startPosition == BreakLines.nextCharacter(lineBreakIteratorFactory, startPosition)
+      return startPosition == BreakLines.nextCharacter(&lineBreakIteratorFactory, startPosition)
     }
 
     if keepAllWords {
@@ -264,13 +265,14 @@ struct BreakLines {
         return startPosition
           == nextBreakablePosition(
             rules: .Special, words: .KeepAll, spaces: .Break,
-            lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition)
+            lineBreakIteratorFactory: &lineBreakIteratorFactory,
+            startPosition: UInt64(startPosition)
           )
       }
       return startPosition
         == nextBreakablePosition(
           rules: .Special, words: .KeepAll, spaces: .Normal,
-          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+          lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     if canUseShortcut {
@@ -278,26 +280,27 @@ struct BreakLines {
         return startPosition
           == nextBreakablePosition(
             rules: .Normal, words: .Normal, spaces: .Break,
-            lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition)
+            lineBreakIteratorFactory: &lineBreakIteratorFactory,
+            startPosition: UInt64(startPosition)
           )
       }
       return startPosition
         == nextBreakablePosition(
           rules: .Normal, words: .Normal, spaces: .Normal,
-          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+          lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     if breakNBSP {
       return startPosition
         == nextBreakablePosition(
           rules: .Special, words: .Normal, spaces: .Break,
-          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+          lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
     }
 
     return startPosition
       == nextBreakablePosition(
         rules: .Special, words: .Normal, spaces: .Normal,
-        lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+        lineBreakIteratorFactory: &lineBreakIteratorFactory, startPosition: UInt64(startPosition))
   }
 
   static func nextBreakableSpace<CharacterType>(
@@ -322,7 +325,7 @@ struct BreakLines {
   }
 
   private static func nextCharacter(
-    _ lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper, _ startPosition: UInt32
+    _ lineBreakIteratorFactory: inout CachedLineBreakIteratorFactoryWrapper, _ startPosition: UInt32
   ) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -415,6 +415,7 @@ void* CachedLineBreakIteratorFactory_new(
     const void* locale,
     uint8_t mode,
     uint8_t content_analysis);
+void CachedLineBreakIteratorFactory_destroy(const void*);
 void* CachedLineBreakIteratorFactory_stringView(const void*);
 uint8_t CachedLineBreakIteratorFactory_mode(const void*);
 const void* CachedLineBreakIteratorFactory_get(const void*);
