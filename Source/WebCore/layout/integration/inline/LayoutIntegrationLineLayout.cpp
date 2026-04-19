@@ -229,15 +229,9 @@ PlacedFloatsItemRaw convertPlacedFloatsItem(WebCore::Layout::PlacedFloats::Item&
     };
 }
 
-}  // namespace
-
-PlacedFloatsRaw convertPlacedFloats(WebCore::Layout::PlacedFloats& placedFloats)
+PlacedFloatsRaw convertPlacedFloats(PlacedFloatsItemRaw* itemsRaw, WebCore::Layout::PlacedFloats& placedFloats)
 {
     auto& items = placedFloats.list();
-    // TODO(asuhan): Fix leaks
-    PlacedFloatsItemRaw* itemsRaw = items.isEmpty()
-        ? nullptr
-        : new PlacedFloatsItemRaw[items.size()];
     for (size_t i = 0; i < items.size(); ++i) {
         itemsRaw[i] = convertPlacedFloatsItem(items[i]);
     }
@@ -247,6 +241,8 @@ PlacedFloatsRaw convertPlacedFloats(WebCore::Layout::PlacedFloats& placedFloats)
         placedFloats.list().size()
     };
 }
+
+}  // namespace
 
 LineClampRaw convertLineClampRaw(const std::optional<WebCore::Layout::BlockLayoutState::LineClamp>& maybeLineClamp)
 {
@@ -740,7 +736,9 @@ std::optional<LayoutRect> LineLayout::layout()
             nested_list_markers.push_back(pair.key);
             nested_list_marker_offsets_raw.push_back(pair.value.rawValue());
         }
-        const auto placedFloatsRaw = convertPlacedFloats(m_blockFormattingState.placedFloats());
+        const auto& items = m_blockFormattingState.placedFloats().list();
+        std::vector<PlacedFloatsItemRaw> itemsRaw(items.size());
+        const auto placedFloatsRaw = convertPlacedFloats(itemsRaw.empty() ? nullptr : &itemsRaw[0], m_blockFormattingState.placedFloats());
         const auto lineClampRaw = convertLineClampRaw(inlineFormattingContext.layoutState().parentBlockLayoutState().lineClamp());
         InlineFormattingContext_layout(
             &inlineFormattingContext, &constraints, lineDamage,
