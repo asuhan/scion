@@ -45,10 +45,7 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
-  func isInLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInLayout() -> Bool { return wk_interop.LocalFrameViewLayoutContext_isInLayout(p) }
 
   func needsSkippedContentLayout() -> Bool {
     // TODO(asuhan): implement this

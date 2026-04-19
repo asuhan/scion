@@ -52,6 +52,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_isInLayout(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->isInLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_needsFullRepaint(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->needsFullRepaint();
