@@ -96,6 +96,7 @@ func isSkippedContentRoot(style: RenderStyleWrapper, element: ElementWrapper?) -
 
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
+  var pOwner: Bool = false
 
   private enum CloneTag { case Clone }
 
@@ -124,6 +125,8 @@ class RenderStyleWrapper: Equatable {
     m_svgStyle = other.m_svgStyle.copy()
   }
 
+  deinit { if pOwner { wk_interop.RenderStyle_destroy(p!) } }
+
   func replace(_ newStyle: RenderStyleWrapper) -> RenderStyleWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -139,6 +142,7 @@ class RenderStyleWrapper: Equatable {
       let cloned = RenderStyleWrapper()
       // TODO(asuhan): convert native fields
       cloned.p = wk_interop.RenderStyle_clone(style.p)
+      cloned.pOwner = true
       return cloned
     }
     return RenderStyleWrapper(style, .Clone)

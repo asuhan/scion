@@ -66,9 +66,13 @@
 
 extern "C" WEBCORE_EXPORT const void* RenderStyle_clone(const void* p)
 {
-    // TODO(asuhan): Fix leaks
     auto cloned = WebCore::RenderStyle::clonePtr(*static_cast<const WebCore::RenderStyle*>(p));
     return cloned.release();
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_destroy(const void* p)
+{
+    delete static_cast<const WebCore::RenderStyle*>(p);
 }
 
 extern "C" WEBCORE_EXPORT uint32_t RenderStyle_pseudoElementType(const void* p)

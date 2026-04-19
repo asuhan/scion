@@ -536,6 +536,7 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   let document = Document(documentRaw)
   let style = RenderStyleWrapper()
   style.p = styleRaw
+  style.pOwner = true
   let renderView = RenderViewWrapper(document, style)
   let unmanaged = Unmanaged.passUnretained(renderView)
   return unmanaged.toOpaque()

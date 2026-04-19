@@ -716,6 +716,7 @@ void Box_setIsFirstChildForIntegration(const void*, bool);
 void Box_setShape(const void* box_raw, const void* shape);
 void* Box_rendererForIntegration(const void*);
 const void* RenderStyle_clone(const void*);
+void RenderStyle_destroy(const void*);
 uint32_t RenderStyle_pseudoElementType(const void*);
 const void* RenderStyle_getCachedPseudoStyle(const void*, uint32_t, const void*);
 bool RenderStyle_isFloating(const void*);
