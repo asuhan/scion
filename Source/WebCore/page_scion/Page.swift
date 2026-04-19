@@ -60,10 +60,7 @@ class PageWrapper {
 
   func deviceScaleFactor() -> Float32 { return wk_interop.Page_deviceScaleFactor(p) }
 
-  func useSystemAppearance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func useSystemAppearance() -> Bool { return wk_interop.Page_useSystemAppearance(p) }
 
   func preferredFilterRenderingModes() -> FilterRenderingMode {
     // TODO(asuhan): implement this
