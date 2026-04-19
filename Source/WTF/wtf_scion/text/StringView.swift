@@ -82,6 +82,8 @@ class StringWrapperView {
       self.p = p
     }
 
+    deinit { wk_interop.UpconvertedCharactersWithSize_destroy(p) }
+
     var uchars: ArraySlice<UChar> {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

@@ -380,6 +380,7 @@ const void* StringView_fromString(const void*);
 const void* StringView_substring(const void*, unsigned, unsigned);
 void StringView_destroy(const void*);
 const void* StringView_upconvertedCharacters(const void*);
+void UpconvertedCharactersWithSize_destroy(const void*);
 void* TextRun_fromStringView(const void*, float, float, bool, bool);
 void TextRun_destroy(const void*);
 const void* String_new();
