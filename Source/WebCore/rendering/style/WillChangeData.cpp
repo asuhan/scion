@@ -32,6 +32,11 @@ extern "C" WEBCORE_EXPORT bool WillChangeData_canCreateStackingContext(const voi
     return static_cast<const WebCore::WillChangeData*>(p)->canCreateStackingContext();
 }
 
+extern "C" WEBCORE_EXPORT bool WillChangeData_createsContainingBlockForOutOfFlowPositioned(const void* p, bool is_root_element)
+{
+    return static_cast<const WebCore::WillChangeData*>(p)->createsContainingBlockForOutOfFlowPositioned(is_root_element);
+}
+
 extern "C" WEBCORE_EXPORT bool WillChangeData_canTriggerCompositing(const void* p)
 {
     return static_cast<const WebCore::WillChangeData*>(p)->canTriggerCompositing();

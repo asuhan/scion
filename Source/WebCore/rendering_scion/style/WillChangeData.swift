@@ -37,6 +37,10 @@ class WillChangeData: Equatable {
     return wk_interop.WillChangeData_canCreateStackingContext(p)
   }
 
+  func createsContainingBlockForOutOfFlowPositioned(_ isRootElement: Bool) -> Bool {
+    return wk_interop.WillChangeData_createsContainingBlockForOutOfFlowPositioned(p, isRootElement)
+  }
+
   func canBeBackdropRoot() -> Bool {
     return containsProperty(.CSSPropertyOpacity)
       || containsProperty(.CSSPropertyBackdropFilter)

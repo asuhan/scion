@@ -1293,6 +1293,7 @@ bool FilterOperations_eq(const void*, const void*);
 bool FilterOperations_isEmpty(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
 bool WillChangeData_canCreateStackingContext(const void*);
+bool WillChangeData_createsContainingBlockForOutOfFlowPositioned(const void*, bool);
 bool WillChangeData_canTriggerCompositing(const void*);
 bool WillChangeData_canTriggerCompositingOnInline(const void*);
 bool Element_isFormControlElement(const void*);
