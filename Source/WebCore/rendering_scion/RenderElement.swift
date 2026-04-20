@@ -371,8 +371,15 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Note that even if these 2 "canContain" functions return true for a particular renderer, it does not necessarily mean the renderer is the containing block (see containingBlockForAbsolute(Fixed)Position).
   func canContainFixedPositionObjects() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderView()
+      || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
+      || (hasBackdropFilter() && !isDocumentElementRenderer())
+      || (isRenderBlock()
+        && (style().willChange()?.createsContainingBlockForOutOfFlowPositioned(
+          isDocumentElementRenderer()) ?? false))
+      || isRenderOrLegacyRenderSVGForeignObject()
+      || shouldApplyLayoutOrPaintContainment()
   }
 
   func canContainAbsolutelyPositionedObjects() -> Bool {
