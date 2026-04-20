@@ -327,6 +327,7 @@
 #include <wtf/UUID.h>
 #include <wtf/text/MakeString.h>
 #include <wtf/text/StringBuffer.h>
+#include <wtf/text/StringToIntegerConversion.h>
 #include <wtf/text/TextStream.h>
 
 #if ENABLE(APP_HIGHLIGHTS)
@@ -3325,6 +3326,10 @@ void Document::createRenderTree()
 
     // FIXME: It would be better if we could pass the resolved document style directly here.
     m_renderView = createRenderer<RenderView>(*this, RenderStyle::create());
+    if (s_useScionRendering) {
+        auto style = RenderStyle::createPtr();
+        m_renderView->setScionHandle(RenderViewScion_create(this, style.release()));
+    }
     CheckedPtr renderView = m_renderView.get();
     Node::setRenderer(renderView.get());
 
@@ -11316,6 +11321,8 @@ void Document::securityOriginDidChange()
 {
     m_permissionsPolicy = nullptr;
 }
+
+bool Document::s_useScionRendering = parseInteger<uint8_t>(StringView::fromLatin1(getenv("SCION_USE_RENDERING"))).value_or(0);
 
 } // namespace WebCore
 
