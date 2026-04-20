@@ -37,6 +37,10 @@ class WillChangeData: Equatable {
     return wk_interop.WillChangeData_canCreateStackingContext(p)
   }
 
+  func createsContainingBlockForAbsolutelyPositioned(_ isRootElement: Bool) -> Bool {
+    return wk_interop.WillChangeData_createsContainingBlockForAbsolutelyPositioned(p, isRootElement)
+  }
+
   func createsContainingBlockForOutOfFlowPositioned(_ isRootElement: Bool) -> Bool {
     return wk_interop.WillChangeData_createsContainingBlockForOutOfFlowPositioned(p, isRootElement)
   }

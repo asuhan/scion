@@ -383,8 +383,16 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func canContainAbsolutelyPositionedObjects() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderView()
+      || style().position() != .Static
+      || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
+      || (hasBackdropFilter() && !isDocumentElementRenderer())
+      || (isRenderBlock()
+        && (style().willChange()?.createsContainingBlockForAbsolutelyPositioned(
+          isDocumentElementRenderer()) ?? false))
+      || isRenderOrLegacyRenderSVGForeignObject()
+      || shouldApplyLayoutOrPaintContainment()
   }
 
   private func canEstablishContainingBlockWithTransform() -> Bool {
