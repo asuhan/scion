@@ -1306,6 +1306,10 @@ class RenderStyleWrapper: Equatable {
 
   func containsInlineSize() -> Bool { return usedContain().contains(.InlineSize) }
 
+  func containsSizeOrInlineSize() -> Bool {
+    return usedContain().contains(.Size) || usedContain().contains(.InlineSize)
+  }
+
   func containsPaint() -> Bool {
     return wk_interop.RenderStyle_containsPaint(p!)
   }
