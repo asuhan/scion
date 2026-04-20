@@ -437,8 +437,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplyAnyContainment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return shouldApplyLayoutOrPaintContainment()
+      || shouldApplySizeOrStyleContainment(
+        style().containsSizeOrInlineSize() || style().containsStyle())
   }
 
   private func selectionColor(colorProperty: CSSPropertyID) -> ColorWrapper {
