@@ -35,8 +35,8 @@ private func paintPhase(
   element: RenderElementWrapper, phase: PaintPhase, paintInfo: inout PaintInfoWrapper,
   childPoint: LayoutPointWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  paintInfo.phase = phase
+  element.paint(paintInfo: &paintInfo, paintOffset: childPoint)
 }
 
 private func mustRepaintFillLayers(_ renderer: RenderElementWrapper, _ layer: FillLayerWrapper)
