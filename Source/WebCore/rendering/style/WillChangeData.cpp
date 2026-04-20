@@ -32,6 +32,16 @@ extern "C" WEBCORE_EXPORT bool WillChangeData_canCreateStackingContext(const voi
     return static_cast<const WebCore::WillChangeData*>(p)->canCreateStackingContext();
 }
 
+extern "C" WEBCORE_EXPORT bool WillChangeData_canTriggerCompositing(const void* p)
+{
+    return static_cast<const WebCore::WillChangeData*>(p)->canTriggerCompositing();
+}
+
+extern "C" WEBCORE_EXPORT bool WillChangeData_canTriggerCompositingOnInline(const void* p)
+{
+    return static_cast<const WebCore::WillChangeData*>(p)->canTriggerCompositingOnInline();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(WillChangeData);

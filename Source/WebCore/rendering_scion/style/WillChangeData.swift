@@ -47,14 +47,10 @@ class WillChangeData: Equatable {
       || containsProperty(.CSSPropertyMask)
   }
 
-  func canTriggerCompositing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func canTriggerCompositing() -> Bool { return wk_interop.WillChangeData_canTriggerCompositing(p) }
 
   func canTriggerCompositingOnInline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.WillChangeData_canTriggerCompositingOnInline(p)
   }
 
   static func == (lhs: WillChangeData, rhs: WillChangeData) -> Bool {
