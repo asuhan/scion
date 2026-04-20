@@ -41,6 +41,14 @@
 #include "StyleReflection.h"
 #include "TransformOperationsBuilder.h"
 
+extern "C" WEBCORE_EXPORT void Style_loadPendingResources(const void* style, void* document, const void* element)
+{
+    WebCore::Style::loadPendingResources(
+        *static_cast<WebCore::RenderStyle*>(const_cast<void*>(style)),
+        *static_cast<WebCore::Document*>(document),
+        static_cast<const WebCore::Element*>(element));
+}
+
 namespace WebCore {
 namespace Style {
 

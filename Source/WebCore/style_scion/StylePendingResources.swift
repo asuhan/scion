@@ -23,13 +23,12 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 extension Style {
 
   static func loadPendingResources(
     _ style: RenderStyleWrapper, _ document: Document, _ element: ElementWrapper?
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  ) { wk_interop.Style_loadPendingResources(style.p!, document.p, element?.p) }
 
 }
