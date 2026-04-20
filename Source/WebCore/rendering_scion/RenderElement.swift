@@ -380,6 +380,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func canEstablishContainingBlockWithTransform() -> Bool {
+    assert(isNativeImpl())
+    return isRenderBlock() || (isTablePart() && !isRenderTableCol())
+  }
+
   func shouldApplyLayoutContainment() -> Bool {
     assert(isNativeImpl())
     return shouldApplyLayoutOrPaintContainment(
