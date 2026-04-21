@@ -325,7 +325,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       }
       return nil
     }
-    return super.node() != nil ? (super.node()! as! ElementWrapper) : nil
+    return super.node() as! ElementWrapper?
   }
 
   func protectedElement() -> ElementWrapper? {
