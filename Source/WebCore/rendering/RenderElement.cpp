@@ -641,6 +641,12 @@ void RenderElement::setStyle(RenderStyle&& style, StyleDifference minimalStyleDi
     }
 }
 
+bool RenderElement::shouldApplyLayoutOrPaintContainment() const
+{
+    if (m_scion) { return m_scion->shouldApplyLayoutOrPaintContainment(); }
+    return shouldApplyLayoutOrPaintContainment(style().containsLayoutOrPaint()) || shouldApplySizeOrStyleContainment(style().contentVisibility() != ContentVisibility::Visible);
+}
+
 void RenderElement::didAttachChild(RenderObject& child, RenderObject*)
 {
     if (CheckedPtr textRenderer = dynamicDowncast<RenderText>(child))

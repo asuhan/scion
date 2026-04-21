@@ -51,6 +51,8 @@ extern "C" const void* RenderElementScion_style(const void*);
 
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
+extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
+
 extern "C" bool RenderElementScion_isTransparent(const void*);
 
 extern "C" bool RenderElementScion_hasMask(const void*);
@@ -306,6 +308,11 @@ const RenderStyle& RenderElementScion::style() const
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {
     RenderElementScion_setStyle(m_handle, &style, static_cast<uint8_t>(minimalStyleDifference));
+}
+
+bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const
+{
+    return RenderElementScion_shouldApplyLayoutOrPaintContainment(m_handle);
 }
 
 bool RenderElementScion::isTransparent() const

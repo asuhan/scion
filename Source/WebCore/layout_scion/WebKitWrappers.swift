@@ -1056,6 +1056,13 @@ func RenderElementScion_setStyle(
   element.setStyle(style: style, minimalStyleDifference: minimalStyleDifferenceRaw)
 }
 
+@_cdecl("RenderElementScion_shouldApplyLayoutOrPaintContainment")
+func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool
+{
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.shouldApplyLayoutOrPaintContainment()
+}
+
 @_cdecl("RenderElementScion_isTransparent")
 func RenderElementScion_isTransparent(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

@@ -83,6 +83,8 @@ public:
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
+    bool shouldApplyLayoutOrPaintContainment() const;
+
     bool isTransparent() const;
 
     bool hasMask() const;
