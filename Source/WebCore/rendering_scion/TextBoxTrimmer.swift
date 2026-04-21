@@ -96,8 +96,7 @@ class TextBoxTrimmer {
   private func adjustTextBoxTrimStatusAfterLayout() {
     let layoutState = m_blockContainer.view().frameView().layoutContext().layoutState()!
     if m_shouldRestoreTextBoxTrimStatus {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return layoutState.setTextBoxTrim(m_previousTextBoxTrimStatus)
     }
 
     if layoutState.hasTextBoxTrimStart() {
