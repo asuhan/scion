@@ -770,34 +770,20 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func marginTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func marginTop() -> LayoutUnit { fatalError("Not reached") }
 
-  func marginBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func marginBottom() -> LayoutUnit { fatalError("Not reached") }
 
-  func marginLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func marginLeft() -> LayoutUnit { fatalError("Not reached") }
 
-  func marginRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func marginRight() -> LayoutUnit { fatalError("Not reached") }
 
   func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
@@ -810,7 +796,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func verticalMarginExtent() -> LayoutUnit {
     assert(isNativeImpl())
-    return marginTop() + marginBottom();
+    return marginTop() + marginBottom()
   }
 
   func horizontalMarginExtent() -> LayoutUnit {
