@@ -611,8 +611,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   func isFlexibleBoxImpl() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   func usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: RenderBoxWrapper)
