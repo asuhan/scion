@@ -83,6 +83,8 @@ public:
 
     bool hasClipPath() const;
 
+    bool hasFilter() const;
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
 private:

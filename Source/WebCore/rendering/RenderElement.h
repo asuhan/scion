@@ -211,7 +211,7 @@ public:
     // CSS scroll-margin that is set in the style of this RenderElement.
     MarginRect absoluteAnchorRectWithScrollMargin(bool* insideFixed = nullptr) const;
 
-    inline bool hasFilter() const;
+    bool hasFilter() const;
     inline bool hasBackdropFilter() const;
     inline bool hasBlendMode() const;
     inline bool hasShapeOutside() const;

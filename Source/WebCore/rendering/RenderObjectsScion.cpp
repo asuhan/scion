@@ -51,6 +51,8 @@ extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
 extern "C" bool RenderElementScion_hasClipPath(const void*);
 
+extern "C" bool RenderElementScion_hasFilter(const void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
@@ -292,6 +294,11 @@ void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalSt
 bool RenderElementScion::hasClipPath() const
 {
     return RenderElementScion_hasClipPath(m_handle);
+}
+
+bool RenderElementScion::hasFilter() const
+{
+    return RenderElementScion_hasFilter(m_handle);
 }
 
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)

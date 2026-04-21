@@ -31,7 +31,6 @@ inline bool RenderElement::hasBackground() const { return style().hasBackground(
 inline bool RenderElement::hasBlendMode() const { return style().hasBlendMode(); }
 inline bool RenderElement::hasClip() const { return isOutOfFlowPositioned() && style().hasClip(); }
 inline bool RenderElement::hasClipOrNonVisibleOverflow() const { return hasClip() || hasNonVisibleOverflow(); }
-inline bool RenderElement::hasFilter() const { return style().hasFilter(); }
 inline bool RenderElement::hasHiddenBackface() const { return style().backfaceVisibility() == BackfaceVisibility::Hidden; }
 inline bool RenderElement::hasMask() const { return style().hasMask(); }
 inline bool RenderElement::hasOutline() const { return style().hasOutline() || hasOutlineAnnotation(); }

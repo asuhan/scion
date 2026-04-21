@@ -2198,6 +2198,12 @@ bool RenderElement::checkForRepaintDuringLayout() const
     return everHadLayout() && !hasSelfPaintingLayer() && !document().view()->layoutContext().needsFullRepaint();
 }
 
+bool RenderElement::hasFilter() const
+{
+    if (m_scion) { return m_scion->hasFilter(); }
+    return style().hasFilter();
+}
+
 ImageOrientation RenderElement::imageOrientation() const
 {
     auto* imageElement = dynamicDowncast<HTMLImageElement>(element());
