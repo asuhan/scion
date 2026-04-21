@@ -349,8 +349,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   typealias Direction = FlowDirection
 
   override func avoidsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   override final func canDropAnonymousBlockChild() -> Bool {
