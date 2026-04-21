@@ -2346,9 +2346,11 @@ private:
         // Total = 53 bits (fits in 8 bytes)
     };
 
+public:
     // This constructor is used to implement the replace operation.
     RenderStyle(RenderStyle&, RenderStyle&&);
 
+private:
     constexpr DisplayType originalDisplay() const { return static_cast<DisplayType>(m_nonInheritedFlags.originalDisplay); }
 
     inline bool hasAutoLeftAndRight() const;

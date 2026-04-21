@@ -128,8 +128,9 @@ class RenderStyleWrapper: Equatable {
   deinit { if pOwner { wk_interop.RenderStyle_destroy(p!) } }
 
   func replace(_ newStyle: RenderStyleWrapper) -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = convert_render_style(p: wk_interop.RenderStyle_replace(p!, newStyle.p!))
+    style.pOwner = true
+    return style
   }
 
   static func create() -> RenderStyleWrapper {

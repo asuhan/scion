@@ -70,6 +70,13 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_clone(const void* p)
     return cloned.release();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_replace(const void* a, const void* b)
+{
+    return new WebCore::RenderStyle(
+        *static_cast<WebCore::RenderStyle*>(const_cast<void*>(a)),
+        std::move(*static_cast<WebCore::RenderStyle*>(const_cast<void*>(b))));
+}
+
 extern "C" WEBCORE_EXPORT void RenderStyle_destroy(const void* p)
 {
     delete static_cast<const WebCore::RenderStyle*>(p);
