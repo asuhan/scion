@@ -1056,6 +1056,12 @@ func RenderElementScion_setStyle(
   element.setStyle(style: style, minimalStyleDifference: minimalStyleDifferenceRaw)
 }
 
+@_cdecl("RenderElementScion_element")
+func RenderElementScion_element(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let renderElement = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return renderElement.element()?.p
+}
+
 @_cdecl("RenderElementScion_shouldApplyLayoutOrPaintContainment")
 func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool
 {

@@ -83,6 +83,10 @@ public:
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
+    Element* element() const;
+
+    RefPtr<Element> protectedElement() const;
+
     bool shouldApplyLayoutOrPaintContainment() const;
 
     bool isTransparent() const;

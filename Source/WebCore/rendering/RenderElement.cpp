@@ -641,6 +641,18 @@ void RenderElement::setStyle(RenderStyle&& style, StyleDifference minimalStyleDi
     }
 }
 
+Element* RenderElement::element() const
+{
+    if (m_scion) { return m_scion->element(); }
+    return downcast<Element>(RenderObject::node());
+}
+
+RefPtr<Element> RenderElement::protectedElement() const
+{
+    if (m_scion) { return m_scion->protectedElement(); }
+    return element();
+}
+
 bool RenderElement::shouldApplyLayoutOrPaintContainment() const
 {
     if (m_scion) { return m_scion->shouldApplyLayoutOrPaintContainment(); }

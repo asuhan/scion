@@ -87,8 +87,8 @@ public:
     std::unique_ptr<RenderStyle> getUncachedPseudoStyle(const Style::PseudoElementRequest&, const RenderStyle* parentStyle = nullptr, const RenderStyle* ownStyle = nullptr) const;
 
     // This is null for anonymous renderers.
-    Element* element() const { return downcast<Element>(RenderObject::node()); }
-    RefPtr<Element> protectedElement() const { return element(); }
+    Element* element() const;
+    RefPtr<Element> protectedElement() const;
     Element* nonPseudoElement() const { return downcast<Element>(RenderObject::nonPseudoNode()); }
     Element* generatingElement() const;
 
