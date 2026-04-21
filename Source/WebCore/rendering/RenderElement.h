@@ -191,7 +191,7 @@ public:
     inline bool hasMask() const;
     inline bool hasClip() const;
     inline bool hasClipOrNonVisibleOverflow() const;
-    inline bool hasClipPath() const;
+    bool hasClipPath() const;
     inline bool hasHiddenBackface() const;
     bool hasViewTransitionName() const;
     bool isViewTransitionRoot() const;

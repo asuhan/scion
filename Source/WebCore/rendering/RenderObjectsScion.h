@@ -81,6 +81,8 @@ public:
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
+    bool hasClipPath() const;
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
 private:

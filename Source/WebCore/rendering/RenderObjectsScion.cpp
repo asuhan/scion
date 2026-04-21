@@ -49,6 +49,8 @@ extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
+extern "C" bool RenderElementScion_hasClipPath(const void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
@@ -285,6 +287,11 @@ void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {
     RenderElementScion_setStyle(m_handle, &style, static_cast<uint8_t>(minimalStyleDifference));
+}
+
+bool RenderElementScion::hasClipPath() const
+{
+    return RenderElementScion_hasClipPath(m_handle);
 }
 
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)

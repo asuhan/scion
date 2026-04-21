@@ -1050,6 +1050,12 @@ func RenderElementScion_setStyle(
   element.setStyle(style: style, minimalStyleDifference: minimalStyleDifferenceRaw)
 }
 
+@_cdecl("RenderElementScion_hasClipPath")
+func RenderElementScion_hasClipPath(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasClipPath()
+}
+
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   if wk_interop.RenderObject_isRenderBlockFlow(p) {
     return RenderBlockFlowWrapper(p: p)

@@ -2159,6 +2159,12 @@ void RenderElement::updateOutlineAutoAncestor(bool hasOutlineAuto)
     }
 }
 
+bool RenderElement::hasClipPath() const
+{
+    if (m_scion) { return m_scion->hasClipPath(); }
+    return style().clipPath();
+}
+
 bool RenderElement::hasOutlineAnnotation() const
 {
     return element() && element()->isLink() && (document().printing() || (view().frameView().paintBehavior() & PaintBehavior::AnnotateLinks));
