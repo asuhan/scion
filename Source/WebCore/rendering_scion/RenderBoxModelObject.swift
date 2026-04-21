@@ -809,8 +809,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit { fatalError("Not reached") }
 
   func verticalMarginExtent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginTop() + marginBottom();
   }
 
   func horizontalMarginExtent() -> LayoutUnit {
