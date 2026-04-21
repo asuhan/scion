@@ -66,7 +66,7 @@ public:
 
     bool hasInitializedStyle() const { return m_hasInitializedStyle; }
 
-    const RenderStyle& style() const { return m_style; }
+    const RenderStyle& style() const;
     const RenderStyle* parentStyle() const { return !m_parent ? nullptr : &m_parent->style(); }
     const RenderStyle& firstLineStyle() const;
 

@@ -1038,6 +1038,12 @@ func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMu
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderElementScion_style")
+func RenderElementScion_style(_ elementRaw: UnsafeMutableRawPointer) -> UnsafeRawPointer {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.style!.p!
+}
+
 @_cdecl("RenderElementScion_setStyle")
 func RenderElementScion_setStyle(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,

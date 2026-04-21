@@ -47,6 +47,8 @@ extern "C" bool RenderObjectScion_needsLayout(const void*);
 
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
+extern "C" const void* RenderElementScion_style(const void*);
+
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
@@ -295,6 +297,11 @@ bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_h
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
 
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
+
+const RenderStyle& RenderElementScion::style() const
+{
+    return *static_cast<const RenderStyle*>(RenderElementScion_style(m_handle));
+}
 
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {

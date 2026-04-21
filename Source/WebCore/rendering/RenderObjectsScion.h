@@ -79,6 +79,8 @@ public:
     {
     }
 
+    const RenderStyle& style() const;
+
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
     bool isTransparent() const;

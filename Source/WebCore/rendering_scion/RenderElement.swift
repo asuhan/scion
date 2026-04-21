@@ -2519,5 +2519,5 @@ class RenderElementWrapper: RenderObjectWrapper {
   private let m_didContributeToVisuallyNonEmptyPixelCount: Bool
   private var m_layoutIdentifier: LayoutIdentifier = 0
 
-  private let style: RenderStyleWrapper?  // TODO(asuhan): not nil once we have initializers
+  let style: RenderStyleWrapper?  // TODO(asuhan): not nil once we have initializers
 }

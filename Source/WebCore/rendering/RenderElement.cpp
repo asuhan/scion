@@ -209,6 +209,12 @@ void RenderElement::setScionHandle(void* handle) {
     m_scion = std::make_unique<RenderElementScion>(handle);
 }
 
+const RenderStyle& RenderElement::style() const
+{
+    if (m_scion) { return m_scion->style(); }
+    return m_style;
+}
+
 Layout::ElementBox* RenderElement::layoutBox()
 {
     return downcast<Layout::ElementBox>(RenderObject::layoutBox());
