@@ -81,6 +81,8 @@ public:
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
+    bool hasMask() const;
+
     bool hasClipPath() const;
 
     bool hasFilter() const;

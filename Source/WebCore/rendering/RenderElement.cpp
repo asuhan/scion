@@ -2159,6 +2159,12 @@ void RenderElement::updateOutlineAutoAncestor(bool hasOutlineAuto)
     }
 }
 
+bool RenderElement::hasMask() const
+{
+    if (m_scion) { return m_scion->hasMask(); }
+    return style().hasMask();
+}
+
 bool RenderElement::hasClipPath() const
 {
     if (m_scion) { return m_scion->hasClipPath(); }

@@ -49,6 +49,8 @@ extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
+extern "C" bool RenderElementScion_hasMask(const void*);
+
 extern "C" bool RenderElementScion_hasClipPath(const void*);
 
 extern "C" bool RenderElementScion_hasFilter(const void*);
@@ -289,6 +291,11 @@ void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {
     RenderElementScion_setStyle(m_handle, &style, static_cast<uint8_t>(minimalStyleDifference));
+}
+
+bool RenderElementScion::hasMask() const
+{
+    return RenderElementScion_hasMask(m_handle);
 }
 
 bool RenderElementScion::hasClipPath() const

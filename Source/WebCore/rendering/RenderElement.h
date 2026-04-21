@@ -188,7 +188,7 @@ public:
     inline bool visibleToHitTesting(const std::optional<HitTestRequest>& = std::nullopt) const;
 
     inline bool hasBackground() const;
-    inline bool hasMask() const;
+    bool hasMask() const;
     inline bool hasClip() const;
     inline bool hasClipOrNonVisibleOverflow() const;
     bool hasClipPath() const;
