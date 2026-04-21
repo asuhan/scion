@@ -659,6 +659,12 @@ RenderObject* RenderElement::firstChild() const
     return m_firstChild.get();
 }
 
+bool RenderElement::shouldApplyPaintContainment() const
+{
+    if (m_scion) { return m_scion->shouldApplyPaintContainment(); }
+    return shouldApplyLayoutOrPaintContainment(style().containsPaint()) || shouldApplySizeOrStyleContainment(style().contentVisibility() != ContentVisibility::Visible);
+}
+
 bool RenderElement::shouldApplyLayoutOrPaintContainment() const
 {
     if (m_scion) { return m_scion->shouldApplyLayoutOrPaintContainment(); }

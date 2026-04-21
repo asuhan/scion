@@ -1070,6 +1070,12 @@ func RenderElementScion_firstChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMuta
   return firstChild.id()
 }
 
+@_cdecl("RenderElementScion_shouldApplyPaintContainment")
+func RenderElementScion_shouldApplyPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.shouldApplyPaintContainment()
+}
+
 @_cdecl("RenderElementScion_shouldApplyLayoutOrPaintContainment")
 func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool
 {

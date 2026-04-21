@@ -89,6 +89,8 @@ public:
 
     RenderObject* firstChild() const;
 
+    bool shouldApplyPaintContainment() const;
+
     bool shouldApplyLayoutOrPaintContainment() const;
 
     bool isTransparent() const;

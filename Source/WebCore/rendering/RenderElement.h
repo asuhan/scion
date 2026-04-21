@@ -110,7 +110,7 @@ public:
     inline bool shouldApplyInlineSizeContainment() const;
     inline bool shouldApplySizeOrInlineSizeContainment() const;
     inline bool shouldApplyStyleContainment() const;
-    inline bool shouldApplyPaintContainment() const;
+    bool shouldApplyPaintContainment() const;
     bool shouldApplyLayoutOrPaintContainment() const;
     inline bool shouldApplyAnyContainment() const;
 
