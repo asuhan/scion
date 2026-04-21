@@ -673,6 +673,10 @@ bool RenderElement::shouldApplyLayoutOrPaintContainment() const
 
 void RenderElement::didAttachChild(RenderObject& child, RenderObject*)
 {
+    if (m_scion) {
+        m_scion->didAttachChild(child);
+        return;
+    }
     if (CheckedPtr textRenderer = dynamicDowncast<RenderText>(child))
         textRenderer->styleDidChange(StyleDifference::Equal, nullptr);
 

@@ -91,6 +91,8 @@ public:
 
     bool shouldApplyPaintContainment() const;
 
+    void didAttachChild(RenderObject&);
+
     void setChildNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
 
     bool shouldApplyLayoutOrPaintContainment() const;

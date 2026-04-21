@@ -57,6 +57,8 @@ extern "C" void* RenderElementScion_firstChild(const void*);
 
 extern "C" bool RenderElementScion_shouldApplyPaintContainment(const void*);
 
+extern "C" void RenderElementScion_didAttachChild(void*, void*);
+
 extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
 
 extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
@@ -338,6 +340,12 @@ RenderObject* RenderElementScion::firstChild() const
 bool RenderElementScion::shouldApplyPaintContainment() const
 {
     return RenderElementScion_shouldApplyPaintContainment(m_handle);
+}
+
+void RenderElementScion::didAttachChild(RenderObject& child)
+{
+    assert(!child.isScion());
+    RenderElementScion_didAttachChild(m_handle, &child);
 }
 
 void RenderElementScion::setChildNeedsLayout(MarkingBehavior markParents)
