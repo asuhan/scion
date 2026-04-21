@@ -572,6 +572,10 @@ void RenderElement::initializeStyle()
 
 void RenderElement::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {
+    if (m_scion) {
+        m_scion->setStyle(std::move(style), minimalStyleDifference);
+        return;
+    }
     // FIXME: Should change RenderView so it can use initializeStyle too.
     // If we do that, we can assert m_hasInitializedStyle unconditionally,
     // and remove the check of m_hasInitializedStyle below too.

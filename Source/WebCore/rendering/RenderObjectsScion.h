@@ -79,6 +79,8 @@ public:
     {
     }
 
+    void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
 private:

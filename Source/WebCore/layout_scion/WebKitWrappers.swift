@@ -1038,6 +1038,18 @@ func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMu
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderElementScion_setStyle")
+func RenderElementScion_setStyle(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,
+  _ minimalStyleDifferenceRaw: UInt8
+) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let style = convert_render_style(p: styleRaw)
+  style.p = styleRaw
+  let minimalStyleDifferenceRaw = StyleDifference(rawValue: minimalStyleDifferenceRaw)!
+  element.setStyle(style: style, minimalStyleDifference: minimalStyleDifferenceRaw)
+}
+
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   if wk_interop.RenderObject_isRenderBlockFlow(p) {
     return RenderBlockFlowWrapper(p: p)
