@@ -827,7 +827,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMultiColumnSet() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isRenderMultiColumnSet(id())
+    }
     return type() == .MultiColumnSet
   }
 
