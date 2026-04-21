@@ -2233,6 +2233,7 @@ bool RenderElement::requiresRenderingConsolidationForViewTransition() const
 
 bool RenderElement::isViewTransitionRoot() const
 {
+    if (m_scion) { return m_scion->isViewTransitionRoot(); }
     return style().pseudoElementType() == PseudoId::ViewTransition;
 }
 

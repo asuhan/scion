@@ -97,6 +97,8 @@ public:
 
     bool hasClipPath() const;
 
+    bool isViewTransitionRoot() const;
+
     bool requiresRenderingConsolidationForViewTransition() const;
 
     bool hasFilter() const;
