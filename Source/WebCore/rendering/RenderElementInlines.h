@@ -26,7 +26,6 @@ namespace WebCore {
 
 inline Overflow RenderElement::effectiveOverflowBlockDirection() const { return style().isHorizontalWritingMode() ? effectiveOverflowY() : effectiveOverflowX(); }
 inline Overflow RenderElement::effectiveOverflowInlineDirection() const { return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY(); }
-inline bool RenderElement::hasBackdropFilter() const { return style().hasBackdropFilter(); }
 inline bool RenderElement::hasBackground() const { return style().hasBackground(); }
 inline bool RenderElement::hasBlendMode() const { return style().hasBlendMode(); }
 inline bool RenderElement::hasClip() const { return isOutOfFlowPositioned() && style().hasClip(); }

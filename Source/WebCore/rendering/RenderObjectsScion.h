@@ -87,6 +87,8 @@ public:
 
     bool hasFilter() const;
 
+    bool hasBackdropFilter() const;
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
 private:

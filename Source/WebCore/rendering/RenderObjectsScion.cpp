@@ -55,6 +55,8 @@ extern "C" bool RenderElementScion_hasClipPath(const void*);
 
 extern "C" bool RenderElementScion_hasFilter(const void*);
 
+extern "C" bool RenderElementScion_hasBackdropFilter(const void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
@@ -306,6 +308,11 @@ bool RenderElementScion::hasClipPath() const
 bool RenderElementScion::hasFilter() const
 {
     return RenderElementScion_hasFilter(m_handle);
+}
+
+bool RenderElementScion::hasBackdropFilter() const
+{
+    return RenderElementScion_hasBackdropFilter(m_handle);
 }
 
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)

@@ -212,7 +212,7 @@ public:
     MarginRect absoluteAnchorRectWithScrollMargin(bool* insideFixed = nullptr) const;
 
     bool hasFilter() const;
-    inline bool hasBackdropFilter() const;
+    bool hasBackdropFilter() const;
     inline bool hasBlendMode() const;
     inline bool hasShapeOutside() const;
 

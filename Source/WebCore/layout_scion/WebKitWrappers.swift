@@ -1068,6 +1068,12 @@ func RenderElementScion_hasFilter(_ elementRaw: UnsafeRawPointer) -> Bool {
   return element.hasFilter()
 }
 
+@_cdecl("RenderElementScion_hasBackdropFilter")
+func RenderElementScion_hasBackdropFilter(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasBackdropFilter()
+}
+
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   if wk_interop.RenderObject_isRenderBlockFlow(p) {
     return RenderBlockFlowWrapper(p: p)
