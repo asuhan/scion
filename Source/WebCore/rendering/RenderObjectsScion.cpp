@@ -55,6 +55,8 @@ extern "C" bool RenderElementScion_hasMask(const void*);
 
 extern "C" bool RenderElementScion_hasClipPath(const void*);
 
+extern "C" bool RenderElementScion_requiresRenderingConsolidationForViewTransition(const void*);
+
 extern "C" bool RenderElementScion_hasFilter(const void*);
 
 extern "C" bool RenderElementScion_hasBackdropFilter(const void*);
@@ -312,6 +314,11 @@ bool RenderElementScion::hasMask() const
 bool RenderElementScion::hasClipPath() const
 {
     return RenderElementScion_hasClipPath(m_handle);
+}
+
+bool RenderElementScion::requiresRenderingConsolidationForViewTransition() const
+{
+    return RenderElementScion_requiresRenderingConsolidationForViewTransition(m_handle);
 }
 
 bool RenderElementScion::hasFilter() const

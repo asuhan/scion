@@ -2197,6 +2197,7 @@ bool RenderElement::hasViewTransitionName() const
 
 bool RenderElement::requiresRenderingConsolidationForViewTransition() const
 {
+    if (m_scion) { return m_scion->requiresRenderingConsolidationForViewTransition(); }
     return hasViewTransitionName() || capturedInViewTransition();
 }
 

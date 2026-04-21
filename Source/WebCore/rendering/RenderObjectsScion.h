@@ -87,6 +87,8 @@ public:
 
     bool hasClipPath() const;
 
+    bool requiresRenderingConsolidationForViewTransition() const;
+
     bool hasFilter() const;
 
     bool hasBackdropFilter() const;
