@@ -159,6 +159,25 @@ class RenderLayoutStateWrapper {
       propagatedTextBoxEdge: propagatedTextBoxEdge)
   }
 
+  func setTextBoxTrim(_ textBoxTrim: TextBoxTrim?) {
+    if textBoxTrim != nil {
+      // TODO(asuhan): handle case when lastFormattedLineRoot is not null.
+      wk_interop.RenderLayoutState_setTextBoxTrim(
+        p,
+        OptionalTextBoxTrimRaw(
+          trimFirstFormattedLine: textBoxTrim!.trimFirstFormattedLine,
+          propagatedTextBoxEdge: TextEdgeRaw(
+            over: textBoxTrim!.propagatedTextBoxEdge.over.rawValue,
+            under: textBoxTrim!.propagatedTextBoxEdge.under.rawValue), isValid: true))
+      return
+    }
+    wk_interop.RenderLayoutState_setTextBoxTrim(
+      p,
+      OptionalTextBoxTrimRaw(
+        trimFirstFormattedLine: false, propagatedTextBoxEdge: TextEdgeRaw(over: 0, under: 0),
+        isValid: false))
+  }
+
   func hasTextBoxTrimStart() -> Bool {
     return wk_interop.RenderLayoutState_hasTextBoxTrimStart(p)
   }

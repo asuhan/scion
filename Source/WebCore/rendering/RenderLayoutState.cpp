@@ -111,6 +111,21 @@ extern "C" WEBCORE_EXPORT struct OptionalTextBoxTrimRaw RenderLayoutState_textBo
     return { textBoxTrim->trimFirstFormattedLine, { static_cast<uint8_t>(textBoxTrim->propagatedTextBoxEdge.over), static_cast<uint8_t>(textBoxTrim->propagatedTextBoxEdge.under) }, true };
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayoutState_setTextBoxTrim(void* p, OptionalTextBoxTrimRaw text_box_trim_raw)
+{
+    const auto render_layout_state = static_cast<WebCore::RenderLayoutState*>(p);
+    if (text_box_trim_raw.isValid) {
+        // TODO(asuhan): handle case when lastFormattedLineRoot is not null.
+        render_layout_state->setTextBoxTrim(WebCore::RenderLayoutState::TextBoxTrim {
+            text_box_trim_raw.trimFirstFormattedLine,
+            { static_cast<WebCore::TextEdgeType>(text_box_trim_raw.propagatedTextBoxEdge.over),
+                static_cast<WebCore::TextEdgeType>(text_box_trim_raw.propagatedTextBoxEdge.under) },
+            nullptr });
+        return;
+    }
+    render_layout_state->setTextBoxTrim(std::nullopt);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayoutState_hasTextBoxTrimStart(const void* p)
 {
     return static_cast<const WebCore::RenderLayoutState*>(p)->hasTextBoxTrimStart();

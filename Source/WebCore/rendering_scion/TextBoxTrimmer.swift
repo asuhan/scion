@@ -80,8 +80,11 @@ class TextBoxTrimmer {
     // 1. trimming does not get propagated into formatting contexts e.g inside inline-block.
     // 2. border and padding (start) prevent trim start.
     if m_blockContainer.createsNewFormattingContext() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      m_previousTextBoxTrimStatus = layoutState.textBoxTrim()
+      m_shouldRestoreTextBoxTrimStatus = true
+      // Run layout on this subtree with no text-box-trim.
+      layoutState.setTextBoxTrim(nil)
+      return
     }
 
     if layoutState.hasTextBoxTrimStart() && m_blockContainer.borderAndPaddingStart().bool() {
@@ -104,5 +107,6 @@ class TextBoxTrimmer {
   }
 
   private let m_blockContainer: RenderBlockFlowWrapper
+  private var m_previousTextBoxTrimStatus: RenderLayoutStateWrapper.TextBoxTrim? = nil
   private var m_shouldRestoreTextBoxTrimStatus = false
 }

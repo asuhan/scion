@@ -563,6 +563,7 @@ void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineCla
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
 struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);
+void RenderLayoutState_setTextBoxTrim(void* p, struct OptionalTextBoxTrimRaw);
 struct OptionalBool RenderLayoutState_blockStartTrimming(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
