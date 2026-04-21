@@ -806,10 +806,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       value: wk_interop.RenderBoxModelObject_marginStart(id(), otherStyle?.p))
   }
 
-  func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit { fatalError("Not reached") }
 
   func verticalMarginExtent() -> LayoutUnit {
     // TODO(asuhan): implement this
