@@ -2216,6 +2216,12 @@ bool RenderElement::hasBackdropFilter() const
     return style().hasBackdropFilter();
 }
 
+bool RenderElement::hasBlendMode() const
+{
+    if (m_scion) { return m_scion->hasBlendMode(); }
+    return style().hasBlendMode();
+}
+
 ImageOrientation RenderElement::imageOrientation() const
 {
     auto* imageElement = dynamicDowncast<HTMLImageElement>(element());

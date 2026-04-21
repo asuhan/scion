@@ -89,6 +89,8 @@ public:
 
     bool hasBackdropFilter() const;
 
+    bool hasBlendMode() const;
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
 private:

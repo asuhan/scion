@@ -57,6 +57,8 @@ extern "C" bool RenderElementScion_hasFilter(const void*);
 
 extern "C" bool RenderElementScion_hasBackdropFilter(const void*);
 
+extern "C" bool RenderElementScion_hasBlendMode(const void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
@@ -313,6 +315,11 @@ bool RenderElementScion::hasFilter() const
 bool RenderElementScion::hasBackdropFilter() const
 {
     return RenderElementScion_hasBackdropFilter(m_handle);
+}
+
+bool RenderElementScion::hasBlendMode() const
+{
+    return RenderElementScion_hasBlendMode(m_handle);
 }
 
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)

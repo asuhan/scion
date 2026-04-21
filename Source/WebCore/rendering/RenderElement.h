@@ -213,7 +213,7 @@ public:
 
     bool hasFilter() const;
     bool hasBackdropFilter() const;
-    inline bool hasBlendMode() const;
+    bool hasBlendMode() const;
     inline bool hasShapeOutside() const;
 
     void registerForVisibleInViewportCallback();
