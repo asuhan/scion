@@ -2159,6 +2159,12 @@ void RenderElement::updateOutlineAutoAncestor(bool hasOutlineAuto)
     }
 }
 
+bool RenderElement::isTransparent() const
+{
+    if (m_scion) { return m_scion->isTransparent(); }
+    return style().hasOpacity();
+}
+
 bool RenderElement::hasMask() const
 {
     if (m_scion) { return m_scion->hasMask(); }

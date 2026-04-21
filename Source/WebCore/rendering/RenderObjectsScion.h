@@ -81,6 +81,8 @@ public:
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
+    bool isTransparent() const;
+
     bool hasMask() const;
 
     bool hasClipPath() const;
