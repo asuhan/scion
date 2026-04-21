@@ -3330,6 +3330,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func addOverflowFromFloats() {
+    if floatingObjects == nil {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
