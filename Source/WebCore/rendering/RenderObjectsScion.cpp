@@ -53,6 +53,8 @@ extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
 extern "C" void* RenderElementScion_element(const void*);
 
+extern "C" void* RenderElementScion_firstChild(const void*);
+
 extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
@@ -320,6 +322,11 @@ Element* RenderElementScion::element() const
 RefPtr<Element> RenderElementScion::protectedElement() const
 {
     return element();
+}
+
+RenderObject* RenderElementScion::firstChild() const
+{
+    return static_cast<RenderObject*>(RenderElementScion_firstChild(m_handle));
 }
 
 bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const

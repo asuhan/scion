@@ -1062,6 +1062,14 @@ func RenderElementScion_element(_ elementRaw: UnsafeRawPointer) -> UnsafeMutable
   return renderElement.element()?.p
 }
 
+@_cdecl("RenderElementScion_firstChild")
+func RenderElementScion_firstChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  guard let firstChild = element.firstChild() else { return nil }
+  assert(!firstChild.isNativeImpl())
+  return firstChild.id()
+}
+
 @_cdecl("RenderElementScion_shouldApplyLayoutOrPaintContainment")
 func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool
 {

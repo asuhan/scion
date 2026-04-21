@@ -653,6 +653,12 @@ RefPtr<Element> RenderElement::protectedElement() const
     return element();
 }
 
+RenderObject* RenderElement::firstChild() const
+{
+    if (m_scion) { return m_scion->firstChild(); }
+    return m_firstChild.get();
+}
+
 bool RenderElement::shouldApplyLayoutOrPaintContainment() const
 {
     if (m_scion) { return m_scion->shouldApplyLayoutOrPaintContainment(); }

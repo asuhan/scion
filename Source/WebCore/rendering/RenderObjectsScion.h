@@ -87,6 +87,8 @@ public:
 
     RefPtr<Element> protectedElement() const;
 
+    RenderObject* firstChild() const;
+
     bool shouldApplyLayoutOrPaintContainment() const;
 
     bool isTransparent() const;

@@ -92,7 +92,7 @@ public:
     Element* nonPseudoElement() const { return downcast<Element>(RenderObject::nonPseudoNode()); }
     Element* generatingElement() const;
 
-    RenderObject* firstChild() const { return m_firstChild.get(); }
+    RenderObject* firstChild() const;
     RenderObject* lastChild() const { return m_lastChild.get(); }
     RenderObject* firstInFlowChild() const;
     RenderObject* lastInFlowChild() const;
