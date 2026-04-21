@@ -1313,6 +1313,20 @@ void RenderElement::setNeedsSimplifiedNormalFlowLayout()
         setLayerNeedsFullRepaint();
 }
 
+void RenderElement::setChildNeedsLayout(MarkingBehavior markParents)
+{
+    if (m_scion) {
+        m_scion->setChildNeedsLayout(markParents);
+        return;
+    }
+    ASSERT(!isSetNeedsLayoutForbidden());
+    if (normalChildNeedsLayout())
+        return;
+    setNormalChildNeedsLayoutBit(true);
+    if (markParents == MarkContainingBlockChain)
+        scheduleLayout(markContainingBlocksForLayout());
+}
+
 void RenderElement::setOutOfFlowChildNeedsStaticPositionLayout()
 {
     // FIXME: Currently this dirty bit has a very limited useage but should be expanded to

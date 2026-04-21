@@ -57,6 +57,8 @@ extern "C" void* RenderElementScion_firstChild(const void*);
 
 extern "C" bool RenderElementScion_shouldApplyPaintContainment(const void*);
 
+extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
+
 extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
@@ -336,6 +338,11 @@ RenderObject* RenderElementScion::firstChild() const
 bool RenderElementScion::shouldApplyPaintContainment() const
 {
     return RenderElementScion_shouldApplyPaintContainment(m_handle);
+}
+
+void RenderElementScion::setChildNeedsLayout(MarkingBehavior markParents)
+{
+    RenderElementScion_setChildNeedsLayout(m_handle, markParents == MarkContainingBlockChain);
 }
 
 bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const

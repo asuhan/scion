@@ -1076,6 +1076,12 @@ func RenderElementScion_shouldApplyPaintContainment(_ elementRaw: UnsafeRawPoint
   return element.shouldApplyPaintContainment()
 }
 
+@_cdecl("RenderElementScion_setChildNeedsLayout")
+func RenderElementScion_setChildNeedsLayout(_ elementRaw: UnsafeMutableRawPointer, _ markParents: Bool) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setChildNeedsLayout(markParents: markParents ? .MarkContainingBlockChain : .MarkOnlyThis)
+}
+
 @_cdecl("RenderElementScion_shouldApplyLayoutOrPaintContainment")
 func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool
 {

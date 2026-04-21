@@ -434,16 +434,6 @@ inline int adjustForAbsoluteZoom(int, const RenderElement&);
 inline LayoutUnit adjustLayoutUnitForAbsoluteZoom(LayoutUnit, const RenderElement&);
 inline LayoutSize adjustLayoutSizeForAbsoluteZoom(LayoutSize, const RenderElement&);
 
-inline void RenderElement::setChildNeedsLayout(MarkingBehavior markParents)
-{
-    ASSERT(!isSetNeedsLayoutForbidden());
-    if (normalChildNeedsLayout())
-        return;
-    setNormalChildNeedsLayoutBit(true);
-    if (markParents == MarkContainingBlockChain)
-        scheduleLayout(markContainingBlocksForLayout());
-}
-
 inline Element* RenderElement::generatingElement() const
 {
     return downcast<Element>(RenderObject::generatingNode());

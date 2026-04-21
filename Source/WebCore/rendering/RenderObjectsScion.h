@@ -91,6 +91,8 @@ public:
 
     bool shouldApplyPaintContainment() const;
 
+    void setChildNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
+
     bool shouldApplyLayoutOrPaintContainment() const;
 
     bool isTransparent() const;
