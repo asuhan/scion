@@ -1099,6 +1099,23 @@ func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: Unsafe
   return element.shouldApplyLayoutOrPaintContainment()
 }
 
+@_cdecl("RenderElementScion_repaintAfterLayoutIfNeeded")
+func RenderElementScion_repaintAfterLayoutIfNeeded(
+  _ elementRaw: UnsafeMutableRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer,
+  _ repaintContainerIsScionView: Bool,
+  _ requiresFullRepaint: Bool, _ oldRectsRaw: RepaintRectsRaw, _ newRectsRaw: RepaintRectsRaw
+) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let repaintContainer =
+    repaintContainerIsScionView
+    ? Unmanaged<RenderViewWrapper>.fromOpaque(repaintContainerRaw).takeUnretainedValue()
+    : createRenderObjectWrapper(repaintContainerRaw) as! RenderLayerModelObjectWrapper?
+  let oldRects = convertRepaintRects(oldRectsRaw)
+  let newRects = convertRepaintRects(newRectsRaw)
+  return element.repaintAfterLayoutIfNeeded(
+    repaintContainer, requiresFullRepaint ? .Yes : .No, oldRects: oldRects, newRects: newRects)
+}
+
 @_cdecl("RenderElementScion_isTransparent")
 func RenderElementScion_isTransparent(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

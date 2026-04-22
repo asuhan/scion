@@ -1413,6 +1413,9 @@ static bool mustRepaintFillLayers(const RenderElement& renderer, const FillLayer
 
 bool RenderElement::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, RequiresFullRepaint requiresFullRepaint, const RepaintRects& oldRects, const RepaintRects& newRects)
 {
+    if (m_scion) {
+        return m_scion->repaintAfterLayoutIfNeeded(std::move(repaintContainer), requiresFullRepaint, oldRects, newRects);
+    }
     if (view().printing())
         return false; // Don't repaint if we're printing.
 

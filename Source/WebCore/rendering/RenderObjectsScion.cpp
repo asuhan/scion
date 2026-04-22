@@ -32,6 +32,7 @@
 #include "RenderFragmentContainer.h"
 #include "RenderLayer.h"
 #include "RenderSelection.h"
+#include "RenderView.h"
 #include "ScrollTypes.h"
 #include <wtf/Assertions.h>
 #include <wtf/CheckedRef.h>
@@ -62,6 +63,8 @@ extern "C" void RenderElementScion_didAttachChild(void*, void*);
 extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
 
 extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
+
+extern "C" bool RenderElementScion_repaintAfterLayoutIfNeeded(void*, void*, bool, bool, RepaintRectsRaw, RepaintRectsRaw);
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
 
@@ -356,6 +359,42 @@ void RenderElementScion::setChildNeedsLayout(MarkingBehavior markParents)
 bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const
 {
     return RenderElementScion_shouldApplyLayoutOrPaintContainment(m_handle);
+}
+
+namespace {
+
+LayoutRectRaw convertLayoutRect(const LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
+{
+    return { convertLayoutRect(rects.clippedOverflowRect), { convertLayoutRect(rects.outlineBoundsRect.value_or({})), static_cast<bool>(rects.outlineBoundsRect) } };
+}
+
+} // namespace
+
+bool RenderElementScion::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, RequiresFullRepaint requiresFullRepaint, const RenderObject::RepaintRects& oldRects, const RenderObject::RepaintRects& newRects)
+{
+    if (repaintContainer->scion()) {
+        assert(is<RenderView>(repaintContainer.get()));
+        return RenderElementScion_repaintAfterLayoutIfNeeded(
+            m_handle,
+            repaintContainer->scion(),
+            true,
+            requiresFullRepaint == RequiresFullRepaint::Yes,
+            convertRepaintRects(oldRects),
+            convertRepaintRects(newRects));
+    }
+    const auto repaintsContainerRaw = static_cast<const void*>(repaintContainer.get());
+    return RenderElementScion_repaintAfterLayoutIfNeeded(
+        m_handle,
+        const_cast<void*>(repaintsContainerRaw),
+        false,
+        requiresFullRepaint == RequiresFullRepaint::Yes,
+        convertRepaintRects(oldRects),
+        convertRepaintRects(newRects));
 }
 
 bool RenderElementScion::isTransparent() const
@@ -709,16 +748,6 @@ bool RenderViewScion::needsEventRegionUpdateForNonCompositedFrame() const
 }
 
 namespace {
-
-LayoutRectRaw convertLayoutRect(const LayoutRect& r)
-{
-    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
-}
-
-RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
-{
-    return { convertLayoutRect(rects.clippedOverflowRect), { convertLayoutRect(rects.outlineBoundsRect.value_or({})), static_cast<bool>(rects.outlineBoundsRect) } };
-}
 
 VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRectContext context)
 {

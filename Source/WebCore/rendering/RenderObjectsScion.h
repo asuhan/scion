@@ -97,6 +97,8 @@ public:
 
     bool shouldApplyLayoutOrPaintContainment() const;
 
+    bool repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&&, RequiresFullRepaint, const RenderObject::RepaintRects&, const RenderObject::RepaintRects&);
+
     bool isTransparent() const;
 
     bool hasMask() const;
