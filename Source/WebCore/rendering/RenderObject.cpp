@@ -222,6 +222,11 @@ extern "C" WEBCORE_EXPORT void RenderObject_setPreviousSibling(void* p, void* pr
     static_cast<WebCore::RenderObject*>(p)->setPreviousSibling(static_cast<WebCore::RenderObject*>(previous));
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setNextSibling(void* p, void* next)
+{
+    static_cast<WebCore::RenderObject*>(p)->setNextSibling(static_cast<WebCore::RenderObject*>(next));
+}
+
 extern "C" WEBCORE_EXPORT void RenderObject_setParent(void* p, void* parent)
 {
     static_cast<WebCore::RenderObject*>(p)->setParent(static_cast<WebCore::RenderElement*>(parent));
