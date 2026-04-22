@@ -547,8 +547,26 @@ class FormattingGeometry {
   func constrainByMinMaxWidth(layoutBox: BoxWrapper, intrinsicWidth: IntrinsicWidthConstraints)
     -> IntrinsicWidthConstraints
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = layoutBox.style
+    let minWidth = FormattingGeometry.fixedValue(geometryProperty: style.logicalMinWidth())
+    let maxWidth = FormattingGeometry.fixedValue(geometryProperty: style.logicalMaxWidth())
+    if minWidth == nil && maxWidth == nil {
+      return intrinsicWidth
+    }
+
+    var intrinsicWidth = intrinsicWidth
+    if maxWidth != nil {
+      intrinsicWidth.minimum = min(maxWidth!, intrinsicWidth.minimum)
+      intrinsicWidth.maximum = min(maxWidth!, intrinsicWidth.maximum)
+    }
+
+    if minWidth != nil {
+      intrinsicWidth.minimum = max(minWidth!, intrinsicWidth.minimum)
+      intrinsicWidth.maximum = max(minWidth!, intrinsicWidth.maximum)
+    }
+
+    assert(intrinsicWidth.minimum <= intrinsicWidth.maximum)
+    return intrinsicWidth
   }
 
   func contentHeightForFormattingContextRoot(formattingContextRoot: ElementBoxWrapper) -> LayoutUnit
