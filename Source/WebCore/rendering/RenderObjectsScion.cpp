@@ -56,6 +56,8 @@ extern "C" void* RenderElementScion_element(const void*);
 
 extern "C" void* RenderElementScion_firstChild(const void*);
 
+extern "C" void* RenderElementScion_lastChild(const void*);
+
 extern "C" bool RenderElementScion_shouldApplyPaintContainment(const void*);
 
 extern "C" void RenderElementScion_didAttachChild(void*, void*);
@@ -340,6 +342,11 @@ RefPtr<Element> RenderElementScion::protectedElement() const
 RenderObject* RenderElementScion::firstChild() const
 {
     return static_cast<RenderObject*>(RenderElementScion_firstChild(m_handle));
+}
+
+RenderObject* RenderElementScion::lastChild() const
+{
+    return static_cast<RenderObject*>(RenderElementScion_lastChild(m_handle));
 }
 
 bool RenderElementScion::shouldApplyPaintContainment() const

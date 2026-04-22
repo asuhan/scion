@@ -89,6 +89,8 @@ public:
 
     RenderObject* firstChild() const;
 
+    RenderObject* lastChild() const;
+
     bool shouldApplyPaintContainment() const;
 
     void didAttachChild(RenderObject&);

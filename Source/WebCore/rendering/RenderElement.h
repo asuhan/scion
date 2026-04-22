@@ -93,7 +93,7 @@ public:
     Element* generatingElement() const;
 
     RenderObject* firstChild() const;
-    RenderObject* lastChild() const { return m_lastChild.get(); }
+    RenderObject* lastChild() const;
     RenderObject* firstInFlowChild() const;
     RenderObject* lastInFlowChild() const;
 

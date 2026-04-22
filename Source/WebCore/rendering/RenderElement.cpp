@@ -664,6 +664,12 @@ RenderObject* RenderElement::firstChild() const
     return m_firstChild.get();
 }
 
+RenderObject* RenderElement::lastChild() const
+{
+    if (m_scion) { return m_scion->lastChild(); }
+    return m_lastChild.get();
+}
+
 bool RenderElement::shouldApplyPaintContainment() const
 {
     if (m_scion) { return m_scion->shouldApplyPaintContainment(); }
