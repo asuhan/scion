@@ -48,7 +48,7 @@ struct LineSegmentRaw {
     bool isValid;
 };
 
-extern "C" WEBCORE_EXPORT struct LineSegmentRaw Shape_getExcludedInterval(const void* p, int32_t logical_top_raw, int32_t logical_height_raw)
+extern "C" WEBCORE_EXPORT LineSegmentRaw Shape_getExcludedInterval(const void* p, int32_t logical_top_raw, int32_t logical_height_raw)
 {
     const auto shape = static_cast<const WebCore::Shape*>(p);
     const auto lineSegment = shape->getExcludedInterval(WebCore::LayoutUnit::fromRawValue(logical_top_raw), WebCore::LayoutUnit::fromRawValue(logical_height_raw));

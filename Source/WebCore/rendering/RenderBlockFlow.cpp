@@ -104,7 +104,7 @@ struct OptionalLayoutUnitRaw {
     bool is_valid;
 };
 
-extern "C" WEBCORE_EXPORT struct OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void* p)
+extern "C" WEBCORE_EXPORT OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void* p)
 {
     const auto& block = *static_cast<const WebCore::RenderBlockFlow*>(p);
     const auto lowestInitialLetterLogicalBottom = block.lowestInitialLetterLogicalBottom();

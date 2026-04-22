@@ -93,7 +93,7 @@ struct UBiDiLogicalRunRaw {
     uint8_t level;
 };
 
-extern "C" WEBCORE_EXPORT struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position)
+extern "C" WEBCORE_EXPORT UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position)
 {
     int32_t logical_limit;
     UBiDiLevel level;
@@ -128,7 +128,7 @@ struct NextU16Raw {
     uint64_t position;
 };
 
-extern "C" WEBCORE_EXPORT struct NextU16Raw U16_NEXT_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
+extern "C" WEBCORE_EXPORT NextU16Raw U16_NEXT_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
 {
     const auto characters = *static_cast<const std::span<const UChar>*>(characters_raw);
     char32_t character;
@@ -136,7 +136,7 @@ extern "C" WEBCORE_EXPORT struct NextU16Raw U16_NEXT_scion(const void* character
     return { character, position };
 }
 
-extern "C" WEBCORE_EXPORT struct NextU16Raw U16_NEXT_buff_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
+extern "C" WEBCORE_EXPORT NextU16Raw U16_NEXT_buff_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
 {
     const auto characters = static_cast<const UChar*>(characters_raw);
     char32_t character;

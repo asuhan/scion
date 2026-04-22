@@ -67,7 +67,7 @@ extern "C" WEBCORE_EXPORT void RenderLayoutState_setLineClamp(void* p, OptionalL
     }
 }
 
-extern "C" WEBCORE_EXPORT struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void* p)
+extern "C" WEBCORE_EXPORT OptionalLineClampRaw RenderLayoutState_lineClamp(const void* p)
 {
     auto lineClamp = static_cast<const WebCore::RenderLayoutState*>(p)->lineClamp();
     if (!lineClamp) {
@@ -82,7 +82,7 @@ struct OptionalLegacyLineClampRaw {
     bool isValid;
 };
 
-extern "C" WEBCORE_EXPORT struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void* p)
+extern "C" WEBCORE_EXPORT OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void* p)
 {
     auto legacyLineClamp = static_cast<const WebCore::RenderLayoutState*>(p)->legacyLineClamp();
     if (!legacyLineClamp) {
@@ -102,7 +102,7 @@ struct OptionalTextBoxTrimRaw {
     bool isValid;
 };
 
-extern "C" WEBCORE_EXPORT struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void* p)
+extern "C" WEBCORE_EXPORT OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void* p)
 {
     auto textBoxTrim = static_cast<const WebCore::RenderLayoutState*>(p)->textBoxTrim();
     if (!textBoxTrim) {

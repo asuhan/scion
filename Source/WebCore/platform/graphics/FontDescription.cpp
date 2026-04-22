@@ -74,7 +74,7 @@ struct OptionalFloatRaw {
     bool is_valid;
 };
 
-extern "C" WEBCORE_EXPORT struct OptionalFloatRaw FontMetrics_xHeight(const void* p)
+extern "C" WEBCORE_EXPORT OptionalFloatRaw FontMetrics_xHeight(const void* p)
 {
     const auto xHeight = static_cast<const WebCore::FontMetrics*>(p)->xHeight();
     return xHeight ? OptionalFloatRaw{*xHeight, true} : OptionalFloatRaw{0, false};

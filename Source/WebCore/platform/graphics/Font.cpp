@@ -67,7 +67,7 @@ struct FloatRectRaw {
     float height;
 };
 
-extern "C" WEBCORE_EXPORT struct FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph)
+extern "C" WEBCORE_EXPORT FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph)
 {
     const auto bounds = static_cast<const WebCore::Font*>(font)->boundsForGlyph(WebCore::Glyph(glyph));
     return { bounds.x(), bounds.y(), bounds.width(), bounds.height() };

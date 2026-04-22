@@ -1773,7 +1773,7 @@ struct BlockEllipsisRaw {
     const void* string;
 };
 
-extern "C" WEBCORE_EXPORT struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void* p)
+extern "C" WEBCORE_EXPORT BlockEllipsisRaw RenderStyle_blockEllipsis(const void* p)
 {
     const auto& blockEllipsis = static_cast<const WebCore::RenderStyle*>(p)->blockEllipsis();
     return BlockEllipsisRaw {

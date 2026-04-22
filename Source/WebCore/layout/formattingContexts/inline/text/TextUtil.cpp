@@ -180,7 +180,7 @@ struct GlyphDataRaw {
     uint8_t color_glyph_type;
 };
 
-extern "C" WEBCORE_EXPORT struct GlyphDataRaw FontCascade_glyphDataForCharacter(const void* font_cascade_ptr, uint32_t c, bool mirror, uint8_t variant)
+extern "C" WEBCORE_EXPORT GlyphDataRaw FontCascade_glyphDataForCharacter(const void* font_cascade_ptr, uint32_t c, bool mirror, uint8_t variant)
 {
     const auto glyphData = static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->glyphDataForCharacter(c, mirror, static_cast<WebCore::FontVariant>(variant));
     return { glyphData.glyph, glyphData.font.get(), static_cast<uint8_t>(glyphData.colorGlyphType) };
@@ -191,7 +191,7 @@ struct ExpansionOpportunityCountRaw {
     bool isAfterExpansion;
 };
 
-extern "C" WEBCORE_EXPORT struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(const void* string_view, uint8_t direction, uint8_t expansion_behavior_left, uint8_t expansion_behavior_right)
+extern "C" WEBCORE_EXPORT ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(const void* string_view, uint8_t direction, uint8_t expansion_behavior_left, uint8_t expansion_behavior_right)
 {
     const auto& stringView = *static_cast<const StringView*>(string_view);
     auto result = WebCore::FontCascade::expansionOpportunityCount(stringView, static_cast<WebCore::TextDirection>(direction), {
@@ -784,7 +784,7 @@ struct EnclosingAscentDescentRaw {
     float descent;
 };
 
-extern "C" WEBCORE_EXPORT struct EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(const void* text_content_raw, const void* style_raw)
+extern "C" WEBCORE_EXPORT EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(const void* text_content_raw, const void* style_raw)
 {
     const auto textContent = *static_cast<const StringView*>(text_content_raw);
     const auto& style = *static_cast<const WebCore::RenderStyle*>(style_raw);

@@ -191,7 +191,7 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_logicalLeft(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->logicalLeft().rawValue();
 }
 
-extern "C" WEBCORE_EXPORT struct LayoutPointRaw RenderBox_location(const void* p)
+extern "C" WEBCORE_EXPORT LayoutPointRaw RenderBox_location(const void* p)
 {
     const auto location = static_cast<const WebCore::RenderBox*>(p)->location();
     return { location.x().rawValue(), location.y().rawValue() };
@@ -208,13 +208,13 @@ extern "C" WEBCORE_EXPORT void RenderBox_move(void* p, int32_t dx, int32_t dy)
     static_cast<WebCore::RenderBox*>(p)->move(WebCore::LayoutUnit::fromRawValue(dx), WebCore::LayoutUnit::fromRawValue(dy));
 }
 
-extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_frameRect(const void* p)
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_frameRect(const void* p)
 {
     const auto& rect = static_cast<const WebCore::RenderBox*>(p)->frameRect();
     return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
 }
 
-extern "C" WEBCORE_EXPORT void RenderBox_addLayoutOverflow(void* p, struct LayoutRectRaw rect_raw) {
+extern "C" WEBCORE_EXPORT void RenderBox_addLayoutOverflow(void* p, LayoutRectRaw rect_raw) {
     WebCore::LayoutRect rect(
         WebCore::LayoutUnit::fromRawValue(rect_raw.x),
         WebCore::LayoutUnit::fromRawValue(rect_raw.y),
@@ -223,7 +223,7 @@ extern "C" WEBCORE_EXPORT void RenderBox_addLayoutOverflow(void* p, struct Layou
     static_cast<WebCore::RenderBox*>(p)->addLayoutOverflow(rect);
 }
 
-extern "C" WEBCORE_EXPORT void RenderBox_addVisualOverflow(void* p, struct LayoutRectRaw rect_raw) {
+extern "C" WEBCORE_EXPORT void RenderBox_addVisualOverflow(void* p, LayoutRectRaw rect_raw) {
     WebCore::LayoutRect rect(
         WebCore::LayoutUnit::fromRawValue(rect_raw.x),
         WebCore::LayoutUnit::fromRawValue(rect_raw.y),
@@ -290,7 +290,7 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(c
     return padding_box_rect.y().rawValue();
 }
 
-extern "C" WEBCORE_EXPORT void RenderBox_repaintDuringLayoutIfMoved(void* p, struct LayoutRectRaw rect)
+extern "C" WEBCORE_EXPORT void RenderBox_repaintDuringLayoutIfMoved(void* p, LayoutRectRaw rect)
 {
     static_cast<WebCore::RenderBox*>(p)->repaintDuringLayoutIfMoved(WebCore::LayoutRect(
         WebCore::LayoutUnit::fromRawValue(rect.x),
@@ -309,20 +309,20 @@ extern "C" WEBCORE_EXPORT bool RenderBox_avoidsFloats(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->avoidsFloats();
 }
 
-extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(void* p, struct LayoutPointRaw position)
+extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(void* p, LayoutPointRaw position)
 {
     static_cast<WebCore::RenderBox*>(p)->flipForWritingMode(WebCore::LayoutPoint(
         WebCore::LayoutUnit::fromRawValue(position.x), WebCore::LayoutUnit::fromRawValue(position.y)));
 }
 
-extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw)
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw)
 {
     const auto style = static_cast<const WebCore::RenderStyle*>(style_raw);
     const auto& rect = static_cast<const WebCore::RenderBox*>(p)->logicalVisualOverflowRectForPropagation(style);
     return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
 }
 
-extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_layoutOverflowRectForPropagation(const void* p, const void* style_raw)
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_layoutOverflowRectForPropagation(const void* p, const void* style_raw)
 {
     const auto style = static_cast<const WebCore::RenderStyle*>(style_raw);
     const auto& rect = static_cast<const WebCore::RenderBox*>(p)->layoutOverflowRectForPropagation(style);
