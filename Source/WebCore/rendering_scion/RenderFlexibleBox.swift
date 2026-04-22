@@ -1630,8 +1630,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func overflowAlignmentForFlexItem(flexItem: RenderBoxWrapper) -> OverflowAlignment {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return flexItem.style().resolvedAlignSelf(
+      parentStyle: style(), normalValueBehaviour: selfAlignmentNormalBehavior()
+    ).overflow
   }
 
   private func canComputePercentageFlexBasis(
