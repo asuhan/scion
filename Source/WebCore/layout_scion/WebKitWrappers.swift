@@ -1130,6 +1130,12 @@ func RenderElementScion_isTransparent(_ elementRaw: UnsafeRawPointer) -> Bool {
   return element.isTransparent()
 }
 
+@_cdecl("RenderElementScion_opacity")
+func RenderElementScion_opacity(_ elementRaw: UnsafeRawPointer) -> Float32 {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.opacity()
+}
+
 @_cdecl("RenderElementScion_hasMask")
 func RenderElementScion_hasMask(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

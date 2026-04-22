@@ -32,7 +32,6 @@ inline bool RenderElement::hasClipOrNonVisibleOverflow() const { return hasClip(
 inline bool RenderElement::hasHiddenBackface() const { return style().backfaceVisibility() == BackfaceVisibility::Hidden; }
 inline bool RenderElement::hasOutline() const { return style().hasOutline() || hasOutlineAnnotation(); }
 inline bool RenderElement::hasShapeOutside() const { return style().shapeOutside(); }
-inline float RenderElement::opacity() const { return style().opacity(); }
 inline FloatRect RenderElement::transformReferenceBoxRect() const { return transformReferenceBoxRect(style()); }
 inline FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& style) const { return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox())); }
 

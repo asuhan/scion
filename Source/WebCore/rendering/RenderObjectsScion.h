@@ -103,6 +103,8 @@ public:
 
     bool isTransparent() const;
 
+    float opacity() const;
+
     bool hasMask() const;
 
     bool hasClipPath() const;

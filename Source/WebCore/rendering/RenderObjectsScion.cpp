@@ -70,6 +70,8 @@ extern "C" bool RenderElementScion_repaintAfterLayoutIfNeeded(void*, void*, bool
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
 
+extern "C" float RenderElementScion_opacity(const void*);
+
 extern "C" bool RenderElementScion_hasMask(const void*);
 
 extern "C" bool RenderElementScion_hasClipPath(const void*);
@@ -411,6 +413,11 @@ bool RenderElementScion::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const Re
 bool RenderElementScion::isTransparent() const
 {
     return RenderElementScion_isTransparent(m_handle);
+}
+
+float RenderElementScion::opacity() const
+{
+    return RenderElementScion_opacity(m_handle);
 }
 
 bool RenderElementScion::hasMask() const

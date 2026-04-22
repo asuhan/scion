@@ -2243,6 +2243,12 @@ bool RenderElement::isTransparent() const
     return style().hasOpacity();
 }
 
+float RenderElement::opacity() const
+{
+    if (m_scion) { return m_scion->opacity(); }
+    return style().opacity();
+}
+
 bool RenderElement::hasMask() const
 {
     if (m_scion) { return m_scion->hasMask(); }
