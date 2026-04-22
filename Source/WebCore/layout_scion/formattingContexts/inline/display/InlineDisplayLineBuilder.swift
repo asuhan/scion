@@ -324,8 +324,20 @@ internal func moveDisplayBoxToClampedLine(
 }
 
 internal func isEligibleForLinkBoxLineClamp(displayBoxes: InlineDisplay.Boxes) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if displayBoxes.count < 3 {
+    // We need at least 3 display boxes to generate content with link ([root inline box][inline box][content])
+    return false
+  }
+  let rootStyle = displayBoxes[0].layoutBox.style
+  if !rootStyle.isLeftToRightDirection() || !rootStyle.isHorizontalWritingMode() {
+    return false
+  }
+  let linkCandidateBox = displayBoxes[displayBoxes.count - 2]
+  if !linkCandidateBox.isNonRootInlineBox() || !linkCandidateBox.isFirstForLayoutBox {
+    // Link spanning multiple lines looks odd with line-clamp.
+    return false
+  }
+  return linkCandidateBox.layoutBox.style.isLink()
 }
 
 internal func computeInsertionPosition(displayBoxes: InlineDisplay.Boxes, clampedLineIndex: UInt64)
