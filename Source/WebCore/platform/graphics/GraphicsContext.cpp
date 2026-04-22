@@ -109,6 +109,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setTextDrawingMode(void* p, uint8
     static_cast<WebCore::GraphicsContext*>(p)->setTextDrawingMode(WebCore::TextDrawingModeFlags::fromRaw(textDrawingMode));
 }
 
+extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_imageInterpolationQuality(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->imageInterpolationQuality());
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_setImageInterpolationQuality(void* p, uint8_t imageInterpolationQuality)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setImageInterpolationQuality(static_cast<WebCore::InterpolationQuality>(imageInterpolationQuality));
+}
+
 struct FloatRectRaw {
     float x;
     float y;

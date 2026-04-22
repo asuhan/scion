@@ -158,13 +158,11 @@ class GraphicsContextWrapper {
   }
 
   func imageInterpolationQuality() -> InterpolationQuality {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return InterpolationQuality(rawValue: wk_interop.GraphicsContext_imageInterpolationQuality(p!))!
   }
 
   func setImageInterpolationQuality(_ imageInterpolationQuality: InterpolationQuality) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setImageInterpolationQuality(p!, imageInterpolationQuality.rawValue)
   }
 
   func shouldAntialias() -> Bool {
