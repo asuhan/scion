@@ -44,8 +44,7 @@ class GraphicsContextWrapper {
   }
 
   func invalidatingImagesWithAsyncDecodes() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.GraphicsContext_invalidatingImagesWithAsyncDecodes(p!)
   }
 
   func detectingContentfulPaint() -> Bool {

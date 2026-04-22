@@ -58,6 +58,11 @@ extern "C" WEBCORE_EXPORT bool GraphicsContext_invalidatingControlTints(const vo
     return static_cast<const WebCore::GraphicsContext*>(p)->invalidatingControlTints();
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsContext_invalidatingImagesWithAsyncDecodes(const void* p)
+{
+    return static_cast<const WebCore::GraphicsContext*>(p)->invalidatingImagesWithAsyncDecodes();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_compositeOperation(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->compositeOperation());

@@ -1338,6 +1338,7 @@ bool LocalFrameView_isTrackingRepaints(const void*);
 bool GraphicsContext_paintingDisabled(const void*);
 bool GraphicsContext_performingPaintInvalidation(const void*);
 bool GraphicsContext_invalidatingControlTints(const void*);
+bool GraphicsContext_invalidatingImagesWithAsyncDecodes(const void*);
 uint8_t GraphicsContext_compositeOperation(const void*);
 void GraphicsContext_setCompositeOperation(void*, uint8_t, uint8_t);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
