@@ -622,6 +622,7 @@ bool LocalFrameView_layerAccessPrevented(const void*);
 bool LocalFrameView_useSlowRepaintsIfNotOverlapped(const void*);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
+void* RenderElement_lastChild(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);
 bool RenderElement_hasBackground(const void*);
 bool RenderElement_hasClipPath(const void*);
