@@ -33,10 +33,7 @@ class GraphicsContextWrapper {
     self.p = nil
   }
 
-  func paintingDisabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func paintingDisabled() -> Bool { return wk_interop.GraphicsContext_paintingDisabled(p!) }
 
   func performingPaintInvalidation() -> Bool {
     // TODO(asuhan): implement this
