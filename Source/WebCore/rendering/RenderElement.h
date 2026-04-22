@@ -64,14 +64,26 @@ public:
     };
     static RenderPtr<RenderElement> createFor(Element&, RenderStyle&&, OptionSet<ConstructBlockLevelRendererFor> = { });
 
-    bool hasInitializedStyle() const { return m_hasInitializedStyle; }
+    bool hasInitializedStyle() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasInitializedStyle;
+    }
 
     const RenderStyle& style() const;
-    const RenderStyle* parentStyle() const { return !m_parent ? nullptr : &m_parent->style(); }
+    const RenderStyle* parentStyle() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !m_parent ? nullptr : &m_parent->style();
+    }
     const RenderStyle& firstLineStyle() const;
 
     // FIXME: Style shouldn't be mutated.
-    RenderStyle& mutableStyle() { return m_style; }
+    RenderStyle& mutableStyle()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_style;
+    }
 
     void initializeStyle();
 
@@ -89,7 +101,11 @@ public:
     // This is null for anonymous renderers.
     Element* element() const;
     RefPtr<Element> protectedElement() const;
-    Element* nonPseudoElement() const { return downcast<Element>(RenderObject::nonPseudoNode()); }
+    Element* nonPseudoElement() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<Element>(RenderObject::nonPseudoNode());
+    }
     Element* generatingElement() const;
 
     RenderObject* firstChild() const;
@@ -163,7 +179,10 @@ public:
 
     // Updates only the local style ptr of the object. Does not update the state of the object,
     // and so only should be called when the style is known not to have changed (or from setStyle).
-    void setStyleInternal(RenderStyle&& style) { m_style = WTFMove(style); }
+    void setStyleInternal(RenderStyle&& style) {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_style = WTFMove(style);
+    }
 
     // Repaint only if our old bounds and new bounds are different. The caller may pass in newBounds and newOutlineBox if they are known.
     bool repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, RequiresFullRepaint, const RepaintRects& oldRects, const RepaintRects& newRects);
@@ -180,7 +199,11 @@ public:
 
     // Returns true if this renderer requires a new stacking context.
     static bool createsGroupForStyle(const RenderStyle&);
-    bool createsGroup() const { return createsGroupForStyle(style()); }
+    bool createsGroup() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return createsGroupForStyle(style());
+    }
 
     bool isTransparent() const; // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
     float opacity() const;
@@ -219,20 +242,47 @@ public:
     void registerForVisibleInViewportCallback();
     void unregisterForVisibleInViewportCallback();
 
-    VisibleInViewportState visibleInViewportState() const { return static_cast<VisibleInViewportState>(m_visibleInViewportState); }
+    VisibleInViewportState visibleInViewportState() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return static_cast<VisibleInViewportState>(m_visibleInViewportState);
+    }
     void setVisibleInViewportState(VisibleInViewportState);
     virtual void visibleInViewportStateChanged();
 
-    bool didContibuteToVisuallyNonEmptyPixelCount() const { return m_didContributeToVisuallyNonEmptyPixelCount; }
-    void setDidContibuteToVisuallyNonEmptyPixelCount() { m_didContributeToVisuallyNonEmptyPixelCount = true; }
+    bool didContibuteToVisuallyNonEmptyPixelCount() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_didContributeToVisuallyNonEmptyPixelCount;
+    }
+    void setDidContibuteToVisuallyNonEmptyPixelCount()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }m_didContributeToVisuallyNonEmptyPixelCount = true;
+    }
 
     bool allowsAnimation() const final;
     bool repaintForPausedImageAnimationsIfNeeded(const IntRect& visibleRect, CachedImage&);
-    bool hasPausedImageAnimations() const { return m_hasPausedImageAnimations; }
-    void setHasPausedImageAnimations(bool b) { m_hasPausedImageAnimations = b; }
+    bool hasPausedImageAnimations() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasPausedImageAnimations;
+    }
+    void setHasPausedImageAnimations(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasPausedImageAnimations = b;
+    }
 
-    bool hasCounterNodeMap() const { return m_hasCounterNodeMap; }
-    void setHasCounterNodeMap(bool f) { m_hasCounterNodeMap = f; }
+    bool hasCounterNodeMap() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasCounterNodeMap;
+    }
+    void setHasCounterNodeMap(bool f)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasCounterNodeMap = f;
+    }
 
 #if ENABLE(TEXT_AUTOSIZING)
     void adjustComputedFontSizesOnBlocks(float size, float visibleWidth);
@@ -248,11 +298,31 @@ public:
     // the child.
     virtual void updateAnonymousChildStyle(RenderStyle&) const { };
 
-    bool hasContinuationChainNode() const { return m_hasContinuationChainNode; }
-    bool isContinuation() const { return m_isContinuation; }
-    void setIsContinuation() { m_isContinuation = true; }
-    bool isFirstLetter() const { return m_isFirstLetter; }
-    void setIsFirstLetter() { m_isFirstLetter = true; }
+    bool hasContinuationChainNode() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasContinuationChainNode;
+    }
+    bool isContinuation() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_isContinuation;
+    }
+    void setIsContinuation()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_isContinuation = true;
+    }
+    bool isFirstLetter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_isFirstLetter;
+    }
+    void setIsFirstLetter()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_isFirstLetter = true;
+    }
 
     RenderObject* attachRendererInternal(RenderPtr<RenderObject> child, RenderObject* beforeChild);
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);
@@ -282,10 +352,21 @@ public:
     inline Overflow effectiveOverflowInlineDirection() const;
     inline Overflow effectiveOverflowBlockDirection() const;
 
-    bool isWritingModeRoot() const { return !parent() || parent()->style().writingMode() != style().writingMode(); }
+    bool isWritingModeRoot() const {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !parent() || parent()->style().writingMode() != style().writingMode();
+    }
 
-    bool isDeprecatedFlexItem() const { return !isInline() && !isFloatingOrOutOfFlowPositioned() && parent() && parent()->isRenderDeprecatedFlexibleBox(); }
-    bool isFlexItemIncludingDeprecated() const { return !isInline() && !isFloatingOrOutOfFlowPositioned() && parent() && parent()->isFlexibleBoxIncludingDeprecated(); }
+    bool isDeprecatedFlexItem() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !isInline() && !isFloatingOrOutOfFlowPositioned() && parent() && parent()->isRenderDeprecatedFlexibleBox();
+    }
+    bool isFlexItemIncludingDeprecated() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !isInline() && !isFloatingOrOutOfFlowPositioned() && parent() && parent()->isFlexibleBoxIncludingDeprecated();
+    }
 
     virtual LayoutRect paintRectToClipOutFromBorder(const LayoutRect&) { return { }; }
     void paintFocusRing(const PaintInfo&, const RenderStyle&, const Vector<LayoutRect>& focusRingRects) const;
@@ -299,14 +380,38 @@ public:
 
     void clearNeedsLayoutForSkippedContent();
 
-    void setRenderBoxHasShapeOutsideInfo(bool b) { m_renderBoxHasShapeOutsideInfo = b; }
-    void setHasCachedSVGResource(bool b) { m_hasCachedSVGResource = b; }
-    bool renderBoxHasShapeOutsideInfo() const { return m_renderBoxHasShapeOutsideInfo; }
-    bool hasCachedSVGResource() const { return m_hasCachedSVGResource; }
+    void setRenderBoxHasShapeOutsideInfo(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_renderBoxHasShapeOutsideInfo = b;
+    }
+    void setHasCachedSVGResource(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasCachedSVGResource = b;
+    }
+    bool renderBoxHasShapeOutsideInfo() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_renderBoxHasShapeOutsideInfo;
+    }
+    bool hasCachedSVGResource() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasCachedSVGResource;
+    }
 
     using LayoutIdentifier = unsigned;
-    void setLayoutIdentifier(LayoutIdentifier layoutIdentifier) { m_layoutIdentifier = layoutIdentifier; }
-    LayoutIdentifier layoutIdentifier() const { return m_layoutIdentifier; }
+    void setLayoutIdentifier(LayoutIdentifier layoutIdentifier)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_layoutIdentifier = layoutIdentifier;
+    }
+    LayoutIdentifier layoutIdentifier() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_layoutIdentifier;
+    }
     bool didVisitSinceLayout(LayoutIdentifier) const;
 
 protected:
@@ -331,19 +436,59 @@ protected:
     void willBeDestroyed() override;
     void notifyFinished(CachedResource&, const NetworkLoadMetrics&, LoadWillContinueInAnotherProcess) override;
 
-    void setHasContinuationChainNode(bool b) { m_hasContinuationChainNode = b; }
+    void setHasContinuationChainNode(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasContinuationChainNode = b;
+    }
 
-    void setRenderBlockHasMarginBeforeQuirk(bool b) { m_renderBlockHasMarginBeforeQuirk = b; }
-    void setRenderBlockHasMarginAfterQuirk(bool b) { m_renderBlockHasMarginAfterQuirk = b; }
-    void setRenderBlockShouldForceRelayoutChildren(bool b) { m_renderBlockShouldForceRelayoutChildren = b; }
-    void setRenderBlockHasRareData(bool b) { m_renderBlockHasRareData = b; }
-    bool renderBlockHasMarginBeforeQuirk() const { return m_renderBlockHasMarginBeforeQuirk; }
-    bool renderBlockHasMarginAfterQuirk() const { return m_renderBlockHasMarginAfterQuirk; }
-    bool renderBlockShouldForceRelayoutChildren() const { return m_renderBlockShouldForceRelayoutChildren; }
+    void setRenderBlockHasMarginBeforeQuirk(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_renderBlockHasMarginBeforeQuirk = b;
+    }
+    void setRenderBlockHasMarginAfterQuirk(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_renderBlockHasMarginAfterQuirk = b;
+    }
+    void setRenderBlockShouldForceRelayoutChildren(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_renderBlockShouldForceRelayoutChildren = b;
+    }
+    void setRenderBlockHasRareData(bool b)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_renderBlockHasRareData = b;
+    }
+    bool renderBlockHasMarginBeforeQuirk() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_renderBlockHasMarginBeforeQuirk;
+    }
+    bool renderBlockHasMarginAfterQuirk() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_renderBlockHasMarginAfterQuirk;
+    }
+    bool renderBlockShouldForceRelayoutChildren() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_renderBlockShouldForceRelayoutChildren;
+    }
     bool renderBlockHasRareData() const;
 
-    void setRenderBlockFlowLineLayoutPath(unsigned u) { m_renderBlockFlowLineLayoutPath = u; }
-    unsigned renderBlockFlowLineLayoutPath() const { return m_renderBlockFlowLineLayoutPath; }
+    void setRenderBlockFlowLineLayoutPath(unsigned u)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_renderBlockFlowLineLayoutPath = u;
+    }
+    unsigned renderBlockFlowLineLayoutPath() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_renderBlockFlowLineLayoutPath;
+    }
 
     void paintOutline(PaintInfo&, const LayoutRect&);
     void updateOutlineAutoAncestor(bool hasOutlineAuto);
@@ -364,8 +509,16 @@ private:
     void isRenderText() const = delete;
     void isRenderElement() const = delete;
 
-    RenderObject* firstChildSlow() const final { return firstChild(); }
-    RenderObject* lastChildSlow() const final { return lastChild(); }
+    RenderObject* firstChildSlow() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return firstChild();
+    }
+    RenderObject* lastChildSlow() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return lastChild();
+    }
 
     RenderElement* rendererForPseudoStyleAcrossShadowBoundary() const;
 
@@ -382,7 +535,11 @@ private:
 
     StyleDifference adjustStyleDifference(StyleDifference, OptionSet<StyleDifferenceContextSensitiveProperty>) const;
 
-    bool canDestroyDecodedData() const final { return !isVisibleInViewport(); }
+    bool canDestroyDecodedData() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !isVisibleInViewport();
+    }
     VisibleInViewportState imageFrameAvailable(CachedImage&, ImageAnimatingState, const IntRect* changeRect) final;
     VisibleInViewportState imageVisibleInViewport(const Document&) const final;
     void didRemoveCachedImageClient(CachedImage&) final;
@@ -436,11 +593,13 @@ inline LayoutSize adjustLayoutSizeForAbsoluteZoom(LayoutSize, const RenderElemen
 
 inline Element* RenderElement::generatingElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<Element>(RenderObject::generatingNode());
 }
 
 inline bool RenderElement::canEstablishContainingBlockWithTransform() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isRenderBlock() || (isTablePart() && !isRenderTableCol());
 }
 
@@ -470,6 +629,7 @@ inline CheckedPtr<RenderElement> ContainerNode::checkedRenderer() const
 
 inline RenderObject* RenderElement::firstInFlowChild() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* firstChild = this->firstChild()) {
         if (firstChild->isInFlow())
             return firstChild;
@@ -480,6 +640,7 @@ inline RenderObject* RenderElement::firstInFlowChild() const
 
 inline RenderObject* RenderElement::lastInFlowChild() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* lastChild = this->lastChild()) {
         if (lastChild->isInFlow())
             return lastChild;

@@ -24,18 +24,55 @@
 
 namespace WebCore {
 
-inline Overflow RenderElement::effectiveOverflowBlockDirection() const { return style().isHorizontalWritingMode() ? effectiveOverflowY() : effectiveOverflowX(); }
-inline Overflow RenderElement::effectiveOverflowInlineDirection() const { return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY(); }
-inline bool RenderElement::hasBackground() const { return style().hasBackground(); }
-inline bool RenderElement::hasClip() const { return isOutOfFlowPositioned() && style().hasClip(); }
-inline bool RenderElement::hasHiddenBackface() const { return style().backfaceVisibility() == BackfaceVisibility::Hidden; }
-inline bool RenderElement::hasOutline() const { return style().hasOutline() || hasOutlineAnnotation(); }
-inline bool RenderElement::hasShapeOutside() const { return style().shapeOutside(); }
-inline FloatRect RenderElement::transformReferenceBoxRect() const { return transformReferenceBoxRect(style()); }
-inline FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& style) const { return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox())); }
+inline Overflow RenderElement::effectiveOverflowBlockDirection() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().isHorizontalWritingMode() ? effectiveOverflowY() : effectiveOverflowX();
+}
+inline Overflow RenderElement::effectiveOverflowInlineDirection() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY();
+}
+inline bool RenderElement::hasBackground() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().hasBackground();
+}
+inline bool RenderElement::hasClip() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return isOutOfFlowPositioned() && style().hasClip();
+}
+inline bool RenderElement::hasHiddenBackface() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().backfaceVisibility() == BackfaceVisibility::Hidden;
+}
+inline bool RenderElement::hasOutline() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().hasOutline() || hasOutlineAnnotation();
+}
+inline bool RenderElement::hasShapeOutside() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().shapeOutside();
+}
+inline FloatRect RenderElement::transformReferenceBoxRect() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return transformReferenceBoxRect(style());
+}
+inline FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& style) const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox()));
+}
 
 inline bool RenderElement::canContainAbsolutelyPositionedObjects() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isRenderView()
         || style().position() != PositionType::Static
         || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
@@ -47,6 +84,7 @@ inline bool RenderElement::canContainAbsolutelyPositionedObjects() const
 
 inline bool RenderElement::canContainFixedPositionObjects() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isRenderView()
         || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
         || (hasBackdropFilter() && !isDocumentElementRenderer())
@@ -62,47 +100,56 @@ inline bool RenderElement::createsGroupForStyle(const RenderStyle& style)
 
 inline bool RenderElement::shouldApplyAnyContainment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return shouldApplyLayoutOrPaintContainment() || shouldApplySizeOrStyleContainment(style().containsSizeOrInlineSize() || style().containsStyle());
 }
 
 inline bool RenderElement::shouldApplyInlineSizeContainment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return WebCore::isSkippedContentRoot(style(), element()) || shouldApplySizeOrStyleContainment(style().containsInlineSize());
 }
 
 inline bool RenderElement::shouldApplyLayoutContainment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return shouldApplyLayoutOrPaintContainment(style().containsLayout() || style().contentVisibility() != ContentVisibility::Visible);
 }
 
 inline bool RenderElement::shouldApplyLayoutOrPaintContainment(bool containsAccordingToStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox()) && style().display() != DisplayType::RubyAnnotation && (!isTablePart() || isRenderBlockFlow());
 }
 
 inline bool RenderElement::shouldApplySizeContainment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return WebCore::isSkippedContentRoot(style(), element()) || shouldApplySizeOrStyleContainment(style().containsSize());
 }
 
 inline bool RenderElement::shouldApplySizeOrInlineSizeContainment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return WebCore::isSkippedContentRoot(style(), element()) || shouldApplySizeOrStyleContainment(style().containsSizeOrInlineSize());
 }
 
 // FIXME: try to avoid duplication with isSkippedContentRoot.
 inline bool RenderElement::shouldApplySizeOrStyleContainment(bool containsAccordingToStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox()) && style().display() != DisplayType::RubyAnnotation && (!isTablePart() || isRenderTableCaption()) && !isRenderTable();
 }
 
 inline bool RenderElement::shouldApplyStyleContainment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return shouldApplySizeOrStyleContainment(style().containsStyle() || style().contentVisibility() != ContentVisibility::Visible);
 }
 
 inline bool RenderElement::visibleToHitTesting(const std::optional<HitTestRequest>& request) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto visibility = !request || request->userTriggered() ? style().usedVisibility() : style().visibility();
     return visibility == Visibility::Visible
         && !isSkippedContent()

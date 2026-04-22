@@ -222,11 +222,13 @@ const RenderStyle& RenderElement::style() const
 
 Layout::ElementBox* RenderElement::layoutBox()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<Layout::ElementBox>(RenderObject::layoutBox());
 }
 
 const Layout::ElementBox* RenderElement::layoutBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<Layout::ElementBox>(RenderObject::layoutBox());
 }
 
@@ -317,6 +319,7 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
 
 const RenderStyle& RenderElement::firstLineStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: It would be better to just set anonymous block first-line styles correctly.
     if (isAnonymousBlock()) {
         if (!previousInFlowSibling()) {
@@ -334,6 +337,7 @@ const RenderStyle& RenderElement::firstLineStyle() const
 
 StyleDifference RenderElement::adjustStyleDifference(StyleDifference diff, OptionSet<StyleDifferenceContextSensitiveProperty> contextSensitiveProperties) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If transform changed, and we are not composited, need to do a layout.
     if (contextSensitiveProperties & StyleDifferenceContextSensitiveProperty::Transform) {
         // FIXME: when transforms are taken into account for overflow, we will need to do a layout.
@@ -397,6 +401,7 @@ StyleDifference RenderElement::adjustStyleDifference(StyleDifference diff, Optio
 
 inline bool RenderElement::shouldRepaintForStyleDifference(StyleDifference diff) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto hasImmediateNonWhitespaceTextChild = [&] {
         for (auto& child : childrenOfType<RenderText>(*this)) {
             if (!child.containsOnlyCollapsibleWhitespace())
@@ -409,6 +414,7 @@ inline bool RenderElement::shouldRepaintForStyleDifference(StyleDifference diff)
 
 void RenderElement::updateFillImages(const FillLayer* oldLayers, const FillLayer* newLayers)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto fillImagesAreIdentical = [](const FillLayer* layer1, const FillLayer* layer2) -> bool {
         if (layer1 == layer2)
             return true;
@@ -453,6 +459,7 @@ void RenderElement::updateFillImages(const FillLayer* oldLayers, const FillLayer
 
 void RenderElement::updateImage(StyleImage* oldImage, StyleImage* newImage)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (oldImage == newImage)
         return;
     if (oldImage)
@@ -463,12 +470,14 @@ void RenderElement::updateImage(StyleImage* oldImage, StyleImage* newImage)
 
 void RenderElement::updateShapeImage(const ShapeValue* oldShapeValue, const ShapeValue* newShapeValue)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (oldShapeValue || newShapeValue)
         updateImage(oldShapeValue ? oldShapeValue->image() : nullptr, newShapeValue ? newShapeValue->protectedImage().get() : nullptr);
 }
 
 bool RenderElement::repaintBeforeStyleChange(StyleDifference diff, const RenderStyle& oldStyle, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (oldStyle.usedVisibility() == Visibility::Hidden) {
         // Repaint on hidden renderer is a no-op.
         return false;
@@ -565,6 +574,7 @@ bool RenderElement::repaintBeforeStyleChange(StyleDifference diff, const RenderS
 
 void RenderElement::initializeStyle()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Style::loadPendingResources(m_style, protectedDocument(), protectedElement().get());
 
     styleWillChange(StyleDifference::NewStyle, style());
@@ -837,6 +847,7 @@ static void addLayers(const RenderElement& insertedRenderer, RenderElement& curr
 
 void RenderElement::removeLayers()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CheckedPtr parentLayer = layerParent();
     if (!parentLayer)
         return;
@@ -852,6 +863,7 @@ void RenderElement::removeLayers()
 
 void RenderElement::moveLayers(RenderLayer& newParent)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasLayer()) {
         if (isInTopLayerOrBackdrop(style(), element()))
             return;
@@ -868,6 +880,7 @@ void RenderElement::moveLayers(RenderLayer& newParent)
 
 RenderLayer* RenderElement::layerParent() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_IMPLIES(isInTopLayerOrBackdrop(style(), protectedElement().get()), hasLayer());
 
     if (hasLayer() && isInTopLayerOrBackdrop(style(), protectedElement().get()))
@@ -879,11 +892,13 @@ RenderLayer* RenderElement::layerParent() const
 // This answers the question "if this renderer had a layer, what would its next sibling layer be".
 RenderLayer* RenderElement::layerNextSibling(RenderLayer& parentLayer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return WebCore::layerNextSiblingRespectingTopLayer(*this, parentLayer);
 }
 
 bool RenderElement::layerCreationAllowedForSubtree() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // In LBSE layers are always created regardless of there position in the render tree.
     // Consider the SVG document fragment: "<defs><mask><rect transform="scale(2)".../>"
     // To paint the <rect> into the mask image, the rect needs to be transformed -
@@ -909,6 +924,7 @@ bool RenderElement::layerCreationAllowedForSubtree() const
 
 void RenderElement::propagateStyleToAnonymousChildren(StylePropagationType propagationType)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We could save this call when the change only affected non-inherited properties.
     for (CheckedRef elementChild : childrenOfType<RenderElement>(*this)) {
         if (!elementChild->isAnonymous() || elementChild->style().pseudoElementType() != PseudoId::None)
@@ -954,6 +970,7 @@ static inline bool rendererHasBackground(const RenderElement* renderer)
 
 void RenderElement::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(settings().shouldAllowUserInstalledFonts() || newStyle.fontDescription().shouldAllowUserInstalledFonts() == AllowUserInstalledFonts::No);
 
     auto* oldStyle = hasInitializedStyle() ? &style() : nullptr;
@@ -1113,6 +1130,7 @@ static inline bool areCursorsEqual(const RenderStyle* a, const RenderStyle* b)
 
 void RenderElement::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto registerImages = [this](auto* style, auto* oldStyle) {
         if (!style && !oldStyle)
             return;
@@ -1191,6 +1209,7 @@ void RenderElement::styleDidChange(StyleDifference diff, const RenderStyle* oldS
 
 void RenderElement::insertedIntoTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Keep our layer hierarchy updated. Optimize for the common case where we don't have any children
     // and don't have a layer attached to ourselves.
     if (firstChild() || hasLayer()) {
@@ -1210,6 +1229,7 @@ void RenderElement::insertedIntoTree()
 
 void RenderElement::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If we remove a visible child from an invisible parent, we don't know the layer visibility any more.
     if (parent()->style().usedVisibility() != Visibility::Visible && style().usedVisibility() == Visibility::Visible && !hasLayer()) {
         // FIXME: should get parent layer. Necessary?
@@ -1225,11 +1245,13 @@ void RenderElement::willBeRemovedFromTree()
 
 bool RenderElement::didVisitSinceLayout(LayoutIdentifier identifier) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return layoutIdentifier() >= identifier;
 }
 
 inline void RenderElement::clearSubtreeLayoutRootIfNeeded() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (renderTreeBeingDestroyed())
         return;
 
@@ -1248,6 +1270,7 @@ inline void RenderElement::clearSubtreeLayoutRootIfNeeded() const
 
 void RenderElement::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #if ENABLE(CONTENT_CHANGE_OBSERVER)
     if (!renderTreeBeingDestroyed() && element())
         document().contentChangeObserver().rendererWillBeDestroyed(*element());
@@ -1299,6 +1322,7 @@ void RenderElement::willBeDestroyed()
 
 void RenderElement::setNeedsPositionedMovementLayout(const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!isSetNeedsLayoutForbidden());
     if (needsPositionedMovementLayout())
         return;
@@ -1314,6 +1338,7 @@ void RenderElement::setNeedsPositionedMovementLayout(const RenderStyle* oldStyle
 
 void RenderElement::clearChildNeedsLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setNormalChildNeedsLayoutBit(false);
     setPosChildNeedsLayoutBit(false);
     setNeedsSimplifiedNormalFlowLayoutBit(false);
@@ -1323,6 +1348,7 @@ void RenderElement::clearChildNeedsLayout()
 
 void RenderElement::setNeedsSimplifiedNormalFlowLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!isSetNeedsLayoutForbidden());
     if (needsSimplifiedNormalFlowLayout())
         return;
@@ -1348,6 +1374,7 @@ void RenderElement::setChildNeedsLayout(MarkingBehavior markParents)
 
 void RenderElement::setOutOfFlowChildNeedsStaticPositionLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Currently this dirty bit has a very limited useage but should be expanded to
     // optimize all kinds of out-of-flow cases.
     // It's also assumed that regular, positioned child related bits are already set.
@@ -1364,6 +1391,7 @@ static inline void paintPhase(RenderElement& element, PaintPhase phase, PaintInf
 
 void RenderElement::paintAsInlineBlock(PaintInfo& paintInfo, const LayoutPoint& childPoint)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Paint all phases atomically, as though the element established its own stacking context.
     // (See Appendix E.2, section 6.4 on inline block/table/replaced elements in the CSS2.1 specification.)
     // This is also used by other elements (e.g. flex items and grid items).
@@ -1384,6 +1412,7 @@ void RenderElement::paintAsInlineBlock(PaintInfo& paintInfo, const LayoutPoint& 
 
 void RenderElement::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
     for (CheckedPtr child = firstChild(); child; child = child->nextSibling()) {
@@ -1641,6 +1670,7 @@ bool RenderElement::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderL
 
 bool RenderElement::borderImageIsLoadedAndCanBeRendered() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(style().hasBorder());
 
     RefPtr borderImage = style().borderImage().image();
@@ -1649,6 +1679,7 @@ bool RenderElement::borderImageIsLoadedAndCanBeRendered() const
 
 bool RenderElement::mayCauseRepaintInsideViewport(const IntRect* optionalViewportRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Ref frameView = view().frameView();
     if (frameView->isOffscreen())
         return false;
@@ -1668,6 +1699,7 @@ bool RenderElement::mayCauseRepaintInsideViewport(const IntRect* optionalViewpor
 
 bool RenderElement::isVisibleIgnoringGeometry() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (document().activeDOMObjectsAreSuspended())
         return false;
     if (style().usedVisibility() != Visibility::Visible)
@@ -1680,6 +1712,7 @@ bool RenderElement::isVisibleIgnoringGeometry() const
 
 bool RenderElement::isVisibleInDocumentRect(const IntRect& documentRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isVisibleIgnoringGeometry())
         return false;
 
@@ -1697,6 +1730,7 @@ bool RenderElement::isVisibleInDocumentRect(const IntRect& documentRect) const
 
 bool RenderElement::isInsideEntirelyHiddenLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isSVGLayerAwareRenderer() && document().settings().layerBasedSVGEngineEnabled() && enclosingLayer()->enclosingSVGHiddenOrResourceContainer())
         return true;
     return style().usedVisibility() != Visibility::Visible && !enclosingLayer()->hasVisibleContent();
@@ -1704,6 +1738,7 @@ bool RenderElement::isInsideEntirelyHiddenLayer() const
 
 void RenderElement::registerForVisibleInViewportCallback()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_isRegisteredForVisibleInViewportCallback)
         return;
     m_isRegisteredForVisibleInViewportCallback = true;
@@ -1713,6 +1748,7 @@ void RenderElement::registerForVisibleInViewportCallback()
 
 void RenderElement::unregisterForVisibleInViewportCallback()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_isRegisteredForVisibleInViewportCallback)
         return;
     m_isRegisteredForVisibleInViewportCallback = false;
@@ -1722,6 +1758,7 @@ void RenderElement::unregisterForVisibleInViewportCallback()
 
 void RenderElement::setVisibleInViewportState(VisibleInViewportState state)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (state == visibleInViewportState())
         return;
     m_visibleInViewportState = static_cast<unsigned>(state);
@@ -1735,6 +1772,7 @@ void RenderElement::visibleInViewportStateChanged()
 
 bool RenderElement::isVisibleInViewport() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Ref frameView = view().frameView();
     auto visibleRect = frameView->windowToContents(frameView->windowClipRect());
     return isVisibleInDocumentRect(visibleRect);
@@ -1742,6 +1780,7 @@ bool RenderElement::isVisibleInViewport() const
 
 VisibleInViewportState RenderElement::imageFrameAvailable(CachedImage& image, ImageAnimatingState animatingState, const IntRect* changeRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool isVisible = isVisibleInViewport();
 
     if (!isVisible && animatingState == ImageAnimatingState::Yes)
@@ -1760,6 +1799,7 @@ VisibleInViewportState RenderElement::imageFrameAvailable(CachedImage& image, Im
 
 VisibleInViewportState RenderElement::imageVisibleInViewport(const Document& document) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (&this->document() != &document)
         return VisibleInViewportState::No;
 
@@ -1768,11 +1808,13 @@ VisibleInViewportState RenderElement::imageVisibleInViewport(const Document& doc
 
 void RenderElement::notifyFinished(CachedResource& resource, const NetworkLoadMetrics&, LoadWillContinueInAnotherProcess)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     document().protectedCachedResourceLoader()->notifyFinished(resource);
 }
 
 bool RenderElement::allowsAnimation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* imageElement = dynamicDowncast<HTMLImageElement>(element()))
         return imageElement->allowsAnimation();
     return page().imageAnimationEnabled();
@@ -1780,18 +1822,21 @@ bool RenderElement::allowsAnimation() const
 
 void RenderElement::didRemoveCachedImageClient(CachedImage& cachedImage)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasPausedImageAnimations())
         checkedView()->removeRendererWithPausedImageAnimations(*this, cachedImage);
 }
 
 void RenderElement::scheduleRenderingUpdateForImage(CachedImage&)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RefPtr page = document().page())
         page->scheduleRenderingUpdate(RenderingUpdateStep::Images);
 }
 
 bool RenderElement::repaintForPausedImageAnimationsIfNeeded(const IntRect& visibleRect, CachedImage& cachedImage)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_hasPausedImageAnimations);
     if (!allowsAnimation() || !isVisibleInDocumentRect(visibleRect))
         return false;
@@ -1814,6 +1859,7 @@ bool RenderElement::repaintForPausedImageAnimationsIfNeeded(const IntRect& visib
 
 const RenderStyle* RenderElement::getCachedPseudoStyle(const Style::PseudoElementIdentifier& pseudoElementIdentifier, const RenderStyle* parentStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (pseudoElementIdentifier.pseudoId < PseudoId::FirstInternalPseudoId && !style().hasPseudoStyle(pseudoElementIdentifier.pseudoId))
         return nullptr;
 
@@ -1829,6 +1875,7 @@ const RenderStyle* RenderElement::getCachedPseudoStyle(const Style::PseudoElemen
 
 std::unique_ptr<RenderStyle> RenderElement::getUncachedPseudoStyle(const Style::PseudoElementRequest& pseudoElementRequest, const RenderStyle* parentStyle, const RenderStyle* ownStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (pseudoElementRequest.pseudoId() < PseudoId::FirstInternalPseudoId && !ownStyle && !style().hasPseudoStyle(pseudoElementRequest.pseudoId()))
         return nullptr;
 
@@ -1854,6 +1901,7 @@ std::unique_ptr<RenderStyle> RenderElement::getUncachedPseudoStyle(const Style::
 
 RenderElement* RenderElement::rendererForPseudoStyleAcrossShadowBoundary() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RefPtr root = element()->containingShadowRoot()) {
         if (root->mode() == ShadowRootMode::UserAgent) {
             RefPtr currentElement = element()->shadowHost();
@@ -1871,6 +1919,7 @@ RenderElement* RenderElement::rendererForPseudoStyleAcrossShadowBoundary() const
 
 const RenderStyle* RenderElement::textSegmentPseudoStyle(PseudoId pseudoId) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isAnonymous())
         return nullptr;
 
@@ -1889,6 +1938,7 @@ const RenderStyle* RenderElement::textSegmentPseudoStyle(PseudoId pseudoId) cons
 
 Color RenderElement::selectionColor(CSSPropertyID colorProperty) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the element is unselectable, or we are only painting the selection,
     // don't override the foreground color with the selection foreground color.
     if (style().usedUserSelect() == UserSelect::None
@@ -1909,6 +1959,7 @@ Color RenderElement::selectionColor(CSSPropertyID colorProperty) const
 
 std::unique_ptr<RenderStyle> RenderElement::selectionPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isAnonymous())
         return nullptr;
 
@@ -1927,16 +1978,19 @@ std::unique_ptr<RenderStyle> RenderElement::selectionPseudoStyle() const
 
 Color RenderElement::selectionForegroundColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return selectionColor(CSSPropertyWebkitTextFillColor);
 }
 
 Color RenderElement::selectionEmphasisMarkColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return selectionColor(CSSPropertyTextEmphasisColor);
 }
 
 Color RenderElement::selectionBackgroundColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().usedUserSelect() == UserSelect::None)
         return Color();
 
@@ -1960,21 +2014,25 @@ Color RenderElement::selectionBackgroundColor() const
 
 const RenderStyle* RenderElement::spellingErrorPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return textSegmentPseudoStyle(PseudoId::SpellingError);
 }
 
 const RenderStyle* RenderElement::grammarErrorPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return textSegmentPseudoStyle(PseudoId::GrammarError);
 }
 
 const RenderStyle* RenderElement::targetTextPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return textSegmentPseudoStyle(PseudoId::TargetText);
 }
 
 bool RenderElement::getLeadingCorner(FloatPoint& point, bool& insideFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isSVGRenderer()) {
         point = localToAbsoluteQuad(strokeBoundingBox(), UseTransforms).boundingBox().minXMinYCorner();
         return true;
@@ -2036,6 +2094,7 @@ bool RenderElement::getLeadingCorner(FloatPoint& point, bool& insideFixed) const
 
 bool RenderElement::getTrailingCorner(FloatPoint& point, bool& insideFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isSVGRenderer()) {
         point = localToAbsoluteQuad(strokeBoundingBox(), UseTransforms).boundingBox().maxXMaxYCorner();
         return true;
@@ -2082,6 +2141,7 @@ bool RenderElement::getTrailingCorner(FloatPoint& point, bool& insideFixed) cons
 
 LayoutRect RenderElement::absoluteAnchorRect(bool* insideFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     FloatPoint leading, trailing;
     bool leadingInFixed = false;
     bool trailingInFixed = false;
@@ -2107,6 +2167,7 @@ LayoutRect RenderElement::absoluteAnchorRect(bool* insideFixed) const
 
 MarginRect RenderElement::absoluteAnchorRectWithScrollMargin(bool* insideFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect anchorRect = absoluteAnchorRect(insideFixed);
     const LengthBox& scrollMargin = style().scrollMargin();
     if (scrollMargin.isZero())
@@ -2161,6 +2222,7 @@ static void drawFocusRing(GraphicsContext& context, Vector<FloatRect> rects, con
 
 void RenderElement::paintFocusRing(const PaintInfo& paintInfo, const RenderStyle& style, const Vector<LayoutRect>& focusRingRects) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(style.outlineStyleIsAuto() == OutlineIsAuto::On);
     float outlineOffset = style.outlineOffset();
     Vector<FloatRect> pixelSnappedFocusRingRects;
@@ -2192,6 +2254,7 @@ bool RenderElement::renderBlockHasRareData() const
 
 void RenderElement::paintOutline(PaintInfo& paintInfo, const LayoutRect& paintRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (paintInfo.context().paintingDisabled())
         return;
 
@@ -2203,6 +2266,7 @@ void RenderElement::paintOutline(PaintInfo& paintInfo, const LayoutRect& paintRe
 
 void RenderElement::issueRepaintForOutlineAuto(float outlineSize)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect repaintRect;
     Vector<LayoutRect> focusRingRects;
     addFocusRingRects(focusRingRects, LayoutPoint(), containerForRepaint().renderer.get());
@@ -2215,6 +2279,7 @@ void RenderElement::issueRepaintForOutlineAuto(float outlineSize)
 
 void RenderElement::updateOutlineAutoAncestor(bool hasOutlineAuto)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* placeholder = dynamicDowncast<RenderMultiColumnSpannerPlaceholder>(*this)) {
         CheckedPtr spanner = placeholder->spanner();
         spanner->setHasOutlineAutoAncestor(hasOutlineAuto);
@@ -2269,11 +2334,13 @@ bool RenderElement::hasClipPath() const
 
 bool RenderElement::hasOutlineAnnotation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return element() && element()->isLink() && (document().printing() || (view().frameView().paintBehavior() & PaintBehavior::AnnotateLinks));
 }
 
 bool RenderElement::hasSelfPaintingLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasLayer())
         return false;
     auto& layerModelObject = downcast<RenderLayerModelObject>(*this);
@@ -2282,6 +2349,7 @@ bool RenderElement::hasSelfPaintingLayer() const
 
 bool RenderElement::hasViewTransitionName() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !!style().viewTransitionName();
 }
 
@@ -2299,6 +2367,7 @@ bool RenderElement::isViewTransitionRoot() const
 
 bool RenderElement::checkForRepaintDuringLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return everHadLayout() && !hasSelfPaintingLayer() && !document().view()->layoutContext().needsFullRepaint();
 }
 
@@ -2322,12 +2391,14 @@ bool RenderElement::hasBlendMode() const
 
 ImageOrientation RenderElement::imageOrientation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* imageElement = dynamicDowncast<HTMLImageElement>(element());
     return (imageElement && !imageElement->allowsOrientationOverride()) ? ImageOrientation(ImageOrientation::Orientation::FromImage) : style().imageOrientation();
 }
 
 void RenderElement::adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(const RenderStyle& oldStyle, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (fragmentedFlowState() == FragmentedFlowState::NotInsideFlow)
         return;
 
@@ -2360,6 +2431,7 @@ void RenderElement::adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(con
 
 void RenderElement::removeFromRenderFragmentedFlow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(fragmentedFlowState() != FragmentedFlowState::NotInsideFlow);
     // Sometimes we remove the element from the flow, but it's not destroyed at that time.
     // It's only until later when we actually destroy it and remove all the children from it.
@@ -2370,6 +2442,7 @@ void RenderElement::removeFromRenderFragmentedFlow()
 
 void RenderElement::removeFromRenderFragmentedFlowIncludingDescendants(bool shouldUpdateState)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Once we reach another flow thread we don't need to update the flow thread state
     // but we have to continue cleanup the flow thread info.
     if (isRenderFragmentedFlow())
@@ -2405,6 +2478,7 @@ void RenderElement::removeFromRenderFragmentedFlowIncludingDescendants(bool shou
 
 void RenderElement::resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(RenderFragmentedFlow* fragmentedFlow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (fragmentedFlow)
         fragmentedFlow->removeFlowChildInfo(*this);
 
@@ -2414,6 +2488,7 @@ void RenderElement::resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants
 
 ReferencedSVGResources& RenderElement::ensureReferencedSVGResources()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& rareData = ensureRareData();
     if (!rareData.referencedSVGResources)
         rareData.referencedSVGResources = makeUnique<ReferencedSVGResources>(*this);
@@ -2423,6 +2498,7 @@ ReferencedSVGResources& RenderElement::ensureReferencedSVGResources()
 
 void RenderElement::clearReferencedSVGResources()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasRareData())
         return;
 
@@ -2432,6 +2508,7 @@ void RenderElement::clearReferencedSVGResources()
 // This needs to run when the entire render tree has been constructed, so can't be called from styleDidChange.
 void RenderElement::updateReferencedSVGResources()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto referencedElementIDs = ReferencedSVGResources::referencedSVGResourceIDs(style(), document());
     if (!referencedElementIDs.isEmpty())
         ensureReferencedSVGResources().updateReferencedResources(treeScopeForSVGReferences(), referencedElementIDs);
@@ -2441,6 +2518,7 @@ void RenderElement::updateReferencedSVGResources()
 
 void RenderElement::repaintRendererOrClientsOfReferencedSVGResources() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* enclosingResourceContainer = lineageOfType<RenderSVGResourceContainer>(*this).first();
     if (!enclosingResourceContainer) {
         repaintOldAndNewPositionsForSVGRenderer();
@@ -2453,6 +2531,7 @@ void RenderElement::repaintRendererOrClientsOfReferencedSVGResources() const
 
 void RenderElement::repaintClientsOfReferencedSVGResources() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!document().settings().layerBasedSVGEngineEnabled())
         return;
 
@@ -2462,6 +2541,7 @@ void RenderElement::repaintClientsOfReferencedSVGResources() const
 
 void RenderElement::repaintOldAndNewPositionsForSVGRenderer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto useUpdateLayerPositionsLogic = [&]() -> std::optional<CheckedPtr<RenderLayer>> {
         if (!document().settings().layerBasedSVGEngineEnabled())
             return std::nullopt;
@@ -2509,6 +2589,7 @@ static RenderObject::BlockContentHeightType includeNonFixedHeight(const RenderOb
 
 void RenderElement::adjustComputedFontSizesOnBlocks(float size, float visibleWidth)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RefPtr document = view().frameView().frame().document();
     if (!document)
         return;
@@ -2539,6 +2620,7 @@ void RenderElement::adjustComputedFontSizesOnBlocks(float size, float visibleWid
 
 void RenderElement::resetTextAutosizing()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RefPtr document = view().frameView().frame().document();
     if (!document)
         return;
@@ -2567,6 +2649,7 @@ void RenderElement::resetTextAutosizing()
 
 std::unique_ptr<RenderStyle> RenderElement::animatedStyle()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     std::unique_ptr<RenderStyle> result;
 
     if (auto styleable = Styleable::fromRenderer(*this))
@@ -2580,16 +2663,19 @@ std::unique_ptr<RenderStyle> RenderElement::animatedStyle()
 
 SingleThreadWeakPtr<RenderBlockFlow> RenderElement::backdropRenderer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasRareData() ? rareData().backdropRenderer : nullptr;
 }
 
 void RenderElement::setBackdropRenderer(RenderBlockFlow& renderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ensureRareData().backdropRenderer = renderer;
 }
 
 Overflow RenderElement::effectiveOverflowX() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto overflowX = style().overflowX();
     if (paintContainmentApplies() && overflowX == Overflow::Visible)
         return Overflow::Clip;
@@ -2598,6 +2684,7 @@ Overflow RenderElement::effectiveOverflowX() const
 
 Overflow RenderElement::effectiveOverflowY() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto overflowY = style().overflowY();
     if (paintContainmentApplies() && overflowY == Overflow::Visible)
         return Overflow::Clip;
@@ -2606,6 +2693,7 @@ Overflow RenderElement::effectiveOverflowY() const
 
 bool RenderElement::createsNewFormattingContext() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Writing-mode changes establish an independent block formatting context
     // if the box is a block-container.
     // https://drafts.csswg.org/css-writing-modes/#block-flow
@@ -2620,11 +2708,13 @@ bool RenderElement::createsNewFormattingContext() const
 
 bool RenderElement::establishesIndependentFormattingContext() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isFloatingOrOutOfFlowPositioned() || (isBlockBox() && hasPotentiallyScrollableOverflow()) || style().containsLayout() || paintContainmentApplies() || (style().isDisplayBlockLevel() && style().blockStepSize());
 }
 
 FloatRect RenderElement::referenceBoxRect(CSSBoxType boxType) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // CSS box model code is implemented in RenderBox::referenceBoxRect().
 
     // For the legacy SVG engine, RenderElement is the only class that's
@@ -2712,11 +2802,13 @@ void RenderElement::markRendererDirtyAfterTopLayerChange(RenderElement* renderer
 
 bool RenderElement::isSkippedContentRoot() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return WebCore::isSkippedContentRoot(style(), element()) && !view().frameView().layoutContext().needsSkippedContentLayout();
 }
 
 bool RenderElement::hasEligibleContainmentForSizeQuery() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!shouldApplyLayoutContainment())
         return false;
 
@@ -2734,6 +2826,7 @@ bool RenderElement::hasEligibleContainmentForSizeQuery() const
 
 void RenderElement::clearNeedsLayoutForSkippedContent()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (CheckedRef descendant : descendantsOfTypePostOrder<RenderObject>(*this))
         descendant->clearNeedsLayout(HadSkippedLayout::Yes);
     clearNeedsLayout(HadSkippedLayout::Yes);
@@ -2741,6 +2834,7 @@ void RenderElement::clearNeedsLayoutForSkippedContent()
 
 void RenderElement::layoutIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!needsLayout())
         return;
     if (isSkippedContentForLayout()) {
