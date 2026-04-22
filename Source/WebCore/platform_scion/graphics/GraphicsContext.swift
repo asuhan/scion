@@ -111,10 +111,7 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
-  func strokeThickness() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func strokeThickness() -> Float32 { return wk_interop.GraphicsContext_strokeThickness(p!) }
 
   func setStrokeThickness(thickness: Float32) {
     // TODO(asuhan): implement this
