@@ -129,6 +129,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setShouldAntialias(void* p, bool 
     static_cast<WebCore::GraphicsContext*>(p)->setShouldAntialias(shouldAntialias);
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsContext_shouldSubpixelQuantizeFonts(const void* p)
+{
+    return static_cast<const WebCore::GraphicsContext*>(p)->shouldSubpixelQuantizeFonts();
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_setShouldSubpixelQuantizeFonts(void* p, bool shouldSubpixelQuantizeFonts)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts);
+}
+
 struct FloatRectRaw {
     float x;
     float y;

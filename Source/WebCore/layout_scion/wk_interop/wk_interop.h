@@ -1352,6 +1352,8 @@ uint8_t GraphicsContext_imageInterpolationQuality(const void*);
 void GraphicsContext_setImageInterpolationQuality(void*, uint8_t);
 bool GraphicsContext_shouldAntialias(const void*);
 void GraphicsContext_setShouldAntialias(void*, bool);
+bool GraphicsContext_shouldSubpixelQuantizeFonts(const void*);
+void GraphicsContext_setShouldSubpixelQuantizeFonts(void*, bool);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
