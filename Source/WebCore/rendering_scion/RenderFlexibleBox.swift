@@ -1280,8 +1280,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flowAwareLocationForFlexItem(flexItem: RenderBoxWrapper) -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalFlow() ? flexItem.location() : flexItem.location().transposedPoint()
   }
 
   private func flexItemHasComputableAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
