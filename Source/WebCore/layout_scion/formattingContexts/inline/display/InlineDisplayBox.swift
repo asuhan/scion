@@ -29,11 +29,6 @@ protocol DisplayTextBox {
 
 extension InlineDisplay {
   class Box: DisplayTextBox {
-    init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
     class Text {
       convenience init() { self.init(start: 0, length: 0, originalContent: StringWrapper()) }
 
