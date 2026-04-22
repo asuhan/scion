@@ -40,8 +40,7 @@ class GraphicsContextWrapper {
   }
 
   func invalidatingControlTints() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.GraphicsContext_invalidatingControlTints(p!)
   }
 
   func invalidatingImagesWithAsyncDecodes() -> Bool {
