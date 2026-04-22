@@ -519,8 +519,8 @@ class FormattingGeometry {
   func computedMinHeight(layoutBox: BoxWrapper, containingBlockHeight: LayoutUnit? = nil)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computedHeightValue(
+      layoutBox: layoutBox, heightType: .Min, containingBlockHeight: containingBlockHeight)
   }
 
   // https://www.w3.org/TR/CSS22/visudet.html#min-max-heights
@@ -530,8 +530,8 @@ class FormattingGeometry {
   func computedMaxHeight(layoutBox: BoxWrapper, containingBlockHeight: LayoutUnit? = nil)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computedHeightValue(
+      layoutBox: layoutBox, heightType: .Max, containingBlockHeight: containingBlockHeight)
   }
 
   func computedMinWidth(layoutBox: BoxWrapper, containingBlockWidth: LayoutUnit) -> LayoutUnit? {
