@@ -48,6 +48,11 @@ extern "C" WEBCORE_EXPORT bool GraphicsContext_paintingDisabled(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->paintingDisabled());
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsContext_performingPaintInvalidation(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->performingPaintInvalidation());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_compositeOperation(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->compositeOperation());
