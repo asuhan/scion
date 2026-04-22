@@ -244,8 +244,8 @@ extension InlineDisplay {
     }
 
     func setExpansion(expansion: Expansion) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      horizontalExpansion = expansion.horizontalExpansion
+      expansionBehavior = expansion.behavior
     }
 
     func expansion() -> Expansion {
