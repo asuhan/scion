@@ -93,8 +93,22 @@ extension InlineDisplay {
     }
 
     func visibleRectIgnoringBlockDirection() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if isFullyTruncatedInBlockDirection {
+        return FloatRectWrapper()
+      }
+      if !hasEllipsis() || hasContentAfterEllipsisBox {
+        return inkOverflow
+      }
+      if isLeftToRightDirection {
+        let visibleLineBoxRight = min(lineBoxRect.maxX(), ellipsis!.visualRect.maxX())
+        return FloatRectWrapper(
+          topLeft: lineBoxRect.location(),
+          bottomRight: FloatPoint(x: visibleLineBoxRight, y: lineBoxRect.maxY()))
+      }
+      let visibleLineBoxLeft = max(lineBoxRect.x(), ellipsis!.visualRect.x())
+      return FloatRectWrapper(
+        topLeft: FloatPoint(x: visibleLineBoxLeft, y: lineBoxRect.y()),
+        bottomRight: FloatPoint(x: lineBoxRect.maxX(), y: lineBoxRect.maxY()))
     }
 
     func baseline() -> Float32 {
