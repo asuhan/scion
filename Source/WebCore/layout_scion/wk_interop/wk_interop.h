@@ -1344,6 +1344,8 @@ float GraphicsContext_strokeThickness(const void*);
 void GraphicsContext_setStrokeThickness(void*, float);
 uint8_t GraphicsContext_compositeOperation(const void*);
 void GraphicsContext_setCompositeOperation(void*, uint8_t, uint8_t);
+float GraphicsContext_alpha(const void*);
+void GraphicsContext_setAlpha(void*, float);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);

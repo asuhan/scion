@@ -88,6 +88,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setCompositeOperation(void* p, ui
     static_cast<WebCore::GraphicsContext*>(p)->setCompositeOperation(static_cast<WebCore::CompositeOperator>(operation), static_cast<WebCore::BlendMode>(blendMode));
 }
 
+extern "C" WEBCORE_EXPORT float GraphicsContext_alpha(const void* p)
+{
+    return static_cast<const WebCore::GraphicsContext*>(p)->alpha();
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_setAlpha(void* p, float alpha)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setAlpha(alpha);
+}
+
 struct FloatRectRaw {
     float x;
     float y;

@@ -145,15 +145,9 @@ class GraphicsContextWrapper {
     wk_interop.GraphicsContext_setCompositeOperation(p!, operation.rawValue, blendMode.rawValue)
   }
 
-  func alpha() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func alpha() -> Float32 { return wk_interop.GraphicsContext_alpha(p!) }
 
-  func setAlpha(alpha: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setAlpha(alpha: Float32) { wk_interop.GraphicsContext_setAlpha(p!, alpha) }
 
   func textDrawingMode() -> TextDrawingModeFlags {
     // TODO(asuhan): implement this
