@@ -2989,7 +2989,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func setParent(parent: RenderElementWrapper?) {
     if !isNativeImpl() {
-      wk_interop.RenderObject_setParent(id(), (parent! as! RenderViewWrapper).getWk())
+      if parent == nil {
+        wk_interop.RenderObject_setParent(id(), nil)
+      } else {
+        wk_interop.RenderObject_setParent(id(), (parent! as! RenderViewWrapper).getWk())
+      }
       return
     }
     assert(isNativeImpl())
