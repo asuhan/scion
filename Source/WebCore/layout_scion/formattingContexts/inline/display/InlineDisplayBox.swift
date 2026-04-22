@@ -154,8 +154,14 @@ extension InlineDisplay {
     static func visibleRectIgnoringBlockDirection(box: Box, visibleLineRect: FloatRectWrapper)
       -> FloatRectWrapper
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var visualRectIgnoringBlockDirection = box.visualRectIgnoringBlockDirection()
+      let visibleBoxLeft = max(visualRectIgnoringBlockDirection.x(), visibleLineRect.x())
+      visualRectIgnoringBlockDirection.setX(x: visibleBoxLeft)
+
+      let visibleBoxRight = min(visualRectIgnoringBlockDirection.maxX(), visibleLineRect.maxX())
+      visualRectIgnoringBlockDirection.shiftMaxXEdgeTo(edge: visibleBoxRight)
+
+      return visualRectIgnoringBlockDirection
     }
 
     func top() -> Float32 { return visualRectIgnoringBlockDirection().y() }
