@@ -886,13 +886,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       crossAxisOffset: LayoutUnit, crossAxisExtent: LayoutUnit,
       baselineAlignmentState: BaselineAlignmentState?, flexLayoutItems: FlexLayoutItems
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.crossAxisOffset = crossAxisOffset
+      self.crossAxisExtent = crossAxisExtent
+      self.baselineAlignmentState = baselineAlignmentState
+      self.flexLayoutItems = flexLayoutItems
     }
 
     var crossAxisOffset: LayoutUnit
     var crossAxisExtent: LayoutUnit
-    let baselineAlignmentState: BaselineAlignmentState? = nil
+    let baselineAlignmentState: BaselineAlignmentState?
     let flexLayoutItems: FlexLayoutItems
   }
 
