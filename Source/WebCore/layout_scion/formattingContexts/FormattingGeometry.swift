@@ -614,8 +614,17 @@ class FormattingGeometry {
   func computedHeight(layoutBox: BoxWrapper, containingBlockHeight: LayoutUnit? = nil)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard
+      let height = computedHeightValue(
+        layoutBox: layoutBox, heightType: .Normal, containingBlockHeight: containingBlockHeight)
+    else {
+      return nil
+    }
+    if layoutBox.style.boxSizing() == .ContentBox {
+      return height
+    }
+    let boxGeometry = formattingContext.geometryForBox(layoutBox: layoutBox)
+    return height - boxGeometry.verticalBorderAndPadding()
   }
 
   func computedWidth(layoutBox: BoxWrapper, containingBlockWidth: LayoutUnit) -> LayoutUnit? {
