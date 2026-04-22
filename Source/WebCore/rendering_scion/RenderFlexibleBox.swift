@@ -1565,8 +1565,12 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func adjustAlignmentForFlexItem(flexItem: RenderBoxWrapper, delta: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!flexItem.isOutOfFlowPositioned())
+    setFlowAwareLocationForFlexItem(
+      flexItem: flexItem,
+      location: flowAwareLocationForFlexItem(flexItem: flexItem)
+        + LayoutSizeWrapper(width: LayoutUnit(value: UInt64(0)), height: delta))
   }
 
   private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
