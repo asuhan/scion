@@ -98,6 +98,17 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setAlpha(void* p, float alpha)
     static_cast<WebCore::GraphicsContext*>(p)->setAlpha(alpha);
 }
 
+extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_textDrawingMode(const void* p)
+{
+    const auto o = static_cast<const WebCore::GraphicsContext*>(p)->textDrawingMode();
+    return o.toRaw();
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_setTextDrawingMode(void* p, uint8_t textDrawingMode)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setTextDrawingMode(WebCore::TextDrawingModeFlags::fromRaw(textDrawingMode));
+}
+
 struct FloatRectRaw {
     float x;
     float y;

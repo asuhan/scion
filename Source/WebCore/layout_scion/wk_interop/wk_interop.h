@@ -1346,6 +1346,8 @@ uint8_t GraphicsContext_compositeOperation(const void*);
 void GraphicsContext_setCompositeOperation(void*, uint8_t, uint8_t);
 float GraphicsContext_alpha(const void*);
 void GraphicsContext_setAlpha(void*, float);
+uint8_t GraphicsContext_textDrawingMode(const void*);
+void GraphicsContext_setTextDrawingMode(void*, uint8_t);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);

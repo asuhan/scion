@@ -150,13 +150,11 @@ class GraphicsContextWrapper {
   func setAlpha(alpha: Float32) { wk_interop.GraphicsContext_setAlpha(p!, alpha) }
 
   func textDrawingMode() -> TextDrawingModeFlags {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextDrawingModeFlags(rawValue: wk_interop.GraphicsContext_textDrawingMode(p!))
   }
 
   func setTextDrawingMode(textDrawingMode: TextDrawingModeFlags) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setTextDrawingMode(p!, textDrawingMode.rawValue)
   }
 
   func imageInterpolationQuality() -> InterpolationQuality {
