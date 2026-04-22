@@ -121,6 +121,8 @@ public:
 
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);
 
+    bool renderBlockHasRareData() const;
+
 private:
     void* m_handle;
 };

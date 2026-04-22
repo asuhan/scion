@@ -2184,6 +2184,12 @@ void RenderElement::paintFocusRing(const PaintInfo& paintInfo, const RenderStyle
         drawFocusRing(paintInfo.context(), pixelSnappedFocusRingRects, style, focusRingColor);
 }
 
+bool RenderElement::renderBlockHasRareData() const
+{
+    if (m_scion) { return m_scion->renderBlockHasRareData(); }
+    return m_renderBlockHasRareData;
+}
+
 void RenderElement::paintOutline(PaintInfo& paintInfo, const LayoutRect& paintRect)
 {
     if (paintInfo.context().paintingDisabled())

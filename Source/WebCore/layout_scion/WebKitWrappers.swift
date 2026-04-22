@@ -1212,6 +1212,12 @@ func RenderElementScion_detachRendererInternal(
   return element.detachRendererInternal(renderer: renderer)?.id()
 }
 
+@_cdecl("RenderElementScion_renderBlockHasRareData")
+func RenderElementScion_renderBlockHasRareData(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.renderBlockHasRareData
+}
+
 @_cdecl("RenderBoxModelObjectScion_continuation")
 func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?
