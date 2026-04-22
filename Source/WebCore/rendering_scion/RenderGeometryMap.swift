@@ -94,8 +94,16 @@ class RenderGeometryMap {
   }
 
   init(_ flags: MapCoordinatesMode = .UseTransforms) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    pInterop = nil
+    nonUniformStepsCount = 0
+    transformedStepsCount = 0
+    fixedStepsCount = 0
+    mapping = []
+    accumulatedOffset = LayoutSizeWrapper()
+    mapCoordinatesFlags = flags
+    #if ASSERT_ENABLED
+      accumulatedOffsetMightBeSaturated = false
+    #endif
   }
 
   func absoluteRect(_ rect: FloatRectWrapper) -> FloatRectWrapper {
