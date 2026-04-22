@@ -127,6 +127,10 @@ public:
 
     bool renderBlockHasRareData() const;
 
+    void setFirstChild(RenderObject*);
+
+    void setLastChild(RenderObject*);
+
 private:
     void* m_handle;
 };

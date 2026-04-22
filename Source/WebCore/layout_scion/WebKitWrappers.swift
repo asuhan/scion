@@ -1230,6 +1230,22 @@ func RenderElementScion_renderBlockHasRareData(_ elementRaw: UnsafeRawPointer) -
   return element.renderBlockHasRareData
 }
 
+@_cdecl("RenderElementScion_setFirstChild")
+func RenderElementScion_setFirstChild(
+  _ elementRaw: UnsafeMutableRawPointer, _ firstChildRaw: UnsafeMutableRawPointer?
+) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setFirstChild(firstChildRaw != nil ? createRenderObjectWrapper(firstChildRaw!) : nil)
+}
+
+@_cdecl("RenderElementScion_setLastChild")
+func RenderElementScion_setLastChild(
+  _ elementRaw: UnsafeMutableRawPointer, _ lastChildRaw: UnsafeMutableRawPointer?
+) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setLastChild(lastChildRaw != nil ? createRenderObjectWrapper(lastChildRaw!) : nil)
+}
+
 @_cdecl("RenderBoxModelObjectScion_continuation")
 func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

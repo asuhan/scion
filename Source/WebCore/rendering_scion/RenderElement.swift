@@ -1567,6 +1567,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     m_layoutIdentifier = layoutIdentifier
   }
 
+  func setFirstChild(_ firstChild: RenderObjectWrapper?) {
+    assert(isNativeImpl())
+    m_firstChild = firstChild
+  }
+
+  func setLastChild(_ lastChild: RenderObjectWrapper?) {
+    assert(isNativeImpl())
+    m_lastChild = lastChild
+  }
+
   func layerCreationAllowedForSubtree() -> Bool {
     assert(isNativeImpl())
     // In LBSE layers are always created regardless of there position in the render tree.

@@ -94,6 +94,10 @@ extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
 
 extern "C" bool RenderElementScion_renderBlockHasRareData(const void*);
 
+extern "C" void RenderElementScion_setFirstChild(void*, void*);
+
+extern "C" void RenderElementScion_setLastChild(void*, void*);
+
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
 
 extern "C" bool RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(const void* p);
@@ -475,6 +479,16 @@ RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject&
 bool RenderElementScion::renderBlockHasRareData() const
 {
     return RenderElementScion_renderBlockHasRareData(m_handle);
+}
+
+void RenderElementScion::setFirstChild(RenderObject* firstChild)
+{
+    RenderElementScion_setFirstChild(m_handle, firstChild);
+}
+
+void RenderElementScion::setLastChild(RenderObject* lastChild)
+{
+    RenderElementScion_setLastChild(m_handle, lastChild);
 }
 
 RenderLayer* RenderLayerModelObjectScion::layer() const

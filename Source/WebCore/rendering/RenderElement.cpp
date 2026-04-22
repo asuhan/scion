@@ -763,10 +763,20 @@ RenderPtr<RenderObject> RenderElement::detachRendererInternal(RenderObject& rend
     if (nextSibling)
         nextSibling->setPreviousSibling(renderer.previousSibling());
 
-    if (parent->firstChild() == &renderer)
-        parent->m_firstChild = nextSibling.get();
-    if (parent->lastChild() == &renderer)
-        parent->m_lastChild = renderer.previousSibling();
+    if (parent->firstChild() == &renderer) {
+        if (parent->m_scion) {
+            parent->m_scion->setFirstChild(nextSibling.get());
+        } else {
+            parent->m_firstChild = nextSibling.get();
+        }
+    }
+    if (parent->lastChild() == &renderer) {
+        if (parent->m_scion) {
+            parent->m_scion->setLastChild(renderer.previousSibling());
+        } else {
+            parent->m_lastChild = renderer.previousSibling();
+        }
+    }
 
     renderer.setPreviousSibling(nullptr);
     renderer.setNextSibling(nullptr);
