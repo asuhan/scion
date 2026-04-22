@@ -501,8 +501,12 @@ class FormattingGeometry {
   func computedValue(geometryProperty: LengthWrapper, containingBlockWidth: LayoutUnit)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    //  In general, the computed value resolves the specified value as far as possible without laying out the content.
+    if geometryProperty.isFixed() || geometryProperty.isPercent() || geometryProperty.isCalculated()
+    {
+      return valueForLength(length: geometryProperty, maximumValue: containingBlockWidth)
+    }
+    return nil
   }
 
   static func fixedValue(geometryProperty: LengthWrapper) -> LayoutUnit? {
