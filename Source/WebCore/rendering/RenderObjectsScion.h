@@ -117,6 +117,8 @@ public:
 
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
+    RenderPtr<RenderObject> detachRendererInternal(RenderObject&);
+
 private:
     void* m_handle;
 };

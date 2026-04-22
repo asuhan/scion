@@ -1193,6 +1193,17 @@ func RenderElementScion_attachRendererInternal(
   element.attachRendererInternal(child: child, beforeChild: beforeChild)
 }
 
+@_cdecl("RenderElementScion_detachRendererInternal")
+func RenderElementScion_detachRendererInternal(
+  _ elementRaw: UnsafeMutableRawPointer, _ rendererRaw: UnsafeMutableRawPointer
+)
+  -> UnsafeMutableRawPointer?
+{
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let renderer = createRenderObjectWrapper(rendererRaw)
+  return element.detachRendererInternal(renderer: renderer)?.id()
+}
+
 @_cdecl("RenderBoxModelObjectScion_continuation")
 func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

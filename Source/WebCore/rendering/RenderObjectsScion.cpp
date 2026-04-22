@@ -84,6 +84,8 @@ extern "C" bool RenderElementScion_hasBlendMode(const void*);
 
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
+extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
+
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
 
 extern "C" bool RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(const void* p);
@@ -440,6 +442,11 @@ bool RenderElementScion::hasBlendMode() const
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)
 {
     RenderElementScion_attachRendererInternal(m_handle, child, beforeChild);
+}
+
+RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject& renderer)
+{
+    return RenderPtr<RenderObject>(static_cast<RenderObject*>(RenderElementScion_detachRendererInternal(m_handle, &renderer)));
 }
 
 RenderLayer* RenderLayerModelObjectScion::layer() const
