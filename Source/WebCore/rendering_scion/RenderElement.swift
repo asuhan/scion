@@ -1315,6 +1315,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func detachRendererInternal(renderer: RenderObjectWrapper) -> RenderObjectWrapper? {
     assert(isNativeImpl())
     let parent = renderer.parent()!
+    assert(parent.isNativeImpl())
     let nextSibling = renderer.nextSibling()
 
     if let previousSibling = renderer.previousSibling() {
