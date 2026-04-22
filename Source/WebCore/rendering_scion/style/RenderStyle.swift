@@ -1269,6 +1269,8 @@ class RenderStyleWrapper: Equatable {
     return InsideLink(rawValue: wk_interop.RenderStyle_insideLink(p!))!
   }
 
+  func isLink() -> Bool { return wk_interop.RenderStyle_isLink(p!) }
+
   func insideDefaultButton() -> Bool { return wk_interop.RenderStyle_insideDefaultButton(p!) }
 
   func widows() -> UInt16 { return wk_interop.RenderStyle_widows(p!) }
