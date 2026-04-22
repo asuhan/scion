@@ -141,10 +141,7 @@ extension InlineDisplay {
 
     func isGenericInlineLevelBox() -> Bool { return type == .GenericInlineLevelBox }
 
-    func isNonRootInlineLevelBox() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isNonRootInlineLevelBox() -> Bool { return isInlineLevelBox() && !isRootInlineBox() }
 
     func isVisible() -> Bool { return !isFullyTruncated && style().usedVisibility() == .Visible }
 
