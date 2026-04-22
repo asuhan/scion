@@ -146,8 +146,7 @@ extension InlineDisplay {
     func isVisible() -> Bool { return !isFullyTruncated && style().usedVisibility() == .Visible }
 
     func isVisibleIgnoringUsedVisibility() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return !isFullyTruncated && style().visibility() == .Visible
     }
 
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper { return unflippedVisualRect }
