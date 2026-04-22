@@ -2255,6 +2255,12 @@ bool RenderElement::hasMask() const
     return style().hasMask();
 }
 
+bool RenderElement::hasClipOrNonVisibleOverflow() const
+{
+    if (m_scion) { return m_scion->hasClipOrNonVisibleOverflow(); }
+    return hasClip() || hasNonVisibleOverflow();
+}
+
 bool RenderElement::hasClipPath() const
 {
     if (m_scion) { return m_scion->hasClipPath(); }

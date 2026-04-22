@@ -107,6 +107,8 @@ public:
 
     bool hasMask() const;
 
+    bool hasClipOrNonVisibleOverflow() const;
+
     bool hasClipPath() const;
 
     bool isViewTransitionRoot() const;

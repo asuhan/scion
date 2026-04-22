@@ -190,7 +190,7 @@ public:
     inline bool hasBackground() const;
     bool hasMask() const;
     inline bool hasClip() const;
-    inline bool hasClipOrNonVisibleOverflow() const;
+    bool hasClipOrNonVisibleOverflow() const;
     bool hasClipPath() const;
     inline bool hasHiddenBackface() const;
     bool hasViewTransitionName() const;
