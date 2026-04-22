@@ -119,6 +119,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setImageInterpolationQuality(void
     static_cast<WebCore::GraphicsContext*>(p)->setImageInterpolationQuality(static_cast<WebCore::InterpolationQuality>(imageInterpolationQuality));
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsContext_shouldAntialias(const void* p)
+{
+    return static_cast<const WebCore::GraphicsContext*>(p)->shouldAntialias();
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_setShouldAntialias(void* p, bool shouldAntialias)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setShouldAntialias(shouldAntialias);
+}
+
 struct FloatRectRaw {
     float x;
     float y;

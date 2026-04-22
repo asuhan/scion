@@ -165,14 +165,10 @@ class GraphicsContextWrapper {
     wk_interop.GraphicsContext_setImageInterpolationQuality(p!, imageInterpolationQuality.rawValue)
   }
 
-  func shouldAntialias() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func shouldAntialias() -> Bool { return wk_interop.GraphicsContext_shouldAntialias(p!) }
 
   func setShouldAntialias(shouldAntialias: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setShouldAntialias(p!, shouldAntialias)
   }
 
   // Normally CG enables subpixel-quantization because it improves the performance of aligning glyphs.
