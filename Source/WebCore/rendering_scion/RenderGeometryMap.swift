@@ -99,8 +99,8 @@ class RenderGeometryMap {
   }
 
   func absoluteRect(_ rect: FloatRectWrapper) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return mapToContainer(rect, nil).boundingBox()
   }
 
   func mapToContainer(_ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?)
