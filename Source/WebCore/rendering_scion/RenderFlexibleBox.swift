@@ -2241,8 +2241,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func availableAlignmentSpaceForFlexItem(
     lineCrossAxisExtent: LayoutUnit, flexItem: RenderBoxWrapper
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let flexItemCrossExtent =
+      crossAxisMarginExtentForFlexItem(flexItem: flexItem)
+      + crossAxisExtentForFlexItem(flexItem: flexItem)
+    return lineCrossAxisExtent - flexItemCrossExtent
   }
 
   private func marginBoxAscentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
