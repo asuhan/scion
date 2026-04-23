@@ -247,6 +247,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setMiterLimit(void* p, float mite
     static_cast<WebCore::GraphicsContext*>(p)->setMiterLimit(miter);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_clip(void* p, FloatRectRaw rect_raw)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->clip({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_clipOut(void* p, FloatRectRaw rect_raw)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->clipOut({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

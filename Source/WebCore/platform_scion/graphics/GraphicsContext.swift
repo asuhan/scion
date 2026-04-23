@@ -360,10 +360,7 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
-  func clip(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clip(rect: FloatRectWrapper) { wk_interop.GraphicsContext_clip(p!, toFloatRectRaw(rect)) }
 
   func clipRoundedRect(rect: FloatRoundedRect) {
     // TODO(asuhan): implement this
@@ -371,8 +368,7 @@ class GraphicsContextWrapper {
   }
 
   func clipOut(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_clipOut(p!, toFloatRectRaw(rect))
   }
 
   func clipOutRoundedRect(rect: FloatRoundedRect) {
