@@ -3012,6 +3012,12 @@ Settings& RenderObject::settings() const
     return page().settings();
 }
 
+LocalFrame& RenderObject::frame() const
+{
+    if (m_scion) { return m_scion->frame(); }
+    return *document().frame();
+}
+
 Page& RenderObject::page() const
 {
     if (m_scion) { return m_scion->page(); }

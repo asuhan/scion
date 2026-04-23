@@ -1023,6 +1023,12 @@ func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.needsLayout()
 }
 
+@_cdecl("RenderObjectScion_frame")
+func RenderObjectScion_frame(_ objectRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.frame().p
+}
+
 @_cdecl("RenderObjectScion_page")
 func RenderObjectScion_page(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

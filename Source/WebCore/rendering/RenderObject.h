@@ -762,7 +762,7 @@ public:
     Document& document() const { return m_node.get().document(); }
     inline Ref<Document> protectedDocument() const; // Defined in RenderObjectInlines.h.
     TreeScope& treeScopeForSVGReferences() const { return m_node.get().treeScopeForSVGReferences(); }
-    LocalFrame& frame() const;
+    WEBCORE_EXPORT LocalFrame& frame() const;
     Ref<LocalFrame> protectedFrame() const { return frame(); }
     Page& page() const;
     Settings& settings() const;
@@ -1345,11 +1345,6 @@ private:
     bool m_preexistingForbidden;
 #endif
 };
-
-inline LocalFrame& RenderObject::frame() const
-{
-    return *document().frame();
-}
 
 inline bool RenderObject::renderTreeBeingDestroyed() const
 {

@@ -46,6 +46,8 @@ extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
 
+extern "C" void* RenderObjectScion_frame(void*);
+
 extern "C" const void* RenderObjectScion_page(const void*);
 
 extern "C" const void* RenderObjectScion_settings(const void*);
@@ -330,6 +332,8 @@ void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildre
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+LocalFrame& RenderObjectScion::frame() { return *static_cast<LocalFrame*>(RenderObjectScion_frame(m_handle)); }
 
 Page& RenderObjectScion::page() const { return *const_cast<Page*>(static_cast<const Page*>(RenderObjectScion_page(m_handle))); }
 

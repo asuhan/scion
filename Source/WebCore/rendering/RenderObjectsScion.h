@@ -66,6 +66,8 @@ public:
 
     bool needsLayout() const;
 
+    LocalFrame& frame();
+
     Page& page() const;
 
     Settings& settings() const;
