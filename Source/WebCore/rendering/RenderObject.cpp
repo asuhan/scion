@@ -378,6 +378,7 @@ bool RenderObject::isFieldset() const
 
 bool RenderObject::isHTMLMarquee() const
 {
+    if (m_scion) { return m_scion->isHTMLMarquee(); }
     return node() && node()->renderer() == this && node()->hasTagName(marqueeTag);
 }
 

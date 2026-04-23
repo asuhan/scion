@@ -74,6 +74,8 @@ public:
 
     bool isRenderHTMLCanvas() const;
 
+    bool isHTMLMarquee() const;
+
     void setChildrenInline(bool b);
 
     bool isSVGLayerAwareRenderer() const;

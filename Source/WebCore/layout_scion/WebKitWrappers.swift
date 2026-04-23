@@ -1048,6 +1048,12 @@ func RenderObjectScion_isRenderHTMLCanvas(_ objectRaw: UnsafeRawPointer) -> Bool
   return object.isRenderHTMLCanvas()
 }
 
+@_cdecl("RenderObjectScion_isHTMLMarquee")
+func RenderObjectScion_isHTMLMarquee(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isHTMLMarquee()
+}
+
 @_cdecl("RenderObjectScion_setChildrenInline")
 func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _ b: Bool) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
