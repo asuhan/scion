@@ -117,13 +117,11 @@ class GraphicsContextWrapper {
   }
 
   func strokeStyle() -> StrokeStyle {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StrokeStyle(rawValue: wk_interop.GraphicsContext_strokeStyle(p!))!
   }
 
   func setStrokeStyle(style: StrokeStyle) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setStrokeStyle(p!, style.rawValue)
   }
 
   func setDropShadow(dropShadow: GraphicsDropShadow) {

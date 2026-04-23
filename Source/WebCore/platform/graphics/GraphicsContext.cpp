@@ -73,6 +73,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setFillRule(void* p, uint8_t fill
     static_cast<WebCore::GraphicsContext*>(p)->setFillRule(static_cast<WebCore::WindRule>(fillRule));
 }
 
+extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_strokeStyle(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->strokeStyle());
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_setStrokeStyle(void* p, uint8_t style)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setStrokeStyle(static_cast<WebCore::StrokeStyle>(style));
+}
+
 extern "C" WEBCORE_EXPORT float GraphicsContext_strokeThickness(const void* p)
 {
     return static_cast<const WebCore::GraphicsContext*>(p)->strokeThickness();
