@@ -66,6 +66,8 @@ public:
 
     void setChildrenInline(bool b);
 
+    bool isPositioned() const;
+
     bool isRenderView() const;
 
     bool hasLayer() const;

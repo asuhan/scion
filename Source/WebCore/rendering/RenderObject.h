@@ -661,7 +661,7 @@ public:
 
     bool isFloating() const { return m_stateBitfields.hasFlag(StateFlag::Floating); }
 
-    bool isPositioned() const { return m_stateBitfields.isPositioned(); }
+    bool isPositioned() const;
     bool isInFlowPositioned() const { return m_stateBitfields.isRelativelyPositioned() || m_stateBitfields.isStickilyPositioned(); }
     bool isOutOfFlowPositioned() const { return m_stateBitfields.isOutOfFlowPositioned(); } // absolute or fixed positioning
     bool isFixedPositioned() const { return isOutOfFlowPositioned() && style().position() == PositionType::Fixed; }

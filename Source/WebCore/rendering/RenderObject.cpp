@@ -3018,6 +3018,12 @@ bool RenderObject::isRenderViewTransitionCapture() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsViewTransitionCapture);
 }
 
+bool RenderObject::isPositioned() const
+{
+    if (m_scion) { return m_scion->isPositioned(); }
+    return m_stateBitfields.isPositioned();
+}
+
 bool RenderObject::isRenderView() const
 {
     if (m_scion) { return m_scion->isRenderView(); }
