@@ -227,6 +227,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clearRect(void* p, FloatRectRaw r
     static_cast<WebCore::GraphicsContext*>(p)->clearRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_strokeRect(void* p, FloatRectRaw rect_raw, float lineWidth)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->strokeRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, lineWidth);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

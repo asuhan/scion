@@ -284,8 +284,7 @@ class GraphicsContextWrapper {
   }
 
   func strokeRect(_ rect: FloatRectWrapper, _ lineWidth: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_strokeRect(p!, toFloatRectRaw(rect), lineWidth)
   }
 
   func setLineCap(lineCap: LineCap) {
