@@ -3012,6 +3012,12 @@ bool RenderObject::isRenderMedia() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia);
 }
 
+bool RenderObject::isRenderVideo() const
+{
+    if (m_scion) { return m_scion->isRenderVideo(); }
+    return type() == Type::Video;
+}
+
 bool RenderObject::isRenderViewTransitionCapture() const
 {
     if (m_scion) { return m_scion->isRenderViewTransitionCapture(); }

@@ -476,7 +476,7 @@ public:
     bool isRenderTextControlSingleLine() const { return isRenderTextControl() && !isRenderTextControlMultiLine(); }
     bool isRenderSearchField() const { return type() == Type::SearchField; }
     bool isRenderTextControlInnerBlock() const { return type() == Type::TextControlInnerBlock; }
-    bool isRenderVideo() const { return type() == Type::Video; }
+    bool isRenderVideo() const;
     bool isRenderViewTransitionCapture() const;
     bool isRenderWidget() const { return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsWidget); }
     bool isRenderHTMLCanvas() const;

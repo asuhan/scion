@@ -42,6 +42,8 @@ extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
+extern "C" bool RenderObjectScion_isRenderVideo(const void*);
+
 extern "C" bool RenderObjectScion_isRenderViewTransitionCapture(const void*);
 
 extern "C" bool RenderObjectScion_isRenderHTMLCanvas(const void*);
@@ -344,6 +346,8 @@ namespace WebCore {
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
 
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
+
+bool RenderObjectScion::isRenderVideo() const { return RenderObjectScion_isRenderVideo(m_handle); }
 
 bool RenderObjectScion::isRenderViewTransitionCapture() const { return RenderObjectScion_isRenderViewTransitionCapture(m_handle); }
 

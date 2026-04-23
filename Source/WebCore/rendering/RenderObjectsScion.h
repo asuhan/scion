@@ -62,6 +62,8 @@ public:
 
     bool isRenderMedia() const;
 
+    bool isRenderVideo() const;
+
     bool isRenderViewTransitionCapture() const;
 
     bool isRenderHTMLCanvas() const;
