@@ -3012,6 +3012,12 @@ bool RenderObject::isRenderMedia() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia);
 }
 
+bool RenderObject::isRenderViewTransitionCapture() const
+{
+    if (m_scion) { return m_scion->isRenderViewTransitionCapture(); }
+    return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsViewTransitionCapture);
+}
+
 bool RenderObject::isRenderView() const
 {
     if (m_scion) { return m_scion->isRenderView(); }

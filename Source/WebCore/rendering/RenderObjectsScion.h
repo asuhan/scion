@@ -62,6 +62,8 @@ public:
 
     bool isRenderMedia() const;
 
+    bool isRenderViewTransitionCapture() const;
+
     void setChildrenInline(bool b);
 
     bool isRenderView() const;
