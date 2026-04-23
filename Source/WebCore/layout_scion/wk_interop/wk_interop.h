@@ -1361,6 +1361,8 @@ void GraphicsContext_setShouldAntialias(void*, bool);
 bool GraphicsContext_shouldSubpixelQuantizeFonts(const void*);
 void GraphicsContext_setShouldSubpixelQuantizeFonts(void*, bool);
 void GraphicsContext_setDrawLuminanceMask(void*, bool);
+void GraphicsContext_save(void*, uint8_t);
+void GraphicsContext_restore(void*, uint8_t);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);

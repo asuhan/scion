@@ -24,7 +24,7 @@
  */
 
 struct GraphicsContextState {
-  enum Purpose {
+  enum Purpose: UInt8 {
     case Initial
     case SaveRestore
     case TransparencyLayer

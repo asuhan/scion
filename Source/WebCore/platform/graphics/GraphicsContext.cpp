@@ -159,6 +159,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setDrawLuminanceMask(void* p, boo
     static_cast<WebCore::GraphicsContext*>(p)->setDrawLuminanceMask(drawLuminanceMask);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_save(void* p, uint8_t purpose)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->save(static_cast<WebCore::GraphicsContextState::Purpose>(purpose));
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_restore(void* p, uint8_t purpose)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->restore(static_cast<WebCore::GraphicsContextState::Purpose>(purpose));
+}
+
 struct FloatRectRaw {
     float x;
     float y;

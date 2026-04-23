@@ -183,13 +183,11 @@ class GraphicsContextWrapper {
   }
 
   func save(purpose: GraphicsContextState.Purpose = .SaveRestore) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_save(p!, purpose.rawValue)
   }
 
   func restore(purpose: GraphicsContextState.Purpose = .SaveRestore) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_restore(p!, purpose.rawValue)
   }
 
   func adjustLineToPixelBoundaries(
