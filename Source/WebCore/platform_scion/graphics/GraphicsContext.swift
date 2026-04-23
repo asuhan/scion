@@ -295,8 +295,7 @@ class GraphicsContextWrapper {
   }
 
   func setLineJoin(lineJoin: LineJoin) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setLineJoin(p!, lineJoin.rawValue)
   }
 
   func setMiterLimit(miter: Float32) {

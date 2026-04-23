@@ -237,6 +237,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setLineCap(void* p, uint8_t lineC
     static_cast<WebCore::GraphicsContext*>(p)->setLineCap(static_cast<WebCore::LineCap>(lineCap));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setLineJoin(void* p, uint8_t lineJoin)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setLineJoin(static_cast<WebCore::LineJoin>(lineJoin));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

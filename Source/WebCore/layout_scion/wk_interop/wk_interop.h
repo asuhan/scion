@@ -1372,6 +1372,7 @@ void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void GraphicsContext_clearRect(void*, struct FloatRectRaw);
 void GraphicsContext_strokeRect(void*, struct FloatRectRaw, float);
 void GraphicsContext_setLineCap(void*, uint8_t);
+void GraphicsContext_setLineJoin(void*, uint8_t);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);
