@@ -283,6 +283,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_scale(void* p, float s)
     static_cast<WebCore::GraphicsContext*>(p)->scale(s);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_rotate(void* p, float angleInRadians)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->rotate(angleInRadians);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);
