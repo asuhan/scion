@@ -1023,6 +1023,12 @@ func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.needsLayout()
 }
 
+@_cdecl("RenderObjectScion_settings")
+func RenderObjectScion_settings(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.settings().p
+}
+
 @_cdecl("RenderObjectScion_setNormalChildNeedsLayoutBit")
 func RenderObjectScion_setNormalChildNeedsLayoutBit(_ objectRaw: UnsafeMutableRawPointer, _ b: Bool)
 {

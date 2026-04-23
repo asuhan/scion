@@ -46,6 +46,8 @@ extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
 
+extern "C" const void* RenderObjectScion_settings(const void*);
+
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 extern "C" const void* RenderElementScion_style(const void*);
@@ -326,6 +328,8 @@ void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildre
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(static_cast<const Settings*>(RenderObjectScion_settings(m_handle))); }
 
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
 

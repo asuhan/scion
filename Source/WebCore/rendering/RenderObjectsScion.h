@@ -66,6 +66,8 @@ public:
 
     bool needsLayout() const;
 
+    Settings& settings() const;
+
     void setNormalChildNeedsLayoutBit(bool b);
 
 private:

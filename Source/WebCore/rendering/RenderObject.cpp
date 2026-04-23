@@ -3006,6 +3006,12 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+Settings& RenderObject::settings() const
+{
+    if (m_scion) { return m_scion->settings(); }
+    return page().settings();
+}
+
 #if ENABLE(TREE_DEBUGGING)
 
 void printPaintOrderTreeForLiveDocuments()

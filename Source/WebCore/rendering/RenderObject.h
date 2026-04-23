@@ -765,7 +765,7 @@ public:
     LocalFrame& frame() const;
     Ref<LocalFrame> protectedFrame() const { return frame(); }
     Page& page() const;
-    Settings& settings() const { return page().settings(); }
+    Settings& settings() const;
 
     // Returns the object containing this one. Can be different from parent for positioned elements.
     // If repaintContainer and repaintContainerSkipped are not null, on return *repaintContainerSkipped
