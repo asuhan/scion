@@ -100,6 +100,8 @@ public:
 
     bool isTransformed() const;
 
+    RenderView& view() const;
+
     Document& document() const;
 
     LocalFrame& frame();

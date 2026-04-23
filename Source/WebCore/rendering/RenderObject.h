@@ -736,7 +736,7 @@ public:
 
     inline bool preservesNewline() const;
 
-    RenderView& view() const { return *document().renderView(); }
+    RenderView& view() const;
     WEBCORE_EXPORT CheckedRef<RenderView> checkedView() const;
 
     HostWindow* hostWindow() const;

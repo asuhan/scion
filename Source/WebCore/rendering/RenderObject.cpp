@@ -3091,6 +3091,12 @@ bool RenderObject::hasTransformRelatedProperty() const
     return m_stateBitfields.hasFlag(StateFlag::HasTransformRelatedProperty);
 }
 
+RenderView& RenderObject::view() const
+{
+    if (m_scion) { return m_scion->view(); }
+    return *document().renderView();
+}
+
 Document& RenderObject::document() const
 {
     if (m_scion) { return m_scion->document(); }

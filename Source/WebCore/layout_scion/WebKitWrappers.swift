@@ -1126,6 +1126,13 @@ func RenderObjectScion_isTransformed(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isTransformed()
 }
 
+@_cdecl("RenderObjectScion_view")
+func RenderObjectScion_view(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let view = object.view()
+  return view.getWk()
+}
+
 @_cdecl("RenderObjectScion_document")
 func RenderObjectScion_document(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
