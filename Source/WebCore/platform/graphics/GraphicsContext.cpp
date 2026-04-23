@@ -191,6 +191,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawLine(void* p, FloatPointRaw p
     static_cast<WebCore::GraphicsContext*>(p)->drawLine({ point1.x, point1.y }, { point2.x, point2.y });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_fillEllipse(void* p, FloatRectRaw ellipse)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->fillEllipse({ ellipse.x, ellipse.y, ellipse.width, ellipse.height });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_strokeEllipse(void* p, FloatRectRaw ellipse)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->strokeEllipse({ ellipse.x, ellipse.y, ellipse.width, ellipse.height });
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;

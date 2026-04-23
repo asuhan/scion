@@ -1365,6 +1365,8 @@ void GraphicsContext_save(void*, uint8_t);
 void GraphicsContext_restore(void*, uint8_t);
 void GraphicsContext_drawRect(void*, struct FloatRectRaw, float);
 void GraphicsContext_drawLine(void*, struct FloatPointRaw, struct FloatPointRaw);
+void GraphicsContext_fillEllipse(void*, struct FloatRectRaw);
+void GraphicsContext_strokeEllipse(void*, struct FloatRectRaw);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);

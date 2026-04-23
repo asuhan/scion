@@ -25,6 +25,10 @@
 
 import wk_interop
 
+private func toFloatRectRaw(_ rect: FloatRectWrapper) -> FloatRectRaw {
+  return FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height())
+}
+
 class GraphicsContextWrapper {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -202,9 +206,7 @@ class GraphicsContextWrapper {
   // using a 1-pixel stroke inset from the rect borders (of the correct
   // stroke color).
   func drawRect(rect: FloatRectWrapper, borderThickness: Float32 = 1) {
-    wk_interop.GraphicsContext_drawRect(
-      p!, FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height()),
-      borderThickness)
+    wk_interop.GraphicsContext_drawRect(p!, toFloatRectRaw(rect), borderThickness)
   }
 
   // This is only used to draw borders, so we should not draw shadows.
@@ -224,13 +226,11 @@ class GraphicsContextWrapper {
   }
 
   func fillEllipse(_ ellipse: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_fillEllipse(p!, toFloatRectRaw(ellipse))
   }
 
   func strokeEllipse(_ ellipse: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_strokeEllipse(p!, toFloatRectRaw(ellipse))
   }
 
   enum RequiresClipToRect {
@@ -246,7 +246,7 @@ class GraphicsContextWrapper {
   func fillRect(rect: FloatRectWrapper, color: ColorWrapper) {
     let srgba = color.toSRGBA()
     wk_interop.GraphicsContext_fillRect(
-      p!, FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height()),
+      p!, toFloatRectRaw(rect),
       SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
   }
 
