@@ -154,6 +154,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setShouldSubpixelQuantizeFonts(vo
     static_cast<WebCore::GraphicsContext*>(p)->setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setDrawLuminanceMask(void* p, bool drawLuminanceMask)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setDrawLuminanceMask(drawLuminanceMask);
+}
+
 struct FloatRectRaw {
     float x;
     float y;

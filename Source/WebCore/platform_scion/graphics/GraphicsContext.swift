@@ -179,8 +179,7 @@ class GraphicsContextWrapper {
   }
 
   func setDrawLuminanceMask(drawLuminanceMask: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setDrawLuminanceMask(p!, drawLuminanceMask)
   }
 
   func save(purpose: GraphicsContextState.Purpose = .SaveRestore) {
