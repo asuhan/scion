@@ -452,14 +452,10 @@ class GraphicsContextWrapper {
   }
 
   func beginTransparencyLayer(opacity: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_beginTransparencyLayer(p!, opacity)
   }
 
-  func endTransparencyLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func endTransparencyLayer() { wk_interop.GraphicsContext_endTransparencyLayer(p!) }
 
   // Focus Rings
 

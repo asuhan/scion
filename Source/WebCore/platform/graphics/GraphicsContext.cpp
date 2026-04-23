@@ -268,6 +268,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawLineForText(void* p, FloatRec
     static_cast<WebCore::GraphicsContext*>(p)->drawLineForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing, doubleUnderlines, static_cast<WebCore::StrokeStyle>(style));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_beginTransparencyLayer(void* p, float opacity)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->beginTransparencyLayer(opacity);
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_endTransparencyLayer(void* p)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->endTransparencyLayer();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

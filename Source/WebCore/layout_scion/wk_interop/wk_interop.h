@@ -1378,6 +1378,8 @@ void GraphicsContext_clip(void*, struct FloatRectRaw);
 void GraphicsContext_clipOut(void*, struct FloatRectRaw);
 struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct FloatRectRaw, bool);
 void GraphicsContext_drawLineForText(void*, struct FloatRectRaw, bool printing, bool doubleUnderlines, uint8_t);
+void GraphicsContext_beginTransparencyLayer(void*, float);
+void GraphicsContext_endTransparencyLayer(void*);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);
