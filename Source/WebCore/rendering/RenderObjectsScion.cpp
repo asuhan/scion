@@ -50,6 +50,8 @@ extern "C" bool RenderObjectScion_isPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isRenderView(const void*);
 
+extern "C" bool RenderObjectScion_hasReflection(const void*);
+
 extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
@@ -346,6 +348,8 @@ void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildre
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
 
 bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRenderView(m_handle); }
+
+bool RenderObjectScion::hasReflection() const { return RenderObjectScion_hasReflection(m_handle); }
 
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 

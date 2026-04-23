@@ -3030,6 +3030,12 @@ bool RenderObject::isRenderView() const
     return type() == Type::View;
 }
 
+bool RenderObject::hasReflection() const
+{
+    if (m_scion) { return m_scion->hasReflection(); }
+    return hasRareData() && rareData().hasReflection;
+}
+
 bool RenderObject::hasTransformRelatedProperty() const
 {
     if (m_scion) { return m_scion->hasTransformRelatedProperty(); }

@@ -70,6 +70,8 @@ public:
 
     bool isRenderView() const;
 
+    bool hasReflection() const;
+
     bool hasLayer() const;
 
     bool needsLayout() const;
