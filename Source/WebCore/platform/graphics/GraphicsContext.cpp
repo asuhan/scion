@@ -232,6 +232,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_strokeRect(void* p, FloatRectRaw 
     static_cast<WebCore::GraphicsContext*>(p)->strokeRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, lineWidth);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setLineCap(void* p, uint8_t lineCap)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setLineCap(static_cast<WebCore::LineCap>(lineCap));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

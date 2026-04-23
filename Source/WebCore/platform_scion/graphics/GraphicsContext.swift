@@ -287,10 +287,7 @@ class GraphicsContextWrapper {
     wk_interop.GraphicsContext_strokeRect(p!, toFloatRectRaw(rect), lineWidth)
   }
 
-  func setLineCap(lineCap: LineCap) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setLineCap(lineCap: LineCap) { wk_interop.GraphicsContext_setLineCap(p!, lineCap.rawValue) }
 
   func setLineDash(dashArray: DashArray, dashOffset: Float32) {
     // TODO(asuhan): implement this
