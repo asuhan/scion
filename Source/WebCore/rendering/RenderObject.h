@@ -723,7 +723,7 @@ public:
 
     bool hasPotentiallyScrollableOverflow() const;
 
-    bool hasTransformRelatedProperty() const { return m_stateBitfields.hasFlag(StateFlag::HasTransformRelatedProperty); } // Transform, perspective or transform-style: preserve-3d.
+    bool hasTransformRelatedProperty() const;
     inline bool isTransformed() const;
     inline bool hasTransformOrPerspective() const;
 

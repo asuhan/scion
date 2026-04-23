@@ -1035,6 +1035,12 @@ func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.needsLayout()
 }
 
+@_cdecl("RenderObjectScion_hasTransformRelatedProperty")
+func RenderObjectScion_hasTransformRelatedProperty(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.hasTransformRelatedProperty()
+}
+
 @_cdecl("RenderObjectScion_frame")
 func RenderObjectScion_frame(_ objectRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

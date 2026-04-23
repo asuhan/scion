@@ -70,6 +70,8 @@ public:
 
     bool needsLayout() const;
 
+    bool hasTransformRelatedProperty() const;
+
     LocalFrame& frame();
 
     Page& page() const;

@@ -50,6 +50,8 @@ extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
 
+extern "C" bool RenderObjectScion_hasTransformRelatedProperty(const void*);
+
 extern "C" void* RenderObjectScion_frame(void*);
 
 extern "C" const void* RenderObjectScion_page(const void*);
@@ -340,6 +342,8 @@ bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRender
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+bool RenderObjectScion::hasTransformRelatedProperty() const { return RenderObjectScion_hasTransformRelatedProperty(m_handle); }
 
 LocalFrame& RenderObjectScion::frame() { return *static_cast<LocalFrame*>(RenderObjectScion_frame(m_handle)); }
 

@@ -3018,6 +3018,12 @@ bool RenderObject::isRenderView() const
     return type() == Type::View;
 }
 
+bool RenderObject::hasTransformRelatedProperty() const
+{
+    if (m_scion) { return m_scion->hasTransformRelatedProperty(); }
+    return m_stateBitfields.hasFlag(StateFlag::HasTransformRelatedProperty);
+}
+
 Settings& RenderObject::settings() const
 {
     if (m_scion) { return m_scion->settings(); }
