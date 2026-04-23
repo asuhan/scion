@@ -263,6 +263,11 @@ extern "C" WEBCORE_EXPORT FloatRectRaw GraphicsContext_computeUnderlineBoundsFor
     return { bounds.x(), bounds.y(), bounds.width(), bounds.height() };
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawLineForText(void* p, FloatRectRaw rect_raw, bool printing, bool doubleUnderlines, uint8_t style)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->drawLineForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing, doubleUnderlines, static_cast<WebCore::StrokeStyle>(style));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

@@ -425,8 +425,8 @@ class GraphicsContextWrapper {
     rect: FloatRectWrapper, printing: Bool, doubleUnderlines: Bool = false,
     style: StrokeStyle = .SolidStroke
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_drawLineForText(
+      p!, toFloatRectRaw(rect), printing, doubleUnderlines, style.rawValue)
   }
 
   func drawLinesForText(
