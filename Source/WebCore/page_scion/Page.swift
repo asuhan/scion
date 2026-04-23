@@ -100,5 +100,5 @@ class PageWrapper {
     return wk_interop.Page_hasEverSetVisibilityAdjustment(p)
   }
 
-  private let p: UnsafeRawPointer
+  let p: UnsafeRawPointer
 }

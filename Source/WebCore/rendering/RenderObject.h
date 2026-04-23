@@ -1351,14 +1351,6 @@ inline LocalFrame& RenderObject::frame() const
     return *document().frame();
 }
 
-inline Page& RenderObject::page() const
-{
-    // The render tree will always be torn down before Frame is disconnected from Page,
-    // so it's safe to assume Frame::page() is non-null as long as there are live RenderObjects.
-    ASSERT(frame().page());
-    return *frame().page();
-}
-
 inline bool RenderObject::renderTreeBeingDestroyed() const
 {
     return document().renderTreeBeingDestroyed();
