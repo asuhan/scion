@@ -209,8 +209,8 @@ class GraphicsContextWrapper {
 
   // This is only used to draw borders, so we should not draw shadows.
   func drawLine(point1: FloatPoint, point2: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_drawLine(
+      p!, FloatPointRaw(x: point1.x, y: point1.y), FloatPointRaw(x: point2.x, y: point2.y))
   }
 
   func fillPath(path: PathWrapper) {

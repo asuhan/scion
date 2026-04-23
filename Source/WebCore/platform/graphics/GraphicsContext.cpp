@@ -181,6 +181,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawRect(void* p, FloatRectRaw re
     static_cast<WebCore::GraphicsContext*>(p)->drawRect({ rect.x, rect.y, rect.width, rect.height }, borderThickness);
 }
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawLine(void* p, FloatPointRaw point1, FloatPointRaw point2)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->drawLine({ point1.x, point1.y }, { point2.x, point2.y });
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;
