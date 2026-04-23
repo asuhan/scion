@@ -3006,6 +3006,12 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+bool RenderObject::isRenderMedia() const
+{
+    if (m_scion) { return m_scion->isRenderMedia(); }
+    return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia);
+}
+
 bool RenderObject::isRenderView() const
 {
     if (m_scion) { return m_scion->isRenderView(); }

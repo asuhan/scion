@@ -1005,6 +1005,12 @@ func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMu
   return layer.layerId()
 }
 
+@_cdecl("RenderObjectScion_isRenderMedia")
+func RenderObjectScion_isRenderMedia(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderMedia()
+}
+
 @_cdecl("RenderObjectScion_setChildrenInline")
 func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _ b: Bool) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

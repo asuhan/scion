@@ -60,6 +60,8 @@ public:
 
     RenderLayer* enclosingLayer() const;
 
+    bool isRenderMedia() const;
+
     void setChildrenInline(bool b);
 
     bool isRenderView() const;

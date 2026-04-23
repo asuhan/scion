@@ -40,6 +40,8 @@
 
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
+extern "C" bool RenderObjectScion_isRenderMedia(const void*);
+
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
 extern "C" bool RenderObjectScion_isRenderView(const void*);
@@ -328,6 +330,8 @@ extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 namespace WebCore {
 
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
+
+bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
 

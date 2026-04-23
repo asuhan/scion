@@ -450,7 +450,7 @@ public:
     bool isRenderListBox() const { return type() == Type::ListBox; }
     bool isRenderListItem() const { return type() == Type::ListItem; }
     bool isRenderListMarker() const { return type() == Type::ListMarker; }
-    bool isRenderMedia() const { return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia); }
+    bool isRenderMedia() const;
     bool isRenderMenuList() const { return type() == Type::MenuList; }
     bool isRenderMeter() const { return type() == Type::Meter; }
     bool isRenderProgress() const { return type() == Type::Progress; }
