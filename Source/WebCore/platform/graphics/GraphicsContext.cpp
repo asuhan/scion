@@ -201,6 +201,15 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_strokeEllipse(void* p, FloatRectR
     static_cast<WebCore::GraphicsContext*>(p)->strokeEllipse({ ellipse.x, ellipse.y, ellipse.width, ellipse.height });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_fillRectWithClipping(void* p, FloatRectRaw rect_raw, bool requiresClipToRect)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->fillRect(
+        { rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height },
+        requiresClipToRect
+            ? WebCore::GraphicsContext::RequiresClipToRect::Yes
+            : WebCore::GraphicsContext::RequiresClipToRect::No);
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;

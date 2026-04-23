@@ -239,8 +239,8 @@ class GraphicsContextWrapper {
   }
 
   func fillRect(_ rect: FloatRectWrapper, _ requiresClipToRect: RequiresClipToRect = .Yes) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_fillRectWithClipping(
+      p!, toFloatRectRaw(rect), requiresClipToRect == .Yes)
   }
 
   func fillRect(rect: FloatRectWrapper, color: ColorWrapper) {
