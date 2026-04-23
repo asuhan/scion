@@ -74,6 +74,8 @@ public:
 
     void setChildrenInline(bool b);
 
+    bool isSVGLayerAwareRenderer() const;
+
     bool isPositioned() const;
 
     bool isRenderView() const;

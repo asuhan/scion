@@ -3042,6 +3042,12 @@ bool RenderObject::isRenderHTMLCanvas() const
     return type() == Type::HTMLCanvas;
 }
 
+bool RenderObject::isSVGLayerAwareRenderer() const
+{
+    if (m_scion) { return m_scion->isSVGLayerAwareRenderer(); }
+    return isRenderSVGRoot() || isRenderSVGModelObject() || isRenderSVGText() || isRenderSVGInline() || isRenderSVGForeignObject();
+}
+
 bool RenderObject::isPositioned() const
 {
     if (m_scion) { return m_scion->isPositioned(); }

@@ -54,6 +54,8 @@ extern "C" bool RenderObjectScion_isRenderHTMLCanvas(const void*);
 
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
+extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
+
 extern "C" bool RenderObjectScion_isPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isRenderView(const void*);
@@ -364,6 +366,8 @@ bool RenderObjectScion::isRenderViewTransitionCapture() const { return RenderObj
 bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_isRenderHTMLCanvas(m_handle); }
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
+
+bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
 
