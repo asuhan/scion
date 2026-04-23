@@ -96,6 +96,8 @@ public:
 
     bool hasTransformRelatedProperty() const;
 
+    Document& document() const;
+
     LocalFrame& frame();
 
     Page& page() const;

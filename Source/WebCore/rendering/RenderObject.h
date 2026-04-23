@@ -759,7 +759,7 @@ public:
     // pseudo elements for which their parent node is returned.
     Node* generatingNode() const { return isPseudoElement() ? generatingPseudoHostElement() : node(); }
 
-    Document& document() const { return m_node.get().document(); }
+    Document& document() const;
     inline Ref<Document> protectedDocument() const; // Defined in RenderObjectInlines.h.
     TreeScope& treeScopeForSVGReferences() const { return m_node.get().treeScopeForSVGReferences(); }
     WEBCORE_EXPORT LocalFrame& frame() const;
