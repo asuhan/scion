@@ -202,8 +202,9 @@ class GraphicsContextWrapper {
   // using a 1-pixel stroke inset from the rect borders (of the correct
   // stroke color).
   func drawRect(rect: FloatRectWrapper, borderThickness: Float32 = 1) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_drawRect(
+      p!, FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height()),
+      borderThickness)
   }
 
   // This is only used to draw borders, so we should not draw shadows.

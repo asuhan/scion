@@ -176,6 +176,11 @@ struct FloatRectRaw {
     float height;
 };
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawRect(void* p, FloatRectRaw rect, float borderThickness)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->drawRect({ rect.x, rect.y, rect.width, rect.height }, borderThickness);
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;
