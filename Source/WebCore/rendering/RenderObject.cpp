@@ -3036,6 +3036,12 @@ bool RenderObject::hasReflection() const
     return hasRareData() && rareData().hasReflection;
 }
 
+bool RenderObject::hasNonVisibleOverflow() const
+{
+    if (m_scion) { return m_scion->hasNonVisibleOverflow(); }
+    return m_stateBitfields.hasFlag(StateFlag::HasNonVisibleOverflow);
+}
+
 bool RenderObject::hasTransformRelatedProperty() const
 {
     if (m_scion) { return m_scion->hasTransformRelatedProperty(); }

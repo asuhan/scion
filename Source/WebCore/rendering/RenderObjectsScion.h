@@ -76,6 +76,8 @@ public:
 
     bool needsLayout() const;
 
+    bool hasNonVisibleOverflow() const;
+
     bool hasTransformRelatedProperty() const;
 
     LocalFrame& frame();

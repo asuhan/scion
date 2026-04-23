@@ -719,7 +719,7 @@ public:
 
     bool isSelectionBorder() const;
 
-    bool hasNonVisibleOverflow() const { return m_stateBitfields.hasFlag(StateFlag::HasNonVisibleOverflow); }
+    bool hasNonVisibleOverflow() const;
 
     bool hasPotentiallyScrollableOverflow() const;
 

@@ -1053,6 +1053,12 @@ func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.needsLayout()
 }
 
+@_cdecl("RenderObjectScion_hasNonVisibleOverflow")
+func RenderObjectScion_hasNonVisibleOverflow(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.hasNonVisibleOverflow()
+}
+
 @_cdecl("RenderObjectScion_hasTransformRelatedProperty")
 func RenderObjectScion_hasTransformRelatedProperty(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
