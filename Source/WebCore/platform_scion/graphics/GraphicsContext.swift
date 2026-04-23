@@ -280,8 +280,7 @@ class GraphicsContextWrapper {
   }
 
   func clearRect(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_clearRect(p!, toFloatRectRaw(rect))
   }
 
   func strokeRect(_ rect: FloatRectWrapper, _ lineWidth: Float32) {

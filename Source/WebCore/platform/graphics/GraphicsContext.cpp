@@ -222,6 +222,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_fillRect(void* p, FloatRectRaw re
     static_cast<WebCore::GraphicsContext*>(p)->fillRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_clearRect(void* p, FloatRectRaw rect_raw)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->clearRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);
