@@ -2854,4 +2854,10 @@ void RenderElement::layoutIfNeeded()
     layout();
 }
 
+RenderElement* RenderObject::parent() const
+{
+    if (m_scion) { return m_scion->parent(); }
+    return m_parent.get();
+}
+
 }

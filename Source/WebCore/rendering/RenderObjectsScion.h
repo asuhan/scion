@@ -58,6 +58,8 @@ public:
     {
     }
 
+    RenderElement* parent() const;
+
     RenderLayer* enclosingLayer() const;
 
     bool isRenderEmbeddedObject() const;

@@ -38,6 +38,8 @@
 #include <wtf/CheckedRef.h>
 #include <wtf/FastMalloc.h>
 
+extern "C" void* RenderObjectScion_parent(const void*);
+
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
@@ -350,6 +352,8 @@ extern "C" void RepaintRegionAccumulator_destroy(void*);
 extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 
 namespace WebCore {
+
+RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElement*>(RenderObjectScion_parent(m_handle)); }
 
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
 

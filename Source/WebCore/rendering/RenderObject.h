@@ -345,7 +345,7 @@ public:
 
     virtual ASCIILiteral renderName() const = 0;
 
-    inline RenderElement* parent() const; // Defined in RenderElement.h.
+    RenderElement* parent() const; // Defined in RenderElement.h.
     inline CheckedPtr<RenderElement> checkedParent() const; // Defined in RenderElement.h.
     bool isDescendantOf(const RenderObject*) const;
 
