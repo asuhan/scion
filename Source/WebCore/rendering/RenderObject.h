@@ -479,7 +479,7 @@ public:
     bool isRenderVideo() const { return type() == Type::Video; }
     bool isRenderViewTransitionCapture() const;
     bool isRenderWidget() const { return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsWidget); }
-    bool isRenderHTMLCanvas() const { return type() == Type::HTMLCanvas; }
+    bool isRenderHTMLCanvas() const;
 #if ENABLE(ATTACHMENT_ELEMENT)
     bool isRenderAttachment() const { return type() == Type::Attachment; }
 #endif

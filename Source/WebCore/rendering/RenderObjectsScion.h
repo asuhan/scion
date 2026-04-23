@@ -64,6 +64,8 @@ public:
 
     bool isRenderViewTransitionCapture() const;
 
+    bool isRenderHTMLCanvas() const;
+
     void setChildrenInline(bool b);
 
     bool isPositioned() const;

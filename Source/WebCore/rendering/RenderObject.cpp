@@ -3018,6 +3018,12 @@ bool RenderObject::isRenderViewTransitionCapture() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsViewTransitionCapture);
 }
 
+bool RenderObject::isRenderHTMLCanvas() const
+{
+    if (m_scion) { return m_scion->isRenderHTMLCanvas(); }
+    return type() == Type::HTMLCanvas;
+}
+
 bool RenderObject::isPositioned() const
 {
     if (m_scion) { return m_scion->isPositioned(); }

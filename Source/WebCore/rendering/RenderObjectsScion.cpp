@@ -44,6 +44,8 @@ extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
 extern "C" bool RenderObjectScion_isRenderViewTransitionCapture(const void*);
 
+extern "C" bool RenderObjectScion_isRenderHTMLCanvas(const void*);
+
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
 extern "C" bool RenderObjectScion_isPositioned(const void*);
@@ -344,6 +346,8 @@ RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<Rend
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
 
 bool RenderObjectScion::isRenderViewTransitionCapture() const { return RenderObjectScion_isRenderViewTransitionCapture(m_handle); }
+
+bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_isRenderHTMLCanvas(m_handle); }
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
 

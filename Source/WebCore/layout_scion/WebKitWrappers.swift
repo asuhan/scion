@@ -1017,6 +1017,12 @@ func RenderObjectScion_isRenderViewTransitionCapture(_ objectRaw: UnsafeRawPoint
   return object.isRenderViewTransitionCapture()
 }
 
+@_cdecl("RenderObjectScion_isRenderHTMLCanvas")
+func RenderObjectScion_isRenderHTMLCanvas(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderHTMLCanvas()
+}
+
 @_cdecl("RenderObjectScion_setChildrenInline")
 func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _ b: Bool) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
