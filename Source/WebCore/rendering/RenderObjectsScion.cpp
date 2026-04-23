@@ -44,6 +44,8 @@ extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
+extern "C" bool RenderObjectScion_isRenderIFrame(const void*);
+
 extern "C" bool RenderObjectScion_isRenderVideo(const void*);
 
 extern "C" bool RenderObjectScion_isRenderViewTransitionCapture(const void*);
@@ -350,6 +352,8 @@ RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<Rend
 bool RenderObjectScion::isRenderEmbeddedObject() const { return RenderObjectScion_isRenderEmbeddedObject(m_handle); }
 
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
+
+bool RenderObjectScion::isRenderIFrame() const { return RenderObjectScion_isRenderIFrame(m_handle); }
 
 bool RenderObjectScion::isRenderVideo() const { return RenderObjectScion_isRenderVideo(m_handle); }
 

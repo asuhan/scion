@@ -3018,6 +3018,12 @@ bool RenderObject::isRenderMedia() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia);
 }
 
+bool RenderObject::isRenderIFrame() const
+{
+    if (m_scion) { return m_scion->isRenderIFrame(); }
+    return type() == Type::IFrame;
+}
+
 bool RenderObject::isRenderVideo() const
 {
     if (m_scion) { return m_scion->isRenderVideo(); }
