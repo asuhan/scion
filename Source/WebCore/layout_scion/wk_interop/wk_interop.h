@@ -1343,6 +1343,7 @@ bool GraphicsContext_performingPaintInvalidation(const void*);
 bool GraphicsContext_invalidatingControlTints(const void*);
 bool GraphicsContext_invalidatingImagesWithAsyncDecodes(const void*);
 bool GraphicsContext_detectingContentfulPaint(const void*);
+void GraphicsContext_setFillRule(void*, uint8_t);
 float GraphicsContext_strokeThickness(const void*);
 void GraphicsContext_setStrokeThickness(void*, float);
 uint8_t GraphicsContext_compositeOperation(const void*);

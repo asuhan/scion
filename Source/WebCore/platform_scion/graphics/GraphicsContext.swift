@@ -82,8 +82,7 @@ class GraphicsContextWrapper {
   }
 
   func setFillRule(fillRule: WindRule) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setFillRule(p!, fillRule.rawValue)
   }
 
   func strokeColor() -> ColorWrapper {

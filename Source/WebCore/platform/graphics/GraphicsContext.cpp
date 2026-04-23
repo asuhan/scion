@@ -68,6 +68,11 @@ extern "C" WEBCORE_EXPORT bool GraphicsContext_detectingContentfulPaint(const vo
     return static_cast<const WebCore::GraphicsContext*>(p)->detectingContentfulPaint();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setFillRule(void* p, uint8_t fillRule)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setFillRule(static_cast<WebCore::WindRule>(fillRule));
+}
+
 extern "C" WEBCORE_EXPORT float GraphicsContext_strokeThickness(const void* p)
 {
     return static_cast<const WebCore::GraphicsContext*>(p)->strokeThickness();
