@@ -3006,6 +3006,12 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+bool RenderObject::isRenderEmbeddedObject() const
+{
+    if (m_scion) { return m_scion->isRenderEmbeddedObject(); }
+    return type() == Type::EmbeddedObject;
+}
+
 bool RenderObject::isRenderMedia() const
 {
     if (m_scion) { return m_scion->isRenderMedia(); }

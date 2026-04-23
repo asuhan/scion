@@ -440,7 +440,7 @@ public:
     bool isRenderQuote() const { return type() == Type::Quote; }
 
     bool isRenderDetailsMarker() const { return type() == Type::DetailsMarker; }
-    bool isRenderEmbeddedObject() const { return type() == Type::EmbeddedObject; }
+    WEBCORE_EXPORT bool isRenderEmbeddedObject() const;
     bool isFieldset() const;
     bool isRenderFileUploadControl() const { return type() == Type::FileUploadControl; }
     bool isRenderFrame() const { return type() == Type::Frame; }

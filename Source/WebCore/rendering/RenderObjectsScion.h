@@ -60,6 +60,8 @@ public:
 
     RenderLayer* enclosingLayer() const;
 
+    bool isRenderEmbeddedObject() const;
+
     bool isRenderMedia() const;
 
     bool isRenderVideo() const;

@@ -1005,6 +1005,12 @@ func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMu
   return layer.layerId()
 }
 
+@_cdecl("RenderObjectScion_isRenderEmbeddedObject")
+func RenderObjectScion_isRenderEmbeddedObject(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderEmbeddedObject()
+}
+
 @_cdecl("RenderObjectScion_isRenderMedia")
 func RenderObjectScion_isRenderMedia(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
