@@ -1380,6 +1380,7 @@ struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct 
 void GraphicsContext_drawLineForText(void*, struct FloatRectRaw, bool printing, bool doubleUnderlines, uint8_t);
 void GraphicsContext_beginTransparencyLayer(void*, float);
 void GraphicsContext_endTransparencyLayer(void*);
+void GraphicsContext_scale(void*, float);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);

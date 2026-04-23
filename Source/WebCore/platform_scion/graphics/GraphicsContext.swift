@@ -466,10 +466,7 @@ class GraphicsContextWrapper {
 
   // Transforms
 
-  func scale(_ s: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func scale(_ s: Float32) { wk_interop.GraphicsContext_scale(p!, s) }
 
   func rotate(_ angleInRadians: Float32) {
     // TODO(asuhan): implement this

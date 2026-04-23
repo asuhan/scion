@@ -278,6 +278,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_endTransparencyLayer(void* p)
     static_cast<WebCore::GraphicsContext*>(p)->endTransparencyLayer();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_scale(void* p, float s)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->scale(s);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);
