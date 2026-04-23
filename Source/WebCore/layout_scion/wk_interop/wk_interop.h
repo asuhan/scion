@@ -1390,6 +1390,8 @@ void GraphicsContext_rotate(void* p, float);
 void GraphicsContext_translateBySize(void*, struct FloatSizeRaw);
 void GraphicsContext_translateByPoint(void*, struct FloatPointRaw);
 void GraphicsContext_translateByXy(void*, float, float);
+void GraphicsContext_setContentfulPaintDetected(void*);
+bool GraphicsContext_contentfulPaintDetected(const void*);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);

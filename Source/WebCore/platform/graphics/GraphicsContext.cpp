@@ -308,6 +308,16 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_translateByXy(void* p, float x, f
     static_cast<WebCore::GraphicsContext*>(p)->translate(x, y);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setContentfulPaintDetected(void* p)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setContentfulPaintDetected();
+}
+
+extern "C" WEBCORE_EXPORT bool GraphicsContext_contentfulPaintDetected(const void* p)
+{
+    return static_cast<const WebCore::GraphicsContext*>(p)->contentfulPaintDetected();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

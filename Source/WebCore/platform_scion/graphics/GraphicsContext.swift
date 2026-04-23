@@ -501,14 +501,10 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
-  func setContentfulPaintDetected() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setContentfulPaintDetected() { wk_interop.GraphicsContext_setContentfulPaintDetected(p!) }
 
   func contentfulPaintDetected() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.GraphicsContext_contentfulPaintDetected(p!)
   }
 
   private let p: UnsafeMutableRawPointer?
