@@ -288,6 +288,26 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_rotate(void* p, float angleInRadi
     static_cast<WebCore::GraphicsContext*>(p)->rotate(angleInRadians);
 }
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_translateBySize(void* p, FloatSizeRaw size)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->translate(WebCore::FloatSize { size.width, size.height });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_translateByPoint(void* p, FloatPointRaw point)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->translate(WebCore::FloatPoint { point.x, point.y });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_translateByXy(void* p, float x, float y)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->translate(x, y);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

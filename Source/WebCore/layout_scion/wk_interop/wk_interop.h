@@ -295,6 +295,11 @@ struct FloatPointRaw {
     float y;
 };
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1382,6 +1387,9 @@ void GraphicsContext_beginTransparencyLayer(void*, float);
 void GraphicsContext_endTransparencyLayer(void*);
 void GraphicsContext_scale(void*, float);
 void GraphicsContext_rotate(void* p, float);
+void GraphicsContext_translateBySize(void*, struct FloatSizeRaw);
+void GraphicsContext_translateByPoint(void*, struct FloatPointRaw);
+void GraphicsContext_translateByXy(void*, float, float);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);

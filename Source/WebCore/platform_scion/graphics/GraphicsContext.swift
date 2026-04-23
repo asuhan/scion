@@ -471,19 +471,15 @@ class GraphicsContextWrapper {
   func rotate(_ angleInRadians: Float32) { wk_interop.GraphicsContext_rotate(p!, angleInRadians) }
 
   func translate(size: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_translateBySize(
+      p!, FloatSizeRaw(width: size.width, height: size.height))
   }
 
   func translate(p: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_translateByPoint(self.p!, FloatPointRaw(x: p.x, y: p.y))
   }
 
-  func translate(x: Float32, y: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func translate(x: Float32, y: Float32) { wk_interop.GraphicsContext_translateByXy(p!, x, y) }
 
   func concatCTM(transform: AffineTransform) {
     // TODO(asuhan): implement this
