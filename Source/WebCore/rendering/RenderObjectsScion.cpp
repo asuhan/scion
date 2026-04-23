@@ -60,6 +60,8 @@ extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isPositioned(const void*);
 
+extern "C" bool RenderObjectScion_isRenderBox(const void*);
+
 extern "C" bool RenderObjectScion_isRenderView(const void*);
 
 extern "C" bool RenderObjectScion_hasReflection(const void*);
@@ -374,6 +376,8 @@ void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildre
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
+
+bool RenderObjectScion::isRenderBox() const { return RenderObjectScion_isRenderBox(m_handle); }
 
 bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRenderView(m_handle); }
 

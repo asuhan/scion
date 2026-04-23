@@ -676,7 +676,7 @@ public:
     bool isWBR() const { return isRenderLineBreak() && hasWBRLineBreakFlag(); }
     bool isLineBreakOpportunity() const { return isRenderLineBreak() && isWBR(); }
     bool isRenderTextOrLineBreak() const { return isRenderText() || isRenderLineBreak(); }
-    bool isRenderBox() const { return m_typeFlags.contains(TypeFlag::IsBox); }
+    bool isRenderBox() const;
     bool isRenderTableRow() const { return type() == Type::TableRow; }
     bool isRenderView() const;
     bool isInline() const { return !m_stateBitfields.hasFlag(StateFlag::IsBlock); } // inline object

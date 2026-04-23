@@ -80,6 +80,8 @@ public:
 
     bool isPositioned() const;
 
+    bool isRenderBox() const;
+
     bool isRenderView() const;
 
     bool hasReflection() const;

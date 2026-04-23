@@ -3054,6 +3054,12 @@ bool RenderObject::isPositioned() const
     return m_stateBitfields.isPositioned();
 }
 
+bool RenderObject::isRenderBox() const
+{
+    if (m_scion) { return m_scion->isRenderBox(); }
+    return m_typeFlags.contains(TypeFlag::IsBox);
+}
+
 bool RenderObject::isRenderView() const
 {
     if (m_scion) { return m_scion->isRenderView(); }
