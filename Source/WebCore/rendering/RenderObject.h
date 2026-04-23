@@ -678,7 +678,7 @@ public:
     bool isRenderTextOrLineBreak() const { return isRenderText() || isRenderLineBreak(); }
     bool isRenderBox() const { return m_typeFlags.contains(TypeFlag::IsBox); }
     bool isRenderTableRow() const { return type() == Type::TableRow; }
-    bool isRenderView() const  { return type() == Type::View; }
+    bool isRenderView() const;
     bool isInline() const { return !m_stateBitfields.hasFlag(StateFlag::IsBlock); } // inline object
     bool isReplacedOrInlineBlock() const { return m_stateBitfields.hasFlag(StateFlag::IsReplacedOrInlineBlock); }
     bool isHorizontalWritingMode() const { return !m_stateBitfields.hasFlag(StateFlag::VerticalWritingMode); }

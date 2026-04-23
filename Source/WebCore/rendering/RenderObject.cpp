@@ -3006,6 +3006,12 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+bool RenderObject::isRenderView() const
+{
+    if (m_scion) { return m_scion->isRenderView(); }
+    return type() == Type::View;
+}
+
 Settings& RenderObject::settings() const
 {
     if (m_scion) { return m_scion->settings(); }

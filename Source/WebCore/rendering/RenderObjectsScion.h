@@ -62,6 +62,8 @@ public:
 
     void setChildrenInline(bool b);
 
+    bool isRenderView() const;
+
     bool hasLayer() const;
 
     bool needsLayout() const;

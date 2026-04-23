@@ -1011,6 +1011,12 @@ func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _
   object.setChildrenInline(b: b)
 }
 
+@_cdecl("RenderObjectScion_isRenderView")
+func RenderObjectScion_isRenderView(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderView()
+}
+
 @_cdecl("RenderObjectScion_hasLayer")
 func RenderObjectScion_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
