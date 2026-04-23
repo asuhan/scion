@@ -98,6 +98,8 @@ public:
 
     bool hasTransformRelatedProperty() const;
 
+    bool isTransformed() const;
+
     Document& document() const;
 
     LocalFrame& frame();

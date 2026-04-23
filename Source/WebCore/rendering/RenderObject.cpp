@@ -3118,6 +3118,12 @@ Page& RenderObject::page() const
     return *frame().page();
 }
 
+bool RenderObject::isTransformed() const
+{
+    if (m_scion) { return m_scion->isTransformed(); }
+    return hasTransformRelatedProperty() && (style().affectsTransform() || hasSVGTransform());
+}
+
 #if ENABLE(TREE_DEBUGGING)
 
 void printPaintOrderTreeForLiveDocuments()

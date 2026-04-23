@@ -1120,6 +1120,12 @@ func RenderObjectScion_hasTransformRelatedProperty(_ objectRaw: UnsafeRawPointer
   return object.hasTransformRelatedProperty()
 }
 
+@_cdecl("RenderObjectScion_isTransformed")
+func RenderObjectScion_isTransformed(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isTransformed()
+}
+
 @_cdecl("RenderObjectScion_document")
 func RenderObjectScion_document(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
