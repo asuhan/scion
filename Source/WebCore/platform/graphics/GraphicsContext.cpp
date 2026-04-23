@@ -242,6 +242,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setLineJoin(void* p, uint8_t line
     static_cast<WebCore::GraphicsContext*>(p)->setLineJoin(static_cast<WebCore::LineJoin>(lineJoin));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setMiterLimit(void* p, float miter)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setMiterLimit(miter);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

@@ -298,10 +298,7 @@ class GraphicsContextWrapper {
     wk_interop.GraphicsContext_setLineJoin(p!, lineJoin.rawValue)
   }
 
-  func setMiterLimit(miter: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setMiterLimit(miter: Float32) { wk_interop.GraphicsContext_setMiterLimit(p!, miter) }
 
   func createScaledImageBuffer(
     _ rect: FloatRectWrapper, _ scale: FloatSize = FloatSize(width: 1, height: 1),
