@@ -257,6 +257,12 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clipOut(void* p, FloatRectRaw rec
     static_cast<WebCore::GraphicsContext*>(p)->clipOut({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
 }
 
+extern "C" WEBCORE_EXPORT FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void* p, FloatRectRaw rect_raw, bool printing)
+{
+    const auto bounds = static_cast<WebCore::GraphicsContext*>(p)->computeUnderlineBoundsForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing);
+    return { bounds.x(), bounds.y(), bounds.width(), bounds.height() };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

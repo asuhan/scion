@@ -29,6 +29,10 @@ private func toFloatRectRaw(_ rect: FloatRectWrapper) -> FloatRectRaw {
   return FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height())
 }
 
+private func toFloatRect(_ rect: FloatRectRaw) -> FloatRectWrapper {
+  return FloatRectWrapper(x: rect.x, y: rect.y, width: rect.width, height: rect.height)
+}
+
 class GraphicsContextWrapper {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -413,8 +417,8 @@ class GraphicsContextWrapper {
   }
 
   func computeUnderlineBoundsForText(rect: FloatRectWrapper, printing: Bool) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return toFloatRect(
+      wk_interop.GraphicsContext_computeUnderlineBoundsForText(p!, toFloatRectRaw(rect), printing))
   }
 
   func drawLineForText(

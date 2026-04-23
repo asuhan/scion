@@ -1376,6 +1376,7 @@ void GraphicsContext_setLineJoin(void*, uint8_t);
 void GraphicsContext_setMiterLimit(void*, float);
 void GraphicsContext_clip(void*, struct FloatRectRaw);
 void GraphicsContext_clipOut(void*, struct FloatRectRaw);
+struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct FloatRectRaw, bool);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);
