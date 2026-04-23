@@ -80,6 +80,8 @@ public:
 
     bool hasReflection() const;
 
+    bool isRenderFragmentedFlow() const;
+
     bool hasLayer() const;
 
     bool needsLayout() const;

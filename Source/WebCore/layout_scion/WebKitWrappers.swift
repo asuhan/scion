@@ -1065,6 +1065,12 @@ func RenderObjectScion_hasReflection(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.hasReflection()
 }
 
+@_cdecl("RenderObjectScion_isRenderFragmentedFlow")
+func RenderObjectScion_isRenderFragmentedFlow(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderFragmentedFlow()
+}
+
 @_cdecl("RenderObjectScion_hasLayer")
 func RenderObjectScion_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

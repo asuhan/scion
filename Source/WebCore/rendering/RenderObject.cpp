@@ -3060,6 +3060,12 @@ bool RenderObject::hasReflection() const
     return hasRareData() && rareData().hasReflection;
 }
 
+bool RenderObject::isRenderFragmentedFlow() const
+{
+    if (m_scion) { return m_scion->isRenderFragmentedFlow(); }
+    return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsFragmentedFlow);
+}
+
 bool RenderObject::hasNonVisibleOverflow() const
 {
     if (m_scion) { return m_scion->hasNonVisibleOverflow(); }

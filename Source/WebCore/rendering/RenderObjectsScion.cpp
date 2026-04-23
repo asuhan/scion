@@ -60,6 +60,8 @@ extern "C" bool RenderObjectScion_isRenderView(const void*);
 
 extern "C" bool RenderObjectScion_hasReflection(const void*);
 
+extern "C" bool RenderObjectScion_isRenderFragmentedFlow(const void*);
+
 extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
@@ -368,6 +370,8 @@ bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositi
 bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRenderView(m_handle); }
 
 bool RenderObjectScion::hasReflection() const { return RenderObjectScion_hasReflection(m_handle); }
+
+bool RenderObjectScion::isRenderFragmentedFlow() const { return RenderObjectScion_isRenderFragmentedFlow(m_handle); }
 
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
