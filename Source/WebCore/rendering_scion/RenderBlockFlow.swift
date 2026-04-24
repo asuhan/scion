@@ -2204,13 +2204,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func logicalTopForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? floatingObject.y() : floatingObject.x()
   }
 
   private func logicalBottomForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? floatingObject.maxY() : floatingObject.maxX()
   }
 
   func logicalWidthForFloat(_ floatingObject: FloatingObjectWrapper) -> LayoutUnit {

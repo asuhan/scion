@@ -66,6 +66,26 @@ class FloatingObjectWrapper: Hashable {
     wk_interop.FloatingObject_setIsPlaced(p, placed)
   }
 
+  func x() -> LayoutUnit {
+    assert(isPlaced)
+    return frameRect.x()
+  }
+
+  func maxX() -> LayoutUnit {
+    assert(isPlaced)
+    return frameRect.maxX()
+  }
+
+  func y() -> LayoutUnit {
+    assert(isPlaced)
+    return frameRect.y()
+  }
+
+  func maxY() -> LayoutUnit {
+    assert(isPlaced)
+    return frameRect.maxY()
+  }
+
   func setX(x: LayoutUnit) {
     #if ASSERT_ENABLED
       assert(!isInPlacedTree)
