@@ -832,6 +832,10 @@ void RenderObject::checkBlockPositionedObjectsNeedLayout()
 
 void RenderObject::setPreferredLogicalWidthsDirty(bool shouldBeDirty, MarkingBehavior markParents)
 {
+    if (m_scion) {
+        m_scion->setPreferredLogicalWidthsDirty(shouldBeDirty, markParents);
+        return;
+    }
     bool alreadyDirty = preferredLogicalWidthsDirty();
     m_stateBitfields.setFlag(StateFlag::PreferredLogicalWidthsDirty, shouldBeDirty);
     if (shouldBeDirty && !alreadyDirty && markParents == MarkContainingBlockChain && (isRenderText() || !style().hasOutOfFlowPosition()))

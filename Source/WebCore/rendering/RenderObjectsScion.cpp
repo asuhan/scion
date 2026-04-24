@@ -138,6 +138,8 @@ extern "C" const void* RenderObjectScion_settings(const void*);
 
 extern "C" void* RenderObjectScion_container(const void*);
 
+extern "C" void RenderObjectScion_setPreferredLogicalWidthsDirty(void*, bool, bool);
+
 extern "C" const void* RenderObjectScion_style(const void*);
 
 struct RepaintContainerStatusRaw {
@@ -540,6 +542,8 @@ Page& RenderObjectScion::page() const { return *const_cast<Page*>(static_cast<co
 Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(static_cast<const Settings*>(RenderObjectScion_settings(m_handle))); }
 
 RenderElement* RenderObjectScion::container() const { return static_cast<RenderElement*>(RenderObjectScion_container(m_handle)); }
+
+void RenderObjectScion::setPreferredLogicalWidthsDirty(bool shouldBeDirty, MarkingBehavior markParents) { RenderObjectScion_setPreferredLogicalWidthsDirty(m_handle, shouldBeDirty, markParents == MarkContainingBlockChain); }
 
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
 

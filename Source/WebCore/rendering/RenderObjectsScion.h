@@ -160,6 +160,8 @@ public:
 
     RenderElement* container() const;
 
+    void setPreferredLogicalWidthsDirty(bool, MarkingBehavior = MarkContainingBlockChain);
+
     const RenderStyle& style() const;
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;
