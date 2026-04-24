@@ -43,8 +43,19 @@ func floatValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> Flo
 }
 
 func floatValueForLength(_ length: LengthWrapper, _ maximumValue: Float32) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch length.type() {
+  case .Fixed:
+    return length.value()
+  case .Percent:
+    return maximumValue * length.percent() / 100.0
+  case .FillAvailable, .Auto, .Normal:
+    return maximumValue
+  case .Calculated:
+    return length.nonNanCalculatedValue(maxValue: maximumValue)
+  case .Relative, .Intrinsic, .MinIntrinsic, .Content, .MinContent, .MaxContent, .FitContent,
+    .Undefined:
+    fatalError("Not reached")
+  }
 }
 
 func sizeForLengthSize(length: LengthSize, maximumValue: LayoutSizeWrapper)
