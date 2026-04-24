@@ -3034,6 +3034,12 @@ bool RenderObject::isRenderInline() const
     return m_typeFlags.contains(TypeFlag::IsRenderInline);
 }
 
+bool RenderObject::isRenderLayerModelObject() const
+{
+    if (m_scion) { return m_scion->isRenderLayerModelObject(); }
+    return m_typeFlags.contains(TypeFlag::IsLayerModelObject);
+}
+
 bool RenderObject::isRenderEmbeddedObject() const
 {
     if (m_scion) { return m_scion->isRenderEmbeddedObject(); }

@@ -50,6 +50,8 @@ extern "C" bool RenderObjectScion_isRenderBlockFlow(const void*);
 
 extern "C" bool RenderObjectScion_isRenderInline(const void*);
 
+extern "C" bool RenderObjectScion_isRenderLayerModelObject(const void*);
+
 extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
@@ -431,6 +433,8 @@ bool RenderObjectScion::isRenderElement() const { return RenderObjectScion_isRen
 bool RenderObjectScion::isRenderBlockFlow() const { return RenderObjectScion_isRenderBlockFlow(m_handle); }
 
 bool RenderObjectScion::isRenderInline() const { return RenderObjectScion_isRenderInline(m_handle); }
+
+bool RenderObjectScion::isRenderLayerModelObject() const { return RenderObjectScion_isRenderLayerModelObject(m_handle); }
 
 bool RenderObjectScion::isRenderEmbeddedObject() const { return RenderObjectScion_isRenderEmbeddedObject(m_handle); }
 

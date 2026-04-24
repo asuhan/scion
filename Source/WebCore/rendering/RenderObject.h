@@ -432,7 +432,7 @@ public:
     bool isRenderBlock() const { return m_typeFlags.contains(TypeFlag::IsRenderBlock); }
     WEBCORE_EXPORT bool isRenderBlockFlow() const;
     bool isRenderInline() const;
-    bool isRenderLayerModelObject() const { return m_typeFlags.contains(TypeFlag::IsLayerModelObject); }
+    WEBCORE_EXPORT bool isRenderLayerModelObject() const;
 
     inline bool isAtomicInlineLevelBox() const;
 

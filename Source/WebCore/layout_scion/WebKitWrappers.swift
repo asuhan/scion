@@ -1039,6 +1039,12 @@ func RenderObjectScion_isRenderInline(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderInline()
 }
 
+@_cdecl("RenderObjectScion_isRenderLayerModelObject")
+func RenderObjectScion_isRenderLayerModelObject(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderLayerModelObject()
+}
+
 @_cdecl("RenderObjectScion_isRenderEmbeddedObject")
 func RenderObjectScion_isRenderEmbeddedObject(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

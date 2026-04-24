@@ -70,6 +70,8 @@ public:
 
     bool isRenderInline() const;
 
+    bool isRenderLayerModelObject() const;
+
     bool isRenderEmbeddedObject() const;
 
     bool isRenderMedia() const;
