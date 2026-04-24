@@ -667,7 +667,7 @@ public:
     bool isFixedPositioned() const;
     bool isAbsolutelyPositioned() const { return isOutOfFlowPositioned() && style().position() == PositionType::Absolute; }
     bool isRelativelyPositioned() const { return m_stateBitfields.isRelativelyPositioned(); }
-    bool isStickilyPositioned() const { return m_stateBitfields.isStickilyPositioned(); }
+    bool isStickilyPositioned() const;
     bool shouldUsePositionedClipping() const { return isAbsolutelyPositioned() || isRenderSVGForeignObject(); }
 
     bool isRenderText() const { return m_typeFlags.contains(TypeFlag::IsText); }

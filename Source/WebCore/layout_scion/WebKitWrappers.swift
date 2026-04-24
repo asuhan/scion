@@ -1108,6 +1108,12 @@ func RenderObjectScion_isFixedPositioned(_ objectRaw: UnsafeRawPointer) -> Bool 
   return object.isFixedPositioned()
 }
 
+@_cdecl("RenderObjectScion_isStickilyPositioned")
+func RenderObjectScion_isStickilyPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isStickilyPositioned()
+}
+
 @_cdecl("RenderObjectScion_isRenderBox")
 func RenderObjectScion_isRenderBox(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -1239,7 +1245,8 @@ private func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
 
 @_cdecl("RenderObjectScion_repaintUsingContainer")
 func RenderObjectScion_repaintUsingContainer(
-  _ objectRaw: UnsafeMutableRawPointer, _ repaintContainer: UnsafeMutableRawPointer, _ r: LayoutRectRaw,
+  _ objectRaw: UnsafeMutableRawPointer, _ repaintContainer: UnsafeMutableRawPointer,
+  _ r: LayoutRectRaw,
   _ shouldClipToLayer: Bool
 ) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

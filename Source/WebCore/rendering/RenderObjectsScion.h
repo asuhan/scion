@@ -94,6 +94,8 @@ public:
 
     bool isFixedPositioned() const;
 
+    bool isStickilyPositioned() const;
+
     bool isRenderBox() const;
 
     bool isRenderTableRow() const;

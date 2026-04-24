@@ -3101,6 +3101,12 @@ bool RenderObject::isFixedPositioned() const
     return isOutOfFlowPositioned() && style().position() == PositionType::Fixed;
 }
 
+bool RenderObject::isStickilyPositioned() const
+{
+    if (m_scion) { return m_scion->isStickilyPositioned(); }
+    return m_stateBitfields.isStickilyPositioned();
+}
+
 bool RenderObject::isRenderBox() const
 {
     if (m_scion) { return m_scion->isRenderBox(); }
