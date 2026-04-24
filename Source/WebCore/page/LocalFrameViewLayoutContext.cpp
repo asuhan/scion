@@ -52,6 +52,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_scheduleLayout(void* p)
+{
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->scheduleLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_isInLayout(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->isInLayout();
