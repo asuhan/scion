@@ -693,8 +693,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func canUseSimpleFontCodePath() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_canUseSimpleFontCodePath
   }
 
   func removeAndDestroyLegacyTextBoxes() {
@@ -1428,6 +1428,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   // just dirtying everything when character data is modified (e.g., appended/inserted
   // or removed).
   private var linesDirty = false
+  private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
   private var useBackslashAsYenSymbol = false
 }
