@@ -3010,6 +3010,12 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+bool RenderObject::isRenderInline() const
+{
+    if (m_scion) { return m_scion->isRenderInline(); }
+    return m_typeFlags.contains(TypeFlag::IsRenderInline);
+}
+
 bool RenderObject::isRenderEmbeddedObject() const
 {
     if (m_scion) { return m_scion->isRenderEmbeddedObject(); }

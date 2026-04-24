@@ -62,6 +62,8 @@ public:
 
     RenderLayer* enclosingLayer() const;
 
+    bool isRenderInline() const;
+
     bool isRenderEmbeddedObject() const;
 
     bool isRenderMedia() const;

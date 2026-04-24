@@ -431,7 +431,7 @@ public:
     bool isRenderBoxModelObject() const { return m_typeFlags.contains(TypeFlag::IsBoxModelObject); }
     bool isRenderBlock() const { return m_typeFlags.contains(TypeFlag::IsRenderBlock); }
     bool isRenderBlockFlow() const { return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::BlockFlow; }
-    bool isRenderInline() const { return m_typeFlags.contains(TypeFlag::IsRenderInline); }
+    bool isRenderInline() const;
     bool isRenderLayerModelObject() const { return m_typeFlags.contains(TypeFlag::IsLayerModelObject); }
 
     inline bool isAtomicInlineLevelBox() const;
