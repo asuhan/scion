@@ -483,7 +483,7 @@ public:
 #if ENABLE(ATTACHMENT_ELEMENT)
     bool isRenderAttachment() const { return type() == Type::Attachment; }
 #endif
-    bool isRenderGrid() const { return type() == Type::Grid; }
+    bool isRenderGrid() const;
 
     bool isRenderMultiColumnSet() const { return type() == Type::MultiColumnSet; }
     bool isRenderMultiColumnFlow() const { return type() == Type::MultiColumnFlow; }

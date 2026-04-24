@@ -1111,6 +1111,12 @@ func RenderObjectScion_isRenderHTMLCanvas(_ objectRaw: UnsafeRawPointer) -> Bool
   return object.isRenderHTMLCanvas()
 }
 
+@_cdecl("RenderObjectScion_isRenderGrid")
+func RenderObjectScion_isRenderGrid(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderGrid()
+}
+
 @_cdecl("RenderObjectScion_isHTMLMarquee")
 func RenderObjectScion_isHTMLMarquee(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

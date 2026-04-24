@@ -3111,6 +3111,12 @@ bool RenderObject::isRenderHTMLCanvas() const
     return type() == Type::HTMLCanvas;
 }
 
+bool RenderObject::isRenderGrid() const
+{
+    if (m_scion) { return m_scion->isRenderGrid(); }
+    return type() == Type::Grid;
+}
+
 bool RenderObject::childrenInline() const
 {
     if (m_scion) { return m_scion->childrenInline(); }

@@ -94,6 +94,8 @@ public:
 
     bool isRenderHTMLCanvas() const;
 
+    bool isRenderGrid() const;
+
     bool isHTMLMarquee() const;
 
     bool childrenInline() const;
