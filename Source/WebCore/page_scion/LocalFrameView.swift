@@ -36,10 +36,8 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
   }
 
-  func checkedLayoutContext() -> LocalFrameViewLayoutContextWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  // TODO(asuhan): remove this, it's not needed in Swift
+  func checkedLayoutContext() -> LocalFrameViewLayoutContextWrapper { return layoutContext() }
 
   func needsLayout() -> Bool { return wk_interop.LocalFrameView_needsLayout(p) }
 
