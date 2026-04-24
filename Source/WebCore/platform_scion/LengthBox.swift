@@ -21,8 +21,11 @@
 
 class LengthBox: Equatable {
   init(top: Int32, right: Int32, bottom: Int32, left: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    base = RectEdges(
+      top: LengthWrapper(value: top, type: .Fixed),
+      right: LengthWrapper(value: right, type: .Fixed),
+      bottom: LengthWrapper(value: bottom, type: .Fixed),
+      left: LengthWrapper(value: left, type: .Fixed))
   }
 
   init(top: LengthWrapper, right: LengthWrapper, bottom: LengthWrapper, left: LengthWrapper) {
