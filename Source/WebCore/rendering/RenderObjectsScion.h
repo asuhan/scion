@@ -110,6 +110,8 @@ public:
 
     Settings& settings() const;
 
+    bool isSkippedContent() const;
+
     void setNormalChildNeedsLayoutBit(bool b);
 
 private:

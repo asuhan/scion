@@ -2972,6 +2972,7 @@ String RenderObject::debugDescription() const
 
 bool RenderObject::isSkippedContent() const
 {
+    if (m_scion) { return m_scion->isSkippedContent(); }
     return parent() && parent()->style().hasSkippedContent();
 }
 
