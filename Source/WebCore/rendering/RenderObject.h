@@ -1092,7 +1092,7 @@ public:
     // Virtual function helpers for the deprecated Flexible Box Layout (display: -webkit-box).
     bool isRenderDeprecatedFlexibleBox() const;
     // Virtual function helper for the new FlexibleBox Layout (display: -webkit-flex).
-    inline bool isRenderFlexibleBox() const { return m_typeFlags.contains(TypeFlag::IsFlexibleBox); }
+    bool isRenderFlexibleBox() const;
     bool isFlexibleBoxIncludingDeprecated() const;
 
     bool isRenderCombineText() const { return type() == Type::CombineText; }

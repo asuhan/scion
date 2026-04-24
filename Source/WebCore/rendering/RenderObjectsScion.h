@@ -186,6 +186,8 @@ public:
 
     bool isRenderDeprecatedFlexibleBox() const;
 
+    bool isRenderFlexibleBox() const;
+
     bool isFlexibleBoxIncludingDeprecated() const;
 
     bool isSkippedContent() const;

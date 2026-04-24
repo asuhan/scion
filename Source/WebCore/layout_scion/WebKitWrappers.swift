@@ -1411,6 +1411,12 @@ func RenderObjectScion_isRenderDeprecatedFlexibleBox(_ objectRaw: UnsafeRawPoint
   return object.isRenderDeprecatedFlexibleBox()
 }
 
+@_cdecl("RenderObjectScion_isRenderFlexibleBox")
+func RenderObjectScion_isRenderFlexibleBox(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderFlexibleBox()
+}
+
 @_cdecl("RenderObjectScion_isFlexibleBoxIncludingDeprecated")
 func RenderObjectScion_isFlexibleBoxIncludingDeprecated(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -3286,6 +3286,12 @@ bool RenderObject::isRenderDeprecatedFlexibleBox() const
     return m_type == RenderObject::Type::DeprecatedFlexibleBox;
 }
 
+bool RenderObject::isRenderFlexibleBox() const
+{
+    if (m_scion) { return m_scion->isRenderFlexibleBox(); }
+    return m_typeFlags.contains(TypeFlag::IsFlexibleBox);
+}
+
 bool RenderObject::isFlexibleBoxIncludingDeprecated() const
 {
     if (m_scion) { return m_scion->isFlexibleBoxIncludingDeprecated(); }
