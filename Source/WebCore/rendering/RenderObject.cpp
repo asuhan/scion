@@ -3088,6 +3088,12 @@ bool RenderObject::isRenderHTMLCanvas() const
     return type() == Type::HTMLCanvas;
 }
 
+bool RenderObject::childrenInline() const
+{
+    if (m_scion) { return m_scion->childrenInline(); }
+    return m_stateBitfields.hasFlag(StateFlag::ChildrenInline);
+}
+
 RenderObject::FragmentedFlowState RenderObject::fragmentedFlowState() const
 {
     if (m_scion) { return m_scion->fragmentedFlowState(); }

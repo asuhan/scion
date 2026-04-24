@@ -517,7 +517,7 @@ public:
 
     static ScrollAnchoringController* searchParentChainForScrollAnchoringController(const RenderObject&);
 
-    bool childrenInline() const { return m_stateBitfields.hasFlag(StateFlag::ChildrenInline); }
+    WEBCORE_EXPORT bool childrenInline() const;
     virtual void setChildrenInline(bool b);
 
     enum class FragmentedFlowState : bool {

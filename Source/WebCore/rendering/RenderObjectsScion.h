@@ -90,6 +90,8 @@ public:
 
     bool isHTMLMarquee() const;
 
+    bool childrenInline() const;
+
     void setChildrenInline(bool b);
 
     RenderObject::FragmentedFlowState fragmentedFlowState() const;

@@ -70,6 +70,8 @@ extern "C" bool RenderObjectScion_isRenderHTMLCanvas(const void*);
 
 extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
 
+extern "C" bool RenderObjectScion_childrenInline(const void*);
+
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
 extern "C" bool RenderObjectScion_fragmentedFlowState(const void*);
@@ -447,6 +449,8 @@ bool RenderObjectScion::isRenderWidget() const { return RenderObjectScion_isRend
 bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_isRenderHTMLCanvas(m_handle); }
 
 bool RenderObjectScion::isHTMLMarquee() const { return RenderObjectScion_isHTMLMarquee(m_handle); }
+
+bool RenderObjectScion::childrenInline() const { return RenderObjectScion_childrenInline(m_handle); }
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
 
