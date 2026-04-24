@@ -2976,6 +2976,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout()
   }
 
+  func usedPointerEvents() -> PointerEvents {
+    assert(isNativeImpl())
+    if document().renderingIsSuppressedForViewTransition() && !isDocumentElementRenderer() {
+      return .None
+    }
+    return style().usedPointerEvents()
+  }
+
   //////////////////////////////////////////
   // Helper functions. Dangerous to use!
   func setPreviousSibling(previous: RenderObjectWrapper?) {
