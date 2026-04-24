@@ -1134,6 +1134,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .SVGViewportContainer
   }
 
+  private func isRenderSVGShape() -> Bool {
+    assert(isNativeImpl())
+    return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsShape)
+  }
+
+  private func isLegacyRenderSVGShape() -> Bool {
+    assert(isNativeImpl())
+    return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsShape)
+  }
+
   func isRenderSVGText() -> Bool {
     assert(isNativeImpl())
     return type() == .SVGText
@@ -1202,8 +1212,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderOrLegacyRenderSVGShape() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderSVGShape() || isLegacyRenderSVGShape()
   }
 
   func isRenderOrLegacyRenderSVGForeignObject() -> Bool {
