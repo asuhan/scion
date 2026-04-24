@@ -1363,6 +1363,12 @@ func RenderObjectScion_setPreferredLogicalWidthsDirty(
     markParents: markParents ? .MarkContainingBlockChain : .MarkOnlyThis)
 }
 
+@_cdecl("RenderObjectScion_isComposited")
+func RenderObjectScion_isComposited(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isComposited()
+}
+
 @_cdecl("RenderObjectScion_style")
 func RenderObjectScion_style(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

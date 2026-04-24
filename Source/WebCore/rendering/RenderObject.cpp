@@ -2071,6 +2071,7 @@ VisiblePosition RenderObject::positionForPoint(const LayoutPoint&, HitTestSource
 
 bool RenderObject::isComposited() const
 {
+    if (m_scion) { return m_scion->isComposited(); }
     return hasLayer() && downcast<RenderLayerModelObject>(*this).layer()->isComposited();
 }
 

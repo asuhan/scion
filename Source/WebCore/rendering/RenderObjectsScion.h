@@ -178,6 +178,8 @@ public:
 
     void setPreferredLogicalWidthsDirty(bool, MarkingBehavior = MarkContainingBlockChain);
 
+    bool isComposited() const;
+
     const RenderStyle& style() const;
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;

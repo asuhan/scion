@@ -156,6 +156,8 @@ extern "C" void* RenderObjectScion_container(const void*);
 
 extern "C" void RenderObjectScion_setPreferredLogicalWidthsDirty(void*, bool, bool);
 
+extern "C" bool RenderObjectScion_isComposited(const void*);
+
 extern "C" const void* RenderObjectScion_style(const void*);
 
 struct RepaintContainerStatusRaw {
@@ -584,6 +586,8 @@ Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(st
 RenderElement* RenderObjectScion::container() const { return static_cast<RenderElement*>(RenderObjectScion_container(m_handle)); }
 
 void RenderObjectScion::setPreferredLogicalWidthsDirty(bool shouldBeDirty, MarkingBehavior markParents) { RenderObjectScion_setPreferredLogicalWidthsDirty(m_handle, shouldBeDirty, markParents == MarkContainingBlockChain); }
+
+bool RenderObjectScion::isComposited() const { return RenderObjectScion_isComposited(m_handle); }
 
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
 
