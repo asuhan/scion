@@ -3230,6 +3230,15 @@ bool RenderObject::renderTreeBeingDestroyed() const
     return document().renderTreeBeingDestroyed();
 }
 
+RenderFragmentedFlow* RenderObject::enclosingFragmentedFlow() const
+{
+    if (m_scion) { return m_scion->enclosingFragmentedFlow(); }
+    if (fragmentedFlowState() == FragmentedFlowState::NotInsideFlow)
+        return nullptr;
+
+    return locateEnclosingFragmentedFlow();
+}
+
 bool RenderObject::hasPotentiallyScrollableOverflow() const
 {
     if (m_scion) { return m_scion->hasPotentiallyScrollableOverflow(); }

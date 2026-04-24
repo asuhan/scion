@@ -1012,6 +1012,15 @@ func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMu
   return layer.layerId()
 }
 
+@_cdecl("RenderObjectScion_enclosingFragmentedFlow")
+func RenderObjectScion_enclosingFragmentedFlow(_ objectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  assert(object.enclosingFragmentedFlow() == nil)
+  return nil
+}
+
 @_cdecl("RenderObjectScion_isRenderElement")
 func RenderObjectScion_isRenderElement(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

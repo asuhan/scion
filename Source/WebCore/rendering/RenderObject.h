@@ -1424,14 +1424,6 @@ inline bool RenderObject::needsSimplifiedNormalFlowLayoutOnly() const
         && !posChildNeedsLayout() && !needsPositionedMovementLayout();
 }
 
-inline RenderFragmentedFlow* RenderObject::enclosingFragmentedFlow() const
-{
-    if (fragmentedFlowState() == FragmentedFlowState::NotInsideFlow)
-        return nullptr;
-
-    return locateEnclosingFragmentedFlow();
-}
-
 inline bool RenderObject::isAnonymousBlock() const
 {
     // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().

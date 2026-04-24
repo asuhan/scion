@@ -62,6 +62,8 @@ public:
 
     RenderLayer* enclosingLayer() const;
 
+    RenderFragmentedFlow* enclosingFragmentedFlow() const;
+
     bool isRenderElement() const;
 
     bool isRenderBlockFlow() const;
