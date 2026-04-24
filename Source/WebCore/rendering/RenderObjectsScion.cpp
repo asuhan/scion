@@ -115,6 +115,8 @@ struct RepaintContainerStatusRaw {
 
 extern "C" RepaintContainerStatusRaw RenderObjectScion_containerForRepaint(const void*);
 
+extern "C" void RenderObjectScion_repaintUsingContainer(const void*, void*, LayoutRectRaw, bool);
+
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
 
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
@@ -477,12 +479,22 @@ RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() co
 
 namespace {
 
+LayoutRectRaw convertLayoutRect(const LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
 LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 {
     return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
 }
 
 } // namespace
+
+void RenderObjectScion::repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect& r, bool shouldClipToLayer) const
+{
+    RenderObjectScion_repaintUsingContainer(m_handle, const_cast<RenderLayerModelObject*>(repaintContainer.get()), convertLayoutRect(r), shouldClipToLayer);
+}
 
 LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerModelObject* repaintContainer) const
 {
@@ -549,11 +561,6 @@ bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const
 }
 
 namespace {
-
-LayoutRectRaw convertLayoutRect(const LayoutRect& r)
-{
-    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
-}
 
 RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
 {

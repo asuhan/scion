@@ -1231,6 +1231,17 @@ private func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   return createRenderObjectWrapper(raw)
 }
 
+@_cdecl("RenderObjectScion_repaintUsingContainer")
+func RenderObjectScion_repaintUsingContainer(
+  _ objectRaw: UnsafeMutableRawPointer, _ repaintContainer: UnsafeMutableRawPointer, _ r: LayoutRectRaw,
+  _ shouldClipToLayer: Bool
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.repaintUsingContainer(
+    createRenderObjectWrapperOrNative(repaintContainer) as! RenderLayerModelObjectWrapper?,
+    convertLayoutRect(r), shouldClipToLayer)
+}
+
 @_cdecl("RenderObjectScion_clippedOverflowRectForRepaint")
 func RenderObjectScion_clippedOverflowRectForRepaint(
   _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?

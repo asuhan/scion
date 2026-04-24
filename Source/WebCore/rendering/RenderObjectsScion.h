@@ -130,6 +130,8 @@ public:
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;
 
+    void repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect&, bool shouldClipToLayer = true) const;
+
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
 
     bool isSkippedContent() const;

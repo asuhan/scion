@@ -1157,6 +1157,11 @@ void RenderObject::propagateRepaintToParentWithOutlineAutoIfNeeded(const RenderL
 
 void RenderObject::repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect& r, bool shouldClipToLayer) const
 {
+    if (m_scion)
+    {
+        m_scion->repaintUsingContainer(std::move(repaintContainer), r, shouldClipToLayer);
+        return;
+    }
     if (r.isEmpty())
         return;
 
