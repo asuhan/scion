@@ -94,6 +94,8 @@ public:
 
     bool isRenderSVGRoot() const;
 
+    bool isRenderSVGText() const;
+
     bool isSVGLayerAwareRenderer() const;
 
     bool isPositioned() const;

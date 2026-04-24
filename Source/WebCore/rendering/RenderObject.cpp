@@ -3100,6 +3100,12 @@ bool RenderObject::isRenderSVGRoot() const
     return type() == Type::SVGRoot;
 }
 
+bool RenderObject::isRenderSVGText() const
+{
+    if (m_scion) { return m_scion->isRenderSVGText(); }
+    return type() == Type::SVGText;
+}
+
 bool RenderObject::isSVGLayerAwareRenderer() const
 {
     if (m_scion) { return m_scion->isSVGLayerAwareRenderer(); }

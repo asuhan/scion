@@ -569,7 +569,7 @@ public:
     bool isRenderSVGShape() const { return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape); }
     bool isLegacyRenderSVGShape() const { return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape); }
     bool isLegacyRenderSVGRect() const { return type() == Type::LegacySVGRect; }
-    bool isRenderSVGText() const { return type() == Type::SVGText; }
+    bool isRenderSVGText() const;
     bool isRenderSVGTextPath() const { return type() == Type::SVGTextPath; }
     bool isRenderSVGTSpan() const { return type() == Type::SVGTSpan; }
     bool isRenderSVGInline() const { return type() == Type::SVGInline || type() == Type::SVGTSpan || type() == Type::SVGTextPath; }
