@@ -1359,6 +1359,12 @@ func RenderObjectScion_container(_ objectRaw: UnsafeRawPointer) -> UnsafeMutable
   return nil
 }
 
+@_cdecl("RenderObjectScion_setNeedsLayout")
+func RenderObjectScion_setNeedsLayout(_ objectRaw: UnsafeMutableRawPointer, _ markParents: Bool) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setNeedsLayout(markParents: markParents ? .MarkContainingBlockChain : .MarkOnlyThis)
+}
+
 @_cdecl("RenderObjectScion_setPreferredLogicalWidthsDirty")
 func RenderObjectScion_setPreferredLogicalWidthsDirty(
   _ objectRaw: UnsafeMutableRawPointer, _ shouldBeDirty: Bool, _ markParents: Bool

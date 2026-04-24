@@ -178,6 +178,8 @@ public:
 
     RenderElement* container() const;
 
+    void setNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
+
     void setPreferredLogicalWidthsDirty(bool, MarkingBehavior = MarkContainingBlockChain);
 
     bool isComposited() const;

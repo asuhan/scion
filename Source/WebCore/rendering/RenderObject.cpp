@@ -3347,6 +3347,22 @@ bool RenderObject::renderTreeBeingDestroyed() const
     return document().renderTreeBeingDestroyed();
 }
 
+void RenderObject::setNeedsLayout(MarkingBehavior markParents)
+{
+    if (m_scion) {
+        m_scion->setNeedsLayout(markParents);
+        return;
+    }
+    ASSERT(!isSetNeedsLayoutForbidden());
+    if (selfNeedsLayout())
+        return;
+    m_stateBitfields.setFlag(StateFlag::NeedsLayout);
+    if (markParents == MarkContainingBlockChain)
+        scheduleLayout(markContainingBlocksForLayout());
+    if (hasLayer())
+        setLayerNeedsFullRepaint();
+}
+
 bool RenderObject::needsSimplifiedNormalFlowLayoutOnly() const
 {
     if (m_scion) { return m_scion->needsSimplifiedNormalFlowLayoutOnly(); }

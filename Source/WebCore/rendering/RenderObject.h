@@ -1371,18 +1371,6 @@ inline bool RenderObject::isBeforeOrAfterContent() const
     return isBeforeContent() || isAfterContent();
 }
 
-inline void RenderObject::setNeedsLayout(MarkingBehavior markParents)
-{
-    ASSERT(!isSetNeedsLayoutForbidden());
-    if (selfNeedsLayout())
-        return;
-    m_stateBitfields.setFlag(StateFlag::NeedsLayout);
-    if (markParents == MarkContainingBlockChain)
-        scheduleLayout(markContainingBlocksForLayout());
-    if (hasLayer())
-        setLayerNeedsFullRepaint();
-}
-
 inline void RenderObject::setSelectionStateIfNeeded(HighlightState state)
 {
     if (selectionState() == state)
