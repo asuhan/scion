@@ -540,6 +540,11 @@ extern "C" WEBCORE_EXPORT bool Document_hasViewTransitionPseudoElementTree(const
     return static_cast<const WebCore::Document*>(raw)->hasViewTransitionPseudoElementTree();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_renderingIsSuppressedForViewTransition(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->renderingIsSuppressedForViewTransition();
+}
+
 extern "C" WEBCORE_EXPORT bool Document_hasTopLayerElement(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->hasTopLayerElement();
