@@ -108,6 +108,8 @@ extern "C" const void* RenderObjectScion_page(const void*);
 
 extern "C" const void* RenderObjectScion_settings(const void*);
 
+extern "C" const void* RenderObjectScion_style(const void*);
+
 struct RepaintContainerStatusRaw {
     bool fullRepaintIsScheduled;
     void* renderer;
@@ -472,6 +474,8 @@ LocalFrame& RenderObjectScion::frame() { return *static_cast<LocalFrame*>(Render
 Page& RenderObjectScion::page() const { return *const_cast<Page*>(static_cast<const Page*>(RenderObjectScion_page(m_handle))); }
 
 Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(static_cast<const Settings*>(RenderObjectScion_settings(m_handle))); }
+
+const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
 
 RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() const
 {

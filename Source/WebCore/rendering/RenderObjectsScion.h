@@ -128,6 +128,8 @@ public:
 
     Settings& settings() const;
 
+    const RenderStyle& style() const;
+
     RenderObject::RepaintContainerStatus containerForRepaint() const;
 
     void repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect&, bool shouldClipToLayer = true) const;

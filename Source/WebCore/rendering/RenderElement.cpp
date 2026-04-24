@@ -2860,4 +2860,12 @@ RenderElement* RenderObject::parent() const
     return m_parent.get();
 }
 
+const RenderStyle& RenderObject::style() const
+{
+    if (m_scion) { return m_scion->style(); }
+    if (isRenderText())
+        return m_parent->style();
+    return downcast<RenderElement>(*this).style();
+}
+
 }
