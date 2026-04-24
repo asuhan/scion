@@ -116,6 +116,8 @@ public:
 
     bool isPositioned() const;
 
+    bool isOutOfFlowPositioned() const;
+
     bool isFixedPositioned() const;
 
     bool isStickilyPositioned() const;

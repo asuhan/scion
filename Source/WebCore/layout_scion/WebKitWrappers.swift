@@ -1177,6 +1177,12 @@ func RenderObjectScion_isPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isPositioned()
 }
 
+@_cdecl("RenderObjectScion_isOutOfFlowPositioned")
+func RenderObjectScion_isOutOfFlowPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isOutOfFlowPositioned()
+}
+
 @_cdecl("RenderObjectScion_isFixedPositioned")
 func RenderObjectScion_isFixedPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

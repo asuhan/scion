@@ -96,6 +96,8 @@ extern "C" bool RenderObjectScion_isSVGRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isPositioned(const void*);
 
+extern "C" bool RenderObjectScion_isOutOfFlowPositioned(const void*);
+
 extern "C" bool RenderObjectScion_isFixedPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isStickilyPositioned(const void*);
@@ -516,6 +518,8 @@ bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectSci
 bool RenderObjectScion::isSVGRenderer() const { return RenderObjectScion_isSVGRenderer(m_handle); }
 
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
+
+bool RenderObjectScion::isOutOfFlowPositioned() const { return RenderObjectScion_isOutOfFlowPositioned(m_handle); }
 
 bool RenderObjectScion::isFixedPositioned() const { return RenderObjectScion_isFixedPositioned(m_handle); }
 

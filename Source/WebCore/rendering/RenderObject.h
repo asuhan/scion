@@ -663,7 +663,7 @@ public:
 
     bool isPositioned() const;
     bool isInFlowPositioned() const { return m_stateBitfields.isRelativelyPositioned() || m_stateBitfields.isStickilyPositioned(); }
-    bool isOutOfFlowPositioned() const { return m_stateBitfields.isOutOfFlowPositioned(); } // absolute or fixed positioning
+    bool isOutOfFlowPositioned() const; // absolute or fixed positioning
     bool isFixedPositioned() const;
     bool isAbsolutelyPositioned() const { return isOutOfFlowPositioned() && style().position() == PositionType::Absolute; }
     bool isRelativelyPositioned() const { return m_stateBitfields.isRelativelyPositioned(); }
