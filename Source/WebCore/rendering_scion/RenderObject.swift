@@ -1159,9 +1159,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .SVGForeignObject
   }
 
+  private func isLegacyRenderSVGResourceContainer() -> Bool {
+    assert(isNativeImpl())
+    return isLegacyRenderSVGModelObject()
+      && m_typeSpecificFlags.svgFlags().contains(.IsResourceContainer)
+  }
+
   func isLegacyRenderSVGHiddenContainer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .LegacySVGHiddenContainer || isLegacyRenderSVGResourceContainer()
   }
 
   func isRenderSVGHiddenContainer() -> Bool {
