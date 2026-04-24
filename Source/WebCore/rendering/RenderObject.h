@@ -725,7 +725,7 @@ public:
 
     bool hasTransformRelatedProperty() const;
     bool isTransformed() const;
-    inline bool hasTransformOrPerspective() const;
+    bool hasTransformOrPerspective() const;
 
     bool capturedInViewTransition() const;
     void setCapturedInViewTransition(bool);

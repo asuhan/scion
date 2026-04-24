@@ -160,6 +160,8 @@ public:
 
     bool isTransformed() const;
 
+    bool hasTransformOrPerspective() const;
+
     bool capturedInViewTransition() const;
 
     bool effectiveCapturedInViewTransition() const;

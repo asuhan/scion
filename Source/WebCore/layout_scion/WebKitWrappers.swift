@@ -1309,6 +1309,12 @@ func RenderObjectScion_isTransformed(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isTransformed()
 }
 
+@_cdecl("RenderObjectScion_hasTransformOrPerspective")
+func RenderObjectScion_hasTransformOrPerspective(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.hasTransformOrPerspective()
+}
+
 @_cdecl("RenderObjectScion_capturedInViewTransition")
 func RenderObjectScion_capturedInViewTransition(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

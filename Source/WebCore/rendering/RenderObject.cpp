@@ -3397,6 +3397,12 @@ bool RenderObject::hasPotentiallyScrollableOverflow() const
     return hasNonVisibleOverflow() && style().overflowX() != Overflow::Clip && style().overflowX() != Overflow::Visible;
 }
 
+bool RenderObject::hasTransformOrPerspective() const
+{
+    if (m_scion) { return m_scion->hasTransformOrPerspective(); }
+    return hasTransformRelatedProperty() && (isTransformed() || style().hasPerspective());
+}
+
 bool RenderObject::isTransformed() const
 {
     if (m_scion) { return m_scion->isTransformed(); }
