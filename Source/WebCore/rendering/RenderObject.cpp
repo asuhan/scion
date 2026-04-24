@@ -3198,6 +3198,12 @@ bool RenderObject::normalChildNeedsLayout() const
     return m_stateBitfields.hasFlag(StateFlag::NormalChildNeedsLayout);
 }
 
+bool RenderObject::preferredLogicalWidthsDirty() const
+{
+    if (m_scion) { return m_scion->preferredLogicalWidthsDirty(); }
+    return m_stateBitfields.hasFlag(StateFlag::PreferredLogicalWidthsDirty);
+}
+
 bool RenderObject::hasNonVisibleOverflow() const
 {
     if (m_scion) { return m_scion->hasNonVisibleOverflow(); }

@@ -1225,6 +1225,12 @@ func RenderObjectScion_normalChildNeedsLayout(_ objectRaw: UnsafeRawPointer) -> 
   return object.normalChildNeedsLayout()
 }
 
+@_cdecl("RenderObjectScion_preferredLogicalWidthsDirty")
+func RenderObjectScion_preferredLogicalWidthsDirty(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.preferredLogicalWidthsDirty()
+}
+
 @_cdecl("RenderObjectScion_hasNonVisibleOverflow")
 func RenderObjectScion_hasNonVisibleOverflow(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

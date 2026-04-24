@@ -715,7 +715,7 @@ public:
     bool normalChildNeedsLayout() const;
     bool outOfFlowChildNeedsStaticPositionLayout() const { return m_stateBitfields.hasFlag(StateFlag::OutOfFlowChildNeedsStaticPositionLayout); }
     
-    bool preferredLogicalWidthsDirty() const { return m_stateBitfields.hasFlag(StateFlag::PreferredLogicalWidthsDirty); }
+    bool preferredLogicalWidthsDirty() const;
 
     bool isSelectionBorder() const;
 

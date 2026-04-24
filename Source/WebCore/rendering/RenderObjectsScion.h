@@ -132,6 +132,8 @@ public:
 
     bool normalChildNeedsLayout() const;
 
+    bool preferredLogicalWidthsDirty() const;
+
     bool hasNonVisibleOverflow() const;
 
     bool hasPotentiallyScrollableOverflow() const;
