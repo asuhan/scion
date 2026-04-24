@@ -90,6 +90,8 @@ public:
 
     bool isRenderSVGModelObject() const;
 
+    bool isRenderSVGRoot() const;
+
     bool isSVGLayerAwareRenderer() const;
 
     bool isPositioned() const;

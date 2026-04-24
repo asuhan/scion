@@ -70,6 +70,8 @@ extern "C" bool RenderObjectScion_fragmentedFlowState(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGModelObject(const void*);
 
+extern "C" bool RenderObjectScion_isRenderSVGRoot(const void*);
+
 extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isPositioned(const void*);
@@ -440,6 +442,8 @@ RenderObject::FragmentedFlowState RenderObjectScion::fragmentedFlowState() const
 }
 
 bool RenderObjectScion::isRenderSVGModelObject() const { return RenderObjectScion_isRenderSVGModelObject(m_handle); }
+
+bool RenderObjectScion::isRenderSVGRoot() const { return RenderObjectScion_isRenderSVGRoot(m_handle); }
 
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
