@@ -3156,6 +3156,12 @@ Settings& RenderObject::settings() const
     return page().settings();
 }
 
+LayoutRect RenderObject::clippedOverflowRectForRepaint(const RenderLayerModelObject* repaintContainer) const
+{
+    if (m_scion) { return m_scion->clippedOverflowRectForRepaint(repaintContainer); }
+    return clippedOverflowRect(repaintContainer, visibleRectContextForRepaint());
+}
+
 LocalFrame& RenderObject::frame() const
 {
     if (m_scion) { return m_scion->frame(); }

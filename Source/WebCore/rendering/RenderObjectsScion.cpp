@@ -115,6 +115,8 @@ struct RepaintContainerStatusRaw {
 
 extern "C" RepaintContainerStatusRaw RenderObjectScion_containerForRepaint(const void*);
 
+extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
+
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
@@ -473,6 +475,22 @@ RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() co
     return { r.fullRepaintIsScheduled, static_cast<const RenderLayerModelObject*>(r.renderer) };
 }
 
+namespace {
+
+LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
+}
+
+} // namespace
+
+LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerModelObject* repaintContainer) const
+{
+    return convertLayoutRectRaw(
+        RenderObjectScion_clippedOverflowRectForRepaint(
+            m_handle, const_cast<RenderLayerModelObject*>(repaintContainer)));
+}
+
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 
 PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<PointerEvents>(RenderObjectScion_usedPointerEvents(m_handle)); }
@@ -684,11 +702,6 @@ LayoutSize RenderBoxScion::size() const
 }
 
 namespace {
-
-LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
-{
-    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
-}
 
 RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
 {

@@ -1034,7 +1034,7 @@ public:
     WEBCORE_EXPORT IntRect pixelSnappedAbsoluteClippedOverflowRect() const;
 
     virtual LayoutRect clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext) const;
-    LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject* repaintContainer) const { return clippedOverflowRect(repaintContainer, visibleRectContextForRepaint()); }
+    LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject* repaintContainer) const;
     virtual LayoutRect rectWithOutlineForRepaint(const RenderLayerModelObject* repaintContainer, LayoutUnit outlineWidth) const;
     virtual LayoutRect outlineBoundsForRepaint(const RenderLayerModelObject* /*repaintContainer*/, const RenderGeometryMap* = nullptr) const { return { }; }
 

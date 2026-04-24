@@ -130,6 +130,8 @@ public:
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;
 
+    LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
+
     bool isSkippedContent() const;
 
     PointerEvents usedPointerEvents() const;

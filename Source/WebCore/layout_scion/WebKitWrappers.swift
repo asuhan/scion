@@ -1222,6 +1222,25 @@ func RenderObjectScion_containerForRepaint(_ objectRaw: UnsafeRawPointer)
     fullRepaintIsScheduled: r.fullRepaintIsScheduled, renderer: r.renderer?.id())
 }
 
+private func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
+  -> RenderObjectWrapper
+{
+  if wk_interop.RenderObject_isRenderView(raw), let viewRaw = wk_interop.RenderView_scion(raw) {
+    return Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  }
+  return createRenderObjectWrapper(raw)
+}
+
+@_cdecl("RenderObjectScion_clippedOverflowRectForRepaint")
+func RenderObjectScion_clippedOverflowRectForRepaint(
+  _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?
+) -> LayoutRectRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return convertLayoutRect(
+    object.clippedOverflowRectForRepaint(
+      createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
+}
+
 @_cdecl("RenderObjectScion_isSkippedContent")
 func RenderObjectScion_isSkippedContent(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
