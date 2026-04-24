@@ -68,6 +68,8 @@ public:
 
     bool isRenderIFrame() const;
 
+    bool isRenderReplica() const;
+
     bool isRenderVideo() const;
 
     bool isRenderViewTransitionCapture() const;

@@ -463,7 +463,7 @@ public:
 #endif
     bool isRenderFragmentContainer() const { return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsFragmentContainer); }
     bool isRenderViewTransitionContainer() const { return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsViewTransitionContainer); }
-    bool isRenderReplica() const { return type() == Type::Replica; }
+    bool isRenderReplica() const;
 
     bool isRenderSlider() const { return type() == Type::Slider; }
     bool isRenderTable() const;

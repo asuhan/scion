@@ -3026,6 +3026,12 @@ bool RenderObject::isRenderIFrame() const
     return type() == Type::IFrame;
 }
 
+bool RenderObject::isRenderReplica() const
+{
+    if (m_scion) { return m_scion->isRenderReplica(); }
+    return type() == Type::Replica;
+}
+
 bool RenderObject::isRenderVideo() const
 {
     if (m_scion) { return m_scion->isRenderVideo(); }
