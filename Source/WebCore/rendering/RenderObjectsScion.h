@@ -172,6 +172,10 @@ public:
 
     bool isSetNeedsLayoutForbidden() const;
 
+#if ASSERT_ENABLED
+    void setNeedsLayoutIsForbidden(bool flag) const;
+#endif
+
 private:
     void* m_handle;
 };

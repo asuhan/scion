@@ -3233,6 +3233,14 @@ LayoutRect RenderObject::clippedOverflowRectForRepaint(const RenderLayerModelObj
     return clippedOverflowRect(repaintContainer, visibleRectContextForRepaint());
 }
 
+#if ASSERT_ENABLED
+void RenderObject::setNeedsLayoutIsForbidden(bool flag) const
+{
+    if (m_scion) { m_scion->setNeedsLayoutIsForbidden(flag); }
+    m_setNeedsLayoutForbidden = flag;
+}
+#endif
+
 LocalFrame& RenderObject::frame() const
 {
     if (m_scion) { return m_scion->frame(); }

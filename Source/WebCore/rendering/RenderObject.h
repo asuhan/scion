@@ -1206,7 +1206,7 @@ private:
     bool hasRareData() const { return m_stateBitfields.hasFlag(StateFlag::HasRareData); }
 
 #if ASSERT_ENABLED
-    void setNeedsLayoutIsForbidden(bool flag) const { m_setNeedsLayoutForbidden = flag; }
+    void setNeedsLayoutIsForbidden(bool flag) const;
     void checkBlockPositionedObjectsNeedLayout();
 #endif
 

@@ -1365,6 +1365,12 @@ func RenderObjectScion_isSetNeedsLayoutForbidden(_ objectRaw: UnsafeRawPointer) 
   return object.isSetNeedsLayoutForbidden()
 }
 
+@_cdecl("RenderObjectScion_setNeedsLayoutIsForbidden")
+func RenderObjectScion_setNeedsLayoutIsForbidden(_ objectRaw: UnsafeRawPointer, _ flag: Bool) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setNeedsLayoutIsForbidden(flag)
+}
+
 @_cdecl("RenderSelectionScion_create")
 func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
