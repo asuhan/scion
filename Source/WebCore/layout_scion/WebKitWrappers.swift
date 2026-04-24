@@ -1012,6 +1012,12 @@ func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMu
   return layer.layerId()
 }
 
+@_cdecl("RenderObjectScion_isRenderElement")
+func RenderObjectScion_isRenderElement(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderElement()
+}
+
 @_cdecl("RenderObjectScion_isRenderInline")
 func RenderObjectScion_isRenderInline(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

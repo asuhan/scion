@@ -426,7 +426,7 @@ public:
 
     bool isPseudoElement() const { return node() && node()->isPseudoElement(); }
 
-    bool isRenderElement() const { return !isRenderText(); }
+    WEBCORE_EXPORT bool isRenderElement() const;
     bool isRenderReplaced() const { return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced; }
     bool isRenderBoxModelObject() const { return m_typeFlags.contains(TypeFlag::IsBoxModelObject); }
     bool isRenderBlock() const { return m_typeFlags.contains(TypeFlag::IsRenderBlock); }

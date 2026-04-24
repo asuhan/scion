@@ -3016,6 +3016,12 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+bool RenderObject::isRenderElement() const
+{
+    if (m_scion) { return m_scion->isRenderElement(); }
+    return !isRenderText();
+}
+
 bool RenderObject::isRenderInline() const
 {
     if (m_scion) { return m_scion->isRenderInline(); }

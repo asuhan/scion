@@ -42,6 +42,8 @@ extern "C" void* RenderObjectScion_parent(const void*);
 
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
+extern "C" bool RenderObjectScion_isRenderElement(const void*);
+
 extern "C" bool RenderObjectScion_isRenderInline(const void*);
 
 extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
@@ -411,6 +413,8 @@ namespace WebCore {
 RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElement*>(RenderObjectScion_parent(m_handle)); }
 
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
+
+bool RenderObjectScion::isRenderElement() const { return RenderObjectScion_isRenderElement(m_handle); }
 
 bool RenderObjectScion::isRenderInline() const { return RenderObjectScion_isRenderInline(m_handle); }
 
