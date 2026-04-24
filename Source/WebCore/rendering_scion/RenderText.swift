@@ -874,13 +874,13 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setHasStrongDirectionalityContent(hasStrongDirectionalityContent: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_hasStrongDirectionalityContent = hasStrongDirectionalityContent
   }
 
   func hasStrongDirectionalityContent() -> Bool? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_hasStrongDirectionalityContent
   }
 
   func computePreferredLogicalWidths(
@@ -1418,6 +1418,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   private let m_text: StringWrapper? = nil
 
   var m_canUseSimplifiedTextMeasuring: Bool? = nil
+  private var m_hasStrongDirectionalityContent: Bool? = nil
   private var hasBreakableChar = false  // Whether or not we can be broken into multiple lines.
   private var hasBreak = false  // Whether or not we have a hard break (e.g., <pre> with '\n').
   private var hasTab = false  // Whether or not we have a variable width tab character (e.g., <pre> with '\t').
