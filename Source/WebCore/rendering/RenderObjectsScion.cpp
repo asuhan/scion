@@ -153,6 +153,8 @@ extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
 
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
+extern "C" bool RenderObjectScion_isSetNeedsLayoutForbidden(const void*);
+
 extern "C" const void* RenderElementScion_style(const void*);
 
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
@@ -566,6 +568,8 @@ bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSk
 PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<PointerEvents>(RenderObjectScion_usedPointerEvents(m_handle)); }
 
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
+
+bool RenderObjectScion::isSetNeedsLayoutForbidden() const { return RenderObjectScion_isSetNeedsLayoutForbidden(m_handle); }
 
 const RenderStyle& RenderElementScion::style() const
 {

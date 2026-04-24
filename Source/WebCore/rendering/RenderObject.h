@@ -1483,15 +1483,6 @@ inline auto RenderObject::visibleRectContextForRenderTreeAsText() -> VisibleRect
     return { false, false, { VisibleRectContextOption::ApplyContainerClip, VisibleRectContextOption::ApplyCompositedContainerScrolls, VisibleRectContextOption::ApplyCompositedClips, VisibleRectContextOption::CalculateAccurateRepaintRect  } };
 }
 
-inline bool RenderObject::isSetNeedsLayoutForbidden() const
-{
-#if ASSERT_ENABLED
-    return m_setNeedsLayoutForbidden;
-#else
-    return false;
-#endif
-}
-
 #if !ASSERT_ENABLED
 
 inline RenderObject::SetLayoutNeededForbiddenScope::SetLayoutNeededForbiddenScope(const RenderObject&, bool)

@@ -3263,6 +3263,16 @@ RenderFragmentedFlow* RenderObject::enclosingFragmentedFlow() const
     return locateEnclosingFragmentedFlow();
 }
 
+bool RenderObject::isSetNeedsLayoutForbidden() const
+{
+    if (m_scion) { return m_scion->isSetNeedsLayoutForbidden(); }
+#if ASSERT_ENABLED
+    return m_setNeedsLayoutForbidden;
+#else
+    return false;
+#endif
+}
+
 bool RenderObject::hasPotentiallyScrollableOverflow() const
 {
     if (m_scion) { return m_scion->hasPotentiallyScrollableOverflow(); }

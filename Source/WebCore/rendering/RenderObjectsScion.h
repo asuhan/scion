@@ -170,6 +170,8 @@ public:
 
     void setNormalChildNeedsLayoutBit(bool b);
 
+    bool isSetNeedsLayoutForbidden() const;
+
 private:
     void* m_handle;
 };

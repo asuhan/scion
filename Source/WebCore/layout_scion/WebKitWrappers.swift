@@ -1359,6 +1359,12 @@ func RenderObjectScion_setNormalChildNeedsLayoutBit(_ objectRaw: UnsafeMutableRa
   object.setNormalChildNeedsLayoutBit(b: b)
 }
 
+@_cdecl("RenderObjectScion_isSetNeedsLayoutForbidden")
+func RenderObjectScion_isSetNeedsLayoutForbidden(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isSetNeedsLayoutForbidden()
+}
+
 @_cdecl("RenderSelectionScion_create")
 func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
