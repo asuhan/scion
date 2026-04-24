@@ -1309,6 +1309,7 @@ auto RenderObject::localRectsForRepaint(RepaintOutlineBounds) const -> RepaintRe
 
 auto RenderObject::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds repaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { return m_scion->rectsForRepaintingAfterLayout(repaintContainer, repaintOutlineBounds); }
     auto localRects = localRectsForRepaint(repaintOutlineBounds);
     if (localRects.clippedOverflowRect.isEmpty())
         return { };

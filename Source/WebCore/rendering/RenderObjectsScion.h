@@ -186,6 +186,8 @@ public:
 
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
 
+    RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
+
     bool renderTreeBeingDestroyed() const;
 
     bool isRenderDeprecatedFlexibleBox() const;

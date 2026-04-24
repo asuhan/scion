@@ -1411,6 +1411,20 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
 }
 
+@_cdecl("RenderObjectScion_rectsForRepaintingAfterLayout")
+func RenderObjectScion_rectsForRepaintingAfterLayout(
+  _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
+  _ repaintOutlineBounds: Bool
+) -> RepaintRectsRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let repaintContainer =
+    repaintContainerRaw != nil
+    ? createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
+    : nil
+  return convertRepaintRects(
+    object.rectsForRepaintingAfterLayout(repaintContainer, repaintOutlineBounds ? .Yes : .No))
+}
+
 @_cdecl("RenderObjectScion_renderTreeBeingDestroyed")
 func RenderObjectScion_renderTreeBeingDestroyed(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -169,6 +169,8 @@ extern "C" void RenderObjectScion_repaintUsingContainer(const void*, void*, Layo
 
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
 
+extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
+
 extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
 
 extern "C" bool RenderObjectScion_isRenderDeprecatedFlexibleBox(const void*);
@@ -617,6 +619,22 @@ LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerMod
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer)));
 }
 
+namespace {
+
+RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
+{
+    return { convertLayoutRectRaw(rects.clippedOverflowRect), rects.outlineBoundsRect.is_valid ? convertLayoutRectRaw(rects.outlineBoundsRect.rect) : LayoutRect {} };
+}
+
+} // namespace
+
+RenderObject::RepaintRects RenderObjectScion::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds repaintOutlineBounds) const
+{
+    return convertRepaintRectsRaw(
+        RenderObjectScion_rectsForRepaintingAfterLayout(
+            m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), repaintOutlineBounds == RepaintOutlineBounds::Yes));
+}
+
 bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
 
 bool RenderObjectScion::isRenderDeprecatedFlexibleBox() const { return RenderObjectScion_isRenderDeprecatedFlexibleBox(m_handle); }
@@ -835,15 +853,6 @@ LayoutSize RenderBoxScion::size() const
     const auto sizeRaw = RenderBoxScion_size(m_handle);
     return { LayoutUnit::fromRawValue(sizeRaw.width), LayoutUnit::fromRawValue(sizeRaw.height) };
 }
-
-namespace {
-
-RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
-{
-    return { convertLayoutRectRaw(rects.clippedOverflowRect), rects.outlineBoundsRect.is_valid ? convertLayoutRectRaw(rects.outlineBoundsRect.rect) : LayoutRect {} };
-}
-
-} // namespace
 
 LayoutRect RenderBoxScion::frameRect() const
 {
