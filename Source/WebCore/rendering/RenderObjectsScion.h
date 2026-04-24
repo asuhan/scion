@@ -126,6 +126,8 @@ public:
 
     bool isRenderFragmentedFlow() const;
 
+    bool hasOutlineAutoAncestor() const;
+
     bool hasLayer() const;
 
     bool needsLayout() const;

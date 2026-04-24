@@ -685,7 +685,7 @@ public:
 
     bool hasReflection() const;
     bool isRenderFragmentedFlow() const;
-    bool hasOutlineAutoAncestor() const { return hasRareData() && rareData().hasOutlineAutoAncestor; }
+    bool hasOutlineAutoAncestor() const;
     bool paintContainmentApplies() const { return m_stateBitfields.hasFlag(StateFlag::PaintContainmentApplies); }
     bool hasSVGTransform() const { return m_stateBitfields.hasFlag(StateFlag::HasSVGTransform); }
 

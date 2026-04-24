@@ -3196,6 +3196,12 @@ bool RenderObject::isRenderFragmentedFlow() const
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsFragmentedFlow);
 }
 
+bool RenderObject::hasOutlineAutoAncestor() const
+{
+    if (m_scion) { return m_scion->hasOutlineAutoAncestor(); }
+    return hasRareData() && rareData().hasOutlineAutoAncestor;
+}
+
 bool RenderObject::normalChildNeedsLayout() const
 {
     if (m_scion) { return m_scion->normalChildNeedsLayout(); }

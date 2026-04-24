@@ -106,6 +106,8 @@ extern "C" bool RenderObjectScion_hasReflection(const void*);
 
 extern "C" bool RenderObjectScion_isRenderFragmentedFlow(const void*);
 
+extern "C" bool RenderObjectScion_hasOutlineAutoAncestor(const void*);
+
 extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
@@ -508,6 +510,8 @@ bool RenderObjectScion::isInline() const { return RenderObjectScion_isInline(m_h
 bool RenderObjectScion::hasReflection() const { return RenderObjectScion_hasReflection(m_handle); }
 
 bool RenderObjectScion::isRenderFragmentedFlow() const { return RenderObjectScion_isRenderFragmentedFlow(m_handle); }
+
+bool RenderObjectScion::hasOutlineAutoAncestor() const { return RenderObjectScion_hasOutlineAutoAncestor(m_handle); }
 
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
