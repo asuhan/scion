@@ -54,6 +54,8 @@ extern "C" bool RenderObjectScion_isRenderVideo(const void*);
 
 extern "C" bool RenderObjectScion_isRenderViewTransitionCapture(const void*);
 
+extern "C" bool RenderObjectScion_isRenderWidget(const void*);
+
 extern "C" bool RenderObjectScion_isRenderHTMLCanvas(const void*);
 
 extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
@@ -386,6 +388,8 @@ bool RenderObjectScion::isRenderReplica() const { return RenderObjectScion_isRen
 bool RenderObjectScion::isRenderVideo() const { return RenderObjectScion_isRenderVideo(m_handle); }
 
 bool RenderObjectScion::isRenderViewTransitionCapture() const { return RenderObjectScion_isRenderViewTransitionCapture(m_handle); }
+
+bool RenderObjectScion::isRenderWidget() const { return RenderObjectScion_isRenderWidget(m_handle); }
 
 bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_isRenderHTMLCanvas(m_handle); }
 

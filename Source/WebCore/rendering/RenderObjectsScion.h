@@ -74,6 +74,8 @@ public:
 
     bool isRenderViewTransitionCapture() const;
 
+    bool isRenderWidget() const;
+
     bool isRenderHTMLCanvas() const;
 
     bool isHTMLMarquee() const;
