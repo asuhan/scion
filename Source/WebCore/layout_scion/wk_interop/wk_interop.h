@@ -575,6 +575,7 @@ void RenderLayoutState_setTextBoxTrim(void* p, struct OptionalTextBoxTrimRaw);
 struct OptionalBool RenderLayoutState_blockStartTrimming(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
+void* LocalFrame_document(const void*);
 bool LocalFrame_shouldUsePrintingLayout(const void*);
 float LocalFrame_frameScaleFactor(const void*);
 void* LocalFrame_view(const void* p);

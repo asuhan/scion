@@ -29,8 +29,8 @@ import wk_interop
 
 final class LocalFrameWrapper: FrameWrapper {
   func document() -> Document? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.LocalFrame_document(p) else { return nil }
+    return Document(raw)
   }
 
   func view() -> LocalFrameViewWrapper? {

@@ -122,6 +122,11 @@
 
 #define FRAME_RELEASE_LOG_ERROR(channel, fmt, ...) RELEASE_LOG_ERROR(channel, "%p - Frame::" fmt, this, ##__VA_ARGS__)
 
+extern "C" void* LocalFrame_document(const void* p)
+{
+    return static_cast<const WebCore::LocalFrame*>(p)->document();
+}
+
 extern "C" bool LocalFrame_shouldUsePrintingLayout(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->shouldUsePrintingLayout();
