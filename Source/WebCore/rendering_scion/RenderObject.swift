@@ -1150,8 +1150,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGInlineText() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .SVGInlineText
   }
 
   func isRenderSVGForeignObject() -> Bool {
