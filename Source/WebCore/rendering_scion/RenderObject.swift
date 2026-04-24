@@ -1280,8 +1280,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasIntrinsicAspectRatio() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isReplacedOrInlineBlock()
+      && (isImage() || isRenderVideo() || isRenderHTMLCanvas() || isRenderViewTransitionCapture())
   }
 
   func isAnonymous() -> Bool {
