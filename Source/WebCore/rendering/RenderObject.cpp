@@ -3182,6 +3182,12 @@ Page& RenderObject::page() const
     return *frame().page();
 }
 
+bool RenderObject::renderTreeBeingDestroyed() const
+{
+    if (m_scion) { return m_scion->renderTreeBeingDestroyed(); }
+    return document().renderTreeBeingDestroyed();
+}
+
 bool RenderObject::hasPotentiallyScrollableOverflow() const
 {
     if (m_scion) { return m_scion->hasPotentiallyScrollableOverflow(); }

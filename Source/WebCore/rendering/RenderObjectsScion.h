@@ -134,6 +134,8 @@ public:
 
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
 
+    bool renderTreeBeingDestroyed() const;
+
     bool isSkippedContent() const;
 
     PointerEvents usedPointerEvents() const;

@@ -1346,11 +1346,6 @@ private:
 #endif
 };
 
-inline bool RenderObject::renderTreeBeingDestroyed() const
-{
-    return document().renderTreeBeingDestroyed();
-}
-
 inline bool RenderObject::isBeforeContent() const
 {
     // Text nodes don't have their own styles, so ignore the style on a text node.

@@ -119,6 +119,8 @@ extern "C" void RenderObjectScion_repaintUsingContainer(const void*, void*, Layo
 
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
 
+extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
+
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
@@ -502,6 +504,8 @@ LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerMod
         RenderObjectScion_clippedOverflowRectForRepaint(
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer)));
 }
+
+bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
 
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 

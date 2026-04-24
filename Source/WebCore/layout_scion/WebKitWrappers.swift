@@ -1252,6 +1252,12 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
 }
 
+@_cdecl("RenderObjectScion_renderTreeBeingDestroyed")
+func RenderObjectScion_renderTreeBeingDestroyed(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.renderTreeBeingDestroyed()
+}
+
 @_cdecl("RenderObjectScion_isSkippedContent")
 func RenderObjectScion_isSkippedContent(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
