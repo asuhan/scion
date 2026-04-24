@@ -1036,6 +1036,12 @@ func RenderObjectScion_isRenderIFrame(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderIFrame()
 }
 
+@_cdecl("RenderObjectScion_isRenderImage")
+func RenderObjectScion_isRenderImage(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderImage()
+}
+
 @_cdecl("RenderObjectScion_isRenderReplica")
 func RenderObjectScion_isRenderReplica(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

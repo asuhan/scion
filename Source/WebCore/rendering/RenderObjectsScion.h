@@ -70,6 +70,8 @@ public:
 
     bool isRenderIFrame() const;
 
+    bool isRenderImage() const;
+
     bool isRenderReplica() const;
 
     bool isRenderVideo() const;
