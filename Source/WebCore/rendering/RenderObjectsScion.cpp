@@ -106,6 +106,13 @@ extern "C" const void* RenderObjectScion_page(const void*);
 
 extern "C" const void* RenderObjectScion_settings(const void*);
 
+struct RepaintContainerStatusRaw {
+    bool fullRepaintIsScheduled;
+    void* renderer;
+};
+
+extern "C" RepaintContainerStatusRaw RenderObjectScion_containerForRepaint(const void*);
+
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
@@ -455,6 +462,12 @@ LocalFrame& RenderObjectScion::frame() { return *static_cast<LocalFrame*>(Render
 Page& RenderObjectScion::page() const { return *const_cast<Page*>(static_cast<const Page*>(RenderObjectScion_page(m_handle))); }
 
 Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(static_cast<const Settings*>(RenderObjectScion_settings(m_handle))); }
+
+RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() const
+{
+    const auto r = RenderObjectScion_containerForRepaint(m_handle);
+    return { r.fullRepaintIsScheduled, static_cast<const RenderLayerModelObject*>(r.renderer) };
+}
 
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 

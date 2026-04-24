@@ -1081,6 +1081,7 @@ static inline bool canRelyOnAncestorLayerFullRepaint(const RenderObject& rendere
 
 RenderObject::RepaintContainerStatus RenderObject::containerForRepaint() const
 {
+    if (m_scion) { return m_scion->containerForRepaint(); }
     CheckedPtr<const RenderLayerModelObject> repaintContainer;
     auto fullRepaintAlreadyScheduled = false;
 

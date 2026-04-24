@@ -1205,6 +1205,17 @@ func RenderObjectScion_settings(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPoint
   return object.settings().p
 }
 
+@_cdecl("RenderObjectScion_containerForRepaint")
+func RenderObjectScion_containerForRepaint(_ objectRaw: UnsafeRawPointer)
+  -> RepaintContainerStatusRaw
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let r = object.containerForRepaint()
+  assert(!(r.renderer?.isNativeImpl() ?? false))
+  return RepaintContainerStatusRaw(
+    fullRepaintIsScheduled: r.fullRepaintIsScheduled, renderer: r.renderer?.id())
+}
+
 @_cdecl("RenderObjectScion_isSkippedContent")
 func RenderObjectScion_isSkippedContent(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

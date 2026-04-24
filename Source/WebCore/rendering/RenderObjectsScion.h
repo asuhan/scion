@@ -126,6 +126,8 @@ public:
 
     Settings& settings() const;
 
+    RenderObject::RepaintContainerStatus containerForRepaint() const;
+
     bool isSkippedContent() const;
 
     PointerEvents usedPointerEvents() const;
