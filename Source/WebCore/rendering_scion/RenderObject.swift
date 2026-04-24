@@ -1268,8 +1268,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // This only returns the transform="" value from the element
   // most callsites want localToParentTransform() instead.
   func localTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return AffineTransform()
   }
 
   // Returns the full transform mapping from local coordinates to local coords for the parent SVG renderer
