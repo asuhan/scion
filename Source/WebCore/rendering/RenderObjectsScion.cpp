@@ -84,6 +84,8 @@ extern "C" bool RenderObjectScion_hasTransformRelatedProperty(const void*);
 
 extern "C" bool RenderObjectScion_isTransformed(const void*);
 
+extern "C" bool RenderObjectScion_effectiveCapturedInViewTransition(const void*);
+
 extern "C" void* RenderObjectScion_view(const void*);
 
 extern "C" void* RenderObjectScion_document(const void*);
@@ -419,6 +421,8 @@ bool RenderObjectScion::hasNonVisibleOverflow() const { return RenderObjectScion
 bool RenderObjectScion::hasTransformRelatedProperty() const { return RenderObjectScion_hasTransformRelatedProperty(m_handle); }
 
 bool RenderObjectScion::isTransformed() const { return RenderObjectScion_isTransformed(m_handle); }
+
+bool RenderObjectScion::effectiveCapturedInViewTransition() const { return RenderObjectScion_effectiveCapturedInViewTransition(m_handle); }
 
 RenderView& RenderObjectScion::view() const { return *static_cast<RenderView*>(RenderObjectScion_view(m_handle)); }
 

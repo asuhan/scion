@@ -2619,6 +2619,7 @@ void RenderObject::RepaintRects::transform(const TransformationMatrix& matrix, f
 
 bool RenderObject::effectiveCapturedInViewTransition() const
 {
+    if (m_scion) { return m_scion->effectiveCapturedInViewTransition(); }
     if (isDocumentElementRenderer())
         return false;
     if (isRenderView())
