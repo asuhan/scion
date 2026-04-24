@@ -110,6 +110,8 @@ extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
 
+extern "C" bool RenderObjectScion_normalChildNeedsLayout(const void*);
+
 extern "C" bool RenderObjectScion_hasNonVisibleOverflow(const void*);
 
 extern "C" bool RenderObjectScion_hasPotentiallyScrollableOverflow(const void*);
@@ -506,6 +508,8 @@ bool RenderObjectScion::isRenderFragmentedFlow() const { return RenderObjectScio
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+bool RenderObjectScion::normalChildNeedsLayout() const { return RenderObjectScion_normalChildNeedsLayout(m_handle); }
 
 bool RenderObjectScion::hasNonVisibleOverflow() const { return RenderObjectScion_hasNonVisibleOverflow(m_handle); }
 

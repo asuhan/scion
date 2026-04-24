@@ -3192,6 +3192,12 @@ bool RenderObject::isRenderFragmentedFlow() const
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsFragmentedFlow);
 }
 
+bool RenderObject::normalChildNeedsLayout() const
+{
+    if (m_scion) { return m_scion->normalChildNeedsLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::NormalChildNeedsLayout);
+}
+
 bool RenderObject::hasNonVisibleOverflow() const
 {
     if (m_scion) { return m_scion->hasNonVisibleOverflow(); }

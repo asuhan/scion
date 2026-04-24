@@ -130,6 +130,8 @@ public:
 
     bool needsLayout() const;
 
+    bool normalChildNeedsLayout() const;
+
     bool hasNonVisibleOverflow() const;
 
     bool hasPotentiallyScrollableOverflow() const;
