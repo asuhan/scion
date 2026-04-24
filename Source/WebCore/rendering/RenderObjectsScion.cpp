@@ -96,6 +96,8 @@ extern "C" bool RenderObjectScion_isRenderTableRow(const void*);
 
 extern "C" bool RenderObjectScion_isRenderView(const void*);
 
+extern "C" bool RenderObjectScion_isInline(const void*);
+
 extern "C" bool RenderObjectScion_hasReflection(const void*);
 
 extern "C" bool RenderObjectScion_isRenderFragmentedFlow(const void*);
@@ -480,6 +482,8 @@ bool RenderObjectScion::isRenderBox() const { return RenderObjectScion_isRenderB
 bool RenderObjectScion::isRenderTableRow() const { return RenderObjectScion_isRenderTableRow(m_handle); }
 
 bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRenderView(m_handle); }
+
+bool RenderObjectScion::isInline() const { return RenderObjectScion_isInline(m_handle); }
 
 bool RenderObjectScion::hasReflection() const { return RenderObjectScion_hasReflection(m_handle); }
 

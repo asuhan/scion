@@ -679,7 +679,7 @@ public:
     bool isRenderBox() const;
     bool isRenderTableRow() const;
     bool isRenderView() const;
-    bool isInline() const { return !m_stateBitfields.hasFlag(StateFlag::IsBlock); } // inline object
+    bool isInline() const; // inline object
     bool isReplacedOrInlineBlock() const { return m_stateBitfields.hasFlag(StateFlag::IsReplacedOrInlineBlock); }
     bool isHorizontalWritingMode() const { return !m_stateBitfields.hasFlag(StateFlag::VerticalWritingMode); }
 

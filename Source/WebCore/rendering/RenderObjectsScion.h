@@ -116,6 +116,8 @@ public:
 
     bool isRenderView() const;
 
+    bool isInline() const;
+
     bool hasReflection() const;
 
     bool isRenderFragmentedFlow() const;

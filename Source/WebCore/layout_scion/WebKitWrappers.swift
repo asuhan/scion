@@ -1177,6 +1177,12 @@ func RenderObjectScion_isRenderView(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderView()
 }
 
+@_cdecl("RenderObjectScion_isInline")
+func RenderObjectScion_isInline(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isInline()
+}
+
 @_cdecl("RenderObjectScion_hasReflection")
 func RenderObjectScion_hasReflection(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

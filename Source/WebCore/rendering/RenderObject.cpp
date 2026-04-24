@@ -3161,6 +3161,12 @@ bool RenderObject::isRenderView() const
     return type() == Type::View;
 }
 
+bool RenderObject::isInline() const
+{
+    if (m_scion) { return m_scion->isInline(); }
+    return !m_stateBitfields.hasFlag(StateFlag::IsBlock);
+}
+
 bool RenderObject::hasReflection() const
 {
     if (m_scion) { return m_scion->hasReflection(); }
