@@ -3165,6 +3165,12 @@ bool RenderObject::isPositioned() const
     return m_stateBitfields.isPositioned();
 }
 
+bool RenderObject::isInFlowPositioned() const
+{
+    if (m_scion) { return m_scion->isInFlowPositioned(); }
+    return m_stateBitfields.isRelativelyPositioned() || m_stateBitfields.isStickilyPositioned();
+}
+
 bool RenderObject::isOutOfFlowPositioned() const
 {
     if (m_scion) { return m_scion->isOutOfFlowPositioned(); }
