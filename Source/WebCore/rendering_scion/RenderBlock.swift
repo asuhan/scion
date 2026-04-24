@@ -415,8 +415,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hasPositionedObjects() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard let objects = positionedObjects() else { return false }
+    return !objects.isEmptyIgnoringNullReferences()
   }
 
   func addPercentHeightDescendant(descendant: RenderBoxWrapper) {
