@@ -64,6 +64,8 @@ public:
 
     bool isRenderElement() const;
 
+    bool isRenderBlockFlow() const;
+
     bool isRenderInline() const;
 
     bool isRenderEmbeddedObject() const;

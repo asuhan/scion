@@ -3022,6 +3022,12 @@ bool RenderObject::isRenderElement() const
     return !isRenderText();
 }
 
+bool RenderObject::isRenderBlockFlow() const
+{
+    if (m_scion) { return m_scion->isRenderBlockFlow(); }
+    return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::BlockFlow;
+}
+
 bool RenderObject::isRenderInline() const
 {
     if (m_scion) { return m_scion->isRenderInline(); }

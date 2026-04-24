@@ -430,7 +430,7 @@ public:
     bool isRenderReplaced() const { return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced; }
     bool isRenderBoxModelObject() const { return m_typeFlags.contains(TypeFlag::IsBoxModelObject); }
     bool isRenderBlock() const { return m_typeFlags.contains(TypeFlag::IsRenderBlock); }
-    bool isRenderBlockFlow() const { return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::BlockFlow; }
+    WEBCORE_EXPORT bool isRenderBlockFlow() const;
     bool isRenderInline() const;
     bool isRenderLayerModelObject() const { return m_typeFlags.contains(TypeFlag::IsLayerModelObject); }
 

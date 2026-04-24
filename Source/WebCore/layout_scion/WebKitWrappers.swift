@@ -1018,6 +1018,12 @@ func RenderObjectScion_isRenderElement(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderElement()
 }
 
+@_cdecl("RenderObjectScion_isRenderBlockFlow")
+func RenderObjectScion_isRenderBlockFlow(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderBlockFlow()
+}
+
 @_cdecl("RenderObjectScion_isRenderInline")
 func RenderObjectScion_isRenderInline(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
