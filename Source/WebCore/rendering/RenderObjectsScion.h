@@ -106,6 +106,8 @@ public:
 
     bool isRenderSVGModelObject() const;
 
+    bool isLegacyRenderSVGRoot() const;
+
     bool isRenderSVGRoot() const;
 
     bool isRenderSVGContainer() const;

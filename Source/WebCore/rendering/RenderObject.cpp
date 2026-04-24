@@ -3137,6 +3137,12 @@ bool RenderObject::isRenderSVGModelObject() const
     return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::SVGModelObject && !m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsLegacy);
 }
 
+bool RenderObject::isLegacyRenderSVGRoot() const
+{
+    if (m_scion) { return m_scion->isLegacyRenderSVGRoot(); }
+    return type() == Type::LegacySVGRoot;
+}
+
 bool RenderObject::isRenderSVGRoot() const
 {
     if (m_scion) { return m_scion->isRenderSVGRoot(); }

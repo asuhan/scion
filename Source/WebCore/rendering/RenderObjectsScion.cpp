@@ -86,6 +86,8 @@ extern "C" bool RenderObjectScion_fragmentedFlowState(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGModelObject(const void*);
 
+extern "C" bool RenderObjectScion_isLegacyRenderSVGRoot(const void*);
+
 extern "C" bool RenderObjectScion_isRenderSVGRoot(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGContainer(const void*);
@@ -520,6 +522,8 @@ RenderObject::FragmentedFlowState RenderObjectScion::fragmentedFlowState() const
 }
 
 bool RenderObjectScion::isRenderSVGModelObject() const { return RenderObjectScion_isRenderSVGModelObject(m_handle); }
+
+bool RenderObjectScion::isLegacyRenderSVGRoot() const { return RenderObjectScion_isLegacyRenderSVGRoot(m_handle); }
 
 bool RenderObjectScion::isRenderSVGRoot() const { return RenderObjectScion_isRenderSVGRoot(m_handle); }
 
