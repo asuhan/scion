@@ -3133,6 +3133,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     #endif  // ASSERT_ENABLED
   }
 
+  func setNeedsLayoutIsForbidden(_ flag: Bool) {
+    #if ASSERT_ENABLED
+      assert(isNativeImpl())
+      m_setNeedsLayoutForbidden = flag
+    #endif  // ASSERT_ENABLED
+  }
+
   func issueRepaint(
     _ partialRepaintRect: LayoutRectWrapper? = nil, _ clipRepaintToLayer: ClipRepaintToLayer = .No,
     _ forceRepaint: ForceRepaint = .No, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
