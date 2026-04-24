@@ -1958,6 +1958,7 @@ static inline RenderElement* containerForElement(const RenderObject& renderer, c
 
 RenderElement* RenderObject::container() const
 {
+    if (m_scion) { return m_scion->container(); }
     return containerForElement(*this, nullptr, nullptr);
 }
 

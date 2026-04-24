@@ -1286,6 +1286,13 @@ func RenderObjectScion_settings(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPoint
   return object.settings().p
 }
 
+@_cdecl("RenderObjectScion_container")
+func RenderObjectScion_container(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  assert(object.container() == nil)
+  return nil
+}
+
 @_cdecl("RenderObjectScion_style")
 func RenderObjectScion_style(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

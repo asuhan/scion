@@ -154,6 +154,8 @@ public:
 
     Settings& settings() const;
 
+    RenderElement* container() const;
+
     const RenderStyle& style() const;
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;
