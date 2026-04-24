@@ -136,6 +136,8 @@ public:
 
     bool needsLayout() const;
 
+    bool needsSimplifiedNormalFlowLayoutOnly() const;
+
     bool normalChildNeedsLayout() const;
 
     bool preferredLogicalWidthsDirty() const;

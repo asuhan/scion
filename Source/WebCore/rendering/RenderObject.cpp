@@ -3297,6 +3297,13 @@ bool RenderObject::renderTreeBeingDestroyed() const
     return document().renderTreeBeingDestroyed();
 }
 
+bool RenderObject::needsSimplifiedNormalFlowLayoutOnly() const
+{
+    if (m_scion) { return m_scion->needsSimplifiedNormalFlowLayoutOnly(); }
+    return needsSimplifiedNormalFlowLayout() && !selfNeedsLayout() && !normalChildNeedsLayout()
+        && !posChildNeedsLayout() && !needsPositionedMovementLayout();
+}
+
 RenderFragmentedFlow* RenderObject::enclosingFragmentedFlow() const
 {
     if (m_scion) { return m_scion->enclosingFragmentedFlow(); }

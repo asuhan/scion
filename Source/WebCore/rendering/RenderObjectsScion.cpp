@@ -116,6 +116,8 @@ extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
 
+extern "C" bool RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(const void*);
+
 extern "C" bool RenderObjectScion_normalChildNeedsLayout(const void*);
 
 extern "C" bool RenderObjectScion_preferredLogicalWidthsDirty(const void*);
@@ -524,6 +526,8 @@ bool RenderObjectScion::hasOutlineAutoAncestor() const { return RenderObjectScio
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+bool RenderObjectScion::needsSimplifiedNormalFlowLayoutOnly() const { return RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(m_handle); }
 
 bool RenderObjectScion::normalChildNeedsLayout() const { return RenderObjectScion_normalChildNeedsLayout(m_handle); }
 

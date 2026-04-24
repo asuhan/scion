@@ -1418,12 +1418,6 @@ inline bool RenderObject::backgroundIsKnownToBeObscured(const LayoutPoint& paint
     return m_stateBitfields.boxDecorationState() == BoxDecorationState::IsKnownToBeObscured;
 }
 
-inline bool RenderObject::needsSimplifiedNormalFlowLayoutOnly() const
-{
-    return needsSimplifiedNormalFlowLayout() && !selfNeedsLayout() && !normalChildNeedsLayout()
-        && !posChildNeedsLayout() && !needsPositionedMovementLayout();
-}
-
 inline bool RenderObject::isAnonymousBlock() const
 {
     // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().
