@@ -3044,6 +3044,12 @@ bool RenderObject::isRenderHTMLCanvas() const
     return type() == Type::HTMLCanvas;
 }
 
+RenderObject::FragmentedFlowState RenderObject::fragmentedFlowState() const
+{
+    if (m_scion) { return m_scion->fragmentedFlowState(); }
+    return m_stateBitfields.fragmentedFlowState();
+}
+
 bool RenderObject::isSVGLayerAwareRenderer() const
 {
     if (m_scion) { return m_scion->isSVGLayerAwareRenderer(); }

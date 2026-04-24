@@ -1060,6 +1060,12 @@ func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _
   object.setChildrenInline(b: b)
 }
 
+@_cdecl("RenderObjectScion_fragmentedFlowState")
+func RenderObjectScion_fragmentedFlowState(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.fragmentedFlowState() == .InsideFlow
+}
+
 @_cdecl("RenderObjectScion_isSVGLayerAwareRenderer")
 func RenderObjectScion_isSVGLayerAwareRenderer(_ objectRaw: UnsafeMutableRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -528,7 +528,7 @@ public:
     enum class SkipDescendentFragmentedFlow : bool { No, Yes };
     void setFragmentedFlowStateIncludingDescendants(FragmentedFlowState, SkipDescendentFragmentedFlow = SkipDescendentFragmentedFlow::Yes);
 
-    FragmentedFlowState fragmentedFlowState() const { return m_stateBitfields.fragmentedFlowState(); }
+    FragmentedFlowState fragmentedFlowState() const;
     void setFragmentedFlowState(FragmentedFlowState state) { m_stateBitfields.setFragmentedFlowState(state); }
 
 #if ENABLE(MATHML)

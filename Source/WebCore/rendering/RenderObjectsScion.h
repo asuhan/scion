@@ -78,6 +78,8 @@ public:
 
     void setChildrenInline(bool b);
 
+    RenderObject::FragmentedFlowState fragmentedFlowState() const;
+
     bool isSVGLayerAwareRenderer() const;
 
     bool isPositioned() const;

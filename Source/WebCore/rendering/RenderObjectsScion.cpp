@@ -58,6 +58,8 @@ extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
 
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
+extern "C" bool RenderObjectScion_fragmentedFlowState(const void*);
+
 extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isPositioned(const void*);
@@ -384,6 +386,13 @@ bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_is
 bool RenderObjectScion::isHTMLMarquee() const { return RenderObjectScion_isHTMLMarquee(m_handle); }
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
+
+RenderObject::FragmentedFlowState RenderObjectScion::fragmentedFlowState() const
+{
+    return RenderObjectScion_fragmentedFlowState(m_handle)
+        ? RenderObject::FragmentedFlowState::InsideFlow
+        : RenderObject::FragmentedFlowState::NotInsideFlow;
+}
 
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
