@@ -1124,6 +1124,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .SVGRoot
   }
 
+  func isRenderSVGContainer() -> Bool {
+    assert(isNativeImpl())
+    return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsContainer)
+  }
+
   func isRenderSVGViewportContainer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
