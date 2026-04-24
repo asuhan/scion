@@ -76,6 +76,8 @@ public:
 
     bool isRenderEmbeddedObject() const;
 
+    bool isRenderListItem() const;
+
     bool isRenderMedia() const;
 
     bool isRenderIFrame() const;

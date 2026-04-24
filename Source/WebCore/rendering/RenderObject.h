@@ -448,7 +448,7 @@ public:
     virtual bool isImage() const { return false; }
     virtual bool isInlineBlockOrInlineTable() const { return false; }
     bool isRenderListBox() const { return type() == Type::ListBox; }
-    bool isRenderListItem() const { return type() == Type::ListItem; }
+    bool isRenderListItem() const;
     bool isRenderListMarker() const { return type() == Type::ListMarker; }
     bool isRenderMedia() const;
     bool isRenderMenuList() const { return type() == Type::MenuList; }

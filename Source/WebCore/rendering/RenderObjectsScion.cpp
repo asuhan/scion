@@ -56,6 +56,8 @@ extern "C" bool RenderObjectScion_isRenderLayerModelObject(const void*);
 
 extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
 
+extern "C" bool RenderObjectScion_isRenderListItem(const void*);
+
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
 extern "C" bool RenderObjectScion_isRenderIFrame(const void*);
@@ -457,6 +459,8 @@ bool RenderObjectScion::isRenderInline() const { return RenderObjectScion_isRend
 bool RenderObjectScion::isRenderLayerModelObject() const { return RenderObjectScion_isRenderLayerModelObject(m_handle); }
 
 bool RenderObjectScion::isRenderEmbeddedObject() const { return RenderObjectScion_isRenderEmbeddedObject(m_handle); }
+
+bool RenderObjectScion::isRenderListItem() const { return RenderObjectScion_isRenderListItem(m_handle); }
 
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
 

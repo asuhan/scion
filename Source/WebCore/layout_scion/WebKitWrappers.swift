@@ -1057,6 +1057,12 @@ func RenderObjectScion_isRenderEmbeddedObject(_ objectRaw: UnsafeRawPointer) -> 
   return object.isRenderEmbeddedObject()
 }
 
+@_cdecl("RenderObjectScion_isRenderListItem")
+func RenderObjectScion_isRenderListItem(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderListItem()
+}
+
 @_cdecl("RenderObjectScion_isRenderMedia")
 func RenderObjectScion_isRenderMedia(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

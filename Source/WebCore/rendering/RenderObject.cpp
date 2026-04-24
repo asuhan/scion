@@ -3057,6 +3057,12 @@ bool RenderObject::isRenderEmbeddedObject() const
     return type() == Type::EmbeddedObject;
 }
 
+bool RenderObject::isRenderListItem() const
+{
+    if (m_scion) { return m_scion->isRenderListItem(); }
+    return type() == Type::ListItem;
+}
+
 bool RenderObject::isRenderMedia() const
 {
     if (m_scion) { return m_scion->isRenderMedia(); }
