@@ -67,8 +67,9 @@ func sizeForLengthSize(length: LengthSize, maximumValue: LayoutSizeWrapper)
 }
 
 func floatSizeForLengthSize(_ lengthSize: LengthSize, _ boxSize: FloatSize) -> FloatSize {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return FloatSize(
+    width: floatValueForLength(lengthSize.width, boxSize.width),
+    height: floatValueForLength(lengthSize.height, boxSize.height))
 }
 
 func valueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> LayoutUnit {
