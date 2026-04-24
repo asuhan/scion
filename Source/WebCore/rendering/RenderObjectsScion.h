@@ -180,6 +180,8 @@ public:
 
     bool renderTreeBeingDestroyed() const;
 
+    bool isFlexibleBoxIncludingDeprecated() const;
+
     bool isSkippedContent() const;
 
     PointerEvents usedPointerEvents() const;

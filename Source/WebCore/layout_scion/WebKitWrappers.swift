@@ -1393,6 +1393,12 @@ func RenderObjectScion_renderTreeBeingDestroyed(_ objectRaw: UnsafeRawPointer) -
   return object.renderTreeBeingDestroyed()
 }
 
+@_cdecl("RenderObjectScion_isFlexibleBoxIncludingDeprecated")
+func RenderObjectScion_isFlexibleBoxIncludingDeprecated(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isFlexibleBoxIncludingDeprecated()
+}
+
 @_cdecl("RenderObjectScion_isSkippedContent")
 func RenderObjectScion_isSkippedContent(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

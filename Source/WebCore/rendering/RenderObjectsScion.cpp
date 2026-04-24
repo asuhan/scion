@@ -163,6 +163,8 @@ extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const v
 
 extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
 
+extern "C" bool RenderObjectScion_isFlexibleBoxIncludingDeprecated(const void*);
+
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
@@ -596,6 +598,8 @@ LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerMod
 }
 
 bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
+
+bool RenderObjectScion::isFlexibleBoxIncludingDeprecated() const { return RenderObjectScion_isFlexibleBoxIncludingDeprecated(m_handle); }
 
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 
