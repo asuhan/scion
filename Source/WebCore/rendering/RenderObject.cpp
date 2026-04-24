@@ -3226,6 +3226,12 @@ bool RenderObject::isTransformed() const
     return hasTransformRelatedProperty() && (style().affectsTransform() || hasSVGTransform());
 }
 
+Ref<Document> RenderObject::protectedDocument() const
+{
+    if (m_scion) { return m_scion->protectedDocument(); }
+    return document();
+}
+
 #if ENABLE(TREE_DEBUGGING)
 
 void printPaintOrderTreeForLiveDocuments()

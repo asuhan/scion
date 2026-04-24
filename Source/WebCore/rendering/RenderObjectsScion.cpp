@@ -485,6 +485,8 @@ RenderView& RenderObjectScion::view() const { return *static_cast<RenderView*>(R
 
 Document& RenderObjectScion::document() const { return *static_cast<Document*>(RenderObjectScion_document(m_handle)); }
 
+Ref<Document> RenderObjectScion::protectedDocument() const { return document(); }
+
 LocalFrame& RenderObjectScion::frame() { return *static_cast<LocalFrame*>(RenderObjectScion_frame(m_handle)); }
 
 Page& RenderObjectScion::page() const { return *const_cast<Page*>(static_cast<const Page*>(RenderObjectScion_page(m_handle))); }

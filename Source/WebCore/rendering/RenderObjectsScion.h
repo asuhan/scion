@@ -130,6 +130,8 @@ public:
 
     Document& document() const;
 
+    Ref<Document> protectedDocument() const;
+
     LocalFrame& frame();
 
     Page& page() const;
