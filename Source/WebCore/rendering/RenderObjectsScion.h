@@ -126,6 +126,8 @@ public:
 
     bool isInline() const;
 
+    bool isHorizontalWritingMode() const;
+
     bool hasReflection() const;
 
     bool isRenderFragmentedFlow() const;

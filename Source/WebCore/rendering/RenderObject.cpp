@@ -3196,6 +3196,12 @@ bool RenderObject::isInline() const
     return !m_stateBitfields.hasFlag(StateFlag::IsBlock);
 }
 
+bool RenderObject::isHorizontalWritingMode() const
+{
+    if (m_scion) { return m_scion->isHorizontalWritingMode(); }
+    return !m_stateBitfields.hasFlag(StateFlag::VerticalWritingMode);
+}
+
 bool RenderObject::hasReflection() const
 {
     if (m_scion) { return m_scion->hasReflection(); }

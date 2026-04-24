@@ -681,7 +681,7 @@ public:
     bool isRenderView() const;
     bool isInline() const; // inline object
     bool isReplacedOrInlineBlock() const { return m_stateBitfields.hasFlag(StateFlag::IsReplacedOrInlineBlock); }
-    bool isHorizontalWritingMode() const { return !m_stateBitfields.hasFlag(StateFlag::VerticalWritingMode); }
+    bool isHorizontalWritingMode() const;
 
     bool hasReflection() const;
     bool isRenderFragmentedFlow() const;
