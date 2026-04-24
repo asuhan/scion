@@ -1099,8 +1099,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderOrLegacyRenderSVGRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderSVGRoot() || isLegacyRenderSVGRoot()
   }
 
   func isRenderOrLegacyRenderSVGShape() -> Bool {
