@@ -2010,8 +2010,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
-    assert(!isNativeImpl())
-    wk_interop.RenderObject_setNeedsLayout(id(), markParents.rawValue)
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setNeedsLayout(id(), markParents.rawValue)
+      return
+    }
+    assert(!isSetNeedsLayoutForbidden())
+    if selfNeedsLayout() {
+      return
+    }
+    m_stateBitfields.setFlag(.NeedsLayout)
+    if markParents == .MarkContainingBlockChain {
+      scheduleLayout(layoutRoot: markContainingBlocksForLayout())
+    }
+    if hasLayer() {
+      setLayerNeedsFullRepaint()
+    }
   }
 
   enum HadSkippedLayout {
