@@ -76,6 +76,8 @@ extern "C" bool RenderObjectScion_isFixedPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isRenderBox(const void*);
 
+extern "C" bool RenderObjectScion_isRenderTableRow(const void*);
+
 extern "C" bool RenderObjectScion_isRenderView(const void*);
 
 extern "C" bool RenderObjectScion_hasReflection(const void*);
@@ -423,6 +425,8 @@ bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositi
 bool RenderObjectScion::isFixedPositioned() const { return RenderObjectScion_isFixedPositioned(m_handle); }
 
 bool RenderObjectScion::isRenderBox() const { return RenderObjectScion_isRenderBox(m_handle); }
+
+bool RenderObjectScion::isRenderTableRow() const { return RenderObjectScion_isRenderTableRow(m_handle); }
 
 bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRenderView(m_handle); }
 

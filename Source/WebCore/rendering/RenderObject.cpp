@@ -3101,6 +3101,12 @@ bool RenderObject::isRenderBox() const
     return m_typeFlags.contains(TypeFlag::IsBox);
 }
 
+bool RenderObject::isRenderTableRow() const
+{
+    if (m_scion) { return m_scion->isRenderTableRow(); }
+    return type() == Type::TableRow;
+}
+
 bool RenderObject::isRenderView() const
 {
     if (m_scion) { return m_scion->isRenderView(); }

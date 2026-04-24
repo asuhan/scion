@@ -96,6 +96,8 @@ public:
 
     bool isRenderBox() const;
 
+    bool isRenderTableRow() const;
+
     bool isRenderView() const;
 
     bool hasReflection() const;
