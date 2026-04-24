@@ -1254,25 +1254,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // since stroke-width is ignored (and marker size can depend on stroke-width).
   // objectBoundingBox is returned local coordinates.
   // The name objectBoundingBox is taken from the SVG 1.1 spec.
-  func objectBoundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func objectBoundingBox() -> FloatRectWrapper { fatalError("Not reached") }
 
-  func strokeBoundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func strokeBoundingBox() -> FloatRectWrapper { fatalError("Not reached") }
 
   // Returns the smallest rectangle enclosing all of the painted content
   // respecting clipping, masking, filters, opacity, stroke-width and markers
   // This returns approximate rectangle for SVG renderers when RepaintRectCalculation.Fast is specified.
   func repaintRectInLocalCoordinates(_ repaintRectCalculation: RepaintRectCalculation = .Fast)
     -> FloatRectWrapper
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  { fatalError("Not reached") }
 
   // This only returns the transform="" value from the element
   // most callsites want localToParentTransform() instead.
