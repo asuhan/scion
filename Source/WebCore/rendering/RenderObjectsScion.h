@@ -180,6 +180,8 @@ public:
 
     bool renderTreeBeingDestroyed() const;
 
+    bool isRenderDeprecatedFlexibleBox() const;
+
     bool isFlexibleBoxIncludingDeprecated() const;
 
     bool isSkippedContent() const;

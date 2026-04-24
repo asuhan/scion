@@ -3268,6 +3268,12 @@ LayoutRect RenderObject::clippedOverflowRectForRepaint(const RenderLayerModelObj
     return clippedOverflowRect(repaintContainer, visibleRectContextForRepaint());
 }
 
+bool RenderObject::isRenderDeprecatedFlexibleBox() const
+{
+    if (m_scion) { return m_scion->isRenderDeprecatedFlexibleBox(); }
+    return m_type == RenderObject::Type::DeprecatedFlexibleBox;
+}
+
 bool RenderObject::isFlexibleBoxIncludingDeprecated() const
 {
     if (m_scion) { return m_scion->isFlexibleBoxIncludingDeprecated(); }

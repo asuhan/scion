@@ -1090,7 +1090,7 @@ public:
     void destroy();
 
     // Virtual function helpers for the deprecated Flexible Box Layout (display: -webkit-box).
-    bool isRenderDeprecatedFlexibleBox() const { return m_type == RenderObject::Type::DeprecatedFlexibleBox; }
+    bool isRenderDeprecatedFlexibleBox() const;
     // Virtual function helper for the new FlexibleBox Layout (display: -webkit-flex).
     inline bool isRenderFlexibleBox() const { return m_typeFlags.contains(TypeFlag::IsFlexibleBox); }
     bool isFlexibleBoxIncludingDeprecated() const;
