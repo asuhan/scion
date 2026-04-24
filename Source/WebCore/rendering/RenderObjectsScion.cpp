@@ -86,6 +86,8 @@ extern "C" bool RenderObjectScion_isRenderSVGText(const void*);
 
 extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
+extern "C" bool RenderObjectScion_isSVGRenderer(const void*);
+
 extern "C" bool RenderObjectScion_isPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isFixedPositioned(const void*);
@@ -474,6 +476,8 @@ bool RenderObjectScion::isRenderSVGRoot() const { return RenderObjectScion_isRen
 bool RenderObjectScion::isRenderSVGText() const { return RenderObjectScion_isRenderSVGText(m_handle); }
 
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
+
+bool RenderObjectScion::isSVGRenderer() const { return RenderObjectScion_isSVGRenderer(m_handle); }
 
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
 

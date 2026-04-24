@@ -3130,6 +3130,12 @@ bool RenderObject::isSVGLayerAwareRenderer() const
     return isRenderSVGRoot() || isRenderSVGModelObject() || isRenderSVGText() || isRenderSVGInline() || isRenderSVGForeignObject();
 }
 
+bool RenderObject::isSVGRenderer() const
+{
+    if (m_scion) { return m_scion->isSVGRenderer(); }
+    return isRenderOrLegacyRenderSVGRoot() || isRenderOrLegacyRenderSVGModelObject() || isRenderSVGBlock() || isRenderSVGInline();
+}
+
 bool RenderObject::isPositioned() const
 {
     if (m_scion) { return m_scion->isPositioned(); }

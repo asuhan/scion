@@ -1147,6 +1147,12 @@ func RenderObjectScion_isSVGLayerAwareRenderer(_ objectRaw: UnsafeMutableRawPoin
   return object.isSVGLayerAwareRenderer()
 }
 
+@_cdecl("RenderObjectScion_isSVGRenderer")
+func RenderObjectScion_isSVGRenderer(_ objectRaw: UnsafeMutableRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isSVGRenderer()
+}
+
 @_cdecl("RenderObjectScion_isPositioned")
 func RenderObjectScion_isPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

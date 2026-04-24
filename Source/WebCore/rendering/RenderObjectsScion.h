@@ -106,6 +106,8 @@ public:
 
     bool isSVGLayerAwareRenderer() const;
 
+    bool isSVGRenderer() const;
+
     bool isPositioned() const;
 
     bool isFixedPositioned() const;
