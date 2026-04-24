@@ -3075,6 +3075,13 @@ bool RenderObject::isPositioned() const
     return m_stateBitfields.isPositioned();
 }
 
+// absolute or fixed positioning
+bool RenderObject::isFixedPositioned() const
+{
+    if (m_scion) { return m_scion->isFixedPositioned(); }
+    return isOutOfFlowPositioned() && style().position() == PositionType::Fixed;
+}
+
 bool RenderObject::isRenderBox() const
 {
     if (m_scion) { return m_scion->isRenderBox(); }

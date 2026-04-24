@@ -88,6 +88,8 @@ public:
 
     bool isPositioned() const;
 
+    bool isFixedPositioned() const;
+
     bool isRenderBox() const;
 
     bool isRenderView() const;
