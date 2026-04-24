@@ -1156,6 +1156,12 @@ func RenderObjectScion_hasNonVisibleOverflow(_ objectRaw: UnsafeRawPointer) -> B
   return object.hasNonVisibleOverflow()
 }
 
+@_cdecl("RenderObjectScion_hasPotentiallyScrollableOverflow")
+func RenderObjectScion_hasPotentiallyScrollableOverflow(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.hasPotentiallyScrollableOverflow()
+}
+
 @_cdecl("RenderObjectScion_hasTransformRelatedProperty")
 func RenderObjectScion_hasTransformRelatedProperty(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

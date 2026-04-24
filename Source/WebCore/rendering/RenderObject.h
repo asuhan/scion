@@ -1537,13 +1537,6 @@ inline RenderObject* RenderObject::nextInFlowSibling() const
     return nextSibling;
 }
 
-inline bool RenderObject::hasPotentiallyScrollableOverflow() const
-{
-    // We only need to test one overflow dimension since 'visible' and 'clip' always get accompanied
-    // with 'clip' or 'visible' in the other dimension (see Style::Adjuster::adjust).
-    return hasNonVisibleOverflow() && style().overflowX() != Overflow::Clip && style().overflowX() != Overflow::Visible;
-}
-
 #if ENABLE(MATHML)
 inline bool RenderObject::isRenderMathMLRow() const
 {

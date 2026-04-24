@@ -90,6 +90,8 @@ extern "C" bool RenderObjectScion_needsLayout(const void*);
 
 extern "C" bool RenderObjectScion_hasNonVisibleOverflow(const void*);
 
+extern "C" bool RenderObjectScion_hasPotentiallyScrollableOverflow(const void*);
+
 extern "C" bool RenderObjectScion_hasTransformRelatedProperty(const void*);
 
 extern "C" bool RenderObjectScion_isTransformed(const void*);
@@ -446,6 +448,8 @@ bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_h
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
 
 bool RenderObjectScion::hasNonVisibleOverflow() const { return RenderObjectScion_hasNonVisibleOverflow(m_handle); }
+
+bool RenderObjectScion::hasPotentiallyScrollableOverflow() const { return RenderObjectScion_hasPotentiallyScrollableOverflow(m_handle); }
 
 bool RenderObjectScion::hasTransformRelatedProperty() const { return RenderObjectScion_hasTransformRelatedProperty(m_handle); }
 

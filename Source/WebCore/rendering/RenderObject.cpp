@@ -3171,6 +3171,14 @@ Page& RenderObject::page() const
     return *frame().page();
 }
 
+bool RenderObject::hasPotentiallyScrollableOverflow() const
+{
+    if (m_scion) { return m_scion->hasPotentiallyScrollableOverflow(); }
+    // We only need to test one overflow dimension since 'visible' and 'clip' always get accompanied
+    // with 'clip' or 'visible' in the other dimension (see Style::Adjuster::adjust).
+    return hasNonVisibleOverflow() && style().overflowX() != Overflow::Clip && style().overflowX() != Overflow::Visible;
+}
+
 bool RenderObject::isTransformed() const
 {
     if (m_scion) { return m_scion->isTransformed(); }

@@ -110,6 +110,8 @@ public:
 
     bool hasNonVisibleOverflow() const;
 
+    bool hasPotentiallyScrollableOverflow() const;
+
     bool hasTransformRelatedProperty() const;
 
     bool isTransformed() const;
