@@ -132,6 +132,77 @@ private func fullRepaintIsScheduled(_ renderer: RenderObjectWrapper) -> Bool {
   return false
 }
 
+private func containerForElement(
+  renderer: RenderObjectWrapper, repaintContainer: RenderLayerModelObjectWrapper?,
+  repaintContainerSkipped: inout Bool?
+) -> RenderElementWrapper? {
+  // This method is extremely similar to containingBlock(), but with a few notable
+  // exceptions.
+  // (1) For normal flow elements, it just returns the parent.
+  // (2) For absolute positioned elements, it will return a relative positioned inline, while
+  // containingBlock() skips to the non-anonymous containing block.
+  // This does mean that computePositionedLogicalWidth and computePositionedLogicalHeight have to use container().
+  // FIXME: See https://bugs.webkit.org/show_bug.cgi?id=270977 for RenderLineBreak special treatment.
+  if !(renderer is RenderElementWrapper) || (renderer is RenderTextWrapper)
+    || (renderer is RenderLineBreakWrapper)
+  {
+    return renderer.parent()
+  }
+
+  let renderElement = renderer as! RenderElementWrapper
+
+  let updateRepaintContainerSkippedFlagIfApplicable = { (repaintContainerSkipped: inout Bool?) in
+    if repaintContainerSkipped == nil {
+      return
+    }
+    repaintContainerSkipped = false
+    if CPtrToInt(repaintContainer?.id()) == CPtrToInt(renderElement.view().id()) {
+      return
+    }
+    for ancestor: RenderElementWrapper in ancestorsOfType(descendant: renderElement) {
+      if CPtrToInt(repaintContainer?.id()) == CPtrToInt(ancestor.id()) {
+        repaintContainerSkipped = true
+        break
+      }
+    }
+  }
+
+  if isInTopLayerOrBackdrop(style: renderElement.style(), element: renderElement.element()) {
+    updateRepaintContainerSkippedFlagIfApplicable(&repaintContainerSkipped)
+    return renderElement.view()
+  }
+  let position = renderElement.style().position()
+  if position == .Static || position == .Relative || position == .Sticky {
+    return renderElement.parent()
+  }
+  var parent = renderElement.parent()
+  if position == .Absolute {
+    while parent != nil && !parent!.canContainAbsolutelyPositionedObjects() {
+      if repaintContainerSkipped != nil
+        && CPtrToInt(repaintContainer?.id()) == CPtrToInt(parent?.id())
+      {
+        repaintContainerSkipped = true
+      }
+      parent = parent!.parent()
+    }
+    return parent
+  }
+
+  while parent != nil && !parent!.canContainFixedPositionObjects() {
+    if isInTopLayerOrBackdrop(style: parent!.style(), element: parent!.element()) {
+      updateRepaintContainerSkippedFlagIfApplicable(&repaintContainerSkipped)
+      return renderElement.view()
+    }
+    if repaintContainerSkipped != nil
+      && CPtrToInt(repaintContainer?.id()) == CPtrToInt(parent?.id())
+    {
+      repaintContainerSkipped = true
+    }
+    parent = parent!.parent()
+  }
+  return parent
+}
+
 class RenderObjectWrapper: CachedImageClientWrapper {
   enum `Type` {
     case BlockFlow
@@ -1643,8 +1714,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // If repaintContainer and repaintContainerSkipped are not null, on return *repaintContainerSkipped
   // is true if the renderer returned is an ancestor of repaintContainer.
   func container() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var repaintContainerSkipped: Bool? = nil
+    return containerForElement(
+      renderer: self, repaintContainer: nil, repaintContainerSkipped: &repaintContainerSkipped)
   }
 
   func container(_ repaintContainer: RenderLayerModelObjectWrapper?) -> (
