@@ -108,6 +108,8 @@ public:
 
     bool isRenderSVGRoot() const;
 
+    bool isRenderSVGContainer() const;
+
     bool isRenderSVGText() const;
 
     bool isSVGLayerAwareRenderer() const;

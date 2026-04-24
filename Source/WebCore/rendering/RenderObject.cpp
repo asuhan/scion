@@ -3143,6 +3143,12 @@ bool RenderObject::isRenderSVGRoot() const
     return type() == Type::SVGRoot;
 }
 
+bool RenderObject::isRenderSVGContainer() const
+{
+    if (m_scion) { return m_scion->isRenderSVGContainer(); }
+    return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsContainer);
+}
+
 bool RenderObject::isRenderSVGText() const
 {
     if (m_scion) { return m_scion->isRenderSVGText(); }
