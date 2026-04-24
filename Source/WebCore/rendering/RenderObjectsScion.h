@@ -86,6 +86,8 @@ public:
 
     RenderObject::FragmentedFlowState fragmentedFlowState() const;
 
+    bool isRenderSVGModelObject() const;
+
     bool isSVGLayerAwareRenderer() const;
 
     bool isPositioned() const;

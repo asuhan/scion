@@ -3070,6 +3070,12 @@ RenderObject::FragmentedFlowState RenderObject::fragmentedFlowState() const
     return m_stateBitfields.fragmentedFlowState();
 }
 
+bool RenderObject::isRenderSVGModelObject() const
+{
+    if (m_scion) { return m_scion->isRenderSVGModelObject(); }
+    return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::SVGModelObject && !m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsLegacy);
+}
+
 bool RenderObject::isSVGLayerAwareRenderer() const
 {
     if (m_scion) { return m_scion->isSVGLayerAwareRenderer(); }
