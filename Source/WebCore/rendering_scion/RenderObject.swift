@@ -809,6 +809,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .ListBox
   }
 
+  func isRenderListItem() -> Bool {
+    assert(isNativeImpl())
+    return type() == .ListItem
+  }
+
   func isRenderListMarker() -> Bool {
     assert(isNativeImpl())
     return type() == .ListMarker
