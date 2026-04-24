@@ -102,6 +102,8 @@ extern "C" const void* RenderObjectScion_settings(const void*);
 
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
+extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
+
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 extern "C" const void* RenderElementScion_style(const void*);
@@ -443,6 +445,8 @@ Page& RenderObjectScion::page() const { return *const_cast<Page*>(static_cast<co
 Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(static_cast<const Settings*>(RenderObjectScion_settings(m_handle))); }
 
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
+
+PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<PointerEvents>(RenderObjectScion_usedPointerEvents(m_handle)); }
 
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
 

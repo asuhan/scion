@@ -2629,6 +2629,7 @@ bool RenderObject::effectiveCapturedInViewTransition() const
 
 PointerEvents RenderObject::usedPointerEvents() const
 {
+    if (m_scion) { return m_scion->usedPointerEvents(); }
     if (document().renderingIsSuppressedForViewTransition() && !isDocumentElementRenderer())
         return PointerEvents::None;
     return style().usedPointerEvents();

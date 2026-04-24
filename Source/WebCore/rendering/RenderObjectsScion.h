@@ -122,6 +122,8 @@ public:
 
     bool isSkippedContent() const;
 
+    PointerEvents usedPointerEvents() const;
+
     void setNormalChildNeedsLayoutBit(bool b);
 
 private:
