@@ -46,6 +46,8 @@ extern "C" void* RenderObjectScion_enclosingFragmentedFlow(const void*);
 
 extern "C" bool RenderObjectScion_isRenderElement(const void*);
 
+extern "C" bool RenderObjectScion_isRenderBlock(const void*);
+
 extern "C" bool RenderObjectScion_isRenderBlockFlow(const void*);
 
 extern "C" bool RenderObjectScion_isRenderInline(const void*);
@@ -445,6 +447,8 @@ RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<Rend
 RenderFragmentedFlow* RenderObjectScion::enclosingFragmentedFlow() const { return static_cast<RenderFragmentedFlow*>(RenderObjectScion_enclosingFragmentedFlow(m_handle)); }
 
 bool RenderObjectScion::isRenderElement() const { return RenderObjectScion_isRenderElement(m_handle); }
+
+bool RenderObjectScion::isRenderBlock() const { return RenderObjectScion_isRenderBlock(m_handle); }
 
 bool RenderObjectScion::isRenderBlockFlow() const { return RenderObjectScion_isRenderBlockFlow(m_handle); }
 

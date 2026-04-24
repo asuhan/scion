@@ -3027,6 +3027,12 @@ bool RenderObject::isRenderElement() const
     return !isRenderText();
 }
 
+bool RenderObject::isRenderBlock() const
+{
+    if (m_scion) { return m_scion->isRenderBlock(); }
+    return m_typeFlags.contains(TypeFlag::IsRenderBlock);
+}
+
 bool RenderObject::isRenderBlockFlow() const
 {
     if (m_scion) { return m_scion->isRenderBlockFlow(); }

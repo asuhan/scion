@@ -429,7 +429,7 @@ public:
     WEBCORE_EXPORT bool isRenderElement() const;
     bool isRenderReplaced() const { return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced; }
     bool isRenderBoxModelObject() const { return m_typeFlags.contains(TypeFlag::IsBoxModelObject); }
-    bool isRenderBlock() const { return m_typeFlags.contains(TypeFlag::IsRenderBlock); }
+    bool isRenderBlock() const;
     WEBCORE_EXPORT bool isRenderBlockFlow() const;
     bool isRenderInline() const;
     WEBCORE_EXPORT bool isRenderLayerModelObject() const;
