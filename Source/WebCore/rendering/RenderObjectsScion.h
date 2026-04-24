@@ -122,6 +122,8 @@ public:
 
     bool isTransformed() const;
 
+    bool capturedInViewTransition() const;
+
     bool effectiveCapturedInViewTransition() const;
 
     RenderView& view() const;

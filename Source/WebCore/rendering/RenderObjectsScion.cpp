@@ -102,6 +102,8 @@ extern "C" bool RenderObjectScion_hasTransformRelatedProperty(const void*);
 
 extern "C" bool RenderObjectScion_isTransformed(const void*);
 
+extern "C" bool RenderObjectScion_capturedInViewTransition(const void*);
+
 extern "C" bool RenderObjectScion_effectiveCapturedInViewTransition(const void*);
 
 extern "C" void* RenderObjectScion_view(const void*);
@@ -474,6 +476,8 @@ bool RenderObjectScion::hasPotentiallyScrollableOverflow() const { return Render
 bool RenderObjectScion::hasTransformRelatedProperty() const { return RenderObjectScion_hasTransformRelatedProperty(m_handle); }
 
 bool RenderObjectScion::isTransformed() const { return RenderObjectScion_isTransformed(m_handle); }
+
+bool RenderObjectScion::capturedInViewTransition() const { return RenderObjectScion_capturedInViewTransition(m_handle); }
 
 bool RenderObjectScion::effectiveCapturedInViewTransition() const { return RenderObjectScion_effectiveCapturedInViewTransition(m_handle); }
 

@@ -727,7 +727,7 @@ public:
     bool isTransformed() const;
     inline bool hasTransformOrPerspective() const;
 
-    bool capturedInViewTransition() const { return m_stateBitfields.hasFlag(StateFlag::CapturedInViewTransition); }
+    bool capturedInViewTransition() const;
     void setCapturedInViewTransition(bool);
 
     // When the document element is captured, the captured contents uses the RenderView

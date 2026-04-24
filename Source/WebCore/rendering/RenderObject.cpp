@@ -3161,6 +3161,12 @@ bool RenderObject::hasTransformRelatedProperty() const
     return m_stateBitfields.hasFlag(StateFlag::HasTransformRelatedProperty);
 }
 
+bool RenderObject::capturedInViewTransition() const
+{
+    if (m_scion) { return m_scion->capturedInViewTransition(); }
+    return m_stateBitfields.hasFlag(StateFlag::CapturedInViewTransition);
+}
+
 RenderView& RenderObject::view() const
 {
     if (m_scion) { return m_scion->view(); }
