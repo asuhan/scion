@@ -1130,8 +1130,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGViewportContainer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .SVGViewportContainer
   }
 
   func isRenderSVGText() -> Bool {
