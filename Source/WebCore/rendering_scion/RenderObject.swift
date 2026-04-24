@@ -823,6 +823,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       && m_typeSpecificFlags.replacedFlags().contains(.IsViewTransitionCapture)
   }
 
+  func isRenderWidget() -> Bool {
+    assert(isNativeImpl())
+    return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsWidget)
+  }
+
   func isRenderHTMLCanvas() -> Bool {
     assert(isNativeImpl())
     return type() == .HTMLCanvas
