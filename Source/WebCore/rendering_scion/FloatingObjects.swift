@@ -86,6 +86,10 @@ class FloatingObjectWrapper: Hashable {
     return frameRect.maxY()
   }
 
+  func width() -> LayoutUnit { return frameRect.width() }
+
+  func height() -> LayoutUnit { return frameRect.height() }
+
   func setX(x: LayoutUnit) {
     #if ASSERT_ENABLED
       assert(!isInPlacedTree)

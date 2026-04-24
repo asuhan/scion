@@ -2214,8 +2214,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func logicalWidthForFloat(_ floatingObject: FloatingObjectWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? floatingObject.width() : floatingObject.height()
   }
 
   private func setLogicalTopForFloat(
