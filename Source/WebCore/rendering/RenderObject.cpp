@@ -345,6 +345,7 @@ void RenderObject::clearLayoutBox()
 
 RenderTheme& RenderObject::theme() const
 {
+    // TODO(asuhan): add Scion implementation check
     return RenderTheme::singleton();
 }
 
