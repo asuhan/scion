@@ -2797,6 +2797,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return document().renderTreeBeingDestroyed()
   }
 
+  func destroy() {
+    assert(isNativeImpl())
+    assert(m_parent == nil)
+    assert(m_next == nil)
+    assert(m_previous == nil)
+    assert(!m_stateBitfields.hasFlag(.BeingDestroyed))
+
+    m_stateBitfields.setFlag(.BeingDestroyed)
+
+    willBeDestroyed()
+  }
+
   // Virtual function helpers for the deprecated Flexible Box Layout (display: -webkit-box).
   func isRenderDeprecatedFlexibleBox() -> Bool {
     assert(isNativeImpl())
