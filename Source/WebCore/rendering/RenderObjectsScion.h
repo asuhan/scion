@@ -114,6 +114,8 @@ public:
 
     bool isRenderSVGContainer() const;
 
+    bool isRenderSVGHiddenContainer() const;
+
     bool isRenderSVGText() const;
 
     bool isSVGLayerAwareRenderer() const;

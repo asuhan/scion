@@ -3165,6 +3165,12 @@ bool RenderObject::isRenderSVGContainer() const
     return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsContainer);
 }
 
+bool RenderObject::isRenderSVGHiddenContainer() const
+{
+    if (m_scion) { return m_scion->isRenderSVGHiddenContainer(); }
+    return type() == Type::SVGHiddenContainer || isRenderSVGResourceContainer() || isRenderSVGResourceFilterPrimitive();
+}
+
 bool RenderObject::isRenderSVGText() const
 {
     if (m_scion) { return m_scion->isRenderSVGText(); }
