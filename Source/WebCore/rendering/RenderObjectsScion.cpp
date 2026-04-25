@@ -183,6 +183,8 @@ extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const
 
 extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
 
+extern "C" void RenderObjectScion_destroy(void*);
+
 extern "C" bool RenderObjectScion_isRenderDeprecatedFlexibleBox(const void*);
 
 extern "C" bool RenderObjectScion_isRenderFlexibleBox(const void*);
@@ -656,6 +658,8 @@ RenderObject::RepaintRects RenderObjectScion::rectsForRepaintingAfterLayout(cons
 }
 
 bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
+
+void RenderObjectScion::destroy() { RenderObjectScion_destroy(m_handle); }
 
 bool RenderObjectScion::isRenderDeprecatedFlexibleBox() const { return RenderObjectScion_isRenderDeprecatedFlexibleBox(m_handle); }
 

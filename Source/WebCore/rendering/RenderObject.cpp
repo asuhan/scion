@@ -2042,6 +2042,10 @@ void RenderObject::willBeRemovedFromTree()
 
 void RenderObject::destroy()
 {
+    if (m_scion) {
+        m_scion->destroy();
+        return;
+    }
     RELEASE_ASSERT(!m_parent);
     RELEASE_ASSERT(!m_next);
     RELEASE_ASSERT(!m_previous);

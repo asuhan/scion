@@ -200,6 +200,8 @@ public:
 
     bool renderTreeBeingDestroyed() const;
 
+    void destroy();
+
     bool isRenderDeprecatedFlexibleBox() const;
 
     bool isRenderFlexibleBox() const;
