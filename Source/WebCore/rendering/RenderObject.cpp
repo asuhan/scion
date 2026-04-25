@@ -3123,6 +3123,12 @@ bool RenderObject::isRenderGrid() const
     return type() == Type::Grid;
 }
 
+bool RenderObject::isDocumentElementRenderer() const
+{
+    if (m_scion) { return m_scion->isDocumentElementRenderer(); }
+    return document().documentElement() == m_node.ptr();
+}
+
 bool RenderObject::childrenInline() const
 {
     if (m_scion) { return m_scion->childrenInline(); }

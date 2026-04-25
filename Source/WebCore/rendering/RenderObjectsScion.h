@@ -96,6 +96,8 @@ public:
 
     bool isRenderGrid() const;
 
+    bool isDocumentElementRenderer() const;
+
     bool isHTMLMarquee() const;
 
     bool childrenInline() const;

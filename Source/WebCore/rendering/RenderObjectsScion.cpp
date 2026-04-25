@@ -76,6 +76,8 @@ extern "C" bool RenderObjectScion_isRenderHTMLCanvas(const void*);
 
 extern "C" bool RenderObjectScion_isRenderGrid(const void*);
 
+extern "C" bool RenderObjectScion_isDocumentElementRenderer(const void*);
+
 extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
 
 extern "C" bool RenderObjectScion_childrenInline(const void*);
@@ -509,6 +511,8 @@ bool RenderObjectScion::isRenderWidget() const { return RenderObjectScion_isRend
 bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_isRenderHTMLCanvas(m_handle); }
 
 bool RenderObjectScion::isRenderGrid() const { return RenderObjectScion_isRenderGrid(m_handle); }
+
+bool RenderObjectScion::isDocumentElementRenderer() const { return RenderObjectScion_isDocumentElementRenderer(m_handle); }
 
 bool RenderObjectScion::isHTMLMarquee() const { return RenderObjectScion_isHTMLMarquee(m_handle); }
 
