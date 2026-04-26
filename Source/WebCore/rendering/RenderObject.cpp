@@ -323,17 +323,20 @@ void RenderObject::setScionHandle(void* handle)
 
 CheckedRef<RenderView> RenderObject::checkedView() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return view();
 }
 
 void RenderObject::setLayoutBox(Layout::Box& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_layoutBox = &box;
     m_layoutBox->setRendererForIntegration(this);
 }
 
 void RenderObject::clearLayoutBox()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_layoutBox)
         return;
 
@@ -351,6 +354,7 @@ RenderTheme& RenderObject::theme() const
 
 bool RenderObject::isDescendantOf(const RenderObject* ancestor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto* renderer = this; renderer; renderer = renderer->m_parent.get()) {
         if (renderer == ancestor)
             return true;
@@ -360,6 +364,7 @@ bool RenderObject::isDescendantOf(const RenderObject* ancestor) const
 
 RenderElement* RenderObject::firstNonAnonymousAncestor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* ancestor = parent();
     while (ancestor && ancestor->isAnonymous())
         ancestor = ancestor->parent();
@@ -368,12 +373,14 @@ RenderElement* RenderObject::firstNonAnonymousAncestor() const
 
 bool RenderObject::isLegend() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return node() && node()->hasTagName(legendTag);
 }
 
     
 bool RenderObject::isFieldset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return node() && node()->hasTagName(fieldsetTag);
 }
 
@@ -385,12 +392,14 @@ bool RenderObject::isHTMLMarquee() const
 
 bool RenderObject::isBlockBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // A block-level box that is also a block container.
     return isBlockLevelBox() && isBlockContainer();
 }
 
 bool RenderObject::isBlockContainer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto display = style().display();
     return (display == DisplayType::Block
         || display == DisplayType::InlineBlock
@@ -402,6 +411,7 @@ bool RenderObject::isBlockContainer() const
 
 void RenderObject::setFragmentedFlowStateIncludingDescendants(FragmentedFlowState state, SkipDescendentFragmentedFlow skipDescendentFragmentedFlow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setFragmentedFlowState(state);
 
     auto* renderElement = dynamicDowncast<RenderElement>(*this);
@@ -458,6 +468,7 @@ RenderObject::FragmentedFlowState RenderObject::computedFragmentedFlowState(cons
 
 void RenderObject::initializeFragmentedFlowStateOnInsertion()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(parent());
 
     // A RenderFragmentedFlow is always considered to be inside itself, so it never has to change its state in response to parent changes.
@@ -473,6 +484,7 @@ void RenderObject::initializeFragmentedFlowStateOnInsertion()
 
 void RenderObject::resetFragmentedFlowStateOnRemoval()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!renderTreeBeingDestroyed());
 
     if (fragmentedFlowState() == FragmentedFlowState::NotInsideFlow)
@@ -492,11 +504,13 @@ void RenderObject::resetFragmentedFlowStateOnRemoval()
 
 void RenderObject::setParent(RenderElement* parent)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_parent = parent;
 }
 
 RenderObject* RenderObject::nextInPreOrder() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderObject* o = firstChildSlow())
         return o;
 
@@ -505,6 +519,7 @@ RenderObject* RenderObject::nextInPreOrder() const
 
 RenderObject* RenderObject::nextInPreOrderAfterChildren() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderObject* o;
     if (!(o = nextSibling())) {
         o = parent();
@@ -519,6 +534,7 @@ RenderObject* RenderObject::nextInPreOrderAfterChildren() const
 
 RenderObject* RenderObject::nextInPreOrder(const RenderObject* stayWithin) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderObject* o = firstChildSlow())
         return o;
 
@@ -527,6 +543,7 @@ RenderObject* RenderObject::nextInPreOrder(const RenderObject* stayWithin) const
 
 RenderObject* RenderObject::nextInPreOrderAfterChildren(const RenderObject* stayWithin) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (this == stayWithin)
         return nullptr;
 
@@ -542,6 +559,7 @@ RenderObject* RenderObject::nextInPreOrderAfterChildren(const RenderObject* stay
 
 RenderObject* RenderObject::previousInPreOrder() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderObject* o = previousSibling()) {
         while (RenderObject* last = o->lastChildSlow())
             o = last;
@@ -553,6 +571,7 @@ RenderObject* RenderObject::previousInPreOrder() const
 
 RenderObject* RenderObject::previousInPreOrder(const RenderObject* stayWithin) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (this == stayWithin)
         return nullptr;
 
@@ -561,6 +580,7 @@ RenderObject* RenderObject::previousInPreOrder(const RenderObject* stayWithin) c
 
 RenderObject* RenderObject::childAt(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderObject* child = firstChildSlow();
     for (unsigned i = 0; child && i < index; i++)
         child = child->nextSibling();
@@ -569,6 +589,7 @@ RenderObject* RenderObject::childAt(unsigned index) const
 
 RenderObject* RenderObject::firstLeafChild() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderObject* r = firstChildSlow();
     while (r) {
         RenderObject* n = nullptr;
@@ -582,6 +603,7 @@ RenderObject* RenderObject::firstLeafChild() const
 
 RenderObject* RenderObject::lastLeafChild() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderObject* r = lastChildSlow();
     while (r) {
         RenderObject* n = nullptr;
@@ -598,6 +620,7 @@ RenderObject* RenderObject::lastLeafChild() const
 // Non-recursive version of the DFS search.
 RenderObject* RenderObject::traverseNext(const RenderObject* stayWithin, HeightTypeTraverseNextInclusionFunction inclusionFunction, int& currentDepth, int& newFixedDepth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     BlockContentHeightType overflowType;
 
     // Check for suitable children.
@@ -657,16 +680,19 @@ RenderLayer* RenderObject::enclosingLayer() const
 
 RenderBox& RenderObject::enclosingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return *lineageOfType<RenderBox>(const_cast<RenderObject&>(*this)).first();
 }
 
 RenderBoxModelObject& RenderObject::enclosingBoxModelObject() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return *lineageOfType<RenderBoxModelObject>(const_cast<RenderObject&>(*this)).first();
 }
 
 RenderBox* RenderObject::enclosingScrollableContainer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Walk up the container chain to find the scrollable container that contains
     // this RenderObject. The important thing here is that `container()` respects
     // the containing block chain for positioned elements. This is important because
@@ -721,6 +747,7 @@ static inline bool objectIsRelayoutBoundary(const RenderElement* object)
 
 void RenderObject::clearNeedsLayout(HadSkippedLayout hadSkippedLayout)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Consider not setting the "ever had layout" bit to true when "hadSkippedLayout"
     setEverHadLayout();
     setHadSkippedLayout(hadSkippedLayout == HadSkippedLayout::Yes);
@@ -740,6 +767,7 @@ void RenderObject::clearNeedsLayout(HadSkippedLayout hadSkippedLayout)
 
 void RenderObject::scheduleLayout(RenderElement* layoutRoot)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* renderView = dynamicDowncast<RenderView>(layoutRoot))
         return renderView->protectedFrameView()->checkedLayoutContext()->scheduleLayout();
 
@@ -763,6 +791,7 @@ static inline void setIsSimplifiedLayoutRootForLayerIfApplicable(RenderElement& 
 
 RenderElement* RenderObject::markContainingBlocksForLayout(RenderElement* layoutRoot)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!isSetNeedsLayoutForbidden());
     if (is<RenderView>(*this))
         return downcast<RenderElement>(this);
@@ -824,6 +853,7 @@ RenderElement* RenderObject::markContainingBlocksForLayout(RenderElement* layout
 #if ASSERT_ENABLED
 void RenderObject::checkBlockPositionedObjectsNeedLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsLayout());
 
     if (auto* renderBlock = dynamicDowncast<RenderBlock>(*this))
@@ -845,6 +875,7 @@ void RenderObject::setPreferredLogicalWidthsDirty(bool shouldBeDirty, MarkingBeh
 
 void RenderObject::invalidateContainerPreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // In order to avoid pathological behavior when inlines are deeply nested, we do include them
     // in the chain that we mark dirty (even though they're kind of irrelevant).
     CheckedPtr ancestor = isRenderTableCell() ? containingBlock() : container();
@@ -867,12 +898,14 @@ void RenderObject::invalidateContainerPreferredLogicalWidths()
 
 void RenderObject::setLayerNeedsFullRepaint()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasLayer());
     downcast<RenderLayerModelObject>(*this).checkedLayer()->setRepaintStatus(RepaintStatus::NeedsFullRepaint);
 }
 
 void RenderObject::setLayerNeedsFullRepaintForPositionedMovementLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasLayer());
     downcast<RenderLayerModelObject>(*this).checkedLayer()->setRepaintStatus(RepaintStatus::NeedsFullRepaintForPositionedMovementLayout);
 }
@@ -931,6 +964,7 @@ RenderBlock* RenderObject::containingBlockForPositionType(PositionType positionT
 
 RenderBlock* RenderObject::containingBlock() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: See https://bugs.webkit.org/show_bug.cgi?id=270977 for RenderLineBreak special treatment.
     if (is<RenderText>(*this) || is<RenderLineBreak>(*this))
         return containingBlockForPositionType(PositionType::Static, *this);
@@ -953,11 +987,13 @@ RenderBlock* RenderObject::containingBlock() const
 
 CheckedPtr<RenderBlock> RenderObject::checkedContainingBlock() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return containingBlock();
 }
 
 void RenderObject::addPDFURLRect(const PaintInfo& paintInfo, const LayoutPoint& paintOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Vector<LayoutRect> focusRingRects;
     addFocusRingRects(focusRingRects, paintOffset, paintInfo.paintContainer);
     LayoutRect urlRect = unionRect(focusRingRects);
@@ -992,6 +1028,7 @@ void RenderObject::addPDFURLRect(const PaintInfo& paintInfo, const LayoutPoint& 
 // FIXME: Move to RenderText with absoluteRectsForRange()?
 void RenderObject::collectSelectionGeometries(Vector<SelectionGeometry>& geometries, unsigned start, unsigned end)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Vector<FloatQuad> quads;
 
     if (!firstChildSlow()) {
@@ -1017,6 +1054,7 @@ void RenderObject::collectSelectionGeometries(Vector<SelectionGeometry>& geometr
 
 IntRect RenderObject::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (useTransforms) {
         Vector<FloatQuad> quads;
         absoluteQuads(quads, wasFixed);
@@ -1037,6 +1075,7 @@ IntRect RenderObject::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed
 
 void RenderObject::absoluteFocusRingQuads(Vector<FloatQuad>& quads)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Vector<LayoutRect> rects;
     // FIXME: addFocusRingRects() needs to be passed this transform-unaware
     // localToAbsolute() offset here because RenderInline::addFocusRingRects()
@@ -1053,6 +1092,7 @@ void RenderObject::absoluteFocusRingQuads(Vector<FloatQuad>& quads)
 
 void RenderObject::addAbsoluteRectForLayer(LayoutRect& result)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasLayer())
         result.unite(absoluteBoundingBoxRectIgnoringTransforms());
 
@@ -1067,6 +1107,7 @@ void RenderObject::addAbsoluteRectForLayer(LayoutRect& result)
 // FIXME: change this to use the subtreePaint terminology
 LayoutRect RenderObject::paintingRootRect(LayoutRect& topLevelRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect result = absoluteBoundingBoxRectIgnoringTransforms();
     topLevelRect = result;
     if (auto* renderElement = dynamicDowncast<RenderElement>(*this)) {
@@ -1123,6 +1164,7 @@ RenderObject::RepaintContainerStatus RenderObject::containerForRepaint() const
 
 void RenderObject::propagateRepaintToParentWithOutlineAutoIfNeeded(const RenderLayerModelObject& repaintContainer, const LayoutRect& repaintRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasOutlineAutoAncestor())
         return;
 
@@ -1220,6 +1262,7 @@ static inline bool fullRepaintIsScheduled(const RenderObject& renderer)
 
 void RenderObject::issueRepaint(std::optional<LayoutRect> partialRepaintRect, ClipRepaintToLayer clipRepaintToLayer, ForceRepaint forceRepaint, std::optional<LayoutBoxExtent> additionalRepaintOutsets) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto repaintContainer = containerForRepaint();
     if (!repaintContainer.renderer)
         repaintContainer = { fullRepaintIsScheduled(*this), &view() };
@@ -1241,6 +1284,7 @@ void RenderObject::issueRepaint(std::optional<LayoutRect> partialRepaintRect, Cl
 
 void RenderObject::repaint(ForceRepaint forceRepaint) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isDescendantOf(&view()) || is<RenderScrollbarPart>(this) || is<RenderReplica>(this));
 
     if (view().printing())
@@ -1250,12 +1294,14 @@ void RenderObject::repaint(ForceRepaint forceRepaint) const
 
 void RenderObject::repaintRectangle(const LayoutRect& repaintRect, bool shouldClipToLayer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isDescendantOf(&view()) || is<RenderScrollbarPart>(this));
     return repaintRectangle(repaintRect, shouldClipToLayer ? ClipRepaintToLayer::Yes : ClipRepaintToLayer::No, ForceRepaint::No);
 }
 
 void RenderObject::repaintRectangle(const LayoutRect& repaintRect, ClipRepaintToLayer shouldClipToLayer, ForceRepaint forceRepaint, std::optional<LayoutBoxExtent> additionalRepaintOutsets) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isDescendantOf(&view()) || is<RenderScrollbarPart>(this) || is<RenderReplica>(this));
 
     if (view().printing())
@@ -1269,6 +1315,7 @@ void RenderObject::repaintRectangle(const LayoutRect& repaintRect, ClipRepaintTo
 
 void RenderObject::repaintSlowRepaintObject() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isDescendantOf(&view()) || is<RenderScrollbarPart>(this) || is<RenderReplica>(this));
 
     CheckedRef view = this->view();
@@ -1292,11 +1339,13 @@ void RenderObject::repaintSlowRepaintObject() const
 
 IntRect RenderObject::pixelSnappedAbsoluteClippedOverflowRect() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return snappedIntRect(absoluteClippedOverflowRectForRepaint());
 }
     
 LayoutRect RenderObject::rectWithOutlineForRepaint(const RenderLayerModelObject* repaintContainer, LayoutUnit outlineWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect r(clippedOverflowRectForRepaint(repaintContainer));
     r.inflate(outlineWidth);
     return r;
@@ -1324,6 +1373,7 @@ auto RenderObject::rectsForRepaintingAfterLayout(const RenderLayerModelObject* r
 
 LayoutRect RenderObject::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto repaintRects = localRectsForRepaint(RepaintOutlineBounds::No);
     if (repaintRects.clippedOverflowRect.isEmpty())
         return { };
@@ -1333,6 +1383,7 @@ LayoutRect RenderObject::clippedOverflowRect(const RenderLayerModelObject* repai
 
 auto RenderObject::computeRects(const RepaintRects& rects, const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto result = computeVisibleRectsInContainer(rects, repaintContainer, context);
     RELEASE_ASSERT(result);
     return *result;
@@ -1340,6 +1391,7 @@ auto RenderObject::computeRects(const RepaintRects& rects, const RenderLayerMode
 
 FloatRect RenderObject::computeFloatRectForRepaint(const FloatRect& rect, const RenderLayerModelObject* repaintContainer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto result = computeFloatVisibleRectInContainer(rect, repaintContainer, visibleRectContextForRepaint());
     RELEASE_ASSERT(result);
     return *result;
@@ -1347,6 +1399,7 @@ FloatRect RenderObject::computeFloatRectForRepaint(const FloatRect& rect, const 
 
 auto RenderObject::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (container == this)
         return rects;
 
@@ -1383,12 +1436,14 @@ static void outputRenderTreeLegend(TextStream& stream)
 
 void RenderObject::showNodeTreeForThis() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RefPtr node = this->node())
         node->showTreeForThis();
 }
 
 void RenderObject::showRenderTreeForThis() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CheckedPtr root = this;
     while (root->parent())
         root = root->parent();
@@ -1400,6 +1455,7 @@ void RenderObject::showRenderTreeForThis() const
 
 void RenderObject::showLineTreeForThis() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* blockFlow = dynamicDowncast<RenderBlockFlow>(*this);
     if (!blockFlow)
         return;
@@ -1426,6 +1482,7 @@ static const RenderFragmentedFlow* enclosingFragmentedFlowFromRenderer(const Ren
 
 void RenderObject::outputRegionsInformation(TextStream& stream) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (CheckedPtr renderFlagmentedFlow = dynamicDowncast<RenderFragmentedFlow>(*this)) {
         auto fragmentContainers = renderFlagmentedFlow->renderFragmentContainerList();
 
@@ -1465,6 +1522,7 @@ void RenderObject::outputRegionsInformation(TextStream& stream) const
 
 void RenderObject::outputRenderObject(TextStream& stream, bool mark, int depth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isInlineBlockOrInlineTable())
         stream << "N";
     else if (isInline())
@@ -1657,6 +1715,7 @@ void RenderObject::outputRenderObject(TextStream& stream, bool mark, int depth) 
 
 void RenderObject::outputRenderSubTreeAndMark(TextStream& stream, const RenderObject* markedObject, int depth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     outputRenderObject(stream, markedObject == this, depth);
 
     if (auto* blockFlow = dynamicDowncast<RenderBlockFlow>(*this)) {
@@ -1672,6 +1731,7 @@ void RenderObject::outputRenderSubTreeAndMark(TextStream& stream, const RenderOb
 
 FloatPoint RenderObject::localToAbsolute(const FloatPoint& localPoint, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     TransformState transformState(TransformState::ApplyTransformDirection, localPoint);
     mapLocalToContainer(nullptr, transformState, mode | ApplyContainerFlip, wasFixed);
     transformState.flatten();
@@ -1681,6 +1741,7 @@ FloatPoint RenderObject::localToAbsolute(const FloatPoint& localPoint, OptionSet
 
 std::unique_ptr<TransformationMatrix> RenderObject::viewTransitionTransform() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Compute the accumulated local to absolute TransformationMatrix, using the
     // 'TrackSVGCTMMatrix' option. This computes a single matrix, applying flatten()
     // to the matrix at 3d rendering context boundaries.
@@ -1694,6 +1755,7 @@ std::unique_ptr<TransformationMatrix> RenderObject::viewTransitionTransform() co
 
 FloatPoint RenderObject::absoluteToLocal(const FloatPoint& containerPoint, OptionSet<MapCoordinatesMode> mode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     TransformState transformState(TransformState::UnapplyInverseTransformDirection, containerPoint);
     mapAbsoluteToLocalPoint(mode, transformState);
     transformState.flatten();
@@ -1703,6 +1765,7 @@ FloatPoint RenderObject::absoluteToLocal(const FloatPoint& containerPoint, Optio
 
 FloatQuad RenderObject::absoluteToLocalQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     TransformState transformState(TransformState::UnapplyInverseTransformDirection, quad.boundingBox().center(), quad);
     mapAbsoluteToLocalPoint(mode, transformState);
     transformState.flatten();
@@ -1711,6 +1774,7 @@ FloatQuad RenderObject::absoluteToLocalQuad(const FloatQuad& quad, OptionSet<Map
 
 void RenderObject::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (ancestorContainer == this)
         return;
 
@@ -1734,6 +1798,7 @@ void RenderObject::mapLocalToContainer(const RenderLayerModelObject* ancestorCon
 
 const RenderObject* RenderObject::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(ancestorToStopAt, ancestorToStopAt != this);
 
     CheckedPtr container = parent();
@@ -1752,6 +1817,7 @@ const RenderObject* RenderObject::pushMappingToContainer(const RenderLayerModelO
 
 void RenderObject::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, TransformState& transformState) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (CheckedPtr parent = this->parent()) {
         parent->mapAbsoluteToLocalPoint(mode, transformState);
         if (auto* box = dynamicDowncast<RenderBox>(*parent))
@@ -1761,6 +1827,7 @@ void RenderObject::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, T
 
 bool RenderObject::shouldUseTransformFromContainer(const RenderObject* containerObject) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isTransformed())
         return true;
     if (containerObject && containerObject->style().hasPerspective())
@@ -1771,6 +1838,7 @@ bool RenderObject::shouldUseTransformFromContainer(const RenderObject* container
 // FIXME: Now that it's no longer passed a container maybe this should be renamed?
 void RenderObject::getTransformFromContainer(const LayoutSize& offsetInContainer, TransformationMatrix& transform) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     transform.makeIdentity();
     transform.translate(offsetInContainer.width(), offsetInContainer.height());
     CheckedPtr<RenderLayer> layer;
@@ -1795,6 +1863,7 @@ void RenderObject::getTransformFromContainer(const LayoutSize& offsetInContainer
 
 void RenderObject::pushOntoTransformState(TransformState& transformState, OptionSet<MapCoordinatesMode> mode, const RenderLayerModelObject* repaintContainer, const RenderElement* container, const LayoutSize& offsetInContainer, bool containerSkipped) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool preserve3D = mode.contains(UseTransforms) && participatesInPreserve3D();
     if (mode.contains(UseTransforms) && shouldUseTransformFromContainer(container)) {
         TransformationMatrix matrix;
@@ -1813,6 +1882,7 @@ void RenderObject::pushOntoTransformState(TransformState& transformState, Option
 
 void RenderObject::pushOntoGeometryMap(RenderGeometryMap& geometryMap, const RenderLayerModelObject* repaintContainer, RenderElement* container, bool containerSkipped) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool isFixedPos = isFixedPositioned();
     LayoutSize adjustmentForSkippedAncestor;
     if (containerSkipped) {
@@ -1839,6 +1909,7 @@ void RenderObject::pushOntoGeometryMap(RenderGeometryMap& geometryMap, const Ren
 
 FloatQuad RenderObject::localToContainerQuad(const FloatQuad& localQuad, const RenderLayerModelObject* container, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Track the point at the center of the quad's bounding box. As mapLocalToContainer() calls offsetFromContainer(),
     // it will use that point as the reference point to decide which column's transform to apply in multiple-column blocks.
     TransformState transformState(TransformState::ApplyTransformDirection, localQuad.boundingBox().center(), localQuad);
@@ -1850,6 +1921,7 @@ FloatQuad RenderObject::localToContainerQuad(const FloatQuad& localQuad, const R
 
 FloatPoint RenderObject::localToContainerPoint(const FloatPoint& localPoint, const RenderLayerModelObject* container, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     TransformState transformState(TransformState::ApplyTransformDirection, localPoint);
     mapLocalToContainer(container, transformState, mode | ApplyContainerFlip, wasFixed);
     transformState.flatten();
@@ -1859,6 +1931,7 @@ FloatPoint RenderObject::localToContainerPoint(const FloatPoint& localPoint, con
 
 LayoutSize RenderObject::offsetFromContainer(RenderElement& container, const LayoutPoint&, bool* offsetDependsOnPoint) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(&container == this->container());
 
     LayoutSize offset;
@@ -1873,6 +1946,7 @@ LayoutSize RenderObject::offsetFromContainer(RenderElement& container, const Lay
 
 LayoutSize RenderObject::offsetFromAncestorContainer(const RenderElement& container) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutSize offset;
     LayoutPoint referencePoint;
     CheckedPtr currentContainer = this;
@@ -1893,16 +1967,19 @@ LayoutSize RenderObject::offsetFromAncestorContainer(const RenderElement& contai
 
 bool RenderObject::participatesInPreserve3D() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasLayer() && downcast<RenderLayerModelObject>(*this).layer()->participatesInPreserve3D();
 }
 
 HostWindow* RenderObject::hostWindow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return view().frameView().root() ? view().frameView().root()->hostWindow() : nullptr;
 }
 
 bool RenderObject::isRooted() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isDescendantOf(&view());
 }
 
@@ -1970,6 +2047,7 @@ RenderElement* RenderObject::container() const
 
 RenderElement* RenderObject::container(const RenderLayerModelObject* repaintContainer, bool& repaintContainerSkipped) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     repaintContainerSkipped = false;
     return containerForElement(*this, repaintContainer, &repaintContainerSkipped);
 }
@@ -1981,6 +2059,7 @@ bool RenderObject::hasLayer() const {
 
 bool RenderObject::isSelectionBorder() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     HighlightState st = selectionState();
     return st == HighlightState::Start
         || st == HighlightState::End
@@ -1991,6 +2070,7 @@ bool RenderObject::isSelectionBorder() const
 
 void RenderObject::setCapturedInViewTransition(bool captured)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (capturedInViewTransition() != captured) {
         m_stateBitfields.setFlag(StateFlag::CapturedInViewTransition, captured);
 
@@ -2011,6 +2091,7 @@ void RenderObject::setCapturedInViewTransition(bool captured)
 
 void RenderObject::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_parent);
     ASSERT(renderTreeBeingDestroyed() || !is<RenderElement>(*this) || !view().frameView().hasSlowRepaintObject(downcast<RenderElement>(*this)));
 
@@ -2029,6 +2110,7 @@ void RenderObject::willBeDestroyed()
 
 void RenderObject::insertedIntoTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We should ASSERT(isRooted()) here but generated content makes some out-of-order insertion.
     if (!isFloating() && parent()->isSVGRenderer() && parent()->childrenInline())
         checkedParent()->dirtyLineFromChangedChild();
@@ -2036,6 +2118,7 @@ void RenderObject::insertedIntoTree()
 
 void RenderObject::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We should ASSERT(isRooted()) but we have some out-of-order removals which would need to be fixed first.
     // Update cached boundaries in SVG renderers, if a child is removed.
     checkedParent()->invalidateCachedBoundaries();
@@ -2065,12 +2148,14 @@ void RenderObject::destroy()
 
 Position RenderObject::positionForPoint(const LayoutPoint& point, HitTestSource source)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: This should just create a Position object instead (webkit.org/b/168566). 
     return positionForPoint(point, source, nullptr).deepEquivalent();
 }
 
 VisiblePosition RenderObject::positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return createVisiblePosition(caretMinOffset(), Affinity::Downstream);
 }
 
@@ -2082,6 +2167,7 @@ bool RenderObject::isComposited() const
 
 bool RenderObject::hitTest(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter hitTestFilter)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool inside = false;
     if (hitTestFilter != HitTestSelf) {
         // First test the foreground layer (lines and inlines).
@@ -2105,6 +2191,7 @@ bool RenderObject::hitTest(const HitTestRequest& request, HitTestResult& result,
 
 Node* RenderObject::nodeForHitTest() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* node = this->node();
     // If we hit the anonymous renderers inside generated content we should
     // actually hit the generated content so walk up to the PseudoElement.
@@ -2117,11 +2204,13 @@ Node* RenderObject::nodeForHitTest() const
 
 RefPtr<Node> RenderObject::protectedNodeForHitTest() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return nodeForHitTest();
 }
 
 void RenderObject::updateHitTestResult(HitTestResult& result, const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (result.innerNode())
         return;
 
@@ -2140,6 +2229,7 @@ bool RenderObject::nodeAtPoint(const HitTestRequest&, HitTestResult&, const HitT
 
 int RenderObject::innerLineHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().computedLineHeight();
 }
 
@@ -2150,6 +2240,7 @@ int RenderObject::caretMinOffset() const
 
 int RenderObject::caretMaxOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isReplacedOrInlineBlock())
         return node() ? std::max(1U, node()->countChildNodes()) : 1;
     if (isHR())
@@ -2159,26 +2250,31 @@ int RenderObject::caretMaxOffset() const
 
 int RenderObject::previousOffset(int current) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return current - 1;
 }
 
 int RenderObject::previousOffsetForBackwardDeletion(int current) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return current - 1;
 }
 
 int RenderObject::nextOffset(int current) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return current + 1;
 }
 
 void RenderObject::imageChanged(CachedImage* image, const IntRect* rect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     imageChanged(static_cast<WrappedImagePtr>(image), rect);
 }
 
 RenderBoxModelObject* RenderObject::offsetParent() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If any of the following holds true return null and stop this algorithm:
     // A is the root element.
     // A is the HTML body element.
@@ -2219,6 +2315,7 @@ RenderBoxModelObject* RenderObject::offsetParent() const
 
 VisiblePosition RenderObject::createVisiblePosition(int offset, Affinity affinity) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If this is a non-anonymous renderer in an editable area, then it's simple.
     if (RefPtr node = nonPseudoNode()) {
         if (!node->hasEditableStyle()) {
@@ -2273,6 +2370,7 @@ VisiblePosition RenderObject::createVisiblePosition(int offset, Affinity affinit
 
 VisiblePosition RenderObject::createVisiblePosition(const Position& position) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (position.isNotNull())
         return VisiblePosition(position);
 
@@ -2287,21 +2385,25 @@ CursorDirective RenderObject::getCursor(const LayoutPoint&, Cursor&) const
 
 bool RenderObject::useDarkAppearance() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return document().useDarkAppearance(&style());
 }
 
 OptionSet<StyleColorOptions> RenderObject::styleColorOptions() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return document().styleColorOptions(&style());
 }
 
 void RenderObject::setSelectionState(HighlightState state)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_stateBitfields.setSelectionState(state);
 }
 
 bool RenderObject::canUpdateSelectionOnRootLineBoxes()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (needsLayout())
         return false;
 
@@ -2315,11 +2417,13 @@ bool RenderObject::canUpdateSelectionOnRootLineBoxes()
 // This correctly prevents form controls from having such renderers.
 bool RenderObject::canHaveGeneratedChildren() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return canHaveChildren();
 }
 
 Node* RenderObject::generatingPseudoHostElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<PseudoElement>(*node()).hostElement();
 }
 
@@ -2329,6 +2433,7 @@ void RenderObject::setNeedsBoundariesUpdate()
 
 void RenderObject::invalidateCachedBoundaries()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (CheckedPtr renderer = this; renderer && renderer->isSVGRenderer(); renderer = renderer->parent()) {
         if (renderer->usesBoundaryCaching()) {
             renderer->setNeedsBoundariesUpdate();
@@ -2375,18 +2480,21 @@ bool RenderObject::nodeAtFloatPoint(const HitTestRequest&, HitTestResult&, const
 
 RenderFragmentedFlow* RenderObject::locateEnclosingFragmentedFlow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CheckedPtr containingBlock = this->containingBlock();
     return containingBlock ? containingBlock->enclosingFragmentedFlow() : nullptr;
 }
 
 void RenderObject::setHasReflection(bool hasReflection)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasReflection || hasRareData())
         ensureRareData().hasReflection = hasReflection;
 }
 
 void RenderObject::setHasOutlineAutoAncestor(bool hasOutlineAutoAncestor)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hasOutlineAutoAncestor || hasRareData())
         ensureRareData().hasOutlineAutoAncestor = hasOutlineAutoAncestor;
 }
@@ -2399,18 +2507,21 @@ RenderObject::RareDataMap& RenderObject::rareDataMap()
 
 const RenderObject::RenderObjectRareData& RenderObject::rareData() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasRareData());
     return *rareDataMap().get(*this);
 }
 
 RenderObject::RenderObjectRareData& RenderObject::ensureRareData()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_stateBitfields.setFlag(StateFlag::HasRareData);
     return *rareDataMap().ensure(*this, [] { return makeUnique<RenderObjectRareData>(); }).iterator->value;
 }
 
 void RenderObject::removeRareData()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasRareData())
         return;
     rareDataMap().remove(*this);
@@ -2422,6 +2533,7 @@ RenderObject::RenderObjectRareData::~RenderObjectRareData() = default;
 
 bool RenderObject::hasNonEmptyVisibleRectRespectingParentFrames() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto enclosingFrameRenderer = [] (const RenderObject& renderer) {
         auto* ownerElement = renderer.document().ownerElement();
         return ownerElement ? ownerElement->renderer() : nullptr;
@@ -2970,6 +3082,7 @@ Vector<SelectionGeometry> RenderObject::collectSelectionGeometries(const SimpleR
 
 String RenderObject::description() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StringBuilder builder;
 
     builder.append(renderName(), ' ');
@@ -2981,6 +3094,7 @@ String RenderObject::description() const
 
 String RenderObject::debugDescription() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StringBuilder builder;
 
     builder.append(renderName(), " 0x"_s, hex(reinterpret_cast<uintptr_t>(this), Lowercase));
@@ -2998,6 +3112,7 @@ bool RenderObject::isSkippedContent() const
 
 bool RenderObject::isSkippedContentForLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout();
 }
 
