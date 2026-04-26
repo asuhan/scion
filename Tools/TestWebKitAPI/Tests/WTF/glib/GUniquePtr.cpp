@@ -40,11 +40,6 @@ inline std::string takeLogStr()
     return string;
 }
 
-static void (* _g_free)(void*) = g_free;
-#define g_free(x) \
-    log() << "g_free(" << ptr << ");"; \
-    _g_free(x);
-
 static void (* _g_error_free)(GError*) = g_error_free;
 #define g_error_free(x) \
     log() << "g_error_free(" << ptr << ");"; \
