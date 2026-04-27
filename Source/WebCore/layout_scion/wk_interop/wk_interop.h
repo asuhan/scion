@@ -1346,6 +1346,7 @@ struct IntSizeRaw ScrollView_layoutSize(const void*);
 int32_t ScrollView_layoutWidth(const void*);
 int32_t ScrollView_layoutHeight(const void*);
 struct IntSizeRaw ScrollView_fixedLayoutSize(const void*);
+struct IntSizeRaw ScrollView_contentsSize(const void*);
 bool ScrollView_useFixedLayout(const void*);
 struct IntSizeRaw ScrollView_size(const void*);
 void* RenderSelection_create(void*);

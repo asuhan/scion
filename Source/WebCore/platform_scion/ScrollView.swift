@@ -89,8 +89,8 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   func useFixedLayout() -> Bool { return wk_interop.ScrollView_useFixedLayout(p) }
 
   override func contentsSize() -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let size = wk_interop.ScrollView_contentsSize(p)
+    return IntSize(width: size.width, height: size.height)
   }
 
   func contentsWidth() -> Int32 {
