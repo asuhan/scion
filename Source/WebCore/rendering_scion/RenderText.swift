@@ -323,13 +323,13 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func selectionBackgroundColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return firstNonAnonymousAncestor()?.selectionBackgroundColor() ?? ColorWrapper()
   }
 
   func selectionForegroundColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return firstNonAnonymousAncestor()?.selectionForegroundColor() ?? ColorWrapper()
   }
 
   func selectionEmphasisMarkColor() -> ColorWrapper {
