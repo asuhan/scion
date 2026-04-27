@@ -1338,6 +1338,8 @@ bool Element_isRelevantToUser(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);
 void RenderGeometryMap_pushView(void* raw, const void* view_raw, struct LayoutSizeRaw scroll_offset_raw, const void* t_raw);
+int32_t ScrollView_width(const void*);
+int32_t ScrollView_height(const void*);
 struct IntRectRaw ScrollView_windowClipRect(const void*);
 void ScrollView_positionScrollbarLayers(void*);
 uint8_t ScrollView_delegatedScrollingMode(const void*);

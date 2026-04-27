@@ -130,15 +130,9 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
-  func width() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func width() -> Int32 { return wk_interop.ScrollView_width(p) }
 
-  func height() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func height() -> Int32 { return wk_interop.ScrollView_height(p) }
 
   func size() -> IntSize {
     let intSizeRaw = wk_interop.ScrollView_size(p)
