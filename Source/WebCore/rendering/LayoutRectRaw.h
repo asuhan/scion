@@ -48,3 +48,18 @@ struct LayoutPointRaw {
     int32_t x;
     int32_t y;
 };
+
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct IntRectRaw {
+    struct IntPointRaw location;
+    struct IntSizeRaw size;
+};

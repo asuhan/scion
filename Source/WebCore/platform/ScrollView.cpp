@@ -31,6 +31,7 @@
 #include "GraphicsContext.h"
 #include "GraphicsLayer.h"
 #include "HostWindow.h"
+#include "LayoutRectRaw.h"
 #include "Logging.h"
 #include "PlatformMouseEvent.h"
 #include "PlatformWheelEvent.h"
@@ -44,6 +45,12 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
+
+extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_windowClipRect(const void* p)
+{
+    const auto rect = static_cast<const WebCore::ScrollView*>(p)->windowClipRect();
+    return { { rect.x(), rect.y() }, { rect.width(), rect.height() } };
+}
 
 extern "C" WEBCORE_EXPORT int32_t ScrollView_layoutWidth(const void* p)
 {
@@ -59,11 +66,6 @@ extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();
 }
-
-struct IntSizeRaw {
-    int32_t width;
-    int32_t height;
-};
 
 extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_size(const void* p)
 {

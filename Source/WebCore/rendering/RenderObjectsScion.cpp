@@ -328,21 +328,6 @@ extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
 
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
-struct IntPointRaw {
-    int32_t x;
-    int32_t y;
-};
-
-struct IntSizeRaw {
-    int32_t width;
-    int32_t height;
-};
-
-struct IntRectRaw {
-    struct IntPointRaw location;
-    struct IntSizeRaw size;
-};
-
 struct ComputedMarginValuesRaw {
     int32_t before;
     int32_t after;

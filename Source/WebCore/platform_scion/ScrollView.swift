@@ -39,8 +39,9 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
 
   // Returns a clip rect in host window coordinates. Used to clip the blit on a scroll.
   func windowClipRect() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rect = wk_interop.ScrollView_windowClipRect(p)
+    return IntRect(
+      x: rect.location.x, y: rect.location.y, width: rect.size.width, height: rect.size.height)
   }
 
   func positionScrollbarLayers() {
