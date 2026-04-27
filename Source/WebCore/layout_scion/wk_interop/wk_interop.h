@@ -1359,6 +1359,8 @@ struct IntSizeRaw ScrollView_size(const void*);
 struct IntPointRaw ScrollView_location(const void*);
 void ScrollView_setFrameRect(void* p, struct IntRectRaw);
 struct IntRectRaw ScrollView_frameRect(const void*);
+void ScrollView_show(void*);
+void ScrollView_hide(void*);
 void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);
 const void* InitialContainingBlock_create(const void*);

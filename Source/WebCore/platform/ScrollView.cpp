@@ -167,6 +167,16 @@ extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_frameRect(const void* p)
     return { { r.x(), r.y() }, { r.width(), r.height() } };
 }
 
+extern "C" WEBCORE_EXPORT void ScrollView_show(void* p)
+{
+    static_cast<WebCore::ScrollView*>(p)->show();
+}
+
+extern "C" WEBCORE_EXPORT void ScrollView_hide(void* p)
+{
+    static_cast<WebCore::ScrollView*>(p)->hide();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ScrollView);
