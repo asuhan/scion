@@ -71,6 +71,12 @@ extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_sizeForVisibleContent(const void
     return { size.width(), size.height() };
 }
 
+extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_layoutSize(const void* p)
+{
+    const auto size = static_cast<const WebCore::ScrollView*>(p)->layoutSize();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT int32_t ScrollView_layoutWidth(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->layoutWidth();
