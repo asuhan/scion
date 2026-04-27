@@ -105,10 +105,7 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
-  func userTriggered() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func userTriggered() -> Bool { return source == .User }
 
   let type: Type_
   private let source: HitTestSource
