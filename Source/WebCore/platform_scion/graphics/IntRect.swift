@@ -101,10 +101,13 @@ struct IntRect: Equatable {
       && y() < other.maxY() && other.y() < maxY()
   }
 
-  func contains(_ point: IntPoint) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  // This checks to see if the rect contains x,y in the traditional sense.
+  // Equivalent to checking if the rect contains a 1x1 rect below and to the right of (px,py).
+  private func contains(_ px: Int32, _ py: Int32) -> Bool {
+    return px >= x() && px < maxX() && py >= y() && py < maxY()
   }
+
+  func contains(_ point: IntPoint) -> Bool { return contains(point.x, point.y) }
 
   func unite(_ other: IntRect) {
     // TODO(asuhan): implement this
