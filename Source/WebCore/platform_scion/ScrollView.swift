@@ -145,8 +145,11 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   }
 
   func setFrameRect(_ rect: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.ScrollView_setFrameRect(
+      p,
+      IntRectRaw(
+        location: IntPointRaw(x: rect.x(), y: rect.y()),
+        size: IntSizeRaw(width: rect.width(), height: rect.height())))
   }
 
   func frameRect() -> IntRect {
