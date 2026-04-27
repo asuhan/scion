@@ -93,15 +93,9 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     return IntSize(width: size.width, height: size.height)
   }
 
-  func contentsWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func contentsWidth() -> Int32 { return contentsSize().width }
 
-  func contentsHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func contentsHeight() -> Int32 { return contentsSize().height }
 
   // scrollPostion() anchors its (0,0) point at the ScrollableArea's origin. The top of the scrolling
   // layer does not represent the top of the view when there is a topContentInset. Additionally, as
