@@ -29,6 +29,34 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func determinant(_ a: FloatSize, _ b: FloatSize) -> Float32 {
+  return a.width * b.height - a.height * b.width
+}
+
+private func rightMostCornerToVector(_ rect: FloatRectWrapper, _ vector: FloatSize) -> FloatPoint {
+  // Return the corner of the rectangle that if it is to the left of the vector
+  // would mean all of the rectangle is to the left of the vector.
+  // The vector here represents the side between two points in a clockwise convex polygon.
+  //
+  //  Q  XXX
+  // QQQ XXX   If the lower left corner of X is left of the vector that goes from the top corner of Q to
+  //  QQQ      the right corner of Q, then all of X is left of the vector, and intersection impossible.
+  //   Q
+  //
+  var point = FloatPoint()
+  if vector.width >= 0 {
+    point.setY(y: rect.maxY())
+  } else {
+    point.setY(y: rect.y())
+  }
+  if vector.height >= 0 {
+    point.setX(x: rect.x())
+  } else {
+    point.setX(x: rect.maxX())
+  }
+  return point
+}
+
 // FIXME: Seems like this would be better as a struct.
 
 // A FloatQuad is a collection of 4 points, often representing the result of
@@ -45,8 +73,50 @@ struct FloatQuad {
   // Tests whether any part of the rectangle intersects with this quad.
   // This only works for convex quads.
   func intersectsRect(_ rect: FloatRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For each side of the quad clockwise we check if the rectangle is to the left of it
+    // since only content on the right can onlap with the quad.
+    // This only works if the quad is convex.
+    var v1 = FloatSize()
+    var v2 = FloatSize()
+    var v3 = FloatSize()
+    var v4 = FloatSize()
+
+    // Ensure we use clockwise vectors.
+    if !isCounterclockwise() {
+      v1 = m_p2 - m_p1
+      v2 = m_p3 - m_p2
+      v3 = m_p4 - m_p3
+      v4 = m_p1 - m_p4
+    } else {
+      v1 = m_p4 - m_p1
+      v2 = m_p1 - m_p2
+      v3 = m_p2 - m_p3
+      v4 = m_p3 - m_p4
+    }
+
+    var p = rightMostCornerToVector(rect, v1)
+    if determinant(v1, p - m_p1) < 0 {
+      return false
+    }
+
+    p = rightMostCornerToVector(rect, v2)
+    if determinant(v2, p - m_p2) < 0 {
+      return false
+    }
+
+    p = rightMostCornerToVector(rect, v3)
+    if determinant(v3, p - m_p3) < 0 {
+      return false
+    }
+
+    p = rightMostCornerToVector(rect, v4)
+    if determinant(v4, p - m_p4) < 0 {
+      return false
+    }
+
+    // If not all of the rectangle is outside one of the quad's four sides, then that means at least
+    // a part of the rectangle is overlapping the quad.
+    return true
   }
 
   func boundingBox() -> FloatRectWrapper {
@@ -62,6 +132,13 @@ struct FloatQuad {
   func move(_ offset: LayoutSizeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Tests whether points are in clock-wise, or counter clock-wise order.
+  // Note that output is undefined when all points are colinear.
+  private func isCounterclockwise() -> Bool {
+    // Return if the two first vectors are turning clockwise. If the quad is convex then all following vectors will turn the same way.
+    return determinant(m_p2 - m_p1, m_p3 - m_p2) < 0
   }
 
   private let m_p1 = FloatPoint()
