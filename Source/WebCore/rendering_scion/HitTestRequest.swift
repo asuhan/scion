@@ -100,10 +100,7 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
-  func resultIsElementList() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func resultIsElementList() -> Bool { return type.contains(.CollectMultipleElements) }
 
   func userTriggered() -> Bool { return source == .User }
 
