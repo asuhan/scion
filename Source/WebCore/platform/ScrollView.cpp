@@ -105,6 +105,13 @@ extern "C" WEBCORE_EXPORT IntPointRaw ScrollView_documentScrollPositionRelativeT
     return { point.x(), point.y() };
 }
 
+extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_windowToContents(const void* p, IntRectRaw r)
+{
+    const auto out = static_cast<const WebCore::ScrollView*>(p)->windowToContents(WebCore::IntRect
+        { r.location.x, r.location.y, r.size.width, r.size.height });
+    return { out.x(), out.y(), out.width(), out.height() };
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();

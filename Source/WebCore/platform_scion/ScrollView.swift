@@ -109,8 +109,12 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   }
 
   func windowToContents(windowRect: IntRect) -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.ScrollView_windowToContents(
+      p,
+      IntRectRaw(
+        location: IntPointRaw(x: windowRect.x(), y: windowRect.y()),
+        size: IntSizeRaw(width: windowRect.width(), height: windowRect.height())))
+    return IntRect(x: r.location.x, y: r.location.y, width: r.size.width, height: r.size.height)
   }
 
   // The purpose of this function is to answer whether or not the scroll view is currently visible. Animations and painting updates can be suspended if
