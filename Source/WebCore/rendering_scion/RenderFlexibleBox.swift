@@ -547,7 +547,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   override func hitTestChildren(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ adjustedLocation: LayoutPointWrapper,
     _ hitTestAction: HitTestAction
   ) -> Bool {

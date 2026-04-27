@@ -1929,7 +1929,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
           rect: overflowClipRect(
             location: adjustedLocation, fragment: nil, relevancy: .IncludeOverlayScrollbarSize)))
     if checkChildren
-      && hitTestChildren(request, result, locationInContainer, adjustedLocation, hitTestAction)
+      && hitTestChildren(request, &result, locationInContainer, adjustedLocation, hitTestAction)
     {
       return true
     }
@@ -3181,7 +3181,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hitTestChildren(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ adjustedLocation: LayoutPointWrapper,
     _ hitTestAction: HitTestAction
   ) -> Bool {
