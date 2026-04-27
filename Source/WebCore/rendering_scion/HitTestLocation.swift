@@ -69,6 +69,19 @@ struct HitTestLocationWrapper {
     m_boundingBox = LayoutRectWrapper(rect: enclosingIntRect(rect: m_transformedRect.boundingBox()))
   }
 
+  // Only used for conversion for interop.
+  init(
+    _ point: LayoutPointWrapper, _ boundingBox: LayoutRectWrapper, _ transformedPoint: FloatPoint,
+    _ transformedRect: FloatQuad, isRectBased: Bool, isRectilinear: Bool
+  ) {
+    m_point = point
+    m_boundingBox = boundingBox
+    m_transformedPoint = transformedPoint
+    m_transformedRect = transformedRect
+    m_isRectBased = isRectBased
+    m_isRectilinear = isRectilinear
+  }
+
   // These are the cached forms of the more accurate point and rect below.
   private var m_point: LayoutPointWrapper
   private var m_boundingBox: LayoutRectWrapper

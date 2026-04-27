@@ -34,6 +34,7 @@ extern "C" void* RenderViewScion_create(void*, const void*);
 
 namespace WebCore {
 
+class HitTestLocation;
 class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
@@ -345,6 +346,8 @@ public:
     LayoutRect visualOverflowRect() const;
 
     LayoutRect paddingBoxRectIncludingScrollbar() const;
+
+    bool hitTestClipPath(const HitTestLocation&, const LayoutPoint&) const;
 
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 

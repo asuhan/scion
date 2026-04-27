@@ -63,7 +63,14 @@ private func rightMostCornerToVector(_ rect: FloatRectWrapper, _ vector: FloatSi
 // mapping a rectangle through transforms. When initialized from a rect, the
 // points are in clockwise order from top left.
 struct FloatQuad {
-  init() {}
+  init() { self.init(FloatPoint(), FloatPoint(), FloatPoint(), FloatPoint()) }
+
+  init(_ p1: FloatPoint, _ p2: FloatPoint, _ p3: FloatPoint, _ p4: FloatPoint) {
+    m_p1 = p1
+    m_p2 = p2
+    m_p3 = p3
+    m_p4 = p4
+  }
 
   init(inRect: FloatRectWrapper) {
     // TODO(asuhan): implement this
@@ -141,8 +148,8 @@ struct FloatQuad {
     return determinant(m_p2 - m_p1, m_p3 - m_p2) < 0
   }
 
-  private let m_p1 = FloatPoint()
-  private let m_p2 = FloatPoint()
-  private let m_p3 = FloatPoint()
-  private let m_p4 = FloatPoint()
+  private let m_p1: FloatPoint
+  private let m_p2: FloatPoint
+  private let m_p3: FloatPoint
+  private let m_p4: FloatPoint
 }

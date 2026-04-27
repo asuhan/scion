@@ -305,6 +305,22 @@ struct RepaintContainerStatusRaw {
     void* renderer;
 };
 
+struct FloatQuadRaw {
+    struct FloatPointRaw p1;
+    struct FloatPointRaw p2;
+    struct FloatPointRaw p3;
+    struct FloatPointRaw p4;
+};
+
+struct HitTestLocationRaw {
+    struct LayoutPointRaw point;
+    struct LayoutRectRaw boundingBox;
+    struct FloatPointRaw transformedPoint;
+    struct FloatQuadRaw transformedRect;
+    bool isRectBased;
+    bool isRectilinear;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

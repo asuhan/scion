@@ -1805,6 +1805,33 @@ func RenderBoxScion_paddingBoxRectIncludingScrollbar(_ boxRaw: UnsafeRawPointer)
   return convertLayoutRect(box.paddingBoxRectIncludingScrollbar())
 }
 
+private func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
+  return FloatPoint(x: p.x, y: p.y)
+}
+
+private func convertFloatQuad(_ q: FloatQuadRaw) -> FloatQuad {
+  return FloatQuad(
+    convertFloatPoint(q.p1), convertFloatPoint(q.p2), convertFloatPoint(q.p3),
+    convertFloatPoint(q.p4))
+}
+
+@_cdecl("RenderBoxScion_hitTestClipPath")
+func RenderBoxScion_hitTestClipPath(
+  _ boxRaw: UnsafeRawPointer, _ hitTestLocationRaw: HitTestLocationRaw,
+  _ accumulatedOffsetRaw: LayoutPointRaw
+) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let hitTestLocation = HitTestLocationWrapper(
+    convertLayoutPointRaw(hitTestLocationRaw.point),
+    convertLayoutRect(hitTestLocationRaw.boundingBox),
+    convertFloatPoint(hitTestLocationRaw.transformedPoint),
+    convertFloatQuad(hitTestLocationRaw.transformedRect),
+    isRectBased: hitTestLocationRaw.isRectBased,
+    isRectilinear: hitTestLocationRaw.isRectilinear)
+  let accumulatedOffset = convertLayoutPointRaw(accumulatedOffsetRaw)
+  return box.hitTestClipPath(hitTestLocation, accumulatedOffset)
+}
+
 @_cdecl("RenderBoxScion_localRectsForRepaint")
 func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOutlineBounds: Bool)
   -> RepaintRectsRaw

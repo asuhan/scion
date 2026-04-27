@@ -25,6 +25,7 @@
 
 #include "RenderObjectsScion.h"
 #include "Document.h"
+#include "HitTestLocation.h"
 #include "LayoutInitialContainingBlock.h"
 #include "LayoutIntegrationLineLayout.h"
 #include "LayoutRect.h"
@@ -281,6 +282,29 @@ extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
+
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+struct FloatQuadRaw {
+    FloatPointRaw p1;
+    FloatPointRaw p2;
+    FloatPointRaw p3;
+    FloatPointRaw p4;
+};
+
+struct HitTestLocationRaw {
+    LayoutPointRaw point;
+    LayoutRectRaw boundingBox;
+    FloatPointRaw transformedPoint;
+    FloatQuadRaw transformedRect;
+    bool isRectBased;
+    bool isRectilinear;
+};
+
+extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
 
@@ -891,6 +915,37 @@ LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
     return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
 }
 
+namespace {
+
+LayoutPointRaw convertLayoutPoint(const LayoutPoint& point) { return { point.x().rawValue(), point.y().rawValue() }; }
+
+FloatPointRaw convertFloatPoint(const FloatPoint& point) { return { point.x(), point.y() }; }
+
+FloatQuadRaw convertFloatQuad(const FloatQuad& q)
+{
+    return {
+        convertFloatPoint(q.p1()),
+        convertFloatPoint(q.p2()),
+        convertFloatPoint(q.p3()),
+        convertFloatPoint(q.p4())
+    };
+}
+
+} // namespace
+
+bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, const LayoutPoint& accumulatedOffset) const
+{
+    HitTestLocationRaw hitTestLocationRaw {
+        convertLayoutPoint(hitTestLocation.point()),
+        convertLayoutRect(hitTestLocation.boundingBox()),
+        convertFloatPoint(hitTestLocation.transformedPoint()),
+        convertFloatQuad(hitTestLocation.transformedRect()),
+        hitTestLocation.isRectBasedTest(),
+        hitTestLocation.isRectilinear()
+    };
+    return RenderBoxScion_hitTestClipPath(m_handle, hitTestLocationRaw, convertLayoutPoint(accumulatedOffset));
+}
+
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const
 {
     return convertRepaintRectsRaw(RenderBoxScion_localRectsForRepaint(m_handle, repaintOutlineBounds == RepaintOutlineBounds::Yes));
@@ -1147,12 +1202,6 @@ void RenderViewScion::repaintRootContents()
 {
     RenderViewScion_repaintRootContents(m_handle);
 }
-
-namespace {
-
-LayoutPointRaw convertLayoutPoint(const LayoutPoint& point) { return { point.x().rawValue(), point.y().rawValue() }; }
-
-} // namespace
 
 void RenderViewScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
