@@ -668,13 +668,37 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   override final func caretMinOffset() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let first = InlineIterator.firstTextBoxFor(self)
+    if !first.bool() {
+      return 0
+    }
+
+    var minOffset = Int32(first.get().start())
+    let box = ++first
+    while box.bool() {
+      minOffset = min(minOffset, Int32(box.get().start()))
+      ++box
+    }
+
+    return minOffset
   }
 
   override final func caretMaxOffset() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let first = InlineIterator.firstTextBoxFor(self)
+    if !first.bool() {
+      return Int32(text().length())
+    }
+
+    var maxOffset = Int32(first.get().end())
+    let box = ++first
+    while box.bool() {
+      maxOffset = max(maxOffset, Int32(box.get().end()))
+      ++box
+    }
+
+    return maxOffset
   }
 
   func hasRenderedText() -> Bool {

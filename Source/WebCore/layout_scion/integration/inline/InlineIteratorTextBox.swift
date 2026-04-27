@@ -73,6 +73,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    @discardableResult
+    static prefix func ++ (this: TextBoxIterator) -> TextBoxIterator {
+      return this.traverseNextTextBox()
+    }
+
     override func get() -> TextBox {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
