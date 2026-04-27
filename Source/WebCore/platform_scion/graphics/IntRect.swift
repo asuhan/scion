@@ -109,9 +109,25 @@ struct IntRect: Equatable {
 
   func contains(_ point: IntPoint) -> Bool { return contains(point.x, point.y) }
 
-  func unite(_ other: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func unite(_ other: IntRect) {
+    // Handle empty special cases first.
+    if other.isEmpty() {
+      return
+    }
+    if isEmpty() {
+      self = other
+      return
+    }
+
+    let l = min(x(), other.x())
+    let t = min(y(), other.y())
+    let r = max(maxX(), other.maxX())
+    let b = max(maxY(), other.maxY())
+
+    location.x = l
+    location.y = t
+    size.width = r - l
+    size.height = b - t
   }
 
   var location: IntPoint
