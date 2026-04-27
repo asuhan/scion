@@ -112,6 +112,11 @@ extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_windowToContents(const void* p, 
     return { out.x(), out.y(), out.width(), out.height() };
 }
 
+extern "C" WEBCORE_EXPORT bool ScrollView_isOffscreen(const void* p)
+{
+    return static_cast<const WebCore::ScrollView*>(p)->isOffscreen();
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();
