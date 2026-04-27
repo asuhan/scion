@@ -42,6 +42,13 @@ struct FloatQuad {
     fatalError("Not implemented")
   }
 
+  // Tests whether any part of the rectangle intersects with this quad.
+  // This only works for convex quads.
+  func intersectsRect(_ rect: FloatRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boundingBox() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

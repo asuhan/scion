@@ -37,9 +37,29 @@ struct HitTestLocationWrapper {
 
   func boundingBox() -> LayoutRectWrapper { return m_boundingBox }
 
-  func intersects(rect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func intersects(rect: LayoutRectWrapper) -> Bool { return intersectsRect(rect) }
+
+  private func intersectsRect(_ rect: LayoutRectWrapper) -> Bool {
+    // FIXME: When the hit test is not rect based we should use rect.contains(m_point).
+    // That does change some corner case tests though.
+
+    // First check if rect even intersects our bounding box.
+    if !rect.intersects(other: m_boundingBox) {
+      return false
+    }
+
+    // If the transformed rect is rectilinear the bounding box intersection was accurate.
+    if m_isRectilinear {
+      return true
+    }
+
+    // If rect fully contains our bounding box, we are also sure of an intersection.
+    if rect.contains(other: m_boundingBox) {
+      return true
+    }
+
+    // Otherwise we need to do a slower quad based intersection test.
+    return m_transformedRect.intersectsRect(rect.FloatRect())
   }
 
   private mutating func move(_ offset: LayoutSizeWrapper) {
