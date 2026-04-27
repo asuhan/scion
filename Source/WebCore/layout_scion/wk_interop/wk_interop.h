@@ -321,6 +321,16 @@ struct HitTestLocationRaw {
     bool isRectilinear;
 };
 
+struct HitTestRequestRaw {
+    uint32_t type;
+    bool source;
+};
+
+struct HitTestResultRaw {
+    struct HitTestLocationRaw hitTestLocation;
+    struct LayoutPointRaw localPoint;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

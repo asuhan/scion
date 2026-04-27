@@ -2167,7 +2167,7 @@ bool RenderObject::isComposited() const
 
 bool RenderObject::hitTest(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter hitTestFilter)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hitTest(request, result, locationInContainer, accumulatedOffset, hitTestFilter); }
     bool inside = false;
     if (hitTestFilter != HitTestSelf) {
         // First test the foreground layer (lines and inlines).

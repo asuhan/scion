@@ -60,6 +60,9 @@ public:
     const FloatPoint& transformedPoint() const { return m_transformedPoint; }
     const FloatQuad& transformedRect() const { return m_transformedRect; }
 
+    // Only needed for interop conversion.
+    HitTestLocation(const LayoutPoint&, const LayoutRect&, const FloatPoint&, const FloatQuad&, bool, bool);
+
 private:
     template<typename RectType> bool intersectsRect(const RectType&) const;
 

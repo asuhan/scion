@@ -90,6 +90,12 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  // Only used for conversion for interop.
+  init(_ hitTestLocation: HitTestLocationWrapper, _ localPoint: LayoutPointWrapper) {
+    self.hitTestLocation = hitTestLocation
+    self.localPoint = localPoint
+  }
+
   let hitTestLocation: HitTestLocationWrapper
 
   // A point in the local coordinate space of m_innerNonSharedNode's renderer. Allows us to efficiently

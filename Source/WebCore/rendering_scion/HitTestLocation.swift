@@ -35,6 +35,10 @@ struct HitTestLocationWrapper {
 
   func roundedPoint() -> IntPoint { return roundedIntPoint(point: m_point) }
 
+  // Rect-based hit test related methods.
+  func isRectBasedTest() -> Bool { return m_isRectBased }
+  func isRectilinear() -> Bool { return m_isRectilinear }
+
   func boundingBox() -> LayoutRectWrapper { return m_boundingBox }
 
   func intersects(rect: LayoutRectWrapper) -> Bool { return intersectsRect(rect) }
@@ -61,6 +65,9 @@ struct HitTestLocationWrapper {
     // Otherwise we need to do a slower quad based intersection test.
     return m_transformedRect.intersectsRect(rect.FloatRect())
   }
+
+  func transformedPoint() -> FloatPoint { return m_transformedPoint }
+  func transformedRect() -> FloatQuad { return m_transformedRect }
 
   private mutating func move(_ offset: LayoutSizeWrapper) {
     m_point.move(s: offset)

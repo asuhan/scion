@@ -77,6 +77,11 @@ struct FloatQuad {
     fatalError("Not implemented")
   }
 
+  func p1() -> FloatPoint { return m_p1 }
+  func p2() -> FloatPoint { return m_p2 }
+  func p3() -> FloatPoint { return m_p3 }
+  func p4() -> FloatPoint { return m_p4 }
+
   // Tests whether any part of the rectangle intersects with this quad.
   // This only works for convex quads.
   func intersectsRect(_ rect: FloatRectWrapper) -> Bool {

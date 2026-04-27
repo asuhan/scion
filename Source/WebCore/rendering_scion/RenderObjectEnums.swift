@@ -23,7 +23,7 @@
  *
  */
 
-enum HitTestFilter {
+enum HitTestFilter: UInt8 {
   case HitTestAll
   case HitTestSelf
   case HitTestDescendants

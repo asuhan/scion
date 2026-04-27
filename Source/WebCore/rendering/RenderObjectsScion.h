@@ -35,6 +35,8 @@ extern "C" void* RenderViewScion_create(void*, const void*);
 namespace WebCore {
 
 class HitTestLocation;
+class HitTestRequest;
+class HitTestResult;
 class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
@@ -192,6 +194,8 @@ public:
     void setPreferredLogicalWidthsDirty(bool, MarkingBehavior = MarkContainingBlockChain);
 
     bool isComposited() const;
+
+    bool hitTest(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter = HitTestAll);
 
     const RenderStyle& style() const;
 

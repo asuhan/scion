@@ -93,6 +93,7 @@ public:
     WEBCORE_EXPORT void setToNonUserAgentShadowAncestor();
 
     const HitTestLocation& hitTestLocation() const { return m_hitTestLocation; }
+    void setHitTestLocation(const HitTestLocation& location) { m_hitTestLocation = location; }
 
     WEBCORE_EXPORT LocalFrame* frame() const;
     WEBCORE_EXPORT LocalFrame* targetFrame() const;

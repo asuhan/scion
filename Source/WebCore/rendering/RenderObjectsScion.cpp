@@ -26,6 +26,8 @@
 #include "RenderObjectsScion.h"
 #include "Document.h"
 #include "HitTestLocation.h"
+#include "HitTestRequest.h"
+#include "HitTestResult.h"
 #include "LayoutInitialContainingBlock.h"
 #include "LayoutIntegrationLineLayout.h"
 #include "LayoutRect.h"
@@ -171,6 +173,39 @@ extern "C" void RenderObjectScion_setPreferredLogicalWidthsDirty(void*, bool, bo
 
 extern "C" bool RenderObjectScion_isComposited(const void*);
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+struct FloatQuadRaw {
+    FloatPointRaw p1;
+    FloatPointRaw p2;
+    FloatPointRaw p3;
+    FloatPointRaw p4;
+};
+
+struct HitTestLocationRaw {
+    LayoutPointRaw point;
+    LayoutRectRaw boundingBox;
+    FloatPointRaw transformedPoint;
+    FloatQuadRaw transformedRect;
+    bool isRectBased;
+    bool isRectilinear;
+};
+
+struct HitTestRequestRaw {
+    uint32_t type;
+    bool source;
+};
+
+struct HitTestResultRaw {
+    HitTestLocationRaw hitTestLocation;
+    LayoutPointRaw localPoint;
+};
+
+extern "C" bool RenderObjectScion_hitTest(void*, HitTestRequestRaw, HitTestResultRaw*, HitTestLocationRaw, LayoutPointRaw, bool);
+
 extern "C" const void* RenderObjectScion_style(const void*);
 
 struct RepaintContainerStatusRaw {
@@ -282,27 +317,6 @@ extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
-
-struct FloatPointRaw {
-    float x;
-    float y;
-};
-
-struct FloatQuadRaw {
-    FloatPointRaw p1;
-    FloatPointRaw p2;
-    FloatPointRaw p3;
-    FloatPointRaw p4;
-};
-
-struct HitTestLocationRaw {
-    LayoutPointRaw point;
-    LayoutRectRaw boundingBox;
-    FloatPointRaw transformedPoint;
-    FloatQuadRaw transformedRect;
-    bool isRectBased;
-    bool isRectilinear;
-};
 
 extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
@@ -624,6 +638,88 @@ void RenderObjectScion::setPreferredLogicalWidthsDirty(bool shouldBeDirty, Marki
 
 bool RenderObjectScion::isComposited() const { return RenderObjectScion_isComposited(m_handle); }
 
+namespace {
+
+LayoutPointRaw convertLayoutPoint(const LayoutPoint& point) { return { point.x().rawValue(), point.y().rawValue() }; }
+
+LayoutRectRaw convertLayoutRect(const LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+FloatPointRaw convertFloatPoint(const FloatPoint& point) { return { point.x(), point.y() }; }
+
+FloatQuadRaw convertFloatQuad(const FloatQuad& q)
+{
+    return {
+        convertFloatPoint(q.p1()),
+        convertFloatPoint(q.p2()),
+        convertFloatPoint(q.p3()),
+        convertFloatPoint(q.p4())
+    };
+}
+
+HitTestLocationRaw convertHitTestLocation(const HitTestLocation& hitTestLocation)
+{
+    return {
+        convertLayoutPoint(hitTestLocation.point()),
+        convertLayoutRect(hitTestLocation.boundingBox()),
+        convertFloatPoint(hitTestLocation.transformedPoint()),
+        convertFloatQuad(hitTestLocation.transformedRect()),
+        hitTestLocation.isRectBasedTest(),
+        hitTestLocation.isRectilinear()
+    };
+}
+
+LayoutPoint convertLayoutPoint(const LayoutPointRaw& point) { return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) }; }
+
+LayoutRect convertLayoutRect(const LayoutRectRaw& r)
+{
+    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
+}
+
+FloatPoint convertFloatPoint(const FloatPointRaw& point) { return { point.x, point.y }; }
+
+FloatQuad convertFloatQuad(const FloatQuadRaw& q)
+{
+    return {
+        convertFloatPoint(q.p1),
+        convertFloatPoint(q.p2),
+        convertFloatPoint(q.p3),
+        convertFloatPoint(q.p4)
+    };
+}
+
+HitTestLocation convertHitTestLocation(const HitTestLocationRaw& hitTestLocation)
+{
+    return {
+        convertLayoutPoint(hitTestLocation.point),
+        convertLayoutRect(hitTestLocation.boundingBox),
+        convertFloatPoint(hitTestLocation.transformedPoint),
+        convertFloatQuad(hitTestLocation.transformedRect),
+        hitTestLocation.isRectBased,
+        hitTestLocation.isRectilinear
+    };
+}
+
+} // namespace
+
+bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter hitTestFilter)
+{
+    HitTestRequestRaw requestRaw { request.type().toRaw(), request.userTriggered() };
+    HitTestResultRaw resultRaw { convertHitTestLocation(result.hitTestLocation()), convertLayoutPoint(result.localPoint()) };
+    bool testResult = RenderObjectScion_hitTest(
+        m_handle,
+        requestRaw,
+        &resultRaw,
+        convertHitTestLocation(locationInContainer),
+        convertLayoutPoint(accumulatedOffset),
+        static_cast<uint8_t>(hitTestFilter));
+    result.setHitTestLocation(convertHitTestLocation(resultRaw.hitTestLocation));
+    result.setLocalPoint(convertLayoutPoint(resultRaw.localPoint));
+    return testResult;
+}
+
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
 
 RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() const
@@ -633,11 +729,6 @@ RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() co
 }
 
 namespace {
-
-LayoutRectRaw convertLayoutRect(const LayoutRect& r)
-{
-    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
-}
 
 LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 {
@@ -915,35 +1006,9 @@ LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
     return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
 }
 
-namespace {
-
-LayoutPointRaw convertLayoutPoint(const LayoutPoint& point) { return { point.x().rawValue(), point.y().rawValue() }; }
-
-FloatPointRaw convertFloatPoint(const FloatPoint& point) { return { point.x(), point.y() }; }
-
-FloatQuadRaw convertFloatQuad(const FloatQuad& q)
-{
-    return {
-        convertFloatPoint(q.p1()),
-        convertFloatPoint(q.p2()),
-        convertFloatPoint(q.p3()),
-        convertFloatPoint(q.p4())
-    };
-}
-
-} // namespace
-
 bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, const LayoutPoint& accumulatedOffset) const
 {
-    HitTestLocationRaw hitTestLocationRaw {
-        convertLayoutPoint(hitTestLocation.point()),
-        convertLayoutRect(hitTestLocation.boundingBox()),
-        convertFloatPoint(hitTestLocation.transformedPoint()),
-        convertFloatQuad(hitTestLocation.transformedRect()),
-        hitTestLocation.isRectBasedTest(),
-        hitTestLocation.isRectilinear()
-    };
-    return RenderBoxScion_hitTestClipPath(m_handle, hitTestLocationRaw, convertLayoutPoint(accumulatedOffset));
+    return RenderBoxScion_hitTestClipPath(m_handle, convertHitTestLocation(hitTestLocation), convertLayoutPoint(accumulatedOffset));
 }
 
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const

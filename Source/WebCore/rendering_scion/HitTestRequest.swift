@@ -21,36 +21,42 @@
 */
 
 struct HitTestRequestWrapper {
-  struct `Type`: OptionSet {
+  struct Type_: OptionSet {
     let rawValue: UInt32
-    static let ReadOnly = Type(rawValue: 1 << 0)
-    static let Active = Type(rawValue: 1 << 1)
-    static let Move = Type(rawValue: 1 << 2)
-    static let Release = Type(rawValue: 1 << 3)
-    static let IgnoreCSSPointerEventsProperty = Type(rawValue: 1 << 4)
-    static let IgnoreClipping = Type(rawValue: 1 << 5)
-    static let SVGClipContent = Type(rawValue: 1 << 6)
-    static let TouchEvent = Type(rawValue: 1 << 7)
-    static let DisallowUserAgentShadowContent = Type(rawValue: 1 << 8)
-    static let DisallowUserAgentShadowContentExceptForImageOverlays = Type(
+    static let ReadOnly = Type_(rawValue: 1 << 0)
+    static let Active = Type_(rawValue: 1 << 1)
+    static let Move = Type_(rawValue: 1 << 2)
+    static let Release = Type_(rawValue: 1 << 3)
+    static let IgnoreCSSPointerEventsProperty = Type_(rawValue: 1 << 4)
+    static let IgnoreClipping = Type_(rawValue: 1 << 5)
+    static let SVGClipContent = Type_(rawValue: 1 << 6)
+    static let TouchEvent = Type_(rawValue: 1 << 7)
+    static let DisallowUserAgentShadowContent = Type_(rawValue: 1 << 8)
+    static let DisallowUserAgentShadowContentExceptForImageOverlays = Type_(
       rawValue: 1 << 9)
-    static let AllowFrameScrollbars = Type(rawValue: 1 << 10)
-    static let AllowChildFrameContent = Type(rawValue: 1 << 11)
-    static let AllowVisibleChildFrameContentOnly = Type(rawValue: 1 << 12)
-    static let ChildFrameHitTest = Type(rawValue: 1 << 13)
-    static let AccessibilityHitTest = Type(rawValue: 1 << 14)
+    static let AllowFrameScrollbars = Type_(rawValue: 1 << 10)
+    static let AllowChildFrameContent = Type_(rawValue: 1 << 11)
+    static let AllowVisibleChildFrameContentOnly = Type_(rawValue: 1 << 12)
+    static let ChildFrameHitTest = Type_(rawValue: 1 << 13)
+    static let AccessibilityHitTest = Type_(rawValue: 1 << 14)
     // Collect a list of nodes instead of just one. Used for elementsFromPoint and rect-based tests.
-    static let CollectMultipleElements = Type(rawValue: 1 << 15)
+    static let CollectMultipleElements = Type_(rawValue: 1 << 15)
     // When using list-based testing, continue hit testing even after a hit has been found.
-    static let IncludeAllElementsUnderPoint = Type(rawValue: 1 << 16)
-    static let PenEvent = Type(rawValue: 1 << 17)
+    static let IncludeAllElementsUnderPoint = Type_(rawValue: 1 << 16)
+    static let PenEvent = Type_(rawValue: 1 << 17)
   }
 
-  static let defaultTypes = `Type`([.ReadOnly, .Active, .DisallowUserAgentShadowContent])
+  static let defaultTypes = Type_([.ReadOnly, .Active, .DisallowUserAgentShadowContent])
+
+  init(_ source: HitTestSource, _ type: Type_ = defaultTypes) {
+    // TODO(asuhan): add type consistency check.
+    self.type = type
+    self.source = source
+  }
 
   // FIXME: This constructor should be phased out in favor of the `HitTestSource` version above, such that all call sites must
   // consider whether the hit test request is user-triggered or bindings-triggered.
-  init(type: `Type` = defaultTypes) {
+  init(type: Type_ = defaultTypes) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -100,5 +106,6 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
-  let type: `Type`
+  let type: Type_
+  private let source: HitTestSource
 }

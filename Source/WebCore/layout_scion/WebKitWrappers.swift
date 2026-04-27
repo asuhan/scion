@@ -1405,6 +1405,71 @@ func RenderObjectScion_isComposited(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isComposited()
 }
 
+private func convertHitTestRequest(_ raw: HitTestRequestRaw) -> HitTestRequestWrapper {
+  return HitTestRequestWrapper(
+    raw.source ? .User : .Script, HitTestRequestWrapper.Type_(rawValue: raw.type))
+}
+
+private func convertHitTestLocation(_ r: HitTestLocationRaw) -> HitTestLocationWrapper {
+  return HitTestLocationWrapper(
+    convertLayoutPointRaw(r.point),
+    convertLayoutRect(r.boundingBox),
+    convertFloatPoint(r.transformedPoint),
+    convertFloatQuad(r.transformedRect),
+    isRectBased: r.isRectBased,
+    isRectilinear: r.isRectilinear)
+}
+
+private func convertHitTestResult(_ raw: HitTestResultRaw) -> HitTestResultWrapper {
+  return HitTestResultWrapper(
+    convertHitTestLocation(raw.hitTestLocation), convertLayoutPointRaw(raw.localPoint))
+}
+
+private func convertLayoutPoint(_ p: LayoutPointWrapper) -> LayoutPointRaw {
+  return LayoutPointRaw(x: p.x.rawValue(), y: p.y.rawValue())
+}
+
+private func convertFloatPoint(_ p: FloatPoint) -> FloatPointRaw {
+  return FloatPointRaw(x: p.x, y: p.y)
+}
+
+private func convertFloatQuad(_ q: FloatQuad) -> FloatQuadRaw {
+  return FloatQuadRaw(
+    p1: convertFloatPoint(q.p1()), p2: convertFloatPoint(q.p2()), p3: convertFloatPoint(q.p3()),
+    p4: convertFloatPoint(q.p4()))
+}
+
+private func convertHitTestLocation(_ r: HitTestLocationWrapper) -> HitTestLocationRaw {
+  return HitTestLocationRaw(
+    point: convertLayoutPoint(r.point()),
+    boundingBox: convertLayoutRect(r.boundingBox()),
+    transformedPoint: convertFloatPoint(r.transformedPoint()),
+    transformedRect: convertFloatQuad(r.transformedRect()),
+    isRectBased: r.isRectBasedTest(),
+    isRectilinear: r.isRectilinear())
+}
+
+@_cdecl("RenderObjectScion_hitTest")
+func RenderObjectScion_hitTest(
+  _ objectRaw: UnsafeMutableRawPointer, _ requestRaw: HitTestRequestRaw,
+  _ resultRaw: UnsafeMutablePointer<HitTestResultRaw>, _ locationInContainerRaw: HitTestLocationRaw,
+  _ accumulatedOffsetRaw: LayoutPointRaw, _ hitTestFilterRaw: UInt8
+)
+  -> Bool
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let request = convertHitTestRequest(requestRaw)
+  var result = convertHitTestResult(resultRaw.pointee)
+  let locationInContainer = convertHitTestLocation(locationInContainerRaw)
+  let accumulatedOffset = convertLayoutPointRaw(accumulatedOffsetRaw)
+  let hitTestFilter = HitTestFilter(rawValue: hitTestFilterRaw)!
+  let testResult = object.hitTest(
+    request, &result, locationInContainer, accumulatedOffset, hitTestFilter)
+  resultRaw.pointee.hitTestLocation = convertHitTestLocation(result.hitTestLocation)
+  resultRaw.pointee.localPoint = convertLayoutPoint(result.localPoint)
+  return testResult
+}
+
 @_cdecl("RenderObjectScion_style")
 func RenderObjectScion_style(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -1821,13 +1886,7 @@ func RenderBoxScion_hitTestClipPath(
   _ accumulatedOffsetRaw: LayoutPointRaw
 ) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
-  let hitTestLocation = HitTestLocationWrapper(
-    convertLayoutPointRaw(hitTestLocationRaw.point),
-    convertLayoutRect(hitTestLocationRaw.boundingBox),
-    convertFloatPoint(hitTestLocationRaw.transformedPoint),
-    convertFloatQuad(hitTestLocationRaw.transformedRect),
-    isRectBased: hitTestLocationRaw.isRectBased,
-    isRectilinear: hitTestLocationRaw.isRectilinear)
+  let hitTestLocation = convertHitTestLocation(hitTestLocationRaw)
   let accumulatedOffset = convertLayoutPointRaw(accumulatedOffsetRaw)
   return box.hitTestClipPath(hitTestLocation, accumulatedOffset)
 }

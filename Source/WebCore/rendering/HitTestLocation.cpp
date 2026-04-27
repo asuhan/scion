@@ -88,6 +88,22 @@ HitTestLocation& HitTestLocation::operator=(const HitTestLocation& other)
     return *this;
 }
 
+HitTestLocation::HitTestLocation(
+    const LayoutPoint& point,
+    const LayoutRect& boundingBox,
+    const FloatPoint& transformedPoint,
+    const FloatQuad& transformedRect,
+    bool isRectBased,
+    bool isRectilinear)
+    : m_point(point)
+    , m_boundingBox(boundingBox)
+    , m_transformedPoint(transformedPoint)
+    , m_transformedRect(transformedRect)
+    , m_isRectBased(isRectBased)
+    , m_isRectilinear(isRectilinear)
+{
+}
+
 void HitTestLocation::move(const LayoutSize& offset)
 {
     m_point.move(offset);
