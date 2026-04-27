@@ -122,6 +122,11 @@ extern "C" WEBCORE_EXPORT bool ScrollView_managesScrollbars(const void* p)
     return static_cast<const WebCore::ScrollView*>(p)->managesScrollbars();
 }
 
+extern "C" WEBCORE_EXPORT void ScrollView_updateScrollbarSteps(void* p)
+{
+    static_cast<WebCore::ScrollView*>(p)->updateScrollbarSteps();
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();

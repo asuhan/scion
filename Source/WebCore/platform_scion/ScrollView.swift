@@ -123,10 +123,7 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
 
   func managesScrollbars() -> Bool { return wk_interop.ScrollView_managesScrollbars(p) }
 
-  func updateScrollbarSteps() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func updateScrollbarSteps() { wk_interop.ScrollView_updateScrollbarSteps(p) }
 
   func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
