@@ -1762,6 +1762,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func hitTestClipPath(
     _ hitTestLocation: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
+    assert(isNativeImpl())
+    if style().clipPath() == nil {
+      return true
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
