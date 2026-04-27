@@ -1350,6 +1350,7 @@ struct IntSizeRaw ScrollView_contentsSize(const void*);
 struct IntPointRaw ScrollView_documentScrollPositionRelativeToViewOrigin(const void*);
 struct IntRectRaw ScrollView_windowToContents(const void* p, struct IntRectRaw);
 bool ScrollView_isOffscreen(const void*);
+bool ScrollView_managesScrollbars(const void*);
 bool ScrollView_useFixedLayout(const void*);
 struct IntSizeRaw ScrollView_size(const void*);
 void* RenderSelection_create(void*);

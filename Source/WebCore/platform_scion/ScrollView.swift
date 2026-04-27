@@ -121,10 +121,7 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   // we know that we are either not in a window right now or if that window is not visible.
   func isOffscreen() -> Bool { return wk_interop.ScrollView_isOffscreen(p) }
 
-  func managesScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func managesScrollbars() -> Bool { return wk_interop.ScrollView_managesScrollbars(p) }
 
   func updateScrollbarSteps() {
     // TODO(asuhan): implement this

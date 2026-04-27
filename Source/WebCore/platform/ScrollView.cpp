@@ -117,6 +117,11 @@ extern "C" WEBCORE_EXPORT bool ScrollView_isOffscreen(const void* p)
     return static_cast<const WebCore::ScrollView*>(p)->isOffscreen();
 }
 
+extern "C" WEBCORE_EXPORT bool ScrollView_managesScrollbars(const void* p)
+{
+    return static_cast<const WebCore::ScrollView*>(p)->managesScrollbars();
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();
