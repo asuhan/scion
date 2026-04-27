@@ -1755,8 +1755,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func hitTestVisualOverflow(
     _ hitTestLocation: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if isRenderView() {
+      return true
+    }
+
+    let adjustedLocation = accumulatedOffset + location()
+    var overflowBox = visualOverflowRect()
+    flipForWritingMode(rect: &overflowBox)
+    overflowBox.moveBy(offset: adjustedLocation)
+    return hitTestLocation.intersects(rect: overflowBox)
   }
 
   func hitTestClipPath(
