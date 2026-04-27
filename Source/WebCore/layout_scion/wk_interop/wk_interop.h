@@ -1341,6 +1341,7 @@ void RenderGeometryMap_pushView(void* raw, const void* view_raw, struct LayoutSi
 struct IntRectRaw ScrollView_windowClipRect(const void*);
 void ScrollView_positionScrollbarLayers(void*);
 uint8_t ScrollView_delegatedScrollingMode(const void*);
+struct IntSizeRaw ScrollView_sizeForVisibleContent(const void*, bool);
 int32_t ScrollView_layoutHeight(const void*);
 int32_t ScrollView_layoutWidth(const void*);
 bool ScrollView_useFixedLayout(const void*);

@@ -62,6 +62,15 @@ extern "C" WEBCORE_EXPORT uint8_t ScrollView_delegatedScrollingMode(const void* 
     return static_cast<uint8_t>(static_cast<const WebCore::ScrollView*>(p)->delegatedScrollingMode());
 }
 
+extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_sizeForVisibleContent(const void* p, bool scrollbarInclusion)
+{
+    const auto size = static_cast<const WebCore::ScrollView*>(p)->sizeForVisibleContent(
+        scrollbarInclusion
+            ? WebCore::ScrollableArea::VisibleContentRectIncludesScrollbars::Yes
+            : WebCore::ScrollableArea::VisibleContentRectIncludesScrollbars::No);
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT int32_t ScrollView_layoutWidth(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->layoutWidth();

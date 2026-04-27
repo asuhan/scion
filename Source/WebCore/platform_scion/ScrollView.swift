@@ -66,8 +66,8 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   func sizeForVisibleContent(scrollbarInclusion: VisibleContentRectIncludesScrollbars = .No)
     -> IntSize
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let size = wk_interop.ScrollView_sizeForVisibleContent(p, scrollbarInclusion == .Yes)
+    return IntSize(width: size.width, height: size.height)
   }
 
   // Functions for getting/setting the size webkit should use to layout the contents. By default this is the same as the visible
