@@ -316,8 +316,10 @@ class RenderTextWrapper: RenderObjectWrapper {
   func getCachedPseudoStyle(
     pseudoElementIdentifier: Style.PseudoElementIdentifier, parentStyle: RenderStyleWrapper? = nil
   ) -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Pseudostyle is associated with an element, so ascend the tree until we find a non-anonymous ancestor.
+    return firstNonAnonymousAncestor()?.getCachedPseudoStyle(
+      pseudoElementIdentifier: pseudoElementIdentifier, parentStyle: parentStyle)
   }
 
   func selectionBackgroundColor() -> ColorWrapper {
