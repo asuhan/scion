@@ -95,8 +95,10 @@ struct IntRect: Equatable {
   }  // typically bottomRight
 
   func intersects(other: IntRect) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Checking emptiness handles negative widths as well as zero.
+    return !isEmpty() && !other.isEmpty()
+      && x() < other.maxX() && other.x() < maxX()
+      && y() < other.maxY() && other.y() < maxY()
   }
 
   func contains(_ point: IntPoint) -> Bool {
