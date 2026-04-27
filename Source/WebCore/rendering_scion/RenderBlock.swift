@@ -2573,8 +2573,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
     _ result: inout HitTestResultWrapper, locationInContainer: LayoutPointWrapper,
     accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !scrollsOverflow() {
+      return false
+    }
+    if layer()?.scrollableArea() != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return false
   }
 
   func addOverflowFromChildren() {
