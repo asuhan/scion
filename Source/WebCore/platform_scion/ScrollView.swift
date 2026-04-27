@@ -140,8 +140,8 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   }
 
   func location() -> IntPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let point = wk_interop.ScrollView_location(p)
+    return IntPoint(x: point.x, y: point.y)
   }
 
   func setFrameRect(_ rect: IntRect) {

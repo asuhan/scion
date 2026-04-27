@@ -148,6 +148,12 @@ extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_size(const void* p)
     return { intSize.width(), intSize.height() };
 }
 
+extern "C" WEBCORE_EXPORT IntPointRaw ScrollView_location(const void* p)
+{
+    const auto location = static_cast<const WebCore::ScrollView*>(p)->location();
+    return { location.x(), location.y() };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ScrollView);
