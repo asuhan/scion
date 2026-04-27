@@ -99,6 +99,12 @@ extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_contentsSize(const void* p)
     return { size.width(), size.height() };
 }
 
+extern "C" WEBCORE_EXPORT IntPointRaw ScrollView_documentScrollPositionRelativeToViewOrigin(const void* p)
+{
+    const auto point = static_cast<const WebCore::ScrollView*>(p)->documentScrollPositionRelativeToViewOrigin();
+    return { point.x(), point.y() };
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();

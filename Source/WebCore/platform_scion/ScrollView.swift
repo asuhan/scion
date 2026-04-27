@@ -104,8 +104,8 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   // will return a version of the current scroll offset which tracks the top of the Document
   // relative to the very top of the view.
   func documentScrollPositionRelativeToViewOrigin() -> ScrollPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let position = wk_interop.ScrollView_documentScrollPositionRelativeToViewOrigin(p)
+    return ScrollPosition(x: position.x, y: position.y)
   }
 
   func windowToContents(windowRect: IntRect) -> IntRect {
