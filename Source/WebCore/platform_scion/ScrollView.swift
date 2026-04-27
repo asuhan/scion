@@ -49,8 +49,7 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   // By default scrolling is handled by WebCore, but some WebKit implementations take over scrolling,
   // delegating it to a native scrolling widget or the UI process.
   func delegatedScrollingMode() -> DelegatedScrollingMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return DelegatedScrollingMode(rawValue: wk_interop.ScrollView_delegatedScrollingMode(p))!
   }
 
   // There are at least three types of contentInset. Usually we just care about WebCoreContentInset, which is the inset

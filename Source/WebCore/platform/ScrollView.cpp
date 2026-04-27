@@ -57,6 +57,11 @@ extern "C" WEBCORE_EXPORT void ScrollView_positionScrollbarLayers(void* p)
     static_cast<WebCore::ScrollView*>(p)->positionScrollbarLayers();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t ScrollView_delegatedScrollingMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::ScrollView*>(p)->delegatedScrollingMode());
+}
+
 extern "C" WEBCORE_EXPORT int32_t ScrollView_layoutWidth(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->layoutWidth();
