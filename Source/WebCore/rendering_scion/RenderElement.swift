@@ -1100,8 +1100,12 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func visibleToHitTesting(request: HitTestRequestWrapper? = nil) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let visibility =
+      (request?.userTriggered() ?? true) ? style().usedVisibility() : style().visibility()
+    return visibility == .Visible
+      && !isSkippedContent()
+      && ((request?.ignoreCSSPointerEventsProperty() ?? false) || usedPointerEvents() != .None)
   }
 
   func hasBackground() -> Bool {

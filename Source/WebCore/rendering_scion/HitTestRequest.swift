@@ -71,6 +71,10 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
+  func ignoreCSSPointerEventsProperty() -> Bool {
+    return type.contains(.IgnoreCSSPointerEventsProperty)
+  }
+
   func ignoreClipping() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
