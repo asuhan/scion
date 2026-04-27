@@ -33,10 +33,7 @@ struct HitTestLocationWrapper {
 
   func point() -> LayoutPointWrapper { return m_point }
 
-  func roundedPoint() -> IntPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func roundedPoint() -> IntPoint { return roundedIntPoint(point: m_point) }
 
   func boundingBox() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
