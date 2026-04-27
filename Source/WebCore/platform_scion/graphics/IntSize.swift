@@ -48,6 +48,8 @@ struct IntSize: Equatable {
     return IntSize(width: max(width, other.width), height: max(height, other.height))
   }
 
+  func area() -> UInt32 { return UInt32(abs(width)) * UInt32(abs(height)) }
+
   var width: Int32 = 0
   var height: Int32 = 0
 }
