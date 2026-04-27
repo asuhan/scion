@@ -52,6 +52,11 @@ extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_windowClipRect(const void* p)
     return { { rect.x(), rect.y() }, { rect.width(), rect.height() } };
 }
 
+extern "C" WEBCORE_EXPORT void ScrollView_positionScrollbarLayers(void* p)
+{
+    static_cast<WebCore::ScrollView*>(p)->positionScrollbarLayers();
+}
+
 extern "C" WEBCORE_EXPORT int32_t ScrollView_layoutWidth(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->layoutWidth();

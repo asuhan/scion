@@ -44,10 +44,7 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
       x: rect.location.x, y: rect.location.y, width: rect.size.width, height: rect.size.height)
   }
 
-  func positionScrollbarLayers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func positionScrollbarLayers() { wk_interop.ScrollView_positionScrollbarLayers(p) }
 
   // By default scrolling is handled by WebCore, but some WebKit implementations take over scrolling,
   // delegating it to a native scrolling widget or the UI process.
