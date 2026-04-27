@@ -22,8 +22,13 @@
 struct HitTestLocationWrapper {
   // Make a copy the HitTestLocation in a new region by applying given offset to internal point and area.
   init(_ other: HitTestLocationWrapper, _ offset: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_point = other.m_point
+    m_boundingBox = other.m_boundingBox
+    m_transformedPoint = other.m_transformedPoint
+    m_transformedRect = other.m_transformedRect
+    m_isRectBased = other.m_isRectBased
+    m_isRectilinear = other.m_isRectilinear
+    move(offset)
   }
 
   func point() -> LayoutPointWrapper {
@@ -45,4 +50,21 @@ struct HitTestLocationWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private mutating func move(_ offset: LayoutSizeWrapper) {
+    m_point.move(s: offset)
+    m_transformedPoint.move(offset.FloatSize())
+    m_transformedRect.move(offset)
+    m_boundingBox = LayoutRectWrapper(rect: enclosingIntRect(rect: m_transformedRect.boundingBox()))
+  }
+
+  // These are the cached forms of the more accurate point and rect below.
+  private var m_point: LayoutPointWrapper
+  private var m_boundingBox: LayoutRectWrapper
+
+  private var m_transformedPoint: FloatPoint
+  private let m_transformedRect: FloatQuad
+
+  private let m_isRectBased: Bool
+  private let m_isRectilinear: Bool
 }
