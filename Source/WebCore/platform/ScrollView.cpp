@@ -87,6 +87,12 @@ extern "C" WEBCORE_EXPORT int32_t ScrollView_layoutHeight(const void* p)
     return static_cast<const WebCore::ScrollView*>(p)->layoutHeight();
 }
 
+extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_fixedLayoutSize(const void* p)
+{
+    const auto size = static_cast<const WebCore::ScrollView*>(p)->fixedLayoutSize();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
 {
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();
