@@ -31,10 +31,7 @@ struct HitTestLocationWrapper {
     move(offset)
   }
 
-  func point() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func point() -> LayoutPointWrapper { return m_point }
 
   func roundedPoint() -> IntPoint {
     // TODO(asuhan): implement this
