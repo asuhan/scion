@@ -161,6 +161,12 @@ extern "C" WEBCORE_EXPORT void ScrollView_setFrameRect(void* p, IntRectRaw rect)
             { rect.size.width, rect.size.height } });
 }
 
+extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_frameRect(const void* p)
+{
+    const auto r = static_cast<const WebCore::ScrollView*>(p)->frameRect();
+    return { { r.x(), r.y() }, { r.width(), r.height() } };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ScrollView);
