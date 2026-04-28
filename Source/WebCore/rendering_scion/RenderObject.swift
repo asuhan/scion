@@ -2287,15 +2287,37 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func containingBlock() -> RenderBlockWrapper? {
-    assert(!isNativeImpl())
-    if let unwrapped = wk_interop.RenderObject_containingBlock(id()) {
-      // TODO(asuhan): decide the type correctly
-      if wk_interop.RenderObject_isRenderListItem(unwrapped) {
-        return RenderListItemWrapper(p: unwrapped)
+    if !isNativeImpl() {
+      if let unwrapped = wk_interop.RenderObject_containingBlock(id()) {
+        // TODO(asuhan): decide the type correctly
+        if wk_interop.RenderObject_isRenderListItem(unwrapped) {
+          return RenderListItemWrapper(p: unwrapped)
+        }
+        return RenderBlockWrapper(p: unwrapped)
       }
-      return RenderBlockWrapper(p: unwrapped)
+      return nil
     }
-    return nil
+    // FIXME: See https://bugs.webkit.org/show_bug.cgi?id=270977 for RenderLineBreak special treatment.
+    if self is RenderTextWrapper || self is RenderLineBreakWrapper {
+      return RenderObjectWrapper.containingBlockForPositionType(
+        positionType: .Static, renderer: self)
+    }
+
+    let containingBlockForRenderer = { (renderer: RenderElementWrapper) -> RenderBlockWrapper? in
+      if isInTopLayerOrBackdrop(style: renderer.style(), element: renderer.element()) {
+        return renderer.view()
+      }
+      return RenderObjectWrapper.containingBlockForPositionType(
+        positionType: renderer.style().position(), renderer: renderer)
+    }
+
+    if parent() == nil, let part = self as? RenderScrollbarPartWrapper {
+      if let scrollbarPart = part.rendererOwningScrollbar() {
+        return containingBlockForRenderer(scrollbarPart)
+      }
+      return nil
+    }
+    return containingBlockForRenderer(self as! RenderElementWrapper)
   }
 
   static func containingBlockForPositionType(

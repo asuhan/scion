@@ -101,6 +101,11 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func rendererOwningScrollbar() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
+    return scrollbar?.owningRenderer()
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     setInline(false)
