@@ -29,8 +29,36 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func dot(_ a: FloatSize, _ b: FloatSize) -> Float32 {
+  return a.width * b.width + a.height * b.height
+}
+
 private func determinant(_ a: FloatSize, _ b: FloatSize) -> Float32 {
   return a.width * b.height - a.height * b.width
+}
+
+private func isPointInTriangle(
+  _ p: FloatPoint, _ t1: FloatPoint, _ t2: FloatPoint, _ t3: FloatPoint
+) -> Bool {
+  // Compute vectors
+  let v0 = t3 - t1
+  let v1 = t2 - t1
+  let v2 = p - t1
+
+  // Compute dot products
+  let dot00 = dot(v0, v0)
+  let dot01 = dot(v0, v1)
+  let dot02 = dot(v0, v2)
+  let dot11 = dot(v1, v1)
+  let dot12 = dot(v1, v2)
+
+  // Compute barycentric coordinates
+  let invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01)
+  let u = (dot11 * dot02 - dot01 * dot12) * invDenom
+  let v = (dot00 * dot12 - dot01 * dot02) * invDenom
+
+  // Check if point is in triangle
+  return (u >= 0) && (v >= 0) && (u + v <= 1)
 }
 
 private func clampToIntRange(_ value: Float32) -> Float32 {
@@ -65,6 +93,40 @@ private func rightMostCornerToVector(_ rect: FloatRectWrapper, _ vector: FloatSi
   return point
 }
 
+// Tests whether the line is contained by or intersected with the circle.
+private func lineIntersectsCircle(
+  _ center: FloatPoint, _ radius: Float32, _ p0: FloatPoint, _ p1: FloatPoint
+) -> Bool {
+  let x0 = p0.x - center.x
+  let y0 = p0.y - center.y
+  let x1 = p1.x - center.x
+  let y1 = p1.y - center.y
+  let radius2 = radius * radius
+  if (x0 * x0 + y0 * y0) <= radius2 || (x1 * x1 + y1 * y1) <= radius2 {
+    return true
+  }
+  if p0 == p1 {
+    return false
+  }
+
+  let a = y0 - y1
+  let b = x1 - x0
+  let c = x0 * y1 - x1 * y0
+  let distance2 = c * c / (a * a + b * b)
+  // If distance between the center point and the line > the radius,
+  // the line doesn't cross (or is contained by) the ellipse.
+  if distance2 > radius2 {
+    return false
+  }
+
+  // The nearest point on the line is between p0 and p1?
+  let x = -a * c / (a * a + b * b)
+  let y = -b * c / (a * a + b * b)
+  return
+    (((x0 <= x && x <= x1) || (x0 >= x && x >= x1))
+    && ((y0 <= y && y <= y1) || (y1 <= y && y <= y0)))
+}
+
 // FIXME: Seems like this would be better as a struct.
 
 // A FloatQuad is a collection of 4 points, often representing the result of
@@ -91,6 +153,11 @@ struct FloatQuad {
   func p2() -> FloatPoint { return m_p2 }
   func p3() -> FloatPoint { return m_p3 }
   func p4() -> FloatPoint { return m_p4 }
+
+  // Tests whether the given point is inside, or on an edge or corner of this quad.
+  private func containsPoint(_ p: FloatPoint) -> Bool {
+    return isPointInTriangle(p, m_p1, m_p2, m_p3) || isPointInTriangle(p, m_p1, m_p3, m_p4)
+  }
 
   // Tests whether any part of the rectangle intersects with this quad.
   // This only works for convex quads.
@@ -144,8 +211,11 @@ struct FloatQuad {
   // Test whether any part of the circle/ellipse intersects with this quad.
   // Note that these two functions only work for convex quads.
   private func intersectsCircle(_ center: FloatPoint, _ radius: Float32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return containsPoint(center)  // The circle may be totally contained by the quad.
+      || lineIntersectsCircle(center, radius, m_p1, m_p2)
+      || lineIntersectsCircle(center, radius, m_p2, m_p3)
+      || lineIntersectsCircle(center, radius, m_p3, m_p4)
+      || lineIntersectsCircle(center, radius, m_p4, m_p1)
   }
 
   func intersectsEllipse(_ center: FloatPoint, _ radii: FloatSize) -> Bool {
