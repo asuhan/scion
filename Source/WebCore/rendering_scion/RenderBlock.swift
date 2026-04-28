@@ -3181,8 +3181,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func nodeForHitTest() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    switch style().pseudoElementType() {
+    // If we're a ::backdrop pseudo-element, we should hit-test to the element that generated it.
+    // This matches the behavior that other browsers have.
+    case .Backdrop:
+      for element in document().topLayerElements() {
+        if element.containerRenderer() == nil {
+          continue
+        }
+        assert(element.containerRenderer()!.backdropRenderer() != nil)
+        if CPtrToInt(element.containerRenderer()!.backdropRenderer()!.id()) == CPtrToInt(id()) {
+          return element
+        }
+      }
+      fatalError("Not reached")
+
+    // The view transition pseudo-elements should hit-test to their originating element (the document element).
+    case .ViewTransition, .ViewTransitionGroup, .ViewTransitionImagePair:
+      return document().documentElement()
+
+    default:
+      break
+    }
+
+    // If we are in the margins of block elements that are part of a
+    // continuation we're actually still inside the enclosing element
+    // that was split. Use the appropriate inner node.
+    return continuation()?.element() ?? element()
   }
 
   // FIXME-BLOCKFLOW: Remove virtualization when all callers have moved to RenderBlockFlow
