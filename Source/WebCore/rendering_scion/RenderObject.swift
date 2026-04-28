@@ -1850,8 +1850,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nodeForHitTest() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var node = self.node()
+    // If we hit the anonymous renderers inside generated content we should
+    // actually hit the generated content so walk up to the PseudoElement.
+    if node == nil && (parent()?.isBeforeOrAfterContent() ?? false) {
+      var renderer = parent()
+      while renderer != nil && node == nil {
+        node = renderer!.element()
+        renderer = renderer!.parent()
+      }
+    }
+    return node
   }
 
   func nodeAtPoint(
