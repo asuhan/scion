@@ -1421,8 +1421,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func backdropRenderer() -> RenderBlockFlowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareData() ? *rareData().backdropRenderer : nil
   }
 
   func setBackdropRenderer(renderer: RenderBlockFlowWrapper) {

@@ -3570,7 +3570,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     let controlPart: ControlPartWrapper? = nil
   }
 
-  private func rareData() -> RenderObjectRareData {
+  func rareData() -> RenderObjectRareData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
