@@ -127,7 +127,7 @@ struct FloatRoundedRect {
   }
 
   init(rect: RoundedRect) {
-    self.rect = rect.rect.FloatRect()
+    self.rect = rect.rect().FloatRect()
     self.radii = Radii(intRadii: rect.radii)
   }
 

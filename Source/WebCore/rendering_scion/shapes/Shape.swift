@@ -288,7 +288,7 @@ class ShapeWrapper {
   static func createBoxShape(
     _ roundedRect: RoundedRect, _ writingMode: WritingMode, _ margin: Float32
   ) -> ShapeWrapper {
-    assert(roundedRect.rect.width() >= Int32(0) && roundedRect.rect.height() >= Int32(0))
+    assert(roundedRect.rect().width() >= Int32(0) && roundedRect.rect().height() >= Int32(0))
 
     let bounds = FloatRoundedRect(rect: roundedRect)
     let shape = BoxShape(bounds)

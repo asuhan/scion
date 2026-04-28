@@ -2552,7 +2552,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     let deviceScaleFactor = deviceScaleFactor()
     for entry in clippingStack.stack {
       var roundedClipRect = entry.clipData.clipRect
-      var clipRect = roundedClipRect.rect
+      var clipRect = roundedClipRect.rect()
       let clippingOffset = computeOffsetFromAncestorGraphicsLayer(
         compositedAncestor, clipRect.location() + offsetFromCompositedAncestor, deviceScaleFactor)
       let snappedClippingLayerRect = snappedGraphicsLayer(
@@ -2565,7 +2565,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       entry.clippingLayer!.setSize(size: snappedClippingLayerRect.size().FloatSize())
 
       clipRect.setLocation(location: LayoutPointWrapper())
-      roundedClipRect.rect = clipRect
+      roundedClipRect.setRect(clipRect)
       entry.clippingLayer!.setContentsClippingRect(FloatRoundedRect(rect: roundedClipRect))
       entry.clippingLayer!.setContentsRectClipsDescendants(true)
 

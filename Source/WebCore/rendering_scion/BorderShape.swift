@@ -131,7 +131,7 @@ struct BorderShape {
     assert(m_borderRect.isRenderable())
   }
 
-  func borderRect() -> LayoutRectWrapper { return m_borderRect.rect }
+  func borderRect() -> LayoutRectWrapper { return m_borderRect.rect() }
 
   func deprecatedRoundedRect() -> RoundedRect { return m_borderRect }
 
@@ -160,10 +160,10 @@ struct BorderShape {
   mutating func setRadii(radii: RoundedRectRadii) { m_borderRect.radii = radii }
 
   func snappedOuterRect(deviceScaleFactor: Float32) -> FloatRectWrapper {
-    return snapRectToDevicePixels(rect: m_borderRect.rect, pixelSnappingFactor: deviceScaleFactor)
+    return snapRectToDevicePixels(rect: m_borderRect.rect(), pixelSnappingFactor: deviceScaleFactor)
   }
 
-  func isEmpty() -> Bool { return m_borderRect.rect.isEmpty() }
+  func isEmpty() -> Bool { return m_borderRect.rect().isEmpty() }
 
   mutating func move(offset: LayoutSizeWrapper) {
     m_borderRect.move(size: offset)
@@ -266,7 +266,7 @@ struct BorderShape {
   }
 
   private func innerEdgeRect() -> LayoutRectWrapper {
-    let borderRect = m_borderRect.rect
+    let borderRect = m_borderRect.rect()
     let width = max(
       LayoutUnit(value: 0), borderRect.width() - borderWidths.left - borderWidths.right)
     let height = max(

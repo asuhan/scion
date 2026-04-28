@@ -69,7 +69,7 @@ private func decorationHasAllSimpleEdges(edges: RectEdges<BorderEdge>) -> Bool {
 private func calculateSideRect(outerBorder: RoundedRect, edges: BorderEdges, side: BoxSide)
   -> LayoutRectWrapper
 {
-  var sideRect = outerBorder.rect
+  var sideRect = outerBorder.rect()
   let width = edges.at(side: side).widthForPainting()
 
   switch side {
@@ -996,7 +996,7 @@ class BorderPainter {
   }
 
   static func allCornersClippedOut(border: RoundedRect, clipRect: LayoutRectWrapper) -> Bool {
-    let boundingRect = border.rect
+    let boundingRect = border.rect()
     if clipRect.contains(other: boundingRect) {
       return false
     }
@@ -1124,8 +1124,8 @@ class BorderPainter {
         }
 
         if haveAllDoubleEdges {
-          var innerThirdRect = sides.outerBorder.rect
-          var outerThirdRect = sides.outerBorder.rect
+          var innerThirdRect = sides.outerBorder.rect()
+          var outerThirdRect = sides.outerBorder.rect()
           for side in allBoxSides {
             let (outerWidth, innerWidth) = sides.edges.at(side: side).getDoubleBorderStripeWidths()
             switch side {
@@ -1224,8 +1224,8 @@ class BorderPainter {
     let antialias =
       BorderPainter.shouldAntialiasLines(context: graphicsContext) || numEdgesVisible == 1
     let innerBorderAdjustment = IntPoint(
-      x: (sides.innerBorder.rect.x() - sides.unadjustedInnerBorder.rect.x()).toInt(),
-      y: (sides.innerBorder.rect.y() - sides.unadjustedInnerBorder.rect.y()).toInt())
+      x: (sides.innerBorder.rect().x() - sides.unadjustedInnerBorder.rect().x()).toInt(),
+      y: (sides.innerBorder.rect().y() - sides.unadjustedInnerBorder.rect().y()).toInt())
     if haveAlphaColor {
       paintTranslucentBorderSides(
         outerBorder: sides.outerBorder, innerBorder: sides.unadjustedInnerBorder,
@@ -1366,7 +1366,7 @@ class BorderPainter {
       return
     }
 
-    var sideRect = outerBorder.rect
+    var sideRect = outerBorder.rect()
     var firstRadius = LayoutSizeWrapper()
     var secondRadius = LayoutSizeWrapper()
 
@@ -1443,7 +1443,7 @@ class BorderPainter {
         edgeToRender.widthForPainting(), adjacentEdge1.widthForPainting(),
         adjacentEdge2.widthForPainting())
       drawBoxSideFromPath(
-        borderRect: outerBorder.rect, borderPath: path, edges: edges, radii: radii,
+        borderRect: outerBorder.rect(), borderPath: path, edges: edges, radii: radii,
         thickness: edgeToRender.widthForPainting(), drawThickness: thickness, side: side,
         color: colorToPaint, borderStyle: edgeToRender.style, bleedAvoidance: bleedAvoidance,
         includeLogicalLeftEdge: includeLogicalLeftEdge,
@@ -1661,9 +1661,9 @@ class BorderPainter {
 
     let deviceScaleFactor = document().deviceScaleFactor()
     let outerRect = snapRectToDevicePixels(
-      rect: outerBorder.rect, pixelSnappingFactor: deviceScaleFactor)
+      rect: outerBorder.rect(), pixelSnappingFactor: deviceScaleFactor)
     let innerRect = snapRectToDevicePixels(
-      rect: innerBorder.rect, pixelSnappingFactor: deviceScaleFactor)
+      rect: innerBorder.rect(), pixelSnappingFactor: deviceScaleFactor)
 
     // For each side, create a quad that encompasses all parts of that side that may draw,
     // including areas inside the innerBorder.

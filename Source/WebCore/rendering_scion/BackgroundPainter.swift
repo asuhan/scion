@@ -788,7 +788,7 @@ class BackgroundPainter {
       } else {
         // Inset shadow.
         let borderRect = borderShape.deprecatedInnerRoundedRect()
-        var holeRect = borderRect.rect
+        var holeRect = borderRect.rect()
         holeRect.inflate(d: -shadowSpread)
 
         let isHorizontal = style.isHorizontalWritingMode()
@@ -844,7 +844,8 @@ class BackgroundPainter {
 
         let fillColor = shadowColor.opaqueColor()
         let shadowCastingRect = areaCastingShadowInHole(
-          holeRect: borderRect.rect, shadowExtent: shadowPaintingExtent, shadowSpread: shadowSpread,
+          holeRect: borderRect.rect(), shadowExtent: shadowPaintingExtent,
+          shadowSpread: shadowSpread,
           shadowOffset: shadowOffset)
         let pixelSnappedOuterRect = snapRectToDevicePixels(
           rect: shadowCastingRect, pixelSnappingFactor: deviceScaleFactor)

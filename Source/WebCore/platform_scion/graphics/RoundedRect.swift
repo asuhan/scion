@@ -130,52 +130,56 @@ struct RoundedRect {
   typealias Radii = RoundedRectRadii
 
   init(rect: LayoutRectWrapper, radii: Radii = Radii()) {
-    self.rect = rect
+    self.m_rect = rect
     self.radii = radii
   }
 
+  func rect() -> LayoutRectWrapper { return m_rect }
+
   func isRounded() -> Bool { return !radii.isZero() }
 
-  mutating func move(size: LayoutSizeWrapper) { rect.move(size: size) }
+  mutating func setRect(_ rect: LayoutRectWrapper) { m_rect = rect }
+
+  mutating func move(size: LayoutSizeWrapper) { m_rect.move(size: size) }
 
   mutating func inflateWithRadii(amount: LayoutUnit) {
-    let old = rect
+    let old = m_rect
 
     if amount < Int32(0) {
-      rect.inflateX(dx: max(-rect.width() / 2, amount))
-      rect.inflateY(dy: max(-rect.height() / 2, amount))
+      m_rect.inflateX(dx: max(-m_rect.width() / 2, amount))
+      m_rect.inflateY(dy: max(-m_rect.height() / 2, amount))
     } else {
-      rect.inflate(d: amount)
+      m_rect.inflate(d: amount)
     }
 
     // Considering the inflation factor of shorter size to scale the radii seems appropriate here
     var factor: Float32 = 0
-    if rect.width() < rect.height() {
-      factor = old.width().bool() ? rect.width().float() / old.width() : 0
+    if m_rect.width() < m_rect.height() {
+      factor = old.width().bool() ? m_rect.width().float() / old.width() : 0
     } else {
-      factor = old.height().bool() ? rect.height().float() / old.height() : 0
+      factor = old.height().bool() ? m_rect.height().float() / old.height() : 0
     }
 
     radii.scale(factor: factor)
   }
 
   func isRenderable() -> Bool {
-    return radii.areRenderableInRect(rect: rect)
+    return radii.areRenderableInRect(rect: m_rect)
   }
 
   mutating func adjustRadii() {
-    radii.makeRenderableInRect(rect: rect)
+    radii.makeRenderableInRect(rect: m_rect)
   }
 
   func contains(otherRect: LayoutRectWrapper) -> Bool {
-    if !rect.contains(other: otherRect) || !isRenderable() {
+    if !rect().contains(other: otherRect) || !isRenderable() {
       return false
     }
 
     let topLeft = radii.topLeft
     if !topLeft.isEmpty() {
       let center = FloatPoint(
-        x: (rect.x() + topLeft.width()).float(), y: (rect.y() + topLeft.height()).float())
+        x: (m_rect.x() + topLeft.width()).float(), y: (m_rect.y() + topLeft.height()).float())
       if otherRect.x() <= center.x && otherRect.y() <= center.y {
         if !ellipseContainsPoint(
           center: center, radii: topLeft.FloatSize(), point: otherRect.minXMinYCorner().FloatPoint()
@@ -188,7 +192,7 @@ struct RoundedRect {
     let topRight = radii.topRight
     if !topRight.isEmpty() {
       let center = FloatPoint(
-        x: (rect.maxX() - topRight.width()).float(), y: (rect.y() + topRight.height()).float())
+        x: (m_rect.maxX() - topRight.width()).float(), y: (m_rect.y() + topRight.height()).float())
       if otherRect.maxX() >= center.x && otherRect.y() <= center.y {
         if !ellipseContainsPoint(
           center: center, radii: topRight.FloatSize(),
@@ -202,7 +206,8 @@ struct RoundedRect {
     let bottomLeft = radii.bottomLeft
     if !bottomLeft.isEmpty() {
       let center = FloatPoint(
-        x: (rect.x() + bottomLeft.width()).float(), y: (rect.maxY() - bottomLeft.height()).float())
+        x: (m_rect.x() + bottomLeft.width()).float(),
+        y: (m_rect.maxY() - bottomLeft.height()).float())
       if otherRect.x() <= center.x && otherRect.maxY() >= center.y {
         if !ellipseContainsPoint(
           center: center, radii: bottomLeft.FloatSize(),
@@ -216,8 +221,8 @@ struct RoundedRect {
     let bottomRight = radii.bottomRight
     if !bottomRight.isEmpty() {
       let center = FloatPoint(
-        x: (rect.maxX() - bottomRight.width()).float(),
-        y: (rect.maxY() - bottomRight.height()).float())
+        x: (m_rect.maxX() - bottomRight.width()).float(),
+        y: (m_rect.maxY() - bottomRight.height()).float())
       if otherRect.maxX() >= center.x && otherRect.maxY() >= center.y {
         if !ellipseContainsPoint(
           center: center, radii: bottomRight.FloatSize(),
@@ -232,7 +237,7 @@ struct RoundedRect {
   }
 
   func pixelSnappedRoundedRectForPainting(deviceScaleFactor: Float32) -> FloatRoundedRect {
-    let originalRect = rect
+    let originalRect = rect()
     if originalRect.isEmpty() {
       return FloatRoundedRect(
         rect: originalRect.FloatRect(), radii: FloatRoundedRect.Radii(intRadii: radii))
@@ -262,9 +267,9 @@ struct RoundedRect {
   }
 
   func transposedRect() -> RoundedRect {
-    return RoundedRect(rect: rect.transposedRect(), radii: radii.transposedRadii())
+    return RoundedRect(rect: m_rect.transposedRect(), radii: radii.transposedRadii())
   }
 
-  var rect = LayoutRectWrapper()
+  private var m_rect = LayoutRectWrapper()
   var radii = Radii()
 }
