@@ -232,7 +232,7 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
       if hitRules.canHitFill {
         if m_objectBoundingBox.contains(localPoint.FloatPoint()) {
           updateHitTestResult(
-            result: result,
+            result: &result,
             point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
           if result.addNodeToListBasedTestResult(
             node: protectedNodeForHitTest(), request: request,

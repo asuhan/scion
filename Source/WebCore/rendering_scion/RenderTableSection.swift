@@ -1562,7 +1562,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
           let cellPoint = flipForWritingModeForChild(child: cell, point: adjustedLocation)
           if cell.nodeAtPoint(request, &result, locationInContainer, cellPoint, action) {
             updateHitTestResult(
-              result: result, point: locationInContainer.point() - toLayoutSize(point: cellPoint))
+              result: &result, point: locationInContainer.point() - toLayoutSize(point: cellPoint))
             return true
           }
         }

@@ -2230,14 +2230,14 @@ class RenderLayerWrapper {
     }
   }
 
-  func hitTest(_ request: HitTestRequestWrapper, _ result: HitTestResultWrapper) -> Bool {
+  func hitTest(_ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper) -> Bool {
     assert(isNativeImpl())
-    return hitTest(request, result.hitTestLocation, result)
+    return hitTest(request, result.hitTestLocation, &result)
   }
 
   private func hitTest(
     _ request: HitTestRequestWrapper, _ hitTestLocation: HitTestLocationWrapper,
-    _ result: HitTestResultWrapper
+    _ result: inout HitTestResultWrapper
   ) -> Bool {
     assert(isNativeImpl())
     assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
@@ -2272,7 +2272,7 @@ class RenderLayerWrapper {
         && isRenderViewLayer
       {
         renderer().updateHitTestResult(
-          result: result,
+          result: &result,
           point: (renderer() as! RenderViewWrapper).flipForWritingMode(
             position: hitTestLocation.point()))
         insideLayer = HitLayer(layer: self)

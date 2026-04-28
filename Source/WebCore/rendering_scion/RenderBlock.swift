@@ -1905,7 +1905,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
         &result, locationInContainer: locationInContainer.point(),
         accumulatedOffset: adjustedLocation)
     {
-      updateHitTestResult(result: result, point: locationInContainer.point() - localOffset)
+      updateHitTestResult(result: &result, point: locationInContainer.point() - localOffset)
       // FIXME: isPointInOverflowControl() doesn't handle rect-based tests yet.
       if result.addNodeToListBasedTestResult(
         node: protectedNodeForHitTest(), request: request,
@@ -1950,7 +1950,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       let boundsRect = LayoutRectWrapper(location: adjustedLocation, size: size())
       if visibleToHitTesting(request: request) && locationInContainer.intersects(rect: boundsRect) {
         updateHitTestResult(
-          result: result,
+          result: &result,
           point: flipForWritingMode(position: locationInContainer.point() - localOffset))
         if result.addNodeToListBasedTestResult(
           node: protectedNodeForHitTest(), request: request,
@@ -3180,6 +3180,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
+  override func nodeForHitTest() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualization when all callers have moved to RenderBlockFlow
   func hitTestFloats(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
@@ -3246,7 +3251,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       request, &result, locationInContainer, toLayoutPoint(size: scrolledOffset), hitTestAction)
     {
       updateHitTestResult(
-        result: result,
+        result: &result,
         point: flipForWritingMode(position: locationInContainer.point() - localOffset))
       return true
     }

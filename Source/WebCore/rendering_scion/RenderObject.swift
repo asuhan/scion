@@ -1849,6 +1849,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return inside
   }
 
+  func nodeForHitTest() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
@@ -2165,13 +2170,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func protectedNodeForHitTest() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nodeForHitTest()
   }
 
-  func updateHitTestResult(result: HitTestResultWrapper, point: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func updateHitTestResult(result: inout HitTestResultWrapper, point: LayoutPointWrapper) {
+    assert(isNativeImpl())
+    if result.innerNode() != nil {
+      return
+    }
+
+    if let node = nodeForHitTest() {
+      result.setInnerNode(node)
+      if result.innerNonSharedNode() == nil {
+        result.setInnerNonSharedNode(node)
+      }
+      result.setLocalPoint(point)
+    }
   }
 
   func positionForPoint(

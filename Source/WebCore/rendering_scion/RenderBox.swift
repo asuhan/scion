@@ -1717,7 +1717,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         && child!.nodeAtPoint(request, &result, locationInContainer, adjustedLocation, action)
       {
         updateHitTestResult(
-          result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation)
+          result: &result,
+          point: locationInContainer.point() - toLayoutSize(point: adjustedLocation)
         )
         return true
       }
@@ -1744,7 +1745,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       }
 
       updateHitTestResult(
-        result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
+        result: &result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
       if result.addNodeToListBasedTestResult(
         node: protectedNodeForHitTest(), request: request, locationInContainer: locationInContainer,
         rect: boundsRect) == .Stop

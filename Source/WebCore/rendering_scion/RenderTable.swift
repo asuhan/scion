@@ -1393,7 +1393,7 @@ class RenderTableWrapper: RenderBlockWrapper {
           let childPoint = flipForWritingModeForChild(child: box, point: adjustedLocation)
           if box.nodeAtPoint(request, &result, locationInContainer, childPoint, action) {
             updateHitTestResult(
-              result: result, point: toLayoutPoint(size: locationInContainer.point() - childPoint))
+              result: &result, point: toLayoutPoint(size: locationInContainer.point() - childPoint))
             return true
           }
         }
@@ -1408,7 +1408,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       && locationInContainer.intersects(rect: boundsRect)
     {
       updateHitTestResult(
-        result: result,
+        result: &result,
         point: flipForWritingMode(
           position: locationInContainer.point() - toLayoutSize(point: adjustedLocation)))
       if result.addNodeToListBasedTestResult(

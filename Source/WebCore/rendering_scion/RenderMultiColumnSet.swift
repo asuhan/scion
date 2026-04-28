@@ -575,6 +575,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     }
   }
 
+  override final func nodeForHitTest() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {

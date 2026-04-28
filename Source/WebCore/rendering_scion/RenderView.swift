@@ -996,6 +996,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     accumulatedRepaintRegion = nil
   }
 
+  override final func nodeForHitTest() -> NodeWrapper? {
+    assert(isNativeImpl())
+    return document().documentElement()
+  }
+
   func updateInitialContainingBlockSize() {
     assert(isNativeImpl())
     // Initial containing block has no margin/padding/border.

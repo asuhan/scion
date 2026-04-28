@@ -1422,7 +1422,10 @@ private func convertHitTestLocation(_ r: HitTestLocationRaw) -> HitTestLocationW
 
 private func convertHitTestResult(_ raw: HitTestResultRaw) -> HitTestResultWrapper {
   return HitTestResultWrapper(
-    convertHitTestLocation(raw.hitTestLocation), convertLayoutPointRaw(raw.localPoint))
+    convertHitTestLocation(raw.hitTestLocation),
+    raw.innerNode != nil ? NodeWrapper(p: raw.innerNode!) : nil,
+    raw.innerNonSharedNode != nil ? NodeWrapper(p: raw.innerNonSharedNode!) : nil,
+    convertLayoutPointRaw(raw.localPoint))
 }
 
 private func convertLayoutPoint(_ p: LayoutPointWrapper) -> LayoutPointRaw {
@@ -1466,6 +1469,8 @@ func RenderObjectScion_hitTest(
   let testResult = object.hitTest(
     request, &result, locationInContainer, accumulatedOffset, hitTestFilter)
   resultRaw.pointee.hitTestLocation = convertHitTestLocation(result.hitTestLocation)
+  resultRaw.pointee.innerNode = result.innerNode()?.p
+  resultRaw.pointee.innerNonSharedNode = result.innerNonSharedNode()?.p
   resultRaw.pointee.localPoint = convertLayoutPoint(result.localPoint)
   return testResult
 }

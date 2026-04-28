@@ -189,7 +189,8 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
           request, &result, locationInContainer, adjustedLocation, hitTestAction)
       {
         updateHitTestResult(
-          result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation)
+          result: &result,
+          point: locationInContainer.point() - toLayoutSize(point: adjustedLocation)
         )
         if result.addNodeToListBasedTestResult(
           node: child!.protectedNode(), request: request, locationInContainer: locationInContainer,
@@ -206,7 +207,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
       && m_objectBoundingBox.contains(localPoint.FloatPoint())
     {
       updateHitTestResult(
-        result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
+        result: &result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
       if result.addNodeToListBasedTestResult(
         node: protectedNodeForHitTest(), request: request, locationInContainer: locationInContainer,
         rect: visualOverflowRect) == .Stop

@@ -31,25 +31,13 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
-  func setInnerNode(_ node: NodeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setInnerNode(_ node: NodeWrapper) { m_innerNode = node }
 
-  func innerNonSharedNode() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func innerNonSharedNode() -> NodeWrapper? { return m_innerNonSharedNode }
 
-  func innerNode() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func innerNode() -> NodeWrapper? { return m_innerNode }
 
-  func setInnerNonSharedNode(_ node: NodeWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setInnerNonSharedNode(_ node: NodeWrapper?) { m_innerNonSharedNode = node }
 
   func setURLElement(_ n: ElementWrapper?) {
     // TODO(asuhan): implement this
@@ -77,6 +65,8 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  mutating func setLocalPoint(_ p: LayoutPointWrapper) { localPoint = p }
+
   func addNodeToListBasedTestResult(
     node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
     rect: LayoutRectWrapper = LayoutRectWrapper()
@@ -91,13 +81,20 @@ struct HitTestResultWrapper {
   }
 
   // Only used for conversion for interop.
-  init(_ hitTestLocation: HitTestLocationWrapper, _ localPoint: LayoutPointWrapper) {
+  init(
+    _ hitTestLocation: HitTestLocationWrapper, _ innerNode: NodeWrapper?,
+    _ innerNonSharedNode: NodeWrapper?, _ localPoint: LayoutPointWrapper
+  ) {
     self.hitTestLocation = hitTestLocation
+    self.m_innerNode = innerNode
+    self.m_innerNonSharedNode = innerNonSharedNode
     self.localPoint = localPoint
   }
 
   let hitTestLocation: HitTestLocationWrapper
 
+  private var m_innerNode: NodeWrapper?
+  private var m_innerNonSharedNode: NodeWrapper?
   // A point in the local coordinate space of m_innerNonSharedNode's renderer. Allows us to efficiently
   // determine where inside the renderer we hit on subsequent operations.
   var localPoint: LayoutPointWrapper

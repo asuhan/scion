@@ -718,7 +718,7 @@ class LayoutIntegration {
     }
 
     func hitTest(
-      request: HitTestRequestWrapper, result: HitTestResultWrapper,
+      request: HitTestRequestWrapper, result: inout HitTestResultWrapper,
       locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,
       hitTestAction: HitTestAction, layerRenderer: RenderInlineWrapper
     ) -> Bool {
@@ -781,7 +781,7 @@ class LayoutIntegration {
         }
 
         renderer.updateHitTestResult(
-          result: result,
+          result: &result,
           point: flow().flipForWritingMode(
             position: locationInContainer.point() - toLayoutSize(point: accumulatedOffset)))
         if result.addNodeToListBasedTestResult(

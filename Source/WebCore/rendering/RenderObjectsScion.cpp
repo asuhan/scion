@@ -201,6 +201,8 @@ struct HitTestRequestRaw {
 
 struct HitTestResultRaw {
     HitTestLocationRaw hitTestLocation;
+    void* innerNode;
+    void* innerNonSharedNode;
     LayoutPointRaw localPoint;
 };
 
@@ -707,7 +709,7 @@ HitTestLocation convertHitTestLocation(const HitTestLocationRaw& hitTestLocation
 bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter hitTestFilter)
 {
     HitTestRequestRaw requestRaw { request.type().toRaw(), request.userTriggered() };
-    HitTestResultRaw resultRaw { convertHitTestLocation(result.hitTestLocation()), convertLayoutPoint(result.localPoint()) };
+    HitTestResultRaw resultRaw { convertHitTestLocation(result.hitTestLocation()), result.innerNode(), result.innerNonSharedNode(), convertLayoutPoint(result.localPoint()) };
     bool testResult = RenderObjectScion_hitTest(
         m_handle,
         requestRaw,
@@ -716,6 +718,8 @@ bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& re
         convertLayoutPoint(accumulatedOffset),
         static_cast<uint8_t>(hitTestFilter));
     result.setHitTestLocation(convertHitTestLocation(resultRaw.hitTestLocation));
+    result.setInnerNode(static_cast<Node*>(resultRaw.innerNode));
+    result.setInnerNonSharedNode(static_cast<Node*>(resultRaw.innerNonSharedNode));
     result.setLocalPoint(convertLayoutPoint(resultRaw.localPoint));
     return testResult;
 }

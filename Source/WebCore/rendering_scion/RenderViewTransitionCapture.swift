@@ -121,6 +121,11 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     }
   }
 
+  override final func nodeForHitTest() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let m_oldImage: ImageBufferWrapper? = nil
   // The overflow rect that the captured image represents, in RenderLayer coordinates
   // of the captured renderer (see layerToLayoutOffset in ViewTransition.cpp).

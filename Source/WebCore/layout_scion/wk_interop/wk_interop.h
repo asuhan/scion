@@ -328,6 +328,8 @@ struct HitTestRequestRaw {
 
 struct HitTestResultRaw {
     struct HitTestLocationRaw hitTestLocation;
+    void* innerNode;
+    void* innerNonSharedNode;
     struct LayoutPointRaw localPoint;
 };
 
