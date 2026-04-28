@@ -33,6 +33,14 @@ private func determinant(_ a: FloatSize, _ b: FloatSize) -> Float32 {
   return a.width * b.height - a.height * b.width
 }
 
+private func clampToIntRange(_ value: Float32) -> Float32 {
+  if value.isInfinite || abs(value) > Float32(Int32.max) {
+    return Float32(value.sign == .minus ? Int32.min : Int32.max)
+  }
+
+  return value
+}
+
 private func rightMostCornerToVector(_ rect: FloatRectWrapper, _ vector: FloatSize) -> FloatPoint {
   // Return the corner of the rectangle that if it is to the left of the vector
   // would mean all of the rectangle is to the left of the vector.
@@ -134,8 +142,13 @@ struct FloatQuad {
   }
 
   func boundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let left = clampToIntRange(min(m_p1.x, m_p2.x, m_p3.x, m_p4.x))
+    let top = clampToIntRange(min(m_p1.y, m_p2.y, m_p3.y, m_p4.y))
+
+    let right = clampToIntRange(max(m_p1.x, m_p2.x, m_p3.x, m_p4.x))
+    let bottom = clampToIntRange(max(m_p1.y, m_p2.y, m_p3.y, m_p4.y))
+
+    return FloatRectWrapper(x: left, y: top, width: right - left, height: bottom - top)
   }
 
   func enclosingBoundingBox() -> IntRect {
