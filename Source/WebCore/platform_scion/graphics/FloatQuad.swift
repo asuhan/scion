@@ -153,9 +153,11 @@ struct FloatQuad {
 
   func enclosingBoundingBox() -> IntRect { return enclosingIntRect(rect: boundingBox()) }
 
-  func move(_ offset: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func move(_ offset: FloatSize) {
+    m_p1 += offset
+    m_p2 += offset
+    m_p3 += offset
+    m_p4 += offset
   }
 
   // Tests whether points are in clock-wise, or counter clock-wise order.
@@ -165,8 +167,8 @@ struct FloatQuad {
     return determinant(m_p2 - m_p1, m_p3 - m_p2) < 0
   }
 
-  private let m_p1: FloatPoint
-  private let m_p2: FloatPoint
-  private let m_p3: FloatPoint
-  private let m_p4: FloatPoint
+  private var m_p1: FloatPoint
+  private var m_p2: FloatPoint
+  private var m_p3: FloatPoint
+  private var m_p4: FloatPoint
 }

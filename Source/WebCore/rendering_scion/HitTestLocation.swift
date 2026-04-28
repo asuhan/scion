@@ -72,7 +72,7 @@ struct HitTestLocationWrapper {
   private mutating func move(_ offset: LayoutSizeWrapper) {
     m_point.move(s: offset)
     m_transformedPoint.move(offset.FloatSize())
-    m_transformedRect.move(offset)
+    m_transformedRect.move(offset.FloatSize())
     m_boundingBox = LayoutRectWrapper(rect: enclosingIntRect(rect: m_transformedRect.boundingBox()))
   }
 
@@ -94,7 +94,7 @@ struct HitTestLocationWrapper {
   private var m_boundingBox: LayoutRectWrapper
 
   private var m_transformedPoint: FloatPoint
-  private let m_transformedRect: FloatQuad
+  private var m_transformedRect: FloatQuad
 
   private let m_isRectBased: Bool
   private let m_isRectilinear: Bool

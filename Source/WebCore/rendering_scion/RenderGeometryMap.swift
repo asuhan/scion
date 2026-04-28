@@ -122,7 +122,7 @@ class RenderGeometryMap {
         || (!mapping.isEmpty && CPtrToInt(container!.id()) == CPtrToInt(mapping[0].renderer?.id())))
     {
       result = FloatQuad(inRect: rect)
-      result.move(accumulatedOffset)
+      result.move(accumulatedOffset.FloatSize())
     } else {
       let transformState = TransformState(
         .ApplyTransformDirection, rect.center(), FloatQuad(inRect: rect))
