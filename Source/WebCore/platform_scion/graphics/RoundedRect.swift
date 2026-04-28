@@ -171,6 +171,83 @@ struct RoundedRect {
     radii.makeRenderableInRect(rect: m_rect)
   }
 
+  // Tests whether the quad intersects any part of this rounded rectangle.
+  // This only works for convex quads.
+  func intersectsQuad(_ quad: FloatQuad) -> Bool {
+    let rect = m_rect.FloatRect()
+    if !quad.intersectsRect(rect) {
+      return false
+    }
+
+    let topLeft = radii.topLeft
+    if !topLeft.isEmpty() {
+      let rect = FloatRectWrapper(
+        x: m_rect.x().float(), y: m_rect.y().float(), width: topLeft.width().float(),
+        height: topLeft.height().float()
+      )
+      if quad.intersectsRect(rect) {
+        let center = FloatPoint(
+          x: (m_rect.x() + topLeft.width()).float(), y: (m_rect.y() + topLeft.height()).float())
+        let size = FloatSize(width: topLeft.width().float(), height: topLeft.height().float())
+        if !quad.intersectsEllipse(center, size) {
+          return false
+        }
+      }
+    }
+
+    let topRight = radii.topRight
+    if !topRight.isEmpty() {
+      let rect = FloatRectWrapper(
+        x: (m_rect.maxX() - topRight.width()).float(), y: m_rect.y().float(),
+        width: topRight.width().float(), height: topRight.height().float())
+      if quad.intersectsRect(rect) {
+        let center = FloatPoint(
+          x: (m_rect.maxX() - topRight.width()).float(), y: (m_rect.y() + topRight.height()).float()
+        )
+        let size = FloatSize(width: topRight.width().float(), height: topRight.height().float())
+        if !quad.intersectsEllipse(center, size) {
+          return false
+        }
+      }
+    }
+
+    let bottomLeft = radii.bottomLeft
+    if !bottomLeft.isEmpty() {
+      let rect = FloatRectWrapper(
+        x: m_rect.x().float(), y: (m_rect.maxY() - bottomLeft.height()).float(),
+        width: bottomLeft.width().float(), height: bottomLeft.height().float())
+      if quad.intersectsRect(rect) {
+        let center = FloatPoint(
+          x: (m_rect.x() + bottomLeft.width()).float(),
+          y: (m_rect.maxY() - bottomLeft.height()).float())
+        let size = FloatSize(width: bottomLeft.width().float(), height: bottomLeft.height().float())
+        if !quad.intersectsEllipse(center, size) {
+          return false
+        }
+      }
+    }
+
+    let bottomRight = radii.bottomRight
+    if !bottomRight.isEmpty() {
+      let rect = FloatRectWrapper(
+        x: (m_rect.maxX() - bottomRight.width()).float(),
+        y: (m_rect.maxY() - bottomRight.height()).float(), width: bottomRight.width().float(),
+        height: bottomRight.height().float())
+      if quad.intersectsRect(rect) {
+        let center = FloatPoint(
+          x: (m_rect.maxX() - bottomRight.width()).float(),
+          y: (m_rect.maxY() - bottomRight.height()).float())
+        let size = FloatSize(
+          width: bottomRight.width().float(), height: bottomRight.height().float())
+        if !quad.intersectsEllipse(center, size) {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+
   func contains(otherRect: LayoutRectWrapper) -> Bool {
     if !rect().contains(other: otherRect) || !isRenderable() {
       return false

@@ -43,6 +43,8 @@ struct HitTestLocationWrapper {
 
   func intersects(rect: LayoutRectWrapper) -> Bool { return intersectsRect(rect) }
 
+  func intersects(_ rect: RoundedRect) -> Bool { return rect.intersectsQuad(m_transformedRect) }
+
   private func intersectsRect(_ rect: LayoutRectWrapper) -> Bool {
     // FIXME: When the hit test is not rect based we should use rect.contains(m_point).
     // That does change some corner case tests though.

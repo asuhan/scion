@@ -1793,8 +1793,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return true
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustedLocation = accumulatedOffset + location()
+    var borderRect = borderBoxRect()
+    borderRect.moveBy(offset: adjustedLocation)
+
+    let borderShape = BorderShape.shapeForBorderRect(style: style(), borderRect: borderRect)
+    // To handle non-round corners, BorderShape should do the hit-testing.
+    return hitTestLocation.intersects(borderShape.deprecatedRoundedRect())
   }
 
   override func minPreferredLogicalWidth() -> LayoutUnit {

@@ -141,6 +141,13 @@ struct FloatQuad {
     return true
   }
 
+  // Test whether any part of the circle/ellipse intersects with this quad.
+  // Note that these two functions only work for convex quads.
+  func intersectsEllipse(_ center: FloatPoint, _ radii: FloatSize) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boundingBox() -> FloatRectWrapper {
     let left = clampToIntRange(min(m_p1.x, m_p2.x, m_p3.x, m_p4.x))
     let top = clampToIntRange(min(m_p1.y, m_p2.y, m_p3.y, m_p4.y))
