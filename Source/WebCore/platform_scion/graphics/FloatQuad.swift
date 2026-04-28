@@ -151,10 +151,7 @@ struct FloatQuad {
     return FloatRectWrapper(x: left, y: top, width: right - left, height: bottom - top)
   }
 
-  func enclosingBoundingBox() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func enclosingBoundingBox() -> IntRect { return enclosingIntRect(rect: boundingBox()) }
 
   func move(_ offset: LayoutSizeWrapper) {
     // TODO(asuhan): implement this
