@@ -677,6 +677,7 @@ int32_t RenderBox_width(const void*);
 int32_t RenderBox_height(const void*);
 void RenderBox_setX(void*, int32_t);
 void RenderBox_setY(void*, int32_t);
+void* RenderBox_previousSiblingBox(const void*);
 void* RenderBox_nextSiblingBox(const void*);
 int32_t RenderBox_marginBefore(const void*, const void*);
 void RenderBox_setMarginBefore(void*, int32_t, const void*);

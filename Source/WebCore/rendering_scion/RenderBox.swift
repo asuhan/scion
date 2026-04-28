@@ -1070,7 +1070,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func previousSiblingBox() -> RenderBoxWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let prevSiblingBoxPtr = wk_interop.RenderBox_previousSiblingBox(id()) else {
+        return nil
+      }
+      return createRenderObjectWrapper(prevSiblingBoxPtr) as! RenderBoxWrapper?
+    }
     if let box = previousSibling() as? RenderBoxWrapper {
       return box
     }
