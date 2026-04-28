@@ -122,8 +122,9 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   }
 
   override final func nodeForHitTest() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // The view transition pseudo-elements should hit-test to their originating element (the document element).
+    return document().documentElement()
   }
 
   private let m_oldImage: ImageBufferWrapper? = nil
