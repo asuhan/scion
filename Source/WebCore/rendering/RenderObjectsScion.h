@@ -197,6 +197,8 @@ public:
 
     bool hitTest(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter = HitTestAll);
 
+    RenderBlock* containingBlock() const;
+
     const RenderStyle& style() const;
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;

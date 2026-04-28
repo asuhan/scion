@@ -964,7 +964,7 @@ RenderBlock* RenderObject::containingBlockForPositionType(PositionType positionT
 
 RenderBlock* RenderObject::containingBlock() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->containingBlock(); }
     // FIXME: See https://bugs.webkit.org/show_bug.cgi?id=270977 for RenderLineBreak special treatment.
     if (is<RenderText>(*this) || is<RenderLineBreak>(*this))
         return containingBlockForPositionType(PositionType::Static, *this);

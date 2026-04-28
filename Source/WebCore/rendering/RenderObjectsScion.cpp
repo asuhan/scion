@@ -208,6 +208,8 @@ struct HitTestResultRaw {
 
 extern "C" bool RenderObjectScion_hitTest(void*, HitTestRequestRaw, HitTestResultRaw*, HitTestLocationRaw, LayoutPointRaw, bool);
 
+extern "C" void* RenderObjectScion_containingBlock(const void*);
+
 extern "C" const void* RenderObjectScion_style(const void*);
 
 struct RepaintContainerStatusRaw {
@@ -725,6 +727,8 @@ bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& re
     result.setLocalPoint(convertLayoutPoint(resultRaw.localPoint));
     return testResult;
 }
+
+RenderBlock* RenderObjectScion::containingBlock() const { return static_cast<RenderBlock*>(RenderObjectScion_containingBlock(m_handle)); }
 
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
 
