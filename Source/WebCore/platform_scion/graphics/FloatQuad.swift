@@ -143,9 +143,19 @@ struct FloatQuad {
 
   // Test whether any part of the circle/ellipse intersects with this quad.
   // Note that these two functions only work for convex quads.
-  func intersectsEllipse(_ center: FloatPoint, _ radii: FloatSize) -> Bool {
+  private func intersectsCircle(_ center: FloatPoint, _ radius: Float32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func intersectsEllipse(_ center: FloatPoint, _ radii: FloatSize) -> Bool {
+    // Transform the ellipse to an origin-centered circle whose radius is the product of major radius and minor radius.
+    // Here we apply the same transformation to the quad.
+    var transformedQuad = self
+    transformedQuad.move(-center.x, -center.y)
+    transformedQuad.scale(radii.height, radii.width)
+
+    return transformedQuad.intersectsCircle(FloatPoint(), radii.height * radii.width)
   }
 
   func boundingBox() -> FloatRectWrapper {
@@ -165,6 +175,20 @@ struct FloatQuad {
     m_p2 += offset
     m_p3 += offset
     m_p4 += offset
+  }
+
+  private mutating func move(_ dx: Float32, _ dy: Float32) {
+    m_p1.move(dx: dx, dy: dy)
+    m_p2.move(dx: dx, dy: dy)
+    m_p3.move(dx: dx, dy: dy)
+    m_p4.move(dx: dx, dy: dy)
+  }
+
+  private mutating func scale(_ dx: Float32, _ dy: Float32) {
+    m_p1.scale(scaleX: dx, scaleY: dy)
+    m_p2.scale(scaleX: dx, scaleY: dy)
+    m_p3.scale(scaleX: dx, scaleY: dy)
+    m_p4.scale(scaleX: dx, scaleY: dy)
   }
 
   // Tests whether points are in clock-wise, or counter clock-wise order.
