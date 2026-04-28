@@ -1945,6 +1945,13 @@ func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRa
   return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
 }
 
+@_cdecl("RenderBoxScion_scrollPosition")
+func RenderBoxScion_scrollPosition(_ boxRaw: UnsafeRawPointer) -> IntPointRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let position = box.scrollPosition()
+  return IntPointRaw(x: position.x, y: position.y)
+}
+
 @_cdecl("RenderBoxScion_styleWillChange")
 func RenderBoxScion_styleWillChange(
   _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer

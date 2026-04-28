@@ -367,6 +367,8 @@ public:
 
     LayoutPoint topLeftLocation() const;
 
+    ScrollPosition scrollPosition() const;
+
     void styleWillChange(StyleDifference, const RenderStyle&);
 
     void willBeDestroyed();

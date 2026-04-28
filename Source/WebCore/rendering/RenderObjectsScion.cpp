@@ -336,6 +336,8 @@ extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
+extern "C" IntPointRaw RenderBoxScion_scrollPosition(const void*);
+
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 extern "C" void RenderBoxScion_willBeDestroyed(void*);
@@ -1049,6 +1051,12 @@ LayoutPoint RenderBoxScion::topLeftLocation() const
 {
     const auto point = RenderBoxScion_topLeftLocation(m_handle);
     return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
+}
+
+ScrollPosition RenderBoxScion::scrollPosition() const
+{
+    const auto position = RenderBoxScion_scrollPosition(m_handle);
+    return { position.x, position.y };
 }
 
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
