@@ -73,8 +73,10 @@ struct FloatQuad {
   }
 
   init(inRect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_p1 = inRect.location()
+    m_p2 = FloatPoint(x: inRect.maxX(), y: inRect.y())
+    m_p3 = FloatPoint(x: inRect.maxX(), y: inRect.maxY())
+    m_p4 = FloatPoint(x: inRect.x(), y: inRect.maxY())
   }
 
   func p1() -> FloatPoint { return m_p1 }
