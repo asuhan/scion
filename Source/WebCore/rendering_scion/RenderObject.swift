@@ -1680,8 +1680,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Returns true if this renderer is rooted.
   func isRooted() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isDescendantOf(ancestor: view())
   }
 
   func node() -> NodeWrapper? {
