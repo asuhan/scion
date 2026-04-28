@@ -328,6 +328,8 @@ extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool
 
 extern "C" int32_t RenderBoxScion_availableLogicalWidth(const void*);
 
+extern "C" bool RenderBoxScion_canBeScrolledAndHasScrollableArea(const void*);
+
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
@@ -1029,6 +1031,11 @@ RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBo
 LayoutUnit RenderBoxScion::availableLogicalWidth() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_availableLogicalWidth(m_handle));
+}
+
+bool RenderBoxScion::canBeScrolledAndHasScrollableArea() const
+{
+    return RenderBoxScion_canBeScrolledAndHasScrollableArea(m_handle);
 }
 
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const

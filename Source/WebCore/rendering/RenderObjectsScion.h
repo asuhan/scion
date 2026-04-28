@@ -359,6 +359,8 @@ public:
 
     LayoutUnit availableLogicalWidth() const;
 
+    bool canBeScrolledAndHasScrollableArea() const;
+
     bool hasAutoScrollbar(ScrollbarOrientation) const;
 
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;

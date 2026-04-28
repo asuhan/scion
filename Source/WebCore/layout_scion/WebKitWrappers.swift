@@ -1917,6 +1917,12 @@ func RenderBoxScion_availableLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.availableLogicalWidth().rawValue()
 }
 
+@_cdecl("RenderBoxScion_canBeScrolledAndHasScrollableArea")
+func RenderBoxScion_canBeScrolledAndHasScrollableArea(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.canBeScrolledAndHasScrollableArea()
+}
+
 @_cdecl("RenderBoxScion_hasAutoScrollbar")
 func RenderBoxScion_hasAutoScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
   -> Bool
