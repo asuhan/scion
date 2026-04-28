@@ -3466,6 +3466,23 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       applyDelta: applyDelta)
   }
 
+  override func hitTestFloats(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func hitTestInlineChildren(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ hitTestAction: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func positionForPointWithInlineChildren(
     _ pointInLogicalContents: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?

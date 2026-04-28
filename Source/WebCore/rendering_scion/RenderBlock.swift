@@ -3180,13 +3180,77 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
+  // FIXME-BLOCKFLOW: Remove virtualization when all callers have moved to RenderBlockFlow
+  func hitTestFloats(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
+  ) -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
+  func hitTestContents(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ hitTestAction: HitTestAction
+  ) -> Bool {
+    assert(isNativeImpl())
+    if childrenInline() && !isRenderTable() {
+      return hitTestInlineChildren(
+        request, &result, locationInContainer, accumulatedOffset, hitTestAction)
+    }
+
+    // Hit test our children.
+    let childHitTest =
+      hitTestAction == .HitTestChildBlockBackgrounds ? .HitTestChildBlockBackground : hitTestAction
+    var child = lastChildBox()
+    while child != nil {
+      let childPoint = flipForWritingModeForChild(child: child!, point: accumulatedOffset)
+      if !child!.hasSelfPaintingLayer() && !child!.isFloating()
+        && child!.nodeAtPoint(request, &result, locationInContainer, childPoint, childHitTest)
+      {
+        return true
+      }
+      child = child!.previousSiblingBox()
+    }
+
+    return false
+  }
+
+  func hitTestInlineChildren(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ hitTestAction: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hitTestChildren(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ adjustedLocation: LayoutPointWrapper,
     _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Hit test descendants first.
+    let localOffset = toLayoutSize(point: adjustedLocation)
+    let scrolledOffset =
+      localOffset - toLayoutSize(point: LayoutPointWrapper(point: scrollPosition()))
+
+    if hitTestAction == .HitTestFloat
+      && hitTestFloats(request, &result, locationInContainer, toLayoutPoint(size: scrolledOffset))
+    {
+      return true
+    }
+    if hitTestContents(
+      request, &result, locationInContainer, toLayoutPoint(size: scrolledOffset), hitTestAction)
+    {
+      updateHitTestResult(
+        result: result,
+        point: flipForWritingMode(position: locationInContainer.point() - localOffset))
+      return true
+    }
+    return false
   }
 
   private func hitTestExcludedChildrenInBorder(
