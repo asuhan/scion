@@ -48,18 +48,28 @@ struct HitTestRequestWrapper {
 
   static let defaultTypes = Type_([.ReadOnly, .Active, .DisallowUserAgentShadowContent])
 
+  private static func assertConsistentType(_ type: Type_) {
+    #if ASSERT_ENABLED
+      assert(
+        !type.contains(.DisallowUserAgentShadowContentExceptForImageOverlays)
+          || !type.contains(.DisallowUserAgentShadowContent))
+      assert(
+        !type.contains(.IncludeAllElementsUnderPoint) || type.contains(.CollectMultipleElements))
+    #endif
+  }
+
   init(_ source: HitTestSource, _ type: Type_ = defaultTypes) {
-    // TODO(asuhan): add type consistency check.
     self.type = type
     self.source = source
+    HitTestRequestWrapper.assertConsistentType(type)
   }
 
   // FIXME: This constructor should be phased out in favor of the `HitTestSource` version above, such that all call sites must
   // consider whether the hit test request is user-triggered or bindings-triggered.
   init(type: Type_ = defaultTypes) {
-    // TODO(asuhan): add type consistency check.
     self.type = type
     self.source = .User
+    HitTestRequestWrapper.assertConsistentType(type)
   }
 
   func active() -> Bool { return type.contains(.Active) }
