@@ -1478,12 +1478,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return borderTop()
   }
 
-  private func clientWidth() -> LayoutUnit {
+  func clientWidth() -> LayoutUnit {
     assert(isNativeImpl())
     return paddingBoxWidth()
   }
 
-  private func clientHeight() -> LayoutUnit {
+  func clientHeight() -> LayoutUnit {
     assert(isNativeImpl())
     return paddingBoxHeight()
   }
@@ -1507,6 +1507,34 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     assert(isNativeImpl())
     return LayoutRectWrapper(
       x: clientLeft(), y: clientTop(), width: clientWidth(), height: clientHeight())
+  }
+
+  func scrollWidth() -> Int32 {
+    assert(isNativeImpl())
+    if hasPotentiallyScrollableOverflow() && layer() != nil {
+      return layer()!.scrollWidth()
+    }
+    // For objects with visible overflow, this matches IE.
+    // FIXME: Need to work right with writing modes.
+    if style().isLeftToRightDirection() {
+      // FIXME: This should use snappedIntSize() instead with absolute coordinates.
+      return Int32(
+        roundToInt(value: max(clientWidth(), layoutOverflowRect().maxX() - borderLeft())))
+    }
+    return Int32(
+      roundToInt(
+        value: clientWidth() - min(LayoutUnit(value: 0), layoutOverflowRect().x() - borderLeft())))
+  }
+
+  func scrollHeight() -> Int32 {
+    assert(isNativeImpl())
+    if hasPotentiallyScrollableOverflow() && layer() != nil {
+      return layer()!.scrollHeight()
+    }
+    // For objects with visible overflow, this matches IE.
+    // FIXME: Need to work right with writing modes.
+    // FIXME: This should use snappedIntSize() instead with absolute coordinates.
+    return Int32(roundToInt(value: max(clientHeight(), layoutOverflowRect().maxY() - borderTop())))
   }
 
   override func marginBottom() -> LayoutUnit {
@@ -4088,6 +4116,28 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       ? horizontalScrollbarHeight() : verticalScrollbarWidth()
   }
 
+  func canBeScrolledAndHasScrollableArea() -> Bool {
+    assert(isNativeImpl())
+    return canBeProgramaticallyScrolled() && (hasHorizontalOverflow() || hasVerticalOverflow())
+  }
+
+  func canBeProgramaticallyScrolled() -> Bool {
+    assert(isNativeImpl())
+    if isRenderView() {
+      return true
+    }
+
+    if !hasPotentiallyScrollableOverflow() {
+      return false
+    }
+
+    if hasScrollableOverflowX() || hasScrollableOverflowY() {
+      return true
+    }
+
+    return element()?.hasEditableStyle() ?? false
+  }
+
   private func canUseOverlayScrollbars() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -4144,6 +4194,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     assert(isNativeImpl())
     return hasNonVisibleOverflow()
       && (style().overflowY() == .Scroll || style().overflowY() == .Auto)
+  }
+
+  func hasHorizontalOverflow() -> Bool {
+    assert(isNativeImpl())
+    return scrollWidth() != roundToInt(value: paddingBoxWidth())
+  }
+
+  func hasVerticalOverflow() -> Bool {
+    assert(isNativeImpl())
+    return scrollHeight() != roundToInt(value: paddingBoxHeight())
   }
 
   private func hasScrollableOverflowX() -> Bool {

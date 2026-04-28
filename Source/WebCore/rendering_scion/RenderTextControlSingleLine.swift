@@ -305,6 +305,26 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
     return true
   }
 
+  override final func scrollWidth() -> Int32 {
+    assert(isNativeImpl())
+    if let innerTextRenderer = innerTextElement()?.renderer() {
+      // Adjust scrollWidth to include input element horizontal paddings and decoration width.
+      let adjustment = clientWidth() - innerTextRenderer.clientWidth()
+      return (innerTextRenderer.scrollWidth() + adjustment).int()
+    }
+    return super.scrollWidth()
+  }
+
+  override final func scrollHeight() -> Int32 {
+    assert(isNativeImpl())
+    if let innerTextRenderer = innerTextElement()?.renderer() {
+      // Adjust scrollHeight to include input element vertical paddings and decoration height.
+      let adjustment = clientHeight() - innerTextRenderer.clientHeight()
+      return (innerTextRenderer.scrollHeight() + adjustment).int()
+    }
+    return super.scrollHeight()
+  }
+
   override final func getAverageCharWidth() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -355,5 +375,13 @@ final class RenderTextControlInnerBlockWrapper: RenderBlockFlowWrapper {
   override func hasLineIfEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override final func canBeProgramaticallyScrolled() -> Bool {
+    assert(isNativeImpl())
+    if let shadowHost = element()!.shadowHost() as? HTMLInputElementWrapper {
+      return !shadowHost.hasAutoFillStrongPasswordButton()
+    }
+    return true
   }
 }

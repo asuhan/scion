@@ -206,6 +206,11 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override final func canBeProgramaticallyScrolled() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
 }
 
 // Renderer for our inner container, for <search> and others.

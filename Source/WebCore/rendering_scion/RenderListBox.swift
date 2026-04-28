@@ -361,12 +361,37 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  override final func canBeProgramaticallyScrolled() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func verticalScrollbarWidth() -> Int32 {
     return verticalScrollbar()?.occupiedWidth() ?? 0
   }
 
   override func horizontalScrollbarHeight() -> Int32 {
     return horizontalScrollbar()?.occupiedHeight() ?? 0
+  }
+
+  // FIXME: We ignore padding in the vertical direction as far as these values are concerned, since that's
+  // how the control currently paints.
+  override final func scrollWidth() -> Int32 {
+    assert(isNativeImpl())
+    if style().isHorizontalWritingMode() {
+      return Int32(roundToInt(value: clientWidth()))
+    }
+
+    return Int32(roundToInt(value: max(clientWidth(), listLogicalHeight())))
+  }
+
+  override final func scrollHeight() -> Int32 {
+    assert(isNativeImpl())
+    if style().isHorizontalWritingMode() {
+      return Int32(roundToInt(value: max(clientHeight(), listLogicalHeight())))
+    }
+
+    return Int32(roundToInt(value: clientHeight()))
   }
 
   override func nodeAtPoint(
@@ -524,6 +549,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   private func numItems() -> Int32 {
     assert(isNativeImpl())
     return Int32(selectElement().listItems().count)
+  }
+
+  private func listLogicalHeight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return itemLogicalHeight() * numItems() - itemBlockSpacing
   }
 
   private func rectForScrollbar(_ scrollbar: Scrollbar) -> LayoutRectWrapper {
