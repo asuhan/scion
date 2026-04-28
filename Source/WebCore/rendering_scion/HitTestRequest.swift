@@ -62,44 +62,25 @@ struct HitTestRequestWrapper {
     self.source = .User
   }
 
-  func active() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func active() -> Bool { return type.contains(.Active) }
 
-  func release() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func release() -> Bool { return type.contains(.Release) }
 
   func ignoreCSSPointerEventsProperty() -> Bool {
     return type.contains(.IgnoreCSSPointerEventsProperty)
   }
 
-  func ignoreClipping() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func ignoreClipping() -> Bool { return type.contains(.IgnoreClipping) }
 
-  func svgClipContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func svgClipContent() -> Bool { return type.contains(.SVGClipContent) }
 
-  func allowsChildFrameContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func allowsChildFrameContent() -> Bool { return type.contains(.AllowChildFrameContent) }
 
   func allowsVisibleChildFrameContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type.contains(.AllowVisibleChildFrameContentOnly)
   }
 
-  func isChildFrameHitTest() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isChildFrameHitTest() -> Bool { return type.contains(.ChildFrameHitTest) }
 
   func resultIsElementList() -> Bool { return type.contains(.CollectMultipleElements) }
 
