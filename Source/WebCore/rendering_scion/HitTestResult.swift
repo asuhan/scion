@@ -71,11 +71,24 @@ struct HitTestResultWrapper {
     node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
     rect: LayoutRectWrapper = LayoutRectWrapper()
   ) -> HitTestProgress {
+    return addNodeToListBasedTestResultCommon(node, request, locationInContainer, rect)
+  }
+
+  func append(_ other: HitTestResultWrapper, _ request: HitTestRequestWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func append(_ other: HitTestResultWrapper, _ request: HitTestRequestWrapper) {
+  private func addNodeToListBasedTestResultCommon(
+    _ node: NodeWrapper?, _ request: HitTestRequestWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ rect: LayoutRectWrapper
+  ) -> HitTestProgress {
+    // If it is not a list-based hit test, this method has to be no-op.
+    if !request.resultIsElementList() {
+      assert(!isRectBasedTest())
+      return .Stop
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
