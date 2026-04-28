@@ -60,10 +60,7 @@ struct HitTestResultWrapper {
   }
 
   // Forwarded from HitTestLocation
-  func isRectBasedTest() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRectBasedTest() -> Bool { return hitTestLocation.isRectBasedTest() }
 
   mutating func setLocalPoint(_ p: LayoutPointWrapper) { localPoint = p }
 
