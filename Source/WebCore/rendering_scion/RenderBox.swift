@@ -1787,6 +1787,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func hitTestBorderRadius(
     _ hitTestLocation: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
+    assert(isNativeImpl())
+    if isRenderView() || !style().hasBorderRadius() {
+      return true
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
