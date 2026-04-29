@@ -44,6 +44,11 @@
 #include "Text.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool HTMLFrameSetElement_noResize(const void* p)
+{
+    return static_cast<const WebCore::HTMLFrameSetElement*>(p)->noResize();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLFrameSetElement);

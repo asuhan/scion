@@ -1453,3 +1453,4 @@ void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);
 void Style_loadPendingResources(const void* style, void* document, const void* element);
 bool HTMLElement_hasFrameTag(const void*);
+bool HTMLFrameSetElement_noResize(const void*);

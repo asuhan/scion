@@ -21,11 +21,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
-  func noResize() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func noResize() -> Bool { return wk_interop.HTMLFrameSetElement_noResize(p) }
 
   func totalRows() -> Int32 {
     // TODO(asuhan): implement this
