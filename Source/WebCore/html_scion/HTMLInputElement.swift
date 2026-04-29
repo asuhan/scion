@@ -26,6 +26,8 @@
  *
  */
 
+import wk_interop
+
 final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
   override func placeholderElement() -> HTMLElementWrapper? {
     // TODO(asuhan): implement this
@@ -38,7 +40,6 @@ final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
   }
 
   func hasAutoFillStrongPasswordButton() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.HTMLInputElement_hasAutoFillStrongPasswordButton(p)
   }
 }

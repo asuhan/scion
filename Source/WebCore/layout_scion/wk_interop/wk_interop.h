@@ -1463,6 +1463,7 @@ int32_t HTMLFrameSetElement_border(const void*);
 bool HTMLFrameSetElement_hasBorderColor(const void*);
 void HTMLCanvasElement_setIsSnapshotting(void*, bool);
 bool HTMLImageElement_isDeferred(const void*);
+bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
 const void* CharacterData_data(const void*);
 uint32_t CharacterData_length(const void*);
 bool CharacterData_containsOnlyASCIIWhitespace(const void*);
