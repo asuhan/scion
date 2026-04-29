@@ -1454,3 +1454,5 @@ void* EventHandler_autoscrollRenderer(const void*);
 void Style_loadPendingResources(const void* style, void* document, const void* element);
 bool HTMLElement_hasFrameTag(const void*);
 bool HTMLFrameSetElement_noResize(const void*);
+int32_t HTMLFrameSetElement_totalRows(const void*);
+int32_t HTMLFrameSetElement_totalCols(const void*);
