@@ -3026,26 +3026,6 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       && documentElementRenderer!.style().logicalHeight().isPercentOrCalculated()
   }
 
-  func boxBorderBefore() -> LayoutUnit {
-    assert(isNativeImpl())
-    return super.borderBefore()
-  }
-
-  private func boxBorderAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func boxPaddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func boxPaddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   // This function will compute the logical border-box height, without laying
   // out the box. This means that the result is only "correct" when the height
   // is explicitly specified. This function exists so that intrinsic width

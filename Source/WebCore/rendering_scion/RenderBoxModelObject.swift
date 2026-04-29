@@ -605,10 +605,20 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func paddingBefore() -> LayoutUnit {
     assert(isNativeImpl())
+    return boxPaddingBefore()
+  }
+
+  func boxPaddingBefore() -> LayoutUnit {
+    assert(isNativeImpl())
     return computedCSSPaddingBefore()
   }
 
   func paddingAfter() -> LayoutUnit {
+    assert(isNativeImpl())
+    return boxPaddingAfter()
+  }
+
+  func boxPaddingAfter() -> LayoutUnit {
     assert(isNativeImpl())
     return computedCSSPaddingAfter()
   }
@@ -669,10 +679,20 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func borderBefore() -> LayoutUnit {
     assert(isNativeImpl())
+    return boxBorderBefore()
+  }
+
+  func boxBorderBefore() -> LayoutUnit {
+    assert(isNativeImpl())
     return LayoutUnit(value: style().borderBeforeWidth())
   }
 
   func borderAfter() -> LayoutUnit {
+    assert(isNativeImpl())
+    return boxBorderAfter()
+  }
+
+  func boxBorderAfter() -> LayoutUnit {
     assert(isNativeImpl())
     return LayoutUnit(value: style().borderAfterWidth())
   }
