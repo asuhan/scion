@@ -507,6 +507,11 @@ extern "C" WEBCORE_EXPORT const void* Length_empty_new(uint8_t type)
     return new WebCore::Length(static_cast<WebCore::LengthType>(type));
 }
 
+extern "C" WEBCORE_EXPORT const void* Length_new_int32(int32_t value, uint8_t type, bool has_quirk)
+{
+    return new WebCore::Length(value, static_cast<WebCore::LengthType>(type), has_quirk);
+}
+
 extern "C" WEBCORE_EXPORT const void* Length_new(int32_t raw_value, uint8_t type, bool has_quirk)
 {
     return new WebCore::Length(WebCore::LayoutUnit::fromRawValue(raw_value), static_cast<WebCore::LengthType>(type), has_quirk);

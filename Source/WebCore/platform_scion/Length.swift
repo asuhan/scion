@@ -46,8 +46,8 @@ class LengthWrapper: Equatable {
   }
 
   init(value: Int32, type: LengthType, hasQuirk: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.Length_new_int32(value, type.rawValue, hasQuirk)
+    self.owner = true
   }
 
   init(value: LayoutUnit, type: LengthType, hasQuirk: Bool = false) {
