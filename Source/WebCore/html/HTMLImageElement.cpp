@@ -70,6 +70,11 @@
 #include "ImageControlsMac.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool HTMLImageElement_isDeferred(const void* p)
+{
+    return static_cast<const WebCore::HTMLImageElement*>(p)->isDeferred();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLImageElement);

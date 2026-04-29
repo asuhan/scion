@@ -20,14 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class HTMLImageElementWrapper: HTMLElementWrapper {
   func decodingMode() -> DecodingMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func isDeferred() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isDeferred() -> Bool { return wk_interop.HTMLImageElement_isDeferred(p) }
 }
