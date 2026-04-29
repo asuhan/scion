@@ -34,10 +34,7 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
-  func hasFontTag() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasFontTag() -> Bool { return wk_interop.Element_hasFontTag(p) }
 
   func hasSvgClipRuleAttrWithoutSynchronization() -> Bool {
     // TODO(asuhan): implement this

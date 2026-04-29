@@ -1348,6 +1348,7 @@ bool WillChangeData_canTriggerCompositing(const void*);
 bool WillChangeData_canTriggerCompositingOnInline(const void*);
 bool Element_hasNowrapAttr(const void*);
 bool Element_hasAltAttr(const void*);
+bool Element_hasFontTag(const void*);
 bool Element_isFormControlElement(const void*);
 bool Element_isDisabledFormControl(const void*);
 bool Element_childShouldCreateRenderer(const void* p, const void* child);
