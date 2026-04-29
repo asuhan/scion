@@ -2170,15 +2170,6 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
   }
 
-  func hitTest(
-    request: HitTestRequestWrapper, result: HitTestResultWrapper,
-    locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,
-    hitTestFilter: HitTestFilter = .HitTestAll
-  ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func protectedNodeForHitTest() -> NodeWrapper? {
     assert(isNativeImpl())
     return nodeForHitTest()

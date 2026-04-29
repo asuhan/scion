@@ -751,8 +751,8 @@ class LayoutIntegration {
 
         if box.isAtomicInlineBox() {
           if renderer.hitTest(
-            request: request, result: result, locationInContainer: locationInContainer,
-            accumulatedOffset: flippedContentOffsetIfNeeded(
+            request, &result, locationInContainer,
+            flippedContentOffsetIfNeeded(
               root: flow(), childRenderer: renderer as! RenderBoxWrapper,
               contentOffset: accumulatedOffset))
           {
