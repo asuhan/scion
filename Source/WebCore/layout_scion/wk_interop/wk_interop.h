@@ -1346,6 +1346,7 @@ bool WillChangeData_createsContainingBlockForAbsolutelyPositioned(const void*, b
 bool WillChangeData_createsContainingBlockForOutOfFlowPositioned(const void*, bool);
 bool WillChangeData_canTriggerCompositing(const void*);
 bool WillChangeData_canTriggerCompositingOnInline(const void*);
+bool Element_hasNowrapAttr(const void*);
 bool Element_isFormControlElement(const void*);
 bool Element_isDisabledFormControl(const void*);
 bool Element_childShouldCreateRenderer(const void* p, const void* child);
