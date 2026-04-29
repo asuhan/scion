@@ -39,6 +39,21 @@
 #include <wtf/text/StringView.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void Length_setValue_i32(const void* p, uint8_t type, int32_t value)
+{
+    static_cast<WebCore::Length*>(const_cast<void*>(p))->setValue(static_cast<WebCore::LengthType>(type), value);
+}
+
+extern "C" WEBCORE_EXPORT void Length_setValue_f32(const void* p, uint8_t type, float value)
+{
+    static_cast<WebCore::Length*>(const_cast<void*>(p))->setValue(static_cast<WebCore::LengthType>(type), value);
+}
+
+extern "C" WEBCORE_EXPORT void Length_setValue(const void* p, uint8_t type, int32_t value)
+{
+    static_cast<WebCore::Length*>(const_cast<void*>(p))->setValue(static_cast<WebCore::LengthType>(type), WebCore::LayoutUnit::fromRawValue(value));
+}
+
 extern "C" WEBCORE_EXPORT float Length_value(const void* p)
 {
     return static_cast<const WebCore::Length*>(p)->value();

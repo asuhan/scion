@@ -73,18 +73,15 @@ class LengthWrapper: Equatable {
   deinit { if self.owner { wk_interop.Length_destroy(p) } }
 
   func setValue(type: LengthType, value: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Length_setValue_i32(p, type.rawValue, value)
   }
 
   func setValue(type: LengthType, value: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Length_setValue_f32(p, type.rawValue, value)
   }
 
   func setValue(type: LengthType, value: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Length_setValue(p, type.rawValue, value.rawValue())
   }
 
   static func *= (this: LengthWrapper, value: Float32) {
