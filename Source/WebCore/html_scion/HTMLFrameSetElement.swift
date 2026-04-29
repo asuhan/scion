@@ -30,10 +30,7 @@ final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
 
   func totalCols() -> Int32 { return wk_interop.HTMLFrameSetElement_totalCols(p) }
 
-  func border() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func border() -> Int32 { return wk_interop.HTMLFrameSetElement_border(p) }
 
   func hasBorderColor() -> Bool {
     // TODO(asuhan): implement this

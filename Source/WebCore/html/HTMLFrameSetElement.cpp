@@ -59,6 +59,11 @@ extern "C" WEBCORE_EXPORT int32_t HTMLFrameSetElement_totalCols(const void* p)
     return static_cast<const WebCore::HTMLFrameSetElement*>(p)->totalCols();
 }
 
+extern "C" WEBCORE_EXPORT int32_t HTMLFrameSetElement_border(const void* p)
+{
+    return static_cast<const WebCore::HTMLFrameSetElement*>(p)->border();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLFrameSetElement);
