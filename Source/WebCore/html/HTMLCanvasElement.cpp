@@ -111,6 +111,11 @@
 #include <pal/cf/CoreMediaSoftLink.h>
 #endif
 
+extern "C" WEBCORE_EXPORT void HTMLCanvasElement_setIsSnapshotting(void* p, bool isSnapshotting)
+{
+    static_cast<WebCore::HTMLCanvasElement*>(p)->setIsSnapshotting(isSnapshotting);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLCanvasElement);

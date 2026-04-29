@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 // TODO(asuhan): inherit from CanvasBase and ActiveDOMObject as well
 final class HTMLCanvasElementWrapper: HTMLElementWrapper {
   func renderingContext() -> CanvasRenderingContextWrapper? {
@@ -38,8 +40,7 @@ final class HTMLCanvasElementWrapper: HTMLElementWrapper {
   }
 
   func setIsSnapshotting(_ isSnapshotting: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.HTMLCanvasElement_setIsSnapshotting(p, isSnapshotting)
   }
 
   // TODO(asuhan): should come from CanvasBase
