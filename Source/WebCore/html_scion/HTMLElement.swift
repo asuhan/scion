@@ -23,10 +23,9 @@
  *
  */
 
+import wk_interop
+
 class HTMLElementWrapper: StyledElementWrapper {
   // TODO(asuhan): implement proper hasTagName accessors
-  func hasFrameTag() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasFrameTag() -> Bool { return wk_interop.HTMLElement_hasFrameTag(p) }
 }
