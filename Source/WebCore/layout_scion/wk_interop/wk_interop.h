@@ -438,6 +438,8 @@ const void* StringBuilder_toString(void*);
 const void* Length_empty_new(uint8_t type);
 const void* Length_new_int32(int32_t value, uint8_t type, bool has_quirk);
 const void* Length_new(int32_t raw_value, uint8_t type, bool has_quirk);
+const void* Length_new_float32(float value, uint8_t type, bool has_quirk);
+const void* Length_new_float64(double value, uint8_t type, bool has_quirk);
 void Length_destroy(const void*);
 const void* FloatRect_new(float x, float y, float width, float height);
 void FloatRect_destroy(const void*);

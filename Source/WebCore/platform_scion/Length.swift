@@ -56,13 +56,13 @@ class LengthWrapper: Equatable {
   }
 
   init(value: Float32, type: LengthType, hasQuirk: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.Length_new_float32(value, type.rawValue, hasQuirk)
+    self.owner = true
   }
 
   init(value: Float64, type: LengthType, hasQuirk: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.Length_new_float64(value, type.rawValue, hasQuirk)
+    self.owner = true
   }
 
   init(p: UnsafeRawPointer) {
