@@ -921,7 +921,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return space
   }
 
-  override func collapsedMarginAfter() -> LayoutUnit {
+  // RenderBlockFlows override these methods, since they are the only class that supports margin collapsing.
+  override final func collapsedMarginBefore() -> LayoutUnit {
+    assert(isNativeImpl())
+    return maxPositiveMarginBefore() - maxNegativeMarginBefore()
+  }
+
+  override final func collapsedMarginAfter() -> LayoutUnit {
     assert(isNativeImpl())
     return maxPositiveMarginAfter() - maxNegativeMarginAfter()
   }

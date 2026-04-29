@@ -1631,8 +1631,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func collapsedMarginBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginBefore()
   }
 
   func collapsedMarginAfter() -> LayoutUnit {
