@@ -29,7 +29,6 @@ class CharacterDataWrapper: NodeWrapper {
   func length() -> UInt32 { return wk_interop.CharacterData_length(p) }
 
   func containsOnlyASCIIWhitespace() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.CharacterData_containsOnlyASCIIWhitespace(p)
   }
 }

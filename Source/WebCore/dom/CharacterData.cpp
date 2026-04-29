@@ -49,6 +49,11 @@ extern "C" WEBCORE_EXPORT uint32_t CharacterData_length(const void* p)
     return static_cast<const WebCore::CharacterData*>(p)->length();
 }
 
+extern "C" WEBCORE_EXPORT bool CharacterData_containsOnlyASCIIWhitespace(const void* p)
+{
+    return static_cast<const WebCore::CharacterData*>(p)->containsOnlyASCIIWhitespace();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(CharacterData);
