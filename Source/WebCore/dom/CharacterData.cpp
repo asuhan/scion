@@ -44,6 +44,11 @@ extern "C" WEBCORE_EXPORT const void* CharacterData_data(const void* p)
     return &static_cast<const WebCore::CharacterData*>(p)->data();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t CharacterData_length(const void* p)
+{
+    return static_cast<const WebCore::CharacterData*>(p)->length();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(CharacterData);
