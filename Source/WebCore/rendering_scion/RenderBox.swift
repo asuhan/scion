@@ -4120,6 +4120,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return element()?.hasEditableStyle() ?? false
   }
 
+  func canAutoscroll() -> Bool {
+    assert(isNativeImpl())
+    if isRenderView() {
+      return view().frameView().isScrollable()
+    }
+
+    // Check for a box that can be scrolled in its own right.
+    if canBeScrolledAndHasScrollableArea() {
+      return true
+    }
+
+    return false
+  }
+
   private func canUseOverlayScrollbars() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
