@@ -1441,7 +1441,7 @@ void RenderBox::autoscroll(const IntPoint& position)
 // There are two kinds of renderer that can autoscroll.
 bool RenderBox::canAutoscroll() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->canAutoscroll(); }
     if (isRenderView())
         return view().frameView().isScrollable();
 

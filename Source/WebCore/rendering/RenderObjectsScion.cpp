@@ -330,6 +330,8 @@ extern "C" int32_t RenderBoxScion_availableLogicalWidth(const void*);
 
 extern "C" bool RenderBoxScion_canBeScrolledAndHasScrollableArea(const void*);
 
+extern "C" bool RenderBoxScion_canAutoscroll(const void*);
+
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
@@ -1036,6 +1038,11 @@ LayoutUnit RenderBoxScion::availableLogicalWidth() const
 bool RenderBoxScion::canBeScrolledAndHasScrollableArea() const
 {
     return RenderBoxScion_canBeScrolledAndHasScrollableArea(m_handle);
+}
+
+bool RenderBoxScion::canAutoscroll() const
+{
+    return RenderBoxScion_canAutoscroll(m_handle);
 }
 
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const

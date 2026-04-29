@@ -361,6 +361,8 @@ public:
 
     bool canBeScrolledAndHasScrollableArea() const;
 
+    bool canAutoscroll() const;
+
     bool hasAutoScrollbar(ScrollbarOrientation) const;
 
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;

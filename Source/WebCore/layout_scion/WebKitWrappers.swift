@@ -1923,6 +1923,12 @@ func RenderBoxScion_canBeScrolledAndHasScrollableArea(_ boxRaw: UnsafeRawPointer
   return box.canBeScrolledAndHasScrollableArea()
 }
 
+@_cdecl("RenderBoxScion_canAutoscroll")
+func RenderBoxScion_canAutoscroll(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.canAutoscroll()
+}
+
 @_cdecl("RenderBoxScion_hasAutoScrollbar")
 func RenderBoxScion_hasAutoScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
   -> Bool
