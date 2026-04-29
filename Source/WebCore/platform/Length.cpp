@@ -85,9 +85,39 @@ extern "C" WEBCORE_EXPORT bool Length_hasQuirk(const void* p)
     return static_cast<const WebCore::Length*>(p)->hasQuirk();
 }
 
+extern "C" WEBCORE_EXPORT bool Length_isZero(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isZero();
+}
+
+extern "C" WEBCORE_EXPORT bool Length_isPositive(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isPositive();
+}
+
+extern "C" WEBCORE_EXPORT bool Length_isNegative(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isNegative();
+}
+
+extern "C" WEBCORE_EXPORT bool Length_isIntrinsic(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isIntrinsic();
+}
+
+extern "C" WEBCORE_EXPORT bool Length_isIntrinsicOrAuto(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isIntrinsicOrAuto();
+}
+
 extern "C" WEBCORE_EXPORT float Length_nonNanCalculatedValue(const void* p, float maxValue)
 {
     return static_cast<const WebCore::Length*>(p)->nonNanCalculatedValue(maxValue);
+}
+
+extern "C" WEBCORE_EXPORT bool Length_isLegacyIntrinsic(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isLegacyIntrinsic();
 }
 
 extern "C" WEBCORE_EXPORT bool Length_eq(const void* a, const void* b)

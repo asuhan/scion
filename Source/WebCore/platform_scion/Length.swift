@@ -160,34 +160,19 @@ class LengthWrapper: Equatable {
   // always contains a percentage, and without a maxValue passed to these functions
   // it's impossible to determine the sign or zero-ness. The following three functions
   // act as if all calculated values are positive.
-  func isZero() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isZero() -> Bool { return wk_interop.Length_isZero(p) }
 
-  func isPositive() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isPositive() -> Bool { return wk_interop.Length_isPositive(p) }
 
-  func isNegative() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isNegative() -> Bool { return wk_interop.Length_isNegative(p) }
 
   func isPercentOrCalculated() -> Bool {
     return isPercent() || isCalculated()
   }
 
-  func isIntrinsic() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isIntrinsic() -> Bool { return wk_interop.Length_isIntrinsic(p) }
 
-  func isIntrinsicOrAuto() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isIntrinsicOrAuto() -> Bool { return wk_interop.Length_isIntrinsicOrAuto(p) }
 
   func isSpecified() -> Bool {
     return isFixed() || isPercentOrCalculated()
@@ -201,10 +186,7 @@ class LengthWrapper: Equatable {
     return wk_interop.Length_nonNanCalculatedValue(p, maxValue)
   }
 
-  func isLegacyIntrinsic() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isLegacyIntrinsic() -> Bool { return wk_interop.Length_isLegacyIntrinsic(p) }
 
   static func == (a: LengthWrapper, b: LengthWrapper) -> Bool {
     return wk_interop.Length_eq(a.p, b.p)
