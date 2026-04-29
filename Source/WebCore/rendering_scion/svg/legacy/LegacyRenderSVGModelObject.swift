@@ -68,8 +68,5 @@ class LegacyRenderSVGModelObject: RenderElementWrapper {
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
-  ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  ) -> Bool { fatalError("Not reached") }
 }
