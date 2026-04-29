@@ -1319,10 +1319,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
-  ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  ) -> Bool { fatalError("Not reached") }
 
   private func widthFromCache(
     fontCascade: FontCascadeWrapper, start: UInt32, length: UInt32, _ xPos: Float32,
