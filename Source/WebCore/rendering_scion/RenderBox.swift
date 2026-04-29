@@ -1616,8 +1616,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let styleToUse = overrideStyle ?? style()
+    marginBox.setStart(
+      start: value, writingMode: styleToUse.writingMode(), direction: styleToUse.direction())
   }
 
   func setMarginEnd(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
