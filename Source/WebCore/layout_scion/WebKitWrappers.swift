@@ -1499,7 +1499,7 @@ func RenderObjectScion_containerForRepaint(_ objectRaw: UnsafeRawPointer)
     fullRepaintIsScheduled: r.fullRepaintIsScheduled, renderer: r.renderer?.id())
 }
 
-private func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
+func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   -> RenderObjectWrapper
 {
   if wk_interop.RenderObject_isRenderView(raw), let viewRaw = wk_interop.RenderView_scion(raw) {

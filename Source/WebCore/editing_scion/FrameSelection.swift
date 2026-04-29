@@ -73,11 +73,10 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
 
   // Return the renderer that is responsible for painting the caret (in the selection start node).
   func caretRendererWithoutUpdatingLayout() -> RenderBlockWrapper? {
-    if wk_interop.FrameSelection_caretRendererWithoutUpdatingLayout(p) == nil {
+    guard let raw = wk_interop.FrameSelection_caretRendererWithoutUpdatingLayout(p) else {
       return nil
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return createRenderObjectWrapperOrNative(raw) as! RenderBlockWrapper?
   }
 
   func isCaret() -> Bool {
