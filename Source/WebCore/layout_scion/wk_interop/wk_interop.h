@@ -532,6 +532,7 @@ void Length_setValue_f32(const void* p, uint8_t type, float value);
 void Length_setValue(const void* p, uint8_t type, int32_t value);
 void Length_imul(const void* p, float value);
 float Length_value(const void*);
+int32_t Length_intValue(const void*);
 float Length_percent(const void*);
 bool Length_hasQuirk(const void*);
 float Length_nonNanCalculatedValue(const void*, float);

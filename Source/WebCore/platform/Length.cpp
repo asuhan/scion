@@ -65,6 +65,11 @@ extern "C" WEBCORE_EXPORT float Length_value(const void* p)
     return static_cast<const WebCore::Length*>(p)->value();
 }
 
+extern "C" WEBCORE_EXPORT int32_t Length_intValue(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->intValue();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t Length_type(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::Length*>(p)->type());

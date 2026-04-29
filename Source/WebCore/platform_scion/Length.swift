@@ -94,10 +94,7 @@ class LengthWrapper: Equatable {
     return wk_interop.Length_value(p)
   }
 
-  func intValue() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func intValue() -> Int32 { return wk_interop.Length_intValue(p) }
 
   func percent() -> Float32 {
     return wk_interop.Length_percent(p)
