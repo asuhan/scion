@@ -27,10 +27,7 @@ import wk_interop
 class ElementWrapper: ContainerNodeWrapper {
   func hasNowrapAttr() -> Bool { return wk_interop.Element_hasNowrapAttr(p) }
 
-  func hasAltAttr() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasAltAttr() -> Bool { return wk_interop.Element_hasAltAttr(p) }
 
   func hasViewBoxAttr() -> Bool {
     // TODO(asuhan): implement this
