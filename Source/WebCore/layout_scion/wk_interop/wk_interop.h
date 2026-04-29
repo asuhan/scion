@@ -1102,6 +1102,7 @@ struct LengthBoxRaw RenderStyle_clip(const void*);
 bool RenderStyle_hasClip(const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
 uint16_t BreakLines_classify(uint16_t, uint8_t);
+void LayoutState_updateQuirksMode(void*, const void*);
 void* LayoutState_ensureBlockFormattingState(void*, const void*);
 bool LayoutState_inStandardsMode(const void*);
 const void* LayoutState_securityOrigin(const void*);

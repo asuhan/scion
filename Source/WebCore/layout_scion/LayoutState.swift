@@ -74,6 +74,10 @@ class LayoutStateWrapper {
   }
 
   func updateQuirksMode(_ document: Document) {
+    if p != nil {
+      wk_interop.LayoutState_updateQuirksMode(p!, document.p)
+      return
+    }
     let quirksMode = { () -> QuirksMode in
       if document.inLimitedQuirksMode() {
         return .Limited
