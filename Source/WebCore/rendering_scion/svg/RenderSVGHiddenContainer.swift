@@ -57,8 +57,8 @@ class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   override func updateFromStyle() {
