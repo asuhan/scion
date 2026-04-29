@@ -137,6 +137,10 @@ extension LayoutBoxExtent {
     return at(mapLogicalSideToPhysicalSide(writingMode, .BlockStart))
   }
 
+  func after(_ writingMode: WritingMode) -> LayoutUnit {
+    return at(mapLogicalSideToPhysicalSide(writingMode, .BlockEnd))
+  }
+
   // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
   mutating func setBefore(_ before: LayoutUnit, _ writingMode: WritingMode) {
     setSide(mapLogicalSideToPhysicalSide(writingMode, .BlockStart), before)
