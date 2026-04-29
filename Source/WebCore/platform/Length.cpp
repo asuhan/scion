@@ -54,6 +54,12 @@ extern "C" WEBCORE_EXPORT void Length_setValue(const void* p, uint8_t type, int3
     static_cast<WebCore::Length*>(const_cast<void*>(p))->setValue(static_cast<WebCore::LengthType>(type), WebCore::LayoutUnit::fromRawValue(value));
 }
 
+extern "C" WEBCORE_EXPORT void Length_imul(const void* p, float value)
+{
+    auto length = *static_cast<WebCore::Length*>(const_cast<void*>(p));
+    length *= value;
+}
+
 extern "C" WEBCORE_EXPORT float Length_value(const void* p)
 {
     return static_cast<const WebCore::Length*>(p)->value();

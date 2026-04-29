@@ -84,9 +84,10 @@ class LengthWrapper: Equatable {
     wk_interop.Length_setValue(p, type.rawValue, value.rawValue())
   }
 
-  static func *= (this: LengthWrapper, value: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  @discardableResult
+  static func *= (this: LengthWrapper, value: Float32) -> LengthWrapper {
+    wk_interop.Length_imul(this.p, value)
+    return this
   }
 
   func value() -> Float32 {
