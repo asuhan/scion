@@ -39,6 +39,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT const void* CharacterData_data(const void* p)
+{
+    return &static_cast<const WebCore::CharacterData*>(p)->data();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(CharacterData);

@@ -1462,3 +1462,4 @@ int32_t HTMLFrameSetElement_totalCols(const void*);
 int32_t HTMLFrameSetElement_border(const void*);
 bool HTMLFrameSetElement_hasBorderColor(const void*);
 void HTMLCanvasElement_setIsSnapshotting(void*, bool);
+const void* CharacterData_data(const void*);

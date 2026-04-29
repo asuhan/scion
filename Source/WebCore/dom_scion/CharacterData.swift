@@ -19,10 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class CharacterDataWrapper: NodeWrapper {
   func data() -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StringWrapper(p: wk_interop.CharacterData_data(p), owner: false)
   }
 
   func length() -> UInt32 {
