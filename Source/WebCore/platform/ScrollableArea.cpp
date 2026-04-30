@@ -130,6 +130,11 @@ extern "C" WEBCORE_EXPORT bool ScrollableArea_useDarkAppearance(const void* p)
     return static_cast<const WebCore::ScrollableArea*>(p)->useDarkAppearance();
 }
 
+extern "C" WEBCORE_EXPORT void ScrollableArea_scrollbarWidthChanged(void* p, uint8_t width)
+{
+    static_cast<WebCore::ScrollableArea*>(p)->scrollbarWidthChanged(static_cast<WebCore::ScrollbarWidth>(width));
+}
+
 namespace WebCore {
 struct SameSizeAsScrollableArea;
 }

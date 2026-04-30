@@ -154,8 +154,7 @@ class ScrollableAreaWrapper {
   }
 
   func scrollbarWidthChanged(_ width: ScrollbarWidth) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.ScrollableArea_scrollbarWidthChanged(pInterop!, width.rawValue)
   }
 
   func setScrollOrigin(_ origin: IntPoint) {

@@ -1428,6 +1428,7 @@ bool ScrollableArea_currentScrollType(const void*);
 struct IntRectRaw ScrollableArea_visibleContentRect(const void*);
 struct IntSizeRaw ScrollableArea_contentsSize(const void*);
 bool ScrollableArea_useDarkAppearance(const void*);
+void ScrollableArea_scrollbarWidthChanged(void*, uint8_t);
 void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);
 const void* InitialContainingBlock_create(const void*);

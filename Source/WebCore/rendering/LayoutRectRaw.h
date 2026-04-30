@@ -63,3 +63,8 @@ struct IntRectRaw {
     struct IntPointRaw location;
     struct IntSizeRaw size;
 };
+
+struct ScrollbarGutterRaw {
+    bool isAuto;
+    bool bothEdges;
+};
