@@ -57,8 +57,7 @@ class ScrollableAreaWrapper {
 
   // This returns information about existing scrollbars, not scrollbars that may be created in future.
   func hasOverlayScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.ScrollableArea_hasOverlayScrollbars(pInterop!)
   }
 
   func scrollingNodeID() -> ScrollingNodeIDWrapper {

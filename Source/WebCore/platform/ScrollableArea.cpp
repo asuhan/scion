@@ -69,6 +69,11 @@ extern "C" WEBCORE_EXPORT bool ScrollableArea_inLiveResize(const void* p)
     return static_cast<const WebCore::ScrollableArea*>(p)->inLiveResize();
 }
 
+extern "C" WEBCORE_EXPORT bool ScrollableArea_hasOverlayScrollbars(const void* p)
+{
+    return static_cast<const WebCore::ScrollableArea*>(p)->hasOverlayScrollbars();
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
 {
     const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();

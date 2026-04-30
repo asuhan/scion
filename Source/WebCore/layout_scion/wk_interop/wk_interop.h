@@ -1417,6 +1417,7 @@ uint8_t ScrollableArea_horizontalScrollbarMode(const void*);
 uint8_t ScrollableArea_verticalScrollbarMode(const void*);
 uint8_t ScrollableArea_scrollbarWidthStyle(const void*);
 bool ScrollableArea_inLiveResize(const void*);
+bool ScrollableArea_hasOverlayScrollbars(const void*);
 struct IntRectRaw ScrollableArea_visibleContentRect(const void*);
 bool ScrollableArea_useDarkAppearance(const void*);
 void* RenderSelection_create(void*);
