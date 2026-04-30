@@ -543,6 +543,8 @@ public:
 
     const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
 
+    void mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode>, TransformState&) const;
+
     bool requiresColumns(int desiredColumnCount) const;
 
     void computeColumnCountAndWidth();

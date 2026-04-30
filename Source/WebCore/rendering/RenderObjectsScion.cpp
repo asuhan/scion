@@ -493,6 +493,8 @@ extern "C" void RenderViewScion_mapLocalToContainer(const void*, void*, void*, u
 
 extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*, void*);
 
+extern "C" void RenderViewScion_mapAbsoluteToLocalPoint(const void*, uint8_t, void*);
+
 extern "C" bool RenderViewScion_requiresColumns(const void*, int32_t desiredColumnCount);
 
 extern "C" void RenderViewScion_computeColumnCountAndWidth(void*);
@@ -1448,6 +1450,11 @@ void RenderViewScion::mapLocalToContainer(const RenderLayerModelObject* ancestor
 const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
     return static_cast<const RenderObject*>(RenderViewScion_pushMappingToContainer(m_handle, ancestorToStopAt ? ancestorToStopAt->scion() : nullptr, &geometryMap));
+}
+
+void RenderViewScion::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, TransformState& transformState) const
+{
+    RenderViewScion_mapAbsoluteToLocalPoint(m_handle, mode.toRaw(), &transformState);
 }
 
 bool RenderViewScion::requiresColumns(int desiredColumnCount) const

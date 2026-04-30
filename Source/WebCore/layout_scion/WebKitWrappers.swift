@@ -938,6 +938,16 @@ func RenderViewScion_pushMappingToContainer(
   return nil
 }
 
+@_cdecl("RenderViewScion_mapAbsoluteToLocalPoint")
+func RenderViewScion_mapAbsoluteToLocalPoint(
+  _ viewRaw: UnsafeRawPointer, _ modeRaw: UInt8, _ transformStateRaw: UnsafeMutableRawPointer
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  var transformState = TransformState(transformStateRaw)
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  view.mapAbsoluteToLocalPoint(mode, &transformState)
+}
+
 @_cdecl("RenderViewScion_requiresColumns")
 func RenderViewScion_requiresColumns(_ viewRaw: UnsafeRawPointer, _ desiredColumnCount: Int32)
   -> Bool
