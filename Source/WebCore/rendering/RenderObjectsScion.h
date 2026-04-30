@@ -117,6 +117,8 @@ public:
 
     bool isRenderSVGContainer() const;
 
+    bool isLegacyRenderSVGHiddenContainer() const;
+
     bool isRenderSVGHiddenContainer() const;
 
     bool isRenderSVGText() const;

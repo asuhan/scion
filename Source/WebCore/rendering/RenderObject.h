@@ -838,10 +838,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGGradientStop;
     }
-    bool isLegacyRenderSVGHiddenContainer() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::LegacySVGHiddenContainer || isLegacyRenderSVGResourceContainer();
-    }
+    bool isLegacyRenderSVGHiddenContainer() const;
     bool isRenderSVGHiddenContainer() const;
     bool isLegacyRenderSVGPath() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
