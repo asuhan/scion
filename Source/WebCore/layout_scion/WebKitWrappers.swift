@@ -590,8 +590,9 @@ func RenderViewScion_computeVisibleRectsInContainer(
 ) -> OptionalRepaintRectsRaw {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   let rects = convertRepaintRects(rectsRaw)
-  let container = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw!)
-    .takeUnretainedValue()
+  let container =
+    containerRaw != nil
+    ? Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw!).takeUnretainedValue() : nil
   let context = convertVisibleRectContext(contextRaw)
   if let repaintRects = view.computeVisibleRectsInContainer(rects, container, context) {
     return OptionalRepaintRectsRaw(rects: convertRepaintRects(repaintRects), is_valid: true)

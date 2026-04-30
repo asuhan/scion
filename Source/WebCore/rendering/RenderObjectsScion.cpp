@@ -1287,12 +1287,12 @@ VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRe
 
 std::optional<WebCore::RenderObject::RepaintRects> RenderViewScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
 {
-    if (!container || !container->scion()) {
+    if (container && !container->scion()) {
         ASSERT_NOT_REACHED();
     }
     const auto rectsRaw = convertRepaintRects(rects);
     const auto contextRaw = convertVisibleRectContext(context);
-    const auto raw = RenderViewScion_computeVisibleRectsInContainer(m_handle, rectsRaw, container->scion(), contextRaw);
+    const auto raw = RenderViewScion_computeVisibleRectsInContainer(m_handle, rectsRaw, container ? container->scion() : nullptr, contextRaw);
     if (!raw.is_valid) {
         return {};
     }
