@@ -169,8 +169,16 @@ class LayoutSizeWrapper: Equatable {
   func fitToAspectRatio(_ aspectRatio: LayoutSizeWrapper, _ fit: AspectRatioFit)
     -> LayoutSizeWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let heightScale = height().toFloat() / aspectRatio.height().toFloat()
+    let widthScale = width().toFloat() / aspectRatio.width().toFloat()
+
+    if (widthScale > heightScale) != (fit == .AspectRatioFitGrow) {
+      return LayoutSizeWrapper(
+        width: height() * aspectRatio.width() / aspectRatio.height(), height: height())
+    }
+
+    return LayoutSizeWrapper(
+      width: width(), height: width() * aspectRatio.height() / aspectRatio.width())
   }
 
   func deepCopy() -> LayoutSizeWrapper {
