@@ -108,8 +108,8 @@ class ScrollableAreaWrapper {
   }
 
   func scrollPosition() -> ScrollPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let p = wk_interop.ScrollableArea_scrollPosition(pInterop!)
+    return ScrollPosition(x: p.x, y: p.y)
   }
 
   func scrollOffset() -> ScrollOffset {
