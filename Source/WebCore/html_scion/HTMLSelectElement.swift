@@ -37,13 +37,11 @@ class HTMLSelectElementWrapper: HTMLFormControlElementWrapper {
   }
 
   func activeSelectionStartListIndex() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.HTMLSelectElement_activeSelectionStartListIndex(p)
   }
 
   func activeSelectionEndListIndex() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.HTMLSelectElement_activeSelectionEndListIndex(p)
   }
 
   func setActiveSelectionEndIndex(_ index: Int32) {

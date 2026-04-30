@@ -67,6 +67,16 @@ extern "C" WEBCORE_EXPORT uint32_t HTMLSelectElement_size(const void* p)
     return static_cast<const WebCore::HTMLSelectElement*>(p)->size();
 }
 
+extern "C" WEBCORE_EXPORT int32_t HTMLSelectElement_activeSelectionStartListIndex(const void* p)
+{
+    return static_cast<const WebCore::HTMLSelectElement*>(p)->activeSelectionStartListIndex();
+}
+
+extern "C" WEBCORE_EXPORT int32_t HTMLSelectElement_activeSelectionEndListIndex(const void* p)
+{
+    return static_cast<const WebCore::HTMLSelectElement*>(p)->activeSelectionEndListIndex();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLSelectElement);

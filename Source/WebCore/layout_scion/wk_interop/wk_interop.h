@@ -1480,6 +1480,8 @@ void HTMLCanvasElement_setIsSnapshotting(void*, bool);
 bool HTMLImageElement_isDeferred(const void*);
 bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
 uint32_t HTMLSelectElement_size(const void*);
+int32_t HTMLSelectElement_activeSelectionStartListIndex(const void*);
+int32_t HTMLSelectElement_activeSelectionEndListIndex(const void*);
 unsigned HTMLTextAreaElement_cols(const void*);
 const void* CharacterData_data(const void*);
 uint32_t CharacterData_length(const void*);
