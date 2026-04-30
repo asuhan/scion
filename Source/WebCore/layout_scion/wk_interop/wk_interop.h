@@ -1415,6 +1415,7 @@ void ScrollView_show(void*);
 void ScrollView_hide(void*);
 uint8_t ScrollableArea_horizontalScrollbarMode(const void*);
 uint8_t ScrollableArea_verticalScrollbarMode(const void*);
+struct ScrollbarGutterRaw ScrollableArea_scrollbarGutterStyle(const void*);
 uint8_t ScrollableArea_scrollbarWidthStyle(const void*);
 bool ScrollableArea_inLiveResize(const void*);
 bool ScrollableArea_hasOverlayScrollbars(const void*);

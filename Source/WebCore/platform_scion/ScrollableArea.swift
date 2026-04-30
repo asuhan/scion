@@ -45,8 +45,8 @@ class ScrollableAreaWrapper {
   }
 
   func scrollbarGutterStyle() -> ScrollbarGutter {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = wk_interop.ScrollableArea_scrollbarGutterStyle(pInterop!)
+    return ScrollbarGutter(isAuto: style.isAuto, bothEdges: style.bothEdges)
   }
 
   func scrollbarWidthStyle() -> ScrollbarWidth {
