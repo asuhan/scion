@@ -162,7 +162,7 @@ private func addBorderStyle(
 private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTableWrapper)
   -> LayoutRectWrapper
 {
-  let rect = tableRow.frameRect()
+  var rect = tableRow.frameRect()
   if !table.collapseBorders() {
     // Row frameRects include unwanted hSpacing on both inline ends.
     let hSpacing = table.hBorderSpacing()
@@ -181,7 +181,7 @@ private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTable
 private func backgroundRectForSection(
   tableSection: RenderTableSectionWrapper, table: RenderTableWrapper
 ) -> LayoutRectWrapper {
-  let rect = LayoutRectWrapper(location: LayoutPointWrapper(), size: tableSection.size())
+  var rect = LayoutRectWrapper(location: LayoutPointWrapper(), size: tableSection.size())
   if !table.collapseBorders() {
     let hSpacing = table.hBorderSpacing()
     let vSpacing = table.vBorderSpacing()

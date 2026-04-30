@@ -154,9 +154,9 @@ struct LayoutRectWrapper: Equatable {
 
   mutating func contract(size: LayoutSizeWrapper) { m_size -= size }
 
-  func contract(box: LayoutBoxExtent) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func contract(box: LayoutBoxExtent) {
+    m_location.move(dx: box.left, dy: box.top)
+    m_size.shrink(box.left + box.right, box.top + box.bottom)
   }
 
   func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
