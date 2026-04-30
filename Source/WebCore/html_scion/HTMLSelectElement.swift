@@ -25,12 +25,11 @@
  *
  */
 
+import wk_interop
+
 // TODO(asuhan): add TypeAheadDataSource protocol and have this implement it
 class HTMLSelectElementWrapper: HTMLFormControlElementWrapper {
-  func size() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func size() -> UInt32 { return wk_interop.HTMLSelectElement_size(p) }
 
   func listItems() -> ArraySlice<HTMLElementWrapper?> {
     // TODO(asuhan): implement this

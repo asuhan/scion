@@ -62,6 +62,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT uint32_t HTMLSelectElement_size(const void* p)
+{
+    return static_cast<const WebCore::HTMLSelectElement*>(p)->size();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLSelectElement);
