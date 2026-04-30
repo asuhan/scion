@@ -50,8 +50,7 @@ class ScrollableAreaWrapper {
   }
 
   func scrollbarWidthStyle() -> ScrollbarWidth {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ScrollbarWidth(rawValue: wk_interop.ScrollableArea_scrollbarWidthStyle(pInterop!))!
   }
 
   func inLiveResize() -> Bool {

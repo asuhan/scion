@@ -59,6 +59,11 @@ extern "C" WEBCORE_EXPORT uint8_t ScrollableArea_verticalScrollbarMode(const voi
     return static_cast<uint8_t>(static_cast<const WebCore::ScrollableArea*>(p)->verticalScrollbarMode());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t ScrollableArea_scrollbarWidthStyle(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::ScrollableArea*>(p)->scrollbarWidthStyle());
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
 {
     const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();
