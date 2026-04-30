@@ -74,10 +74,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
 
   func hasReferenceFilter() -> Bool { return wk_interop.FilterOperations_hasReferenceFilter(p) }
 
-  func isReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isReferenceFilter() -> Bool { return wk_interop.FilterOperations_isReferenceFilter(p) }
 
   func transformColor(color: ColorWrapper) {
     // TODO(asuhan): implement this

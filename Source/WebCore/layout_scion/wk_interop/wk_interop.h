@@ -1365,6 +1365,7 @@ bool FilterOperations_hasFilterThatAffectsOpacity(const void*);
 bool FilterOperations_hasFilterThatMovesPixels(const void*);
 bool FilterOperations_hasFilterThatShouldBeRestrictedBySecurityOrigin(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
+bool FilterOperations_isReferenceFilter(const void*);
 bool WillChangeData_canCreateStackingContext(const void*);
 bool WillChangeData_createsContainingBlockForAbsolutelyPositioned(const void*, bool);
 bool WillChangeData_createsContainingBlockForOutOfFlowPositioned(const void*, bool);

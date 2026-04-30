@@ -80,6 +80,11 @@ extern "C" WEBCORE_EXPORT bool FilterOperations_hasReferenceFilter(const void* p
     return static_cast<const WebCore::FilterOperations*>(p)->hasReferenceFilter();
 }
 
+extern "C" WEBCORE_EXPORT bool FilterOperations_isReferenceFilter(const void* p)
+{
+    return static_cast<const WebCore::FilterOperations*>(p)->isReferenceFilter();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(FilterOperations);
