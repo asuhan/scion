@@ -70,6 +70,11 @@ extern "C" WEBCORE_EXPORT bool FilterOperations_hasFilterThatMovesPixels(const v
     return static_cast<const WebCore::FilterOperations*>(p)->hasFilterThatMovesPixels();
 }
 
+extern "C" WEBCORE_EXPORT bool FilterOperations_hasFilterThatShouldBeRestrictedBySecurityOrigin(const void* p)
+{
+    return static_cast<const WebCore::FilterOperations*>(p)->hasFilterThatShouldBeRestrictedBySecurityOrigin();
+}
+
 extern "C" WEBCORE_EXPORT bool FilterOperations_hasReferenceFilter(const void* p)
 {
     return static_cast<const WebCore::FilterOperations*>(p)->hasReferenceFilter();

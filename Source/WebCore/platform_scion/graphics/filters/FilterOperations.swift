@@ -69,8 +69,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
   }
 
   func hasFilterThatShouldBeRestrictedBySecurityOrigin() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FilterOperations_hasFilterThatShouldBeRestrictedBySecurityOrigin(p)
   }
 
   func hasReferenceFilter() -> Bool { return wk_interop.FilterOperations_hasReferenceFilter(p) }
