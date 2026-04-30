@@ -1422,6 +1422,7 @@ bool ScrollableArea_isScrollCornerVisible(const void*);
 struct IntRectRaw ScrollableArea_scrollCornerRect(const void*);
 void ScrollableArea_invalidateScrollCorner(void*, struct IntRectRaw);
 struct IntPointRaw ScrollableArea_scrollPosition(const void*);
+struct IntPointRaw ScrollableArea_scrollOffset(const void*);
 struct IntRectRaw ScrollableArea_visibleContentRect(const void*);
 bool ScrollableArea_useDarkAppearance(const void*);
 void* RenderSelection_create(void*);

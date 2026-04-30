@@ -96,6 +96,12 @@ extern "C" WEBCORE_EXPORT IntPointRaw ScrollableArea_scrollPosition(const void* 
     return { position.x(), position.y() };
 }
 
+extern "C" WEBCORE_EXPORT IntPointRaw ScrollableArea_scrollOffset(const void* p)
+{
+    const auto offset = static_cast<const WebCore::ScrollableArea*>(p)->scrollPosition();
+    return { offset.x(), offset.y() };
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
 {
     const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();
