@@ -81,8 +81,7 @@ class ScrollableAreaWrapper {
   }
 
   func isScrollCornerVisible() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.ScrollableArea_isScrollCornerVisible(pInterop!)
   }
 
   func scrollCornerRect() -> IntRect {
