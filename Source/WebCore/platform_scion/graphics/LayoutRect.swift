@@ -161,10 +161,7 @@ struct LayoutRectWrapper: Equatable {
 
   func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
 
-  func contract(dw: Int32, dh: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func contract(dw: Int32, dh: Int32) { m_size.expand(width: -dw, height: -dh) }
 
   mutating func shiftXEdgeTo(edge: Float32) {
     shiftXEdgeTo(edge: LayoutUnit(value: edge))
