@@ -1419,6 +1419,7 @@ uint8_t ScrollableArea_scrollbarWidthStyle(const void*);
 bool ScrollableArea_inLiveResize(const void*);
 bool ScrollableArea_hasOverlayScrollbars(const void*);
 bool ScrollableArea_isScrollCornerVisible(const void*);
+struct IntRectRaw ScrollableArea_scrollCornerRect(const void*);
 struct IntRectRaw ScrollableArea_visibleContentRect(const void*);
 bool ScrollableArea_useDarkAppearance(const void*);
 void* RenderSelection_create(void*);

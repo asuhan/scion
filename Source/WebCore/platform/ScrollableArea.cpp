@@ -79,6 +79,12 @@ extern "C" WEBCORE_EXPORT bool ScrollableArea_isScrollCornerVisible(const void* 
     return static_cast<const WebCore::ScrollableArea*>(p)->isScrollCornerVisible();
 }
 
+extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_scrollCornerRect(const void* p)
+{
+    const auto r = static_cast<const WebCore::ScrollableArea*>(p)->scrollCornerRect();
+    return { { r.x(), r.y() }, { r.width(), r.height() } };
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
 {
     const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();
