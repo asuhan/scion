@@ -105,6 +105,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_enclosingLayer(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->enclosingLayer();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_useDarkAppearance(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->useDarkAppearance();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderElement(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderElement();

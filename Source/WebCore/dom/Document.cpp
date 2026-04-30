@@ -440,6 +440,11 @@ extern "C" WEBCORE_EXPORT float Document_deviceScaleFactor(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->deviceScaleFactor();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_useDarkAppearance(const void* raw, const void* style_raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->useDarkAppearance(static_cast<const WebCore::RenderStyle*>(style_raw));
+}
+
 extern "C" WEBCORE_EXPORT void* Document_view(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->view();

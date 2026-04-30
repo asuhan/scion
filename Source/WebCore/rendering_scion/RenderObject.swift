@@ -697,8 +697,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func useDarkAppearance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_useDarkAppearance(id())
+    }
+    return document().useDarkAppearance(style())
   }
 
   // RenderObject tree manipulation

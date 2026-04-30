@@ -71,6 +71,10 @@ class Document: TreeScopeWrapper {
 
   func deviceScaleFactor() -> Float32 { return wk_interop.Document_deviceScaleFactor(p) }
 
+  func useDarkAppearance(_ style: RenderStyleWrapper?) -> Bool {
+    return wk_interop.Document_useDarkAppearance(p, style?.p!)
+  }
+
   func compositeOperatorForBackgroundColor(color: ColorWrapper, renderer: RenderObjectWrapper)
     -> CompositeOperator
   {
