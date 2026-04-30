@@ -158,8 +158,8 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // FIXME: Style shouldn't be mutated.
   func mutableStyle() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return self.style!
   }
 
   func initializeStyle() {
