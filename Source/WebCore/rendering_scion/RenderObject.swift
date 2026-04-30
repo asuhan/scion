@@ -1173,6 +1173,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .SVGInlineText
   }
 
+  func isLegacyRenderSVGImage() -> Bool {
+    assert(isNativeImpl())
+    return type() == .LegacySVGImage
+  }
+
   func isRenderSVGForeignObject() -> Bool {
     assert(isNativeImpl())
     return type() == .SVGForeignObject
