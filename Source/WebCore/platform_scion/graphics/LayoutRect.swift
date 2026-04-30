@@ -421,8 +421,10 @@ func snappedIntRect(rect: LayoutRectWrapper) -> IntRect {
 func snappedIntRect(left: LayoutUnit, top: LayoutUnit, width: LayoutUnit, height: LayoutUnit)
   -> IntRect
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return IntRect(
+    location: IntPoint(x: left.round(), y: top.round()),
+    size: snappedIntSize(
+      LayoutSizeWrapper(width: width, height: height), LayoutPointWrapper(x: left, y: top)))
 }
 
 func enclosingIntRect(rect: LayoutRectWrapper) -> IntRect {
