@@ -2645,7 +2645,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
 
     // Returns true if intersecting (clippedOverflowRect remains non-empty).
-    func edgeInclusiveIntersect(_ clipRect: LayoutRectWrapper) -> Bool {
+    mutating func edgeInclusiveIntersect(_ clipRect: LayoutRectWrapper) -> Bool {
       // Note the we only intersect clippedOverflowRect.
       return clippedOverflowRect.edgeInclusiveIntersect(clipRect)
     }

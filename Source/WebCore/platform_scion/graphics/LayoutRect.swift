@@ -237,9 +237,22 @@ struct LayoutRectWrapper: Equatable {
     m_size = newMaxPoint - newLocation
   }
 
-  func edgeInclusiveIntersect(_ other: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func edgeInclusiveIntersect(_ other: LayoutRectWrapper) -> Bool {
+    var newLocation = LayoutPointWrapper(x: max(x(), other.x()), y: max(y(), other.y()))
+    var newMaxPoint = LayoutPointWrapper(x: min(maxX(), other.maxX()), y: min(maxY(), other.maxY()))
+
+    var intersects = true
+
+    // Return a clean empty rectangle for non-intersecting cases.
+    if newLocation.x > newMaxPoint.x || newLocation.y > newMaxPoint.y {
+      newLocation = LayoutPointWrapper()
+      newMaxPoint = LayoutPointWrapper()
+      intersects = false
+    }
+
+    m_location = newLocation
+    m_size = newMaxPoint - newLocation
+    return intersects
   }
 
   mutating func unite(other: LayoutRectWrapper) {
