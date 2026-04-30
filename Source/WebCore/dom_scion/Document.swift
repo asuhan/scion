@@ -60,7 +60,7 @@ class Document: TreeScopeWrapper {
   }
 
   func view() -> LocalFrameViewWrapper? {
-    return LocalFrameViewWrapper(p: wk_interop.Document_view(p))
+    return LocalFrameViewWrapper(wk_interop.Document_view(p))
   }
 
   func page() -> PageWrapper? { return PageWrapper(wk_interop.Document_page(p)) }

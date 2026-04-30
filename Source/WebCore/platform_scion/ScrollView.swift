@@ -33,23 +33,19 @@ enum DelegatedScrollingMode: UInt8 {
 }
 
 class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
-  init(p: UnsafeMutableRawPointer) {
-    self.p = p
-  }
-
   // Returns a clip rect in host window coordinates. Used to clip the blit on a scroll.
   func windowClipRect() -> IntRect {
-    let rect = wk_interop.ScrollView_windowClipRect(p)
+    let rect = wk_interop.ScrollView_windowClipRect(pInterop)
     return IntRect(
       x: rect.location.x, y: rect.location.y, width: rect.size.width, height: rect.size.height)
   }
 
-  func positionScrollbarLayers() { wk_interop.ScrollView_positionScrollbarLayers(p) }
+  func positionScrollbarLayers() { wk_interop.ScrollView_positionScrollbarLayers(pInterop) }
 
   // By default scrolling is handled by WebCore, but some WebKit implementations take over scrolling,
   // delegating it to a native scrolling widget or the UI process.
   func delegatedScrollingMode() -> DelegatedScrollingMode {
-    return DelegatedScrollingMode(rawValue: wk_interop.ScrollView_delegatedScrollingMode(p))!
+    return DelegatedScrollingMode(rawValue: wk_interop.ScrollView_delegatedScrollingMode(pInterop))!
   }
 
   // There are at least three types of contentInset. Usually we just care about WebCoreContentInset, which is the inset
@@ -66,30 +62,30 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   func sizeForVisibleContent(scrollbarInclusion: VisibleContentRectIncludesScrollbars = .No)
     -> IntSize
   {
-    let size = wk_interop.ScrollView_sizeForVisibleContent(p, scrollbarInclusion == .Yes)
+    let size = wk_interop.ScrollView_sizeForVisibleContent(pInterop, scrollbarInclusion == .Yes)
     return IntSize(width: size.width, height: size.height)
   }
 
   // Functions for getting/setting the size webkit should use to layout the contents. By default this is the same as the visible
   // content size. Explicitly setting a layout size value will cause webkit to layout the contents using this size instead.
   func layoutSize() -> IntSize {
-    let size = wk_interop.ScrollView_layoutSize(p)
+    let size = wk_interop.ScrollView_layoutSize(pInterop)
     return IntSize(width: size.width, height: size.height)
   }
 
-  func layoutWidth() -> Int32 { return wk_interop.ScrollView_layoutWidth(p) }
+  func layoutWidth() -> Int32 { return wk_interop.ScrollView_layoutWidth(pInterop) }
 
-  func layoutHeight() -> Int32 { return wk_interop.ScrollView_layoutHeight(p) }
+  func layoutHeight() -> Int32 { return wk_interop.ScrollView_layoutHeight(pInterop) }
 
   func fixedLayoutSize() -> IntSize {
-    let size = wk_interop.ScrollView_fixedLayoutSize(p)
+    let size = wk_interop.ScrollView_fixedLayoutSize(pInterop)
     return IntSize(width: size.width, height: size.height)
   }
 
-  func useFixedLayout() -> Bool { return wk_interop.ScrollView_useFixedLayout(p) }
+  func useFixedLayout() -> Bool { return wk_interop.ScrollView_useFixedLayout(pInterop) }
 
   override func contentsSize() -> IntSize {
-    let size = wk_interop.ScrollView_contentsSize(p)
+    let size = wk_interop.ScrollView_contentsSize(pInterop)
     return IntSize(width: size.width, height: size.height)
   }
 
@@ -104,13 +100,13 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   // will return a version of the current scroll offset which tracks the top of the Document
   // relative to the very top of the view.
   func documentScrollPositionRelativeToViewOrigin() -> ScrollPosition {
-    let position = wk_interop.ScrollView_documentScrollPositionRelativeToViewOrigin(p)
+    let position = wk_interop.ScrollView_documentScrollPositionRelativeToViewOrigin(pInterop)
     return ScrollPosition(x: position.x, y: position.y)
   }
 
   func windowToContents(windowRect: IntRect) -> IntRect {
     let r = wk_interop.ScrollView_windowToContents(
-      p,
+      pInterop,
       IntRectRaw(
         location: IntPointRaw(x: windowRect.x(), y: windowRect.y()),
         size: IntSizeRaw(width: windowRect.width(), height: windowRect.height())))
@@ -119,41 +115,41 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
 
   // The purpose of this function is to answer whether or not the scroll view is currently visible. Animations and painting updates can be suspended if
   // we know that we are either not in a window right now or if that window is not visible.
-  func isOffscreen() -> Bool { return wk_interop.ScrollView_isOffscreen(p) }
+  func isOffscreen() -> Bool { return wk_interop.ScrollView_isOffscreen(pInterop) }
 
-  func managesScrollbars() -> Bool { return wk_interop.ScrollView_managesScrollbars(p) }
+  func managesScrollbars() -> Bool { return wk_interop.ScrollView_managesScrollbars(pInterop) }
 
-  func updateScrollbarSteps() { wk_interop.ScrollView_updateScrollbarSteps(p) }
+  func updateScrollbarSteps() { wk_interop.ScrollView_updateScrollbarSteps(pInterop) }
 
   func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func width() -> Int32 { return wk_interop.ScrollView_width(p) }
+  func width() -> Int32 { return wk_interop.ScrollView_width(pInterop) }
 
-  func height() -> Int32 { return wk_interop.ScrollView_height(p) }
+  func height() -> Int32 { return wk_interop.ScrollView_height(pInterop) }
 
   func size() -> IntSize {
-    let intSizeRaw = wk_interop.ScrollView_size(p)
+    let intSizeRaw = wk_interop.ScrollView_size(pInterop)
     return IntSize(width: intSizeRaw.width, height: intSizeRaw.height)
   }
 
   func location() -> IntPoint {
-    let point = wk_interop.ScrollView_location(p)
+    let point = wk_interop.ScrollView_location(pInterop)
     return IntPoint(x: point.x, y: point.y)
   }
 
   func setFrameRect(_ rect: IntRect) {
     wk_interop.ScrollView_setFrameRect(
-      p,
+      pInterop,
       IntRectRaw(
         location: IntPointRaw(x: rect.x(), y: rect.y()),
         size: IntSizeRaw(width: rect.width(), height: rect.height())))
   }
 
   func frameRect() -> IntRect {
-    let rect = wk_interop.ScrollView_frameRect(p)
+    let rect = wk_interop.ScrollView_frameRect(pInterop)
     return IntRect(
       location: IntPoint(x: rect.location.x, y: rect.location.y),
       size: IntSize(width: rect.size.width, height: rect.size.height))
@@ -168,14 +164,12 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
-  func show() { wk_interop.ScrollView_show(p) }
+  func show() { wk_interop.ScrollView_show(pInterop) }
 
-  func hide() { wk_interop.ScrollView_hide(p) }
+  func hide() { wk_interop.ScrollView_hide(pInterop) }
 
   func repaintContentRectangle(_ rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  var p: UnsafeMutableRawPointer
 }

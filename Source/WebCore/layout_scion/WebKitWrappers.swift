@@ -691,7 +691,7 @@ func RenderViewScion_viewLogicalHeight(_ viewRaw: UnsafeRawPointer) -> Int32 {
 @_cdecl("RenderViewScion_frameView")
 func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  return view.frameView().p
+  return view.frameView().pInterop!
 }
 
 @_cdecl("RenderViewScion_initialContainingBlock")

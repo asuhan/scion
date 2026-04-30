@@ -25,7 +25,9 @@
 import wk_interop
 
 class LocalFrameViewWrapper: FrameViewWrapper {
-  func frame() -> LocalFrameWrapper { return LocalFrameWrapper(wk_interop.LocalFrameView_frame(p)) }
+  func frame() -> LocalFrameWrapper {
+    return LocalFrameWrapper(wk_interop.LocalFrameView_frame(pInterop))
+  }
 
   func renderView() -> RenderViewWrapper? {
     // TODO(asuhan): implement this
@@ -33,25 +35,25 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func layoutContext() -> LocalFrameViewLayoutContextWrapper {
-    return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
+    return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(pInterop))
   }
 
   // TODO(asuhan): remove this, it's not needed in Swift
   func checkedLayoutContext() -> LocalFrameViewLayoutContextWrapper { return layoutContext() }
 
-  func needsLayout() -> Bool { return wk_interop.LocalFrameView_needsLayout(p) }
+  func needsLayout() -> Bool { return wk_interop.LocalFrameView_needsLayout(pInterop) }
 
   // Called when changes to the GraphicsLayer hierarchy have to be synchronized with
   // content rendered via the normal painting path.
   func setNeedsOneShotDrawingSynchronization() {
-    wk_interop.LocalFrameView_setNeedsOneShotDrawingSynchronization(p)
+    wk_interop.LocalFrameView_setNeedsOneShotDrawingSynchronization(pInterop)
   }
 
   func recalculateScrollbarOverlayStyle() {
-    wk_interop.LocalFrameView_recalculateScrollbarOverlayStyle(p)
+    wk_interop.LocalFrameView_recalculateScrollbarOverlayStyle(pInterop)
   }
 
-  func isTransparent() -> Bool { return wk_interop.LocalFrameView_isTransparent(p) }
+  func isTransparent() -> Bool { return wk_interop.LocalFrameView_isTransparent(pInterop) }
 
   func baseBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this
@@ -59,39 +61,39 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func updateExtendBackgroundIfNecessary() {
-    wk_interop.LocalFrameView_updateExtendBackgroundIfNecessary(p)
+    wk_interop.LocalFrameView_updateExtendBackgroundIfNecessary(pInterop)
   }
 
   func hasExtendedBackgroundRectForPainting() -> Bool {
-    return wk_interop.LocalFrameView_hasExtendedBackgroundRectForPainting(p)
+    return wk_interop.LocalFrameView_hasExtendedBackgroundRectForPainting(pInterop)
   }
 
   func extendedBackgroundRectForPainting() -> IntRect {
-    return convertIntRect(wk_interop.LocalFrameView_extendedBackgroundRectForPainting(p))
+    return convertIntRect(wk_interop.LocalFrameView_extendedBackgroundRectForPainting(pInterop))
   }
 
   override func windowClipRect() -> IntRect {
-    return convertIntRect(wk_interop.LocalFrameView_windowClipRect(p))
+    return convertIntRect(wk_interop.LocalFrameView_windowClipRect(pInterop))
   }
 
   func visualViewportOverrideRect() -> LayoutRectWrapper? {
-    let r = wk_interop.LocalFrameView_visualViewportOverrideRect(p)
+    let r = wk_interop.LocalFrameView_visualViewportOverrideRect(pInterop)
     return r.is_valid ? convertLayoutRect(r.rect) : nil
   }
 
   // These are in document coordinates, unaffected by page scale (but affected by zooming).
   func layoutViewportRect() -> LayoutRectWrapper {
-    return convertLayoutRect(wk_interop.LocalFrameView_layoutViewportRect(p))
+    return convertLayoutRect(wk_interop.LocalFrameView_layoutViewportRect(pInterop))
   }
 
   func rectForFixedPositionLayout() -> LayoutRectWrapper {
-    return convertLayoutRect(wk_interop.LocalFrameView_rectForFixedPositionLayout(p))
+    return convertLayoutRect(wk_interop.LocalFrameView_rectForFixedPositionLayout(pInterop))
   }
 
-  func setCannotBlitToWindow() { wk_interop.LocalFrameView_setCannotBlitToWindow(p) }
+  func setCannotBlitToWindow() { wk_interop.LocalFrameView_setCannotBlitToWindow(pInterop) }
 
   func setContentIsOpaque(contentIsOpaque: Bool) {
-    wk_interop.LocalFrameView_setContentIsOpaque(p, contentIsOpaque)
+    wk_interop.LocalFrameView_setContentIsOpaque(pInterop, contentIsOpaque)
   }
 
   func addSlowRepaintObject(_ renderer: RenderElementWrapper) {
@@ -107,7 +109,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   func hasSlowRepaintObject(_ renderer: RenderElementWrapper) -> Bool {
     assert(renderer.isNativeImpl())
     return wk_interop.LocalFrameView_hasSlowRepaintObject(
-      p, (renderer as! RenderViewWrapper).getWk())
+      pInterop, (renderer as! RenderViewWrapper).getWk())
   }
 
   func slowRepaintObjects() -> WeakHashSet<RenderElementWrapper>? {
@@ -131,21 +133,21 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
-  func frameScaleFactor() -> Float32 { return wk_interop.LocalFrameView_frameScaleFactor(p) }
+  func frameScaleFactor() -> Float32 { return wk_interop.LocalFrameView_frameScaleFactor(pInterop) }
 
   // Functions for querying the current scrolled position, negating the effects of overhang
   // and adjusting for page scale.
   func scrollPositionForFixedPosition() -> LayoutPointWrapper {
-    return convertLayoutPointRaw(wk_interop.LocalFrameView_scrollPositionForFixedPosition(p))
+    return convertLayoutPointRaw(wk_interop.LocalFrameView_scrollPositionForFixedPosition(pInterop))
   }
 
   func positionForRootContentLayer() -> FloatPoint {
-    let p = wk_interop.LocalFrameView_positionForRootContentLayer(p)
+    let p = wk_interop.LocalFrameView_positionForRootContentLayer(pInterop)
     return FloatPoint(x: p.x, y: p.y)
   }
 
   func speculativeTilingEnabled() -> Bool {
-    return wk_interop.LocalFrameView_speculativeTilingEnabled(p)
+    return wk_interop.LocalFrameView_speculativeTilingEnabled(pInterop)
   }
 
   func addEmbeddedObjectToUpdate(_ embeddedObject: RenderEmbeddedObjectWrapper) {
@@ -154,16 +156,16 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func setPaintBehavior(_ behavior: PaintBehavior) {
-    wk_interop.LocalFrameView_setPaintBehavior(p, behavior.rawValue)
+    wk_interop.LocalFrameView_setPaintBehavior(pInterop, behavior.rawValue)
   }
 
   func paintBehavior() -> PaintBehavior {
-    return PaintBehavior(rawValue: wk_interop.LocalFrameView_paintBehavior(p))
+    return PaintBehavior(rawValue: wk_interop.LocalFrameView_paintBehavior(pInterop))
   }
 
   func documentBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): handle all color types, flags.
-    let c = wk_interop.LocalFrameView_documentBackgroundColor(p)
+    let c = wk_interop.LocalFrameView_documentBackgroundColor(pInterop)
     return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
@@ -178,7 +180,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func hasEnoughContentForVisualMilestones() -> Bool {
-    return wk_interop.LocalFrameView_hasEnoughContentForVisualMilestones(p)
+    return wk_interop.LocalFrameView_hasEnoughContentForVisualMilestones(pInterop)
   }
 
   // isScrollable() takes an optional Scrollability parameter that allows the caller to define what they mean by 'scrollable.'
@@ -193,7 +195,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
 
   func isScrollable(definitionOfScrollable: Scrollability = .Scrollable) -> Bool {
     return wk_interop.LocalFrameView_isScrollable(
-      p, definitionOfScrollable == .ScrollableOrRubberbandable)
+      pInterop, definitionOfScrollable == .ScrollableOrRubberbandable)
   }
 
   func embeddedContentBox() -> RenderBoxWrapper? {
@@ -201,7 +203,9 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
-  func isTrackingRepaints() -> Bool { return wk_interop.LocalFrameView_isTrackingRepaints(p) }
+  func isTrackingRepaints() -> Bool {
+    return wk_interop.LocalFrameView_isTrackingRepaints(pInterop)
+  }
 
   // Page and LocalFrameView both store a Pagination value. Page::pagination() is set only by API,
   // and LocalFrameView::pagination() is set only by CSS. Page::pagination() will affect all
@@ -210,7 +214,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   // it will return Page::pagination() since currently there are no callers that need to
   // distinguish between the two.
   func pagination() -> Pagination {
-    let raw = wk_interop.LocalFrameView_pagination(p)
+    let raw = wk_interop.LocalFrameView_pagination(pInterop)
     return Pagination(
       mode: Pagination.Mode(rawValue: raw.mode)!, behavesLikeColumns: raw.behavesLikeColumns,
       pageLength: raw.pageLength, gap: raw.gap)
@@ -223,24 +227,27 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   {
     return convertLayoutRect(
       wk_interop.LocalFrameView_fixedScrollableAreaBoundsInflatedForScrolling(
-        p, convertLayoutRect(uninflatedBounds)))
+        pInterop, convertLayoutRect(uninflatedBounds)))
   }
 
   func scrollPositionRespectingCustomFixedPosition() -> LayoutPointWrapper {
-    let rawLayoutPoint = wk_interop.LocalFrameView_scrollPositionRespectingCustomFixedPosition(p)
+    let rawLayoutPoint = wk_interop.LocalFrameView_scrollPositionRespectingCustomFixedPosition(
+      pInterop)
     return LayoutPointWrapper(
       x: LayoutUnit.fromRawValue(value: rawLayoutPoint.x),
       y: LayoutUnit.fromRawValue(value: rawLayoutPoint.y))
   }
 
-  func topContentDirectionDidChange() { wk_interop.LocalFrameView_topContentDirectionDidChange(p) }
+  func topContentDirectionDidChange() {
+    wk_interop.LocalFrameView_topContentDirectionDidChange(pInterop)
+  }
 
   func hasFlippedBlockRenderers() -> Bool {
-    return wk_interop.LocalFrameView_hasFlippedBlockRenderers(p)
+    return wk_interop.LocalFrameView_hasFlippedBlockRenderers(pInterop)
   }
 
   func setHasFlippedBlockRenderers(_ b: Bool) {
-    wk_interop.LocalFrameView_setHasFlippedBlockRenderers(p, b)
+    wk_interop.LocalFrameView_setHasFlippedBlockRenderers(pInterop, b)
   }
 
   func addTrackedRepaintRect(_ r: FloatRectWrapper) {
@@ -264,16 +271,18 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   // ScrollView
-  override func updateScrollbarSteps() { wk_interop.LocalFrameView_updateScrollbarSteps(p) }
+  override func updateScrollbarSteps() { wk_interop.LocalFrameView_updateScrollbarSteps(pInterop) }
 
   override func scrollbarWidthChanged(_ width: ScrollbarWidth) {
-    wk_interop.LocalFrameView_scrollbarWidthChanged(p, width.rawValue)
+    wk_interop.LocalFrameView_scrollbarWidthChanged(pInterop, width.rawValue)
   }
 
-  func layerAccessPrevented() -> Bool { return wk_interop.LocalFrameView_layerAccessPrevented(p) }
+  func layerAccessPrevented() -> Bool {
+    return wk_interop.LocalFrameView_layerAccessPrevented(pInterop)
+  }
 
   func useSlowRepaintsIfNotOverlapped() -> Bool {
-    return wk_interop.LocalFrameView_useSlowRepaintsIfNotOverlapped(p)
+    return wk_interop.LocalFrameView_useSlowRepaintsIfNotOverlapped(pInterop)
   }
 
   override final func repaintContentRectangle(_ r: IntRect) {

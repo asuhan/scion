@@ -68,13 +68,12 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-
-    self.pInterop = nil
+    super.init(nil)
   }
 
   init(_ p: UnsafeMutableRawPointer) {
     self.m_layer = nil
-    self.pInterop = p
+    super.init(p)
   }
 
   func clear() {
@@ -869,8 +868,6 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     }
   }
 
-  private func isNativeImpl() -> Bool { return pInterop == nil }
-
   private let scrollDimensionsDirty = true
   private var registeredScrollableArea = false
   private var m_hasCompositedScrollableOverflow = false
@@ -891,6 +888,4 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private var resizer: RenderScrollbarPartWrapper? = nil
 
   private var m_marquee: RenderMarqueeWrapper? = nil  // Used for <marquee>.
-
-  private let pInterop: UnsafeMutableRawPointer?
 }

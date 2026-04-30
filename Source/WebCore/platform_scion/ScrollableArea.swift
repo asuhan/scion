@@ -30,6 +30,10 @@
  */
 
 class ScrollableAreaWrapper {
+  init(_ p: UnsafeMutableRawPointer?) {
+    self.pInterop = p
+  }
+
   func horizontalScrollbarMode() -> ScrollbarMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -182,6 +186,10 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func isNativeImpl() -> Bool { return pInterop == nil }
+
   // This reflects animated scrolls triggered by CSS OM View "smooth" scrolls.
   let scrollAnimationStatus: ScrollAnimationStatus = .NotAnimating
+
+  let pInterop: UnsafeMutableRawPointer?
 }

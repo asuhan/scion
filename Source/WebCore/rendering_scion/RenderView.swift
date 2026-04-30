@@ -230,7 +230,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   func frameView() -> LocalFrameViewWrapper {
     if !isNativeImpl() {
-      return LocalFrameViewWrapper(p: wk_interop.RenderView_frameView(id()))
+      return LocalFrameViewWrapper(wk_interop.RenderView_frameView(id()))
     }
     return m_frameView!
   }
