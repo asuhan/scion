@@ -52,6 +52,11 @@
 #include <wtf/StdLibExtras.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT unsigned HTMLTextAreaElement_cols(const void* p)
+{
+    return static_cast<const WebCore::HTMLTextAreaElement*>(p)->cols();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTextAreaElement);

@@ -23,11 +23,10 @@
  *
  */
 
+import wk_interop
+
 final class HTMLTextAreaElementWrapper: HTMLTextFormControlElementWrapper {
-  func cols() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func cols() -> UInt32 { return wk_interop.HTMLTextAreaElement_cols(p) }
 
   override func placeholderElement() -> HTMLElementWrapper? {
     // TODO(asuhan): implement this
