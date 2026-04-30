@@ -77,6 +77,11 @@ extern "C" WEBCORE_EXPORT int32_t HTMLSelectElement_activeSelectionEndListIndex(
     return static_cast<const WebCore::HTMLSelectElement*>(p)->activeSelectionEndListIndex();
 }
 
+extern "C" WEBCORE_EXPORT void HTMLSelectElement_setActiveSelectionEndIndex(void* p, int32_t index)
+{
+    static_cast<WebCore::HTMLSelectElement*>(p)->setActiveSelectionEndIndex(index);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLSelectElement);
