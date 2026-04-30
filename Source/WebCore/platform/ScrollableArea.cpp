@@ -38,6 +38,7 @@
 #include "GraphicsContext.h"
 #include "GraphicsLayer.h"
 #include "LayoutRect.h"
+#include "LayoutRectRaw.h"
 #include "Logging.h"
 #include "PlatformWheelEvent.h"
 #include "ScrollAnimator.h"
@@ -47,6 +48,12 @@
 #include "ScrollbarsControllerMock.h"
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
+
+extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
+{
+    const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();
+    return { { r.x(), r.y() }, { r.width(), r.height() } };
+}
 
 namespace WebCore {
 struct SameSizeAsScrollableArea;

@@ -29,6 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class ScrollableAreaWrapper {
   init(_ p: UnsafeMutableRawPointer?) {
     self.pInterop = p
@@ -130,16 +132,10 @@ class ScrollableAreaWrapper {
     case Yes
   }
 
-  enum VisibleContentRectBehavior {
-    case ContentsVisibleRect
-    case LegacyIOSDocumentVisibleRect
-  }
-
-  func visibleContentRect(
-    _ visibleContentRectBehavior: VisibleContentRectBehavior = .ContentsVisibleRect
-  ) -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func visibleContentRect() -> IntRect {
+    // TODO(asuhan): add iOS support
+    let r = wk_interop.ScrollableArea_visibleContentRect(pInterop!)
+    return IntRect(x: r.location.x, y: r.location.y, width: r.size.width, height: r.size.height)
   }
 
   func contentsSize() -> IntSize {

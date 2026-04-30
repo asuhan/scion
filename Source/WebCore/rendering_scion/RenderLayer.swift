@@ -2257,8 +2257,7 @@ class RenderLayerWrapper {
         hitTestArea.intersect(other: absoluteLayoutViewportRect)
       } else {
         hitTestArea.intersect(
-          other: LayoutRectWrapper(
-            rect: renderer().view().frameView().visibleContentRect(.LegacyIOSDocumentVisibleRect)))
+          other: LayoutRectWrapper(rect: renderer().view().frameView().visibleContentRect()))
       }
     }
 
