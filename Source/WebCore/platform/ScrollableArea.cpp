@@ -102,6 +102,11 @@ extern "C" WEBCORE_EXPORT IntPointRaw ScrollableArea_scrollOffset(const void* p)
     return { offset.x(), offset.y() };
 }
 
+extern "C" WEBCORE_EXPORT bool ScrollableArea_currentScrollType(const void* p)
+{
+    return static_cast<const WebCore::ScrollableArea*>(p)->currentScrollType() == WebCore::ScrollType::Programmatic;
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
 {
     const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();

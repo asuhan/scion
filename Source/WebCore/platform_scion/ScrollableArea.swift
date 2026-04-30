@@ -118,8 +118,7 @@ class ScrollableAreaWrapper {
   }
 
   func currentScrollType() -> ScrollType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.ScrollableArea_currentScrollType(pInterop!) ? .Programmatic : .User
   }
 
   enum VisibleContentRectIncludesScrollbars {
