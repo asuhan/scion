@@ -384,6 +384,7 @@ bool InlineTextBox_hasPositionDependentContentWidth(const void*);
 bool InlineTextBox_hasStrongDirectionalityContent(const void*);
 const void* InlineTextBox_style(const void*);
 bool String_isNull(const void*);
+bool String_isEmpty(const void*);
 unsigned String_length(const void*);
 unsigned StringView_length(const void*);
 bool StringView_isEmpty(const void*);

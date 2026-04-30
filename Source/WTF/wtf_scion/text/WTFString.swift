@@ -57,10 +57,7 @@ class StringWrapper: Hashable {
     return wk_interop.String_isNull(self.p)
   }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return wk_interop.String_isEmpty(self.p) }
 
   func length() -> UInt32 {
     return string_length(p: self.p)

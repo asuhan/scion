@@ -241,6 +241,11 @@ extern "C" WEBCORE_EXPORT bool String_isNull(const void* p)
     return static_cast<const String*>(p)->isNull();
 }
 
+extern "C" WEBCORE_EXPORT bool String_isEmpty(const void* p)
+{
+    return static_cast<const String*>(p)->isEmpty();
+}
+
 extern "C" WEBCORE_EXPORT unsigned String_length(const void* p)
 {
     return static_cast<const String*>(p)->length();
