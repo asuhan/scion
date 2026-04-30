@@ -877,12 +877,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func mapAbsoluteToLocalPoint(
-    _ mode: MapCoordinatesMode, _ transformState: inout TransformState
+    _ mode: MapCoordinatesMode, _ transformState: TransformState
   ) {
     assert(isNativeImpl())
     guard let container = container() else { return }
 
-    container.mapAbsoluteToLocalPoint(mode, &transformState)
+    container.mapAbsoluteToLocalPoint(mode, transformState)
 
     var unused: Bool? = nil
     let containerOffset = offsetFromContainer(container, LayoutPointWrapper(), &unused)

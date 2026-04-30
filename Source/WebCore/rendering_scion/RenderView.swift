@@ -951,7 +951,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func mapAbsoluteToLocalPoint(
-    _ mode: MapCoordinatesMode, _ transformState: inout TransformState
+    _ mode: MapCoordinatesMode, _ transformState: TransformState
   ) {
     assert(isNativeImpl())
     if mode.contains(.UseTransforms) && shouldUseTransformFromContainer(nil) {

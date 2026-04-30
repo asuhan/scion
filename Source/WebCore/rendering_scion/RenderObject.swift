@@ -2904,10 +2904,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     parent.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
-  func mapAbsoluteToLocalPoint(_ mode: MapCoordinatesMode, _ transformState: inout TransformState) {
+  func mapAbsoluteToLocalPoint(_ mode: MapCoordinatesMode, _ transformState: TransformState) {
     assert(isNativeImpl())
     if let parent = parent() {
-      parent.mapAbsoluteToLocalPoint(mode, &transformState)
+      parent.mapAbsoluteToLocalPoint(mode, transformState)
       if let box = parent as? RenderBoxWrapper {
         transformState.move(toLayoutSize(point: LayoutPointWrapper(point: box.scrollPosition())))
       }

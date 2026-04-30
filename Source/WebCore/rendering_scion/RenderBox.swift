@@ -6164,7 +6164,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func mapAbsoluteToLocalPoint(
-    _ mode: MapCoordinatesMode, _ transformState: inout TransformState
+    _ mode: MapCoordinatesMode, _ transformState: TransformState
   ) {
     assert(isNativeImpl())
     var mode = mode
@@ -6177,7 +6177,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       mode.remove(.IsFixed)
     }
 
-    super.mapAbsoluteToLocalPoint(mode, &transformState)
+    super.mapAbsoluteToLocalPoint(mode, transformState)
   }
 
   func skipContainingBlockForPercentHeightCalculation(
