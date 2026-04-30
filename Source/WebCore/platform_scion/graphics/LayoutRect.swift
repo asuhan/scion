@@ -131,13 +131,15 @@ struct LayoutRectWrapper: Equatable {
   }
 
   mutating func expandToInfiniteY() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let infRect = LayoutRectWrapper.infiniteRect()
+    setY(y: infRect.y())
+    setHeight(height: infRect.height())
   }
 
   mutating func expandToInfiniteX() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let infRect = LayoutRectWrapper.infiniteRect()
+    setX(x: infRect.x())
+    setWidth(width: infRect.width())
   }
 
   mutating func shiftXEdgeBy(delta: LayoutUnit) {
