@@ -32,8 +32,10 @@ struct FloatRoundedRect {
     init() {}
 
     init(topLeft: FloatSize, topRight: FloatSize, bottomLeft: FloatSize, bottomRight: FloatSize) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.topLeft = topLeft
+      self.topRight = topRight
+      self.bottomLeft = bottomLeft
+      self.bottomRight = bottomRight
     }
 
     init(intRadii: RoundedRect.Radii) {
