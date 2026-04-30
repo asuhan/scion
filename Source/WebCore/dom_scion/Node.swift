@@ -142,8 +142,8 @@ class NodeWrapper {
 
   // Use these two methods with caution.
   func renderBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Node_renderBox(p) else { return nil }
+    return createRenderObjectWrapperOrNative(raw) as! RenderBoxWrapper?
   }
 
   func computedStyle() -> RenderStyleWrapper? {
