@@ -206,8 +206,7 @@ internal func ceiledIntSize(s: LayoutSizeWrapper) -> IntSize {
 }
 
 func roundedIntSize(s: LayoutSizeWrapper) -> IntSize {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return IntSize(width: s.width().round(), height: s.height().round())
 }
 
 func floorSizeToDevicePixels(_ size: LayoutSizeWrapper, _ pixelSnappingFactor: Float32) -> FloatSize
