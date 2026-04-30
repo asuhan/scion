@@ -113,6 +113,12 @@ extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const voi
     return { { r.x(), r.y() }, { r.width(), r.height() } };
 }
 
+extern "C" WEBCORE_EXPORT IntSizeRaw ScrollableArea_contentsSize(const void* p)
+{
+    const auto size = static_cast<const WebCore::ScrollableArea*>(p)->contentsSize();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollableArea_useDarkAppearance(const void* p)
 {
     return static_cast<const WebCore::ScrollableArea*>(p)->useDarkAppearance();

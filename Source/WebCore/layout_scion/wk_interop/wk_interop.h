@@ -1425,6 +1425,7 @@ struct IntPointRaw ScrollableArea_scrollPosition(const void*);
 struct IntPointRaw ScrollableArea_scrollOffset(const void*);
 bool ScrollableArea_currentScrollType(const void*);
 struct IntRectRaw ScrollableArea_visibleContentRect(const void*);
+struct IntSizeRaw ScrollableArea_contentsSize(const void*);
 bool ScrollableArea_useDarkAppearance(const void*);
 void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);

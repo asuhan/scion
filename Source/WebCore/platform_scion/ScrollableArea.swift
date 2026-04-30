@@ -133,8 +133,8 @@ class ScrollableAreaWrapper {
   }
 
   func contentsSize() -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let size = wk_interop.ScrollableArea_contentsSize(pInterop!)
+    return IntSize(width: size.width, height: size.height)
   }
 
   func useDarkAppearance() -> Bool { return wk_interop.ScrollableArea_useDarkAppearance(pInterop!) }
