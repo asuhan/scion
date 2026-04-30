@@ -1412,6 +1412,7 @@ struct IntRectRaw ScrollView_frameRect(const void*);
 void ScrollView_show(void*);
 void ScrollView_hide(void*);
 struct IntRectRaw ScrollableArea_visibleContentRect(const void*);
+bool ScrollableArea_useDarkAppearance(const void*);
 void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);
 const void* InitialContainingBlock_create(const void*);

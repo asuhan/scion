@@ -143,10 +143,7 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
-  func useDarkAppearance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func useDarkAppearance() -> Bool { return wk_interop.ScrollableArea_useDarkAppearance(pInterop!) }
 
   func layerForHorizontalScrollbar() -> GraphicsLayer? {
     // TODO(asuhan): implement this
