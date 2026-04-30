@@ -1483,6 +1483,7 @@ uint32_t HTMLSelectElement_size(const void*);
 int32_t HTMLSelectElement_activeSelectionStartListIndex(const void*);
 int32_t HTMLSelectElement_activeSelectionEndListIndex(const void*);
 void HTMLSelectElement_setActiveSelectionEndIndex(void*, int32_t);
+bool HTMLSelectElement_allowsNonContiguousSelection(const void*);
 unsigned HTMLTextAreaElement_cols(const void*);
 const void* CharacterData_data(const void*);
 uint32_t CharacterData_length(const void*);

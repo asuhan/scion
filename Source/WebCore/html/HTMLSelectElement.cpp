@@ -82,6 +82,11 @@ extern "C" WEBCORE_EXPORT void HTMLSelectElement_setActiveSelectionEndIndex(void
     static_cast<WebCore::HTMLSelectElement*>(p)->setActiveSelectionEndIndex(index);
 }
 
+extern "C" WEBCORE_EXPORT bool HTMLSelectElement_allowsNonContiguousSelection(const void* p)
+{
+    return static_cast<const WebCore::HTMLSelectElement*>(p)->allowsNonContiguousSelection();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLSelectElement);
