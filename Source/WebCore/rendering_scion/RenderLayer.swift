@@ -1292,8 +1292,13 @@ class RenderLayerWrapper {
   }
 
   func cannotBlitToWindow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_cannotBlitToWindow(pInterop!)
+    }
+    if isTransparent() || hasReflection() || isTransformed() {
+      return true
+    }
+    return parent()?.cannotBlitToWindow() ?? false
   }
 
   // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
