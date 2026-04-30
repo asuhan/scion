@@ -49,6 +49,16 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT uint8_t ScrollableArea_horizontalScrollbarMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::ScrollableArea*>(p)->horizontalScrollbarMode());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t ScrollableArea_verticalScrollbarMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::ScrollableArea*>(p)->verticalScrollbarMode());
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw ScrollableArea_visibleContentRect(const void* p)
 {
     const auto r = static_cast<const WebCore::ScrollableArea*>(p)->visibleContentRect();

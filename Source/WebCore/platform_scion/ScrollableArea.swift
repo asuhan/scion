@@ -37,13 +37,11 @@ class ScrollableAreaWrapper {
   }
 
   func horizontalScrollbarMode() -> ScrollbarMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ScrollbarMode(rawValue: wk_interop.ScrollableArea_horizontalScrollbarMode(pInterop!))!
   }
 
   func verticalScrollbarMode() -> ScrollbarMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ScrollbarMode(rawValue: wk_interop.ScrollableArea_verticalScrollbarMode(pInterop!))!
   }
 
   func scrollbarGutterStyle() -> ScrollbarGutter {
