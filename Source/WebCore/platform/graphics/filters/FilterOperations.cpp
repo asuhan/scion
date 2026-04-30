@@ -65,6 +65,11 @@ extern "C" WEBCORE_EXPORT bool FilterOperations_hasFilterThatAffectsOpacity(cons
     return static_cast<const WebCore::FilterOperations*>(p)->hasFilterThatAffectsOpacity();
 }
 
+extern "C" WEBCORE_EXPORT bool FilterOperations_hasFilterThatMovesPixels(const void* p)
+{
+    return static_cast<const WebCore::FilterOperations*>(p)->hasFilterThatMovesPixels();
+}
+
 extern "C" WEBCORE_EXPORT bool FilterOperations_hasReferenceFilter(const void* p)
 {
     return static_cast<const WebCore::FilterOperations*>(p)->hasReferenceFilter();

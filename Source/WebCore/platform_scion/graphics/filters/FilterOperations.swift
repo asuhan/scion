@@ -65,8 +65,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
   }
 
   func hasFilterThatMovesPixels() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FilterOperations_hasFilterThatMovesPixels(p)
   }
 
   func hasFilterThatShouldBeRestrictedBySecurityOrigin() -> Bool {
