@@ -1361,6 +1361,7 @@ void FilterOperations_destroy(const void*);
 bool FilterOperations_eq(const void*, const void*);
 bool FilterOperations_isEmpty(const void*);
 uint64_t FilterOperations_size(const void*);
+bool FilterOperations_hasFilterThatAffectsOpacity(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
 bool WillChangeData_canCreateStackingContext(const void*);
 bool WillChangeData_createsContainingBlockForAbsolutelyPositioned(const void*, bool);

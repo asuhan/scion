@@ -60,6 +60,11 @@ extern "C" WEBCORE_EXPORT uint64_t FilterOperations_size(const void* p)
     return static_cast<const WebCore::FilterOperations*>(p)->size();
 }
 
+extern "C" WEBCORE_EXPORT bool FilterOperations_hasFilterThatAffectsOpacity(const void* p)
+{
+    return static_cast<const WebCore::FilterOperations*>(p)->hasFilterThatAffectsOpacity();
+}
+
 extern "C" WEBCORE_EXPORT bool FilterOperations_hasReferenceFilter(const void* p)
 {
     return static_cast<const WebCore::FilterOperations*>(p)->hasReferenceFilter();

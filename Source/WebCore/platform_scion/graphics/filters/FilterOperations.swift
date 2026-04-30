@@ -61,8 +61,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
   }
 
   func hasFilterThatAffectsOpacity() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FilterOperations_hasFilterThatAffectsOpacity(p)
   }
 
   func hasFilterThatMovesPixels() -> Bool {
