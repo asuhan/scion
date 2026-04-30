@@ -203,6 +203,13 @@ struct LayoutRectWrapper: Equatable {
   func maxXMaxYCorner() -> LayoutPointWrapper {
     return LayoutPointWrapper(x: m_location.x + m_size.width(), y: m_location.y + m_size.height())
   }  // typically bottomRight
+  func isMaxXMaxYRepresentable() -> Bool {
+    let rect = self.FloatRect()
+    let maxX = rect.maxX()
+    let maxY = rect.maxY()
+    return maxX > LayoutUnit.nearlyMin() && maxX < LayoutUnit.nearlyMax()
+      && maxY > LayoutUnit.nearlyMin() && maxY < LayoutUnit.nearlyMax()
+  }
 
   func intersects(other: LayoutRectWrapper) -> Bool {
     // Checking emptiness handles negative widths as well as zero.
@@ -296,8 +303,28 @@ struct LayoutRectWrapper: Equatable {
 
   @discardableResult
   mutating func checkedUnite(other: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if other.isEmpty() {
+      return true
+    }
+    if isEmpty() {
+      self = other
+      return true
+    }
+    if !isMaxXMaxYRepresentable() || !other.isMaxXMaxYRepresentable() {
+      return false
+    }
+    let topLeft = FloatPoint(
+      x: min(x().float(), other.x().float()), y: min(y().float(), other.y().float()))
+    let bottomRight = FloatPoint(
+      x: max(maxX().float(), other.maxX().float()), y: max(maxY().float(), other.maxY().float()))
+    let size: FloatSize = bottomRight - topLeft
+
+    if size.width >= LayoutUnit.nearlyMax() || size.height >= LayoutUnit.nearlyMax() {
+      return false
+    }
+    m_location = LayoutPointWrapper(size: topLeft)
+    m_size = LayoutSizeWrapper(size: size)
+    return true
   }
 
   mutating func inflateX(dx: LayoutUnit) {

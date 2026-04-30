@@ -218,6 +218,10 @@ struct LayoutUnit: Comparable {
     return a <= LayoutUnit(value: b)
   }
 
+  static func >= (a: Float32, b: LayoutUnit) -> Bool {
+    return a >= b.toFloat()
+  }
+
   static func >= (a: LayoutUnit, b: Int32) -> Bool {
     return a >= LayoutUnit(value: b)
   }
@@ -305,6 +309,19 @@ struct LayoutUnit: Comparable {
   static func min() -> LayoutUnit {
     var m = LayoutUnit()
     m.value = Int32.min
+    return m
+  }
+
+  // Versions of max/min that are slightly smaller/larger than max/min() to allow for roinding without overflowing.
+  static func nearlyMax() -> LayoutUnit {
+    var m = LayoutUnit()
+    m.value = Int32.max - kFixedPointDenominator / 2
+    return m
+  }
+
+  static func nearlyMin() -> LayoutUnit {
+    var m = LayoutUnit()
+    m.value = Int32.min + kFixedPointDenominator / 2
     return m
   }
 
