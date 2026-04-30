@@ -1184,6 +1184,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsResourceContainer)
   }
 
+  func isRenderSVGGradientStop() -> Bool {
+    assert(isNativeImpl())
+    return type() == .SVGGradientStop
+  }
+
   func isLegacyRenderSVGHiddenContainer() -> Bool {
     assert(isNativeImpl())
     return type() == .LegacySVGHiddenContainer || isLegacyRenderSVGResourceContainer()
