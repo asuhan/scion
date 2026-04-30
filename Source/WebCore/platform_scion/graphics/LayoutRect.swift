@@ -278,8 +278,20 @@ struct LayoutRectWrapper: Equatable {
   }
 
   mutating func uniteIfNonZero(_ other: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Handle empty special cases first.
+    if !other.width().bool() && !other.height().bool() {
+      return
+    }
+    if !width().bool() && !height().bool() {
+      self = other
+      return
+    }
+
+    let newLocation = LayoutPointWrapper(x: min(x(), other.x()), y: min(y(), other.y()))
+    let newMaxPoint = LayoutPointWrapper(x: max(maxX(), other.maxX()), y: max(maxY(), other.maxY()))
+
+    m_location = newLocation
+    m_size = newMaxPoint - newLocation
   }
 
   @discardableResult
