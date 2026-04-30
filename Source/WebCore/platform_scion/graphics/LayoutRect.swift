@@ -402,8 +402,10 @@ struct LayoutRectWrapper: Equatable {
   }
 
   static func infiniteRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Return a rect that is slightly smaller than the true max rect to allow pixelSnapping to round up to the nearest IntRect without overflowing.
+    return LayoutRectWrapper(
+      x: LayoutUnit.nearlyMin() / 2, y: LayoutUnit.nearlyMin() / 2, width: LayoutUnit.nearlyMax(),
+      height: LayoutUnit.nearlyMax())
   }
 
   func FloatRect() -> FloatRectWrapper {
