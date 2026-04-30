@@ -198,8 +198,9 @@ func roundPointToDevicePixels(
 func floorPointToDevicePixels(_ point: LayoutPointWrapper, _ pixelSnappingFactor: Float32)
   -> FloatPoint
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return FloatPoint(
+    x: floorToDevicePixel(value: point.x, pixelSnappingFactor: pixelSnappingFactor),
+    y: floorToDevicePixel(value: point.y, pixelSnappingFactor: pixelSnappingFactor))
 }
 
 func ceilPointToDevicePixels(_ point: LayoutPointWrapper, _ pixelSnappingFactor: Float32)
