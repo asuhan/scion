@@ -124,8 +124,12 @@ class LayoutSizeWrapper: Equatable {
   }
 
   func clampToMinimumSize(minimumSize: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if width_ < minimumSize.width() {
+      width_ = minimumSize.width()
+    }
+    if height_ < minimumSize.height() {
+      height_ = minimumSize.height()
+    }
   }
 
   func transposedSize() -> LayoutSizeWrapper {
