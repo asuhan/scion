@@ -447,8 +447,10 @@ func enclosingLayoutRect(rect: FloatRectWrapper) -> LayoutRectWrapper {
 func encloseRectToDevicePixels(rect: LayoutRectWrapper, pixelSnappingFactor: Float32)
   -> FloatRectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let location = floorPointToDevicePixels(rect.minXMinYCorner(), pixelSnappingFactor)
+  let maxPoint = ceilPointToDevicePixels(rect.maxXMaxYCorner(), pixelSnappingFactor)
+
+  return FloatRectWrapper(location: location, size: maxPoint - location)
 }
 
 // Device pixel snapping functions.

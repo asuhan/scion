@@ -202,6 +202,14 @@ func floorPointToDevicePixels(_ point: LayoutPointWrapper, _ pixelSnappingFactor
   fatalError("Not implemented")
 }
 
+func ceilPointToDevicePixels(_ point: LayoutPointWrapper, _ pixelSnappingFactor: Float32)
+  -> FloatPoint
+{
+  return FloatPoint(
+    x: ceilToDevicePixel(value: point.x, pixelSnappingFactor: pixelSnappingFactor),
+    y: ceilToDevicePixel(value: point.y, pixelSnappingFactor: pixelSnappingFactor))
+}
+
 func snapSizeToDevicePixel(
   size: LayoutSizeWrapper, location: LayoutPointWrapper, pixelSnappingFactor: Float32
 ) -> FloatSize {
