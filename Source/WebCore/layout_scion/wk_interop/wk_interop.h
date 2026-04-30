@@ -560,6 +560,7 @@ bool ElementBox_hasBaselineForIntegration(const void*);
 int32_t ElementBox_baselineForIntegration(const void*);
 void* RenderObject_previousSibling(const void*);
 void* RenderObject_nextSibling(const void*);
+void* RenderObject_enclosingLayer(const void*);
 bool RenderObject_isRenderElement(const void*);
 bool RenderObject_isRenderTableCell(const void*);
 bool RenderObject_isRenderMultiColumnSet(const void*);

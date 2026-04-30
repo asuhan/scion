@@ -634,7 +634,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingLayer() -> RenderLayerWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return RenderLayerWrapper(p: wk_interop.RenderObject_enclosingLayer(id()))
+    }
     for renderer in RenderAncestorIteratorAdapter<RenderLayerModelObjectWrapper>.lineageOfType(
       first: self)
     {
