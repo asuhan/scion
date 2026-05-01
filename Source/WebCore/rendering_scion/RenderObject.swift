@@ -770,6 +770,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .Quote
   }
 
+  func isRenderDetailsMarker() -> Bool {
+    assert(isNativeImpl())
+    return type() == .DetailsMarker
+  }
+
   func isRenderEmbeddedObject() -> Bool {
     assert(isNativeImpl())
     return type() == .EmbeddedObject
