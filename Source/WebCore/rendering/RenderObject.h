@@ -460,11 +460,7 @@ public:
     void outputRegionsInformation(WTF::TextStream&) const;
 #endif
 
-    bool isPseudoElement() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return node() && node()->isPseudoElement();
-    }
+    bool isPseudoElement() const;
 
     WEBCORE_EXPORT bool isRenderElement() const;
     bool isRenderReplaced() const
@@ -472,11 +468,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced;
     }
-    bool isRenderBoxModelObject() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_typeFlags.contains(TypeFlag::IsBoxModelObject);
-    }
+    bool isRenderBoxModelObject() const;
     bool isRenderBlock() const;
     WEBCORE_EXPORT bool isRenderBlockFlow() const;
     bool isRenderInline() const;
@@ -495,18 +487,10 @@ public:
         return type() == Type::Quote;
     }
 
-    bool isRenderDetailsMarker() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::DetailsMarker;
-    }
+    bool isRenderDetailsMarker() const;
     WEBCORE_EXPORT bool isRenderEmbeddedObject() const;
     bool isFieldset() const;
-    bool isRenderFileUploadControl() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::FileUploadControl;
-    }
+    bool isRenderFileUploadControl() const;
     bool isRenderFrame() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -525,11 +509,7 @@ public:
         return type() == Type::ListBox;
     }
     bool isRenderListItem() const;
-    bool isRenderListMarker() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::ListMarker;
-    }
+    bool isRenderListMarker() const;
     bool isRenderMedia() const;
     bool isRenderMenuList() const
     {
@@ -583,11 +563,7 @@ public:
         return type() == Type::Slider;
     }
     bool isRenderTable() const;
-    bool isRenderTableCell() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TableCell;
-    }
+    bool isRenderTableCell() const;
     bool isRenderTableCol() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -812,11 +788,7 @@ public:
     bool isLegacyRenderSVGRoot() const;
     bool isRenderSVGRoot() const;
     bool isRenderSVGContainer() const;
-    bool isLegacyRenderSVGContainer() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsContainer);
-    }
+    bool isLegacyRenderSVGContainer() const;
     bool isRenderSVGTransformableContainer() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -834,10 +806,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::LegacySVGViewportContainer;
     }
-    bool isRenderSVGGradientStop() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::SVGGradientStop;
-    }
+    bool isRenderSVGGradientStop() const;
     bool isLegacyRenderSVGHiddenContainer() const;
     bool isRenderSVGHiddenContainer() const;
     bool isLegacyRenderSVGPath() const {
@@ -852,10 +821,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape);
     }
-    bool isLegacyRenderSVGShape() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape);
-    }
+    bool isLegacyRenderSVGShape() const;
     bool isLegacyRenderSVGRect() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::LegacySVGRect;
@@ -873,14 +839,8 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGInline || type() == Type::SVGTSpan || type() == Type::SVGTextPath;
     }
-    bool isRenderSVGInlineText() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::SVGInlineText;
-    }
-    bool isLegacyRenderSVGImage() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::LegacySVGImage;
-    }
+    bool isRenderSVGInlineText() const;
+    bool isLegacyRenderSVGImage() const;
     bool isRenderSVGImage() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGImage;
@@ -893,10 +853,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGForeignObject;
     }
-    bool isLegacyRenderSVGResourceContainer() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsResourceContainer);
-    }
+    bool isLegacyRenderSVGResourceContainer() const;
     bool isRenderSVGResourceContainer() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsResourceContainer);
@@ -1089,16 +1046,8 @@ public:
         return isAbsolutelyPositioned() || isRenderSVGForeignObject();
     }
 
-    bool isRenderText() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_typeFlags.contains(TypeFlag::IsText);
-    }
-    bool isRenderLineBreak() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::LineBreak;
-    }
+    bool isRenderText() const;
+    bool isRenderLineBreak() const;
     bool isBR() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -1176,23 +1125,11 @@ public:
     bool backgroundIsKnownToBeObscured(const LayoutPoint& paintOffset);
 
     WEBCORE_EXPORT bool needsLayout() const;
-    bool selfNeedsLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::NeedsLayout);
-    }
-    bool needsPositionedMovementLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::NeedsPositionedMovementLayout);
-    }
+    bool selfNeedsLayout() const;
+    bool needsPositionedMovementLayout() const;
     bool needsPositionedMovementLayoutOnly() const;
 
-    bool posChildNeedsLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::PosChildNeedsLayout);
-    }
+    bool posChildNeedsLayout() const;
     bool needsSimplifiedNormalFlowLayout() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -1235,13 +1172,7 @@ public:
     // Returns true if this renderer is rooted.
     bool isRooted() const;
 
-    Node* node() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        if (isAnonymous())
-            return nullptr;
-        return m_node.ptr();
-    }
+    Node* node() const;
     RefPtr<Node> protectedNode() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

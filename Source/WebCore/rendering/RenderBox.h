@@ -781,16 +781,8 @@ public:
     LayoutRect logicalLayoutOverflowRectForPropagation(const RenderStyle*) const;
     LayoutRect layoutOverflowRectForPropagation(const RenderStyle*) const;
 
-    bool hasRenderOverflow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_overflow;
-    }
-    bool hasVisualOverflow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_overflow && !borderBoxRect().contains(m_overflow->visualOverflowRect());
-    }
+    bool hasRenderOverflow() const;
+    bool hasVisualOverflow() const;
 
     virtual bool needsPreferredWidthsRecalculation() const;
     virtual void computeIntrinsicRatioInformation(FloatSize& /* intrinsicSize */, FloatSize& /* intrinsicRatio */) const

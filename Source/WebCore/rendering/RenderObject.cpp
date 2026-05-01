@@ -390,8 +390,14 @@ bool RenderObject::isLegend() const
     
 bool RenderObject::isFieldset() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->isFieldset(); }
     return node() && node()->hasTagName(fieldsetTag);
+}
+
+bool RenderObject::isRenderFileUploadControl() const
+{
+    if (m_scion) { return m_scion->isRenderFileUploadControl(); }
+    return type() == Type::FileUploadControl;
 }
 
 bool RenderObject::isHTMLMarquee() const
@@ -1993,6 +1999,14 @@ bool RenderObject::isRooted() const
     return isDescendantOf(&view());
 }
 
+Node* RenderObject::node() const
+{
+    if (m_scion) { return m_scion->node(); }
+    if (isAnonymous())
+        return nullptr;
+    return m_node.ptr();
+}
+
 static inline RenderElement* containerForElement(const RenderObject& renderer, const RenderLayerModelObject* repaintContainer, bool* repaintContainerSkipped)
 {
     // This method is extremely similar to containingBlock(), but with a few notable
@@ -3138,6 +3152,24 @@ bool RenderObject::needsLayout() const
         || needsPositionedMovementLayout();
 }
 
+bool RenderObject::selfNeedsLayout() const
+{
+    if (m_scion) { return m_scion->selfNeedsLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::NeedsLayout);
+}
+
+bool RenderObject::needsPositionedMovementLayout() const
+{
+    if (m_scion) { return m_scion->needsPositionedMovementLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::NeedsPositionedMovementLayout);
+}
+
+bool RenderObject::posChildNeedsLayout() const
+{
+    if (m_scion) { return m_scion->posChildNeedsLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::PosChildNeedsLayout);
+}
+
 void RenderObject::setNormalChildNeedsLayoutBit(bool b)
 {
     if (m_scion) {
@@ -3153,10 +3185,22 @@ TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
     return ts;
 }
 
+bool RenderObject::isPseudoElement() const
+{
+    if (m_scion) { return m_scion->isPseudoElement(); }
+    return node() && node()->isPseudoElement();
+}
+
 bool RenderObject::isRenderElement() const
 {
     if (m_scion) { return m_scion->isRenderElement(); }
     return !isRenderText();
+}
+
+bool RenderObject::isRenderBoxModelObject() const
+{
+    if (m_scion) { return m_scion->isRenderBoxModelObject(); }
+    return m_typeFlags.contains(TypeFlag::IsBoxModelObject);
 }
 
 bool RenderObject::isRenderBlock() const
@@ -3183,6 +3227,12 @@ bool RenderObject::isRenderLayerModelObject() const
     return m_typeFlags.contains(TypeFlag::IsLayerModelObject);
 }
 
+bool RenderObject::isRenderDetailsMarker() const
+{
+    if (m_scion) { return m_scion->isRenderDetailsMarker(); }
+    return type() == Type::DetailsMarker;
+}
+
 bool RenderObject::isRenderEmbeddedObject() const
 {
     if (m_scion) { return m_scion->isRenderEmbeddedObject(); }
@@ -3193,6 +3243,12 @@ bool RenderObject::isRenderListItem() const
 {
     if (m_scion) { return m_scion->isRenderListItem(); }
     return type() == Type::ListItem;
+}
+
+bool RenderObject::isRenderListMarker() const
+{
+    if (m_scion) { return m_scion->isRenderListMarker(); }
+    return type() == Type::ListMarker;
 }
 
 bool RenderObject::isRenderMedia() const
@@ -3217,6 +3273,12 @@ bool RenderObject::isRenderReplica() const
 {
     if (m_scion) { return m_scion->isRenderReplica(); }
     return type() == Type::Replica;
+}
+
+bool RenderObject::isRenderTableCell() const
+{
+    if (m_scion) { return m_scion->isRenderTableCell(); }
+    return type() == Type::TableCell;
 }
 
 bool RenderObject::isRenderVideo() const
@@ -3291,6 +3353,17 @@ bool RenderObject::isRenderSVGContainer() const
     return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsContainer);
 }
 
+bool RenderObject::isLegacyRenderSVGContainer() const
+{
+    if (m_scion) { return m_scion->isLegacyRenderSVGContainer(); }
+    return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsContainer);
+}
+
+bool RenderObject::isRenderSVGGradientStop() const {
+    if (m_scion) { return m_scion->isRenderSVGGradientStop(); }
+    return type() == Type::SVGGradientStop;
+}
+
 bool RenderObject::isLegacyRenderSVGHiddenContainer() const
 {
     if (m_scion) { return m_scion->isLegacyRenderSVGHiddenContainer(); }
@@ -3303,10 +3376,30 @@ bool RenderObject::isRenderSVGHiddenContainer() const
     return type() == Type::SVGHiddenContainer || isRenderSVGResourceContainer() || isRenderSVGResourceFilterPrimitive();
 }
 
+bool RenderObject::isLegacyRenderSVGShape() const {
+    if (m_scion) { return m_scion->isLegacyRenderSVGShape(); }
+    return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape);
+}
+
 bool RenderObject::isRenderSVGText() const
 {
     if (m_scion) { return m_scion->isRenderSVGText(); }
     return type() == Type::SVGText;
+}
+
+bool RenderObject::isRenderSVGInlineText() const {
+    if (m_scion) { return m_scion->isRenderSVGInlineText(); }
+    return type() == Type::SVGInlineText;
+}
+
+bool RenderObject::isLegacyRenderSVGImage() const {
+    if (m_scion) { return m_scion->isLegacyRenderSVGImage(); }
+    return type() == Type::LegacySVGImage;
+}
+
+bool RenderObject::isLegacyRenderSVGResourceContainer() const {
+    if (m_scion) { return m_scion->isLegacyRenderSVGResourceContainer(); }
+    return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsResourceContainer);
 }
 
 bool RenderObject::isSVGLayerAwareRenderer() const
@@ -3350,6 +3443,18 @@ bool RenderObject::isStickilyPositioned() const
 {
     if (m_scion) { return m_scion->isStickilyPositioned(); }
     return m_stateBitfields.isStickilyPositioned();
+}
+
+bool RenderObject::isRenderText() const
+{
+    if (m_scion) { return m_scion->isRenderText(); }
+    return m_typeFlags.contains(TypeFlag::IsText);
+}
+
+bool RenderObject::isRenderLineBreak() const
+{
+    if (m_scion) { return m_scion->isRenderLineBreak(); }
+    return type() == Type::LineBreak;
 }
 
 bool RenderObject::isRenderBox() const

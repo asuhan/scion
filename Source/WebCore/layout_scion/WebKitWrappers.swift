@@ -1032,10 +1032,22 @@ func RenderObjectScion_enclosingFragmentedFlow(_ objectRaw: UnsafeRawPointer)
   return nil
 }
 
+@_cdecl("RenderObjectScion_isPseudoElement")
+func RenderObjectScion_isPseudoElement(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isPseudoElement()
+}
+
 @_cdecl("RenderObjectScion_isRenderElement")
 func RenderObjectScion_isRenderElement(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isRenderElement()
+}
+
+@_cdecl("RenderObjectScion_isRenderBoxModelObject")
+func RenderObjectScion_isRenderBoxModelObject(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderBoxModelObject()
 }
 
 @_cdecl("RenderObjectScion_isRenderBlock")
@@ -1062,16 +1074,40 @@ func RenderObjectScion_isRenderLayerModelObject(_ objectRaw: UnsafeRawPointer) -
   return object.isRenderLayerModelObject()
 }
 
+@_cdecl("RenderObjectScion_isRenderDetailsMarker")
+func RenderObjectScion_isRenderDetailsMarker(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderDetailsMarker()
+}
+
 @_cdecl("RenderObjectScion_isRenderEmbeddedObject")
 func RenderObjectScion_isRenderEmbeddedObject(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isRenderEmbeddedObject()
 }
 
+@_cdecl("RenderObjectScion_isFieldset")
+func RenderObjectScion_isFieldset(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isFieldset()
+}
+
+@_cdecl("RenderObjectScion_isRenderFileUploadControl")
+func RenderObjectScion_isRenderFileUploadControl(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderFileUploadControl()
+}
+
 @_cdecl("RenderObjectScion_isRenderListItem")
 func RenderObjectScion_isRenderListItem(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isRenderListItem()
+}
+
+@_cdecl("RenderObjectScion_isRenderListMarker")
+func RenderObjectScion_isRenderListMarker(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderListMarker()
 }
 
 @_cdecl("RenderObjectScion_isRenderMedia")
@@ -1096,6 +1132,12 @@ func RenderObjectScion_isRenderImage(_ objectRaw: UnsafeRawPointer) -> Bool {
 func RenderObjectScion_isRenderReplica(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isRenderReplica()
+}
+
+@_cdecl("RenderObjectScion_isRenderTableCell")
+func RenderObjectScion_isRenderTableCell(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTableCell()
 }
 
 @_cdecl("RenderObjectScion_isRenderVideo")
@@ -1182,6 +1224,18 @@ func RenderObjectScion_isRenderSVGContainer(_ objectRaw: UnsafeRawPointer) -> Bo
   return object.isRenderSVGContainer()
 }
 
+@_cdecl("RenderObjectScion_isLegacyRenderSVGContainer")
+func RenderObjectScion_isLegacyRenderSVGContainer(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegacyRenderSVGContainer()
+}
+
+@_cdecl("RenderObjectScion_isRenderSVGGradientStop")
+func RenderObjectScion_isRenderSVGGradientStop(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderSVGGradientStop()
+}
+
 @_cdecl("RenderObjectScion_isLegacyRenderSVGHiddenContainer")
 func RenderObjectScion_isLegacyRenderSVGHiddenContainer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -1194,10 +1248,34 @@ func RenderObjectScion_isRenderSVGHiddenContainer(_ objectRaw: UnsafeRawPointer)
   return object.isRenderSVGHiddenContainer()
 }
 
+@_cdecl("RenderObjectScion_isLegacyRenderSVGShape")
+func RenderObjectScion_isLegacyRenderSVGShape(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegacyRenderSVGShape()
+}
+
 @_cdecl("RenderObjectScion_isRenderSVGText")
 func RenderObjectScion_isRenderSVGText(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isRenderSVGText()
+}
+
+@_cdecl("RenderObjectScion_isRenderSVGInlineText")
+func RenderObjectScion_isRenderSVGInlineText(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderSVGInlineText()
+}
+
+@_cdecl("RenderObjectScion_isLegacyRenderSVGImage")
+func RenderObjectScion_isLegacyRenderSVGImage(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegacyRenderSVGImage()
+}
+
+@_cdecl("RenderObjectScion_isLegacyRenderSVGResourceContainer")
+func RenderObjectScion_isLegacyRenderSVGResourceContainer(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegacyRenderSVGResourceContainer()
 }
 
 @_cdecl("RenderObjectScion_isSVGLayerAwareRenderer")
@@ -1240,6 +1318,18 @@ func RenderObjectScion_isFixedPositioned(_ objectRaw: UnsafeRawPointer) -> Bool 
 func RenderObjectScion_isStickilyPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isStickilyPositioned()
+}
+
+@_cdecl("RenderObjectScion_isRenderText")
+func RenderObjectScion_isRenderText(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderText()
+}
+
+@_cdecl("RenderObjectScion_isRenderLineBreak")
+func RenderObjectScion_isRenderLineBreak(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderLineBreak()
 }
 
 @_cdecl("RenderObjectScion_isRenderBox")
@@ -1300,6 +1390,24 @@ func RenderObjectScion_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
 func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.needsLayout()
+}
+
+@_cdecl("RenderObjectScion_selfNeedsLayout")
+func RenderObjectScion_selfNeedsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.selfNeedsLayout()
+}
+
+@_cdecl("RenderObjectScion_needsPositionedMovementLayout")
+func RenderObjectScion_needsPositionedMovementLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.needsPositionedMovementLayout()
+}
+
+@_cdecl("RenderObjectScion_posChildNeedsLayout")
+func RenderObjectScion_posChildNeedsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.posChildNeedsLayout()
 }
 
 @_cdecl("RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly")
@@ -1367,6 +1475,13 @@ func RenderObjectScion_view(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPo
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   let view = object.view()
   return view.getWk()
+}
+
+@_cdecl("RenderObjectScion_node")
+func RenderObjectScion_node(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let node = object.node() else { return nil }
+  return node.p
 }
 
 @_cdecl("RenderObjectScion_document")
@@ -1981,6 +2096,18 @@ func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRa
   return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
 }
 
+@_cdecl("RenderBoxScion_hasRenderOverflow")
+func RenderBoxScion_hasRenderOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.hasRenderOverflow()
+}
+
+@_cdecl("RenderBoxScion_hasVisualOverflow")
+func RenderBoxScion_hasVisualOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.hasVisualOverflow()
+}
+
 @_cdecl("RenderBoxScion_scrollPosition")
 func RenderBoxScion_scrollPosition(_ boxRaw: UnsafeRawPointer) -> IntPointRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
@@ -2065,6 +2192,30 @@ func RenderBlockFlowScion_styleWillChange(
   let diff = StyleDifference(rawValue: diffRaw)!
   let newStyle = convert_render_style(p: newStyleRaw)
   blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
+}
+
+@_cdecl("RenderBlockScion_borderTop")
+func RenderBlockScion_borderTop(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.borderTop().rawValue()
+}
+
+@_cdecl("RenderBlockScion_borderBottom")
+func RenderBlockScion_borderBottom(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.borderBottom().rawValue()
+}
+
+@_cdecl("RenderBlockScion_borderLeft")
+func RenderBlockScion_borderLeft(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.borderLeft().rawValue()
+}
+
+@_cdecl("RenderBlockScion_borderRight")
+func RenderBlockScion_borderRight(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.borderRight().rawValue()
 }
 
 @_cdecl("RenderBlockScion_setMarginBeforeForChild")

@@ -67,7 +67,11 @@ public:
 
     RenderFragmentedFlow* enclosingFragmentedFlow() const;
 
+    bool isPseudoElement() const;
+
     bool isRenderElement() const;
+
+    bool isRenderBoxModelObject() const;
 
     bool isRenderBlock() const;
 
@@ -77,9 +81,17 @@ public:
 
     bool isRenderLayerModelObject() const;
 
+    bool isRenderDetailsMarker() const;
+
     bool isRenderEmbeddedObject() const;
 
+    bool isFieldset() const;
+
+    bool isRenderFileUploadControl() const;
+
     bool isRenderListItem() const;
+
+    bool isRenderListMarker() const;
 
     bool isRenderMedia() const;
 
@@ -88,6 +100,8 @@ public:
     bool isRenderImage() const;
 
     bool isRenderReplica() const;
+
+    bool isRenderTableCell() const;
 
     bool isRenderVideo() const;
 
@@ -117,11 +131,23 @@ public:
 
     bool isRenderSVGContainer() const;
 
+    bool isLegacyRenderSVGContainer() const;
+
+    bool isRenderSVGGradientStop() const;
+
     bool isLegacyRenderSVGHiddenContainer() const;
 
     bool isRenderSVGHiddenContainer() const;
 
+    bool isLegacyRenderSVGShape() const;
+
     bool isRenderSVGText() const;
+
+    bool isRenderSVGInlineText() const;
+
+    bool isLegacyRenderSVGImage() const;
+
+    bool isLegacyRenderSVGResourceContainer() const;
 
     bool isSVGLayerAwareRenderer() const;
 
@@ -136,6 +162,10 @@ public:
     bool isFixedPositioned() const;
 
     bool isStickilyPositioned() const;
+
+    bool isRenderText() const;
+
+    bool isRenderLineBreak() const;
 
     bool isRenderBox() const;
 
@@ -156,6 +186,12 @@ public:
     bool hasLayer() const;
 
     bool needsLayout() const;
+
+    bool selfNeedsLayout() const;
+
+    bool needsPositionedMovementLayout() const;
+
+    bool posChildNeedsLayout() const;
 
     bool needsSimplifiedNormalFlowLayoutOnly() const;
 
@@ -178,6 +214,8 @@ public:
     bool effectiveCapturedInViewTransition() const;
 
     RenderView& view() const;
+
+    Node* node() const;
 
     Document& document() const;
 
@@ -375,6 +413,10 @@ public:
 
     LayoutPoint topLeftLocation() const;
 
+    bool hasRenderOverflow() const;
+
+    bool hasVisualOverflow() const;
+
     ScrollPosition scrollPosition() const;
 
     void styleWillChange(StyleDifference, const RenderStyle&);
@@ -395,6 +437,14 @@ public:
         : m_handle(handle)
     {
     }
+
+    LayoutUnit borderTop() const;
+
+    LayoutUnit borderBottom() const;
+
+    LayoutUnit borderLeft() const;
+
+    LayoutUnit borderRight() const;
 
     void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const;
 

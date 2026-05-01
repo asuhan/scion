@@ -6053,6 +6053,18 @@ LayoutPoint RenderBox::topLeftLocation() const
     return topLeftLocationWithFlipping();
 }
 
+bool RenderBox::hasRenderOverflow() const
+{
+    if (m_scion) { return m_scion->hasRenderOverflow(); }
+    return m_overflow;
+}
+
+bool RenderBox::hasVisualOverflow() const
+{
+    if (m_scion) { return m_scion->hasVisualOverflow(); }
+    return m_overflow && !borderBoxRect().contains(m_overflow->visualOverflowRect());
+}
+
 LayoutUnit RenderBox::flipForWritingMode(LayoutUnit position) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

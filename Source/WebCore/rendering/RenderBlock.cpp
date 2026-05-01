@@ -3587,7 +3587,7 @@ RectEdges<LayoutUnit> RenderBlock::borderWidths() const
 
 LayoutUnit RenderBlock::borderTop() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderTop(); }
     if (style().blockFlowDirection() != FlowDirection::TopToBottom || !intrinsicBorderForFieldset())
         return RenderBox::borderTop();
     return RenderBox::borderTop() + intrinsicBorderForFieldset();
@@ -3595,7 +3595,7 @@ LayoutUnit RenderBlock::borderTop() const
 
 LayoutUnit RenderBlock::borderLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderLeft(); }
     if (style().blockFlowDirection() != FlowDirection::LeftToRight || !intrinsicBorderForFieldset())
         return RenderBox::borderLeft();
     return RenderBox::borderLeft() + intrinsicBorderForFieldset();
@@ -3603,7 +3603,7 @@ LayoutUnit RenderBlock::borderLeft() const
 
 LayoutUnit RenderBlock::borderBottom() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderBottom(); }
     if (style().blockFlowDirection() != FlowDirection::BottomToTop || !intrinsicBorderForFieldset())
         return RenderBox::borderBottom();
     return RenderBox::borderBottom() + intrinsicBorderForFieldset();
@@ -3611,7 +3611,7 @@ LayoutUnit RenderBlock::borderBottom() const
 
 LayoutUnit RenderBlock::borderRight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderRight(); }
     if (style().blockFlowDirection() != FlowDirection::RightToLeft || !intrinsicBorderForFieldset())
         return RenderBox::borderRight();
     return RenderBox::borderRight() + intrinsicBorderForFieldset();

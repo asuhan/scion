@@ -47,7 +47,11 @@ extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" void* RenderObjectScion_enclosingFragmentedFlow(const void*);
 
+extern "C" bool RenderObjectScion_isPseudoElement(const void*);
+
 extern "C" bool RenderObjectScion_isRenderElement(const void*);
+
+extern "C" bool RenderObjectScion_isRenderBoxModelObject(const void*);
 
 extern "C" bool RenderObjectScion_isRenderBlock(const void*);
 
@@ -57,9 +61,17 @@ extern "C" bool RenderObjectScion_isRenderInline(const void*);
 
 extern "C" bool RenderObjectScion_isRenderLayerModelObject(const void*);
 
+extern "C" bool RenderObjectScion_isRenderDetailsMarker(const void*);
+
 extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
 
+extern "C" bool RenderObjectScion_isFieldset(const void*);
+
+extern "C" bool RenderObjectScion_isRenderFileUploadControl(const void*);
+
 extern "C" bool RenderObjectScion_isRenderListItem(const void*);
+
+extern "C" bool RenderObjectScion_isRenderListMarker(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
@@ -68,6 +80,8 @@ extern "C" bool RenderObjectScion_isRenderIFrame(const void*);
 extern "C" bool RenderObjectScion_isRenderImage(const void*);
 
 extern "C" bool RenderObjectScion_isRenderReplica(const void*);
+
+extern "C" bool RenderObjectScion_isRenderTableCell(const void*);
 
 extern "C" bool RenderObjectScion_isRenderVideo(const void*);
 
@@ -97,11 +111,23 @@ extern "C" bool RenderObjectScion_isRenderSVGRoot(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGContainer(const void*);
 
+extern "C" bool RenderObjectScion_isLegacyRenderSVGContainer(const void*);
+
+extern "C" bool RenderObjectScion_isRenderSVGGradientStop(const void*);
+
 extern "C" bool RenderObjectScion_isLegacyRenderSVGHiddenContainer(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGHiddenContainer(const void*);
 
+extern "C" bool RenderObjectScion_isLegacyRenderSVGShape(const void*);
+
 extern "C" bool RenderObjectScion_isRenderSVGText(const void*);
+
+extern "C" bool RenderObjectScion_isRenderSVGInlineText(const void*);
+
+extern "C" bool RenderObjectScion_isLegacyRenderSVGImage(const void*);
+
+extern "C" bool RenderObjectScion_isLegacyRenderSVGResourceContainer(const void*);
 
 extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
@@ -116,6 +142,10 @@ extern "C" bool RenderObjectScion_isOutOfFlowPositioned(const void*);
 extern "C" bool RenderObjectScion_isFixedPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isStickilyPositioned(const void*);
+
+extern "C" bool RenderObjectScion_isRenderText(const void*);
+
+extern "C" bool RenderObjectScion_isRenderLineBreak(const void*);
 
 extern "C" bool RenderObjectScion_isRenderBox(const void*);
 
@@ -136,6 +166,12 @@ extern "C" bool RenderObjectScion_hasOutlineAutoAncestor(const void*);
 extern "C" bool RenderObjectScion_hasLayer(const void*);
 
 extern "C" bool RenderObjectScion_needsLayout(const void*);
+
+extern "C" bool RenderObjectScion_selfNeedsLayout(const void*);
+
+extern "C" bool RenderObjectScion_needsPositionedMovementLayout(const void*);
+
+extern "C" bool RenderObjectScion_posChildNeedsLayout(const void*);
 
 extern "C" bool RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(const void*);
 
@@ -158,6 +194,8 @@ extern "C" bool RenderObjectScion_capturedInViewTransition(const void*);
 extern "C" bool RenderObjectScion_effectiveCapturedInViewTransition(const void*);
 
 extern "C" void* RenderObjectScion_view(const void*);
+
+extern "C" void* RenderObjectScion_node(const void*);
 
 extern "C" void* RenderObjectScion_document(const void*);
 
@@ -344,6 +382,10 @@ extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
+extern "C" bool RenderBoxScion_hasRenderOverflow(const void*);
+
+extern "C" bool RenderBoxScion_hasVisualOverflow(const void*);
+
 extern "C" IntPointRaw RenderBoxScion_scrollPosition(const void*);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
@@ -351,6 +393,14 @@ extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
+
+extern "C" int32_t RenderBlockScion_borderTop(const void*);
+
+extern "C" int32_t RenderBlockScion_borderBottom(const void*);
+
+extern "C" int32_t RenderBlockScion_borderLeft(const void*);
+
+extern "C" int32_t RenderBlockScion_borderRight(const void*);
 
 extern "C" void RenderBlockScion_setMarginBeforeForChild(const void*, void*, int32_t);
 
@@ -519,7 +569,11 @@ RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<Rend
 
 RenderFragmentedFlow* RenderObjectScion::enclosingFragmentedFlow() const { return static_cast<RenderFragmentedFlow*>(RenderObjectScion_enclosingFragmentedFlow(m_handle)); }
 
+bool RenderObjectScion::isPseudoElement() const { return RenderObjectScion_isPseudoElement(m_handle); }
+
 bool RenderObjectScion::isRenderElement() const { return RenderObjectScion_isRenderElement(m_handle); }
+
+bool RenderObjectScion::isRenderBoxModelObject() const { return RenderObjectScion_isRenderBoxModelObject(m_handle); }
 
 bool RenderObjectScion::isRenderBlock() const { return RenderObjectScion_isRenderBlock(m_handle); }
 
@@ -529,9 +583,17 @@ bool RenderObjectScion::isRenderInline() const { return RenderObjectScion_isRend
 
 bool RenderObjectScion::isRenderLayerModelObject() const { return RenderObjectScion_isRenderLayerModelObject(m_handle); }
 
+bool RenderObjectScion::isRenderDetailsMarker() const { return RenderObjectScion_isRenderDetailsMarker(m_handle); }
+
 bool RenderObjectScion::isRenderEmbeddedObject() const { return RenderObjectScion_isRenderEmbeddedObject(m_handle); }
 
+bool RenderObjectScion::isFieldset() const { return RenderObjectScion_isFieldset(m_handle); }
+
+bool RenderObjectScion::isRenderFileUploadControl() const { return RenderObjectScion_isRenderFileUploadControl(m_handle); }
+
 bool RenderObjectScion::isRenderListItem() const { return RenderObjectScion_isRenderListItem(m_handle); }
+
+bool RenderObjectScion::isRenderListMarker() const { return RenderObjectScion_isRenderListMarker(m_handle); }
 
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
 
@@ -540,6 +602,8 @@ bool RenderObjectScion::isRenderIFrame() const { return RenderObjectScion_isRend
 bool RenderObjectScion::isRenderImage() const { return RenderObjectScion_isRenderImage(m_handle); }
 
 bool RenderObjectScion::isRenderReplica() const { return RenderObjectScion_isRenderReplica(m_handle); }
+
+bool RenderObjectScion::isRenderTableCell() const { return RenderObjectScion_isRenderTableCell(m_handle); }
 
 bool RenderObjectScion::isRenderVideo() const { return RenderObjectScion_isRenderVideo(m_handle); }
 
@@ -574,11 +638,23 @@ bool RenderObjectScion::isRenderSVGRoot() const { return RenderObjectScion_isRen
 
 bool RenderObjectScion::isRenderSVGContainer() const { return RenderObjectScion_isRenderSVGContainer(m_handle); }
 
+bool RenderObjectScion::isLegacyRenderSVGContainer() const { return RenderObjectScion_isLegacyRenderSVGContainer(m_handle); }
+
+bool RenderObjectScion::isRenderSVGGradientStop() const { return RenderObjectScion_isRenderSVGGradientStop(m_handle); }
+
 bool RenderObjectScion::isLegacyRenderSVGHiddenContainer() const { return RenderObjectScion_isLegacyRenderSVGHiddenContainer(m_handle); }
 
 bool RenderObjectScion::isRenderSVGHiddenContainer() const { return RenderObjectScion_isRenderSVGHiddenContainer(m_handle); }
 
+bool RenderObjectScion::isLegacyRenderSVGShape() const { return RenderObjectScion_isLegacyRenderSVGShape(m_handle); }
+
 bool RenderObjectScion::isRenderSVGText() const { return RenderObjectScion_isRenderSVGText(m_handle); }
+
+bool RenderObjectScion::isRenderSVGInlineText() const { return RenderObjectScion_isRenderSVGInlineText(m_handle); }
+
+bool RenderObjectScion::isLegacyRenderSVGImage() const { return RenderObjectScion_isLegacyRenderSVGImage(m_handle); }
+
+bool RenderObjectScion::isLegacyRenderSVGResourceContainer() const { return RenderObjectScion_isLegacyRenderSVGResourceContainer(m_handle); }
 
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
@@ -593,6 +669,10 @@ bool RenderObjectScion::isOutOfFlowPositioned() const { return RenderObjectScion
 bool RenderObjectScion::isFixedPositioned() const { return RenderObjectScion_isFixedPositioned(m_handle); }
 
 bool RenderObjectScion::isStickilyPositioned() const { return RenderObjectScion_isStickilyPositioned(m_handle); }
+
+bool RenderObjectScion::isRenderText() const { return RenderObjectScion_isRenderText(m_handle); }
+
+bool RenderObjectScion::isRenderLineBreak() const { return RenderObjectScion_isRenderLineBreak(m_handle); }
 
 bool RenderObjectScion::isRenderBox() const { return RenderObjectScion_isRenderBox(m_handle); }
 
@@ -613,6 +693,12 @@ bool RenderObjectScion::hasOutlineAutoAncestor() const { return RenderObjectScio
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
+
+bool RenderObjectScion::selfNeedsLayout() const { return RenderObjectScion_selfNeedsLayout(m_handle); }
+
+bool RenderObjectScion::needsPositionedMovementLayout() const { return RenderObjectScion_needsPositionedMovementLayout(m_handle); }
+
+bool RenderObjectScion::posChildNeedsLayout() const { return RenderObjectScion_posChildNeedsLayout(m_handle); }
 
 bool RenderObjectScion::needsSimplifiedNormalFlowLayoutOnly() const { return RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(m_handle); }
 
@@ -635,6 +721,8 @@ bool RenderObjectScion::capturedInViewTransition() const { return RenderObjectSc
 bool RenderObjectScion::effectiveCapturedInViewTransition() const { return RenderObjectScion_effectiveCapturedInViewTransition(m_handle); }
 
 RenderView& RenderObjectScion::view() const { return *static_cast<RenderView*>(RenderObjectScion_view(m_handle)); }
+
+Node* RenderObjectScion::node() const { return static_cast<Node*>(RenderObjectScion_node(m_handle)); }
 
 Document& RenderObjectScion::document() const { return *static_cast<Document*>(RenderObjectScion_document(m_handle)); }
 
@@ -1077,6 +1165,16 @@ LayoutPoint RenderBoxScion::topLeftLocation() const
     return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
 }
 
+bool RenderBoxScion::hasRenderOverflow() const
+{
+    return RenderBoxScion_hasRenderOverflow(m_handle);
+}
+
+bool RenderBoxScion::hasVisualOverflow() const
+{
+    return RenderBoxScion_hasVisualOverflow(m_handle);
+}
+
 ScrollPosition RenderBoxScion::scrollPosition() const
 {
     const auto position = RenderBoxScion_scrollPosition(m_handle);
@@ -1096,6 +1194,26 @@ void RenderBoxScion::willBeDestroyed()
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
 {
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+LayoutUnit RenderBlockScion::borderTop() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_borderTop(m_handle));
+}
+
+LayoutUnit RenderBlockScion::borderBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_borderBottom(m_handle));
+}
+
+LayoutUnit RenderBlockScion::borderLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_borderLeft(m_handle));
+}
+
+LayoutUnit RenderBlockScion::borderRight() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_borderRight(m_handle));
 }
 
 void RenderBlockScion::setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const
