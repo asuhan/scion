@@ -985,6 +985,11 @@ extern "C" WEBCORE_EXPORT ScopedNameRaw RenderStyle_viewTransitionName(const voi
     };
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setDisplay(const void* p, uint8_t value)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setDisplay(static_cast<WebCore::DisplayType>(value));
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textAlignLast(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textAlignLast());

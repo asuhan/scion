@@ -1963,10 +1963,7 @@ class RenderStyleWrapper: Equatable {
       scopeOrdinal: Style.ScopeOrdinal(rawValue: raw.scopeOrdinal)!, isIdentifier: raw.isIdentifier)
   }
 
-  func setDisplay(value: DisplayType) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setDisplay(value: DisplayType) { wk_interop.RenderStyle_setDisplay(p!, value.rawValue) }
 
   func setPosition(v: PositionType) {
     // TODO(asuhan): implement this
