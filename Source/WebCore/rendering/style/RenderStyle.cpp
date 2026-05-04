@@ -959,6 +959,11 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setFloating(const void* p, uint8_t v)
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFloating(static_cast<WebCore::Float>(v));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_borderIsEquivalentForPainting(const void* p, const void* other)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderIsEquivalentForPainting(*static_cast<const WebCore::RenderStyle*>(other));
+}
+
 struct ScopedNameRaw {
     const void* name;
     int8_t scopeOrdinal;

@@ -1020,8 +1020,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderIsEquivalentForPainting(_ otherStyle: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_borderIsEquivalentForPainting(p!, otherStyle.p!)
   }
 
   func outlineSize() -> Float32 {

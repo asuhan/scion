@@ -1112,6 +1112,7 @@ uint8_t RenderStyle_textEmphasisMark(const void*);
 uint8_t RenderStyle_textEmphasisPosition(const void*);
 bool RenderStyle_hasTextCombine(const void*);
 void RenderStyle_setFloating(const void*, uint8_t);
+bool RenderStyle_borderIsEquivalentForPainting(const void*, const void*);
 struct ScopedNameRaw RenderStyle_viewTransitionName(const void*);
 uint8_t RenderStyle_textAlignLast(const void*);
 struct LengthBoxRaw RenderStyle_clip(const void*);
