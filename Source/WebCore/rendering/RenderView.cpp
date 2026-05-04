@@ -221,9 +221,9 @@ void RenderView::updateLogicalWidth()
     setLogicalWidth(shouldUsePrintingLayout() ? m_pageLogicalSize->width() : LayoutUnit(viewLogicalWidth()));
 }
 
-LayoutUnit RenderView::availableLogicalHeight(AvailableLogicalHeightType) const
+LayoutUnit RenderView::availableLogicalHeight(AvailableLogicalHeightType heightType) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->availableLogicalHeight(heightType); }
     // Make sure block progression pagination for percentages uses the column extent and
     // not the view's extent. See https://bugs.webkit.org/show_bug.cgi?id=135204.
     if (multiColumnFlow() && multiColumnFlow()->firstMultiColumnSet())

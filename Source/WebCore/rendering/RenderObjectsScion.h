@@ -515,6 +515,8 @@ public:
 
     RenderBox::LogicalExtentComputedValues computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const;
 
+    LayoutUnit availableLogicalHeight(AvailableLogicalHeightType) const;
+
     int viewHeight() const;
 
     int viewWidth() const;

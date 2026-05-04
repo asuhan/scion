@@ -457,6 +457,8 @@ extern "C" void RenderViewScion_updateLogicalWidth(void*);
 
 extern "C" struct LogicalExtentComputedValuesRaw RenderViewScion_computeLogicalHeight(const void*, int32_t, int32_t);
 
+extern "C" int32_t RenderViewScion_availableLogicalHeight(void*, bool);
+
 extern "C" int32_t RenderViewScion_viewHeight(const void*);
 
 extern "C" int32_t RenderViewScion_viewWidth(const void*);
@@ -1339,6 +1341,11 @@ RenderBox::LogicalExtentComputedValues RenderViewScion::computeLogicalHeight(Lay
         LayoutUnit::fromRawValue(e.position),
         { LayoutUnit::fromRawValue(e.margins.before), LayoutUnit::fromRawValue(e.margins.after), LayoutUnit::fromRawValue(e.margins.start), LayoutUnit::fromRawValue(e.margins.end) }
     };
+}
+
+LayoutUnit RenderViewScion::availableLogicalHeight(AvailableLogicalHeightType heightType) const
+{
+    return LayoutUnit::fromRawValue(RenderViewScion_availableLogicalHeight(m_handle, heightType == IncludeMarginBorderPadding));
 }
 
 int RenderViewScion::viewHeight() const

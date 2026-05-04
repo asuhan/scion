@@ -665,6 +665,17 @@ func RenderViewScion_computeLogicalHeight(
       start: e.margins.start.rawValue(), end: e.margins.end.rawValue()))
 }
 
+@_cdecl("RenderViewScion_availableLogicalHeight")
+func RenderViewScion_availableLogicalHeight(
+  _ viewRaw: UnsafeMutableRawPointer, _ includeMarginBorderPadding: Bool
+) -> Int32 {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let availableLogicalHeight = view.availableLogicalHeight(
+    heightType:
+      includeMarginBorderPadding ? .IncludeMarginBorderPadding : .ExcludeMarginBorderPadding)
+  return availableLogicalHeight.rawValue()
+}
+
 @_cdecl("RenderViewScion_viewHeight")
 func RenderViewScion_viewHeight(_ viewRaw: UnsafeRawPointer) -> Int32 {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
