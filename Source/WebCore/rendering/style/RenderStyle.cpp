@@ -990,6 +990,11 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setDisplay(const void* p, uint8_t val
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setDisplay(static_cast<WebCore::DisplayType>(value));
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setPosition(const void* p, uint8_t v)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setPosition(static_cast<WebCore::PositionType>(v));
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textAlignLast(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textAlignLast());

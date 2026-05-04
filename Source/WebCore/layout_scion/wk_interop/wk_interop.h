@@ -1115,6 +1115,7 @@ void RenderStyle_setFloating(const void*, uint8_t);
 bool RenderStyle_borderIsEquivalentForPainting(const void*, const void*);
 struct ScopedNameRaw RenderStyle_viewTransitionName(const void*);
 void RenderStyle_setDisplay(const void*, uint8_t);
+void RenderStyle_setPosition(const void*, uint8_t);
 uint8_t RenderStyle_textAlignLast(const void*);
 struct LengthBoxRaw RenderStyle_clip(const void*);
 bool RenderStyle_hasClip(const void*);
