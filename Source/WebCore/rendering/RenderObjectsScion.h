@@ -541,6 +541,8 @@ public:
 
     void repaintRootContents();
 
+    void repaintViewAndCompositedLayers();
+
     void paint(PaintInfo&, const LayoutPoint&);
 
     RenderElement* rendererForRootBackground() const;

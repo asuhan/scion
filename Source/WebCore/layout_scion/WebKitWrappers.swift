@@ -735,6 +735,12 @@ func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
   view.repaintRootContents()
 }
 
+@_cdecl("RenderViewScion_repaintViewAndCompositedLayers")
+func RenderViewScion_repaintViewAndCompositedLayers(_ viewRaw: UnsafeMutableRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.repaintViewAndCompositedLayers()
+}
+
 @_cdecl("RenderViewScion_paint")
 func RenderViewScion_paint(
   _ viewRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,

@@ -700,7 +700,10 @@ void RenderView::flushAccumulatedRepaintRegion() const
 
 void RenderView::repaintViewAndCompositedLayers()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->repaintViewAndCompositedLayers();
+        return;
+    }
     repaintRootContents();
 
     RenderLayerCompositor& compositor = this->compositor();
