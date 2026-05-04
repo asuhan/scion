@@ -613,6 +613,7 @@ void RenderLayerCompositor_destroy(void*);
 bool RenderLayerCompositor_usesCompositing(const void* p);
 bool RenderLayerCompositor_hasContentCompositingLayers(const void*);
 void RenderLayerCompositor_rootBackgroundColorOrTransparencyChanged(void*);
+void RenderLayerCompositor_repaintCompositedLayers(void*);
 void RenderLayerCompositor_setIsInWindow(void*, bool);
 bool RenderLayoutState_isPaginated(const void*);
 int32_t RenderLayoutState_pageLogicalHeight(const void*);

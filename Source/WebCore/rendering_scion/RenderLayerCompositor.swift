@@ -1193,7 +1193,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Repaint all composited layers.
   func repaintCompositedLayers() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayerCompositor_repaintCompositedLayers(interop())
+      return
+    }
     recursiveRepaintLayer(rootRenderLayer())
   }
 

@@ -135,6 +135,11 @@ extern "C" WEBCORE_EXPORT void RenderLayerCompositor_rootBackgroundColorOrTransp
     return static_cast<WebCore::RenderLayerCompositor*>(p)->rootBackgroundColorOrTransparencyChanged();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayerCompositor_repaintCompositedLayers(void* p)
+{
+    static_cast<WebCore::RenderLayerCompositor*>(p)->repaintCompositedLayers();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayerCompositor_setIsInWindow(void* p, bool isInWindow)
 {
     static_cast<WebCore::RenderLayerCompositor*>(p)->setIsInWindow(isInWindow);
