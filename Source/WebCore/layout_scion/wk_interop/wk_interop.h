@@ -1117,6 +1117,7 @@ struct ScopedNameRaw RenderStyle_viewTransitionName(const void*);
 void RenderStyle_setDisplay(const void*, uint8_t);
 void RenderStyle_setPosition(const void*, uint8_t);
 void RenderStyle_setTextAlign(const void*, uint8_t);
+void RenderStyle_setDirection(const void*, bool);
 uint8_t RenderStyle_textAlignLast(const void*);
 struct LengthBoxRaw RenderStyle_clip(const void*);
 bool RenderStyle_hasClip(const void*);

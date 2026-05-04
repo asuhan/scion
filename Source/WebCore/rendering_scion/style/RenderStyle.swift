@@ -2016,10 +2016,7 @@ class RenderStyleWrapper: Equatable {
     wk_interop.RenderStyle_setTextAlign(p!, v.rawValue)
   }
 
-  func setDirection(_ v: TextDirection) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setDirection(_ v: TextDirection) { wk_interop.RenderStyle_setDirection(p!, v == .RTL) }
 
   func setMaskBorder(image: NinePieceImage) {
     // TODO(asuhan): implement this
