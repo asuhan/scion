@@ -893,10 +893,7 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_hasTextCombine(p!)
   }
 
-  func setFloating(v: Float) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setFloating(v: Float) { wk_interop.RenderStyle_setFloating(p!, v.rawValue) }
 
   func getRoundedInnerBorderFor(
     borderRect: LayoutRectWrapper, topWidth: LayoutUnit, bottomWidth: LayoutUnit,

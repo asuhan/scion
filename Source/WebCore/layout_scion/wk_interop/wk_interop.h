@@ -1111,6 +1111,7 @@ const void* RenderStyle_marginStart(const void*);
 uint8_t RenderStyle_textEmphasisMark(const void*);
 uint8_t RenderStyle_textEmphasisPosition(const void*);
 bool RenderStyle_hasTextCombine(const void*);
+void RenderStyle_setFloating(const void*, uint8_t);
 struct ScopedNameRaw RenderStyle_viewTransitionName(const void*);
 uint8_t RenderStyle_textAlignLast(const void*);
 struct LengthBoxRaw RenderStyle_clip(const void*);

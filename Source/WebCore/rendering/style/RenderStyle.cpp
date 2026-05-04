@@ -954,6 +954,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasTextCombine(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasTextCombine();
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setFloating(const void* p, uint8_t v)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFloating(static_cast<WebCore::Float>(v));
+}
+
 struct ScopedNameRaw {
     const void* name;
     int8_t scopeOrdinal;
