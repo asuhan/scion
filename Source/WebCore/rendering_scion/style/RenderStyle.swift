@@ -2013,8 +2013,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setTextAlign(_ v: TextAlignMode) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setTextAlign(p!, v.rawValue)
   }
 
   func setDirection(_ v: TextDirection) {
