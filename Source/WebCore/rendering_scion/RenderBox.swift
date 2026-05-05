@@ -4203,13 +4203,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func hasScrollableOverflowX() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return scrollsOverflowX() && hasHorizontalOverflow()
   }
 
   private func hasScrollableOverflowY() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return scrollsOverflowY() && hasVerticalOverflow()
   }
 
   func isScrollContainerX() -> Bool {
