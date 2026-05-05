@@ -2360,10 +2360,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  static func initialDisplay() -> DisplayType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func initialDisplay() -> DisplayType { return .Inline }
 
   static func initialTextAlign() -> TextAlignMode {
     return .Start
