@@ -865,10 +865,7 @@ class RenderTreeUpdater {
     }
   }
 
-  func renderView() -> RenderViewWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func renderView() -> RenderViewWrapper { return document.renderView()! }
 
   private let document: Document
   private let styleUpdate: Style.Update? = nil
