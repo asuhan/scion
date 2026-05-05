@@ -1985,8 +1985,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasTrimmedMargin(marginTrimType: MarginTrimType?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !isInFlow() {
+      return false
+    }
+    if !hasRareData() {
+      return false
+    }
+    return marginTrimType != nil
+      ? rareData().trimmedMargins.contains(marginTrimType!) : !rareData().trimmedMargins.isEmpty
   }
 
   override func offsetFromContainer(
