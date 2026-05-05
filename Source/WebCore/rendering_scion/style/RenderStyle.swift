@@ -2183,8 +2183,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setLineBoxContain(c: LineBoxContain) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setLineBoxContain(p!, c.rawValue)
   }
 
   static func paintTypesForPaintOrder(order: PaintOrder) -> ArraySlice<PaintType> {
