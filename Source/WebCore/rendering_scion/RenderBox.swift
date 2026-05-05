@@ -1980,8 +1980,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearTrimmedMarginsMarkings() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasRareData())
+    ensureRareData().trimmedMargins = []
   }
 
   func hasTrimmedMargin(marginTrimType: MarginTrimType?) -> Bool {

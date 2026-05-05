@@ -3597,7 +3597,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   class RenderObjectRareData {
     var hasReflection = false
     var hasOutlineAutoAncestor = false
-    let trimmedMargins: MarginTrimType = []
+    var trimmedMargins: MarginTrimType = []
 
     // From RenderElement
     var referencedSVGResources: ReferencedSVGResources? = nil
