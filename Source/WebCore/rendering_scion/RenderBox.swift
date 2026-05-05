@@ -1595,8 +1595,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func marginInlineStart(writingMode: WritingMode) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginBox.start(writingMode)
   }
 
   func setMarginBefore(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
