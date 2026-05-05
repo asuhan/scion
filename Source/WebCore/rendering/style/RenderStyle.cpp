@@ -631,6 +631,11 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setFlexWrap(const void* p, uint8_t wr
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFlexWrap(static_cast<WebCore::FlexWrap>(wrap));
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setColumnSpan(const void* p, bool span)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setColumnSpan(span ? WebCore::ColumnSpan::All : WebCore::ColumnSpan::None);
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, int32_t width, int32_t height)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));

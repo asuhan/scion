@@ -2159,8 +2159,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setColumnSpan(_ span: ColumnSpan) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setColumnSpan(p!, span == .All)
   }
 
   func inheritColumnPropertiesFrom(_ parent: RenderStyleWrapper) {
