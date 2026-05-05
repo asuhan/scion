@@ -2129,15 +2129,9 @@ class RenderStyleWrapper: Equatable {
 
   func setUsedZIndex(index: Int32) { wk_interop.RenderStyle_setUsedZIndex(p!, index) }
 
-  func setFlexGrow(_ grow: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setFlexGrow(_ grow: Float32) { wk_interop.RenderStyle_setFlexGrow(p!, grow) }
 
-  func setFlexShrink(_ shrink: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setFlexShrink(_ shrink: Float32) { wk_interop.RenderStyle_setFlexShrink(p!, shrink) }
 
   func setAlignContent(_ data: StyleContentAlignmentData) {
     // TODO(asuhan): implement this
