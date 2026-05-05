@@ -124,7 +124,7 @@ enum BoxSide: UInt8 {
 
 let allBoxSides: [BoxSide] = [.Top, .Right, .Bottom, .Left]
 
-private func mapLogicalSideToPhysicalSide(_ flow: TextFlow, _ logicalSide: LogicalBoxSide)
+func mapLogicalSideToPhysicalSide(_ flow: TextFlow, _ logicalSide: LogicalBoxSide)
   -> BoxSide
 {
   let isBlock = logicalSide == .BlockStart || logicalSide == .BlockEnd

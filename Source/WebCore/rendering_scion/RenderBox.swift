@@ -1568,8 +1568,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func marginLogicalLeft(overrideStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginBox.start((overrideStyle ?? style()).writingMode())
   }
 
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
