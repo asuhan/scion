@@ -622,22 +622,26 @@ class RenderTreeUpdater {
   }
 
   private class Parent {
-    let element: ElementWrapper? = nil
-    let update: Style.ElementUpdate? = nil
-    let renderTreePosition: RenderTreePosition? = nil
+    let element: ElementWrapper?
+    let update: Style.ElementUpdate?
+    let renderTreePosition: RenderTreePosition?
 
     var didCreateOrDestroyChildRenderer = false
     var previousChildRenderer: RenderObjectWrapper? = nil
     var hasPrecedingInFlowChild = false
 
     init(root: ContainerNodeWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      element = root as? ElementWrapper
+      update = nil
+      renderTreePosition = RenderTreePosition(parent: root.containerRenderer()!)
     }
 
     init(element: ElementWrapper, update: Style.ElementUpdate?) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.element = element
+      self.update = update
+      renderTreePosition =
+        element.containerRenderer() != nil
+        ? RenderTreePosition(parent: element.containerRenderer()!) : nil
     }
   }
 
