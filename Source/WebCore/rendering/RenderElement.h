@@ -118,7 +118,7 @@ public:
 
     // Note that even if these 2 "canContain" functions return true for a particular renderer, it does not necessarily mean the renderer is the containing block (see containingBlockForAbsolute(Fixed)Position).
     inline bool canContainFixedPositionObjects() const;
-    inline bool canContainAbsolutelyPositionedObjects() const;
+    bool canContainAbsolutelyPositionedObjects() const;
     bool canEstablishContainingBlockWithTransform() const;
 
     inline bool shouldApplyLayoutContainment() const;

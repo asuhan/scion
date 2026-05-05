@@ -232,6 +232,18 @@ const Layout::ElementBox* RenderElement::layoutBox() const
     return downcast<Layout::ElementBox>(RenderObject::layoutBox());
 }
 
+bool RenderElement::canContainAbsolutelyPositionedObjects() const
+{
+    if (m_scion) { return m_scion->canContainAbsolutelyPositionedObjects(); }
+    return isRenderView()
+        || style().position() != PositionType::Static
+        || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
+        || (hasBackdropFilter() && !isDocumentElementRenderer())
+        || (isRenderBlock() && style().willChange() && style().willChange()->createsContainingBlockForAbsolutelyPositioned(isDocumentElementRenderer()))
+        || isRenderOrLegacyRenderSVGForeignObject()
+        || shouldApplyLayoutOrPaintContainment();
+}
+
 bool RenderElement::isContentDataSupported(const ContentData& contentData)
 {
     // Minimal support for content properties replacing an entire element.

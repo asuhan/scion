@@ -70,18 +70,6 @@ inline FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& sty
     return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox()));
 }
 
-inline bool RenderElement::canContainAbsolutelyPositionedObjects() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return isRenderView()
-        || style().position() != PositionType::Static
-        || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
-        || (hasBackdropFilter() && !isDocumentElementRenderer())
-        || (isRenderBlock() && style().willChange() && style().willChange()->createsContainingBlockForAbsolutelyPositioned(isDocumentElementRenderer()))
-        || isRenderOrLegacyRenderSVGForeignObject()
-        || shouldApplyLayoutOrPaintContainment();
-}
-
 inline bool RenderElement::canContainFixedPositionObjects() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

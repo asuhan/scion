@@ -1804,6 +1804,14 @@ func RenderElementScion_lastChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutab
   return lastChild.id()
 }
 
+@_cdecl("RenderElementScion_canContainAbsolutelyPositionedObjects")
+func RenderElementScion_canContainAbsolutelyPositionedObjects(_ elementRaw: UnsafeRawPointer)
+  -> Bool
+{
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.canContainAbsolutelyPositionedObjects()
+}
+
 @_cdecl("RenderElementScion_shouldApplyPaintContainment")
 func RenderElementScion_shouldApplyPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

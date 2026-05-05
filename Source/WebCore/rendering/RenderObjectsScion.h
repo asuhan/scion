@@ -294,6 +294,8 @@ public:
 
     RenderObject* lastChild() const;
 
+    bool canContainAbsolutelyPositionedObjects() const;
+
     bool shouldApplyPaintContainment() const;
 
     void didAttachChild(RenderObject&);
