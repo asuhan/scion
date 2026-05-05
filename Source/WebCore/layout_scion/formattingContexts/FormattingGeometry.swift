@@ -535,13 +535,11 @@ class FormattingGeometry {
   }
 
   func computedMinWidth(layoutBox: BoxWrapper, containingBlockWidth: LayoutUnit) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computedWidthValue(layoutBox, .Min, containingBlockWidth)
   }
 
   func computedMaxWidth(layoutBox: BoxWrapper, containingBlockWidth: LayoutUnit) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computedWidthValue(layoutBox, .Max, containingBlockWidth)
   }
 
   func constrainByMinMaxWidth(layoutBox: BoxWrapper, intrinsicWidth: IntrinsicWidthConstraints)
@@ -1482,6 +1480,73 @@ class FormattingGeometry {
     }
 
     return valueForLength(length: height, maximumValue: containingBlockHeightCopy!)
+  }
+
+  enum WidthType {
+    case Min
+    case Max
+    case Normal
+  }
+  private func computedWidthValue(
+    _ layoutBox: BoxWrapper, _ widthType: WidthType, _ containingBlockWidth: LayoutUnit
+  ) -> LayoutUnit? {
+    // Applies to: all elements except non-replaced inlines (out-of-flow check is required for positioned <br> as for some reason we don't blockify them).
+    assert(!layoutBox.isInlineBox() || layoutBox.isOutOfFlowPositioned())
+
+    let width = { () in
+      let style = layoutBox.style
+      switch widthType {
+      case .Normal:
+        return style.logicalWidth()
+      case .Min:
+        return style.logicalMinWidth()
+      case .Max:
+        return style.logicalMaxWidth()
+      }
+    }()
+    if let computedValue = computedValue(
+      geometryProperty: width, containingBlockWidth: containingBlockWidth)
+    {
+      return computedValue
+    }
+
+    if width.isMinContent() || width.isMaxContent() || width.isFitContent() {
+      guard let elementBox = layoutBox as? ElementBoxWrapper else { return nil }
+      // FIXME: Consider splitting up computedIntrinsicWidthConstraints so that we could computed the min and max values separately.
+      let intrinsicWidthConstraints = { () in
+        if !elementBox.hasInFlowOrFloatingChild() {
+          return IntrinsicWidthConstraints(
+            minimum: LayoutUnit(value: UInt64(0)), maximum: containingBlockWidth)
+        }
+        assert(elementBox.establishesFormattingContext())
+        let layoutState = layoutState()
+        if layoutState.hasFormattingState(formattingContextRoot: elementBox),
+          let intrinsicWidthConstraints = layoutState.formattingStateForFormattingContext(
+            formattingContextRoot: elementBox
+          ).intrinsicWidthConstraints
+        {
+          return intrinsicWidthConstraints
+        }
+        return LayoutContext.createFormattingContext(
+          formattingContextRoot: elementBox, layoutState: layoutState
+        )
+        .computedIntrinsicWidthConstraints()
+      }()
+      if width.isMinContent() {
+        return intrinsicWidthConstraints.minimum
+      }
+      if width.isMaxContent() {
+        return intrinsicWidthConstraints.maximum
+      }
+      assert(width.isFitContent())
+      // If the available space in a given axis is definite, equal to min(max-content size,
+      // max(min-content size, stretch-fit size)). Otherwise, equal to the max-content size in that axis.
+      // FIXME: We don't yet have indefinite available size.
+      return min(
+        intrinsicWidthConstraints.maximum,
+        max(intrinsicWidthConstraints.minimum, containingBlockWidth))
+    }
+    return nil
   }
 
   static func nonAnonymousContainingBlockLogicalHeight(layoutBox: BoxWrapper) -> LengthWrapper {
