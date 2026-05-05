@@ -896,6 +896,7 @@ void RenderStyle_setFlexGrow(const void*, float);
 void RenderStyle_setFlexShrink(const void*, float);
 void RenderStyle_setAlignSelfPosition(const void*, uint8_t);
 void RenderStyle_setFlexDirection(const void*, uint8_t);
+void RenderStyle_setFlexWrap(const void*, uint8_t);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 bool RenderStyle_hasExplicitlySetStrokeWidth(const void*);
 void* RenderStyle_willChange(const void*);

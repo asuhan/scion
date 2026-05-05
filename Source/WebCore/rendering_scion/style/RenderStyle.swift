@@ -2151,10 +2151,7 @@ class RenderStyleWrapper: Equatable {
     wk_interop.RenderStyle_setFlexDirection(p!, direction.rawValue)
   }
 
-  func setFlexWrap(_ wrap: FlexWrap) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setFlexWrap(_ wrap: FlexWrap) { wk_interop.RenderStyle_setFlexWrap(p!, wrap.rawValue) }
 
   func setJustifyContent(_ data: StyleContentAlignmentData) {
     // TODO(asuhan): implement this
