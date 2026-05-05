@@ -1087,6 +1087,7 @@ uint8_t RenderStyle_pointerEvents(const void*);
 uint8_t RenderStyle_usedPointerEvents(const void*);
 uint8_t RenderStyle_usedTransformStyle3D(const void*);
 bool RenderStyle_preserves3D(const void*);
+void RenderStyle_setUnicodeBidi(const void*, uint8_t);
 uint8_t RenderStyle_paintOrder(const void*);
 uint8_t RenderStyle_joinStyle(const void*);
 const void* RenderStyle_strokeWidth(const void*);

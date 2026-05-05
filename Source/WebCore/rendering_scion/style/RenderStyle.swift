@@ -2435,10 +2435,7 @@ class RenderStyleWrapper: Equatable {
 
   func preserves3D() -> Bool { return wk_interop.RenderStyle_preserves3D(p!) }
 
-  func setUnicodeBidi(v: UnicodeBidi) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setUnicodeBidi(v: UnicodeBidi) { wk_interop.RenderStyle_setUnicodeBidi(p!, v.rawValue) }
 
   func setTextWrapMode(v: TextWrapMode) {
     // TODO(asuhan): implement this
