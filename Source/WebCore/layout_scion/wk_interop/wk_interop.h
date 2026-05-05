@@ -1094,6 +1094,7 @@ uint8_t RenderStyle_paintOrder(const void*);
 uint8_t RenderStyle_joinStyle(const void*);
 const void* RenderStyle_strokeWidth(const void*);
 bool RenderStyle_hasVisibleStroke(const void*);
+float RenderStyle_strokeMiterLimit(const void*);
 bool RenderStyle_hasExplicitlySetColor(const void*);
 void* RenderStyle_shapeOutside(const void*);
 const void* RenderStyle_shapeMargin(const void*);

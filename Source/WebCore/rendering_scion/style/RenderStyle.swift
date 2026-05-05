@@ -2464,10 +2464,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func strokeMiterLimit() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func strokeMiterLimit() -> Float32 { return wk_interop.RenderStyle_strokeMiterLimit(p!) }
 
   func svgStyle() -> SVGRenderStyle {
     // TODO(asuhan): implement this

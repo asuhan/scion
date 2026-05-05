@@ -1820,6 +1820,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasVisibleStroke(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasVisibleStroke();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_strokeMiterLimit(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->strokeMiterLimit();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasExplicitlySetColor(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasExplicitlySetColor();
