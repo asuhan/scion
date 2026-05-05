@@ -147,6 +147,12 @@ extension LayoutBoxExtent {
         makeTextFlow(writingMode: writingMode, direction: direction), .InlineStart))
   }
 
+  func end(_ writingMode: WritingMode, _ direction: TextDirection = .LTR) -> LayoutUnit {
+    return at(
+      mapLogicalSideToPhysicalSide(
+        makeTextFlow(writingMode: writingMode, direction: direction), .InlineEnd))
+  }
+
   // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
   mutating func setBefore(_ before: LayoutUnit, _ writingMode: WritingMode) {
     setSide(mapLogicalSideToPhysicalSide(writingMode, .BlockStart), before)
