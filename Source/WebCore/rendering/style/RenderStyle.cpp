@@ -601,6 +601,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoUsedZIndex(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasAutoUsedZIndex();
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setUsedZIndex(const void* p, int32_t index)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setUsedZIndex(index);
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, int32_t width, int32_t height)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));

@@ -891,6 +891,7 @@ bool RenderStyle_isolation(const void*);
 bool RenderStyle_usesStandardScrollbarStyle(const void*);
 int32_t RenderStyle_usedZIndex(const void*);
 bool RenderStyle_hasAutoUsedZIndex(const void*);
+void RenderStyle_setUsedZIndex(const void*, int32_t);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 bool RenderStyle_hasExplicitlySetStrokeWidth(const void*);
 void* RenderStyle_willChange(const void*);

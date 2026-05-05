@@ -2127,10 +2127,7 @@ class RenderStyleWrapper: Equatable {
 
   func hasAutoUsedZIndex() -> Bool { return wk_interop.RenderStyle_hasAutoUsedZIndex(p!) }
 
-  func setUsedZIndex(index: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setUsedZIndex(index: Int32) { wk_interop.RenderStyle_setUsedZIndex(p!, index) }
 
   func setFlexGrow(_ grow: Float32) {
     // TODO(asuhan): implement this
