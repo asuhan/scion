@@ -2275,10 +2275,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  static func initialShapeImageThreshold() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func initialShapeImageThreshold() -> Float32 { return 0 }
 
   func clipPath() -> PathOperation? {
     let clipPathRaw = wk_interop.RenderStyle_clipPath(p!)
