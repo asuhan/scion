@@ -4937,11 +4937,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func logicalVisualOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
     assert(!isNativeImpl())
-    if style.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    let raw = wk_interop.RenderBox_logicalVisualOverflowRectForPropagation(id(), style.p)
+    let raw = wk_interop.RenderBox_logicalVisualOverflowRectForPropagation(id(), style.p!)
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: raw.x),
       y: LayoutUnit.fromRawValue(value: raw.y),
@@ -4977,11 +4973,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func layoutOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
     assert(!isNativeImpl())
-    if style.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    let raw = wk_interop.RenderBox_layoutOverflowRectForPropagation(id(), style.p)
+    let raw = wk_interop.RenderBox_layoutOverflowRectForPropagation(id(), style.p!)
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: raw.x),
       y: LayoutUnit.fromRawValue(value: raw.y),
