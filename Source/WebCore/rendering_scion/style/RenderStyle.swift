@@ -259,8 +259,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func pseudoElementNameArgument() -> AtomStringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return AtomStringWrapper(p: wk_interop.RenderStyle_pseudoElementNameArgument(p!))
   }
 
   func getCachedPseudoStyle(pseudoElementIdentifier: Style.PseudoElementIdentifier)
