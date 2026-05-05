@@ -1802,7 +1802,10 @@ TrackedRendererListHashSet* RenderBlock::positionedObjects() const
 
 void RenderBlock::insertPositionedObject(RenderBox& positioned)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->insertPositionedObject(positioned);
+        return;
+    }
     ASSERT(!isAnonymousBlock());
 
     positioned.clearOverridingContainingBlockContentSize();

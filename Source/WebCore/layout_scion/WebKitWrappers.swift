@@ -2233,6 +2233,15 @@ func RenderBlockFlowScion_styleWillChange(
   blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
 }
 
+@_cdecl("RenderBlockScion_insertPositionedObject")
+func RenderBlockScion_insertPositionedObject(
+  _ blockRaw: UnsafeMutableRawPointer, _ positionedRaw: UnsafeMutableRawPointer
+) {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let positioned = createRenderObjectWrapperOrNative(positionedRaw) as! RenderBoxWrapper
+  block.insertPositionedObject(positioned: positioned)
+}
+
 @_cdecl("RenderBlockScion_borderTop")
 func RenderBlockScion_borderTop(_ blockRaw: UnsafeRawPointer) -> Int32 {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

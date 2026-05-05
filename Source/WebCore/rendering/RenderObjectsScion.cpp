@@ -400,6 +400,8 @@ extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
+extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
+
 extern "C" int32_t RenderBlockScion_borderTop(const void*);
 
 extern "C" int32_t RenderBlockScion_borderBottom(const void*);
@@ -1213,6 +1215,12 @@ void RenderBoxScion::willBeDestroyed()
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
 {
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderBlockScion::insertPositionedObject(RenderBox& positioned)
+{
+    assert(!positioned.scion());
+    RenderBlockScion_insertPositionedObject(m_handle, &positioned);
 }
 
 LayoutUnit RenderBlockScion::borderTop() const

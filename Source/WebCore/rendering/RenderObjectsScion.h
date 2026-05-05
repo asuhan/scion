@@ -444,6 +444,8 @@ public:
     {
     }
 
+    void insertPositionedObject(RenderBox&);
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;
