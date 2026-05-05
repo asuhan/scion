@@ -2445,10 +2445,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func capStyle() -> LineCap {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func capStyle() -> LineCap { return LineCap(rawValue: RenderStyle_capStyle(p!))! }
 
   func paintOrder() -> PaintOrder {
     return PaintOrder(rawValue: wk_interop.RenderStyle_paintOrder(p!))!
