@@ -3179,6 +3179,15 @@ void RenderObject::setNormalChildNeedsLayoutBit(bool b)
     m_stateBitfields.setFlag(StateFlag::NormalChildNeedsLayout, b);
 }
 
+void RenderObject::setPosChildNeedsLayoutBit(bool b)
+{
+    if (m_scion) {
+        m_scion->setPosChildNeedsLayoutBit(b);
+        return;
+    }
+    m_stateBitfields.setFlag(StateFlag::PosChildNeedsLayout, b);
+}
+
 TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
 {
     ts << renderer.debugDescription();

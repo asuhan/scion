@@ -1711,11 +1711,7 @@ protected:
         m_stateBitfields.setFlag(StateFlag::NeedsPositionedMovementLayout, b);
     }
     void setNormalChildNeedsLayoutBit(bool b);
-    void setPosChildNeedsLayoutBit(bool b)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_stateBitfields.setFlag(StateFlag::PosChildNeedsLayout, b);
-    }
+    void setPosChildNeedsLayoutBit(bool b);
     void setNeedsSimplifiedNormalFlowLayoutBit(bool b)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
