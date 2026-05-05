@@ -1959,6 +1959,10 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_usesStandardScrollbarStyle(p!)
   }
 
+  func usesLegacyScrollbarStyle() -> Bool {
+    return hasPseudoStyle(pseudo: .WebKitScrollbar) && !usesStandardScrollbarStyle()
+  }
+
   func viewTransitionName() -> Style.ScopedName? {
     let raw = wk_interop.RenderStyle_viewTransitionName(p!)
     if !raw.is_valid {

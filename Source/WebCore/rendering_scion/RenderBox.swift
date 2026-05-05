@@ -4144,8 +4144,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func canUseOverlayScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !style().usesLegacyScrollbarStyle() && ScrollbarTheme.theme().usesOverlayScrollbars()
   }
 
   func hasAutoScrollbar(_ orientation: ScrollbarOrientation) -> Bool {
