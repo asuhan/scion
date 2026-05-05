@@ -2437,10 +2437,7 @@ class RenderStyleWrapper: Equatable {
 
   func setUnicodeBidi(v: UnicodeBidi) { wk_interop.RenderStyle_setUnicodeBidi(p!, v.rawValue) }
 
-  func setTextWrapMode(v: TextWrapMode) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setTextWrapMode(v: TextWrapMode) { wk_interop.RenderStyle_setTextWrapMode(p!, v == .NoWrap) }
 
   @discardableResult
   func setFontDescription(description: FontCascadeDescriptionWrapper) -> Bool {
