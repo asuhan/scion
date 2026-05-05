@@ -2144,8 +2144,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setAlignSelfPosition(_ position: ItemPosition) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setAlignSelfPosition(p!, position.rawValue)
   }
 
   func setFlexDirection(_ direction: FlexDirection) {

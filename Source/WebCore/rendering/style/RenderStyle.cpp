@@ -616,6 +616,11 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setFlexShrink(const void* p, float sh
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFlexShrink(shrink);
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setAlignSelfPosition(const void* p, uint8_t position)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setAlignSelfPosition(static_cast<WebCore::ItemPosition>(position));
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, int32_t width, int32_t height)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));
