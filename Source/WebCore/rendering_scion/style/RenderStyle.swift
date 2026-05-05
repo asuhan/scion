@@ -710,8 +710,14 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isCollapsibleWhiteSpace(_ character: UChar) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch character {
+    case UChar(Character(" ").asciiValue!), UChar(Character("\t").asciiValue!):
+      return collapseWhiteSpace()
+    case UChar(Character("\n").asciiValue!):
+      return !preserveNewline()
+    default:
+      return false
+    }
   }
 
   func marginStart() -> LengthWrapper {
