@@ -133,6 +133,8 @@ extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isSVGRenderer(const void*);
 
+extern "C" bool RenderObjectScion_isAnonymousBlock(const void*);
+
 extern "C" bool RenderObjectScion_isPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isInFlowPositioned(const void*);
@@ -665,6 +667,8 @@ bool RenderObjectScion::isLegacyRenderSVGResourceContainer() const { return Rend
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
 bool RenderObjectScion::isSVGRenderer() const { return RenderObjectScion_isSVGRenderer(m_handle); }
+
+bool RenderObjectScion::isAnonymousBlock() const { return RenderObjectScion_isAnonymousBlock(m_handle); }
 
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
 

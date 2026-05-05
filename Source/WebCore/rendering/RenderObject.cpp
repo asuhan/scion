@@ -3414,6 +3414,25 @@ bool RenderObject::isSVGRenderer() const
     return isRenderOrLegacyRenderSVGRoot() || isRenderOrLegacyRenderSVGModelObject() || isRenderSVGBlock() || isRenderSVGInline();
 }
 
+bool RenderObject::isAnonymousBlock() const
+{
+    if (m_scion) { return m_scion->isAnonymousBlock(); }
+    // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().
+    // FIXME: That seems difficult. Can we come up with a simpler way to make behavior correct?
+    // FIXME: Does this relatively long function benefit from being inlined?
+    return isAnonymous()
+        && (style().display() == DisplayType::Block || style().display() == DisplayType::Box)
+        && style().pseudoElementType() == PseudoId::None
+        && isRenderBlock()
+#if ENABLE(MATHML)
+        && !isRenderMathMLBlock()
+#endif
+        && !isRenderListMarker()
+        && !isRenderFragmentedFlow()
+        && !isRenderMultiColumnSet()
+        && !isRenderView();
+}
+
 bool RenderObject::isPositioned() const
 {
     if (m_scion) { return m_scion->isPositioned(); }

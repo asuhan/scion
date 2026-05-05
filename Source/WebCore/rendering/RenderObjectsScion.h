@@ -153,6 +153,8 @@ public:
 
     bool isSVGRenderer() const;
 
+    bool isAnonymousBlock() const;
+
     bool isPositioned() const;
 
     bool isInFlowPositioned() const;

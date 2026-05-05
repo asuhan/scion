@@ -1988,25 +1988,6 @@ inline bool RenderObject::backgroundIsKnownToBeObscured(const LayoutPoint& paint
     return m_stateBitfields.boxDecorationState() == BoxDecorationState::IsKnownToBeObscured;
 }
 
-inline bool RenderObject::isAnonymousBlock() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().
-    // FIXME: That seems difficult. Can we come up with a simpler way to make behavior correct?
-    // FIXME: Does this relatively long function benefit from being inlined?
-    return isAnonymous()
-        && (style().display() == DisplayType::Block || style().display() == DisplayType::Box)
-        && style().pseudoElementType() == PseudoId::None
-        && isRenderBlock()
-#if ENABLE(MATHML)
-        && !isRenderMathMLBlock()
-#endif
-        && !isRenderListMarker()
-        && !isRenderFragmentedFlow()
-        && !isRenderMultiColumnSet()
-        && !isRenderView();
-}
-
 inline bool RenderObject::needsPositionedMovementLayoutOnly() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

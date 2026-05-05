@@ -1307,6 +1307,12 @@ func RenderObjectScion_isSVGRenderer(_ objectRaw: UnsafeMutableRawPointer) -> Bo
   return object.isSVGRenderer()
 }
 
+@_cdecl("RenderObjectScion_isAnonymousBlock")
+func RenderObjectScion_isAnonymousBlock(_ objectRaw: UnsafeMutableRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isAnonymousBlock()
+}
+
 @_cdecl("RenderObjectScion_isPositioned")
 func RenderObjectScion_isPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
