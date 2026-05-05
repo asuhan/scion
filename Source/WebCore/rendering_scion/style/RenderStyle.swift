@@ -2260,10 +2260,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func shapeImageThreshold() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func shapeImageThreshold() -> Float32 { return wk_interop.RenderStyle_shapeImageThreshold(p!) }
 
   static func initialShapeImageThreshold() -> Float32 { return 0 }
 

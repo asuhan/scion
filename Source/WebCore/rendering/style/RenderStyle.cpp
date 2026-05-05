@@ -1820,6 +1820,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_shapeMargin(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->shapeMargin();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_shapeImageThreshold(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->shapeImageThreshold();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_offsetPath(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->offsetPath();

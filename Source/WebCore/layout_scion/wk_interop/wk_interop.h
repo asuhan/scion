@@ -1094,6 +1094,7 @@ bool RenderStyle_hasVisibleStroke(const void*);
 bool RenderStyle_hasExplicitlySetColor(const void*);
 void* RenderStyle_shapeOutside(const void*);
 const void* RenderStyle_shapeMargin(const void*);
+float RenderStyle_shapeImageThreshold(const void*);
 void* RenderStyle_offsetPath(const void*);
 struct PathOperationRaw RenderStyle_clipPath(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
