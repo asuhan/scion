@@ -1975,8 +1975,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    ensureRareData().trimmedMargins.formUnion(newTrimmedMargin)
   }
 
   func clearTrimmedMarginsMarkings() {
