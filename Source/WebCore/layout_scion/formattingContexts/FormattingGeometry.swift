@@ -626,8 +626,16 @@ class FormattingGeometry {
   }
 
   func computedWidth(layoutBox: BoxWrapper, containingBlockWidth: LayoutUnit) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let computedWidth = computedWidthValue(layoutBox, .Normal, containingBlockWidth) else {
+      return nil
+    }
+    let style = layoutBox.style
+    // Non-quantitative values such as auto and min-content are not influenced by the box-sizing property.
+    if style.boxSizing() == .ContentBox || style.width().isIntrinsicOrAuto() {
+      return computedWidth
+    }
+    let boxGeometry = formattingContext.geometryForBox(layoutBox: layoutBox)
+    return computedWidth - boxGeometry.horizontalBorderAndPadding()
   }
 
   func layoutState() -> LayoutStateWrapper {
