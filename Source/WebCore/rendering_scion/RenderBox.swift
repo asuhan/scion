@@ -1845,8 +1845,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    minLogicalWidth = minPreferredLogicalWidth() - borderAndPaddingLogicalWidth()
+    maxLogicalWidth = maxPreferredLogicalWidth() - borderAndPaddingLogicalWidth()
   }
 
   func minimumReplacedHeight() -> LayoutUnit {
