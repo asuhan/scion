@@ -1643,9 +1643,11 @@ func RenderObjectScion_containerForRepaint(_ objectRaw: UnsafeRawPointer)
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   let r = object.containerForRepaint()
-  assert(!(r.renderer?.isNativeImpl() ?? false))
+  let renderer =
+    (r.renderer?.isNativeImpl() ?? false)
+    ? (r.renderer! as! RenderViewWrapper).getWk() : r.renderer?.id()
   return RepaintContainerStatusRaw(
-    fullRepaintIsScheduled: r.fullRepaintIsScheduled, renderer: r.renderer?.id())
+    fullRepaintIsScheduled: r.fullRepaintIsScheduled, renderer: renderer)
 }
 
 func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
