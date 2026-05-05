@@ -652,10 +652,7 @@ class RenderTreeUpdater {
     fatalError("Not reached")
   }
 
-  func renderTreePosition() -> RenderTreePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func renderTreePosition() -> RenderTreePosition { return renderingParent().renderTreePosition! }
 
   private func pushParent(element: ElementWrapper, update: Style.ElementUpdate?) {
     parentStack.append(Parent(element: element, update: update))
