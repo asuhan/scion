@@ -45,10 +45,7 @@ final class DragCaretControllerWrapper: CaretBaseWrapper {
     fatalError("Not implemented")
   }
 
-  func isContentEditable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isContentEditable() -> Bool { return wk_interop.DragCaretController_isContentEditable(p) }
 
   private let p: UnsafeRawPointer
 }

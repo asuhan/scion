@@ -128,6 +128,11 @@ extern "C" WEBCORE_EXPORT void* DragCaretController_caretRenderer(const void* p)
     return static_cast<const WebCore::DragCaretController*>(p)->caretRenderer();
 }
 
+extern "C" WEBCORE_EXPORT bool DragCaretController_isContentEditable(const void* p)
+{
+    return static_cast<const WebCore::DragCaretController*>(p)->isContentEditable();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(CaretBase);
