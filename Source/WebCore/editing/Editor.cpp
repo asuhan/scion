@@ -165,6 +165,11 @@ extern "C" WEBCORE_EXPORT bool Editor_compositionUsesCustomHighlights(const void
     return static_cast<const WebCore::Editor*>(p)->compositionUsesCustomHighlights();
 }
 
+extern "C" WEBCORE_EXPORT bool Editor_markedTextMatchesAreHighlighted(const void* p)
+{
+    return static_cast<const WebCore::Editor*>(p)->markedTextMatchesAreHighlighted();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(TemporarySelectionChange);

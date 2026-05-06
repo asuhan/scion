@@ -63,8 +63,7 @@ final class EditorWrapper {
   }
 
   func markedTextMatchesAreHighlighted() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Editor_markedTextMatchesAreHighlighted(p)
   }
 
   func nodeBeforeWritingSuggestions() -> NodeWrapper? {
