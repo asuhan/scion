@@ -541,7 +541,7 @@ RenderObject* RenderObject::nextInPreOrder() const
 
 RenderObject* RenderObject::nextInPreOrderAfterChildren() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->nextInPreOrderAfterChildren(); }
     RenderObject* o;
     if (!(o = nextSibling())) {
         o = parent();

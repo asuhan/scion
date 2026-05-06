@@ -1045,6 +1045,13 @@ func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutab
   return nil
 }
 
+@_cdecl("RenderObjectScion_nextInPreOrderAfterChildren")
+func RenderObjectScion_nextInPreOrderAfterChildren(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  assert(object.nextInPreOrderAfterChildren() == nil)
+  return nil
+}
+
 @_cdecl("RenderObjectScion_enclosingLayer")
 func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
