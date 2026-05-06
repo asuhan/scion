@@ -1156,8 +1156,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasOutlineAnnotation() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return (element()?.isLink() ?? false)
+      && (document().printing() || view().frameView().paintBehavior().contains(.AnnotateLinks))
   }
 
   func hasOutline() -> Bool {

@@ -1400,6 +1400,7 @@ bool Element_hasFontTag(const void*);
 bool Element_isFormControlElement(const void*);
 bool Element_isDisabledFormControl(const void*);
 bool Element_childShouldCreateRenderer(const void* p, const void* child);
+bool Element_isLink(const void*);
 bool Element_isInTopLayer(const void*);
 void Element_willAttachRenderers(void*);
 void Element_didAttachRenderers(void*);

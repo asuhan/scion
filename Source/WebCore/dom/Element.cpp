@@ -196,6 +196,11 @@ extern "C" WEBCORE_EXPORT bool Element_childShouldCreateRenderer(const void* p, 
     return static_cast<const WebCore::Element*>(p)->childShouldCreateRenderer(*static_cast<const WebCore::Node*>(child));
 }
 
+extern "C" WEBCORE_EXPORT bool Element_isLink(const void* p)
+{
+    return static_cast<const WebCore::Element*>(p)->isLink();
+}
+
 extern "C" WEBCORE_EXPORT bool Element_isInTopLayer(const void* p)
 {
     return static_cast<const WebCore::Element*>(p)->isInTopLayer();
