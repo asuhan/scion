@@ -85,10 +85,7 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
     fatalError("Not implemented")
   }
 
-  func isFocusedAndActive() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isFocusedAndActive() -> Bool { return wk_interop.FrameSelection_isFocusedAndActive(p) }
 
   func shouldShowBlockCursor() -> Bool {
     // TODO(asuhan): implement this
