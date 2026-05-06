@@ -98,17 +98,22 @@
 #include "SelectionGeometry.h"
 #endif
 
-extern "C" void* FrameSelection_caretRendererWithoutUpdatingLayout(const void* p)
+extern "C" WEBCORE_EXPORT void* FrameSelection_caretRendererWithoutUpdatingLayout(const void* p)
 {
     return static_cast<const WebCore::FrameSelection*>(p)->caretRendererWithoutUpdatingLayout();
 }
 
-extern "C" const void* FrameSelection_selection(const void* p)
+extern "C" WEBCORE_EXPORT const void* FrameSelection_selection(const void* p)
 {
     return &static_cast<const WebCore::FrameSelection*>(p)->selection();
 }
 
-extern "C" void* DragCaretController_caretRenderer(const void* p)
+extern "C" WEBCORE_EXPORT bool FrameSelection_isCaret(const void* p)
+{
+    return static_cast<const WebCore::FrameSelection*>(p)->isCaret();
+}
+
+extern "C" WEBCORE_EXPORT void* DragCaretController_caretRenderer(const void* p)
 {
     return static_cast<const WebCore::DragCaretController*>(p)->caretRenderer();
 }

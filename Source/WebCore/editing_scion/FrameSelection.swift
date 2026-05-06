@@ -78,10 +78,7 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
     return createRenderObjectWrapperOrNative(raw) as! RenderBlockWrapper?
   }
 
-  func isCaret() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isCaret() -> Bool { return wk_interop.FrameSelection_isCaret(p) }
 
   func paintCaret(context: GraphicsContextWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
