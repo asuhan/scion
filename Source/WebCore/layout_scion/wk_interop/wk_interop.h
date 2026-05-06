@@ -1517,6 +1517,8 @@ void GraphicsContext_translateByXy(void*, float, float);
 void GraphicsContext_setContentfulPaintDetected(void*);
 bool GraphicsContext_contentfulPaintDetected(const void*);
 uint8_t GraphicsLayer_type(const void*);
+void GraphicsLayer_removeAllChildren(void*);
+void GraphicsLayer_removeFromParent(void*);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

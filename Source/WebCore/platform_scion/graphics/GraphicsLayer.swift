@@ -88,15 +88,9 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
-  func removeAllChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func removeAllChildren() { wk_interop.GraphicsLayer_removeAllChildren(p) }
 
-  func removeFromParent() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func removeFromParent() { wk_interop.GraphicsLayer_removeFromParent(p) }
 
   func setMaskLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
