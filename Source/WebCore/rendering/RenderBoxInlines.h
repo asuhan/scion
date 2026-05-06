@@ -150,11 +150,6 @@ inline LayoutUnit RenderBox::logicalBottom() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return logicalTop() + logicalHeight();
 }
-inline LayoutUnit RenderBox::logicalHeight() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? height() : width();
-}
 inline LayoutUnit RenderBox::logicalLeft() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

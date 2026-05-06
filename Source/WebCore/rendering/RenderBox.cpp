@@ -1006,6 +1006,12 @@ void RenderBox::constrainLogicalMinMaxSizesByAspectRatio(LayoutUnit& computedMin
     }
 }
 
+LayoutUnit RenderBox::logicalHeight() const
+{
+    if (m_scion) { return m_scion->logicalHeight(); }
+    return style().isHorizontalWritingMode() ? height() : width();
+}
+
 LayoutUnit RenderBox::constrainLogicalWidthInFragmentByMinMax(LayoutUnit logicalWidth, LayoutUnit availableWidth, const RenderBlock& cb, RenderFragmentContainer* fragment, AllowIntrinsic allowIntrinsic) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

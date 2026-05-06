@@ -391,6 +391,8 @@ public:
 
     LayoutUnit width() const;
 
+    LayoutUnit logicalHeight() const;
+
     LayoutPoint location() const;
 
     LayoutSize size() const;

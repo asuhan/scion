@@ -112,7 +112,7 @@ public:
     inline LayoutUnit logicalTop() const;
     inline LayoutUnit logicalBottom() const;
     inline LayoutUnit logicalWidth() const;
-    inline LayoutUnit logicalHeight() const;
+    LayoutUnit logicalHeight() const;
 
     enum class AllowIntrinsic : bool { No, Yes };
     LayoutUnit constrainLogicalWidthInFragmentByMinMax(LayoutUnit, LayoutUnit, const RenderBlock&, RenderFragmentContainer*, AllowIntrinsic = AllowIntrinsic::Yes) const;

@@ -355,6 +355,8 @@ extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" int32_t RenderBoxScion_width(const void*);
 
+extern "C" int32_t RenderBoxScion_logicalHeight(const void*);
+
 extern "C" LayoutPointRaw RenderBoxScion_location(const void*);
 
 struct LayoutSizeRaw {
@@ -1111,6 +1113,11 @@ bool RenderBoxScion::requiresLayerWithScrollableArea() const
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+LayoutUnit RenderBoxScion::logicalHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_logicalHeight(m_handle));
 }
 
 LayoutPoint RenderBoxScion::location() const
