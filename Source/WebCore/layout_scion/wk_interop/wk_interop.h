@@ -1520,6 +1520,7 @@ void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 const void* FrameSelection_selection(const void*);
 bool FrameSelection_isCaret(const void*);
 bool FrameSelection_isFocusedAndActive(const void*);
+bool FrameSelection_shouldShowBlockCursor(const void*);
 bool VisibleSelection_hasEditableStyle(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);

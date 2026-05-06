@@ -87,10 +87,7 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
 
   func isFocusedAndActive() -> Bool { return wk_interop.FrameSelection_isFocusedAndActive(p) }
 
-  func shouldShowBlockCursor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func shouldShowBlockCursor() -> Bool { return wk_interop.FrameSelection_shouldShowBlockCursor(p) }
 
   private let p: UnsafeMutableRawPointer
 }

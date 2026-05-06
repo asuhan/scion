@@ -118,6 +118,11 @@ extern "C" WEBCORE_EXPORT bool FrameSelection_isFocusedAndActive(const void* p)
     return static_cast<const WebCore::FrameSelection*>(p)->isFocusedAndActive();
 }
 
+extern "C" WEBCORE_EXPORT bool FrameSelection_shouldShowBlockCursor(const void* p)
+{
+    return static_cast<const WebCore::FrameSelection*>(p)->shouldShowBlockCursor();
+}
+
 extern "C" WEBCORE_EXPORT void* DragCaretController_caretRenderer(const void* p)
 {
     return static_cast<const WebCore::DragCaretController*>(p)->caretRenderer();
