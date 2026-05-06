@@ -63,8 +63,7 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
   }
 
   func setNeedsSelectionUpdate(revealMode: RevealSelectionAfterUpdate = .NotForced) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FrameSelection_setNeedsSelectionUpdate(p, revealMode == .Forced)
   }
 
   // Return the renderer that is responsible for painting the caret (in the selection start node).

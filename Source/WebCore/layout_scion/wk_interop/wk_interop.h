@@ -1518,6 +1518,7 @@ void GraphicsContext_setContentfulPaintDetected(void*);
 bool GraphicsContext_contentfulPaintDetected(const void*);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 const void* FrameSelection_selection(const void*);
+void FrameSelection_setNeedsSelectionUpdate(void* p, bool);
 bool FrameSelection_isCaret(const void*);
 bool FrameSelection_isFocusedAndActive(const void*);
 bool FrameSelection_shouldShowBlockCursor(const void*);

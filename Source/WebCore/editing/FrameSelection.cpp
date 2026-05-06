@@ -108,6 +108,13 @@ extern "C" WEBCORE_EXPORT const void* FrameSelection_selection(const void* p)
     return &static_cast<const WebCore::FrameSelection*>(p)->selection();
 }
 
+extern "C" WEBCORE_EXPORT void FrameSelection_setNeedsSelectionUpdate(void* p, bool forced_reveal_mode)
+{
+    static_cast<WebCore::FrameSelection*>(p)->setNeedsSelectionUpdate(forced_reveal_mode
+            ? WebCore::FrameSelection::RevealSelectionAfterUpdate::Forced
+            : WebCore::FrameSelection::RevealSelectionAfterUpdate::NotForced);
+}
+
 extern "C" WEBCORE_EXPORT bool FrameSelection_isCaret(const void* p)
 {
     return static_cast<const WebCore::FrameSelection*>(p)->isCaret();
