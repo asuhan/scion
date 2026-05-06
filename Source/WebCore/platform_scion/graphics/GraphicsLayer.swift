@@ -461,8 +461,7 @@ class GraphicsLayer {
   }
 
   static func supportsContentsTiling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.GraphicsLayer_supportsContentsTiling()
   }
 
   func setShouldPaintUsingCompositeCopy(_ copy: Bool) {

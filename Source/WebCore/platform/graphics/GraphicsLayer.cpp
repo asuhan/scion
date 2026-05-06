@@ -55,6 +55,11 @@ extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsContentsTiling()
+{
+    return WebCore::GraphicsLayer::supportsContentsTiling();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(AnimationValue);
