@@ -98,8 +98,7 @@ class GraphicsLayer {
   }
 
   func setIsBackdropRoot(isBackdropRoot: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setIsBackdropRoot(p, isBackdropRoot)
   }
 
   func isBackdropRoot() -> Bool {

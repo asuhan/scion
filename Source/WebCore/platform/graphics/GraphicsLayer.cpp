@@ -65,6 +65,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_removeFromParent(void* p)
     static_cast<WebCore::GraphicsLayer*>(p)->removeFromParent();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setIsBackdropRoot(void* p, bool isBackdropRoot)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setIsBackdropRoot(isBackdropRoot);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
