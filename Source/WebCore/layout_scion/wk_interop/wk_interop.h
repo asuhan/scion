@@ -1517,6 +1517,7 @@ void GraphicsContext_setContentfulPaintDetected(void*);
 bool GraphicsContext_contentfulPaintDetected(const void*);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 const void* FrameSelection_selection(const void*);
+bool VisibleSelection_hasEditableStyle(const void*);
 void* DragCaretController_caretRenderer(const void*);
 void* EventHandler_autoscrollRenderer(const void*);
 void Style_loadPendingResources(const void* style, void* document, const void* element);

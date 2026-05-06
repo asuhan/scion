@@ -44,6 +44,11 @@
 #include <wtf/text/TextStream.h>
 #include <wtf/unicode/CharacterNames.h>
 
+extern "C" WEBCORE_EXPORT bool VisibleSelection_hasEditableStyle(const void* p)
+{
+    return static_cast<const WebCore::VisibleSelection*>(p)->hasEditableStyle();
+}
+
 namespace WebCore {
 
 const VisibleSelection& VisibleSelection::emptySelection()

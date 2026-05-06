@@ -23,13 +23,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class VisibleSelectionWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
-  func hasEditableStyle() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasEditableStyle() -> Bool { return wk_interop.VisibleSelection_hasEditableStyle(p) }
 
   private let p: UnsafeRawPointer
 }
