@@ -151,6 +151,8 @@ extern "C" bool RenderObjectScion_isRenderText(const void*);
 
 extern "C" bool RenderObjectScion_isRenderLineBreak(const void*);
 
+extern "C" bool RenderObjectScion_isBR(const void*);
+
 extern "C" bool RenderObjectScion_isRenderBox(const void*);
 
 extern "C" bool RenderObjectScion_isRenderTableRow(const void*);
@@ -693,6 +695,8 @@ bool RenderObjectScion::isStickilyPositioned() const { return RenderObjectScion_
 bool RenderObjectScion::isRenderText() const { return RenderObjectScion_isRenderText(m_handle); }
 
 bool RenderObjectScion::isRenderLineBreak() const { return RenderObjectScion_isRenderLineBreak(m_handle); }
+
+bool RenderObjectScion::isBR() const { return RenderObjectScion_isBR(m_handle); }
 
 bool RenderObjectScion::isRenderBox() const { return RenderObjectScion_isRenderBox(m_handle); }
 

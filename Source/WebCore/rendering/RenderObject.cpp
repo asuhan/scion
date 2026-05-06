@@ -3491,6 +3491,12 @@ bool RenderObject::isRenderLineBreak() const
     return type() == Type::LineBreak;
 }
 
+bool RenderObject::isBR() const
+{
+    if (m_scion) { return m_scion->isBR(); }
+    return isRenderLineBreak() && !hasWBRLineBreakFlag();
+}
+
 bool RenderObject::isRenderBox() const
 {
     if (m_scion) { return m_scion->isRenderBox(); }

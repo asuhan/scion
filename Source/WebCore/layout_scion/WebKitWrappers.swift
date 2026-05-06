@@ -1368,6 +1368,12 @@ func RenderObjectScion_isRenderLineBreak(_ objectRaw: UnsafeRawPointer) -> Bool 
   return object.isRenderLineBreak()
 }
 
+@_cdecl("RenderObjectScion_isBR")
+func RenderObjectScion_isBR(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isBR()
+}
+
 @_cdecl("RenderObjectScion_isRenderBox")
 func RenderObjectScion_isRenderBox(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

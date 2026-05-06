@@ -171,6 +171,8 @@ public:
 
     bool isRenderLineBreak() const;
 
+    bool isBR() const;
+
     bool isRenderBox() const;
 
     bool isRenderTableRow() const;

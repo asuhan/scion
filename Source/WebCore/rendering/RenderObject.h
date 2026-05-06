@@ -1044,11 +1044,7 @@ public:
 
     bool isRenderText() const;
     bool isRenderLineBreak() const;
-    bool isBR() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderLineBreak() && !hasWBRLineBreakFlag();
-    }
+    bool isBR() const;
     bool isWBR() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
