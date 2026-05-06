@@ -1547,3 +1547,5 @@ uint32_t CharacterData_length(const void*);
 bool CharacterData_containsOnlyASCIIWhitespace(const void*);
 uint32_t Editor_compositionStart(const void*);
 uint32_t Editor_compositionEnd(const void*);
+bool Editor_compositionUsesCustomUnderlines(const void*);
+bool Editor_compositionUsesCustomHighlights(const void*);

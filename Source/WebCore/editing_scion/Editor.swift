@@ -40,13 +40,11 @@ final class EditorWrapper {
   func compositionEnd() -> UInt32 { return wk_interop.Editor_compositionEnd(p) }
 
   func compositionUsesCustomUnderlines() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Editor_compositionUsesCustomUnderlines(p)
   }
 
   func compositionUsesCustomHighlights() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Editor_compositionUsesCustomHighlights(p)
   }
 
   func customCompositionUnderlines() -> [CompositionUnderline] {

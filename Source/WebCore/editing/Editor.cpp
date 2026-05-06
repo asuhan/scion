@@ -155,6 +155,16 @@ extern "C" WEBCORE_EXPORT uint32_t Editor_compositionEnd(const void* p)
     return static_cast<const WebCore::Editor*>(p)->compositionEnd();
 }
 
+extern "C" WEBCORE_EXPORT bool Editor_compositionUsesCustomUnderlines(const void* p)
+{
+    return static_cast<const WebCore::Editor*>(p)->compositionUsesCustomUnderlines();
+}
+
+extern "C" WEBCORE_EXPORT bool Editor_compositionUsesCustomHighlights(const void* p)
+{
+    return static_cast<const WebCore::Editor*>(p)->compositionUsesCustomHighlights();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(TemporarySelectionChange);
