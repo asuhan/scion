@@ -27,24 +27,29 @@ func use(_ unused: GraphicsContextStateSaver) {}
 
 class GraphicsContextStateSaver {
   init(context: GraphicsContextWrapper, saveAndRestore: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_context = context
+    m_saveAndRestore = saveAndRestore
+    if m_saveAndRestore {
+      m_context.save()
+    }
   }
 
   deinit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_saveAndRestore {
+      m_context.restore()
+    }
   }
 
   func save() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!m_saveAndRestore)
+    m_context.save()
+    m_saveAndRestore = true
   }
 
-  func context() -> GraphicsContextWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func context() -> GraphicsContextWrapper { return m_context }
+
+  private let m_context: GraphicsContextWrapper
+  private var m_saveAndRestore: Bool
 }
 
 class TransparencyLayerScope {
