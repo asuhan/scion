@@ -1516,6 +1516,7 @@ void GraphicsContext_translateByPoint(void*, struct FloatPointRaw);
 void GraphicsContext_translateByXy(void*, float, float);
 void GraphicsContext_setContentfulPaintDetected(void*);
 bool GraphicsContext_contentfulPaintDetected(const void*);
+bool GraphicsLayer_supportsLayerType(uint8_t);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 const void* FrameSelection_selection(const void*);
 void FrameSelection_setNeedsSelectionUpdate(void* p, bool);

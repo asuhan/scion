@@ -50,6 +50,11 @@
 #include <stdio.h>
 #endif
 
+extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
+{
+    return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(AnimationValue);

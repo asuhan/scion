@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class GraphicsLayer {
   enum `Type`: UInt8 {
     case Normal
@@ -455,8 +457,7 @@ class GraphicsLayer {
   }
 
   static func supportsLayerType(type: `Type`) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.GraphicsLayer_supportsLayerType(type.rawValue)
   }
 
   static func supportsContentsTiling() -> Bool {
