@@ -43,6 +43,8 @@
 
 extern "C" void* RenderObjectScion_parent(const void*);
 
+extern "C" void* RenderObjectScion_nextSibling(const void*);
+
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" void* RenderObjectScion_enclosingFragmentedFlow(const void*);
@@ -578,6 +580,8 @@ extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 namespace WebCore {
 
 RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElement*>(RenderObjectScion_parent(m_handle)); }
+
+RenderObject* RenderObjectScion::nextSibling() const { return static_cast<RenderObject*>(RenderObjectScion_nextSibling(m_handle)); }
 
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
 

@@ -372,6 +372,12 @@ bool RenderObject::isDescendantOf(const RenderObject* ancestor) const
     return false;
 }
 
+RenderObject* RenderObject::nextSibling() const
+{
+    if (m_scion) { return m_scion->nextSibling(); }
+    return m_next.get();
+}
+
 RenderElement* RenderObject::firstNonAnonymousAncestor() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

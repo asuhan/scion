@@ -63,6 +63,8 @@ public:
 
     RenderElement* parent() const;
 
+    RenderObject* nextSibling() const;
+
     RenderLayer* enclosingLayer() const;
 
     RenderFragmentedFlow* enclosingFragmentedFlow() const;

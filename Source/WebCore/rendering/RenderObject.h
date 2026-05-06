@@ -366,11 +366,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_previous.get();
     }
-    RenderObject* nextSibling() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_next.get();
-    }
+    RenderObject* nextSibling() const;
     RenderObject* previousInFlowSibling() const;
     RenderObject* nextInFlowSibling() const;
 
