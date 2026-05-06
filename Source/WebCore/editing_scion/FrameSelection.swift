@@ -57,8 +57,7 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func selection() -> VisibleSelectionWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return VisibleSelectionWrapper(wk_interop.FrameSelection_selection(p))
   }
 
   enum RevealSelectionAfterUpdate {
