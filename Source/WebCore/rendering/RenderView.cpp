@@ -1079,6 +1079,14 @@ void RenderView::setIsInWindow(bool isInWindow)
         m_compositor->setIsInWindow(isInWindow);
 }
 
+void RenderView::incrementRendersWithOutline() {
+    if (m_scion) {
+        m_scion->incrementRendersWithOutline();
+        return;
+    }
+    ++m_renderersWithOutlineCount;
+}
+
 bool RenderView::hasRenderersWithOutline() const
 {
     if (m_scion) {

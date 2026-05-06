@@ -189,10 +189,7 @@ public:
     void addCounterNeedingUpdate(RenderCounter&);
     SingleThreadWeakHashSet<RenderCounter> takeCountersNeedingUpdate();
 
-    void incrementRendersWithOutline() {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        ++m_renderersWithOutlineCount;
-    }
+    void incrementRendersWithOutline();
     void decrementRendersWithOutline() {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         ASSERT(m_renderersWithOutlineCount > 0); --m_renderersWithOutlineCount;

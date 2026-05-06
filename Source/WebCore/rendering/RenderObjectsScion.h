@@ -579,6 +579,8 @@ public:
 
     bool hasQuotesNeedingUpdate() const;
 
+    void incrementRendersWithOutline();
+
     bool hasRenderersWithOutline() const;
 
     uint64_t rendererCount() const;

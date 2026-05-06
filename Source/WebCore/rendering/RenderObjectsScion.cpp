@@ -531,6 +531,8 @@ extern "C" bool RenderViewScion_shouldPaintBaseBackground(const void*);
 
 extern "C" bool RenderViewScion_hasQuotesNeedingUpdate(const void*);
 
+extern "C" void RenderViewScion_incrementRendersWithOutline(void*);
+
 extern "C" bool RenderViewScion_hasRenderersWithOutline(const void*);
 
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
@@ -1526,6 +1528,11 @@ bool RenderViewScion::shouldPaintBaseBackground() const
 bool RenderViewScion::hasQuotesNeedingUpdate() const
 {
     return RenderViewScion_hasQuotesNeedingUpdate(m_handle);
+}
+
+void RenderViewScion::incrementRendersWithOutline()
+{
+    RenderViewScion_incrementRendersWithOutline(m_handle);
 }
 
 bool RenderViewScion::hasRenderersWithOutline() const
