@@ -24,22 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 final class EditorWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   // getting international text input composition state (for use by LegacyInlineTextBox)
   func compositionNode() -> TextWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func compositionStart() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func compositionStart() -> UInt32 { return wk_interop.Editor_compositionStart(p) }
 
-  func compositionEnd() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func compositionEnd() -> UInt32 { return wk_interop.Editor_compositionEnd(p) }
 
   func compositionUsesCustomUnderlines() -> Bool {
     // TODO(asuhan): implement this
@@ -90,4 +88,6 @@ final class EditorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }

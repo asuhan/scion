@@ -1545,3 +1545,5 @@ unsigned HTMLTextAreaElement_cols(const void*);
 const void* CharacterData_data(const void*);
 uint32_t CharacterData_length(const void*);
 bool CharacterData_containsOnlyASCIIWhitespace(const void*);
+uint32_t Editor_compositionStart(const void*);
+uint32_t Editor_compositionEnd(const void*);

@@ -145,6 +145,16 @@
 #include "PromisedAttachmentInfo.h"
 #endif
 
+extern "C" WEBCORE_EXPORT uint32_t Editor_compositionStart(const void* p)
+{
+    return static_cast<const WebCore::Editor*>(p)->compositionStart();
+}
+
+extern "C" WEBCORE_EXPORT uint32_t Editor_compositionEnd(const void* p)
+{
+    return static_cast<const WebCore::Editor*>(p)->compositionEnd();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(TemporarySelectionChange);
