@@ -1087,6 +1087,14 @@ void RenderView::incrementRendersWithOutline() {
     ++m_renderersWithOutlineCount;
 }
 
+void RenderView::decrementRendersWithOutline() {
+    if (m_scion) {
+        m_scion->decrementRendersWithOutline();
+        return;
+    }
+    ASSERT(m_renderersWithOutlineCount > 0); --m_renderersWithOutlineCount;
+}
+
 bool RenderView::hasRenderersWithOutline() const
 {
     if (m_scion) {

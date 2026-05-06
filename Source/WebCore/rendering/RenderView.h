@@ -190,10 +190,7 @@ public:
     SingleThreadWeakHashSet<RenderCounter> takeCountersNeedingUpdate();
 
     void incrementRendersWithOutline();
-    void decrementRendersWithOutline() {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        ASSERT(m_renderersWithOutlineCount > 0); --m_renderersWithOutlineCount;
-    }
+    void decrementRendersWithOutline();
     bool hasRenderersWithOutline() const;
 
     ImageQualityController& imageQualityController();

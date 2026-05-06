@@ -589,6 +589,8 @@ public:
 
     void incrementRendersWithOutline();
 
+    void decrementRendersWithOutline();
+
     bool hasRenderersWithOutline() const;
 
     uint64_t rendererCount() const;

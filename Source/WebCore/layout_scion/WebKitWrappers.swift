@@ -853,6 +853,12 @@ func RenderViewScion_incrementRendersWithOutline(_ viewRaw: UnsafeMutableRawPoin
   view.incrementRendersWithOutline()
 }
 
+@_cdecl("RenderViewScion_decrementRendersWithOutline")
+func RenderViewScion_decrementRendersWithOutline(_ viewRaw: UnsafeMutableRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.decrementRendersWithOutline()
+}
+
 @_cdecl("RenderViewScion_hasRenderersWithOutline")
 func RenderViewScion_hasRenderersWithOutline(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
@@ -1046,7 +1052,9 @@ func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutab
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrderAfterChildren")
-func RenderObjectScion_nextInPreOrderAfterChildren(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+func RenderObjectScion_nextInPreOrderAfterChildren(_ objectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   assert(object.nextInPreOrderAfterChildren() == nil)
   return nil
