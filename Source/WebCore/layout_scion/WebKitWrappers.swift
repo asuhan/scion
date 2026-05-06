@@ -184,14 +184,10 @@ public func InlineFormattingContext_layout(
     var ellipsisC: UnsafeRawPointer? = nil
     defer { if ellipsisC != nil { wk_interop.Ellipsis_destroy(ellipsisC!) } }
     if let ellipsis = line.ellipsis {
-      if ellipsis.text.p == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
-      }
       ellipsisC = wk_interop.Ellipsis_new(
         ellipsis.type.rawValue, ellipsis.visualRect.x(),
         ellipsis.visualRect.y(), ellipsis.visualRect.width(),
-        ellipsis.visualRect.height(), ellipsis.text.p)
+        ellipsis.visualRect.height(), ellipsis.text.p!)
     }
     let lineC = wk_interop.InlineDisplayLine_new(
       0,  // first_box_index
@@ -354,14 +350,10 @@ public func LineLayout_layout(
     var ellipsisC: UnsafeRawPointer? = nil
     defer { if ellipsisC != nil { wk_interop.Ellipsis_destroy(ellipsisC!) } }
     if let ellipsis = line.ellipsis {
-      if ellipsis.text.p == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
-      }
       ellipsisC = wk_interop.Ellipsis_new(
         ellipsis.type.rawValue, ellipsis.visualRect.x(),
         ellipsis.visualRect.y(), ellipsis.visualRect.width(),
-        ellipsis.visualRect.height(), ellipsis.text.p)
+        ellipsis.visualRect.height(), ellipsis.text.p!)
     }
     let lineC = wk_interop.InlineDisplayLine_new(
       0,  // first_box_index
