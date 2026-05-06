@@ -54,19 +54,29 @@ class GraphicsContextStateSaver {
 
 class TransparencyLayerScope {
   init(context: GraphicsContextWrapper, alpha: Float32, beginLayer: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_context = context
+    m_alpha = alpha
+    m_beganLayer = beginLayer
+    if beginLayer {
+      m_context.beginTransparencyLayer(opacity: m_alpha)
+    }
   }
 
   func beginLayer(alpha: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_alpha = alpha
+    m_context.beginTransparencyLayer(opacity: m_alpha)
+    m_beganLayer = true
   }
 
   deinit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_beganLayer {
+      m_context.endTransparencyLayer()
+    }
   }
+
+  private let m_context: GraphicsContextWrapper
+  private var m_alpha: Float32
+  private var m_beganLayer: Bool
 }
 
 func use(_ x: borrowing InterpolationQualityMaintainer) {}
