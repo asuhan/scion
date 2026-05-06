@@ -166,22 +166,27 @@ extern "C" WEBCORE_EXPORT void RenderBox_setMarginAfter(void* p, int32_t value_r
     static_cast<WebCore::RenderBox*>(p)->setMarginAfter(value, override_style);
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingContainingBlockContentSize(void* box_raw_ptr)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingContainingBlockContentSize();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalWidthLength(void* box_raw_ptr, const void* length_raw_ptr)
 {
-    auto* renderer = static_cast<WebCore::RenderBox*>(static_cast<WebCore::RenderBox*>(box_raw_ptr));
+    auto* renderer = static_cast<WebCore::RenderBox*>(box_raw_ptr);
     auto* length = static_cast<const WebCore::Length*>(static_cast<const WebCore::Length*>(length_raw_ptr));
     renderer->setOverridingLogicalWidthLength(*length);
 }
 
 extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingLogicalWidthLength(void* box_raw_ptr)
 {
-    auto* renderer = static_cast<WebCore::RenderBox*>(static_cast<WebCore::RenderBox*>(box_raw_ptr));
+    auto* renderer = static_cast<WebCore::RenderBox*>(box_raw_ptr);
     renderer->clearOverridingLogicalWidthLength();
 }
 
 extern "C" WEBCORE_EXPORT void RenderBox_computeAndSetBlockDirectionMargins(void* box_raw_ptr, const void* containing_block_raw)
 {
-    auto* renderer = static_cast<WebCore::RenderBox*>(static_cast<WebCore::RenderBox*>(box_raw_ptr));
+    auto* renderer = static_cast<WebCore::RenderBox*>(box_raw_ptr);
     const auto& containingBlock = *static_cast<const WebCore::RenderBlock*>(static_cast<const WebCore::RenderBlock*>(containing_block_raw));
     renderer->computeAndSetBlockDirectionMargins(containingBlock);
 }

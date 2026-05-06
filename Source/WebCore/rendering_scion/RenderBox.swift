@@ -1938,8 +1938,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverridingContainingBlockContentSize() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    wk_interop.RenderBox_clearOverridingContainingBlockContentSize(id())
   }
 
   // These are currently only used by Flexbox code. In some cases we must layout flex items with a different main size
