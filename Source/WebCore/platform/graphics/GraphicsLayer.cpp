@@ -85,6 +85,16 @@ extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setDrawsContent(void* p, bool b)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setDrawsContent(b);
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsVisible(void* p, bool b)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setContentsVisible(b);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

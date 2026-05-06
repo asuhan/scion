@@ -211,15 +211,9 @@ class GraphicsLayer {
 
   func drawsContent() -> Bool { return wk_interop.GraphicsLayer_drawsContent(p) }
 
-  func setDrawsContent(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setDrawsContent(b: Bool) { wk_interop.GraphicsLayer_setDrawsContent(p, b) }
 
-  func setContentsVisible(_ b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setContentsVisible(_ b: Bool) { wk_interop.GraphicsLayer_setContentsVisible(p, b) }
 
   func setUserInteractionEnabled(_ b: Bool) {
     // TODO(asuhan): implement this

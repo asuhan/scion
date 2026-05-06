@@ -1523,6 +1523,8 @@ void GraphicsLayer_removeFromParent(void*);
 void GraphicsLayer_setIsBackdropRoot(void*, bool);
 bool GraphicsLayer_isBackdropRoot(const void*);
 bool GraphicsLayer_drawsContent(const void*);
+void GraphicsLayer_setDrawsContent(void*, bool);
+void GraphicsLayer_setContentsVisible(void*, bool);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
