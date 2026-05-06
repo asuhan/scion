@@ -1525,6 +1525,7 @@ bool GraphicsLayer_isBackdropRoot(const void*);
 bool GraphicsLayer_drawsContent(const void*);
 void GraphicsLayer_setDrawsContent(void*, bool);
 void GraphicsLayer_setContentsVisible(void*, bool);
+void GraphicsLayer_setUserInteractionEnabled(void*, bool);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

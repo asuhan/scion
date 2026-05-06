@@ -95,6 +95,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsVisible(void* p, bool b)
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsVisible(b);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setUserInteractionEnabled(void* p, bool b)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setUserInteractionEnabled(b);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

@@ -216,8 +216,7 @@ class GraphicsLayer {
   func setContentsVisible(_ b: Bool) { wk_interop.GraphicsLayer_setContentsVisible(p, b) }
 
   func setUserInteractionEnabled(_ b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setUserInteractionEnabled(p, b)
   }
 
   func setBackgroundColor(_ color: ColorWrapper) {
