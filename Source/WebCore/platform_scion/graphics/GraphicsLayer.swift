@@ -101,10 +101,7 @@ class GraphicsLayer {
     wk_interop.GraphicsLayer_setIsBackdropRoot(p, isBackdropRoot)
   }
 
-  func isBackdropRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isBackdropRoot() -> Bool { return wk_interop.GraphicsLayer_isBackdropRoot(p) }
 
   // The given layer will replicate this layer and its children; the replica renders behind this layer.
   func setReplicatedByLayer(layer: GraphicsLayer?) {
