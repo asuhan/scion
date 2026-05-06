@@ -36,6 +36,8 @@ class GraphicsLayer {
     case Shape
   }
 
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   // Unparent, clear the client, and clear the RefPtr.
   static func unparentAndClear(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
@@ -56,10 +58,7 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
-  func type() -> `Type` {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func type() -> `Type` { return `Type`(rawValue: wk_interop.GraphicsLayer_type(p))! }
 
   func setName(name: String) {
     // TODO(asuhan): implement this
@@ -473,4 +472,6 @@ class GraphicsLayer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }

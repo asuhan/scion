@@ -50,6 +50,11 @@
 #include <stdio.h>
 #endif
 
+extern "C" WEBCORE_EXPORT uint8_t GraphicsLayer_type(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::GraphicsLayer*>(p)->type());
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
