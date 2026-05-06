@@ -66,8 +66,8 @@ class GraphicsLayer {
   }
 
   func parent() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let parentRaw = wk_interop.GraphicsLayer_parent(p) else { return nil }
+    return GraphicsLayer(parentRaw)
   }
 
   func children() -> ArraySlice<GraphicsLayer> {
