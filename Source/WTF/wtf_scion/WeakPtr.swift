@@ -30,10 +30,7 @@ class WeakPtr<T: AnyObject>: Hashable {
 
   func bool() -> Bool { return m_object != nil }
 
-  static prefix func * (_ this: WeakPtr<T>) -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static prefix func * (_ this: WeakPtr<T>) -> T { return this.m_object! }
 
   static func == (_ a: WeakPtr<T>, _ b: WeakPtr<T>) -> Bool {
     if a.m_object == nil || b.m_object == nil {
