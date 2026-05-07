@@ -37,8 +37,7 @@ class WeakRef<T: AnyObject>: Equatable, Hashable {
   }
 
   func hash(into hasher: inout Hasher) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    hasher.combine(ObjectIdentifier(*m_impl))
   }
 
   private let m_impl: Ref<T>
