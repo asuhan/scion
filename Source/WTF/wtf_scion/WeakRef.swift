@@ -26,15 +26,9 @@
 class WeakRef<T: AnyObject>: Equatable, Hashable {
   init(_ object: T) { self.m_impl = Ref(object) }
 
-  static prefix func * (_ this: WeakRef<T>) -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static prefix func * (_ this: WeakRef<T>) -> T { return *this.m_impl }
 
-  static func == (_ a: WeakRef<T>, _ b: WeakRef<T>) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func == (_ a: WeakRef<T>, _ b: WeakRef<T>) -> Bool { return a.m_impl === b.m_impl }
 
   func hash(into hasher: inout Hasher) {
     hasher.combine(ObjectIdentifier(*m_impl))
