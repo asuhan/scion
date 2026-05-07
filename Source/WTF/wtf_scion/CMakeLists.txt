@@ -8,7 +8,6 @@ target_sources(layout_scion PRIVATE
     MathExtras.swift
     MemoryPressureHandler.swift
     MonotonicTime.swift
-    ObjectIdentifierHashSet.swift
     OptionalComparison.swift
     PriorityQueue.swift
     Ref.swift

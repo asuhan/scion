@@ -537,7 +537,7 @@ class RenderTreeBuilder {
 
       // Style change may have moved some subtree out of the fragmented flow. Their flow states have already been updated (see adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded)
       // and here is where we take care of the remaining, spanner tree mutation.
-      let spannerContainingBlockSet = ObjectIdentifierHashSet<RenderElementWrapper>()
+      let spannerContainingBlockSet = WeakHashSet<RenderElementWrapper>()
       for descendant: RenderMultiColumnSpannerPlaceholderWrapper in descendantsOfType(
         root: renderer)
       {
