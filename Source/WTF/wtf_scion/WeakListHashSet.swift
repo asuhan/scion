@@ -57,8 +57,7 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     }
 
     static func == (this: WeakListHashSetIterator, other: WeakListHashSetIterator) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return this.m_position == other.m_position
     }
 
     private func skipEmptyBuckets() {
