@@ -279,8 +279,7 @@ class GraphicsLayer {
   }
 
   func setContentsRectClipsDescendants(_ b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsRectClipsDescendants(p, b)
   }
 
   func setShapeLayerPath(_ path: PathWrapper) {

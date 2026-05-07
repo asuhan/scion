@@ -262,6 +262,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsRect(void* p, FloatRectR
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsRect(toFloatRect(r));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsRectClipsDescendants(void* p, bool b)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setContentsRectClipsDescendants(b);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
