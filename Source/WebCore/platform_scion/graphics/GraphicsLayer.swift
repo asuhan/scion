@@ -158,8 +158,7 @@ class GraphicsLayer {
   }
 
   func setPosition(p: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setPosition(self.p, FloatPointRaw(x: p.x, y: p.y))
   }
 
   func setAnchorPoint(p: FloatPoint3D) {

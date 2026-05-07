@@ -1532,6 +1532,7 @@ bool GraphicsLayer_drawsContent(const void*);
 struct IntPointRaw GraphicsLayer_scrollOffset(const void*);
 void GraphicsLayer_setScrollOffset(void*, struct IntPointRaw, bool);
 struct FloatPointRaw GraphicsLayer_position(const void*);
+void GraphicsLayer_setPosition(void*, struct FloatPointRaw);
 void GraphicsLayer_setDrawsContent(void*, bool);
 void GraphicsLayer_setContentsVisible(void*, bool);
 void GraphicsLayer_setUserInteractionEnabled(void*, bool);
