@@ -1564,6 +1564,7 @@ void GraphicsLayer_setAppliesDeviceScale(void*, bool);
 bool GraphicsLayer_appliesDeviceScale(const void*);
 void GraphicsLayer_setAllowsBackingStoreDetaching(void*, bool);
 void GraphicsLayer_setAllowsTiling(void*, bool);
+void GraphicsLayer_setShouldUpdateRootRelativeScaleFactor(void*, bool);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

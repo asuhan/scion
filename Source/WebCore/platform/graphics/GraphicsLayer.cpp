@@ -323,6 +323,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setAllowsTiling(void* p, bool allow
     static_cast<WebCore::GraphicsLayer*>(p)->setAllowsTiling(allowsTiling);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setShouldUpdateRootRelativeScaleFactor(void* p, bool value)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setShouldUpdateRootRelativeScaleFactor(value);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

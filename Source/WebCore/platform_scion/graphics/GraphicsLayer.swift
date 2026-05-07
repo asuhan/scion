@@ -375,8 +375,7 @@ class GraphicsLayer {
   }
 
   func setShouldUpdateRootRelativeScaleFactor(value: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setShouldUpdateRootRelativeScaleFactor(p, value)
   }
 
   func tiledBacking() -> TiledBackingWrapper? {
