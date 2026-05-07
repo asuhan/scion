@@ -168,13 +168,12 @@ class GraphicsLayer {
 
   // The size of the layer.
   func size() -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let s = wk_interop.GraphicsLayer_size(p)
+    return FloatSize(width: s.width, height: s.height)
   }
 
   func setSize(size: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setSize(p, FloatSizeRaw(width: size.width, height: size.height))
   }
 
   func setBoundsOrigin(_ origin: FloatPoint) {
