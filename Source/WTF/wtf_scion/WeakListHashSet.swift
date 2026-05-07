@@ -38,8 +38,14 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     }
 
     func next() -> T? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if m_position == m_endPosition {
+        return nil
+      }
+      let value = *self
+      ++m_position
+      skipEmptyBuckets()
+      m_set.increaseOperationCountSinceLastCleanup()
+      return value
     }
 
     static prefix func * (it: WeakListHashSetIterator) -> T {
@@ -153,10 +159,17 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  private func increaseOperationCountSinceLastCleanup(_ count: UInt32 = 1) -> UInt32 {
+    m_operationCountSinceLastCleanup += count
+    return m_operationCountSinceLastCleanup
+  }
+
   private func amortizedCleanupIfNeeded(_ count: UInt32 = 1) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private let m_set = WeakPtrImplSet()
+  private var m_operationCountSinceLastCleanup: UInt32 = 0
 }
