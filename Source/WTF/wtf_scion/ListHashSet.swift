@@ -126,8 +126,10 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
   }
 
   func find(value: T) -> ListHashSetIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let it = m_impl[value] {
+      return makeIterator(it)
+    }
+    return end()
   }
 
   @discardableResult
