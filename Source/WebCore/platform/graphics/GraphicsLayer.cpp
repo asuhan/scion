@@ -338,6 +338,11 @@ extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsContentsTiling()
     return WebCore::GraphicsLayer::supportsContentsTiling();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setShouldPaintUsingCompositeCopy(void* p, bool copy)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setShouldPaintUsingCompositeCopy(copy);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(AnimationValue);

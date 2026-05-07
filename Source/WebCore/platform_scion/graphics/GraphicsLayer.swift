@@ -397,8 +397,7 @@ class GraphicsLayer {
   }
 
   func setShouldPaintUsingCompositeCopy(_ copy: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setShouldPaintUsingCompositeCopy(p, copy)
   }
 
   func setAnimationExtent(_ animationExtent: FloatRectWrapper?) {

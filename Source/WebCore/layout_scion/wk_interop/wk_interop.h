@@ -1567,6 +1567,7 @@ void GraphicsLayer_setAllowsTiling(void*, bool);
 void GraphicsLayer_setShouldUpdateRootRelativeScaleFactor(void*, bool);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
+void GraphicsLayer_setShouldPaintUsingCompositeCopy(void*, bool);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 const void* FrameSelection_selection(const void*);
 void FrameSelection_setNeedsSelectionUpdate(void* p, bool);
