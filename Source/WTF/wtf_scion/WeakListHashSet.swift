@@ -133,8 +133,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func computeSize() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    removeNullReferences()
+    return m_set.size()
   }
 
   @discardableResult
