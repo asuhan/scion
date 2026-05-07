@@ -95,8 +95,7 @@ class RenderLayoutStateWrapper {
   }
 
   func needsBlockDirectionLocationSetBeforeLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderLayoutState_needsBlockDirectionLocationSetBeforeLayout(p)
   }
 
   func renderer() -> RenderElementWrapper? {
