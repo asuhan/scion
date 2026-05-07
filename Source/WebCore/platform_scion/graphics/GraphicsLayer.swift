@@ -354,10 +354,7 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
-  func setShowRepaintCounter(show: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setShowRepaintCounter(show: Bool) { wk_interop.GraphicsLayer_setShowRepaintCounter(p, show) }
 
   func pixelAlignmentOffset() -> FloatSize {
     // TODO(asuhan): implement this
