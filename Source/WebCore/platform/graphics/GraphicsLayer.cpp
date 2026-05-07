@@ -90,6 +90,17 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setReplicatedLayerPosition(void* p,
     static_cast<WebCore::GraphicsLayer*>(p)->setReplicatedLayerPosition({ point.x, point.y });
 }
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsLayer_offsetFromRenderer(const void* p)
+{
+    const auto offset = static_cast<const WebCore::GraphicsLayer*>(p)->offsetFromRenderer();
+    return { offset.width(), offset.height() };
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();

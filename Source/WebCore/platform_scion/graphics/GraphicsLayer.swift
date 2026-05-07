@@ -126,8 +126,8 @@ class GraphicsLayer {
 
   // Offset is origin of the renderer minus origin of the graphics layer.
   func offsetFromRenderer() -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offset = wk_interop.GraphicsLayer_offsetFromRenderer(p)
+    return FloatSize(width: offset.width, height: offset.height)
   }
 
   func setOffsetFromRenderer(
