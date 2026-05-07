@@ -25,11 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class WeakPtr<T> {
-  init(_ object: T?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+class WeakPtr<T: AnyObject>: Hashable {
+  init(_ object: T?) { self.m_object = object }
 
   func bool() -> Bool {
     // TODO(asuhan): implement this
@@ -40,4 +37,17 @@ class WeakPtr<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func == (_ a: WeakPtr<T>, _ b: WeakPtr<T>) -> Bool {
+    if a.m_object == nil || b.m_object == nil {
+      return (a.m_object == nil) == (b.m_object == nil)
+    }
+    return ObjectIdentifier(a.m_object!) == ObjectIdentifier(b.m_object!)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(m_object != nil ? UInt(bitPattern: ObjectIdentifier(m_object!)) : 0)
+  }
+
+  private let m_object: T?
 }

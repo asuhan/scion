@@ -57,6 +57,8 @@ final class ListHashSetIterator<T>: IteratorProtocol, Equatable {
 final class ListHashSet<T: Equatable & Hashable>: Sequence {
   private typealias Node = ListHashSetNode<T>
 
+  typealias iterator = ListHashSetIterator<T>
+
   init() {}
 
   struct AddResult {

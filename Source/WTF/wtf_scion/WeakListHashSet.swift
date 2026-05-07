@@ -25,10 +25,18 @@
  */
 
 final class WeakListHashSet<T: AnyObject>: Sequence {
-  private typealias WeakPtrImplSet = ListHashSet<WeakRef<T>>
-  typealias AddResult = ListHashSet<WeakRef<T>>.AddResult
+  typealias WeakPtrImplSet = ListHashSet<WeakPtr<T>>
+  typealias AddResult = WeakPtrImplSet.AddResult
 
   final class WeakListHashSetIterator: IteratorProtocol, Equatable {
+    init(_ set_: WeakListHashSet, _ position: WeakPtrImplSet.iterator) {
+      m_set = set_
+      m_position = position
+      m_beginPosition = set_.m_set.begin()
+      m_endPosition = set_.m_set.end()
+      skipEmptyBuckets()
+    }
+
     func next() -> T? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -49,11 +57,21 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private func skipEmptyBuckets() {
+      while m_position != m_endPosition && !(*m_position).bool() {
+        ++m_position
+      }
+    }
+
+    private let m_set: WeakListHashSet
+    private let m_position: WeakPtrImplSet.iterator
+    private let m_beginPosition: WeakPtrImplSet.iterator
+    private let m_endPosition: WeakPtrImplSet.iterator
   }
 
   func makeIterator() -> WeakListHashSetIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return WeakListHashSetIterator(self, m_set.begin())
   }
 
   func begin() -> WeakListHashSetIterator {
@@ -79,7 +97,7 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   @discardableResult
   func add(value: T) -> AddResult {
     amortizedCleanupIfNeeded()
-    return m_set.add(value: WeakRef(value))
+    return m_set.add(value: WeakPtr(value))
   }
 
   func appendOrMoveToLast(value: T) -> AddResult {
