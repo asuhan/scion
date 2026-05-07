@@ -59,6 +59,17 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
       return it
     }
 
+    @discardableResult
+    static prefix func -- (it: WeakListHashSetIterator) -> WeakListHashSetIterator {
+      assert(it.m_position != it.m_beginPosition)
+      --it.m_position
+      while it.m_position != it.m_beginPosition && !(*it.m_position).bool() {
+        --it.m_position
+      }
+      it.m_set.increaseOperationCountSinceLastCleanup()
+      return it
+    }
+
     static func == (this: WeakListHashSetIterator, other: WeakListHashSetIterator) -> Bool {
       return this.m_position == other.m_position
     }
@@ -160,8 +171,9 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func last() -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let it = end()
+    --it
+    return *it
   }
 
   func deepCopy() -> WeakListHashSet<T> {

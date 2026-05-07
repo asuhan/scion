@@ -50,8 +50,13 @@ final class ListHashSetIterator<T: Equatable & Hashable>: IteratorProtocol, Equa
 
   @discardableResult
   static prefix func -- (it: ListHashSetIterator<T>) -> ListHashSetIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(it.m_position !== it.m_set.m_head)
+    if it.m_position == nil {
+      it.m_position = it.m_set.m_tail
+    } else {
+      it.m_position = it.m_position!.m_prev
+    }
+    return it
   }
 
   // Comparison.
@@ -70,7 +75,7 @@ final class ListHashSetIterator<T: Equatable & Hashable>: IteratorProtocol, Equa
 }
 
 final class ListHashSet<T: Equatable & Hashable>: Sequence {
-  private typealias Node = ListHashSetNode<T>
+  typealias Node = ListHashSetNode<T>
 
   typealias iterator = ListHashSetIterator<T>
 
@@ -181,8 +186,8 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
   }
 
   private var m_impl = [T: Node]()
-  private var m_head: Node? = nil
-  private var m_tail: Node? = nil
+  var m_head: Node? = nil
+  var m_tail: Node? = nil
 }
 
 class ListHashSetNode<T> {
