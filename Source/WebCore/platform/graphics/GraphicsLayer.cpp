@@ -152,6 +152,16 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setSize(void* p, FloatSizeRaw size)
     static_cast<WebCore::GraphicsLayer*>(p)->setSize({ size.width, size.height });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setBoundsOrigin(void* p, FloatPointRaw point)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setBoundsOrigin({ point.x, point.y });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_syncBoundsOrigin(void* p, FloatPointRaw point)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->syncBoundsOrigin({ point.x, point.y });
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();

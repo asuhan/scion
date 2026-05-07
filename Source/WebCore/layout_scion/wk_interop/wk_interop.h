@@ -1535,6 +1535,8 @@ struct FloatPointRaw GraphicsLayer_position(const void*);
 void GraphicsLayer_setPosition(void*, struct FloatPointRaw);
 struct FloatSizeRaw GraphicsLayer_size(const void*);
 void GraphicsLayer_setSize(void*, struct FloatSizeRaw);
+void GraphicsLayer_setBoundsOrigin(void*, struct FloatPointRaw);
+void GraphicsLayer_syncBoundsOrigin(void*, struct FloatPointRaw);
 void GraphicsLayer_setDrawsContent(void*, bool);
 void GraphicsLayer_setContentsVisible(void*, bool);
 void GraphicsLayer_setUserInteractionEnabled(void*, bool);

@@ -177,14 +177,12 @@ class GraphicsLayer {
   }
 
   func setBoundsOrigin(_ origin: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setBoundsOrigin(self.p, FloatPointRaw(x: origin.x, y: origin.y))
   }
 
   // For platforms that move underlying platform layers on a different thread for scrolling; just update the GraphicsLayer state.
   func syncBoundsOrigin(_ origin: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_syncBoundsOrigin(self.p, FloatPointRaw(x: origin.x, y: origin.y))
   }
 
   func setTransform(matrix: TransformationMatrix) {
