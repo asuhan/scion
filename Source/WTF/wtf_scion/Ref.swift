@@ -25,6 +25,8 @@
  */
 
 class Ref<T: AnyObject>: Equatable, Hashable {
+  init(_ object: T) { self.m_object = object }
+
   static prefix func * (_ this: Ref<T>) -> T {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -39,4 +41,6 @@ class Ref<T: AnyObject>: Equatable, Hashable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_object: T
 }

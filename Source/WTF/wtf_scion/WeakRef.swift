@@ -24,10 +24,7 @@
  */
 
 class WeakRef<T: AnyObject>: Equatable, Hashable {
-  init(_ object: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(_ object: T) { self.m_impl = Ref(object) }
 
   static prefix func * (_ this: WeakRef<T>) -> T {
     // TODO(asuhan): implement this
@@ -43,4 +40,6 @@ class WeakRef<T: AnyObject>: Equatable, Hashable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_impl: Ref<T>
 }
