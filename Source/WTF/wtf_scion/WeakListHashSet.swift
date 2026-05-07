@@ -24,49 +24,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class WeakListSet<T: AnyObject>: Sequence {
+final class WeakListHashSet<T: AnyObject>: Sequence {
   private typealias WeakPtrImplSet = ListHashSet<WeakRef<T>>
   typealias AddResult = ListHashSet<WeakRef<T>>.AddResult
 
-  final class WeakListSetIterator: IteratorProtocol, Equatable {
+  final class WeakListHashSetIterator: IteratorProtocol, Equatable {
     func next() -> T? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    static prefix func * (it: WeakListSetIterator) -> T {
+    static prefix func * (it: WeakListHashSetIterator) -> T {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
     @discardableResult
-    static prefix func ++ (it: WeakListSetIterator) -> WeakListSetIterator {
+    static prefix func ++ (it: WeakListHashSetIterator) -> WeakListHashSetIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    static func == (this: WeakListSetIterator, other: WeakListSetIterator) -> Bool {
+    static func == (this: WeakListHashSetIterator, other: WeakListHashSetIterator) -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
   }
 
-  func makeIterator() -> WeakListSetIterator {
+  func makeIterator() -> WeakListHashSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func begin() -> WeakListSetIterator {
+  func begin() -> WeakListHashSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func end() -> WeakListSetIterator {
+  func end() -> WeakListHashSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func find(value: T) -> WeakListSetIterator {
+  func find(value: T) -> WeakListHashSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -87,7 +87,7 @@ final class WeakListSet<T: AnyObject>: Sequence {
     fatalError("Not implemented")
   }
 
-  func insertBefore(_ it: WeakListSetIterator, _ value: T) -> AddResult {
+  func insertBefore(_ it: WeakListHashSetIterator, _ value: T) -> AddResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -130,7 +130,7 @@ final class WeakListSet<T: AnyObject>: Sequence {
     fatalError("Not implemented")
   }
 
-  func deepCopy() -> WeakListSet<T> {
+  func deepCopy() -> WeakListHashSet<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

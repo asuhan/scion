@@ -1745,7 +1745,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     struct Provider {
       let providerLayer: RenderLayerWrapper?
-      let sharingLayers: WeakListSet<RenderLayerWrapper>
+      let sharingLayers: WeakListHashSet<RenderLayerWrapper>
       let absoluteBounds: LayoutRectWrapper
     }
 
@@ -1886,14 +1886,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         backingProviderCandidates.insert(
           Provider(
             providerLayer: candidateLayer,
-            sharingLayers: WeakListSet<RenderLayerWrapper>(),
+            sharingLayers: WeakListHashSet<RenderLayerWrapper>(),
             absoluteBounds: candidateAbsoluteBounds), at: 0)
       } else {
         // Otherwise insert it at the position captured in the snapshot
         backingProviderCandidates.insert(
           Provider(
             providerLayer: candidateLayer,
-            sharingLayers: WeakListSet<RenderLayerWrapper>(),
+            sharingLayers: WeakListHashSet<RenderLayerWrapper>(),
             absoluteBounds: candidateAbsoluteBounds), at: backingSharingSnapshot!.providerCount)
       }
     }
@@ -1943,7 +1943,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       backingProviderCandidates.append(
         Provider(
           providerLayer: candidateLayer,
-          sharingLayers: WeakListSet<RenderLayerWrapper>(),
+          sharingLayers: WeakListHashSet<RenderLayerWrapper>(),
           absoluteBounds: candidateAbsoluteBounds))
       backingSharingStackingContext = candidateStackingContext
     }

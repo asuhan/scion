@@ -23,7 +23,7 @@
 import Foundation
 import wk_interop
 
-typealias TrackedRendererListHashSet = WeakListSet<RenderBoxWrapper>
+typealias TrackedRendererListHashSet = WeakListHashSet<RenderBoxWrapper>
 
 private typealias TrackedDescendantsMap = [UInt: TrackedRendererListHashSet]
 private typealias TrackedContainerMap = HashMap<RenderBoxWrapper, WeakHashSet<RenderBlockWrapper>>?

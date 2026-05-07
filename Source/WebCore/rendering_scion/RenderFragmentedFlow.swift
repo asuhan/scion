@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  */
 
-typealias RenderFragmentContainerList = WeakListSet<RenderFragmentContainerWrapper>
+typealias RenderFragmentContainerList = WeakListHashSet<RenderFragmentContainerWrapper>
 typealias ContainingFragmentMap = HashMap<LegacyRootInlineBox?, RenderFragmentContainerWrapper>
 typealias FragmentIntervalTree = IntervalTree<LayoutUnit, RenderFragmentContainerWrapper>
 

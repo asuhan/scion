@@ -36,7 +36,7 @@ extension LayoutIntegration {
       self.boxTree = boxTree
       self.damageRect = paintInfo.rect
       self.damageRect.moveBy(offset: -self.paintOffset)
-      self.outlineObjects = WeakListSet<RenderInlineWrapper>()
+      self.outlineObjects = WeakListHashSet<RenderInlineWrapper>()
     }
 
     mutating func paint() {
@@ -181,7 +181,7 @@ extension LayoutIntegration {
     private let inlineBoxWithLayer: RenderInlineWrapper?
     private let inlineContent: InlineContent
     private let boxTree: BoxTree
-    private let outlineObjects: WeakListSet<RenderInlineWrapper>
+    private let outlineObjects: WeakListHashSet<RenderInlineWrapper>
   }
 
   struct LayerPaintScope {

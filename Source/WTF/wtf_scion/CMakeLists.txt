@@ -16,7 +16,7 @@ target_sources(layout_scion PRIVATE
     SetForScope.swift
     SystemTracing.swift
     WeakHashSet.swift
-    WeakListSet.swift
+    WeakListHashSet.swift
     WeakRef.swift
     WeakPtr.swift
 )
