@@ -55,6 +55,8 @@ final class ListHashSetIterator<T>: IteratorProtocol, Equatable {
 }
 
 final class ListHashSet<T: Equatable & Hashable>: Sequence {
+  private typealias Node = ListHashSetNode<T>
+
   init() {}
 
   struct AddResult {
@@ -85,8 +87,11 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
 
   @discardableResult
   func add(value: T) -> AddResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (isNewEntry, _) = m_impl.insert(value)
+    if isNewEntry {
+      appendNode(ListHashSetNode(value))
+    }
+    return AddResult(isNewEntry: isNewEntry)
   }
 
   func last() -> T {
@@ -104,5 +109,30 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     fatalError("Not implemented")
   }
 
-  private let m_impl = Set<T>()
+  private func appendNode(_ node: Node) {
+    node.m_prev = m_tail
+    node.m_next = nil
+
+    if m_tail != nil {
+      assert(m_head != nil)
+      m_tail!.m_next = node
+    } else {
+      assert(m_head == nil)
+      m_head = node
+    }
+
+    m_tail = node
+  }
+
+  private var m_impl = Set<T>()
+  private var m_head: Node? = nil
+  private var m_tail: Node? = nil
+}
+
+class ListHashSetNode<T> {
+  init(_ value: T) { m_value = value }
+
+  private let m_value: T
+  var m_prev: ListHashSetNode<T>? = nil
+  var m_next: ListHashSetNode<T>? = nil
 }
