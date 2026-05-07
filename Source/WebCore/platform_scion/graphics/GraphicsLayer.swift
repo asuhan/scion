@@ -288,8 +288,7 @@ class GraphicsLayer {
   }
 
   func setShapeLayerWindRule(_ windRule: WindRule) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setShapeLayerWindRule(p, windRule == .EvenOdd)
   }
 
   // Layer contents

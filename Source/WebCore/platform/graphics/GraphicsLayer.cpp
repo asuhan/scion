@@ -267,6 +267,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsRectClipsDescendants(voi
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsRectClipsDescendants(b);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setShapeLayerWindRule(void* p, bool even_odd)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setShapeLayerWindRule(even_odd ? WebCore::WindRule::EvenOdd : WebCore::WindRule::NonZero);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
