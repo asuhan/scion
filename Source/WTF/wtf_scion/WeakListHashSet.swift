@@ -52,8 +52,11 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
 
     @discardableResult
     static prefix func ++ (it: WeakListHashSetIterator) -> WeakListHashSetIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(it.m_position != it.m_endPosition)
+      ++it.m_position
+      it.skipEmptyBuckets()
+      it.m_set.increaseOperationCountSinceLastCleanup()
+      return it
     }
 
     static func == (this: WeakListHashSetIterator, other: WeakListHashSetIterator) -> Bool {
