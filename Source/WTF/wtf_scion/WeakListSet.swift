@@ -25,8 +25,8 @@
  */
 
 final class WeakListSet<T: AnyObject>: Sequence {
-  private typealias WeakPtrImplSet = ListSet<WeakNullableRef<T>>
-  typealias AddResult = ListSet<WeakNullableRef<T>>.AddResult
+  private typealias WeakPtrImplSet = ListSet<WeakRef<T>>
+  typealias AddResult = ListSet<WeakRef<T>>.AddResult
 
   final class WeakListSetIterator: IteratorProtocol, Equatable {
     func next() -> T? {

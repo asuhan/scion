@@ -17,7 +17,8 @@ target_sources(layout_scion PRIVATE
     SystemTracing.swift
     WeakHashSet.swift
     WeakListSet.swift
-    WeakNullableRef.swift
+    WeakRef.swift
+    WeakPtr.swift
 )
 add_subdirectory(text)
 add_subdirectory(unicode)

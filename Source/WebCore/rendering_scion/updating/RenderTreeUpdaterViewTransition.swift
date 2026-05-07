@@ -119,7 +119,7 @@ extension RenderTreeUpdater {
       }
 
       // Traverse named elements map to update/build all ::view-transition-group().
-      var descendantsToDelete: [WeakNullableRef<RenderObjectWrapper>] = []
+      var descendantsToDelete: [WeakPtr<RenderObjectWrapper>] = []
       var currentGroup = documentElementRenderer.view().viewTransitionRoot()!.firstChild()
       for name in activeViewTransition!.namedElements().keys() {
         assert(
@@ -130,7 +130,7 @@ extension RenderTreeUpdater {
               pseudoId: .ViewTransitionGroup, nameArgument: name),
             parentStyle: documentElementRenderer.style())
           if style == nil || style!.display() == .None {
-            descendantsToDelete.append(WeakNullableRef(currentGroup))
+            descendantsToDelete.append(WeakPtr(currentGroup))
           } else {
             updatePseudoElementGroup(
               groupStyle: style!, group: currentGroup as! RenderElementWrapper,

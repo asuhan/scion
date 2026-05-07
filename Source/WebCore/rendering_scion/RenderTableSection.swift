@@ -98,7 +98,7 @@ private func shouldFlexCellChild(cell: RenderTableCellWrapper, cellDescendant: R
 }
 
 private func compareCellPositions(
-  elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
+  elem1: WeakRef<RenderTableCellWrapper>, elem2: WeakRef<RenderTableCellWrapper>
 ) -> Bool {
   return (*elem1).rowIndex() < (*elem2).rowIndex()
 }
@@ -106,7 +106,7 @@ private func compareCellPositions(
 // This comparison is used only when we have overflowing cells as we have an unsorted array to sort. We thus need
 // to sort both on rows and columns to properly repaint.
 private func compareCellPositionsWithOverflowingCells(
-  elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
+  elem1: WeakRef<RenderTableCellWrapper>, elem2: WeakRef<RenderTableCellWrapper>
 ) -> Bool {
   if (*elem1).rowIndex() != (*elem2).rowIndex() {
     return (*elem1).rowIndex() < (*elem2).rowIndex()
@@ -1306,7 +1306,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
               }
             }
 
-            cells.append(WeakNullableRef(currentCell))
+            cells.append(WeakRef(currentCell))
           }
         }
       }

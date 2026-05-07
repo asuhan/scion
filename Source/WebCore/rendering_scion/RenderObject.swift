@@ -3605,7 +3605,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     // From RenderElement
     var referencedSVGResources: ReferencedSVGResources? = nil
-    let backdropRenderer = WeakNullableRef<RenderBlockFlowWrapper>(nil)
+    let backdropRenderer = WeakPtr<RenderBlockFlowWrapper>(nil)
 
     // From RenderBox
     let controlPart: ControlPartWrapper? = nil

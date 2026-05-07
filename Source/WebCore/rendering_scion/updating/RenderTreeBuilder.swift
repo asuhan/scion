@@ -548,7 +548,7 @@ class RenderTreeBuilder {
           spannerContainingBlockSet.add(value: containingBlock)
         }
       }
-      let oldEnclosingFragmentedFlow = WeakNullableRef(enclosingFragmentedFlow)
+      let oldEnclosingFragmentedFlow = WeakPtr(enclosingFragmentedFlow)
       for containingBlock in spannerContainingBlockSet {
         if !oldEnclosingFragmentedFlow.bool() {
           break

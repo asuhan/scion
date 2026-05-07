@@ -65,7 +65,7 @@ final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
   }
 }
 
-func copyToVector<T>(collection: WeakHashSet<T>) -> [WeakNullableRef<T>] {
+func copyToVector<T>(collection: WeakHashSet<T>) -> [WeakRef<T>] {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }

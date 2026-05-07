@@ -91,7 +91,7 @@ private class PositionedDescendantsMap {
       assert(containerMap[ObjectIdentifier(positionedDescendant)] != nil)
       return
     }
-    containerMap[ObjectIdentifier(positionedDescendant)] = WeakNullableRef(containingBlock)
+    containerMap[ObjectIdentifier(positionedDescendant)] = WeakRef(containingBlock)
   }
 
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
@@ -111,7 +111,7 @@ private class PositionedDescendantsMap {
   }
 
   private typealias DescendantsMap = [ObjectIdentifier: TrackedRendererListHashSet]
-  private typealias ContainerMap = [ObjectIdentifier: WeakNullableRef<RenderBlockWrapper>]
+  private typealias ContainerMap = [ObjectIdentifier: WeakRef<RenderBlockWrapper>]
 
   private var descendantsMap = DescendantsMap()
   private var containerMap = ContainerMap()
@@ -273,7 +273,7 @@ struct TextRunFlags: OptionSet {
 }
 
 private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<
-  WeakNullableRef<RenderInlineWrapper>
+  WeakRef<RenderInlineWrapper>
 >?]
 
 // Allocated only when some of these fields have non-default values

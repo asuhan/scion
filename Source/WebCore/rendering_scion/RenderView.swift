@@ -772,7 +772,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   func resumePausedImageAnimationsIfNeeded(_ visibleRect: IntRect) {
     assert(isNativeImpl())
     // TODO(asuhan): use array with inline storage
-    var toRemove: [(RenderElementWrapper, WeakNullableRef<CachedImageWrapper>)] = []
+    var toRemove: [(RenderElementWrapper, WeakRef<CachedImageWrapper>)] = []
     for (rendererRaw, cachedImages) in m_renderersWithPausedImageAnimation {
       for image in cachedImages {
         let renderer = Unmanaged<RenderElementWrapper>.fromOpaque(
@@ -1061,7 +1061,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
 
-  private let m_renderersWithPausedImageAnimation: [UInt: [WeakNullableRef<CachedImageWrapper>]] =
+  private let m_renderersWithPausedImageAnimation: [UInt: [WeakRef<CachedImageWrapper>]] =
     [:]
   private var m_SVGSVGElementsWithPausedImageAnimation: Set<UInt> = []
   private var m_visibleInViewportRenderers: Set<UInt> = []
