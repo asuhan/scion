@@ -232,8 +232,7 @@ class GraphicsLayer {
   }
 
   func setBlendMode(blendMode: BlendMode) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setBlendMode(p, blendMode.rawValue)
   }
 
   func setPaintingPhase(phase: GraphicsLayerPaintingPhase) {
