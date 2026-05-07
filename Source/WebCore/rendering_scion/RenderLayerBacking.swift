@@ -105,7 +105,7 @@ struct PaintedContentsInfo {
 }
 
 private func clearBackingSharingLayerProviders(
-  sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>, providerLayer: RenderLayerWrapper
+  sharingLayers: WeakListSet<RenderLayerWrapper>, providerLayer: RenderLayerWrapper
 ) {
   for layer in sharingLayers {
     if CPtrToInt(layer.backingProviderLayer?.layerId()) == CPtrToInt(providerLayer.layerId()) {
@@ -600,7 +600,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     clearBackingSharingLayers()
   }
 
-  func setBackingSharingLayers(_ sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>) {
+  func setBackingSharingLayers(_ sharingLayers: WeakListSet<RenderLayerWrapper>) {
     var sharingLayersChanged = backingSharingLayers.computeSize() != sharingLayers.computeSize()
     // For layers that used to share and no longer do, and are not composited, recompute repaint rects.
     for oldSharingLayer in backingSharingLayers {
@@ -3349,7 +3349,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var owningLayer: RenderLayerWrapper? = nil
 
   // A list other layers that paint into this backing store, later than owningLayer in paint order.
-  private var backingSharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
+  private var backingSharingLayers = WeakListSet<RenderLayerWrapper>()
 
   var ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
   var overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.

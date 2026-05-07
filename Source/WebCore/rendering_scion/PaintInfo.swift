@@ -36,7 +36,7 @@ struct PaintInfoWrapper {
   init(
     newContext: GraphicsContextWrapper, newRect: LayoutRectWrapper, newPhase: PaintPhase,
     newPaintBehavior: PaintBehavior, newSubtreePaintRoot: RenderObjectWrapper? = nil,
-    newOutlineObjects: ListSet<RenderInlineWrapper, UInt>? = nil,
+    newOutlineObjects: WeakListSet<RenderInlineWrapper>? = nil,
     overlapTestRequests: OverlapTestRequestMap? = nil,
     newPaintContainer: RenderLayerModelObjectWrapper? = nil,
     enclosingSelfPaintingLayer: RenderLayerWrapper? = nil,
@@ -241,7 +241,7 @@ struct PaintInfoWrapper {
   }
 
   // used to list outlines that should be painted by a block with inline children
-  var outlineObjects: ListSet<RenderInlineWrapper, UInt>? {
+  var outlineObjects: WeakListSet<RenderInlineWrapper>? {
     get {
       if n == nil {
         // TODO(asuhan): implement this
@@ -318,7 +318,7 @@ struct PaintInfoWrapper {
     var phase: PaintPhase
     let paintBehavior: PaintBehavior
     let subtreePaintRoot: RenderObjectWrapper?  // used to draw just one element and its visual children
-    var outlineObjects: WeakListSet<RenderInlineWrapper, UInt>?  // used to list outlines that should be painted by a block with inline children
+    var outlineObjects: WeakListSet<RenderInlineWrapper>?  // used to list outlines that should be painted by a block with inline children
     let overlapTestRequests: OverlapTestRequestMap?
     let paintContainer: RenderLayerModelObjectWrapper?  // the layer object that originates the current painting
     var requireSecurityOriginAccessForWidgets: Bool

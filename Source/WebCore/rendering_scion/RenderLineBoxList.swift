@@ -63,7 +63,7 @@ class RenderLineBoxList {
     }
 
     var info = paintInfo
-    let outlineObjects = WeakListSet<RenderInlineWrapper, UInt>()
+    let outlineObjects = WeakListSet<RenderInlineWrapper>()
     info.outlineObjects = outlineObjects
 
     // See if our root lines intersect with the dirty rect.  If so, then we paint

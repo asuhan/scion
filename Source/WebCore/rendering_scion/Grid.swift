@@ -25,7 +25,7 @@
 
 typealias GridCell = [RenderBoxWrapper]
 private typealias GridAsMatrix = [[GridCell]]
-typealias OrderedTrackIndexSet = ListSet<UInt64, UInt64>
+typealias OrderedTrackIndexSet = ListSet<UInt64>
 
 final class Grid {
   init(grid: RenderGridWrapper) {

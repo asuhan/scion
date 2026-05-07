@@ -15,6 +15,7 @@ target_sources(layout_scion PRIVATE
     SetForScope.swift
     SystemTracing.swift
     WeakHashSet.swift
+    WeakListSet.swift
     WeakNullableRef.swift
 )
 add_subdirectory(text)

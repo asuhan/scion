@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2005-2024 Apple Inc. All rights reserved.
- * Copyright (C) 2011, Benjamin Poulain <ikipou@gmail.com>
+ * Copyright (C) 2023 Apple Inc. All rights reserved.
  * Copyright (C) 2026 Scion authors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,56 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class ListSetIterator<T>: IteratorProtocol, Equatable {
-  func next() -> T? {
+final class WeakListSet<T: AnyObject>: Sequence {
+  typealias AddResult = ListSet<T>.AddResult
+
+  final class WeakListSetIterator: IteratorProtocol, Equatable {
+    func next() -> T? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static prefix func * (it: WeakListSetIterator) -> T {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    @discardableResult
+    static prefix func ++ (it: WeakListSetIterator) -> WeakListSetIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static func == (this: WeakListSetIterator, other: WeakListSetIterator) -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  func makeIterator() -> WeakListSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  static prefix func * (it: ListSetIterator<T>) -> T {
+  func begin() -> WeakListSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  @discardableResult
-  static prefix func ++ (it: ListSetIterator<T>) -> ListSetIterator<T> {
+  func end() -> WeakListSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  @discardableResult
-  static prefix func -- (it: ListSetIterator<T>) -> ListSetIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func == (this: ListSetIterator<T>, other: ListSetIterator<T>) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
-
-final class ListSet<T>: Sequence {
-  struct AddResult {
-    let isNewEntry: Bool
-  }
-
-  func size() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func begin() -> ListSetIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func end() -> ListSetIterator<T> {
+  func find(value: T) -> WeakListSetIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -90,17 +81,48 @@ final class ListSet<T>: Sequence {
     fatalError("Not implemented")
   }
 
+  func appendOrMoveToLast(value: T) -> AddResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func insertBefore(_ it: WeakListSetIterator, _ value: T) -> AddResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func remove(value: T) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isEmptyIgnoringNullReferences() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeSize() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func first() -> T {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func last() -> T {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func find(value: T) -> ListSetIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func makeIterator() -> ListSetIterator<T> {
+  func deepCopy() -> WeakListSet<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

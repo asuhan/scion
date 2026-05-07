@@ -203,7 +203,7 @@ private func coalesceAdjacentWithSameRanges(styledTexts: [StyledMarkedText]) -> 
 }
 
 private func orderHighlights(
-  markedTextsNames: ListSet<AtomStringWrapper, AtomStringWrapper>, markedTexts: inout [MarkedText]
+  markedTextsNames: ListSet<AtomStringWrapper>, markedTexts: inout [MarkedText]
 ) {
   if markedTexts.isEmpty {
     return
@@ -288,7 +288,7 @@ final class StyledMarkedText: MarkedText {
     }
 
     // Keep track of original order of highlights.
-    let markedTextsNames = ListSet<AtomStringWrapper, AtomStringWrapper>()
+    let markedTextsNames = ListSet<AtomStringWrapper>()
     for markedText in textsToSubdivide {
       if !markedText.highlightName.isNull() {
         markedTextsNames.add(value: markedText.highlightName)

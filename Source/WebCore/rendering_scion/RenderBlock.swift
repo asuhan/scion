@@ -23,7 +23,7 @@
 import Foundation
 import wk_interop
 
-typealias TrackedRendererListHashSet = ListSet<RenderBoxWrapper, UInt>
+typealias TrackedRendererListHashSet = WeakListSet<RenderBoxWrapper>
 
 private typealias TrackedDescendantsMap = [UInt: TrackedRendererListHashSet]
 private typealias TrackedContainerMap = HashMap<RenderBoxWrapper, WeakHashSet<RenderBlockWrapper>>?
@@ -272,9 +272,7 @@ struct TextRunFlags: OptionSet {
   static let RespectDirectionOverride = TextRunFlags(rawValue: 1 << 1)
 }
 
-private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<
-  RenderInlineWrapper, ObjectIdentifier
->?]
+private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<RenderInlineWrapper>?]
 
 // Allocated only when some of these fields have non-default values
 
