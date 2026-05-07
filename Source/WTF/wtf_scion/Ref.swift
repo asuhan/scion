@@ -29,14 +29,10 @@ class Ref<T: AnyObject>: Equatable, Hashable {
 
   static prefix func * (_ this: Ref<T>) -> T { return this.m_object }
 
-  static func == (_ a: Ref<T>, _ b: Ref<T>) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func == (_ a: Ref<T>, _ b: Ref<T>) -> Bool { return a.m_object === b.m_object }
 
   func hash(into hasher: inout Hasher) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    hasher.combine(UInt(bitPattern: ObjectIdentifier(m_object)))
   }
 
   private let m_object: T
