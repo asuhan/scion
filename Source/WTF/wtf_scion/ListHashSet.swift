@@ -25,7 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class ListHashSetIterator<T>: IteratorProtocol, Equatable {
+final class ListHashSetIterator<T: Equatable & Hashable>: IteratorProtocol, Equatable {
+  typealias ListHashSetType = ListHashSet<T>
+  typealias Node = ListHashSetNode<T>
+
+  init(_ set_: ListHashSetType, _ position: Node?) {
+    m_set = set_
+    m_position = position
+  }
+
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -52,6 +60,9 @@ final class ListHashSetIterator<T>: IteratorProtocol, Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_set: ListHashSetType?
+  private let m_position: Node?
 }
 
 final class ListHashSet<T: Equatable & Hashable>: Sequence {
@@ -72,10 +83,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
 
   func isEmpty() -> Bool { return m_impl.isEmpty }
 
-  func begin() -> ListHashSetIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func begin() -> ListHashSetIterator<T> { return makeIterator(m_head) }
 
   func end() -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
@@ -106,7 +114,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     fatalError("Not implemented")
   }
 
-  func makeIterator() -> ListHashSetIterator<T> {
+  func makeIterator() -> iterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -124,6 +132,10 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     }
 
     m_tail = node
+  }
+
+  private func makeIterator(_ position: Node?) -> iterator {
+    return iterator(self, position)
   }
 
   private var m_impl = Set<T>()
