@@ -60,16 +60,6 @@ inline LayoutUnit RenderBox::clientLogicalBottom() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return borderBefore() + clientLogicalHeight();
 }
-inline LayoutUnit RenderBox::clientLogicalHeight() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? clientHeight() : clientWidth();
-}
-inline LayoutUnit RenderBox::clientLogicalWidth() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? clientWidth() : clientHeight();
-}
 inline LayoutUnit RenderBox::clientTop() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

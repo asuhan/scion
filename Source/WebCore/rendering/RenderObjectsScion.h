@@ -407,6 +407,10 @@ public:
 
     LayoutRect paddingBoxRectIncludingScrollbar() const;
 
+    LayoutUnit clientLogicalWidth() const;
+
+    LayoutUnit clientLogicalHeight() const;
+
     bool hitTestClipPath(const HitTestLocation&, const LayoutPoint&) const;
 
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;

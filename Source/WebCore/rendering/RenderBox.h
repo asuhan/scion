@@ -272,8 +272,8 @@ public:
     inline LayoutUnit clientTop() const;
     WEBCORE_EXPORT LayoutUnit clientWidth() const;
     WEBCORE_EXPORT LayoutUnit clientHeight() const;
-    inline LayoutUnit clientLogicalWidth() const;
-    inline LayoutUnit clientLogicalHeight() const;
+    LayoutUnit clientLogicalWidth() const;
+    LayoutUnit clientLogicalHeight() const;
     inline LayoutUnit clientLogicalBottom() const;
     inline LayoutRect clientBoxRect() const;
 

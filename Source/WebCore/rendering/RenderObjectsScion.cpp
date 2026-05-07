@@ -376,6 +376,10 @@ extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
 
+extern "C" int32_t RenderBoxScion_clientLogicalWidth(const void*);
+
+extern "C" int32_t RenderBoxScion_clientLogicalHeight(const void*);
+
 extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
@@ -1156,6 +1160,16 @@ LayoutRect RenderBoxScion::visualOverflowRect() const
 LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
 {
     return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
+}
+
+LayoutUnit RenderBoxScion::clientLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_clientLogicalWidth(m_handle));
+}
+
+LayoutUnit RenderBoxScion::clientLogicalHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_clientLogicalHeight(m_handle));
 }
 
 bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, const LayoutPoint& accumulatedOffset) const

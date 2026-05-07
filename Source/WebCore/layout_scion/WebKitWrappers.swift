@@ -2085,6 +2085,18 @@ func RenderBoxScion_paddingBoxRectIncludingScrollbar(_ boxRaw: UnsafeRawPointer)
   return convertLayoutRect(box.paddingBoxRectIncludingScrollbar())
 }
 
+@_cdecl("RenderBoxScion_clientLogicalWidth")
+func RenderBoxScion_clientLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.clientLogicalWidth().rawValue()
+}
+
+@_cdecl("RenderBoxScion_clientLogicalHeight")
+func RenderBoxScion_clientLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.clientLogicalHeight().rawValue()
+}
+
 private func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
   return FloatPoint(x: p.x, y: p.y)
 }

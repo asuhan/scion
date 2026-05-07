@@ -845,6 +845,18 @@ LayoutUnit RenderBox::clientHeight() const
     return paddingBoxHeight();
 }
 
+LayoutUnit RenderBox::clientLogicalWidth() const
+{
+    if (m_scion) { return m_scion->clientLogicalWidth(); }
+    return style().isHorizontalWritingMode() ? clientWidth() : clientHeight();
+}
+
+LayoutUnit RenderBox::clientLogicalHeight() const
+{
+    if (m_scion) { return m_scion->clientLogicalHeight(); }
+    return style().isHorizontalWritingMode() ? clientHeight() : clientWidth();
+}
+
 int RenderBox::scrollWidth() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
