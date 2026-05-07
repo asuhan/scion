@@ -219,10 +219,19 @@ struct FloatRectRaw {
     float height;
 };
 
+namespace {
+
+WebCore::FloatRect toFloatRect(const FloatRectRaw& r)
+{
+    return { r.x, r.y, r.width, r.height };
+}
+
+} // namespace
+
 extern "C" WEBCORE_EXPORT void GraphicsLayer_setNeedsDisplayInRect(void* p, FloatRectRaw initialRect, bool shouldClip)
 {
     static_cast<WebCore::GraphicsLayer*>(p)->setNeedsDisplayInRect(
-        { initialRect.x, initialRect.y, initialRect.width, initialRect.height },
+        toFloatRect(initialRect),
         shouldClip
             ? WebCore::GraphicsLayer::ShouldClipToLayer::ClipToLayer
             : WebCore::GraphicsLayer::ShouldClipToLayer::DoNotClipToLayer);
@@ -246,6 +255,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsTilePhase(void* p, Float
 extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsTileSize(void* p, FloatSizeRaw s)
 {
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsTileSize({ s.width, s.height });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsRect(void* p, FloatRectRaw r)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setContentsRect(toFloatRect(r));
 }
 
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)

@@ -270,8 +270,7 @@ class GraphicsLayer {
   }
 
   func setContentsRect(_ r: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsRect(p, toFloatRectRaw(r))
   }
 
   func setContentsClippingRect(_ roundedRect: FloatRoundedRect) {
