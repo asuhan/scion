@@ -272,6 +272,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setShapeLayerWindRule(void* p, bool
     static_cast<WebCore::GraphicsLayer*>(p)->setShapeLayerWindRule(even_odd ? WebCore::WindRule::EvenOdd : WebCore::WindRule::NonZero);
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsLayer_usesContentsLayer(const void* p)
+{
+    return static_cast<const WebCore::GraphicsLayer*>(p)->usesContentsLayer();
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

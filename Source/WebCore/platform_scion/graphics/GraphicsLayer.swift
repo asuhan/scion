@@ -331,10 +331,7 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
-  func usesContentsLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func usesContentsLayer() -> Bool { return wk_interop.GraphicsLayer_usesContentsLayer(p) }
 
   enum ScalingFilter {
     case Linear
