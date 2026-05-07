@@ -167,6 +167,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setPreserves3D(void* p, bool b)
     static_cast<WebCore::GraphicsLayer*>(p)->setPreserves3D(b);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setMasksToBounds(void* p, bool b)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setMasksToBounds(b);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();

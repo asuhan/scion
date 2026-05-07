@@ -197,10 +197,7 @@ class GraphicsLayer {
 
   func setPreserves3D(_ b: Bool) { wk_interop.GraphicsLayer_setPreserves3D(p, b) }
 
-  func setMasksToBounds(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setMasksToBounds(b: Bool) { wk_interop.GraphicsLayer_setMasksToBounds(p, b) }
 
   func drawsContent() -> Bool { return wk_interop.GraphicsLayer_drawsContent(p) }
 
