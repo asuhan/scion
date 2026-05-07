@@ -202,6 +202,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setBlendMode(void* p, uint8_t blend
     static_cast<WebCore::GraphicsLayer*>(p)->setBlendMode(static_cast<WebCore::BlendMode>(blendMode));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setPaintingPhase(void* p, uint8_t phase)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setPaintingPhase(static_cast<WebCore::GraphicsLayerPaintingPhase>(phase));
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

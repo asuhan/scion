@@ -236,8 +236,7 @@ class GraphicsLayer {
   }
 
   func setPaintingPhase(phase: GraphicsLayerPaintingPhase) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setPaintingPhase(p, phase.rawValue)
   }
 
   enum ShouldClipToLayer {
