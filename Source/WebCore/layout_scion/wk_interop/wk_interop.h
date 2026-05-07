@@ -1542,6 +1542,7 @@ void GraphicsLayer_setContentsVisible(void*, bool);
 void GraphicsLayer_setUserInteractionEnabled(void*, bool);
 void GraphicsLayer_setContentsOpaque(void*, bool);
 void GraphicsLayer_setBackfaceVisibility(void*, bool);
+void GraphicsLayer_setOpacity(void*, float);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

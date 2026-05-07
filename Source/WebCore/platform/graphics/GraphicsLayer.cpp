@@ -192,6 +192,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setBackfaceVisibility(void* p, bool
     static_cast<WebCore::GraphicsLayer*>(p)->setBackfaceVisibility(b);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setOpacity(void* p, float opacity)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setOpacity(opacity);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

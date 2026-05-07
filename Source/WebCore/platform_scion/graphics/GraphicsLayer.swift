@@ -224,10 +224,7 @@ class GraphicsLayer {
 
   func setBackfaceVisibility(_ b: Bool) { wk_interop.GraphicsLayer_setBackfaceVisibility(p, b) }
 
-  func setOpacity(opacity: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setOpacity(opacity: Float32) { wk_interop.GraphicsLayer_setOpacity(p, opacity) }
 
   func setBackdropFiltersRect(_ backdropFiltersRect: FloatRoundedRect) {
     // TODO(asuhan): implement this
