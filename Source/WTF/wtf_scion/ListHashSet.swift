@@ -140,10 +140,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     return true
   }
 
-  func makeIterator() -> iterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func makeIterator() -> iterator { return begin() }
 
   private func unlink(_ node: Node) {
     if node.m_prev == nil {
