@@ -25,7 +25,8 @@
  */
 
 final class WeakListSet<T: AnyObject>: Sequence {
-  typealias AddResult = ListSet<T>.AddResult
+  private typealias WeakPtrImplSet = ListSet<WeakNullableRef<T>>
+  typealias AddResult = ListSet<WeakNullableRef<T>>.AddResult
 
   final class WeakListSetIterator: IteratorProtocol, Equatable {
     func next() -> T? {
@@ -103,8 +104,15 @@ final class WeakListSet<T: AnyObject>: Sequence {
   }
 
   func isEmptyIgnoringNullReferences() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_set.isEmpty() {
+      return true
+    }
+
+    let onlyContainsNullReferences = begin() == end()
+    if onlyContainsNullReferences {
+      clear()
+    }
+    return onlyContainsNullReferences
   }
 
   func computeSize() -> UInt32 {
@@ -126,4 +134,6 @@ final class WeakListSet<T: AnyObject>: Sequence {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_set = WeakPtrImplSet()
 }

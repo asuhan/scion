@@ -3445,7 +3445,7 @@ class RenderLayerWrapper {
   static func topLayerRenderLayers(renderView: RenderViewWrapper) -> [RenderLayerWrapper] {
     var layers: [RenderLayerWrapper] = []
     for element in renderView.document().topLayerElements() {
-      let renderer = element.containerRenderer()
+      let renderer = (*element).containerRenderer()
       if renderer == nil {
         continue
       }

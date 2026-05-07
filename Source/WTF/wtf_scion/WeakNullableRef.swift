@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class WeakNullableRef<T: AnyObject> {
+class WeakNullableRef<T: AnyObject>: Equatable, Hashable {
   init(_ object: T?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -35,6 +35,16 @@ class WeakNullableRef<T: AnyObject> {
   }
 
   static prefix func * (_ this: WeakNullableRef<T>) -> T {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (_ a: WeakNullableRef<T>, _ b: WeakNullableRef<T>) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hash(into hasher: inout Hasher) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -54,7 +54,9 @@ final class ListSetIterator<T>: IteratorProtocol, Equatable {
   }
 }
 
-final class ListSet<T>: Sequence {
+final class ListSet<T: Equatable & Hashable>: Sequence {
+  init() {}
+
   struct AddResult {
     let isNewEntry: Bool
   }
@@ -64,10 +66,7 @@ final class ListSet<T>: Sequence {
     fatalError("Not implemented")
   }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return m_impl.isEmpty }
 
   func begin() -> ListSetIterator<T> {
     // TODO(asuhan): implement this
@@ -104,4 +103,6 @@ final class ListSet<T>: Sequence {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_impl = Set<T>()
 }

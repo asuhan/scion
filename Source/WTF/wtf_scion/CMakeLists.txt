@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     ObjectIdentifierHashSet.swift
     OptionalComparison.swift
     PriorityQueue.swift
+    Ref.swift
     SaturatedArithmetic.swift
     SetForScope.swift
     SystemTracing.swift

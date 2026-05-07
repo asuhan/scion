@@ -272,7 +272,9 @@ struct TextRunFlags: OptionSet {
   static let RespectDirectionOverride = TextRunFlags(rawValue: 1 << 1)
 }
 
-private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<RenderInlineWrapper>?]
+private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<
+  WeakNullableRef<RenderInlineWrapper>
+>?]
 
 // Allocated only when some of these fields have non-default values
 
@@ -282,7 +284,7 @@ class RenderBlockRareData {
   let m_intrinsicBorderForFieldset = LayoutUnit()
 }
 
-private let continuationOutlineTable: ContinuationOutlineTableMap = [:]
+private let continuationOutlineTable = ContinuationOutlineTableMap()
 
 class RenderBlockWrapper: RenderBoxWrapper {
   override init(
@@ -3185,12 +3187,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
     // This matches the behavior that other browsers have.
     case .Backdrop:
       for element in document().topLayerElements() {
-        if element.containerRenderer() == nil {
+        if (*element).containerRenderer() == nil {
           continue
         }
-        assert(element.containerRenderer()!.backdropRenderer() != nil)
-        if CPtrToInt(element.containerRenderer()!.backdropRenderer()!.id()) == CPtrToInt(id()) {
-          return element
+        assert((*element).containerRenderer()!.backdropRenderer() != nil)
+        if CPtrToInt((*element).containerRenderer()!.backdropRenderer()!.id()) == CPtrToInt(id()) {
+          return *element
         }
       }
       fatalError("Not reached")
