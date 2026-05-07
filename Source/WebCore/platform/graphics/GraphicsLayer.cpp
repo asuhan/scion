@@ -207,6 +207,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setPaintingPhase(void* p, uint8_t p
     static_cast<WebCore::GraphicsLayer*>(p)->setPaintingPhase(static_cast<WebCore::GraphicsLayerPaintingPhase>(phase));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setNeedsDisplay(void* p)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setNeedsDisplay();
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

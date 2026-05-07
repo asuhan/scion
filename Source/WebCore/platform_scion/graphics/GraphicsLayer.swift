@@ -244,10 +244,7 @@ class GraphicsLayer {
     case ClipToLayer
   }
 
-  func setNeedsDisplay() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setNeedsDisplay() { wk_interop.GraphicsLayer_setNeedsDisplay(p) }
 
   // mark the given rect (in layer coords) as needing dispay. Never goes deep.
   func setNeedsDisplayInRect(
