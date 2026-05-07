@@ -56,9 +56,9 @@ final class ListHashSetIterator<T: Equatable & Hashable>: IteratorProtocol, Equa
     fatalError("Not implemented")
   }
 
+  // Comparison.
   static func == (this: ListHashSetIterator<T>, other: ListHashSetIterator<T>) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return this.m_position === other.m_position
   }
 
   private let m_set: ListHashSetType?
