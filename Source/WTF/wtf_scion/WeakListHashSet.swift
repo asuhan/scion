@@ -78,8 +78,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
 
   @discardableResult
   func add(value: T) -> AddResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    amortizedCleanupIfNeeded()
+    return m_set.add(value: WeakRef(value))
   }
 
   func appendOrMoveToLast(value: T) -> AddResult {
@@ -131,6 +131,11 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func deepCopy() -> WeakListHashSet<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func amortizedCleanupIfNeeded(_ count: UInt32 = 1) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
