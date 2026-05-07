@@ -133,8 +133,9 @@ class GraphicsLayer {
   func setOffsetFromRenderer(
     _ offset: FloatSize, _ shouldSetNeedsDisplay: ShouldSetNeedsDisplay = .SetNeedsDisplay
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setOffsetFromRenderer(
+      p, FloatSizeRaw(width: offset.width, height: offset.height),
+      shouldSetNeedsDisplay == .SetNeedsDisplay)
   }
 
   // Scroll offset of the content layer inside its scrolling parent layer.

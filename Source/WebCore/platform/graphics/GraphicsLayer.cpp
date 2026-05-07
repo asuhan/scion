@@ -101,6 +101,15 @@ extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsLayer_offsetFromRenderer(const vo
     return { offset.width(), offset.height() };
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setOffsetFromRenderer(void* p, FloatSizeRaw offset, bool shouldSetNeedsDisplay)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setOffsetFromRenderer(
+        { offset.width, offset.height },
+        shouldSetNeedsDisplay
+            ? WebCore::GraphicsLayer::ShouldSetNeedsDisplay::SetNeedsDisplay
+            : WebCore::GraphicsLayer::ShouldSetNeedsDisplay::DontSetNeedsDisplay);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();
