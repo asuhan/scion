@@ -93,10 +93,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
 
   func end() -> ListHashSetIterator<T> { return makeIterator(nil) }
 
-  func contains(value: T) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func contains(value: T) -> Bool { return m_impl[value] != nil }
 
   @discardableResult
   func add(value: T) -> AddResult {
