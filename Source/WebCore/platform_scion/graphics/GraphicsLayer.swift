@@ -250,8 +250,8 @@ class GraphicsLayer {
   func setNeedsDisplayInRect(
     _ initialRect: FloatRectWrapper, _ shouldClip: ShouldClipToLayer = .ClipToLayer
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setNeedsDisplayInRect(
+      p, toFloatRectRaw(initialRect), shouldClip == .ClipToLayer)
   }
 
   func setContentsNeedsDisplay() {

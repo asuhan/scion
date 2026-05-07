@@ -25,7 +25,7 @@
 
 import wk_interop
 
-private func toFloatRectRaw(_ rect: FloatRectWrapper) -> FloatRectRaw {
+func toFloatRectRaw(_ rect: FloatRectWrapper) -> FloatRectRaw {
   return FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height())
 }
 

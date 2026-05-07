@@ -1546,6 +1546,7 @@ void GraphicsLayer_setOpacity(void*, float);
 void GraphicsLayer_setBlendMode(void*, uint8_t);
 void GraphicsLayer_setPaintingPhase(void*, uint8_t);
 void GraphicsLayer_setNeedsDisplay(void*);
+void GraphicsLayer_setNeedsDisplayInRect(void*, struct FloatRectRaw, bool);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

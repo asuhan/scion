@@ -212,6 +212,22 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setNeedsDisplay(void* p)
     static_cast<WebCore::GraphicsLayer*>(p)->setNeedsDisplay();
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setNeedsDisplayInRect(void* p, FloatRectRaw initialRect, bool shouldClip)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setNeedsDisplayInRect(
+        { initialRect.x, initialRect.y, initialRect.width, initialRect.height },
+        shouldClip
+            ? WebCore::GraphicsLayer::ShouldClipToLayer::ClipToLayer
+            : WebCore::GraphicsLayer::ShouldClipToLayer::DoNotClipToLayer);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
