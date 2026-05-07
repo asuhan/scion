@@ -48,10 +48,7 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
       return value
     }
 
-    static prefix func * (it: WeakListHashSetIterator) -> T {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    static prefix func * (it: WeakListHashSetIterator) -> T { return *(*it.m_position) }
 
     @discardableResult
     static prefix func ++ (it: WeakListHashSetIterator) -> WeakListHashSetIterator {
