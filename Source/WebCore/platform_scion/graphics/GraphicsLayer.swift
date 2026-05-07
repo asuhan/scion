@@ -115,9 +115,8 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
-  func setReplicatedLayerPosition(_ p: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func setReplicatedLayerPosition(_ point: FloatPoint) {
+    wk_interop.GraphicsLayer_setReplicatedLayerPosition(p, FloatPointRaw(x: point.x, y: point.y))
   }
 
   enum ShouldSetNeedsDisplay {

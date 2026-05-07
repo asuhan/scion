@@ -80,6 +80,16 @@ extern "C" WEBCORE_EXPORT bool GraphicsLayer_isBackdropRoot(const void* p)
     return static_cast<const WebCore::GraphicsLayer*>(p)->isBackdropRoot();
 }
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setReplicatedLayerPosition(void* p, FloatPointRaw point)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setReplicatedLayerPosition({ point.x, point.y });
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();

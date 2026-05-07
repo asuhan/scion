@@ -1525,6 +1525,7 @@ void GraphicsLayer_removeAllChildren(void*);
 void GraphicsLayer_removeFromParent(void*);
 void GraphicsLayer_setIsBackdropRoot(void*, bool);
 bool GraphicsLayer_isBackdropRoot(const void*);
+void GraphicsLayer_setReplicatedLayerPosition(void*, struct FloatPointRaw);
 bool GraphicsLayer_drawsContent(const void*);
 void GraphicsLayer_setDrawsContent(void*, bool);
 void GraphicsLayer_setContentsVisible(void*, bool);
