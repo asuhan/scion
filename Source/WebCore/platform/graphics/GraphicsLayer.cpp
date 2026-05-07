@@ -162,6 +162,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_syncBoundsOrigin(void* p, FloatPoin
     static_cast<WebCore::GraphicsLayer*>(p)->syncBoundsOrigin({ point.x, point.y });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setPreserves3D(void* p, bool b)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setPreserves3D(b);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();

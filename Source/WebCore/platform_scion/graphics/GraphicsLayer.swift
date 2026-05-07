@@ -195,10 +195,7 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
-  func setPreserves3D(_ b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setPreserves3D(_ b: Bool) { wk_interop.GraphicsLayer_setPreserves3D(p, b) }
 
   func setMasksToBounds(b: Bool) {
     // TODO(asuhan): implement this
