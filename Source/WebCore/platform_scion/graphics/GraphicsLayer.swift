@@ -254,10 +254,7 @@ class GraphicsLayer {
       p, toFloatRectRaw(initialRect), shouldClip == .ClipToLayer)
   }
 
-  func setContentsNeedsDisplay() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setContentsNeedsDisplay() { wk_interop.GraphicsLayer_setContentsNeedsDisplay(p) }
 
   func markDamageRectsUnreliable() {
     // TODO(asuhan): implement this
