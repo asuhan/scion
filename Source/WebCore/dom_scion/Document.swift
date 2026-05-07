@@ -209,7 +209,7 @@ class Document: TreeScopeWrapper {
     return wk_interop.Document_renderingIsSuppressedForViewTransition(p)
   }
 
-  func topLayerElements() -> ListSet<Ref<ElementWrapper>> {
+  func topLayerElements() -> ListHashSet<Ref<ElementWrapper>> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

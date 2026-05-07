@@ -4,7 +4,7 @@ target_sources(layout_scion PRIVATE
     HashMap.swift
     HashSet.swift
     IteratorRange.swift
-    ListSet.swift
+    ListHashSet.swift
     MathExtras.swift
     MemoryPressureHandler.swift
     MonotonicTime.swift

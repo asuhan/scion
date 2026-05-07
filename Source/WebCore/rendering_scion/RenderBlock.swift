@@ -272,7 +272,7 @@ struct TextRunFlags: OptionSet {
   static let RespectDirectionOverride = TextRunFlags(rawValue: 1 << 1)
 }
 
-private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListSet<
+private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListHashSet<
   WeakRef<RenderInlineWrapper>
 >?]
 

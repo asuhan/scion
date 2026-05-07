@@ -39,7 +39,7 @@ struct CapturedElement {
 }
 
 class OrderedNamedElementsMapWrapper {
-  func keys() -> ListSet<AtomStringWrapper> {
+  func keys() -> ListHashSet<AtomStringWrapper> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

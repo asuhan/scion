@@ -25,36 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class ListSetIterator<T>: IteratorProtocol, Equatable {
+final class ListHashSetIterator<T>: IteratorProtocol, Equatable {
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  static prefix func * (it: ListSetIterator<T>) -> T {
+  static prefix func * (it: ListHashSetIterator<T>) -> T {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   @discardableResult
-  static prefix func ++ (it: ListSetIterator<T>) -> ListSetIterator<T> {
+  static prefix func ++ (it: ListHashSetIterator<T>) -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   @discardableResult
-  static prefix func -- (it: ListSetIterator<T>) -> ListSetIterator<T> {
+  static prefix func -- (it: ListHashSetIterator<T>) -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  static func == (this: ListSetIterator<T>, other: ListSetIterator<T>) -> Bool {
+  static func == (this: ListHashSetIterator<T>, other: ListHashSetIterator<T>) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 }
 
-final class ListSet<T: Equatable & Hashable>: Sequence {
+final class ListHashSet<T: Equatable & Hashable>: Sequence {
   init() {}
 
   struct AddResult {
@@ -68,12 +68,12 @@ final class ListSet<T: Equatable & Hashable>: Sequence {
 
   func isEmpty() -> Bool { return m_impl.isEmpty }
 
-  func begin() -> ListSetIterator<T> {
+  func begin() -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func end() -> ListSetIterator<T> {
+  func end() -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -94,12 +94,12 @@ final class ListSet<T: Equatable & Hashable>: Sequence {
     fatalError("Not implemented")
   }
 
-  func find(value: T) -> ListSetIterator<T> {
+  func find(value: T) -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func makeIterator() -> ListSetIterator<T> {
+  func makeIterator() -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
