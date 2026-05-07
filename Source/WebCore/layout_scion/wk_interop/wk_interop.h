@@ -1549,6 +1549,8 @@ void GraphicsLayer_setNeedsDisplay(void*);
 void GraphicsLayer_setNeedsDisplayInRect(void*, struct FloatRectRaw, bool);
 void GraphicsLayer_setContentsNeedsDisplay(void*);
 void GraphicsLayer_markDamageRectsUnreliable(void*);
+void GraphicsLayer_setContentsTilePhase(void*, struct FloatSizeRaw);
+void GraphicsLayer_setContentsTileSize(void*, struct FloatSizeRaw);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

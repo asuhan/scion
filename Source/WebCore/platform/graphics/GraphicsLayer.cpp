@@ -238,6 +238,16 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_markDamageRectsUnreliable(void* p)
     static_cast<WebCore::GraphicsLayer*>(p)->markDamageRectsUnreliable();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsTilePhase(void* p, FloatSizeRaw s)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setContentsTilePhase({ s.width, s.height });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsTileSize(void* p, FloatSizeRaw s)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setContentsTileSize({ s.width, s.height });
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

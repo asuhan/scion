@@ -260,13 +260,13 @@ class GraphicsLayer {
 
   // The tile phase is relative to the GraphicsLayer bounds.
   func setContentsTilePhase(_ p: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsTilePhase(
+      self.p, FloatSizeRaw(width: p.width, height: p.height))
   }
 
   func setContentsTileSize(_ s: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsTileSize(
+      self.p, FloatSizeRaw(width: s.width, height: s.height))
   }
 
   func setContentsRect(_ r: FloatRectWrapper) {
