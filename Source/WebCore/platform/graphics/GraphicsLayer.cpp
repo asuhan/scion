@@ -292,6 +292,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setAppliesDeviceScale(void* p, bool
     static_cast<WebCore::GraphicsLayer*>(p)->setAppliesDeviceScale(appliesScale);
 }
 
+extern "C" WEBCORE_EXPORT bool GraphicsLayer_appliesDeviceScale(const void* p)
+{
+    return static_cast<const WebCore::GraphicsLayer*>(p)->appliesDeviceScale();
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

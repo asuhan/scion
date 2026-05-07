@@ -369,10 +369,7 @@ class GraphicsLayer {
     wk_interop.GraphicsLayer_setAppliesDeviceScale(p, appliesScale)
   }
 
-  func appliesDeviceScale() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func appliesDeviceScale() -> Bool { return wk_interop.GraphicsLayer_appliesDeviceScale(p) }
 
   // Whether this layer can throw away backing store to save memory. False for layers that can be revealed by async scrolling.
   func setAllowsBackingStoreDetaching(allowDetaching: Bool) {

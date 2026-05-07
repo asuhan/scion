@@ -1558,6 +1558,7 @@ bool GraphicsLayer_usesContentsLayer(const void*);
 void GraphicsLayer_setShowRepaintCounter(void*, bool);
 void GraphicsLayer_setAppliesPageScale(void*, bool);
 void GraphicsLayer_setAppliesDeviceScale(void*, bool);
+bool GraphicsLayer_appliesDeviceScale(const void*);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
