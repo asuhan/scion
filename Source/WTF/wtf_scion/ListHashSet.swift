@@ -144,6 +144,12 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     return true
   }
 
+  func clear() {
+    m_impl.removeAll()
+    m_head = nil
+    m_tail = nil
+  }
+
   func makeIterator() -> iterator { return begin() }
 
   private func unlink(_ node: Node) {

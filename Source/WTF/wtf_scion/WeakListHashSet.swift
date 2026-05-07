@@ -127,8 +127,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func clear() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_set.clear()
+    cleanupHappened()
   }
 
   func isEmptyIgnoringNullReferences() -> Bool {
