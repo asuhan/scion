@@ -59,7 +59,13 @@ final class ListHashSetIterator<T: Equatable & Hashable>: IteratorProtocol, Equa
     return this.m_position === other.m_position
   }
 
-  private let m_set: ListHashSetType?
+  func node() -> Node? { return m_position }
+
+  func deepCopy() -> ListHashSetIterator<T> {
+    return ListHashSetIterator<T>(m_set, m_position)
+  }
+
+  private let m_set: ListHashSetType
   private var m_position: Node?
 }
 
@@ -74,10 +80,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     let isNewEntry: Bool
   }
 
-  func size() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func size() -> UInt32 { return UInt32(m_impl.count) }
 
   func isEmpty() -> Bool { return m_impl.isEmpty }
 
@@ -123,6 +126,16 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
   func find(value: T) -> ListHashSetIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func remove(_ it: iterator) -> Bool {
+    if it == end() {
+      return false
+    }
+    m_impl.removeValue(forKey: *it)
+    unlink(it.node()!)
+    return true
   }
 
   func makeIterator() -> iterator {

@@ -137,6 +137,22 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  private func removeNullReferences() -> Bool {
+    var didRemove = false
+    let it = m_set.begin()
+    while it != m_set.end() {
+      let currentIt = it.deepCopy()
+      ++it
+      if !(*currentIt).bool() {
+        m_set.remove(currentIt)
+        didRemove = true
+      }
+    }
+    cleanupHappened()
+    return didRemove
+  }
+
   func first() -> T {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -152,6 +168,11 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     fatalError("Not implemented")
   }
 
+  private func cleanupHappened() {
+    m_operationCountSinceLastCleanup = 0
+    m_maxOperationCountWithoutCleanup = Swift.min(UInt32.max / 2, m_set.size()) * 2
+  }
+
   @discardableResult
   private func increaseOperationCountSinceLastCleanup(_ count: UInt32 = 1) -> UInt32 {
     m_operationCountSinceLastCleanup += count
@@ -159,10 +180,13 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   private func amortizedCleanupIfNeeded(_ count: UInt32 = 1) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let currentCount = increaseOperationCountSinceLastCleanup(count)
+    if currentCount > m_maxOperationCountWithoutCleanup {
+      removeNullReferences()
+    }
   }
 
   private let m_set = WeakPtrImplSet()
   private var m_operationCountSinceLastCleanup: UInt32 = 0
+  private var m_maxOperationCountWithoutCleanup: UInt32 = 0
 }
