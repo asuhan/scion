@@ -362,13 +362,11 @@ class GraphicsLayer {
   }
 
   func setAppliesPageScale(appliesScale: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setAppliesPageScale(p, appliesScale)
   }
 
   func setAppliesDeviceScale(_ appliesScale: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setAppliesDeviceScale(p, appliesScale)
   }
 
   func appliesDeviceScale() -> Bool {

@@ -282,6 +282,16 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setShowRepaintCounter(void* p, bool
     static_cast<WebCore::GraphicsLayer*>(p)->setShowRepaintCounter(show);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setAppliesPageScale(void* p, bool appliesScale)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setAppliesPageScale(appliesScale);
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setAppliesDeviceScale(void* p, bool appliesScale)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setAppliesDeviceScale(appliesScale);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
