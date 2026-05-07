@@ -27,10 +27,7 @@
 class Ref<T: AnyObject>: Equatable, Hashable {
   init(_ object: T) { self.m_object = object }
 
-  static prefix func * (_ this: Ref<T>) -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static prefix func * (_ this: Ref<T>) -> T { return this.m_object }
 
   static func == (_ a: Ref<T>, _ b: Ref<T>) -> Bool {
     // TODO(asuhan): implement this
