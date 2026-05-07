@@ -130,6 +130,12 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setScrollOffset(void* p, IntPointRa
             : WebCore::GraphicsLayer::ShouldSetNeedsDisplay::DontSetNeedsDisplay);
 }
 
+extern "C" WEBCORE_EXPORT FloatPointRaw GraphicsLayer_position(const void* p)
+{
+    const auto position = static_cast<const WebCore::GraphicsLayer*>(p)->position();
+    return { position.x(), position.y() };
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_drawsContent(const void* p)
 {
     return static_cast<const WebCore::GraphicsLayer*>(p)->drawsContent();

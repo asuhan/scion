@@ -153,8 +153,8 @@ class GraphicsLayer {
 
   // The position of the layer (the location of its top-left corner in its parent)
   func position() -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let pos = wk_interop.GraphicsLayer_position(p)
+    return FloatPoint(x: pos.x, y: pos.y)
   }
 
   func setPosition(p: FloatPoint) {
