@@ -77,10 +77,7 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     return WeakListHashSetIterator(self, m_set.begin())
   }
 
-  func begin() -> WeakListHashSetIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func begin() -> WeakListHashSetIterator { return makeIterator() }
 
   func end() -> WeakListHashSetIterator {
     // TODO(asuhan): implement this
