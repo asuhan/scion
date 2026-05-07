@@ -154,8 +154,9 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func first() -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let it = begin()
+    assert(it != end())
+    return *it
   }
 
   func last() -> T {
