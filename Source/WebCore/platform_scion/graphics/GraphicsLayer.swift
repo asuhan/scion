@@ -256,10 +256,7 @@ class GraphicsLayer {
 
   func setContentsNeedsDisplay() { wk_interop.GraphicsLayer_setContentsNeedsDisplay(p) }
 
-  func markDamageRectsUnreliable() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func markDamageRectsUnreliable() { wk_interop.GraphicsLayer_markDamageRectsUnreliable(p) }
 
   // The tile phase is relative to the GraphicsLayer bounds.
   func setContentsTilePhase(_ p: FloatSize) {

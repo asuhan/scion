@@ -1548,6 +1548,7 @@ void GraphicsLayer_setPaintingPhase(void*, uint8_t);
 void GraphicsLayer_setNeedsDisplay(void*);
 void GraphicsLayer_setNeedsDisplayInRect(void*, struct FloatRectRaw, bool);
 void GraphicsLayer_setContentsNeedsDisplay(void*);
+void GraphicsLayer_markDamageRectsUnreliable(void*);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);

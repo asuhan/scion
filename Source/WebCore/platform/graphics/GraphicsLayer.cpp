@@ -233,6 +233,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsNeedsDisplay(void* p)
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsNeedsDisplay();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_markDamageRectsUnreliable(void* p)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->markDamageRectsUnreliable();
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));
