@@ -35,8 +35,10 @@ final class ListHashSetIterator<T: Equatable & Hashable>: IteratorProtocol, Equa
   }
 
   func next() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let value = *self
+    assert(m_position != nil)
+    m_position = m_position!.m_next
+    return value
   }
 
   static prefix func * (it: ListHashSetIterator<T>) -> T { return it.m_position!.m_value }
