@@ -147,8 +147,8 @@ class GraphicsLayer {
   func setScrollOffset(
     _ offset: ScrollOffset, _ shouldSetNeedsDisplay: ShouldSetNeedsDisplay = .SetNeedsDisplay
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setScrollOffset(
+      p, IntPointRaw(x: offset.x, y: offset.y), shouldSetNeedsDisplay == .SetNeedsDisplay)
   }
 
   // The position of the layer (the location of its top-left corner in its parent)
