@@ -100,8 +100,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func appendOrMoveToLast(value: T) -> AddResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    amortizedCleanupIfNeeded()
+    return m_set.appendOrMoveToLast(WeakPtr(value))
   }
 
   func insertBefore(_ it: WeakListHashSetIterator, _ value: T) -> AddResult {

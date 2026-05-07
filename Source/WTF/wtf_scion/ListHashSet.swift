@@ -92,11 +92,27 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
 
   @discardableResult
   func add(value: T) -> AddResult {
-    let (isNewEntry, _) = m_impl.insert(value)
-    if isNewEntry {
-      appendNode(ListHashSetNode(value))
+    let existingNode = m_impl[value]
+    if existingNode == nil {
+      let node = ListHashSetNode(value)
+      m_impl[value] = node
+      appendNode(node)
     }
-    return AddResult(isNewEntry: isNewEntry)
+    return AddResult(isNewEntry: existingNode == nil)
+  }
+
+  // Add the value to the end of the collection. If the value was already in
+  // the list, it is moved to the end.
+  func appendOrMoveToLast(_ value: T) -> AddResult {
+    let existingNode = m_impl[value]
+    let node = existingNode ?? ListHashSetNode(value)
+    if existingNode != nil {
+      unlink(node)
+    } else {
+      m_impl[value] = node
+    }
+    appendNode(node)
+    return AddResult(isNewEntry: existingNode == nil)
   }
 
   func last() -> T {
@@ -112,6 +128,24 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
   func makeIterator() -> iterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func unlink(_ node: Node) {
+    if node.m_prev == nil {
+      assert(node === m_head)
+      m_head = node.m_next
+    } else {
+      assert(node !== m_head)
+      node.m_prev!.m_next = node.m_next
+    }
+
+    if node.m_next == nil {
+      assert(node === m_tail)
+      m_tail = node.m_prev
+    } else {
+      assert(node !== m_tail)
+      node.m_next!.m_prev = node.m_prev
+    }
   }
 
   private func appendNode(_ node: Node) {
@@ -133,7 +167,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     return iterator(self, position)
   }
 
-  private var m_impl = Set<T>()
+  private var m_impl = [T: Node]()
   private var m_head: Node? = nil
   private var m_tail: Node? = nil
 }
