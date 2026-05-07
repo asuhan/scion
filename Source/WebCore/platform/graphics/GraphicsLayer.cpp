@@ -328,6 +328,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setShouldUpdateRootRelativeScaleFac
     static_cast<WebCore::GraphicsLayer*>(p)->setShouldUpdateRootRelativeScaleFactor(value);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setTileCoverage(void* p, uint8_t coverage)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setTileCoverage(coverage);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

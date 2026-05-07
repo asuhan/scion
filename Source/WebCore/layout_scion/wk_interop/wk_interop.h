@@ -1565,6 +1565,7 @@ bool GraphicsLayer_appliesDeviceScale(const void*);
 void GraphicsLayer_setAllowsBackingStoreDetaching(void*, bool);
 void GraphicsLayer_setAllowsTiling(void*, bool);
 void GraphicsLayer_setShouldUpdateRootRelativeScaleFactor(void*, bool);
+void GraphicsLayer_setTileCoverage(void*, uint8_t);
 bool GraphicsLayer_supportsLayerType(uint8_t);
 bool GraphicsLayer_supportsContentsTiling();
 void GraphicsLayer_setShouldPaintUsingCompositeCopy(void*, bool);

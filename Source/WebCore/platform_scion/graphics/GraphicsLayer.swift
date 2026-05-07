@@ -384,8 +384,7 @@ class GraphicsLayer {
   }
 
   func setTileCoverage(coverage: TiledBackingWrapper.TileCoverage) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setTileCoverage(p, coverage.rawValue)
   }
 
   static func supportsLayerType(type: `Type`) -> Bool {
