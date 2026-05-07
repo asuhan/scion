@@ -351,8 +351,8 @@ class GraphicsLayer {
   func setShowRepaintCounter(show: Bool) { wk_interop.GraphicsLayer_setShowRepaintCounter(p, show) }
 
   func pixelAlignmentOffset() -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let s = wk_interop.GraphicsLayer_pixelAlignmentOffset(p)
+    return FloatSize(width: s.width, height: s.height)
   }
 
   func setAppliesPageScale(appliesScale: Bool = true) {

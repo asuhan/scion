@@ -292,6 +292,12 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setShowRepaintCounter(void* p, bool
     static_cast<WebCore::GraphicsLayer*>(p)->setShowRepaintCounter(show);
 }
 
+extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsLayer_pixelAlignmentOffset(const void* p)
+{
+    const auto s = static_cast<const WebCore::GraphicsLayer*>(p)->pixelAlignmentOffset();
+    return { s.width(), s.height() };
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsLayer_setAppliesPageScale(void* p, bool appliesScale)
 {
     static_cast<WebCore::GraphicsLayer*>(p)->setAppliesPageScale(appliesScale);

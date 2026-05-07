@@ -1558,6 +1558,7 @@ void GraphicsLayer_setContentsRectClipsDescendants(void*, bool);
 void GraphicsLayer_setShapeLayerWindRule(void*, bool);
 bool GraphicsLayer_usesContentsLayer(const void*);
 void GraphicsLayer_setShowRepaintCounter(void*, bool);
+struct FloatSizeRaw GraphicsLayer_pixelAlignmentOffset(const void*);
 void GraphicsLayer_setAppliesPageScale(void*, bool);
 void GraphicsLayer_setAppliesDeviceScale(void*, bool);
 bool GraphicsLayer_appliesDeviceScale(const void*);
