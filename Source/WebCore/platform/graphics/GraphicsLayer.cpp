@@ -318,6 +318,11 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setAllowsBackingStoreDetaching(void
     static_cast<WebCore::GraphicsLayer*>(p)->setAllowsBackingStoreDetaching(allowDetaching);
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setAllowsTiling(void* p, bool allowsTiling)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setAllowsTiling(allowsTiling);
+}
+
 extern "C" WEBCORE_EXPORT bool GraphicsLayer_supportsLayerType(uint8_t type)
 {
     return WebCore::GraphicsLayer::supportsLayerType(static_cast<WebCore::GraphicsLayer::Type>(type));

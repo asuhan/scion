@@ -371,8 +371,7 @@ class GraphicsLayer {
   }
 
   func setAllowsTiling(allowsTiling: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setAllowsTiling(p, allowsTiling)
   }
 
   func setShouldUpdateRootRelativeScaleFactor(value: Bool) {
