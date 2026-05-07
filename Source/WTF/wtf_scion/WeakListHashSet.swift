@@ -89,8 +89,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func contains(value: T) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    increaseOperationCountSinceLastCleanup()
+    return m_set.contains(value: WeakPtr(value))
   }
 
   @discardableResult
