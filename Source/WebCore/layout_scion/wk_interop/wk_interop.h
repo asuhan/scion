@@ -1529,6 +1529,7 @@ void GraphicsLayer_setReplicatedLayerPosition(void*, struct FloatPointRaw);
 struct FloatSizeRaw GraphicsLayer_offsetFromRenderer(const void*);
 void GraphicsLayer_setOffsetFromRenderer(void*, struct FloatSizeRaw, bool);
 bool GraphicsLayer_drawsContent(const void*);
+struct IntPointRaw GraphicsLayer_scrollOffset(const void*);
 void GraphicsLayer_setDrawsContent(void*, bool);
 void GraphicsLayer_setContentsVisible(void*, bool);
 void GraphicsLayer_setUserInteractionEnabled(void*, bool);

@@ -140,8 +140,8 @@ class GraphicsLayer {
 
   // Scroll offset of the content layer inside its scrolling parent layer.
   func scrollOffset() -> ScrollOffset {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offset = wk_interop.GraphicsLayer_scrollOffset(p)
+    return ScrollOffset(x: offset.x, y: offset.y)
   }
 
   func setScrollOffset(
