@@ -1565,7 +1565,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsPositionedMovementLayoutOnly() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_needsPositionedMovementLayoutOnly(id())
+    }
     return needsPositionedMovementLayout()
       && !selfNeedsLayout()
       && !normalChildNeedsLayout()
