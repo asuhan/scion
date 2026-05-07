@@ -84,8 +84,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   func end() -> WeakListHashSetIterator { return WeakListHashSetIterator(self, m_set.end()) }
 
   func find(value: T) -> WeakListHashSetIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    increaseOperationCountSinceLastCleanup()
+    return WeakListHashSetIterator(self, m_set.find(value: WeakPtr(value)))
   }
 
   func contains(value: T) -> Bool {
