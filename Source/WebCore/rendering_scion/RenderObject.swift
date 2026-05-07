@@ -1382,7 +1382,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFixedPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isFixedPositioned(id())
+    }
     return isOutOfFlowPositioned() && style().position() == .Fixed
   }
 

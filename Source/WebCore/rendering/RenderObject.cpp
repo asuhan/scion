@@ -150,6 +150,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isOutOfFlowPositioned(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isOutOfFlowPositioned();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isFixedPositioned(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isFixedPositioned();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderView(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderView();
