@@ -70,17 +70,6 @@ inline FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& sty
     return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox()));
 }
 
-inline bool RenderElement::canContainFixedPositionObjects() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return isRenderView()
-        || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
-        || (hasBackdropFilter() && !isDocumentElementRenderer())
-        || (isRenderBlock() && style().willChange() && style().willChange()->createsContainingBlockForOutOfFlowPositioned(isDocumentElementRenderer()))
-        || isRenderOrLegacyRenderSVGForeignObject()
-        || shouldApplyLayoutOrPaintContainment();
-}
-
 inline bool RenderElement::createsGroupForStyle(const RenderStyle& style)
 {
     return style.hasOpacity() || style.hasMask() || style.clipPath() || style.hasFilter() || style.hasBackdropFilter() || style.hasBlendMode();

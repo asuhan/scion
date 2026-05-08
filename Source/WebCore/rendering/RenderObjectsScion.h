@@ -304,6 +304,8 @@ public:
 
     RenderObject* lastChild() const;
 
+    bool canContainFixedPositionObjects() const;
+
     bool canContainAbsolutelyPositionedObjects() const;
 
     bool shouldApplyPaintContainment() const;

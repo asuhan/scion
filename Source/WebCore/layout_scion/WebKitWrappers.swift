@@ -1850,6 +1850,12 @@ func RenderElementScion_lastChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutab
   return lastChild.id()
 }
 
+@_cdecl("RenderElementScion_canContainFixedPositionObjects")
+func RenderElementScion_canContainFixedPositionObjects(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.canContainFixedPositionObjects()
+}
+
 @_cdecl("RenderElementScion_canContainAbsolutelyPositionedObjects")
 func RenderElementScion_canContainAbsolutelyPositionedObjects(_ elementRaw: UnsafeRawPointer)
   -> Bool

@@ -232,6 +232,17 @@ const Layout::ElementBox* RenderElement::layoutBox() const
     return downcast<Layout::ElementBox>(RenderObject::layoutBox());
 }
 
+bool RenderElement::canContainFixedPositionObjects() const
+{
+    if (m_scion) { return m_scion->canContainFixedPositionObjects(); }
+    return isRenderView()
+        || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
+        || (hasBackdropFilter() && !isDocumentElementRenderer())
+        || (isRenderBlock() && style().willChange() && style().willChange()->createsContainingBlockForOutOfFlowPositioned(isDocumentElementRenderer()))
+        || isRenderOrLegacyRenderSVGForeignObject()
+        || shouldApplyLayoutOrPaintContainment();
+}
+
 bool RenderElement::canContainAbsolutelyPositionedObjects() const
 {
     if (m_scion) { return m_scion->canContainAbsolutelyPositionedObjects(); }
