@@ -50,8 +50,7 @@ final class LocalFrameWrapper: FrameWrapper {
   }
 
   func rootFrame() -> LocalFrameWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LocalFrameWrapper(wk_interop.LocalFrame_rootFrame(p))
   }
 
   func contentRenderer() -> RenderViewWrapper? {

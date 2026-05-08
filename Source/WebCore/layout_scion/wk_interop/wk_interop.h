@@ -636,6 +636,7 @@ float LocalFrame_frameScaleFactor(const void*);
 void* LocalFrame_view(const void* p);
 void* LocalFrame_eventHandler(void*);
 void* LocalFrame_selection(void*);
+void* LocalFrame_rootFrame(const void*);
 void LocalFrameViewLayoutContext_scheduleLayout(void*);
 bool LocalFrameViewLayoutContext_isInLayout(const void*);
 bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void*);

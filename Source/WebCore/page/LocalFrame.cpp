@@ -122,39 +122,45 @@
 
 #define FRAME_RELEASE_LOG_ERROR(channel, fmt, ...) RELEASE_LOG_ERROR(channel, "%p - Frame::" fmt, this, ##__VA_ARGS__)
 
-extern "C" void* LocalFrame_document(const void* p)
+extern "C" WEBCORE_EXPORT void* LocalFrame_document(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->document();
 }
 
-extern "C" const void* LocalFrame_editor(const void* p)
+extern "C" WEBCORE_EXPORT const void* LocalFrame_editor(const void* p)
 {
     return &static_cast<const WebCore::LocalFrame*>(p)->editor();
 }
 
-extern "C" bool LocalFrame_shouldUsePrintingLayout(const void* p)
+extern "C" WEBCORE_EXPORT bool LocalFrame_shouldUsePrintingLayout(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->shouldUsePrintingLayout();
 }
 
-extern "C" float LocalFrame_frameScaleFactor(const void* p)
+extern "C" WEBCORE_EXPORT float LocalFrame_frameScaleFactor(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->frameScaleFactor();
 }
 
-extern "C" void* LocalFrame_view(const void* p)
+extern "C" WEBCORE_EXPORT void* LocalFrame_view(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->view();
 }
 
-extern "C" void* LocalFrame_eventHandler(void* p)
+extern "C" WEBCORE_EXPORT void* LocalFrame_eventHandler(void* p)
 {
     return &static_cast<WebCore::LocalFrame*>(p)->eventHandler();
 }
 
-extern "C" void* LocalFrame_selection(void* p)
+extern "C" WEBCORE_EXPORT void* LocalFrame_selection(void* p)
 {
     return &static_cast<WebCore::LocalFrame*>(p)->selection();
+}
+
+extern "C" WEBCORE_EXPORT void* LocalFrame_rootFrame(const void* p)
+{
+    const auto root = &static_cast<const WebCore::LocalFrame*>(p)->rootFrame();
+    return const_cast<void*>(static_cast<const void*>(root));
 }
 
 namespace WebCore {
