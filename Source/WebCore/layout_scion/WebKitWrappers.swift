@@ -937,7 +937,7 @@ func RenderViewScion_mapLocalToContainer(
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   let ancestorContainer =
     ancestorContainerRaw != nil
-    ? createRenderObjectWrapperOrNative(ancestorContainerRaw!) as! RenderLayerModelObjectWrapper
+    ? createRenderObjectWrapperOrNative(ancestorContainerRaw!) as! RenderLayerModelObjectWrapper?
     : nil
   let transformState = TransformState(transformStateRaw)
   let mode = MapCoordinatesMode(rawValue: modeRaw)
