@@ -173,6 +173,11 @@ extern "C" WEBCORE_EXPORT void* EventHandler_autoscrollRenderer(const void* p)
     return static_cast<const WebCore::EventHandler*>(p)->autoscrollRenderer();
 }
 
+extern "C" WEBCORE_EXPORT void EventHandler_scheduleCursorUpdate(void* p)
+{
+    static_cast<WebCore::EventHandler*>(p)->scheduleCursorUpdate();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(EventHandler);

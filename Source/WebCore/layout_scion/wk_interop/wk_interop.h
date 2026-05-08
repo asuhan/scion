@@ -1583,6 +1583,7 @@ void* DragCaretController_caretRenderer(const void*);
 bool DragCaretController_isContentEditable(const void*);
 void EventHandler_stopAutoscrollTimer(void*, bool);
 void* EventHandler_autoscrollRenderer(const void*);
+void EventHandler_scheduleCursorUpdate(void*);
 void Style_loadPendingResources(const void* style, void* document, const void* element);
 bool HTMLElement_hasFrameTag(const void*);
 bool HTMLFrameSetElement_noResize(const void*);

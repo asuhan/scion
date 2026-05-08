@@ -43,10 +43,7 @@ final class EventHandler {
     return nil
   }
 
-  func scheduleCursorUpdate() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func scheduleCursorUpdate() { wk_interop.EventHandler_scheduleCursorUpdate(p) }
 
   private let p: UnsafeMutableRawPointer
 }
