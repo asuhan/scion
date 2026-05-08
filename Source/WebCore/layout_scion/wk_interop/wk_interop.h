@@ -1373,6 +1373,7 @@ const void* FillLayer_next(const void*);
 void* NinePieceImage_image(const void*);
 void* ShapeValue_image(const void*);
 void* Frame_page(const void*);
+void* Frame_settings(void*);
 bool Frame_isMainFrame(const void*);
 bool Frame_isRootFrame(const void*);
 const void* Page_dragCaretController(const void*);

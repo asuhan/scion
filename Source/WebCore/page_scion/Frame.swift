@@ -40,10 +40,7 @@ class FrameWrapper {
 
   func page() -> PageWrapper? { return PageWrapper(wk_interop.Frame_page(p)) }
 
-  func settings() -> SettingsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func settings() -> SettingsWrapper { return SettingsWrapper(wk_interop.Frame_settings(p)) }
 
   func isMainFrame() -> Bool { return wk_interop.Frame_isMainFrame(p) }
 
