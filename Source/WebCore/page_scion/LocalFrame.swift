@@ -42,10 +42,8 @@ final class LocalFrameWrapper: FrameWrapper {
 
   func eventHandler() -> EventHandler { return EventHandler(wk_interop.LocalFrame_eventHandler(p)) }
 
-  func checkedEventHandler() -> EventHandler {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  // TODO(asuhan): remove this, it's not needed in Swift
+  func checkedEventHandler() -> EventHandler { return eventHandler() }
 
   func selection() -> FrameSelectionWrapper {
     return FrameSelectionWrapper(wk_interop.LocalFrame_selection(p))
