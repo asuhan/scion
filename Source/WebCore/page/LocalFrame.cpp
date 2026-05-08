@@ -127,6 +127,11 @@ extern "C" void* LocalFrame_document(const void* p)
     return static_cast<const WebCore::LocalFrame*>(p)->document();
 }
 
+extern "C" const void* LocalFrame_editor(const void* p)
+{
+    return &static_cast<const WebCore::LocalFrame*>(p)->editor();
+}
+
 extern "C" bool LocalFrame_shouldUsePrintingLayout(const void* p)
 {
     return static_cast<const WebCore::LocalFrame*>(p)->shouldUsePrintingLayout();
