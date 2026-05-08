@@ -1411,6 +1411,12 @@ void RenderView::unregisterBoxWithScrollSnapPositions(const RenderBox& box)
     m_boxesWithScrollSnapPositions.remove(box);
 }
 
+const SingleThreadWeakHashSet<const RenderBox>& RenderView::boxesWithScrollSnapPositions()
+{
+    if (m_scion) { return m_scion->boxesWithScrollSnapPositions(); }
+    return m_boxesWithScrollSnapPositions;
+}
+
 void RenderView::registerContainerQueryBox(const RenderBox& box)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

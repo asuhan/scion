@@ -611,6 +611,8 @@ public:
 
     RenderLayer* takeStyleChangeLayerTreeMutationRoot();
 
+    const SingleThreadWeakHashSet<const RenderBox>& boxesWithScrollSnapPositions() const;
+
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 
     SingleThreadWeakPtr<RenderElement> viewTransitionRoot() const;
@@ -640,6 +642,8 @@ public:
     void* handle() const { return m_handle; }
 
 private:
+    // TODO(asuhan): remove when containerQueryBoxes is implemented
+    bool boxesWithScrollSnapPositionsIsEmpty() const;
     // TODO(asuhan): remove when containerQueryBoxes is implemented
     bool containerQueryBoxesIsEmpty() const;
 

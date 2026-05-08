@@ -996,6 +996,12 @@ func RenderViewScion_shouldUsePrintingLayout(_ viewRaw: UnsafeRawPointer) -> Boo
   return view.shouldUsePrintingLayout()
 }
 
+@_cdecl("RenderViewScion_boxesWithScrollSnapPositionsIsEmpty")
+func RenderViewScion_boxesWithScrollSnapPositionsIsEmpty(_ viewRaw: UnsafeRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.boxesWithScrollSnapPositionsIsEmpty()
+}
+
 @_cdecl("RenderViewScion_containerQueryBoxesIsEmpty")
 func RenderViewScion_containerQueryBoxesIsEmpty(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

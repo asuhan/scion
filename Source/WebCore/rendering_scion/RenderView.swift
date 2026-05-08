@@ -871,6 +871,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // TODO(asuhan): remove when boxesWithScrollSnapPositions is implemented
+  func boxesWithScrollSnapPositionsIsEmpty() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   // TODO(asuhan): remove when containerQueryBoxes is implemented
   func containerQueryBoxesIsEmpty() -> Bool {
     assert(isNativeImpl())

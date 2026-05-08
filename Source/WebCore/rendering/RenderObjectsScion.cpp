@@ -587,6 +587,8 @@ extern "C" void* RepaintRegionAccumulator_create(void*);
 
 extern "C" void RepaintRegionAccumulator_destroy(void*);
 
+extern "C" bool RenderViewScion_boxesWithScrollSnapPositionsIsEmpty(const void*);
+
 extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 
 namespace WebCore {
@@ -1624,6 +1626,16 @@ RenderLayer* RenderViewScion::takeStyleChangeLayerTreeMutationRoot()
     return static_cast<RenderLayer*>(RenderViewScion_takeStyleChangeLayerTreeMutationRoot(m_handle));
 }
 
+const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::boxesWithScrollSnapPositions() const
+{
+    static SingleThreadWeakHashSet<const RenderBox> unused;
+    if (boxesWithScrollSnapPositionsIsEmpty()) {
+        return unused;
+    }
+    ASSERT_NOT_REACHED();
+    return unused;
+}
+
 const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryBoxes() const
 {
     static SingleThreadWeakHashSet<const RenderBox> unused;
@@ -1692,6 +1704,11 @@ void* RenderViewScion::createRepaintRegionAccumulator() const
 void RenderViewScion::destroyRepaintRegionAccumulator(void* accumulatedRepaintRegion)
 {
     RepaintRegionAccumulator_destroy(accumulatedRepaintRegion);
+}
+
+bool RenderViewScion::boxesWithScrollSnapPositionsIsEmpty() const
+{
+    return RenderViewScion_boxesWithScrollSnapPositionsIsEmpty(m_handle);
 }
 
 bool RenderViewScion::containerQueryBoxesIsEmpty() const

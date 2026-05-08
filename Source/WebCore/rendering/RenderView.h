@@ -234,10 +234,7 @@ public:
 
     void registerBoxWithScrollSnapPositions(const RenderBox&);
     void unregisterBoxWithScrollSnapPositions(const RenderBox&);
-    const SingleThreadWeakHashSet<const RenderBox>& boxesWithScrollSnapPositions() {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_boxesWithScrollSnapPositions;
-    }
+    const SingleThreadWeakHashSet<const RenderBox>& boxesWithScrollSnapPositions();
 
     void registerContainerQueryBox(const RenderBox&);
     void unregisterContainerQueryBox(const RenderBox&);
