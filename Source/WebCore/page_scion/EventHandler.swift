@@ -32,8 +32,7 @@ final class EventHandler {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func stopAutoscrollTimer(_ rendererIsBeingDestroyed: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.EventHandler_stopAutoscrollTimer(p, rendererIsBeingDestroyed)
   }
 
   func autoscrollRenderer() -> RenderBoxWrapper? {

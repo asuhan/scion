@@ -163,6 +163,11 @@
 #include "PointerLockController.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void EventHandler_stopAutoscrollTimer(void* p, bool rendererIsBeingDestroyed)
+{
+    static_cast<WebCore::EventHandler*>(p)->stopAutoscrollTimer(rendererIsBeingDestroyed);
+}
+
 extern "C" WEBCORE_EXPORT void* EventHandler_autoscrollRenderer(const void* p)
 {
     return static_cast<const WebCore::EventHandler*>(p)->autoscrollRenderer();
