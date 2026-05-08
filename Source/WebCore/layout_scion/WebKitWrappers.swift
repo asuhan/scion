@@ -1811,9 +1811,15 @@ func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMu
 }
 
 @_cdecl("RenderElementScion_style")
-func RenderElementScion_style(_ elementRaw: UnsafeMutableRawPointer) -> UnsafeRawPointer {
+func RenderElementScion_style(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  return element.style!.p!
+  return element.elementStyle().p!
+}
+
+@_cdecl("RenderElementScion_mutableStyle")
+func RenderElementScion_mutableStyle(_ elementRaw: UnsafeMutableRawPointer) -> UnsafeRawPointer {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.mutableStyle().p!
 }
 
 @_cdecl("RenderElementScion_setStyle")

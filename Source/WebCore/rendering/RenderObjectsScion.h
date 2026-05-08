@@ -294,6 +294,8 @@ public:
 
     const RenderStyle& style() const;
 
+    RenderStyle& mutableStyle();
+
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
     Element* element() const;

@@ -358,6 +358,12 @@ const RenderStyle& RenderElement::firstLineStyle() const
     return style();
 }
 
+RenderStyle& RenderElement::mutableStyle()
+{
+    if (m_scion) { return m_scion->mutableStyle(); }
+    return m_style;
+}
+
 StyleDifference RenderElement::adjustStyleDifference(StyleDifference diff, OptionSet<StyleDifferenceContextSensitiveProperty> contextSensitiveProperties) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

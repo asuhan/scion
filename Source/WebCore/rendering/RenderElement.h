@@ -79,11 +79,7 @@ public:
     const RenderStyle& firstLineStyle() const;
 
     // FIXME: Style shouldn't be mutated.
-    RenderStyle& mutableStyle()
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_style;
-    }
+    RenderStyle& mutableStyle();
 
     void initializeStyle();
 
