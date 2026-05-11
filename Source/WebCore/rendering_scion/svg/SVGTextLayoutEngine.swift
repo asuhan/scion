@@ -230,7 +230,8 @@ struct SVGTextLayoutEngine {
       }
     }
 
-    let key = (textBox.get().renderer(), textBox.get().start())
+    let key = InlineIterator.SVGTextBox.Key(
+      chunk: textBox.get().renderer(), start: textBox.get().start())
     let fragments = m_fragmentMap.ensure(key, { () in return SVGTextFragmentArrayRef() }).value!
 
     fragments.a.append(m_currentTextFragment)
@@ -383,7 +384,9 @@ struct SVGTextLayoutEngine {
       if m_visualCharacterOffset == textBox.get().start() {
         moveToExpectedChunkStartPositionIfNeeded()
         if startsNewTextChunk {
-          m_lineLayoutChunkStarts.add((textBox.get().renderer(), textBox.get().start()))
+          m_lineLayoutChunkStarts.add(
+            InlineIterator.SVGTextBox.Key(
+              chunk: textBox.get().renderer(), start: textBox.get().start()))
         }
       }
 
@@ -584,7 +587,8 @@ struct SVGTextLayoutEngine {
         continue
       }
 
-      let key = (textBox.get().renderer(), textBox.get().start())
+      let key = InlineIterator.SVGTextBox.Key(
+        chunk: textBox.get().renderer(), start: textBox.get().start())
       if m_fragmentMap.contains(key) {
         for fragment in m_fragmentMap.get(key).a {
           assert(fragment.lengthAdjustTransform.isIdentity())

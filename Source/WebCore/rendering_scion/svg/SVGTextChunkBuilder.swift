@@ -71,7 +71,9 @@ struct SVGTextChunkBuilder {
     var first = limit
 
     for (i, lineLayoutBox) in lineLayoutBoxes.enumerated() {
-      if !chunkStarts.contains(value: (lineLayoutBox.get().renderer(), lineLayoutBox.get().start()))
+      if !chunkStarts.contains(
+        value: InlineIterator.SVGTextBox.Key(
+          chunk: lineLayoutBox.get().renderer(), start: lineLayoutBox.get().start()))
       {
         continue
       }

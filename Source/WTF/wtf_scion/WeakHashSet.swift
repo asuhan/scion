@@ -23,7 +23,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
+final class WeakHashSet<KeyType: AnyObject>: Sequence, IteratorProtocol {
+  typealias WeakPtrImplSet = HashSet<WeakPtr<KeyType>>
+
   struct AddResult {
     let isNewEntry: Bool
   }
@@ -45,8 +47,8 @@ final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
   }
 
   func contains(value: KeyType) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    increaseOperationCountSinceLastCleanup()
+    return m_set.contains(value: WeakPtr(value))
   }
 
   func isEmptyIgnoringNullReferences() -> Bool {
@@ -63,6 +65,15 @@ final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  @discardableResult
+  private func increaseOperationCountSinceLastCleanup(_ count: UInt32 = 1) -> UInt32 {
+    m_operationCountSinceLastCleanup += count
+    return m_operationCountSinceLastCleanup
+  }
+
+  private let m_set = WeakPtrImplSet()
+  private var m_operationCountSinceLastCleanup: UInt32 = 0
 }
 
 func copyToVector<T>(collection: WeakHashSet<T>) -> [WeakRef<T>] {

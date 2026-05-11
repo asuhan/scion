@@ -88,7 +88,7 @@ struct SVGTextChunk {
 
     boxes = []
     for box in lineLayoutBoxes[Int(first)..<Int(limit)] {
-      let key = (box.get().renderer(), box.get().start())
+      let key = InlineIterator.SVGTextBox.Key(chunk: box.get().renderer(), start: box.get().start())
       if !fragmentMap.contains(key) {
         continue
       }
@@ -189,7 +189,8 @@ struct SVGTextChunk {
         foundFirstFragment = true
       }
 
-      let key = (box.box.get().renderer(), box.box.get().start())
+      let key = InlineIterator.SVGTextBox.Key(
+        chunk: box.box.get().renderer(), start: box.box.get().start())
       textBoxTransformations.set(key, spacingAndGlyphsTransform)
     }
   }

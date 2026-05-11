@@ -1822,7 +1822,7 @@ final class GridTrackSizingAlgorithm {
     let allTracks = tracks(direction: direction)
     var itemsSortedByIncreasingSpan: [GridItemWithSpan] = []
     var itemsCrossingFlexibleTracks: [GridItemWithSpan] = []
-    let itemsSet = HashSet<RenderBoxWrapper>()
+    let itemsSet = WeakHashSet<RenderBoxWrapper>()
 
     if grid.hasGridItems() {
       for trackIndex in contentSizedTracksIndex {
@@ -1968,7 +1968,7 @@ final class GridTrackSizingAlgorithm {
     _ track: GridTrack, _ trackIndex: UInt32, _ iterator: GridIterator,
     _ itemsSortedByIncreasingSpan: inout [GridItemWithSpan],
     _ itemsCrossingFlexibleTracks: inout [GridItemWithSpan],
-    _ itemsSet: HashSet<RenderBoxWrapper>, _ currentAccumulatedMbp: LayoutUnit,
+    _ itemsSet: WeakHashSet<RenderBoxWrapper>, _ currentAccumulatedMbp: LayoutUnit,
     _ gridLayoutState: inout GridLayoutState
   ) {
     var gridItem = iterator.nextGridItem()
@@ -1983,10 +1983,11 @@ final class GridTrackSizingAlgorithm {
   private func accumulateIntrinsicSizes(
     _ gridItem: RenderBoxWrapper, _ track: GridTrack, _ trackIndex: UInt32,
     _ iterator: GridIterator, _ itemsSortedByIncreasingSpan: inout [GridItemWithSpan],
-    _ itemsCrossingFlexibleTracks: inout [GridItemWithSpan], _ itemsSet: HashSet<RenderBoxWrapper>,
+    _ itemsCrossingFlexibleTracks: inout [GridItemWithSpan],
+    _ itemsSet: WeakHashSet<RenderBoxWrapper>,
     _ currentAccumulatedMbp: LayoutUnit, _ gridLayoutState: inout GridLayoutState
   ) {
-    let isNewEntry = itemsSet.add(gridItem).isNewEntry
+    let isNewEntry = itemsSet.add(value: gridItem).isNewEntry
     let span = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
 
     if let inner = gridItem as? RenderGridWrapper,

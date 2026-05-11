@@ -18,19 +18,18 @@
  *
  */
 
-class HashSet<KeyType> {
+class HashSet<KeyType: Equatable & Hashable> {
   struct AddResult {
     let isNewEntry: Bool
   }
 
-  func contains(value: KeyType) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func contains(value: KeyType) -> Bool { return m_impl.contains(value) }
 
   @discardableResult
   func add(_ value: KeyType) -> AddResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_impl = Set<KeyType>()
 }

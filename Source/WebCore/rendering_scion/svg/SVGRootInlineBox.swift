@@ -184,7 +184,8 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
         assert(textBox.renderer() is RenderSVGInlineTextWrapper)
 
         let svgTextBox = InlineIterator.svgTextBoxFor(textBox)
-        let fragmentKey = (svgTextBox.get().renderer(), svgTextBox.get().start())
+        let fragmentKey = InlineIterator.SVGTextBox.Key(
+          chunk: svgTextBox.get().renderer(), start: svgTextBox.get().start())
         if fragmentMap.contains(fragmentKey) {
           let textFragments = fragmentMap.get(fragmentKey)
           textBox.setTextFragments(textFragments.a)

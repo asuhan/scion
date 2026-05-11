@@ -40,7 +40,19 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    typealias Key = (RenderSVGInlineTextWrapper, UInt32)
+    struct Key: Equatable, Hashable {
+      let chunk: RenderSVGInlineTextWrapper
+      let start: UInt32
+
+      static func == (_ a: Self, _ b: Self) -> Bool {
+        return a.chunk === b.chunk && a.start == b.start
+      }
+
+      func hash(into hasher: inout Hasher) {
+        hasher.combine(UInt(bitPattern: ObjectIdentifier(chunk)))
+        hasher.combine(start)
+      }
+    }
   }
 
   class SVGTextBoxIterator: TextBoxIterator {
