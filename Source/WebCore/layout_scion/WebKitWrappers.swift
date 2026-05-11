@@ -2306,6 +2306,15 @@ func RenderBlockScion_insertPositionedObject(
   block.insertPositionedObject(positioned: positioned)
 }
 
+@_cdecl("RenderBlockScion_addPercentHeightDescendant")
+func RenderBlockScion_addPercentHeightDescendant(
+  _ blockRaw: UnsafeMutableRawPointer, _ descendantRaw: UnsafeMutableRawPointer
+) {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let descendant = createRenderObjectWrapperOrNative(descendantRaw) as! RenderBoxWrapper
+  block.addPercentHeightDescendant(descendant: descendant)
+}
+
 @_cdecl("RenderBlockScion_borderTop")
 func RenderBlockScion_borderTop(_ blockRaw: UnsafeRawPointer) -> Int32 {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

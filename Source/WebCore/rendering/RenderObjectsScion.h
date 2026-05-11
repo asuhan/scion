@@ -462,6 +462,8 @@ public:
 
     void insertPositionedObject(RenderBox&);
 
+    void addPercentHeightDescendant(RenderBox&);
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;

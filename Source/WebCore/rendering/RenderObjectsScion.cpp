@@ -418,6 +418,8 @@ extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*
 
 extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
 
+extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
+
 extern "C" int32_t RenderBlockScion_borderTop(const void*);
 
 extern "C" int32_t RenderBlockScion_borderBottom(const void*);
@@ -1274,6 +1276,12 @@ void RenderBlockScion::insertPositionedObject(RenderBox& positioned)
 {
     assert(!positioned.scion());
     RenderBlockScion_insertPositionedObject(m_handle, &positioned);
+}
+
+void RenderBlockScion::addPercentHeightDescendant(RenderBox& descendant)
+{
+    assert(!descendant.scion());
+    RenderBlockScion_addPercentHeightDescendant(m_handle, &descendant);
 }
 
 LayoutUnit RenderBlockScion::borderTop() const

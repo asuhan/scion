@@ -1869,7 +1869,10 @@ void RenderBlock::removePositionedObjects(const RenderBlock* newContainingBlockC
 
 void RenderBlock::addPercentHeightDescendant(RenderBox& descendant)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->addPercentHeightDescendant(descendant);
+        return;
+    }
     insertIntoTrackedRendererMaps(*this, descendant);
 }
 
