@@ -54,8 +54,8 @@ final class WeakHashSet<KeyType: AnyObject>: Sequence, IteratorProtocol {
   }
 
   func computeSize() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    removeNullReferences()
+    return m_set.size()
   }
 
   func next() -> KeyType? {
