@@ -298,8 +298,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func autoRepeatCountForDirection(direction: GridTrackSizingDirection) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return currentGrid().autoRepeatTracks(direction: direction)
   }
 
   // Required by GridTrackSizingAlgorithm. Keep them under control.
