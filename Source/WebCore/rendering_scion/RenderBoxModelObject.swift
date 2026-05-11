@@ -781,13 +781,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderLogicalLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? borderLeft() : borderTop()
   }
 
   func borderLogicalRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? borderRight() : borderBottom()
   }
 
   func marginTop() -> LayoutUnit { fatalError("Not reached") }
