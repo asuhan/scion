@@ -166,8 +166,7 @@ class BoxWrapper: Hashable {
   }
 
   func establishesTableFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isTableBox()
   }
 
   func establishesFlexFormattingContext() -> Bool {
