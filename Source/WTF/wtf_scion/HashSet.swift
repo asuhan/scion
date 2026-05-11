@@ -23,13 +23,18 @@ class HashSet<KeyType: Equatable & Hashable> {
     let isNewEntry: Bool
   }
 
+  func size() -> UInt32 { return UInt32(m_impl.count) }
+
   func contains(value: KeyType) -> Bool { return m_impl.contains(value) }
 
   @discardableResult
   func add(_ value: KeyType) -> AddResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (inserted, _) = m_impl.insert(value)
+    return AddResult(isNewEntry: inserted)
   }
 
-  private let m_impl = Set<KeyType>()
+  @discardableResult
+  func remove(_ value: KeyType) -> Bool { return m_impl.remove(value) != nil }
+
+  private var m_impl = Set<KeyType>()
 }
