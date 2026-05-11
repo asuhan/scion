@@ -6044,7 +6044,7 @@ LayoutUnit RenderBox::offsetTop() const
 
 LayoutPoint RenderBox::flipForWritingModeForChild(const RenderBox& child, const LayoutPoint& point) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->flipForWritingModeForChild(child, point); }
     if (!style().isFlippedBlocksWritingMode())
         return point;
     

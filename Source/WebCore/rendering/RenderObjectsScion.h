@@ -433,6 +433,8 @@ public:
 
     bool isUnsplittableForPagination() const;
 
+    LayoutPoint flipForWritingModeForChild(const RenderBox& child, const LayoutPoint&) const;
+
     LayoutPoint topLeftLocation() const;
 
     bool hasRenderOverflow() const;

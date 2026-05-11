@@ -402,6 +402,8 @@ extern "C" bool RenderBoxScion_scrollsOverflow(const void*);
 
 extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
 
+extern "C" LayoutPointRaw RenderBoxScion_flipForWritingModeForChild(const void*, void*, LayoutPointRaw);
+
 extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
 extern "C" bool RenderBoxScion_hasRenderOverflow(const void*);
@@ -1233,6 +1235,11 @@ bool RenderBoxScion::scrollsOverflow() const
 bool RenderBoxScion::isUnsplittableForPagination() const
 {
     return RenderBoxScion_isUnsplittableForPagination(m_handle);
+}
+
+LayoutPoint RenderBoxScion::flipForWritingModeForChild(const RenderBox& child, const LayoutPoint& point) const
+{
+    return convertLayoutPoint(RenderBoxScion_flipForWritingModeForChild(m_handle, const_cast<RenderBox*>(&child), convertLayoutPoint(point)));
 }
 
 LayoutPoint RenderBoxScion::topLeftLocation() const

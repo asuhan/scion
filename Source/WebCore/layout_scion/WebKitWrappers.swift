@@ -2192,6 +2192,16 @@ func RenderBoxScion_isUnsplittableForPagination(_ boxRaw: UnsafeRawPointer) -> B
   return box.isUnsplittableForPagination()
 }
 
+@_cdecl("RenderBoxScion_flipForWritingModeForChild")
+func RenderBoxScion_flipForWritingModeForChild(
+  _ boxRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ point: LayoutPointRaw
+) -> LayoutPointRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let child = createRenderObjectWrapperOrNative(childRaw) as! RenderBoxWrapper
+  return convertLayoutPoint(
+    box.flipForWritingModeForChild(child: child, point: convertLayoutPointRaw(point)))
+}
+
 @_cdecl("RenderBoxScion_topLeftLocation")
 func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
