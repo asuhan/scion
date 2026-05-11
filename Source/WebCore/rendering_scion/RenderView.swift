@@ -723,8 +723,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func imageQualityController() -> ImageQualityController {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if m_imageQualityController == nil {
+      m_imageQualityController = ImageQualityController(self)
+    }
+    return m_imageQualityController!
   }
 
   func hasSoftwareFilters() -> Bool {
@@ -1031,6 +1034,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private var m_frameView: LocalFrameViewWrapper? = nil
 
+  private var m_imageQualityController: ImageQualityController? = nil
   private var m_compositor: RenderLayerCompositorWrapper? = nil
 
   private let m_hasQuotesNeedingUpdate = false
