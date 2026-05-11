@@ -25,8 +25,8 @@
 
 class ImageQualityController {
   init(_ renderView: RenderViewWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_renderView = renderView
+    // TODO(asuhan): initialize timer
   }
 
   static func interpolationQualityFromStyle(_ style: RenderStyleWrapper) -> InterpolationQuality? {
@@ -55,6 +55,7 @@ class ImageQualityController {
   private typealias LayerSizeMap = HashMap<FillLayerWrapper, LayoutSizeWrapper>
   private typealias ObjectLayerSizeMap = HashMap<WeakRef<RenderBoxModelObjectWrapper>, LayerSizeMap>
 
+  private let m_renderView: RenderViewWrapper
   private let m_objectLayerSizeMap = ObjectLayerSizeMap()
   private var m_animatedResizeIsActive = false
 }
