@@ -42,8 +42,19 @@ class ImageQualityController {
     }
   }
 
-  func rendererWillBeDestroyed(_ renderer: RenderBoxModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func rendererWillBeDestroyed(_ renderer: RenderBoxModelObjectWrapper) { removeObject(renderer) }
+
+  private func removeObject(_ object: RenderBoxModelObjectWrapper) {
+    m_objectLayerSizeMap.remove(WeakRef(object))
+    if m_objectLayerSizeMap.isEmpty() {
+      m_animatedResizeIsActive = false
+      // TODO(asuhan): stop timer
+    }
   }
+
+  private typealias LayerSizeMap = HashMap<FillLayerWrapper, LayoutSizeWrapper>
+  private typealias ObjectLayerSizeMap = HashMap<WeakRef<RenderBoxModelObjectWrapper>, LayerSizeMap>
+
+  private let m_objectLayerSizeMap = ObjectLayerSizeMap()
+  private var m_animatedResizeIsActive = false
 }
