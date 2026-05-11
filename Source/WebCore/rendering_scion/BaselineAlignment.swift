@@ -45,15 +45,9 @@ class BaselineGroup: Sequence, IteratorProtocol {
     m_preference = childPreference
   }
 
-  func computeSize() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func computeSize() -> Int32 { return Int32(m_items.computeSize()) }
 
-  func next() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func next() -> RenderBoxWrapper? { return m_items.next() }
 
   private let m_blockFlow: FlowDirection
   private let m_preference: ItemPosition
