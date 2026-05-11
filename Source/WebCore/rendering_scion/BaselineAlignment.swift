@@ -39,8 +39,10 @@
 //
 class BaselineGroup: Sequence, IteratorProtocol {
   init(blockFlow: FlowDirection, childPreference: ItemPosition) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    maxAscent = LayoutUnit(value: 0)
+    m_items = WeakHashSet<RenderBoxWrapper>()
+    m_blockFlow = blockFlow
+    m_preference = childPreference
   }
 
   func computeSize() -> Int32 {
@@ -53,7 +55,10 @@ class BaselineGroup: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  private let m_blockFlow: FlowDirection
+  private let m_preference: ItemPosition
   let maxAscent: LayoutUnit
+  private let m_items: WeakHashSet<RenderBoxWrapper>
 }
 
 //
