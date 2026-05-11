@@ -14,6 +14,7 @@ target_sources(layout_scion PRIVATE
     SaturatedArithmetic.swift
     SetForScope.swift
     SystemTracing.swift
+    WeakHashMap.swift
     WeakHashSet.swift
     WeakListHashSet.swift
     WeakRef.swift

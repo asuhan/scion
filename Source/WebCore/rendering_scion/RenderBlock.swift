@@ -25,11 +25,38 @@ import wk_interop
 
 typealias TrackedRendererListHashSet = WeakListHashSet<RenderBoxWrapper>
 
-private typealias TrackedDescendantsMap = [UInt: TrackedRendererListHashSet]
-private typealias TrackedContainerMap = HashMap<RenderBoxWrapper, WeakHashSet<RenderBlockWrapper>>?
+private typealias TrackedDescendantsMap = WeakHashMap<
+  RenderBlockWrapper, TrackedRendererListHashSet?
+>
+private typealias TrackedContainerMap = WeakHashMap<
+  RenderBoxWrapper, WeakHashSet<RenderBlockWrapper>
+>
 
 private var percentHeightDescendantsMap: TrackedDescendantsMap? = nil
-private let percentHeightContainerMap: TrackedContainerMap? = nil
+private var percentHeightContainerMap: TrackedContainerMap? = nil
+
+private func insertIntoTrackedRendererMaps(
+  _ container: RenderBlockWrapper, _ descendant: RenderBoxWrapper
+) {
+  if percentHeightDescendantsMap == nil {
+    percentHeightDescendantsMap = TrackedDescendantsMap()
+    percentHeightContainerMap = TrackedContainerMap()
+  }
+
+  let descendantSet = percentHeightDescendantsMap!.ensure(
+    container, { () in return TrackedRendererListHashSet() }
+  ).value!
+
+  let added = descendantSet.add(value: descendant).isNewEntry
+  if !added {
+    return
+  }
+
+  let containerSet = percentHeightContainerMap!.add(descendant, WeakHashSet<RenderBlockWrapper>())
+    .value
+  assert(!containerSet.contains(value: container))
+  containerSet.add(value: container)
+}
 
 enum CaretType {
   case CursorCaret
@@ -421,8 +448,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func addPercentHeightDescendant(descendant: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    insertIntoTrackedRendererMaps(self, descendant)
   }
 
   static func removePercentHeightDescendant(descendant: RenderBoxWrapper) {
@@ -3541,7 +3567,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return
     }
 
-    let descendants = percentHeightDescendantsMap![CPtrToInt(id())]
+    let descendants = percentHeightDescendantsMap!.get(self, nil)
     if descendants == nil {
       return
     }
