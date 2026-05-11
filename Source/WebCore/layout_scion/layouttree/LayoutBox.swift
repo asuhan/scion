@@ -411,8 +411,8 @@ class BoxWrapper: Hashable {
   }
 
   func isFlexItem() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Each in-flow child of a flex container becomes a flex item (https://www.w3.org/TR/css-flexbox-1/#flex-items).
+    return isInFlow() && parent().isFlexBox()
   }
 
   func isLineBreakBox() -> Bool {
