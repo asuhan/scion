@@ -28,10 +28,7 @@ enum CompositingPolicy {
 class PageWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
-  func mainFrame() -> FrameWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func mainFrame() -> FrameWrapper { return FrameWrapper(wk_interop.Page_mainFrame(p)) }
 
   func chrome() -> ChromeWrapper {
     // TODO(asuhan): implement this

@@ -1376,6 +1376,7 @@ void* Frame_page(const void*);
 void* Frame_settings(void*);
 bool Frame_isMainFrame(const void*);
 bool Frame_isRootFrame(const void*);
+void* Page_mainFrame(const void*);
 const void* Page_dragCaretController(const void*);
 void* Page_settings(const void*);
 float Page_pageScaleFactor(const void*);

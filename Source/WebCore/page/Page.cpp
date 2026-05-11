@@ -233,6 +233,11 @@
 #include "GamepadManager.h"
 #endif
 
+extern "C" void* Page_mainFrame(const void* raw)
+{
+    return &static_cast<WebCore::Page*>(const_cast<void*>(raw))->mainFrame();
+}
+
 extern "C" const void* Page_dragCaretController(const void* raw)
 {
     return &static_cast<const WebCore::Page*>(raw)->dragCaretController();
