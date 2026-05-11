@@ -23,12 +23,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class ScrollbarsControllerWrapper {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func scrollbarLayoutDirectionChanged(_ scrollbarLayoutDirection: UserInterfaceLayoutDirection) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.ScrollbarsController_scrollbarLayoutDirectionChanged(
+      p, scrollbarLayoutDirection == .RTL)
   }
 
   private let p: UnsafeMutableRawPointer

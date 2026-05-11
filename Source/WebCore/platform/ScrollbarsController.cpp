@@ -29,6 +29,13 @@
 #include "ScrollableArea.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void ScrollbarsController_scrollbarLayoutDirectionChanged(void* p, bool scrollbarLayoutDirection)
+{
+    static_cast<WebCore::ScrollbarsController*>(p)->scrollbarLayoutDirectionChanged(scrollbarLayoutDirection
+            ? WebCore::UserInterfaceLayoutDirection::RTL
+            : WebCore::UserInterfaceLayoutDirection::LTR);
+}
+
 namespace WebCore {
 
 #if !PLATFORM(MAC) && !PLATFORM(WPE) && !PLATFORM(GTK)
