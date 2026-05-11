@@ -280,11 +280,7 @@ class TextUtil {
   static func enclosingGlyphBoundsForText(textContent: StringWrapperView, style: RenderStyleWrapper)
     -> EnclosingAscentDescent
   {
-    if style.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    let raw = wk_interop.TextUtil_enclosingGlyphBoundsForText(textContent.p, style.p)
+    let raw = wk_interop.TextUtil_enclosingGlyphBoundsForText(textContent.p, style.p!)
     return EnclosingAscentDescent(
       ascent: raw.ascent, descent: raw.descent)
   }
@@ -299,17 +295,9 @@ class TextUtil {
     textWidth: InlineLayoutUnit, availableWidth: InlineLayoutUnit,
     contentLogicalLeft: InlineLayoutUnit, fontCascade: FontCascadeWrapper
   ) -> WordBreakLeft {
-    if inlineTextBox.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    if fontCascade.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     let raw = wk_interop.TextUtil_breakWord(
-      inlineTextBox.p, startPosition, length, textWidth, availableWidth, contentLogicalLeft,
-      fontCascade.p)
+      inlineTextBox.p!, startPosition, length, textWidth, availableWidth, contentLogicalLeft,
+      fontCascade.p!)
     return WordBreakLeft(length: raw.length, logicalWidth: raw.logicalWidth)
   }
 
@@ -474,11 +462,7 @@ class TextUtil {
   }
 
   static func hyphenWidth(style: RenderStyleWrapper) -> InlineLayoutUnit {
-    if style.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.TextUtil_hyphenWidth(style.p)
+    return wk_interop.TextUtil_hyphenWidth(style.p!)
   }
 
   static func firstUserPerceivedCharacterLength(inlineTextItem: InlineTextItemWrapper) -> UInt64 {
@@ -491,12 +475,8 @@ class TextUtil {
   static func firstUserPerceivedCharacterLength(
     inlineTextBox: InlineTextBoxWrapper, startPosition: UInt64, length: UInt64
   ) -> UInt64 {
-    if inlineTextBox.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return wk_interop.TextUtil_firstUserPerceivedCharacterLength(
-      inlineTextBox.p, startPosition, length)
+      inlineTextBox.p!, startPosition, length)
   }
 
   static func directionForTextContent(content: StringWrapperView) -> TextDirection {
