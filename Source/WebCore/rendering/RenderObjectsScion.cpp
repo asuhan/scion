@@ -181,6 +181,8 @@ extern "C" bool RenderObjectScion_needsPositionedMovementLayout(const void*);
 
 extern "C" bool RenderObjectScion_posChildNeedsLayout(const void*);
 
+extern "C" bool RenderObjectScion_needsSimplifiedNormalFlowLayout(const void*);
+
 extern "C" bool RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(const void*);
 
 extern "C" bool RenderObjectScion_normalChildNeedsLayout(const void*);
@@ -749,6 +751,8 @@ bool RenderObjectScion::selfNeedsLayout() const { return RenderObjectScion_selfN
 bool RenderObjectScion::needsPositionedMovementLayout() const { return RenderObjectScion_needsPositionedMovementLayout(m_handle); }
 
 bool RenderObjectScion::posChildNeedsLayout() const { return RenderObjectScion_posChildNeedsLayout(m_handle); }
+
+bool RenderObjectScion::needsSimplifiedNormalFlowLayout() const { return RenderObjectScion_needsSimplifiedNormalFlowLayout(m_handle); }
 
 bool RenderObjectScion::needsSimplifiedNormalFlowLayoutOnly() const { return RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(m_handle); }
 

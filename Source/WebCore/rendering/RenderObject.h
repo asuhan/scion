@@ -1122,11 +1122,7 @@ public:
     bool needsPositionedMovementLayoutOnly() const;
 
     bool posChildNeedsLayout() const;
-    bool needsSimplifiedNormalFlowLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::NeedsSimplifiedNormalFlowLayout);
-    }
+    bool needsSimplifiedNormalFlowLayout() const;
     bool needsSimplifiedNormalFlowLayoutOnly() const;
     bool normalChildNeedsLayout() const;
     bool outOfFlowChildNeedsStaticPositionLayout() const

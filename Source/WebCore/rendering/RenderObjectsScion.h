@@ -201,6 +201,8 @@ public:
 
     bool posChildNeedsLayout() const;
 
+    bool needsSimplifiedNormalFlowLayout() const;
+
     bool needsSimplifiedNormalFlowLayoutOnly() const;
 
     bool normalChildNeedsLayout() const;

@@ -1467,6 +1467,12 @@ func RenderObjectScion_posChildNeedsLayout(_ objectRaw: UnsafeRawPointer) -> Boo
   return object.posChildNeedsLayout()
 }
 
+@_cdecl("RenderObjectScion_needsSimplifiedNormalFlowLayout")
+func RenderObjectScion_needsSimplifiedNormalFlowLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.needsSimplifiedNormalFlowLayout()
+}
+
 @_cdecl("RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly")
 func RenderObjectScion_needsSimplifiedNormalFlowLayoutOnly(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

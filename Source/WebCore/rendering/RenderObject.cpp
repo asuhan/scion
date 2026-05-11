@@ -3186,6 +3186,12 @@ bool RenderObject::posChildNeedsLayout() const
     return m_stateBitfields.hasFlag(StateFlag::PosChildNeedsLayout);
 }
 
+bool RenderObject::needsSimplifiedNormalFlowLayout() const
+{
+    if (m_scion) { return m_scion->needsSimplifiedNormalFlowLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::NeedsSimplifiedNormalFlowLayout);
+}
+
 void RenderObject::setNormalChildNeedsLayoutBit(bool b)
 {
     if (m_scion) {
