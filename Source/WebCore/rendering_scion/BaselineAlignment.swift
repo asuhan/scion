@@ -124,9 +124,9 @@ struct BaselineAlignmentState {
     updateSharedGroup(child: child, preference: preference, ascent: ascent)
   }
 
-  func sharedGroup(child: RenderBoxWrapper, preference: ItemPosition) -> BaselineGroup {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func sharedGroup(child: RenderBoxWrapper, preference: ItemPosition) -> BaselineGroup {
+    assert(isBaselinePosition(position: preference))
+    return findCompatibleSharedGroup(child, preference)
   }
 
   // Updates the baseline-sharing group compatible with the item.

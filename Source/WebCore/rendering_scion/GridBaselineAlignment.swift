@@ -100,7 +100,7 @@ struct GridBaselineAlignment {
   ) -> BaselineGroup {
     assert(isBaselinePosition(position: preference))
     let isRowAxisContext = alignmentAxis == .GridColumnAxis
-    let baselineAlignmentState =
+    var baselineAlignmentState =
       isRowAxisContext
       ? rowAxisBaselineAlignmentStates.m[sharedContext]!
       : colAxisBaselineAlignmentStates.m[sharedContext]!
