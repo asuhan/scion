@@ -38,6 +38,14 @@
 // (first/last baseline), it's ready to collect the items that will participate in the Baseline Alignment logic.
 //
 class BaselineGroup: Sequence, IteratorProtocol {
+  // It stores an item (if not already present) and update the max_ascent associated to this
+  // baseline-sharing group.
+  func update(_ child: RenderBoxWrapper, _ ascent: LayoutUnit) {
+    if m_items.add(value: child).isNewEntry {
+      maxAscent = Swift.max(maxAscent, ascent)
+    }
+  }
+
   init(blockFlow: FlowDirection, childPreference: ItemPosition) {
     maxAscent = LayoutUnit(value: 0)
     m_items = WeakHashSet<RenderBoxWrapper>()
@@ -49,9 +57,50 @@ class BaselineGroup: Sequence, IteratorProtocol {
 
   func next() -> RenderBoxWrapper? { return m_items.next() }
 
+  // Determines whether a baseline-sharing group is compatible with an item, based on its 'block-flow' and
+  // 'baseline-preference'
+  func isCompatible(_ childBlockFlow: FlowDirection, _ childPreference: ItemPosition)
+    -> Bool
+  {
+    assert(isBaselinePosition(position: childPreference))
+    assert(computeSize() > 0)
+    return
+      ((m_blockFlow == childBlockFlow || isOrthogonalBlockFlow(childBlockFlow))
+      && m_preference == childPreference)
+      || (isOppositeBlockFlow(childBlockFlow) && m_preference != childPreference)
+  }
+
+  // Determines whether the baseline-sharing group's associated block-flow is opposite (LR vs RL) to particular
+  // item's writing-mode.
+  private func isOppositeBlockFlow(_ blockFlow: FlowDirection) -> Bool {
+    switch blockFlow {
+    case .TopToBottom:
+      return false
+    case .LeftToRight:
+      return m_blockFlow == .RightToLeft
+    case .RightToLeft:
+      return m_blockFlow == .LeftToRight
+    default:
+      fatalError("Not reached")
+    }
+  }
+
+  // Determines whether the baseline-sharing group's associated block-flow is orthogonal (vertical vs horizontal)
+  // to particular item's writing-mode.
+  private func isOrthogonalBlockFlow(_ blockFlow: FlowDirection) -> Bool {
+    switch blockFlow {
+    case .TopToBottom:
+      return m_blockFlow != .TopToBottom
+    case .LeftToRight, .RightToLeft:
+      return m_blockFlow == .TopToBottom
+    default:
+      fatalError("Not reached")
+    }
+  }
+
   private let m_blockFlow: FlowDirection
   private let m_preference: ItemPosition
-  let maxAscent: LayoutUnit
+  var maxAscent: LayoutUnit
   private let m_items: WeakHashSet<RenderBoxWrapper>
 }
 
@@ -83,12 +132,36 @@ struct BaselineAlignmentState {
   // Updates the baseline-sharing group compatible with the item.
   // We pass the item's baseline-preference to avoid dependencies with the LayoutGrid class, which is the one
   // managing the alignment behavior of the Grid Items.
-  func updateSharedGroup(child: RenderBoxWrapper, preference: ItemPosition, ascent: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func updateSharedGroup(
+    child: RenderBoxWrapper, preference: ItemPosition, ascent: LayoutUnit
+  ) {
+    assert(isBaselinePosition(position: preference))
+    let group = findCompatibleSharedGroup(child, preference)
+    group.update(child, ascent)
   }
 
-  let sharedGroups: [BaselineGroup]
+  // Returns the baseline-sharing group compatible with an item.
+  // We pass the item's baseline-preference to avoid dependencies with the LayoutGrid class, which is the one
+  // managing the alignment behavior of the Grid Items.
+  // FIXME: Properly implement baseline-group compatibility.
+  // See https://github.com/w3c/csswg-drafts/issues/721
+  private mutating func findCompatibleSharedGroup(
+    _ child: RenderBoxWrapper, _ preference: ItemPosition
+  )
+    -> BaselineGroup
+  {
+    let blockFlowDirection = child.style().blockFlowDirection()
+    for group in sharedGroups {
+      if group.isCompatible(blockFlowDirection, preference) {
+        return group
+      }
+    }
+    sharedGroups.insert(
+      BaselineGroup(blockFlow: blockFlowDirection, childPreference: preference), at: 0)
+    return sharedGroups[0]
+  }
+
+  var sharedGroups: [BaselineGroup]
 }
 
 enum AllowedBaseLine {

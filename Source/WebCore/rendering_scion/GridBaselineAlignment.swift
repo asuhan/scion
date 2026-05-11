@@ -54,8 +54,8 @@ struct GridBaselineAlignment {
     let baselineAlignmentStateMap =
       isRowAxisContext ? rowAxisBaselineAlignmentStates : colAxisBaselineAlignmentStates
     // Looking for a compatible baseline-sharing group.
-    if let baselineAlignmentStateSearch = baselineAlignmentStateMap.m[sharedContext] {
-      baselineAlignmentStateSearch.updateSharedGroup(
+    if baselineAlignmentStateMap.m[sharedContext] != nil {
+      baselineAlignmentStateMap.m[sharedContext]!.updateSharedGroup(
         child: gridItem, preference: preference, ascent: ascent)
     } else {
       baselineAlignmentStateMap.m[sharedContext] = BaselineAlignmentState(
