@@ -120,8 +120,8 @@ class BaselineGroup: Sequence, IteratorProtocol {
 // compatible with the new item.
 struct BaselineAlignmentState {
   init(child: RenderBoxWrapper, preference: ItemPosition, ascent: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isBaselinePosition(position: preference))
+    updateSharedGroup(child: child, preference: preference, ascent: ascent)
   }
 
   func sharedGroup(child: RenderBoxWrapper, preference: ItemPosition) -> BaselineGroup {
@@ -161,7 +161,7 @@ struct BaselineAlignmentState {
     return sharedGroups[0]
   }
 
-  var sharedGroups: [BaselineGroup]
+  var sharedGroups: [BaselineGroup] = []
 }
 
 enum AllowedBaseLine {
