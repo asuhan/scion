@@ -24,8 +24,12 @@
  */
 
 class ScrollbarsControllerWrapper {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   func scrollbarLayoutDirectionChanged(_ scrollbarLayoutDirection: UserInterfaceLayoutDirection) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }

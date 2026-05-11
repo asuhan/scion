@@ -71,8 +71,7 @@ class ScrollableAreaWrapper {
   }
 
   func scrollbarsController() -> ScrollbarsControllerWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ScrollbarsControllerWrapper(wk_interop.ScrollableArea_scrollbarsController(pInterop!))
   }
 
   func invalidateScrollbar(scrollbar: Scrollbar, rect: IntRect) {

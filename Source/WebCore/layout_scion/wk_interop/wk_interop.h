@@ -1454,6 +1454,7 @@ struct ScrollbarGutterRaw ScrollableArea_scrollbarGutterStyle(const void*);
 uint8_t ScrollableArea_scrollbarWidthStyle(const void*);
 bool ScrollableArea_inLiveResize(const void*);
 bool ScrollableArea_hasOverlayScrollbars(const void*);
+void* ScrollableArea_scrollbarsController(const void*);
 bool ScrollableArea_isScrollCornerVisible(const void*);
 struct IntRectRaw ScrollableArea_scrollCornerRect(const void*);
 void ScrollableArea_invalidateScrollCorner(void*, struct IntRectRaw);

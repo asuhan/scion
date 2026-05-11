@@ -80,6 +80,11 @@ extern "C" WEBCORE_EXPORT bool ScrollableArea_hasOverlayScrollbars(const void* p
     return static_cast<const WebCore::ScrollableArea*>(p)->hasOverlayScrollbars();
 }
 
+extern "C" WEBCORE_EXPORT void* ScrollableArea_scrollbarsController(const void* p)
+{
+    return &static_cast<const WebCore::ScrollableArea*>(p)->scrollbarsController();
+}
+
 extern "C" WEBCORE_EXPORT bool ScrollableArea_isScrollCornerVisible(const void* p)
 {
     return static_cast<const WebCore::ScrollableArea*>(p)->isScrollCornerVisible();
