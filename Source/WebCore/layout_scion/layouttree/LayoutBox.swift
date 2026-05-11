@@ -230,8 +230,12 @@ class BoxWrapper: Hashable {
   }
 
   func isFloatAvoider() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isFloatingPositioned() || hasFloatClear() {
+      return true
+    }
+
+    return establishesTableFormattingContext() || establishesIndependentFormattingContext()
+      || establishesBlockFormattingContext()
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {
