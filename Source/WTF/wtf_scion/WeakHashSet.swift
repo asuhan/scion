@@ -39,8 +39,8 @@ final class WeakHashSet<KeyType: AnyObject>: Sequence, IteratorProtocol {
   }
 
   func clear() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_set.clear()
+    cleanupHappened()
   }
 
   func contains(value: KeyType) -> Bool {

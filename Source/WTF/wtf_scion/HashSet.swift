@@ -36,5 +36,7 @@ class HashSet<KeyType: Equatable & Hashable> {
   @discardableResult
   func remove(_ value: KeyType) -> Bool { return m_impl.remove(value) != nil }
 
+  func clear() { m_impl.removeAll() }
+
   private var m_impl = Set<KeyType>()
 }
