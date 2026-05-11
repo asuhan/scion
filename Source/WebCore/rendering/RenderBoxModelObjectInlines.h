@@ -95,30 +95,31 @@ inline LayoutUnit RenderBoxModelObject::borderLogicalHeight() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return borderBefore() + borderAfter();
 }
-inline LayoutUnit RenderBoxModelObject::borderLogicalLeft() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? borderLeft() : borderTop(); }
 inline LayoutUnit RenderBoxModelObject::borderLogicalRight() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? borderRight() : borderBottom(); }
+    return style().isHorizontalWritingMode() ? borderRight() : borderBottom();
+}
 inline LayoutUnit RenderBoxModelObject::borderLogicalWidth() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
-    return borderStart() + borderEnd(); }
+    return borderStart() + borderEnd();
+}
 inline LayoutUnit RenderBoxModelObject::borderRight() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderRightWidth()); }
+    return LayoutUnit(style().borderRightWidth());
+}
 inline LayoutUnit RenderBoxModelObject::borderStart() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderStartWidth()); }
+    return LayoutUnit(style().borderStartWidth());
+}
 inline LayoutUnit RenderBoxModelObject::borderTop() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderTopWidth()); }
+    return LayoutUnit(style().borderTopWidth());
+}
 inline LayoutUnit RenderBoxModelObject::computedCSSPaddingAfter() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

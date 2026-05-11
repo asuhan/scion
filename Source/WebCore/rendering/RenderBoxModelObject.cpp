@@ -1105,4 +1105,10 @@ bool RenderBoxModelObject::requiresLayer() const
     return isDocumentElementRenderer() || isPositioned() || createsGroup() || hasTransformRelatedProperty() || hasHiddenBackface() || hasReflection() || requiresRenderingConsolidationForViewTransition() || isRenderViewTransitionCapture();
 }
 
+LayoutUnit RenderBoxModelObject::borderLogicalLeft() const
+{
+    if (m_scion) { return m_scion->borderLogicalLeft(); }
+    return style().isHorizontalWritingMode() ? borderLeft() : borderTop();
+}
+
 } // namespace WebCore

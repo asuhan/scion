@@ -2038,6 +2038,13 @@ func RenderElementScion_setLastChild(
   element.setLastChild(lastChildRaw != nil ? createRenderObjectWrapper(lastChildRaw!) : nil)
 }
 
+@_cdecl("RenderBoxModelObjectScion_borderLogicalLeft")
+func RenderBoxModelObjectScion_borderLogicalLeft(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.borderLogicalLeft().rawValue()
+}
+
 @_cdecl("RenderBoxModelObjectScion_continuation")
 func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

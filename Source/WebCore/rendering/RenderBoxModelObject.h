@@ -163,7 +163,7 @@ public:
     inline LayoutUnit borderAndPaddingLogicalLeft() const;
     inline LayoutUnit borderAndPaddingLogicalRight() const;
 
-    inline LayoutUnit borderLogicalLeft() const;
+    LayoutUnit borderLogicalLeft() const;
     inline LayoutUnit borderLogicalRight() const;
     inline LayoutUnit borderLogicalWidth() const;
     inline LayoutUnit borderLogicalHeight() const;

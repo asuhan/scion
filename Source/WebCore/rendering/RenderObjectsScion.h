@@ -380,6 +380,8 @@ public:
     {
     }
 
+    LayoutUnit borderLogicalLeft() const;
+
     RenderBoxModelObject* continuation() const;
 
 private:
