@@ -1796,6 +1796,14 @@ func RenderObjectScion_setPosChildNeedsLayoutBit(_ objectRaw: UnsafeMutableRawPo
   object.setPosChildNeedsLayoutBit(b: b)
 }
 
+@_cdecl("RenderObjectScion_setNeedsSimplifiedNormalFlowLayoutBit")
+func RenderObjectScion_setNeedsSimplifiedNormalFlowLayoutBit(
+  _ objectRaw: UnsafeMutableRawPointer, _ b: Bool
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setNeedsSimplifiedNormalFlowLayoutBit(b: b)
+}
+
 @_cdecl("RenderObjectScion_isSetNeedsLayoutForbidden")
 func RenderObjectScion_isSetNeedsLayoutForbidden(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

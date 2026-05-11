@@ -277,6 +277,8 @@ public:
 
     void setPosChildNeedsLayoutBit(bool b);
 
+    void setNeedsSimplifiedNormalFlowLayoutBit(bool b);
+
     bool isSetNeedsLayoutForbidden() const;
 
 #if ASSERT_ENABLED

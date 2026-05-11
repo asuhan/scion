@@ -293,6 +293,8 @@ extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 extern "C" void RenderObjectScion_setPosChildNeedsLayoutBit(void*, bool);
 
+extern "C" void RenderObjectScion_setNeedsSimplifiedNormalFlowLayoutBit(void*, bool);
+
 extern "C" bool RenderObjectScion_isSetNeedsLayoutForbidden(const void*);
 
 extern "C" void RenderObjectScion_setNeedsLayoutIsForbidden(const void*, bool);
@@ -944,6 +946,8 @@ PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
 
 void RenderObjectScion::setPosChildNeedsLayoutBit(bool b) { RenderObjectScion_setPosChildNeedsLayoutBit(m_handle, b); }
+
+void RenderObjectScion::setNeedsSimplifiedNormalFlowLayoutBit(bool b) { RenderObjectScion_setNeedsSimplifiedNormalFlowLayoutBit(m_handle, b); }
 
 bool RenderObjectScion::isSetNeedsLayoutForbidden() const { return RenderObjectScion_isSetNeedsLayoutForbidden(m_handle); }
 
