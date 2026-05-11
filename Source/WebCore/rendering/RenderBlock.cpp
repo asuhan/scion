@@ -3625,7 +3625,7 @@ LayoutUnit RenderBlock::borderRight() const
 
 LayoutUnit RenderBlock::borderBefore() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderBefore(); }
     return RenderBox::borderBefore() + intrinsicBorderForFieldset();
 }
 

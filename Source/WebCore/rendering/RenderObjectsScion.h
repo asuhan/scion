@@ -476,6 +476,8 @@ public:
 
     LayoutUnit borderRight() const;
 
+    LayoutUnit borderBefore() const;
+
     void setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const;
 
     void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const;

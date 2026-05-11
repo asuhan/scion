@@ -432,6 +432,8 @@ extern "C" int32_t RenderBlockScion_borderLeft(const void*);
 
 extern "C" int32_t RenderBlockScion_borderRight(const void*);
 
+extern "C" int32_t RenderBlockScion_borderBefore(const void*);
+
 extern "C" void RenderBlockScion_setMarginBeforeForChild(const void*, void*, int32_t);
 
 extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int32_t);
@@ -1316,6 +1318,11 @@ LayoutUnit RenderBlockScion::borderLeft() const
 LayoutUnit RenderBlockScion::borderRight() const
 {
     return LayoutUnit::fromRawValue(RenderBlockScion_borderRight(m_handle));
+}
+
+LayoutUnit RenderBlockScion::borderBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_borderBefore(m_handle));
 }
 
 void RenderBlockScion::setMarginBeforeForChild(RenderBox& child, LayoutUnit value) const

@@ -2356,6 +2356,12 @@ func RenderBlockScion_borderRight(_ blockRaw: UnsafeRawPointer) -> Int32 {
   return block.borderRight().rawValue()
 }
 
+@_cdecl("RenderBlockScion_borderBefore")
+func RenderBlockScion_borderBefore(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.borderBefore().rawValue()
+}
+
 @_cdecl("RenderBlockScion_setMarginBeforeForChild")
 func RenderBlockScion_setMarginBeforeForChild(
   _ blockRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ valueRaw: Int32
