@@ -2709,8 +2709,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       }
       // We may have already forced relayout for orthogonal flowing children in
       // computeInnerFlexBaseSizeForFlexItem.
-      var forceFlexItemRelayout =
-        relayoutChildren && !relaidOutFlexItems.contains(value: CPtrToInt(flexItem.id()))
+      var forceFlexItemRelayout = relayoutChildren && !relaidOutFlexItems.contains(value: flexItem)
       if !forceFlexItemRelayout && flexItemHasPercentHeightDescendants(renderer: flexItem) {
         // Have to force another relayout even though the child is sized
         // correctly, because its descendants are not sized correctly yet. Our

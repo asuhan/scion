@@ -29,12 +29,12 @@ final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
   }
 
   @discardableResult
-  func add<U>(value: U) -> AddResult {
+  func add(value: KeyType) -> AddResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func remove<U>(_ value: U) -> Bool {
+  func remove(_ value: KeyType) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -44,7 +44,7 @@ final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
-  func contains<U>(value: U) -> Bool {
+  func contains(value: KeyType) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
