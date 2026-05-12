@@ -119,6 +119,8 @@ public:
 
     bool isDocumentElementRenderer() const;
 
+    bool isBody() const;
+
     bool isHTMLMarquee() const;
 
     bool childrenInline() const;

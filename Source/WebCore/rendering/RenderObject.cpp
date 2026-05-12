@@ -3363,6 +3363,12 @@ bool RenderObject::isDocumentElementRenderer() const
     return document().documentElement() == m_node.ptr();
 }
 
+bool RenderObject::isBody() const
+{
+    if (m_scion) { return m_scion->isBody(); }
+    return node() && node()->hasTagName(HTMLNames::bodyTag);
+}
+
 bool RenderObject::childrenInline() const
 {
     if (m_scion) { return m_scion->childrenInline(); }

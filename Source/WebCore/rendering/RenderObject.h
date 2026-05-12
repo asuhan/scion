@@ -641,11 +641,7 @@ public:
     }
 
     bool isDocumentElementRenderer() const;
-    bool isBody() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return node() && node()->hasTagName(HTMLNames::bodyTag);
-    }
+    bool isBody() const;
     bool isHR() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
