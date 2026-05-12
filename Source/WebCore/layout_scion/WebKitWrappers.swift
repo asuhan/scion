@@ -2036,6 +2036,12 @@ func RenderElementScion_detachRendererInternal(
   return element.detachRendererInternal(renderer: renderer)?.id()
 }
 
+@_cdecl("RenderElementScion_hasCachedSVGResource")
+func RenderElementScion_hasCachedSVGResource(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasCachedSVGResource()
+}
+
 @_cdecl("RenderElementScion_renderBlockHasRareData")
 func RenderElementScion_renderBlockHasRareData(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

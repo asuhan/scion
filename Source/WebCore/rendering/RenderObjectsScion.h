@@ -350,6 +350,8 @@ public:
 
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);
 
+    bool hasCachedSVGResource() const;
+
     bool renderBlockHasRareData() const;
 
     void setFirstChild(RenderObject*);

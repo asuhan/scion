@@ -2871,6 +2871,12 @@ void RenderElement::clearNeedsLayoutForSkippedContent()
     clearNeedsLayout(HadSkippedLayout::Yes);
 }
 
+bool RenderElement::hasCachedSVGResource() const
+{
+    if (m_scion) { return m_scion->hasCachedSVGResource(); }
+    return m_hasCachedSVGResource;
+}
+
 void RenderElement::layoutIfNeeded()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

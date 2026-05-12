@@ -351,6 +351,8 @@ extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
 
+extern "C" bool RenderElementScion_hasCachedSVGResource(const void*);
+
 extern "C" bool RenderElementScion_renderBlockHasRareData(const void*);
 
 extern "C" void RenderElementScion_setFirstChild(void*, void*);
@@ -1114,6 +1116,11 @@ void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObjec
 RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject& renderer)
 {
     return RenderPtr<RenderObject>(static_cast<RenderObject*>(RenderElementScion_detachRendererInternal(m_handle, &renderer)));
+}
+
+bool RenderElementScion::hasCachedSVGResource() const
+{
+    return RenderElementScion_hasCachedSVGResource(m_handle);
 }
 
 bool RenderElementScion::renderBlockHasRareData() const

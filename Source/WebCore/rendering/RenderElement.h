@@ -391,11 +391,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_renderBoxHasShapeOutsideInfo;
     }
-    bool hasCachedSVGResource() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_hasCachedSVGResource;
-    }
+    bool hasCachedSVGResource() const;
 
     using LayoutIdentifier = unsigned;
     void setLayoutIdentifier(LayoutIdentifier layoutIdentifier)
