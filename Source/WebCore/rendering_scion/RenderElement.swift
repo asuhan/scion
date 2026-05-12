@@ -1566,6 +1566,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasCachedSVGResource() -> Bool {
+    assert(isNativeImpl())
+    return m_hasCachedSVGResource
+  }
+
   typealias LayoutIdentifier = UInt32
   func setLayoutIdentifier(_ layoutIdentifier: LayoutIdentifier) {
     assert(isNativeImpl())
@@ -2531,6 +2536,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   var renderBlockHasMarginAfterQuirk: Bool
   var renderBlockShouldForceRelayoutChildren: Bool
   var renderBlockHasRareData = false
+  private let m_hasCachedSVGResource = false
   private var m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
 
   private var m_lastChild: RenderObjectWrapper?
