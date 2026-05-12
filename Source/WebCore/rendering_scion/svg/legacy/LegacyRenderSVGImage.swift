@@ -144,8 +144,8 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
   }
 
   override func localTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_localTransform
   }
 
   private var needsBoundariesUpdate = false
