@@ -37,8 +37,8 @@ final class LegacyRenderSVGViewportContainer: LegacyRenderSVGContainer {
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   override func localToParentTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_localToParentTransform
   }
 
   override func calcViewport() {
@@ -59,4 +59,6 @@ final class LegacyRenderSVGViewportContainer: LegacyRenderSVGContainer {
 
   let isLayoutSizeChanged = false
   private var needsTransformUpdate = false
+
+  private let m_localToParentTransform = AffineTransform()
 }
