@@ -155,8 +155,10 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   }
 
   override func localToParentTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_localToParentTransform = localTransform()
+    m_localToParentTransform.translate(viewport.location())
+    return m_localToParentTransform
   }
 
   override func localTransform() -> AffineTransform {
@@ -176,6 +178,7 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   }
 
   private var m_localTransform = AffineTransform()
+  private var m_localToParentTransform = AffineTransform()
   private var viewport = FloatRectWrapper()
   private var needsTransformUpdate = true
 }
