@@ -168,4 +168,6 @@ class AffineTransform: Equatable {
 
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
   private var transform: [Float64]
+
+  static let identity = AffineTransform()
 }
