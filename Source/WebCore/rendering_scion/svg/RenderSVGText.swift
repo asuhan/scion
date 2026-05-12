@@ -371,8 +371,11 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return true
+    }
+    return false
   }
 
   override func layout() {
