@@ -3321,6 +3321,21 @@ bool RenderObject::isRenderReplica() const
     return type() == Type::Replica;
 }
 
+bool RenderObject::isRenderTable() const
+{
+    if (m_scion) { return m_scion->isRenderTable(); }
+    switch (type()) {
+    case Type::Table:
+#if ENABLE(MATHML)
+    case Type::MathMLTable:
+#endif
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
 bool RenderObject::isRenderTableCell() const
 {
     if (m_scion) { return m_scion->isRenderTableCell(); }

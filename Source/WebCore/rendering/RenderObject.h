@@ -2061,21 +2061,6 @@ inline bool RenderObject::isRenderMathMLRow() const
 }
 #endif
 
-inline bool RenderObject::isRenderTable() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    switch (type()) {
-    case Type::Table:
-#if ENABLE(MATHML)
-    case Type::MathMLTable:
-#endif
-        return true;
-    default:
-        break;
-    }
-    return false;
-}
-
 inline bool RenderObject::usesBoundaryCaching() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

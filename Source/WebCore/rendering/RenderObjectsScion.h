@@ -105,6 +105,8 @@ public:
 
     bool isRenderReplica() const;
 
+    bool isRenderTable() const;
+
     bool isRenderTableCell() const;
 
     bool isRenderVideo() const;

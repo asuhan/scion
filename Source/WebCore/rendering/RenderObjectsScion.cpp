@@ -85,6 +85,8 @@ extern "C" bool RenderObjectScion_isRenderImage(const void*);
 
 extern "C" bool RenderObjectScion_isRenderReplica(const void*);
 
+extern "C" bool RenderObjectScion_isRenderTable(const void*);
+
 extern "C" bool RenderObjectScion_isRenderTableCell(const void*);
 
 extern "C" bool RenderObjectScion_isRenderVideo(const void*);
@@ -658,6 +660,8 @@ bool RenderObjectScion::isRenderIFrame() const { return RenderObjectScion_isRend
 bool RenderObjectScion::isRenderImage() const { return RenderObjectScion_isRenderImage(m_handle); }
 
 bool RenderObjectScion::isRenderReplica() const { return RenderObjectScion_isRenderReplica(m_handle); }
+
+bool RenderObjectScion::isRenderTable() const { return RenderObjectScion_isRenderTable(m_handle); }
 
 bool RenderObjectScion::isRenderTableCell() const { return RenderObjectScion_isRenderTableCell(m_handle); }
 
