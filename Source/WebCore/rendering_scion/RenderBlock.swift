@@ -458,8 +458,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func percentHeightDescendants() -> TrackedRendererListHashSet? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return percentHeightDescendantsMap?.get(self, nil)
   }
 
   func hasPercentHeightDescendants() -> Bool {
