@@ -136,8 +136,8 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   override func clippedOverflowRect(
