@@ -547,8 +547,8 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func localToParentTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_localTransform
   }
 
   override func localTransform() -> AffineTransform {
