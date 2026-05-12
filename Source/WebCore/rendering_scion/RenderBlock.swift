@@ -463,8 +463,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hasPercentHeightDescendants() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard let objects = percentHeightDescendants() else { return false }
+    return !objects.isEmptyIgnoringNullReferences()
   }
 
   static func hasPercentHeightContainerMap() -> Bool { return percentHeightContainerMap != nil }
