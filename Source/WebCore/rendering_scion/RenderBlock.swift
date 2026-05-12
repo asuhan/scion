@@ -448,6 +448,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func addPercentHeightDescendant(descendant: RenderBoxWrapper) {
+    assert(isNativeImpl())
     insertIntoTrackedRendererMaps(self, descendant)
   }
 
