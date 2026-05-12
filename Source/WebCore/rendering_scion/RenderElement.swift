@@ -93,8 +93,7 @@ private func useShrinkWrappedFocusRingForOutlineStyleAuto() -> Bool {
 private func drawFocusRing(
   context: GraphicsContextWrapper, path: PathWrapper, style: RenderStyleWrapper, color: ColorWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  context.drawFocusRing(path, style.outlineWidth(), color)
 }
 
 private func drawFocusRing(
