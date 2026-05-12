@@ -34,9 +34,9 @@ final class RenderVideoWrapper: RenderMediaWrapper {
     fatalError("Not implemented")
   }
 
-  override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func requiresLayer() -> Bool {
+    assert(isNativeImpl())
+    return true
   }
 
   override func paintReplaced(
