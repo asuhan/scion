@@ -32,8 +32,8 @@ private func calcScrollbarThicknessUsing(
 
 final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   override func layout() {
