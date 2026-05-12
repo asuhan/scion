@@ -471,8 +471,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   static func hasPercentHeightContainerMap() -> Bool { return percentHeightContainerMap != nil }
 
   static func hasPercentHeightDescendant(descendant: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We don't null check percentHeightContainerMap since the caller
+    // already ensures this and we need to call this function on every
+    // descendant in clearPercentHeightDescendantsFrom().
+    return percentHeightContainerMap!.contains(descendant)
   }
 
   static func clearPercentHeightDescendantsFrom(parent: RenderBoxWrapper) {

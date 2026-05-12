@@ -47,5 +47,18 @@ final class WeakHashMap<KeyType: AnyObject, ValueType> {
     return m_impl[ObjectIdentifier(key)] ?? defaultValue
   }
 
+  func contains(_ key: KeyType) -> Bool {
+    increaseOperationCountSinceLastCleanup()
+    return m_impl[ObjectIdentifier(key)] != nil
+  }
+
+  @discardableResult
+  func increaseOperationCountSinceLastCleanup(_ operationsPerformed: UInt32 = 1) -> UInt32 {
+    let currentCount = m_operationCountSinceLastCleanup
+    m_operationCountSinceLastCleanup += operationsPerformed
+    return currentCount
+  }
+
   private var m_impl: [ObjectIdentifier: ValueType] = [:]
+  private var m_operationCountSinceLastCleanup: UInt32 = 0
 }
