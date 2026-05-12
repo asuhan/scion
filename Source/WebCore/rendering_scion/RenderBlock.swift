@@ -3471,8 +3471,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
   override final func rectWithOutlineForRepaint(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var r = super.rectWithOutlineForRepaint(repaintContainer, outlineWidth)
+    if isContinuation() {
+      r.inflateY(dy: collapsedMarginBefore())  // FIXME: This is wrong for block-flows that are horizontal.
+    }
+    return r
   }
 
   override final func outlineStyleForRepaint() -> RenderStyleWrapper {
