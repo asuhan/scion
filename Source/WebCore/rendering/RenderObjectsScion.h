@@ -259,6 +259,8 @@ public:
 
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
 
+    bool isFloatingOrOutOfFlowPositioned() const;
+
     bool renderTreeBeingDestroyed() const;
 
     void destroy();

@@ -2594,6 +2594,12 @@ bool RenderObject::hasNonEmptyVisibleRectRespectingParentFrames() const
     return false;
 }
 
+bool RenderObject::isFloatingOrOutOfFlowPositioned() const
+{
+    if (m_scion) { return m_scion->isFloatingOrOutOfFlowPositioned(); }
+    return (isFloating() || isOutOfFlowPositioned());
+}
+
 Vector<FloatQuad> RenderObject::absoluteTextQuads(const SimpleRange& range, OptionSet<RenderObject::BoundingRectBehavior> behavior)
 {
     Vector<FloatQuad> quads;

@@ -1556,11 +1556,7 @@ public:
 
     virtual unsigned length() const { return 1; }
 
-    bool isFloatingOrOutOfFlowPositioned() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return (isFloating() || isOutOfFlowPositioned());
-    }
+    bool isFloatingOrOutOfFlowPositioned() const;
     bool isInFlow() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

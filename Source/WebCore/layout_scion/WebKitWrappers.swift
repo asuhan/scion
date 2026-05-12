@@ -1741,6 +1741,12 @@ func RenderObjectScion_rectsForRepaintingAfterLayout(
     object.rectsForRepaintingAfterLayout(repaintContainer, repaintOutlineBounds ? .Yes : .No))
 }
 
+@_cdecl("RenderObjectScion_isFloatingOrOutOfFlowPositioned")
+func RenderObjectScion_isFloatingOrOutOfFlowPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isFloatingOrOutOfFlowPositioned()
+}
+
 @_cdecl("RenderObjectScion_renderTreeBeingDestroyed")
 func RenderObjectScion_renderTreeBeingDestroyed(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

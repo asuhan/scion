@@ -275,6 +275,8 @@ extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const v
 
 extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
 
+extern "C" bool RenderObjectScion_isFloatingOrOutOfFlowPositioned(const void*);
+
 extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
 
 extern "C" void RenderObjectScion_destroy(void*);
@@ -928,6 +930,8 @@ RenderObject::RepaintRects RenderObjectScion::rectsForRepaintingAfterLayout(cons
         RenderObjectScion_rectsForRepaintingAfterLayout(
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), repaintOutlineBounds == RepaintOutlineBounds::Yes));
 }
+
+bool RenderObjectScion::isFloatingOrOutOfFlowPositioned() const { return RenderObjectScion_isFloatingOrOutOfFlowPositioned(m_handle); }
 
 bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
 
