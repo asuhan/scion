@@ -71,9 +71,9 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
   }
 
-  override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func requiresLayer() -> Bool {
+    assert(isNativeImpl())
+    return false
   }
 
   override func layout() {
