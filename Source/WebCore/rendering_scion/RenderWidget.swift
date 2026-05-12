@@ -200,8 +200,8 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.requiresLayer() || requiresAcceleratedCompositing()
   }
 
   override func needsPreferredWidthsRecalculation() -> Bool {
