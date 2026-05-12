@@ -299,8 +299,16 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func localToParentTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Slightly optimized version of m_localToParentTransform = AffineTransform::makeTranslation(x(), y()) * m_localToBorderBoxTransform;
+    m_localToParentTransform = m_localToBorderBoxTransform
+    if x().bool() {
+      m_localToParentTransform.setE(m_localToParentTransform.e() + Float64(roundToInt(value: x())))
+    }
+    if y().bool() {
+      m_localToParentTransform.setF(m_localToParentTransform.f() + Float64(roundToInt(value: y())))
+    }
+    return m_localToParentTransform
   }
 
   override func repaintRectInLocalCoordinates(
@@ -449,6 +457,8 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   private var strokeBoundingBox: FloatRectWrapper? = nil
   private var m_repaintBoundingBox = FloatRectWrapper()
   private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
+  private var m_localToParentTransform = AffineTransform()
+  private let m_localToBorderBoxTransform = AffineTransform()
   var localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
   var isLayoutSizeChanged = false
