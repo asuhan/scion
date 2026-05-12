@@ -478,8 +478,19 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   static func clearPercentHeightDescendantsFrom(parent: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(percentHeightContainerMap != nil)
+    var child = parent.firstChild()
+    while child != nil {
+      guard let box = child as? RenderBoxWrapper else { continue }
+
+      if !hasPercentHeightDescendant(descendant: box) {
+        continue
+      }
+
+      removePercentHeightDescendant(descendant: box)
+
+      child = child!.nextInPreOrder(stayWithin: parent)
+    }
   }
 
   static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
