@@ -1103,8 +1103,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setFragmentedFlowState(_ state: FragmentedFlowState) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFragmentedFlowState(state)
   }
 
   private func isLegacyRenderSVGModelObject() -> Bool {
@@ -3533,6 +3533,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     func fragmentedFlowState() -> FragmentedFlowState { return m_fragmentedFlowState }
 
+    mutating func setFragmentedFlowState(_ fragmentedFlowState: FragmentedFlowState) {
+      m_fragmentedFlowState = fragmentedFlowState
+    }
+
     mutating func setBoxDecorationState(_ boxDecorationState: BoxDecorationState) {
       self.boxDecorationState = boxDecorationState
     }
@@ -3540,7 +3544,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     private var flags: StateFlag = []
     private var m_positionedState: PositionedState = .IsStaticallyPositioned
     private let m_selectionState: HighlightState = .None
-    private let m_fragmentedFlowState: FragmentedFlowState = .NotInsideFlow
+    private var m_fragmentedFlowState: FragmentedFlowState = .NotInsideFlow
     var boxDecorationState: BoxDecorationState = .None
   }
 
