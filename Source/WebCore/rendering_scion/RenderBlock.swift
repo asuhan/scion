@@ -1218,6 +1218,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
       - (logicalWidth() - (isHorizontalWritingMode() ? boxRect.maxX() : boxRect.maxY()))
   }
 
+  func availableLogicalWidthForContent(_ fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
+    assert(isNativeImpl())
+    return max(
+      LayoutUnit(value: 0),
+      logicalRightOffsetForContent(fragment) - logicalLeftOffsetForContent(fragment))
+  }
+
   func startOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
     assert(isNativeImpl())
     return style().isLeftToRightDirection()
@@ -1258,8 +1265,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func availableLogicalWidthForContent(blockOffset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return availableLogicalWidthForContent(fragmentAtBlockOffset(blockOffset: blockOffset))
   }
 
   func startOffsetForContent() -> LayoutUnit {
