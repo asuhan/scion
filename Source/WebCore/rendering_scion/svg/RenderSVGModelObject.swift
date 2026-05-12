@@ -31,8 +31,8 @@
 
 class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
