@@ -32,9 +32,9 @@ final class RenderReplicaWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func requiresLayer() -> Bool {
+    assert(isNativeImpl())
+    return true
   }
 
   override func layout() {
