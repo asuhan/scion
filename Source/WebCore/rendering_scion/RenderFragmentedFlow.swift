@@ -819,9 +819,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // Always create a RenderLayer for the RenderFragmentedFlow so that we
+  // can easily avoid drawing the children directly.
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   // Overridden by columns/pages to set up an initial logical width of the page width even when
