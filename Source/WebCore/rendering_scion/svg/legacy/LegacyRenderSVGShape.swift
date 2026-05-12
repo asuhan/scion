@@ -100,9 +100,9 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
-  override func localToParentTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func localToParentTransform() -> AffineTransform {
+    assert(isNativeImpl())
+    return m_localTransform
   }
 
   override final func localTransform() -> AffineTransform {
