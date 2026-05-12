@@ -821,8 +821,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func createAnonymousBlock(display: DisplayType = .Block) -> RenderBlockWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return createAnonymousBlockWithStyleAndDisplay(
+      document: document(), style: style(), display: display)!
   }
 
   override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
