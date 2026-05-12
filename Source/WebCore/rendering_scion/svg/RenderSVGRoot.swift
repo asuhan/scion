@@ -111,8 +111,8 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   private func updateLayoutSizeIfNeeded() -> Bool {
