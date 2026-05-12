@@ -713,8 +713,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func startOffsetForLine(
     position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isLeftToRightDirection()
+      ? logicalLeftOffsetForLine(position: position, logicalHeight: logicalHeight)
+      : logicalWidth() - logicalRightOffsetForLine(position: position, logicalHeight: logicalHeight)
   }
 
   override func positionForPoint(
