@@ -1901,6 +1901,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return false
   }
 
+  // Convert a local quad to absolute coordinates, taking transforms into account.
+  func localToAbsoluteQuad(_ quad: FloatQuad, _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?)
+    -> FloatQuad
+  {
+    assert(isNativeImpl())
+    return localToContainerQuad(localQuad: quad, container: nil, mode: mode, wasFixed: &wasFixed)
+  }
+
   // Convert a local quad into the coordinate system of container, taking transforms into account.
   func localToContainerQuad(
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,
