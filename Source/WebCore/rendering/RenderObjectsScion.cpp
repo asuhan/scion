@@ -545,6 +545,8 @@ extern "C" OptionalRepaintRectsRaw RenderViewScion_computeVisibleRectsInContaine
 
 extern "C" void RenderViewScion_repaintRootContents(const void*);
 
+extern "C" void RenderViewScion_repaintViewRectangle(const void*, LayoutRectRaw);
+
 extern "C" void RenderViewScion_repaintViewAndCompositedLayers(void*);
 
 extern "C" void RenderViewScion_paint(void*, void*, LayoutPointRaw);
@@ -1576,6 +1578,11 @@ std::optional<WebCore::RenderObject::RepaintRects> RenderViewScion::computeVisib
 void RenderViewScion::repaintRootContents()
 {
     RenderViewScion_repaintRootContents(m_handle);
+}
+
+void RenderViewScion::repaintViewRectangle(const LayoutRect& repaintRect) const
+{
+    RenderViewScion_repaintViewRectangle(m_handle, convertLayoutRect(repaintRect));
 }
 
 void RenderViewScion::repaintViewAndCompositedLayers()

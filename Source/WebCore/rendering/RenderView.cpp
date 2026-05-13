@@ -637,7 +637,10 @@ void RenderView::repaintRootContents()
 
 void RenderView::repaintViewRectangle(const LayoutRect& repaintRect) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->repaintViewRectangle(repaintRect);
+        return;
+    }
     if (!shouldRepaint(repaintRect))
         return;
 

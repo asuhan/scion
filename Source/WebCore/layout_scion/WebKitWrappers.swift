@@ -738,6 +738,13 @@ func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
   view.repaintRootContents()
 }
 
+@_cdecl("RenderViewScion_repaintViewRectangle")
+func RenderViewScion_repaintViewRectangle(_ viewRaw: UnsafeRawPointer, _ repaintRect: LayoutRectRaw)
+{
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.repaintViewRectangle(convertLayoutRect(repaintRect))
+}
+
 @_cdecl("RenderViewScion_repaintViewAndCompositedLayers")
 func RenderViewScion_repaintViewAndCompositedLayers(_ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

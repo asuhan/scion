@@ -593,6 +593,8 @@ public:
 
     void repaintRootContents();
 
+    void repaintViewRectangle(const LayoutRect&) const;
+
     void repaintViewAndCompositedLayers();
 
     void paint(PaintInfo&, const LayoutPoint&);
