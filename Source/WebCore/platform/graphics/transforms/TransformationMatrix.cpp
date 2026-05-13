@@ -53,6 +53,20 @@ extern "C" WEBCORE_EXPORT void* TransformationMatrix_makeIdentity(void* p)
     return &static_cast<WebCore::TransformationMatrix*>(p)->makeIdentity();
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT FloatRectRaw TransformationMatrix_mapRect(const void* p, FloatRectRaw rect)
+{
+    const auto r = static_cast<const WebCore::TransformationMatrix*>(p)->mapRect(
+        WebCore::FloatRect { rect.x, rect.y, rect.width, rect.height });
+    return { r.x(), r.y(), r.width(), r.height() };
+}
+
 extern "C" WEBCORE_EXPORT double TransformationMatrix_e(const void* p)
 {
     return static_cast<const WebCore::TransformationMatrix*>(p)->e();

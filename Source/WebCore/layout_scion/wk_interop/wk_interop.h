@@ -1629,6 +1629,7 @@ void* TransformState_releaseTrackedTransform(void*);
 bool TransformState_direction(const void*);
 void* TransformationMatrix_create();
 void* TransformationMatrix_makeIdentity(void*);
+struct FloatRectRaw TransformationMatrix_mapRect(const void*, struct FloatRectRaw);
 double TransformationMatrix_e(const void*);
 void TransformationMatrix_setE(void*, double);
 double TransformationMatrix_f(const void*);

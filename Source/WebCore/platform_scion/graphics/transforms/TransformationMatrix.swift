@@ -53,8 +53,7 @@ class TransformationMatrix {
   // If the matrix has 3D components, the z component of the result is
   // dropped, effectively projecting the rect into the z=0 plane.
   func mapRect(_ rect: FloatRectWrapper) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return toFloatRect(wk_interop.TransformationMatrix_mapRect(pInterop, toFloatRectRaw(rect)))
   }
 
   // Rounds the resulting mapped rectangle out. This is helpful for bounding

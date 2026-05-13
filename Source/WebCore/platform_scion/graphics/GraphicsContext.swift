@@ -29,7 +29,7 @@ func toFloatRectRaw(_ rect: FloatRectWrapper) -> FloatRectRaw {
   return FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height())
 }
 
-private func toFloatRect(_ rect: FloatRectRaw) -> FloatRectWrapper {
+func toFloatRect(_ rect: FloatRectRaw) -> FloatRectWrapper {
   return FloatRectWrapper(x: rect.x, y: rect.y, width: rect.width, height: rect.height)
 }
 
