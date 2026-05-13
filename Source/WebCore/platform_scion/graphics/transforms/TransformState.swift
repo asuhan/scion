@@ -39,7 +39,7 @@ class TransformState {
     case FlattenTransform
     case AccumulateTransform
   }
-  enum TransformMatrixTracking {
+  enum TransformMatrixTracking: UInt8 {
     case DoNotTrackTransformMatrix
     case TrackSVGCTMMatrix
     case TrackSVGScreenCTMMatrix
@@ -65,13 +65,11 @@ class TransformState {
   }
 
   func setTransformMatrixTracking(_ tracking: TransformMatrixTracking) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.TransformState_setTransformMatrixTracking(p, tracking.rawValue)
   }
 
   func transformMatrixTracking() -> TransformMatrixTracking {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformMatrixTracking(rawValue: wk_interop.TransformState_transformMatrixTracking(p))!
   }
 
   func move(

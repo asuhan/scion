@@ -92,6 +92,17 @@ extern "C" WEBCORE_EXPORT void TransformState_destroy(void* p)
     delete static_cast<WebCore::TransformState*>(p);
 }
 
+extern "C" WEBCORE_EXPORT void TransformState_setTransformMatrixTracking(void* p, uint8_t tracking)
+{
+    static_cast<WebCore::TransformState*>(p)->setTransformMatrixTracking(
+        static_cast<WebCore::TransformState::TransformMatrixTracking>(tracking));
+}
+
+extern "C" WEBCORE_EXPORT uint8_t TransformState_transformMatrixTracking(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::TransformState*>(p)->transformMatrixTracking());
+}
+
 extern "C" WEBCORE_EXPORT void TransformState_flatten(void* p)
 {
     static_cast<WebCore::TransformState*>(p)->flatten();
