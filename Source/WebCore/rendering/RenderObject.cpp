@@ -928,6 +928,17 @@ void RenderObject::invalidateContainerPreferredLogicalWidths()
     }
 }
 
+void RenderObject::invalidateBackgroundObscurationStatus()
+{
+    if (m_scion) {
+        m_scion->invalidateBackgroundObscurationStatus();
+        return;
+    }
+    if (!hasVisibleBoxDecorations())
+        return;
+    m_stateBitfields.setBoxDecorationState(BoxDecorationState::InvalidObscurationStatus);
+}
+
 void RenderObject::setLayerNeedsFullRepaint()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

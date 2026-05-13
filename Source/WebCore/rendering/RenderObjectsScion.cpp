@@ -225,6 +225,8 @@ extern "C" void RenderObjectScion_setNeedsLayout(void*, bool);
 
 extern "C" void RenderObjectScion_setPreferredLogicalWidthsDirty(void*, bool, bool);
 
+extern "C" void RenderObjectScion_invalidateBackgroundObscurationStatus(void*);
+
 extern "C" bool RenderObjectScion_isComposited(const void*);
 
 struct FloatPointRaw {
@@ -807,6 +809,8 @@ RenderElement* RenderObjectScion::container() const { return static_cast<RenderE
 void RenderObjectScion::setNeedsLayout(MarkingBehavior markParents) { RenderObjectScion_setNeedsLayout(m_handle, markParents == MarkContainingBlockChain); }
 
 void RenderObjectScion::setPreferredLogicalWidthsDirty(bool shouldBeDirty, MarkingBehavior markParents) { RenderObjectScion_setPreferredLogicalWidthsDirty(m_handle, shouldBeDirty, markParents == MarkContainingBlockChain); }
+
+void RenderObjectScion::invalidateBackgroundObscurationStatus() { RenderObjectScion_invalidateBackgroundObscurationStatus(m_handle); }
 
 bool RenderObjectScion::isComposited() const { return RenderObjectScion_isComposited(m_handle); }
 

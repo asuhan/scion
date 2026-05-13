@@ -1942,14 +1942,6 @@ inline void RenderObject::setHasVisibleBoxDecorations(bool b)
     m_stateBitfields.setBoxDecorationState(BoxDecorationState::InvalidObscurationStatus);
 }
 
-inline void RenderObject::invalidateBackgroundObscurationStatus()
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (!hasVisibleBoxDecorations())
-        return;
-    m_stateBitfields.setBoxDecorationState(BoxDecorationState::InvalidObscurationStatus);
-}
-
 inline bool RenderObject::backgroundIsKnownToBeObscured(const LayoutPoint& paintOffset)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
