@@ -47,8 +47,7 @@ class TransformationMatrix {
 
   @discardableResult
   func makeIdentity() -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(wk_interop.TransformationMatrix_makeIdentity(pInterop), false)
   }
 
   // If the matrix has 3D components, the z component of the result is

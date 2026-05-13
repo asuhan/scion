@@ -48,6 +48,11 @@ extern "C" WEBCORE_EXPORT void* TransformationMatrix_create()
     return new WebCore::TransformationMatrix();
 }
 
+extern "C" WEBCORE_EXPORT void* TransformationMatrix_makeIdentity(void* p)
+{
+    return &static_cast<WebCore::TransformationMatrix*>(p)->makeIdentity();
+}
+
 extern "C" WEBCORE_EXPORT void TransformationMatrix_destroy(const void* p)
 {
     delete static_cast<const WebCore::TransformationMatrix*>(p);
