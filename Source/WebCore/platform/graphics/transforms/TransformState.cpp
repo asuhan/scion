@@ -153,6 +153,11 @@ extern "C" WEBCORE_EXPORT void* TransformState_releaseTrackedTransform(void* p)
     return transform.release();
 }
 
+extern "C" WEBCORE_EXPORT bool TransformState_direction(const void* p)
+{
+    return static_cast<const WebCore::TransformState*>(p)->direction() == WebCore::TransformState::TransformDirection::UnapplyInverseTransformDirection;
+}
+
 namespace WebCore {
 
 TransformState& TransformState::operator=(const TransformState& other)

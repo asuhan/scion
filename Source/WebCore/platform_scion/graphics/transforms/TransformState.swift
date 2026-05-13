@@ -125,8 +125,8 @@ class TransformState {
   }
 
   func direction() -> TransformDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.TransformState_direction(p)
+      ? .UnapplyInverseTransformDirection : .ApplyTransformDirection
   }
 
   private let p: UnsafeMutableRawPointer

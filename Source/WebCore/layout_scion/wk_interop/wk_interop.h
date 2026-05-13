@@ -1626,4 +1626,5 @@ struct FloatQuadRaw TransformState_lastPlanarQuad(const void*);
 struct FloatPointRaw TransformState_mappedPoint(const void*);
 struct FloatQuadRaw TransformState_mappedQuad(const void*);
 void* TransformState_releaseTrackedTransform(void*);
+bool TransformState_direction(const void*);
 void TransformationMatrix_destroy(const void*);
