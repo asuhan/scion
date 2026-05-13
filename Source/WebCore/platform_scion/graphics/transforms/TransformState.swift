@@ -110,8 +110,7 @@ class TransformState {
   }
 
   func lastPlanarQuad() -> FloatQuad {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertFloatQuad(wk_interop.TransformState_lastPlanarQuad(p))
   }
 
   // Return the point or quad mapped through the current transform

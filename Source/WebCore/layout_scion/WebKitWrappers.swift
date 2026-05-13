@@ -2203,7 +2203,7 @@ private func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
   return FloatPoint(x: p.x, y: p.y)
 }
 
-private func convertFloatQuad(_ q: FloatQuadRaw) -> FloatQuad {
+func convertFloatQuad(_ q: FloatQuadRaw) -> FloatQuad {
   return FloatQuad(
     convertFloatPoint(q.p1), convertFloatPoint(q.p2), convertFloatPoint(q.p3),
     convertFloatPoint(q.p4))

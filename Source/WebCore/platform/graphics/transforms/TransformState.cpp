@@ -54,6 +54,18 @@ WebCore::FloatQuad convertFloatQuad(const FloatQuadRaw& q)
     };
 }
 
+FloatPointRaw convertFloatPoint(const WebCore::FloatPoint& point) { return { point.x(), point.y() }; }
+
+FloatQuadRaw convertFloatQuad(const WebCore::FloatQuad& q)
+{
+    return {
+        convertFloatPoint(q.p1()),
+        convertFloatPoint(q.p2()),
+        convertFloatPoint(q.p3()),
+        convertFloatPoint(q.p4())
+    };
+}
+
 } // namespace
 
 extern "C" WEBCORE_EXPORT void* TransformState_create(bool mappingDirection, FloatPointRaw p, FloatQuadRaw quad)
@@ -74,6 +86,11 @@ extern "C" WEBCORE_EXPORT void TransformState_destroy(void* p)
 extern "C" WEBCORE_EXPORT void TransformState_flatten(void* p)
 {
     static_cast<WebCore::TransformState*>(p)->flatten();
+}
+
+extern "C" WEBCORE_EXPORT FloatQuadRaw TransformState_lastPlanarQuad(const void* p)
+{
+    return convertFloatQuad(static_cast<const WebCore::TransformState*>(p)->lastPlanarQuad());
 }
 
 namespace WebCore {
