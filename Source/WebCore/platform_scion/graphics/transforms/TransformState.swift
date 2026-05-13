@@ -121,8 +121,7 @@ class TransformState {
   }
 
   func releaseTrackedTransform() -> TransformationMatrix? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(wk_interop.TransformState_releaseTrackedTransform(p), true)
   }
 
   func direction() -> TransformDirection {

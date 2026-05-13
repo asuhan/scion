@@ -147,6 +147,12 @@ extern "C" WEBCORE_EXPORT FloatQuadRaw TransformState_mappedQuad(const void* p)
     return convertFloatQuad(static_cast<const WebCore::TransformState*>(p)->mappedQuad());
 }
 
+extern "C" WEBCORE_EXPORT void* TransformState_releaseTrackedTransform(void* p)
+{
+    auto transform = static_cast<WebCore::TransformState*>(p)->releaseTrackedTransform();
+    return transform.release();
+}
+
 namespace WebCore {
 
 TransformState& TransformState::operator=(const TransformState& other)

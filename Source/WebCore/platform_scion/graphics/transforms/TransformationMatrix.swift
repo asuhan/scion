@@ -24,8 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class TransformationMatrix {
-  init(_ p: UnsafeMutableRawPointer) { pInterop = p }
+  init(_ p: UnsafeMutableRawPointer, _ owner: Bool) {
+    self.pInterop = p
+    self.owner = owner
+  }
+
+  deinit {
+    if self.owner {
+      wk_interop.TransformationMatrix_destroy(pInterop)
+    }
+  }
 
   init() {
     // TODO(asuhan): implement this
@@ -169,4 +180,5 @@ class TransformationMatrix {
   func interop() -> UnsafeMutableRawPointer { return pInterop }
 
   private let pInterop: UnsafeMutableRawPointer
+  private let owner: Bool
 }
