@@ -26,7 +26,7 @@
 import wk_interop
 
 struct UpdateScrollInfoAfterLayoutTransaction {
-  let nestedCount: Int32 = 0
+  let nestedCount: Int32
   let blocks = WeakHashSet<RenderBlockWrapper>()
 }
 
@@ -94,13 +94,18 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func updateScrollInfoAfterLayoutTransactionIfExists() -> UpdateScrollInfoAfterLayoutTransaction? {
-    if wk_interop.LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(p)
-      == nil
-    {
+    guard
+      let info =
+        wk_interop.LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(p)
+    else {
       return nil
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !wk_interop.UpdateScrollInfoAfterLayoutTransaction_blocksIsEmpty(info) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    let nestedCount = wk_interop.UpdateScrollInfoAfterLayoutTransaction_nestedCount(info)
+    return UpdateScrollInfoAfterLayoutTransaction(nestedCount: nestedCount)
   }
 
   func setBoxNeedsTransformUpdateAfterContainerLayout(

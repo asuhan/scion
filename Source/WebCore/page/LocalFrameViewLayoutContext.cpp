@@ -111,6 +111,17 @@ extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfte
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransactionIfExists();
 }
 
+extern "C" WEBCORE_EXPORT int UpdateScrollInfoAfterLayoutTransaction_nestedCount(const void* p)
+{
+    return static_cast<const WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p)->nestedCount;
+}
+
+extern "C" WEBCORE_EXPORT bool UpdateScrollInfoAfterLayoutTransaction_blocksIsEmpty(const void* p)
+{
+    const auto info = static_cast<const WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p);
+    return info->blocks.isEmptyIgnoringNullReferences();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_hasBoxesNeedingTransformUpdateAfterContainerLayout(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->hasBoxesNeedingTransformUpdateAfterContainerLayout();
