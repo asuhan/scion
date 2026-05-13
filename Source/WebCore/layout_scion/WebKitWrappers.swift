@@ -2199,7 +2199,7 @@ func RenderBoxScion_clientLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.clientLogicalHeight().rawValue()
 }
 
-private func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
+func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
   return FloatPoint(x: p.x, y: p.y)
 }
 

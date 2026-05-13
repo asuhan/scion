@@ -1621,4 +1621,5 @@ uint8_t TransformState_transformMatrixTracking(const void*);
 void TransformState_move(void*, struct LayoutSizeRaw, uint8_t);
 void TransformState_transformFromContainer(void*, const void*, uint8_t);
 void TransformState_flatten(void*);
+struct FloatPointRaw TransformState_lastPlanarPoint(const void*);
 struct FloatQuadRaw TransformState_lastPlanarQuad(const void*);

@@ -127,6 +127,11 @@ extern "C" WEBCORE_EXPORT void TransformState_flatten(void* p)
     static_cast<WebCore::TransformState*>(p)->flatten();
 }
 
+extern "C" WEBCORE_EXPORT FloatPointRaw TransformState_lastPlanarPoint(const void* p)
+{
+    return convertFloatPoint(static_cast<const WebCore::TransformState*>(p)->lastPlanarPoint());
+}
+
 extern "C" WEBCORE_EXPORT FloatQuadRaw TransformState_lastPlanarQuad(const void* p)
 {
     return convertFloatQuad(static_cast<const WebCore::TransformState*>(p)->lastPlanarQuad());

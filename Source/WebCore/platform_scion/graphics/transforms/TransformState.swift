@@ -104,8 +104,7 @@ class TransformState {
 
   // Return the coords of the point or quad in the last flattened layer
   func lastPlanarPoint() -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertFloatPoint(wk_interop.TransformState_lastPlanarPoint(p))
   }
 
   func lastPlanarQuad() -> FloatQuad {
