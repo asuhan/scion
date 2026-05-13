@@ -1978,6 +1978,12 @@ func RenderElementScion_hasMask(_ elementRaw: UnsafeRawPointer) -> Bool {
   return element.hasMask()
 }
 
+@_cdecl("RenderElementScion_hasClip")
+func RenderElementScion_hasClip(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasClip()
+}
+
 @_cdecl("RenderElementScion_hasClipOrNonVisibleOverflow")
 func RenderElementScion_hasClipOrNonVisibleOverflow(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

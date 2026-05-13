@@ -341,6 +341,8 @@ extern "C" float RenderElementScion_opacity(const void*);
 
 extern "C" bool RenderElementScion_hasMask(const void*);
 
+extern "C" bool RenderElementScion_hasClip(const void*);
+
 extern "C" bool RenderElementScion_hasClipOrNonVisibleOverflow(const void*);
 
 extern "C" bool RenderElementScion_hasClipPath(const void*);
@@ -1087,6 +1089,11 @@ float RenderElementScion::opacity() const
 bool RenderElementScion::hasMask() const
 {
     return RenderElementScion_hasMask(m_handle);
+}
+
+bool RenderElementScion::hasClip() const
+{
+    return RenderElementScion_hasClip(m_handle);
 }
 
 bool RenderElementScion::hasClipOrNonVisibleOverflow() const

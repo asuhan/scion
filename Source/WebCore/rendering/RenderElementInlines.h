@@ -39,11 +39,6 @@ inline bool RenderElement::hasBackground() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().hasBackground();
 }
-inline bool RenderElement::hasClip() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return isOutOfFlowPositioned() && style().hasClip();
-}
 inline bool RenderElement::hasHiddenBackface() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

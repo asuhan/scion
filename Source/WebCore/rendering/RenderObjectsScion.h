@@ -340,6 +340,8 @@ public:
 
     bool hasMask() const;
 
+    bool hasClip() const;
+
     bool hasClipOrNonVisibleOverflow() const;
 
     bool hasClipPath() const;

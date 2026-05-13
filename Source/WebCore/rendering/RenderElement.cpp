@@ -2359,6 +2359,12 @@ bool RenderElement::hasMask() const
     return style().hasMask();
 }
 
+bool RenderElement::hasClip() const
+{
+    if (m_scion) { return m_scion->hasClip(); }
+    return isOutOfFlowPositioned() && style().hasClip();
+}
+
 bool RenderElement::hasClipOrNonVisibleOverflow() const
 {
     if (m_scion) { return m_scion->hasClipOrNonVisibleOverflow(); }
