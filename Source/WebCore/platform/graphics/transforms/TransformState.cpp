@@ -78,6 +78,15 @@ extern "C" WEBCORE_EXPORT void* TransformState_create(bool mappingDirection, Flo
         convertFloatQuad(quad));
 }
 
+extern "C" WEBCORE_EXPORT void* TransformState_create_from_point(bool mappingDirection, FloatPointRaw p)
+{
+    return new WebCore::TransformState(
+        mappingDirection
+            ? WebCore::TransformState::UnapplyInverseTransformDirection
+            : WebCore::TransformState::ApplyTransformDirection,
+        convertFloatPoint(p));
+}
+
 extern "C" WEBCORE_EXPORT void TransformState_destroy(void* p)
 {
     delete static_cast<WebCore::TransformState*>(p);

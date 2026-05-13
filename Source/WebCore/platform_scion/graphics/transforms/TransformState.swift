@@ -59,8 +59,9 @@ class TransformState {
   }
 
   init(_ mappingDirection: TransformDirection, _ p: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.TransformState_create_from_point(
+      mappingDirection == .UnapplyInverseTransformDirection, convertFloatPoint(p))
+    self.owner = true
   }
 
   func setTransformMatrixTracking(_ tracking: TransformMatrixTracking) {
