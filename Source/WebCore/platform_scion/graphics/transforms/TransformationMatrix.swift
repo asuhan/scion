@@ -70,8 +70,8 @@ class TransformationMatrix {
   }
 
   func mapRect(_ r: LayoutRectWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutRect(
+      wk_interop.TransformationMatrix_mapLayoutRect(pInterop, convertLayoutRect(r)))
   }
 
   func e() -> Float64 { return wk_interop.TransformationMatrix_e(pInterop) }

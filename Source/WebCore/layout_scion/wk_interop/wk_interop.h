@@ -1631,6 +1631,7 @@ void* TransformationMatrix_create();
 void* TransformationMatrix_makeIdentity(void*);
 struct FloatRectRaw TransformationMatrix_mapFloatRect(const void*, struct FloatRectRaw);
 struct IntRectRaw TransformationMatrix_mapIntRect(const void* p, struct IntRectRaw);
+struct LayoutRectRaw TransformationMatrix_mapLayoutRect(const void* p, struct LayoutRectRaw);
 double TransformationMatrix_e(const void*);
 void TransformationMatrix_setE(void*, double);
 double TransformationMatrix_f(const void*);

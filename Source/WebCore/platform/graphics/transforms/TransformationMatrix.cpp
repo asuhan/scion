@@ -89,6 +89,33 @@ extern "C" WEBCORE_EXPORT IntRectRaw TransformationMatrix_mapIntRect(const void*
     return { r.x(), r.y(), r.width(), r.height() };
 }
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+namespace {
+
+LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height) };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT LayoutRectRaw TransformationMatrix_mapLayoutRect(const void* p, LayoutRectRaw rect)
+{
+    return convertLayoutRect(
+        static_cast<const WebCore::TransformationMatrix*>(p)->mapRect(convertLayoutRectRaw(rect)));
+}
+
 extern "C" WEBCORE_EXPORT double TransformationMatrix_e(const void* p)
 {
     return static_cast<const WebCore::TransformationMatrix*>(p)->e();
