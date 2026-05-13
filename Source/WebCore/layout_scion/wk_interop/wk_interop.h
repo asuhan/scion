@@ -1618,5 +1618,6 @@ void* TransformState_create_from_point(bool, struct FloatPointRaw);
 void TransformState_destroy(void*);
 void TransformState_setTransformMatrixTracking(void*, uint8_t);
 uint8_t TransformState_transformMatrixTracking(const void*);
+void TransformState_move(void*, struct LayoutSizeRaw, uint8_t);
 void TransformState_flatten(void*);
 struct FloatQuadRaw TransformState_lastPlanarQuad(const void*);

@@ -35,7 +35,7 @@ class TransformState {
     case ApplyTransformDirection
     case UnapplyInverseTransformDirection
   }
-  enum TransformAccumulation {
+  enum TransformAccumulation: UInt8 {
     case FlattenTransform
     case AccumulateTransform
   }
@@ -75,13 +75,13 @@ class TransformState {
   func move(
     _ x: LayoutUnit, _ y: LayoutUnit, _ accumulate: TransformAccumulation = .FlattenTransform
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    move(LayoutSizeWrapper(width: x, height: y), accumulate)
   }
 
   func move(_ offset: LayoutSizeWrapper, _ accumulate: TransformAccumulation = .FlattenTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.TransformState_move(
+      p, LayoutSizeRaw(width: offset.width().rawValue(), height: offset.height().rawValue()),
+      accumulate.rawValue)
   }
 
   func applyTransform(

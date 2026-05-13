@@ -103,6 +103,18 @@ extern "C" WEBCORE_EXPORT uint8_t TransformState_transformMatrixTracking(const v
     return static_cast<uint8_t>(static_cast<const WebCore::TransformState*>(p)->transformMatrixTracking());
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT void TransformState_move(void* p, LayoutSizeRaw offset, uint8_t accumulate)
+{
+    static_cast<WebCore::TransformState*>(p)->move(
+        { WebCore::LayoutUnit::fromRawValue(offset.width), WebCore::LayoutUnit::fromRawValue(offset.height) },
+        static_cast<WebCore::TransformState::TransformAccumulation>(accumulate));
+}
+
 extern "C" WEBCORE_EXPORT void TransformState_flatten(void* p)
 {
     static_cast<WebCore::TransformState*>(p)->flatten();
