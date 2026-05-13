@@ -1636,4 +1636,6 @@ double TransformationMatrix_e(const void*);
 void TransformationMatrix_setE(void*, double);
 double TransformationMatrix_f(const void*);
 void TransformationMatrix_setF(void*, double);
+bool TransformationMatrix_isInvertible(const void*);
+bool TransformationMatrix_isAffine(const void*);
 void TransformationMatrix_destroy(const void*);

@@ -125,20 +125,14 @@ class TransformationMatrix {
     fatalError("Not implemented")
   }
 
-  func isInvertible() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInvertible() -> Bool { return wk_interop.TransformationMatrix_isInvertible(pInterop) }
 
   func inverse() -> TransformationMatrix? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func isAffine() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isAffine() -> Bool { return wk_interop.TransformationMatrix_isAffine(pInterop) }
 
   // Throw away the non-affine parts of the matrix (lossy!).
   func makeAffine() {
