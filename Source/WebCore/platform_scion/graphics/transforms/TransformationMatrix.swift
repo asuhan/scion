@@ -38,10 +38,7 @@ class TransformationMatrix {
     }
   }
 
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  convenience init() { self.init(wk_interop.TransformationMatrix_create(), true) }
 
   init(_ t: AffineTransform) {
     // TODO(asuhan): implement this
