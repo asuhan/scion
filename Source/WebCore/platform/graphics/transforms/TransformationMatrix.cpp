@@ -60,10 +60,32 @@ struct FloatRectRaw {
     float height;
 };
 
-extern "C" WEBCORE_EXPORT FloatRectRaw TransformationMatrix_mapRect(const void* p, FloatRectRaw rect)
+extern "C" WEBCORE_EXPORT FloatRectRaw TransformationMatrix_mapFloatRect(const void* p, FloatRectRaw rect)
 {
     const auto r = static_cast<const WebCore::TransformationMatrix*>(p)->mapRect(
         WebCore::FloatRect { rect.x, rect.y, rect.width, rect.height });
+    return { r.x(), r.y(), r.width(), r.height() };
+}
+
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct IntRectRaw {
+    struct IntPointRaw location;
+    struct IntSizeRaw size;
+};
+
+extern "C" WEBCORE_EXPORT IntRectRaw TransformationMatrix_mapIntRect(const void* p, IntRectRaw rect)
+{
+    const auto r = static_cast<const WebCore::TransformationMatrix*>(p)->mapRect(
+        WebCore::IntRect { rect.location.x, rect.location.y, rect.size.width, rect.size.height });
     return { r.x(), r.y(), r.width(), r.height() };
 }
 

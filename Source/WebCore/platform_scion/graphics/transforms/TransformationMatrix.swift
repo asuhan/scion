@@ -26,6 +26,12 @@
 
 import wk_interop
 
+private func convertIntRect(_ r: IntRect) -> IntRectRaw {
+  return IntRectRaw(
+    location: IntPointRaw(x: r.location.x, y: r.location.y),
+    size: IntSizeRaw(width: r.size.width, height: r.size.height))
+}
+
 class TransformationMatrix {
   init(_ p: UnsafeMutableRawPointer, _ owner: Bool) {
     self.pInterop = p
@@ -53,14 +59,14 @@ class TransformationMatrix {
   // If the matrix has 3D components, the z component of the result is
   // dropped, effectively projecting the rect into the z=0 plane.
   func mapRect(_ rect: FloatRectWrapper) -> FloatRectWrapper {
-    return toFloatRect(wk_interop.TransformationMatrix_mapRect(pInterop, toFloatRectRaw(rect)))
+    return toFloatRect(wk_interop.TransformationMatrix_mapFloatRect(pInterop, toFloatRectRaw(rect)))
   }
 
   // Rounds the resulting mapped rectangle out. This is helpful for bounding
   // box computations but may not be what is wanted in other contexts.
   func mapRect(_ rect: IntRect) -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertIntRect(
+      wk_interop.TransformationMatrix_mapIntRect(pInterop, convertIntRect(rect)))
   }
 
   func mapRect(_ r: LayoutRectWrapper) -> LayoutRectWrapper {
