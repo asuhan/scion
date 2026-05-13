@@ -1623,3 +1623,4 @@ void TransformState_transformFromContainer(void*, const void*, uint8_t);
 void TransformState_flatten(void*);
 struct FloatPointRaw TransformState_lastPlanarPoint(const void*);
 struct FloatQuadRaw TransformState_lastPlanarQuad(const void*);
+struct FloatPointRaw TransformState_mappedPoint(const void*);

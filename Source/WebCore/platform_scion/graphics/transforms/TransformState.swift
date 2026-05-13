@@ -113,8 +113,7 @@ class TransformState {
 
   // Return the point or quad mapped through the current transform
   func mappedPoint() -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertFloatPoint(wk_interop.TransformState_mappedPoint(p))
   }
 
   func mappedQuad() -> FloatQuad {
