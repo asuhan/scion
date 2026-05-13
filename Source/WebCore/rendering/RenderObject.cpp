@@ -1806,6 +1806,12 @@ FloatPoint RenderObject::absoluteToLocal(const FloatPoint& containerPoint, Optio
     return transformState.lastPlanarPoint();
 }
 
+FloatQuad RenderObject::localToAbsoluteQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    if (m_scion) { return m_scion->localToAbsoluteQuad(quad, mode, wasFixed); }
+    return localToContainerQuad(quad, nullptr, mode, wasFixed);
+}
+
 FloatQuad RenderObject::absoluteToLocalQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

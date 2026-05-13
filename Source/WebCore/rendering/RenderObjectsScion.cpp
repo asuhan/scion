@@ -268,6 +268,8 @@ extern "C" bool RenderObjectScion_hitTest(void*, HitTestRequestRaw, HitTestResul
 
 extern "C" void* RenderObjectScion_containingBlock(const void*);
 
+extern "C" FloatQuadRaw RenderObjectScion_localToAbsoluteQuad(const void*, FloatQuadRaw, uint8_t, bool*);
+
 extern "C" const void* RenderObjectScion_style(const void*);
 
 struct RepaintContainerStatusRaw {
@@ -907,6 +909,11 @@ bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& re
 }
 
 RenderBlock* RenderObjectScion::containingBlock() const { return static_cast<RenderBlock*>(RenderObjectScion_containingBlock(m_handle)); }
+
+FloatQuad RenderObjectScion::localToAbsoluteQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    return convertFloatQuad(RenderObjectScion_localToAbsoluteQuad(m_handle, convertFloatQuad(quad), mode.toRaw(), wasFixed));
+}
 
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
 

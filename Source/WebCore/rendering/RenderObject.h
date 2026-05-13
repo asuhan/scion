@@ -1972,12 +1972,6 @@ inline void RenderObject::setPositionState(PositionType position)
     m_stateBitfields.setPositionedState(position);
 }
 
-inline FloatQuad RenderObject::localToAbsoluteQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return localToContainerQuad(quad, nullptr, mode, wasFixed);
-}
-
 inline auto RenderObject::visibleRectContextForRepaint() -> VisibleRectContext
 {
     return { false, false, { VisibleRectContextOption::ApplyContainerClip, VisibleRectContextOption::ApplyCompositedContainerScrolls } };

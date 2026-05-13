@@ -948,7 +948,7 @@ func RenderViewScion_mapLocalToContainer(
     : nil
   let transformState = TransformState(transformStateRaw)
   let mode = MapCoordinatesMode(rawValue: modeRaw)
-  var wasFixedCopy: Bool? = wasFixed?.pointee
+  var wasFixedCopy = wasFixed?.pointee
   view.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixedCopy)
 }
 
@@ -1706,6 +1706,18 @@ func RenderObjectScion_containingBlock(_ objectRaw: UnsafeRawPointer) -> UnsafeM
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   assert(object.containingBlock() == nil)
   return nil
+}
+
+@_cdecl("RenderObjectScion_localToAbsoluteQuad")
+func RenderObjectScion_localToAbsoluteQuad(
+  _ objectRaw: UnsafeRawPointer, _ quadRaw: FloatQuadRaw, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) -> FloatQuadRaw {
+  let object = Unmanaged<RenderViewWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let quad = convertFloatQuad(quadRaw)
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  var wasFixedCopy = wasFixed?.pointee
+  return convertFloatQuad(object.localToAbsoluteQuad(quad, mode, &wasFixedCopy))
 }
 
 @_cdecl("RenderObjectScion_style")

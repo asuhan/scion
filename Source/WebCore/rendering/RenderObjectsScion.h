@@ -257,6 +257,8 @@ public:
 
     RenderBlock* containingBlock() const;
 
+    FloatQuad localToAbsoluteQuad(const FloatQuad&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
+
     const RenderStyle& style() const;
 
     RenderObject::RepaintContainerStatus containerForRepaint() const;
