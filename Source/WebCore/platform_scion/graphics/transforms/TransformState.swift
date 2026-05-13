@@ -96,8 +96,8 @@ class TransformState {
     _ transformFromContainer: TransformationMatrix,
     _ accumulate: TransformAccumulation = .FlattenTransform
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.TransformState_transformFromContainer(
+      p, transformFromContainer.interop(), accumulate.rawValue)
   }
 
   func flatten() { wk_interop.TransformState_flatten(p) }

@@ -115,6 +115,13 @@ extern "C" WEBCORE_EXPORT void TransformState_move(void* p, LayoutSizeRaw offset
         static_cast<WebCore::TransformState::TransformAccumulation>(accumulate));
 }
 
+extern "C" WEBCORE_EXPORT void TransformState_transformFromContainer(void* p, const void* transformFromContainerRaw, uint8_t accumulateRaw)
+{
+    const auto& transformFromContainer = *static_cast<const WebCore::TransformationMatrix*>(transformFromContainerRaw);
+    const auto accumulate = static_cast<WebCore::TransformState::TransformAccumulation>(accumulateRaw);
+    static_cast<WebCore::TransformState*>(p)->applyTransform(transformFromContainer, accumulate);
+}
+
 extern "C" WEBCORE_EXPORT void TransformState_flatten(void* p)
 {
     static_cast<WebCore::TransformState*>(p)->flatten();
