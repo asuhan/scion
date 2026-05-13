@@ -71,6 +71,11 @@ extern "C" WEBCORE_EXPORT void TransformState_destroy(void* p)
     delete static_cast<WebCore::TransformState*>(p);
 }
 
+extern "C" WEBCORE_EXPORT void TransformState_flatten(void* p)
+{
+    static_cast<WebCore::TransformState*>(p)->flatten();
+}
+
 namespace WebCore {
 
 TransformState& TransformState::operator=(const TransformState& other)
