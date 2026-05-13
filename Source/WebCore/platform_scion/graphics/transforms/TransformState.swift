@@ -23,8 +23,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class TransformState {
-  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+  init(_ p: UnsafeMutableRawPointer) {
+    self.p = p
+    self.owner = false
+  }
 
   enum TransformDirection {
     case ApplyTransformDirection
@@ -41,8 +46,16 @@ class TransformState {
   }
 
   init(_ mappingDirection: TransformDirection, _ p: FloatPoint, _ quad: FloatQuad) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.TransformState_create(
+      mappingDirection == .UnapplyInverseTransformDirection, convertFloatPoint(p),
+      convertFloatQuad(quad))
+    self.owner = true
+  }
+
+  deinit {
+    if owner {
+      TransformState_destroy(p)
+    }
   }
 
   init(_ mappingDirection: TransformDirection, _ p: FloatPoint) {
@@ -126,4 +139,5 @@ class TransformState {
   }
 
   private let p: UnsafeMutableRawPointer
+  private let owner: Bool
 }

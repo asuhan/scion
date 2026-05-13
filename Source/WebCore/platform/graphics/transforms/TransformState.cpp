@@ -28,6 +28,49 @@
 
 #include <wtf/text/TextStream.h>
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+struct FloatQuadRaw {
+    struct FloatPointRaw p1;
+    struct FloatPointRaw p2;
+    struct FloatPointRaw p3;
+    struct FloatPointRaw p4;
+};
+
+namespace {
+
+WebCore::FloatPoint convertFloatPoint(const FloatPointRaw& point) { return { point.x, point.y }; }
+
+WebCore::FloatQuad convertFloatQuad(const FloatQuadRaw& q)
+{
+    return {
+        convertFloatPoint(q.p1),
+        convertFloatPoint(q.p2),
+        convertFloatPoint(q.p3),
+        convertFloatPoint(q.p4)
+    };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void* TransformState_create(bool mappingDirection, FloatPointRaw p, FloatQuadRaw quad)
+{
+    return new WebCore::TransformState(
+        mappingDirection
+            ? WebCore::TransformState::UnapplyInverseTransformDirection
+            : WebCore::TransformState::ApplyTransformDirection,
+        convertFloatPoint(p),
+        convertFloatQuad(quad));
+}
+
+extern "C" WEBCORE_EXPORT void TransformState_destroy(void* p)
+{
+    delete static_cast<WebCore::TransformState*>(p);
+}
+
 namespace WebCore {
 
 TransformState& TransformState::operator=(const TransformState& other)

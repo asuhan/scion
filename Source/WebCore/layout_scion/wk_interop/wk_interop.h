@@ -1613,3 +1613,5 @@ uint32_t Editor_compositionEnd(const void*);
 bool Editor_compositionUsesCustomUnderlines(const void*);
 bool Editor_compositionUsesCustomHighlights(const void*);
 bool Editor_markedTextMatchesAreHighlighted(const void*);
+void* TransformState_create(bool, struct FloatPointRaw, struct  FloatQuadRaw);
+void TransformState_destroy(void*);

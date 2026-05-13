@@ -1658,11 +1658,11 @@ private func convertLayoutPoint(_ p: LayoutPointWrapper) -> LayoutPointRaw {
   return LayoutPointRaw(x: p.x.rawValue(), y: p.y.rawValue())
 }
 
-private func convertFloatPoint(_ p: FloatPoint) -> FloatPointRaw {
+func convertFloatPoint(_ p: FloatPoint) -> FloatPointRaw {
   return FloatPointRaw(x: p.x, y: p.y)
 }
 
-private func convertFloatQuad(_ q: FloatQuad) -> FloatQuadRaw {
+func convertFloatQuad(_ q: FloatQuad) -> FloatQuadRaw {
   return FloatQuadRaw(
     p1: convertFloatPoint(q.p1()), p2: convertFloatPoint(q.p2()), p3: convertFloatPoint(q.p3()),
     p4: convertFloatPoint(q.p4()))
