@@ -996,11 +996,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isReplacedOrInlineBlock() && (isImage() || isRenderVideo() || isRenderHTMLCanvas() || isRenderViewTransitionCapture());
     }
-    bool isAnonymous() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_typeFlags.contains(TypeFlag::IsAnonymous);
-    }
+    bool isAnonymous() const;
     bool isAnonymousBlock() const;
     bool isAnonymousForPercentageResolution() const
     {

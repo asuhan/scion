@@ -161,6 +161,8 @@ public:
 
     bool isSVGRenderer() const;
 
+    bool isAnonymous() const;
+
     bool isAnonymousBlock() const;
 
     bool isPositioned() const;

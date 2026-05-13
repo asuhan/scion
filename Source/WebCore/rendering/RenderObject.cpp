@@ -3492,6 +3492,12 @@ bool RenderObject::isSVGRenderer() const
     return isRenderOrLegacyRenderSVGRoot() || isRenderOrLegacyRenderSVGModelObject() || isRenderSVGBlock() || isRenderSVGInline();
 }
 
+bool RenderObject::isAnonymous() const
+{
+    if (m_scion) { return m_scion->isAnonymous(); }
+    return m_typeFlags.contains(TypeFlag::IsAnonymous);
+}
+
 bool RenderObject::isAnonymousBlock() const
 {
     if (m_scion) { return m_scion->isAnonymousBlock(); }
