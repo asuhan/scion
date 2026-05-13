@@ -53,6 +53,26 @@ extern "C" WEBCORE_EXPORT void* TransformationMatrix_makeIdentity(void* p)
     return &static_cast<WebCore::TransformationMatrix*>(p)->makeIdentity();
 }
 
+extern "C" WEBCORE_EXPORT double TransformationMatrix_e(const void* p)
+{
+    return static_cast<const WebCore::TransformationMatrix*>(p)->e();
+}
+
+extern "C" WEBCORE_EXPORT void TransformationMatrix_setE(void* p, double e)
+{
+    static_cast<WebCore::TransformationMatrix*>(p)->setE(e);
+}
+
+extern "C" WEBCORE_EXPORT double TransformationMatrix_f(const void* p)
+{
+    return static_cast<const WebCore::TransformationMatrix*>(p)->f();
+}
+
+extern "C" WEBCORE_EXPORT void TransformationMatrix_setF(void* p, double f)
+{
+    static_cast<WebCore::TransformationMatrix*>(p)->setF(f);
+}
+
 extern "C" WEBCORE_EXPORT void TransformationMatrix_destroy(const void* p)
 {
     delete static_cast<const WebCore::TransformationMatrix*>(p);

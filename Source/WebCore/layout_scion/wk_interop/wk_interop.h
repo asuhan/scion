@@ -1629,4 +1629,8 @@ void* TransformState_releaseTrackedTransform(void*);
 bool TransformState_direction(const void*);
 void* TransformationMatrix_create();
 void* TransformationMatrix_makeIdentity(void*);
+double TransformationMatrix_e(const void*);
+void TransformationMatrix_setE(void*, double);
+double TransformationMatrix_f(const void*);
+void TransformationMatrix_setF(void*, double);
 void TransformationMatrix_destroy(const void*);

@@ -69,25 +69,13 @@ class TransformationMatrix {
     fatalError("Not implemented")
   }
 
-  func e() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func e() -> Float64 { return wk_interop.TransformationMatrix_e(pInterop) }
 
-  func setE(_ e: Float64) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setE(_ e: Float64) { wk_interop.TransformationMatrix_setE(pInterop, e) }
 
-  func f() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func f() -> Float64 { return wk_interop.TransformationMatrix_f(pInterop) }
 
-  func setF(_ f: Float64) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setF(_ f: Float64) { wk_interop.TransformationMatrix_setF(pInterop, f) }
 
   // this = mat * this.
   @discardableResult
