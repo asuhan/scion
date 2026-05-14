@@ -146,6 +146,10 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     return FloatPoint(x: p.x, y: p.y)
   }
 
+  func fixedElementsLayoutRelativeToFrame() -> Bool {
+    return wk_interop.LocalFrameView_fixedElementsLayoutRelativeToFrame(pInterop)
+  }
+
   func speculativeTilingEnabled() -> Bool {
     return wk_interop.LocalFrameView_speculativeTilingEnabled(pInterop)
   }
