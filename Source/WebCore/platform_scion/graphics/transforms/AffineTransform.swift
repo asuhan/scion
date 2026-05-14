@@ -201,8 +201,7 @@ class AffineTransform: Equatable {
 
   // result = this * t (i.e., a multRight)
   static func * (this: AffineTransform, t: AffineTransform) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return this.deepCopy().multiply(t)
   }
 
   static func == (_ a: AffineTransform, _ b: AffineTransform) -> Bool {
