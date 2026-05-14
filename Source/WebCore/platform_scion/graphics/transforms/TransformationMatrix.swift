@@ -111,8 +111,8 @@ class TransformationMatrix {
 
   @discardableResult
   func translateRight3d(tx: Float64, ty: Float64, tz: Float64) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(
+      wk_interop.TransformationMatrix_translateRight3d(pInterop, tx, ty, tz), false)
   }
 
   @discardableResult
