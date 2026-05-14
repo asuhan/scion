@@ -73,8 +73,10 @@ class AffineTransform: Equatable {
   }
 
   func isIdentity() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return
+      (transform[0] == 1 && transform[1] == 0
+      && transform[2] == 0 && transform[3] == 1
+      && transform[4] == 0 && transform[5] == 0)
   }
 
   func a() -> Float64 { return transform[0] }
