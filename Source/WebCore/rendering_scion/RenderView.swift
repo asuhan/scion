@@ -240,8 +240,24 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func clientLogicalHeightForFixedPosition() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // FIXME: If the FrameView's fixedVisibleContentRect() is not empty, perhaps it should be consulted here too?
+    let frameView = self.frameView()
+    if frameView.fixedElementsLayoutRelativeToFrame() {
+      return LayoutUnit(
+        value: Float32(
+          isHorizontalWritingMode() ? frameView.visibleHeight() : frameView.visibleWidth())
+          / frameView.frame().frameScaleFactor())
+    }
+
+    // TODO(asuhan): add iOS support
+
+    if settings().visualViewportEnabled() {
+      return isHorizontalWritingMode()
+        ? frameView.layoutViewportRect().height() : frameView.layoutViewportRect().width()
+    }
+
+    return clientLogicalHeight()
   }
 
   func frameView() -> LocalFrameViewWrapper {
