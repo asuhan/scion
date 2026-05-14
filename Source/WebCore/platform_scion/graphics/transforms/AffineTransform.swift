@@ -27,6 +27,10 @@
 
 import Foundation
 
+private func det(_ transform: ArraySlice<Float64>) -> Float64 {
+  return transform[0] * transform[3] - transform[1] * transform[2]
+}
+
 class AffineTransform: Equatable {
   init() {
     self.transform = [1, 0, 0, 1, 0, 0]
@@ -186,8 +190,30 @@ class AffineTransform: Equatable {
   }
 
   func inverse() -> AffineTransform? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let determinant = det(transform[...])
+    if !determinant.isFinite || determinant == 0 {
+      return nil
+    }
+
+    let result = AffineTransform()
+    if isIdentityOrTranslation() {
+      result.transform[4] = -transform[4]
+      result.transform[5] = -transform[5]
+      return result
+    }
+
+    result.transform[0] = transform[3] / determinant
+    result.transform[1] = -transform[1] / determinant
+    result.transform[2] = -transform[2] / determinant
+    result.transform[3] = transform[0] / determinant
+    result.transform[4] =
+      (transform[2] * transform[5]
+        - transform[3] * transform[4]) / determinant
+    result.transform[5] =
+      (transform[1] * transform[4]
+        - transform[0] * transform[5]) / determinant
+
+    return result
   }
 
   func isIdentityOrTranslationOrFlipped() -> Bool {
