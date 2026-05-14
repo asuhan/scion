@@ -1246,6 +1246,12 @@ func RenderObjectScion_isHTMLMarquee(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isHTMLMarquee()
 }
 
+@_cdecl("RenderObjectScion_isTablePart")
+func RenderObjectScion_isTablePart(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isTablePart()
+}
+
 @_cdecl("RenderObjectScion_childrenInline")
 func RenderObjectScion_childrenInline(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

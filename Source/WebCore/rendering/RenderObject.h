@@ -651,11 +651,7 @@ public:
 
     bool isHTMLMarquee() const;
 
-    bool isTablePart() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderTableCell() || isRenderTableCol() || isRenderTableCaption() || isRenderTableRow() || isRenderTableSection();
-    }
+    bool isTablePart() const;
 
     bool isViewTransitionPseudo() const
     {

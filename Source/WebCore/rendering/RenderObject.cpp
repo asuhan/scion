@@ -422,6 +422,12 @@ bool RenderObject::isHTMLMarquee() const
     return node() && node()->renderer() == this && node()->hasTagName(marqueeTag);
 }
 
+bool RenderObject::isTablePart() const
+{
+    if (m_scion) { return m_scion->isTablePart(); }
+    return isRenderTableCell() || isRenderTableCol() || isRenderTableCaption() || isRenderTableRow() || isRenderTableSection();
+}
+
 bool RenderObject::isBlockBox() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

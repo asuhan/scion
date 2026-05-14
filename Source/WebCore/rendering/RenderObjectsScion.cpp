@@ -105,6 +105,8 @@ extern "C" bool RenderObjectScion_isBody(const void*);
 
 extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
 
+extern "C" bool RenderObjectScion_isTablePart(const void*);
+
 extern "C" bool RenderObjectScion_childrenInline(const void*);
 
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
@@ -692,6 +694,8 @@ bool RenderObjectScion::isDocumentElementRenderer() const { return RenderObjectS
 bool RenderObjectScion::isBody() const { return RenderObjectScion_isBody(m_handle); }
 
 bool RenderObjectScion::isHTMLMarquee() const { return RenderObjectScion_isHTMLMarquee(m_handle); }
+
+bool RenderObjectScion::isTablePart() const { return RenderObjectScion_isTablePart(m_handle); }
 
 bool RenderObjectScion::childrenInline() const { return RenderObjectScion_childrenInline(m_handle); }
 
