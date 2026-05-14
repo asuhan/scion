@@ -109,6 +109,11 @@
 #include <wtf/WeakListHashSet.h>
 #endif
 
+extern "C" WEBCORE_EXPORT bool RenderLayerBacking_paintsIntoWindow(const void* p)
+{
+    return static_cast<const WebCore::RenderLayerBacking*>(p)->paintsIntoWindow();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayerBacking);

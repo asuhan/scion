@@ -1284,6 +1284,7 @@ bool RenderLayer_isolatesBlending(const void*);
 bool RenderLayer_isComposited(const void*);
 void* RenderLayer_backing(const void*);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
+bool RenderLayerBacking_paintsIntoWindow(const void*);
 void* Document_frame(const void*);
 void* Document_documentElement(const void*);
 bool Document_isImageDocument(const void*);

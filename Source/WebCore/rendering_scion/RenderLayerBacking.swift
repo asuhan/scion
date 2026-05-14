@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 // This acts as a cache of what we know about what is painting into this RenderLayerBacking.
 struct PaintedContentsInfo {
   enum ContentsTypeDetermination {
@@ -1422,7 +1424,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // This returns false for other layers, and when the document layer actually needs to paint into its backing store
   // for some reason.
   func paintsIntoWindow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerBacking_paintsIntoWindow(p)
+    }
     if isFrameLayerWithTiledBacking {
       return false
     }
