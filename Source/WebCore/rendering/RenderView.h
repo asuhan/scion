@@ -95,10 +95,7 @@ public:
     }
 
     bool needsEventRegionUpdateForNonCompositedFrame() const;
-    void setNeedsEventRegionUpdateForNonCompositedFrame(bool value = true) {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_needsEventRegionUpdateForNonCompositedFrame = value;
-    }
+    void setNeedsEventRegionUpdateForNonCompositedFrame(bool value = true);
 
     std::optional<RepaintRects> computeVisibleRectsInContainer(const RepaintRects&, const RenderLayerModelObject* container, VisibleRectContext) const override;
     void repaintRootContents();

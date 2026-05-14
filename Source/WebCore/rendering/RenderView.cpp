@@ -720,6 +720,14 @@ bool RenderView::needsEventRegionUpdateForNonCompositedFrame() const
     return m_needsEventRegionUpdateForNonCompositedFrame;
 }
 
+void RenderView::setNeedsEventRegionUpdateForNonCompositedFrame(bool value) {
+    if (m_scion) {
+        m_scion->setNeedsEventRegionUpdateForNonCompositedFrame(value);
+        return;
+    }
+    m_needsEventRegionUpdateForNonCompositedFrame = value;
+}
+
 auto RenderView::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
     if (m_scion) { return m_scion->computeVisibleRectsInContainer(rects, container, context); }

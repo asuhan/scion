@@ -597,6 +597,8 @@ public:
 
     bool needsEventRegionUpdateForNonCompositedFrame() const;
 
+    void setNeedsEventRegionUpdateForNonCompositedFrame(bool);
+
     std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
 
     void repaintRootContents();

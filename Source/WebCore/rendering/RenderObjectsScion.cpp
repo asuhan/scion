@@ -537,6 +537,8 @@ extern "C" void RenderViewScion_updateQuirksMode(const void*);
 
 extern "C" bool RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(const void*);
 
+extern "C" void RenderViewScion_setNeedsEventRegionUpdateForNonCompositedFrame(void*, bool);
+
 struct OptionalRepaintRectsRaw {
     RepaintRectsRaw rects;
     bool is_valid;
@@ -1579,6 +1581,11 @@ void RenderViewScion::updateQuirksMode()
 bool RenderViewScion::needsEventRegionUpdateForNonCompositedFrame() const
 {
     return RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(m_handle);
+}
+
+void RenderViewScion::setNeedsEventRegionUpdateForNonCompositedFrame(bool value)
+{
+    RenderViewScion_setNeedsEventRegionUpdateForNonCompositedFrame(m_handle, value);
 }
 
 namespace {

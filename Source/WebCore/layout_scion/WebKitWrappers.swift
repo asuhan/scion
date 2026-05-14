@@ -732,6 +732,14 @@ func RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(_ viewRaw: Unsa
   return view.needsEventRegionUpdateForNonCompositedFrame()
 }
 
+@_cdecl("RenderViewScion_setNeedsEventRegionUpdateForNonCompositedFrame")
+func RenderViewScion_setNeedsEventRegionUpdateForNonCompositedFrame(
+  _ viewRaw: UnsafeMutableRawPointer, _ value: Bool
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.setNeedsEventRegionUpdateForNonCompositedFrame(value)
+}
+
 @_cdecl("RenderViewScion_repaintRootContents")
 func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
