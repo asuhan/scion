@@ -36,9 +36,17 @@ class AffineTransform: Equatable {
     self.transform = [a, b, c, d, e, f]
   }
 
+  private func map(x: Float64, y: Float64, x2: inout Float64, y2: inout Float64) {
+    x2 = (transform[0] * x + transform[2] * y + transform[4])
+    y2 = (transform[1] * x + transform[3] * y + transform[5])
+  }
+
   func mapPoint(_ point: FloatPoint) -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var x2: Float64 = 0
+    var y2: Float64 = 0
+    map(x: Float64(point.x), y: Float64(point.y), x2: &x2, y2: &y2)
+
+    return FloatPoint(x: narrowPrecisionToFloat(x2), y: narrowPrecisionToFloat(y2))
   }
 
   // Rounds the resulting mapped rectangle out. This is helpful for bounding
