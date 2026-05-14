@@ -1749,6 +1749,18 @@ func RenderObjectScion_containingBlock(_ objectRaw: UnsafeRawPointer) -> UnsafeM
   return nil
 }
 
+@_cdecl("RenderObjectScion_localToAbsolute")
+func RenderObjectScion_localToAbsolute(
+  _ objectRaw: UnsafeRawPointer, _ localPointRaw: FloatPointRaw, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) -> FloatPointRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let localPoint = convertFloatPoint(localPointRaw)
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  var wasFixedCopy = wasFixed?.pointee
+  return convertFloatPoint(object.localToAbsolute(localPoint, mode, &wasFixedCopy))
+}
+
 @_cdecl("RenderObjectScion_localToAbsoluteQuad")
 func RenderObjectScion_localToAbsoluteQuad(
   _ objectRaw: UnsafeRawPointer, _ quadRaw: FloatQuadRaw, _ modeRaw: UInt8,

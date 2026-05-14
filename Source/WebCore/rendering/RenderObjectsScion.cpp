@@ -270,6 +270,8 @@ extern "C" bool RenderObjectScion_hitTest(void*, HitTestRequestRaw, HitTestResul
 
 extern "C" void* RenderObjectScion_containingBlock(const void*);
 
+extern "C" FloatPointRaw RenderObjectScion_localToAbsolute(const void*, FloatPointRaw, uint8_t, bool*);
+
 extern "C" FloatQuadRaw RenderObjectScion_localToAbsoluteQuad(const void*, FloatQuadRaw, uint8_t, bool*);
 
 extern "C" const void* RenderObjectScion_style(const void*);
@@ -927,6 +929,11 @@ bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& re
 }
 
 RenderBlock* RenderObjectScion::containingBlock() const { return static_cast<RenderBlock*>(RenderObjectScion_containingBlock(m_handle)); }
+
+FloatPoint RenderObjectScion::localToAbsolute(const FloatPoint& localPoint, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    return convertFloatPoint(RenderObjectScion_localToAbsolute(m_handle, convertFloatPoint(localPoint), mode.toRaw(), wasFixed));
+}
 
 FloatQuad RenderObjectScion::localToAbsoluteQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {

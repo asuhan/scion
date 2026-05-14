@@ -259,6 +259,8 @@ public:
 
     RenderBlock* containingBlock() const;
 
+    FloatPoint localToAbsolute(const FloatPoint&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
+
     FloatQuad localToAbsoluteQuad(const FloatQuad&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
 
     const RenderStyle& style() const;

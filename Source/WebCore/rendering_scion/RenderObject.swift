@@ -2401,7 +2401,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return localToAbsolute(localPoint, mode, &unused)
   }
 
-  private func localToAbsolute(
+  func localToAbsolute(
     _ localPoint: FloatPoint, _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) -> FloatPoint {
     assert(isNativeImpl())
