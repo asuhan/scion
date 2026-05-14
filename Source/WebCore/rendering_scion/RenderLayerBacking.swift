@@ -569,6 +569,7 @@ private func backgroundRectForBox(_ box: RenderBoxWrapper) -> LayoutRectWrapper 
 
 final class RenderLayerBacking: GraphicsLayerClientWrapper {
   init(layer: RenderLayerWrapper) {
+    self.p = nil
     super.init()
     owningLayer = layer
 
@@ -592,8 +593,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   // Do cleanup while layer->backing() is still valid.
   func willBeDestroyed() {
+    assert(isNativeImpl())
     assert(ObjectIdentifier(owningLayer!.backing()!) == ObjectIdentifier(self))
     compositor().removeFromScrollCoordinatedLayers(layer: owningLayer!)
 
@@ -601,6 +605,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func setBackingSharingLayers(_ sharingLayers: WeakListHashSet<RenderLayerWrapper>) {
+    assert(isNativeImpl())
     var sharingLayersChanged = backingSharingLayers.computeSize() != sharingLayers.computeSize()
     // For layers that used to share and no longer do, and are not composited, recompute repaint rects.
     for oldSharingLayer in backingSharingLayers {
@@ -646,11 +651,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func removeBackingSharingLayer(layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     layer.setBackingProviderLayer(backingProvider: nil)
     backingSharingLayers.remove(value: layer)
   }
 
   func clearBackingSharingLayers() {
+    assert(isNativeImpl())
     clearBackingSharingLayerProviders(
       sharingLayers: backingSharingLayers, providerLayer: owningLayer!)
     backingSharingLayers.clear()
@@ -658,6 +665,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // This can only update things that don't require up-to-date layout.
   func updateConfigurationAfterStyleChange() {
+    assert(isNativeImpl())
     updateMaskingLayer(hasMask: renderer().hasMask(), hasClipPath: renderer().hasClipPath())
 
     if owningLayer!.hasReflection() {
@@ -682,6 +690,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Returns true if layer configuration changed.
   func updateConfiguration(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
+    assert(isNativeImpl())
     assert(!owningLayer!.normalFlowListDirty)
     assert(!owningLayer!.zOrderListsDirty)
     assert(!renderer().view().needsLayout())
@@ -702,7 +711,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     setBackgroundLayerPaintsFixedRootBackground(
       compositor.needsFixedRootBackgroundLayer(owningLayer!))
 
-    if updateBackgroundLayer(backgroundLayerPaintsFixedRootBackground || requiresBackgroundLayer) {
+    if updateBackgroundLayer(m_backgroundLayerPaintsFixedRootBackground || requiresBackgroundLayer)
+    {
       layerConfigChanged = true
     }
 
@@ -868,6 +878,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Update graphics layer position and bounds.
   func updateGeometry(_ compositedAncestor: RenderLayerWrapper?) {
+    assert(isNativeImpl())
     assert(!owningLayer!.normalFlowListDirty)
     assert(!owningLayer!.zOrderListsDirty)
     assert(!owningLayer!.descendantDependentFlagsAreDirty())
@@ -1119,7 +1130,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     if backgroundLayer != nil {
       var backgroundPosition = FloatPoint()
       var backgroundSize = primaryGraphicsLayerRect.size().FloatSize()
-      if backgroundLayerPaintsFixedRootBackground {
+      if backgroundLayerPaintsFixedRootBackground() {
         let frameView = renderer().view().frameView()
         backgroundPosition = frameView.scrollPositionForFixedPosition().FloatPoint()
         backgroundSize = FloatSize(size: frameView.layoutSize())
@@ -1158,6 +1169,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Update state the requires that descendant layers have been updated.
   func updateAfterDescendants() {
+    assert(isNativeImpl())
     // FIXME: this potentially duplicates work we did in updateConfiguration().
     var contentsInfo = PaintedContentsInfo(inBacking: self)
 
@@ -1199,6 +1211,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Update contents and clipping structure.
   func updateDrawsContent() {
+    assert(isNativeImpl())
     var contentsInfo = PaintedContentsInfo(inBacking: self)
     updateDrawsContent(contentsInfo: &contentsInfo)
   }
@@ -1219,10 +1232,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  func hasAncestorClippingLayers() -> Bool { return ancestorClippingStack != nil }
+  func hasAncestorClippingLayers() -> Bool {
+    assert(isNativeImpl())
+    return ancestorClippingStack != nil
+  }
 
   func ensureOverflowControlsHostLayerAncestorClippingStack(compositedAncestor: RenderLayerWrapper)
   {
+    assert(isNativeImpl())
     let scrollingCoordinator = owningLayer!.page().scrollingCoordinator()
     let clippingData = ancestorClippingStack!.compositedClipData()
 
@@ -1242,12 +1259,19 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     connectClippingStackLayers(overflowControlsHostLayerAncestorClippingStack!)
   }
 
+  func backgroundLayerPaintsFixedRootBackground() -> Bool {
+    assert(isNativeImpl())
+    return m_backgroundLayerPaintsFixedRootBackground
+  }
+
   func hasScrollingLayer() -> Bool {
+    assert(isNativeImpl())
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func detachFromScrollingCoordinator(roles: ScrollCoordinationRole) {
+    assert(isNativeImpl())
     if !scrollingNodeID.bool() && ancestorClippingStack != nil && !frameHostingNodeID.bool()
       && !pluginHostingNodeID.bool() && !viewportConstrainedNodeID.bool()
       && !positioningNodeID.bool()
@@ -1298,6 +1322,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func scrollingNodeIDForRole(role: ScrollCoordinationRole) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     switch role {
     case .Scrolling:
       return scrollingNodeID
@@ -1318,6 +1343,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func setScrollingNodeIDForRole(_ nodeID: ScrollingNodeIDWrapper, _ role: ScrollCoordinationRole) {
+    assert(isNativeImpl())
     switch role {
     case .Scrolling:
       scrollingNodeID = nodeID
@@ -1343,6 +1369,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func parentForSublayers() -> GraphicsLayer {
+    assert(isNativeImpl())
     if scrolledContentsLayer != nil {
       return scrolledContentsLayer!
     }
@@ -1351,6 +1378,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func childForSuperlayers() -> GraphicsLayer {
+    assert(isNativeImpl())
     if owningLayer!.isRenderViewLayer {
       // If the document element is captured, then the RenderView's layer will get attached
       // into the view-transition tree, and we instead want to attach the root of the VT tree to our ancestor.
@@ -1367,6 +1395,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func childForSuperlayersExcludingViewTransitions() -> GraphicsLayer {
+    assert(isNativeImpl())
     if transformFlatteningLayer != nil {
       return transformFlatteningLayer!
     }
@@ -1393,6 +1422,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // This returns false for other layers, and when the document layer actually needs to paint into its backing store
   // for some reason.
   func paintsIntoWindow() -> Bool {
+    assert(isNativeImpl())
     if isFrameLayerWithTiledBacking {
       return false
     }
@@ -1412,6 +1442,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func setRequiresOwnBackingStore(_ requiresOwnBacking: Bool) {
+    assert(isNativeImpl())
     if requiresOwnBacking == requiresOwnBackingStore {
       return
     }
@@ -1427,6 +1458,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func setContentsNeedDisplay(_ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
+    assert(isNativeImpl())
     assert(!paintsIntoCompositedAncestor())
 
     // Use the repaint as a trigger to re-evaluate direct compositing (which is never used on the root layer).
@@ -1474,6 +1506,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   func setContentsNeedDisplayInRect(
     _ r: LayoutRectWrapper, _ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
   ) {
+    assert(isNativeImpl())
     assert(!paintsIntoCompositedAncestor())
 
     // Use the repaint as a trigger to re-evaluate direct compositing (which is never used on the root layer).
@@ -1534,6 +1567,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Notification from the renderer that its content changed.
   func contentChanged(_ changeType: ContentChangeType) {
+    assert(isNativeImpl())
     var contentsInfo = PaintedContentsInfo(inBacking: self)
     if changeType == .ImageChanged || changeType == .CanvasChanged {
       if contentsInfo.isDirectlyCompositedImage() {
@@ -1575,11 +1609,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func compositedBounds() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     return m_compositedBounds
   }
 
   // Returns true if changed.
   func setCompositedBounds(_ bounds: LayoutRectWrapper) -> Bool {
+    assert(isNativeImpl())
     if bounds == m_compositedBounds {
       return false
     }
@@ -1591,6 +1627,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // Returns true if changed.
   @discardableResult
   func updateCompositedBounds() -> Bool {
+    assert(isNativeImpl())
     var layerBounds = owningLayer!.calculateLayerBounds(
       ancestorLayer: owningLayer, offsetFromRoot: LayoutSizeWrapper(),
       flags: RenderLayerWrapper.defaultCalculateLayerBoundsFlags.union([
@@ -1656,6 +1693,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func updateAllowsBackingStoreDetaching(absoluteBounds: LayoutRectWrapper) {
+    assert(isNativeImpl())
     let setAllowsBackingStoreDetaching = { [self] (allowDetaching: Bool) in
       m_graphicsLayer?.setAllowsBackingStoreDetaching(allowDetaching: allowDetaching)
       foregroundLayer?.setAllowsBackingStoreDetaching(allowDetaching: allowDetaching)
@@ -1682,6 +1720,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateAfterWidgetResize() {
+    assert(isNativeImpl())
     guard let renderWidget = renderer() as? RenderWidgetWrapper else { return }
 
     if let innerCompositor = RenderLayerCompositorWrapper.frameContentsCompositor(
@@ -1697,6 +1736,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func positionOverflowControlsLayers() {
+    assert(isNativeImpl())
     guard let scrollableArea = owningLayer!.scrollableArea() else { return }
     if !scrollableArea.hasScrollbars() {
       return
@@ -1748,6 +1788,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func adjustTiledBackingCoverage() {
+    assert(isNativeImpl())
     if isFrameLayerWithTiledBacking {
       let tileCoverage = computePageTiledBackingCoverage(layer: owningLayer!)
       if let tiledBacking = tiledBacking() {
@@ -1762,6 +1803,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func updateDebugIndicators(showBorder: Bool, showRepaintCounter: Bool) {
+    assert(isNativeImpl())
     m_graphicsLayer!.setShowDebugBorder(show: showBorder)
     m_graphicsLayer!.setShowRepaintCounter(show: showRepaintCounter)
 
@@ -1833,6 +1875,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func contentsBox() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     let renderBox = renderer() as? RenderBoxWrapper
     if renderBox == nil {
       return LayoutRectWrapper()
@@ -1853,6 +1896,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func layerForContents() -> GraphicsLayer? {
+    assert(isNativeImpl())
     if !RenderLayerCompositorWrapper.isCompositedPlugin(renderer: renderer()) {
       return nil
     }
@@ -1871,6 +1915,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   func adjustOverflowControlsPositionRelativeToAncestor(
     _ ancestorLayer: RenderLayerWrapper
   ) {
+    assert(isNativeImpl())
     assert(overflowControlsContainer != nil)
     assert(ancestorLayer.isComposited())
     if ancestorLayer.backing() == nil {
@@ -1909,6 +1954,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func backgroundBoxForSimpleContainerPainting() -> FloatRectWrapper {
+    assert(isNativeImpl())
     guard let box = renderer() as? RenderBoxWrapper else { return FloatRectWrapper() }
 
     var backgroundBox = backgroundRectForBox(box)
@@ -1917,6 +1963,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func createPrimaryGraphicsLayer() {
+    assert(isNativeImpl())
     let layerName = owningLayer!.name()
     m_graphicsLayer = createGraphicsLayer(
       layerName, isFrameLayerWithTiledBacking ? .PageTiledBacking : .Normal)
@@ -1945,6 +1992,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func willDestroyLayer(layer: GraphicsLayer?) {
+    assert(isNativeImpl())
     if layer != nil && layer!.type() == .Normal && layer!.tiledBacking() != nil {
       compositor().layerTiledBackingUsageChanged(graphicsLayer: layer, usingTiledBacking: false)
     }
@@ -1953,6 +2001,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func createGraphicsLayer(_ name: String, _ layerType: GraphicsLayer.`Type` = .Normal)
     -> GraphicsLayer
   {
+    assert(isNativeImpl())
     let graphicsLayerFactory = renderer().page().chrome().client().graphicsLayerFactory()
 
     let graphicsLayer = GraphicsLayer.create(
@@ -1974,7 +2023,10 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  private func renderBox() -> RenderBoxWrapper? { return owningLayer!.renderBox() }
+  private func renderBox() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
+    return owningLayer!.renderBox()
+  }
 
   private func compositor() -> RenderLayerCompositorWrapper {
     // TODO(asuhan): implement this
@@ -1982,6 +2034,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateInternalHierarchy() {
+    assert(isNativeImpl())
     // foregroundLayer has to be inserted in the correct order with child layers,
     // so it's not inserted here.
     var lastClippingLayer: GraphicsLayer? = nil
@@ -2059,6 +2112,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateViewportConstrainedAnchorLayer(_ needsAnchorLayer: Bool) -> Bool {
+    assert(isNativeImpl())
     var layerChanged = false
     if needsAnchorLayer {
       if viewportAnchorLayer == nil {
@@ -2078,6 +2132,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func updateAncestorClipping(
     _ needsAncestorClip: Bool, _ compositingAncestor: RenderLayerWrapper?
   ) -> Bool {
+    assert(isNativeImpl())
     var layersChanged = false
 
     if needsAncestorClip {
@@ -2109,6 +2164,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Return true if the layer changed.
   private func updateDescendantClippingLayer(_ needsDescendantClip: Bool) -> Bool {
+    assert(isNativeImpl())
     var layersChanged = false
 
     if needsDescendantClip {
@@ -2131,6 +2187,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     _ needsHorizontalScrollbarLayer: Bool, _ needsVerticalScrollbarLayer: Bool,
     _ needsScrollCornerLayer: Bool
   ) -> Bool {
+    assert(isNativeImpl())
     let createOrDestroyLayer = {
       [self] (layer: inout GraphicsLayer?, needLayer: Bool, drawsContent: Bool, layerName: String)
       in
@@ -2188,6 +2245,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateForegroundLayer(_ needsForegroundLayer: Bool) -> Bool {
+    assert(isNativeImpl())
     var layerChanged = false
     if needsForegroundLayer {
       if foregroundLayer == nil {
@@ -2205,6 +2263,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateBackgroundLayer(_ needsBackgroundLayer: Bool) -> Bool {
+    assert(isNativeImpl())
     var layerChanged = false
     if needsBackgroundLayer {
       if backgroundLayer == nil {
@@ -2240,6 +2299,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // Masking layer is used for masks or clip-path.
   @discardableResult
   private func updateMaskingLayer(hasMask: Bool, hasClipPath: Bool) -> Bool {
+    assert(isNativeImpl())
     var layerChanged = false
     if hasMask || hasClipPath {
       var maskPhases: GraphicsLayerPaintingPhase = []
@@ -2284,6 +2344,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateTransformFlatteningLayer(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
+    assert(isNativeImpl())
     var needsFlatteningLayer = false
     // If our parent layer has preserve-3d or perspective, and it's not our DOM parent, then we need a flattening layer to block that from being applied in 3d.
     if ancestorLayerWillCombineTransform(compositingAncestor)
@@ -2308,6 +2369,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func requiresLayerForScrollbar(_ scrollbar: Scrollbar?) -> Bool {
+    assert(isNativeImpl())
     if scrollbar == nil {
       return false
     }
@@ -2319,6 +2381,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func requiresHorizontalScrollbarLayer() -> Bool {
+    assert(isNativeImpl())
     if let scrollableArea = owningLayer!.scrollableArea() {
       return requiresLayerForScrollbar(scrollableArea.horizontalScrollbar())
     }
@@ -2326,6 +2389,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func requiresVerticalScrollbarLayer() -> Bool {
+    assert(isNativeImpl())
     if let scrollableArea = owningLayer!.scrollableArea() {
       return requiresLayerForScrollbar(scrollableArea.verticalScrollbar())
     }
@@ -2333,6 +2397,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollCornerLayer() -> Bool {
+    assert(isNativeImpl())
     if !(owningLayer!.renderer() is RenderBoxWrapper) {
       return false
     }
@@ -2349,6 +2414,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollingLayers(_ needsScrollingLayers: Bool) -> Bool {
+    assert(isNativeImpl())
     if needsScrollingLayers == (scrollContainerLayer != nil) {
       return false
     }
@@ -2383,6 +2449,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollOffset(_ scrollOffset: ScrollOffset) {
+    assert(isNativeImpl())
     let scrollableArea = owningLayer!.scrollableArea()!
 
     if scrollableArea.currentScrollType() == .User {
@@ -2401,6 +2468,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func setLocationOfScrolledContents(
     _ scrollOffset: ScrollOffset, _ setOrSync: ScrollingLayerPositionAction
   ) {
+    assert(isNativeImpl())
     if setOrSync == .Sync {
       scrollContainerLayer!.syncBoundsOrigin(FloatPoint(p: scrollOffset))
     } else {
@@ -2410,6 +2478,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // FIXME: Avoid repaints when clip path changes.
   private func updateMaskingLayerGeometry() {
+    assert(isNativeImpl())
     maskLayer!.setSize(size: m_graphicsLayer!.size())
     maskLayer!.setPosition(p: FloatPoint())
     maskLayer!.setOffsetFromRenderer(m_graphicsLayer!.offsetFromRenderer())
@@ -2439,6 +2508,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateRootLayerConfiguration() {
+    assert(isNativeImpl())
     if !isFrameLayerWithTiledBacking {
       return
     }
@@ -2446,7 +2516,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     var backgroundColor: ColorWrapper? = ColorWrapper()
     let viewIsTransparent = compositor().viewHasTransparentBackground(&backgroundColor)
 
-    if backgroundLayerPaintsFixedRootBackground && backgroundLayer != nil {
+    if m_backgroundLayerPaintsFixedRootBackground && backgroundLayer != nil {
       if isMainFrameRenderViewLayer {
         backgroundLayer!.setBackgroundColor(backgroundColor!)
         backgroundLayer!.setContentsOpaque(b: !viewIsTransparent)
@@ -2461,6 +2531,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updatePaintingPhases() {
+    assert(isNativeImpl())
     // Phases for m_maskLayer are set elsewhere.
     var primaryLayerPhases: GraphicsLayerPaintingPhase = [.Background, .Foreground]
 
@@ -2497,15 +2568,17 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func setBackgroundLayerPaintsFixedRootBackground(
-    _ backgroundLayerPaintsFixedRootBackground: Bool
+    _ m_backgroundLayerPaintsFixedRootBackground: Bool
   ) {
-    if backgroundLayerPaintsFixedRootBackground == self.backgroundLayerPaintsFixedRootBackground {
+    assert(isNativeImpl())
+    if m_backgroundLayerPaintsFixedRootBackground == self.m_backgroundLayerPaintsFixedRootBackground
+    {
       return
     }
 
-    self.backgroundLayerPaintsFixedRootBackground = backgroundLayerPaintsFixedRootBackground
+    self.m_backgroundLayerPaintsFixedRootBackground = m_backgroundLayerPaintsFixedRootBackground
 
-    if self.backgroundLayerPaintsFixedRootBackground {
+    if self.m_backgroundLayerPaintsFixedRootBackground {
       assert(self.isFrameLayerWithTiledBacking)
       renderer().view().frameView().removeSlowRepaintObject(
         renderer().view().rendererForRootBackground()!)
@@ -2514,12 +2587,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Return the offset from the top-left of this compositing layer at which the renderer's contents are painted.
   private func contentOffsetInCompositingLayer() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     return LayoutSizeWrapper(
       width: -m_compositedBounds.x() + compositedBoundsOffsetFromGraphicsLayer.width(),
       height: -m_compositedBounds.y() + compositedBoundsOffsetFromGraphicsLayer.height())
   }
 
   private func ensureClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
+    assert(isNativeImpl())
     for i in 0..<clippingStack.stack.count {
       if clippingStack.stack[i].clippingLayer == nil {
         clippingStack.stack[i].clippingLayer = createGraphicsLayer(
@@ -2543,6 +2618,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     _ clippingStack: LayerAncestorClippingStack, _ compositedAncestor: RenderLayerWrapper?,
     _ parentGraphicsLayerRect: inout LayoutRectWrapper
   ) {
+    assert(isNativeImpl())
     // All clipRects in the stack are computed relative to owningLayer, so convert them back to compositedAncestor.
     let offsetFromCompositedAncestor = toLayoutSize(
       point: owningLayer!.convertToLayerCoords(
@@ -2588,6 +2664,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func connectClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
+    assert(isNativeImpl())
     let connectEntryLayers = { (entry: LayerAncestorClippingStack.ClippingStackEntry) -> Void in
       entry.clippingLayer?.setChildren(newChildren: [entry.scrollingLayer!])
     }
@@ -2606,10 +2683,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateOpacity(style: RenderStyleWrapper) {
+    assert(isNativeImpl())
     m_graphicsLayer!.setOpacity(opacity: compositingOpacity(rendererOpacity: style.opacity()))
   }
 
   private func updateTransform(style: RenderStyleWrapper) {
+    assert(isNativeImpl())
     var t = TransformationMatrix()
     if renderer().effectiveCapturedInViewTransition() {
       if let activeViewTransition = renderer().document().activeViewTransition() {
@@ -2645,6 +2724,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     _ primaryGraphicsLayerRect: LayoutRectWrapper,
     _ offsetFromParentGraphicsLayer: LayoutSizeWrapper
   ) {
+    assert(isNativeImpl())
     var defaultAnchorPoint = FloatPoint3D(x: 0.5, y: 0.5, z: 0)
 
     if owningLayer!.isRenderViewLayer || renderer().effectiveCapturedInViewTransition() {
@@ -2753,6 +2833,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   @discardableResult
   private func updateBackdropRoot() -> Bool {
+    assert(isNativeImpl())
     // Don't try to make the RenderView's layer a backdrop root if it's going to
     // paint into the window since it won't work (WebKitLegacy only).
     var willBeBackdropRoot = owningLayer!.isBackdropRoot() && !paintsIntoWindow()
@@ -2772,6 +2853,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateBackdropFiltersGeometry() {
+    assert(isNativeImpl())
     if !canCompositeBackdropFilters {
       return
     }
@@ -2800,6 +2882,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateBlendMode(style: RenderStyleWrapper) {
+    assert(isNativeImpl())
     // FIXME: where is the blend mode updated when m_ancestorClippingStacks come and go?
     if ancestorClippingStack != nil {
       ancestorClippingStack!.stack.first!.clippingLayer!.setBlendMode(blendMode: style.blendMode())
@@ -2810,6 +2893,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateContentsScalingFilters(style: RenderStyleWrapper) {
+    assert(isNativeImpl())
     if !renderer().isRenderHTMLCanvas()
       || canvasCompositingStrategy(renderer: renderer()) != .CanvasAsLayerContents
     {
@@ -2831,6 +2915,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Return the opacity value that this layer should use for compositing.
   func compositingOpacity(rendererOpacity: Float32) -> Float32 {
+    assert(isNativeImpl())
     var finalOpacity = rendererOpacity
 
     var curr = owningLayer!.stackingContext()
@@ -2849,6 +2934,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func rendererBackgroundColor() -> ColorWrapper {
+    assert(isNativeImpl())
     var backgroundRenderer =
       renderer().isDocumentElementRenderer() ? renderer().view().rendererForRootBackground() : nil
 
@@ -2861,6 +2947,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func paintsBoxDecorations() -> Bool {
+    assert(isNativeImpl())
     if !owningLayer!.hasVisibleBoxDecorations() {
       return false
     }
@@ -2869,6 +2956,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func paintsContent(request: inout RenderLayerWrapper.PaintedContentRequest) -> Bool {
+    assert(isNativeImpl())
     owningLayer!.updateDescendantDependentFlags()
 
     var paintsContent = false
@@ -2912,6 +3000,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateDrawsContent(contentsInfo: inout PaintedContentsInfo) {
+    assert(isNativeImpl())
     if scrollContainerLayer != nil {
       // We don't have to consider overflow controls, because we know that the scrollbars are drawn elsewhere.
       // m_graphicsLayer only needs backing store if the non-scrolling parts (background, outlines, borders, shadows etc) need to paint.
@@ -2939,7 +3028,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     if backgroundLayer != nil {
       backgroundLayer!.setDrawsContent(
-        b: backgroundLayerPaintsFixedRootBackground
+        b: m_backgroundLayerPaintsFixedRootBackground
           ? hasPaintedContent : contentsInfo.paintsBoxDecorations())
     }
   }
@@ -2949,6 +3038,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // It may have no children, or all its children may be themselves composited.
   // This is a useful optimization, because it allows us to avoid allocating backing store.
   func isSimpleContainerCompositingLayer(contentsInfo: inout PaintedContentsInfo) -> Bool {
+    assert(isNativeImpl())
     if owningLayer!.isRenderViewLayer {
       return false
     }
@@ -2982,6 +3072,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Returns true if this layer has content that needs to be rendered by painting into the backing store.
   private func containsPaintedContent(contentsInfo: inout PaintedContentsInfo) -> Bool {
+    assert(isNativeImpl())
     if contentsInfo.isSimpleContainer() || paintsIntoWindow() || paintsIntoCompositedAncestor()
       || artificiallyInflatedBounds || owningLayer!.isReflection()
     {
@@ -3011,6 +3102,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // An image can be directly compositing if it's the sole content of the layer, and has no box decorations
   // that require painting. Direct compositing saves backing store.
   func isDirectlyCompositedImage() -> Bool {
+    assert(isNativeImpl())
     let imageRenderer = renderer() as? RenderImageWrapper
     if imageRenderer == nil || owningLayer!.hasVisibleBoxDecorationsOrBackground()
       || owningLayer!.paintsWithFilters() || renderer().hasClip()
@@ -3038,6 +3130,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateImageContents(_ contentsInfo: inout PaintedContentsInfo) {
+    assert(isNativeImpl())
     let imageRenderer = renderer() as! RenderImageWrapper
 
     guard let cachedImage = imageRenderer.cachedImage() else { return }
@@ -3061,6 +3154,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func isUnscaledBitmapOnly() -> Bool {
+    assert(isNativeImpl())
     if !(renderer() is RenderImageWrapper) && !(renderer() is RenderHTMLCanvasWrapper) {
       return false
     }
@@ -3112,6 +3206,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateDirectlyCompositedBoxDecorations(_ contentsInfo: inout PaintedContentsInfo) {
+    assert(isNativeImpl())
     if !owningLayer!.hasVisibleContent {
       return
     }
@@ -3123,7 +3218,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateDirectlyCompositedBackgroundColor(_ contentsInfo: inout PaintedContentsInfo) {
-    if backgroundLayer != nil && !backgroundLayerPaintsFixedRootBackground
+    assert(isNativeImpl())
+    if backgroundLayer != nil && !m_backgroundLayerPaintsFixedRootBackground
       && !contentsInfo.paintsBoxDecorations()
     {
       m_graphicsLayer!.setContentsToSolidColor(ColorWrapper())
@@ -3156,6 +3252,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateDirectlyCompositedBackgroundImage(_ contentsInfo: inout PaintedContentsInfo) {
+    assert(isNativeImpl())
     if !GraphicsLayer.supportsContentsTiling() {
       return
     }
@@ -3185,12 +3282,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func resetContentsRect() {
+    assert(isNativeImpl())
     updateContentsRects()
     m_graphicsLayer!.setContentsTileSize(FloatSize(size: IntSize()))
     m_graphicsLayer!.setContentsTilePhase(FloatSize(size: IntSize()))
   }
 
   private func updateContentsRects() {
+    assert(isNativeImpl())
     m_graphicsLayer!.setContentsRect(
       snapRectToDevicePixelsIfNeeded(rect: contentsBox(), renderer: renderer()))
 
@@ -3210,6 +3309,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   )
     -> Bool
   {
+    assert(isNativeImpl())
     var hasPaintingDescendant = false
     traverseVisibleNonCompositedDescendantLayers(
       parent: owningLayer!,
@@ -3233,6 +3333,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func hasVisibleNonCompositedDescendants() -> Bool {
+    assert(isNativeImpl())
     var hasVisibleDescendant = false
     traverseVisibleNonCompositedDescendantLayers(
       parent: owningLayer!,
@@ -3245,6 +3346,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func shouldClipCompositedBounds() -> Bool {
+    assert(isNativeImpl())
     #if !WTF_PLATFORM_IOS_FAMILY
       // Scrollbar layers use this layer for relative positioning, so don't clip.
       if layerForHorizontalScrollbar != nil || layerForVerticalScrollbar != nil {
@@ -3276,6 +3378,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func shouldSetContentsDisplayDelegate() -> Bool {
+    assert(isNativeImpl())
     if !renderer().isRenderHTMLCanvas() {
       return false
     }
@@ -3284,6 +3387,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func canIssueSetNeedsDisplay() -> Bool {
+    assert(isNativeImpl())
     return !paintsIntoWindow() && !paintsIntoCompositedAncestor()
   }
 
@@ -3291,6 +3395,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func computeParentGraphicsLayerRect(_ compositedAncestor: RenderLayerWrapper?)
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     if compositedAncestor?.backing == nil {
       return LayoutRectWrapper(rect: renderer().view().documentRect())
     }
@@ -3335,6 +3440,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func computePrimaryGraphicsLayerRect(
     _ compositedAncestor: RenderLayerWrapper?, _ parentGraphicsLayerRect: LayoutRectWrapper
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var compositedBoundsOffset = ComputedOffsets(
       renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
       localRect: compositedBounds(), parentGraphicsLayerRect: parentGraphicsLayerRect,
@@ -3346,6 +3452,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
           size: compositedBounds().size()
         ), pixelSnappingFactor: deviceScaleFactor()))
   }
+
+  private func isNativeImpl() -> Bool { return p == nil }
 
   private var owningLayer: RenderLayerWrapper? = nil
 
@@ -3388,10 +3496,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   var isFrameLayerWithTiledBacking = false
   var requiresOwnBackingStore = true
   var canCompositeBackdropFilters = false
-  var backgroundLayerPaintsFixedRootBackground = false
+  private var m_backgroundLayerPaintsFixedRootBackground = false
   private let requiresBackgroundLayer = false
   private var hasSubpixelRounding = false
   private var m_shouldPaintUsingCompositeCopy = false
+
+  private let p: UnsafeMutableRawPointer?
 }
 
 enum CanvasCompositingStrategy {

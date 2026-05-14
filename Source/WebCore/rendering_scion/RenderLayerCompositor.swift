@@ -873,7 +873,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return nil
     }
 
-    if viewLayer!.isComposited() && viewLayer!.backing()!.backgroundLayerPaintsFixedRootBackground {
+    if viewLayer!.isComposited() && viewLayer!.backing()!.backgroundLayerPaintsFixedRootBackground()
+    {
       return viewLayer!.backing()!.backgroundLayer
     }
 
