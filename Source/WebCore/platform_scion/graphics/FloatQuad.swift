@@ -154,6 +154,11 @@ struct FloatQuad {
   func p3() -> FloatPoint { return m_p3 }
   func p4() -> FloatPoint { return m_p4 }
 
+  mutating func setP1(_ p: FloatPoint) { m_p1 = p }
+  mutating func setP2(_ p: FloatPoint) { m_p2 = p }
+  mutating func setP3(_ p: FloatPoint) { m_p3 = p }
+  mutating func setP4(_ p: FloatPoint) { m_p4 = p }
+
   // Tests whether the given point is inside, or on an edge or corner of this quad.
   private func containsPoint(_ p: FloatPoint) -> Bool {
     return isPointInTriangle(p, m_p1, m_p2, m_p3) || isPointInTriangle(p, m_p1, m_p3, m_p4)

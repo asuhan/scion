@@ -57,8 +57,19 @@ class AffineTransform: Equatable {
   }
 
   func mapRect(rect: FloatRectWrapper) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isIdentityOrTranslation() {
+      var mappedRect = rect
+      mappedRect.move(
+        dx: narrowPrecisionToFloat(transform[4]), dy: narrowPrecisionToFloat(transform[5]))
+      return mappedRect
+    }
+
+    var result = FloatQuad()
+    result.setP1(mapPoint(rect.location()))
+    result.setP2(mapPoint(FloatPoint(x: rect.maxX(), y: rect.y())))
+    result.setP3(mapPoint(FloatPoint(x: rect.maxX(), y: rect.maxY())))
+    result.setP4(mapPoint(FloatPoint(x: rect.x(), y: rect.maxY())))
+    return result.boundingBox()
   }
 
   func isIdentity() -> Bool {
@@ -152,6 +163,10 @@ class AffineTransform: Equatable {
   func isIdentityOrTranslationOrFlipped() -> Bool {
     return transform[0] == 1 && transform[1] == 0 && transform[2] == 0
       && (transform[3] == 1 || transform[3] == -1)
+  }
+
+  func isIdentityOrTranslation() -> Bool {
+    return transform[0] == 1 && transform[1] == 0 && transform[2] == 0 && transform[3] == 1
   }
 
   // result = this * t (i.e., a multRight)
