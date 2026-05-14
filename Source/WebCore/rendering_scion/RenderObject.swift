@@ -2520,7 +2520,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       let view = view()
       assert(CPtrToInt(repaintContainer!.id()) == CPtrToInt(view.id()))
       let viewHasCompositedLayer = view.isComposited()
-      if !viewHasCompositedLayer || view.layer()!.backing!.paintsIntoWindow() {
+      if !viewHasCompositedLayer || view.layer()!.backing()!.paintsIntoWindow() {
         var rect = r
         if viewHasCompositedLayer && view.layer()!.transform != nil {
           rect = LayoutRectWrapper(

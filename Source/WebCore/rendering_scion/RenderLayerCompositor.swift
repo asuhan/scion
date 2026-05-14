@@ -104,7 +104,7 @@ private func frameHostingNodeForFrame(_ frame: LocalFrameWrapper) -> ScrollingNo
     return nil
   }
 
-  let frameHostingNodeID = widgetRenderer!.layer()!.backing!.scrollingNodeIDForRole(
+  let frameHostingNodeID = widgetRenderer!.layer()!.backing()!.scrollingNodeIDForRole(
     role: .FrameHosting)
 
   return frameHostingNodeID
@@ -267,7 +267,7 @@ private func collectStationaryLayerRelatedOverflowNodes(_ layer: RenderLayerWrap
   let appendOverflowLayerNodeID = { (overflowLayer: RenderLayerWrapper) in
     assert(overflowLayer.isComposited())
     if overflowLayer.isComposited() {
-      let scrollingNodeID = overflowLayer.backing!.scrollingNodeIDForRole(role: .Scrolling)
+      let scrollingNodeID = overflowLayer.backing()!.scrollingNodeIDForRole(role: .Scrolling)
       if scrollingNodeID.bool() {
         scrollingNodes.append(scrollingNodeID)
         return
@@ -765,7 +765,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     let layerScrollingNodeID = { (layer: RenderLayerWrapper) -> ScrollingNodeIDWrapper in
       if layer.isComposited() {
-        return layer.backing!.scrollingNodeIDForRole(role: .Scrolling)
+        return layer.backing()!.scrollingNodeIDForRole(role: .Scrolling)
       }
       return ScrollingNodeIDWrapper()
     }
@@ -857,10 +857,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   func supportsFixedRootBackgroundCompositing() -> Bool {
     assert(isNativeImpl())
-    if let renderViewBacking = m_renderView!.layer()!.backing {
-      return renderViewBacking.isFrameLayerWithTiledBacking
-    }
-    return false
+    return m_renderView!.layer()!.backing()?.isFrameLayerWithTiledBacking ?? false
   }
 
   func needsFixedRootBackgroundLayer(_ layer: RenderLayerWrapper) -> Bool {
@@ -876,8 +873,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return nil
     }
 
-    if viewLayer!.isComposited() && viewLayer!.backing!.backgroundLayerPaintsFixedRootBackground {
-      return viewLayer!.backing!.backgroundLayer
+    if viewLayer!.isComposited() && viewLayer!.backing()!.backgroundLayerPaintsFixedRootBackground {
+      return viewLayer!.backing()!.backgroundLayer
     }
 
     return nil
@@ -987,7 +984,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return
     }
 
-    assert(compositedAncestor!.backing != nil)
+    assert(compositedAncestor!.backing() != nil)
     var repaintRect = rect
     repaintRect.move(size: layer.offsetFromAncestor(ancestorLayer: compositedAncestor))
     compositedAncestor!.setBackingNeedsRepaintInRect(r: repaintRect)
@@ -1007,12 +1004,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if child.isComposited() {
-      repaintInCompositedAncestor(layer: child, rect: child.backing!.compositedBounds())  // FIXME: do via dirty bits?
+      repaintInCompositedAncestor(layer: child, rect: child.backing()!.compositedBounds())  // FIXME: do via dirty bits?
     } else if child.paintsIntoProvidedBacking() {
       let backingProviderLayer = child.backingProviderLayer!
       // FIXME: Optimize this repaint.
       backingProviderLayer.setBackingNeedsRepaint()
-      backingProviderLayer.backing!.removeBackingSharingLayer(layer: child)
+      backingProviderLayer.backing()!.removeBackingSharingLayer(layer: child)
     } else {
       return
     }
@@ -1102,11 +1099,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       }
     }
 
-    if let backing = layer.backing {
-      backing.updateConfigurationAfterStyleChange()
-    } else {
-      return
-    }
+    guard let backing = layer.backing() else { return }
+
+    backing.updateConfigurationAfterStyleChange()
 
     if diff.rawValue >= StyleDifference.Repaint.rawValue {
       // Visibility change may affect geometry of the enclosing composited layer.
@@ -1175,7 +1170,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       layer.setNeedsPostLayoutCompositingUpdateOnAncestors()
     }
 
-    if let backing = layer.backing {
+    if let backing = layer.backing() {
       backing.updateConfigurationAfterStyleChange()
     }
   }
@@ -1358,7 +1353,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         widgetLayersAttachedAsChildren: false, layerHierarchyChanged: false)
     }
 
-    let backing = layer.backing!
+    let backing = layer.backing()!
     let hostingLayer = backing.parentForSublayers()
 
     let isVisible = renderer.style().usedVisibility() == .Visible
@@ -1495,7 +1490,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     let modelObject = capturedRenderer! as! RenderLayerModelObjectWrapper
-    if let backing = modelObject.layer()!.backing {
+    if let backing = modelObject.layer()!.backing() {
       childList.append(backing.childForSuperlayersExcludingViewTransitions())
     }
   }
@@ -1513,7 +1508,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   func rootLayerConfigurationChanged() {
     assert(isNativeImpl())
-    if let renderViewBacking = m_renderView!.layer()!.backing,
+    if let renderViewBacking = m_renderView!.layer()!.backing(),
       renderViewBacking.isFrameLayerWithTiledBacking
     {
       m_renderView!.layer()!.setNeedsCompositingConfigurationUpdate()
@@ -1956,7 +1951,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       for candidate in candidates {
         candidate.sharingLayers.remove(value: endLayer)
-        candidate.providerLayer!.backing!.setBackingSharingLayers(candidate.sharingLayers)
+        candidate.providerLayer!.backing()!.setBackingSharingLayers(candidate.sharingLayers)
       }
       backingSharingStackingContext = nil
       m_sequenceIdentifier = BackingSharingSequenceIdentifierWrapper.generate()
@@ -2162,7 +2157,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if backingRequired == .Yes {
       // If we need to repaint, do so before making backing and disconnecting from the backing provider layer.
-      if layer.backing == nil {
+      if layer.backing() == nil {
         repaintLayer(layer: layer, backingSharingState: backingSharingState)
       }
 
@@ -2170,7 +2165,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       enableCompositingMode()
 
-      if layer.backing == nil {
+      if layer.backing() == nil {
         layer.ensureBacking()
 
         if layer.isRenderViewLayer && useCoordinatedScrollingForLayer(layer) {
@@ -2180,7 +2175,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
           }
           updateRootContentLayerClipping()
 
-          if let tiledBacking = layer.backing!.tiledBacking() {
+          if let tiledBacking = layer.backing()!.tiledBacking() {
             tiledBacking.setTopContentInset(topContentInset: frameView.topContentInset())
           }
         }
@@ -2197,32 +2192,30 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
         layerChanged = true
       }
-    } else {
-      if layer.backing != nil {
-        // If we're removing backing on a reflection, clear the source GraphicsLayer's pointer to
-        // its replica GraphicsLayer. In practice this should never happen because reflectee and reflection
-        // are both either composited, or not composited.
-        if layer.isReflection() {
-          let sourceLayer = (layer.renderer().parent()! as! RenderLayerModelObjectWrapper).layer()
-          if let backing = sourceLayer!.backing {
-            assert(optEq(backing.graphicsLayer()!.replicaLayer(), layer.backing!.graphicsLayer()))
-            backing.graphicsLayer()!.setReplicatedByLayer(layer: nil)
-          }
+    } else if layer.backing() != nil {
+      // If we're removing backing on a reflection, clear the source GraphicsLayer's pointer to
+      // its replica GraphicsLayer. In practice this should never happen because reflectee and reflection
+      // are both either composited, or not composited.
+      if layer.isReflection() {
+        let sourceLayer = (layer.renderer().parent()! as! RenderLayerModelObjectWrapper).layer()
+        if let backing = sourceLayer!.backing() {
+          assert(optEq(backing.graphicsLayer()!.replicaLayer(), layer.backing()!.graphicsLayer()))
+          backing.graphicsLayer()!.setReplicatedByLayer(layer: nil)
         }
-
-        layer.clearBacking()
-        layerChanged = true
-
-        // This layer and all of its descendants have cached repaints rects that are relative to
-        // the repaint container, so change when compositing changes; we need to update them here,
-        // as long as shared backing isn't going to change our repaint container.
-        if !repaintTargetsSharedBacking(layer: layer, backingSharingState: backingSharingState) {
-          layer.computeRepaintRectsIncludingDescendants()
-        }
-
-        // If we need to repaint, do so now that we've removed the backing.
-        repaintLayer(layer: layer, backingSharingState: backingSharingState)
       }
+
+      layer.clearBacking()
+      layerChanged = true
+
+      // This layer and all of its descendants have cached repaints rects that are relative to
+      // the repaint container, so change when compositing changes; we need to update them here,
+      // as long as shared backing isn't going to change our repaint container.
+      if !repaintTargetsSharedBacking(layer: layer, backingSharingState: backingSharingState) {
+        layer.computeRepaintRectsIncludingDescendants()
+      }
+
+      // If we need to repaint, do so now that we've removed the backing.
+      repaintLayer(layer: layer, backingSharingState: backingSharingState)
     }
 
     if layerChanged {
@@ -2254,7 +2247,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       layer.setViewportConstrainedNotCompositedReason(reason: .NoNotCompositedReason)
     }
 
-    if let layerBacking = layer.backing {
+    if let layerBacking = layer.backing() {
       layerBacking.updateDebugIndicators(
         showBorder: m_showDebugBorders, showRepaintCounter: m_showRepaintCounter)
     }
@@ -2272,7 +2265,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // See if we need content or clipping layers. Methods called here should assume
     // that the compositing state of descendant layers has not been updated yet.
-    if layer.backing != nil && layer.backing!.updateConfiguration(compositingAncestor!) {
+    if layer.backing() != nil && layer.backing()!.updateConfiguration(compositingAncestor!) {
       layerChanged = true
     }
 
@@ -2318,7 +2311,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer.updateLayerListsIfNeeded()
 
     // FIXME: This method does not work correctly with transforms.
-    if layer.isComposited() && !layer.backing!.paintsIntoCompositedAncestor() {
+    if layer.isComposited() && !layer.backing()!.paintsIntoCompositedAncestor() {
       layer.setBackingNeedsRepaint()
     }
 
@@ -2634,7 +2627,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       sharingState.endBackingSharingSequence(layer)
 
       if layer.isComposited() {
-        layer.backing!.clearBackingSharingLayers()
+        layer.backing()!.clearBackingSharingLayers()
       }
 
       return
@@ -2670,7 +2663,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       }
     }
 
-    layer.backing!.clearBackingSharingLayers()
+    layer.backing()!.clearBackingSharingLayers()
 
     // A layer that composites resets backing-sharing, since subsequent layers need to composite to overlap it. If a descendant didn't already end the sharing sequence that was current when processing of this layer started, end it now.
     if backingSharingSnapshot != nil
@@ -2992,7 +2985,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         && !descendantsAddedToOverlap)
 
     if layer.isComposited() {
-      layer.backing!.updateAllowsBackingStoreDetaching(absoluteBounds: layerExtent.bounds)
+      layer.backing()!.updateAllowsBackingStoreDetaching(absoluteBounds: layerExtent.bounds)
     }
 
     overlapMap.geometryMap.popMappingsToAncestor(ancestorLayer: ancestorLayer)
@@ -3150,7 +3143,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       scrollingTreeState.v.needSynchronousScrollingReasonsUpdate = true
     }
 
-    let layerBacking = layer.backing
+    let layerBacking = layer.backing()
     if layerBacking != nil {
       updateLevel.remove(.CompositedChildren)
 
@@ -3180,7 +3173,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         scrollingNodeChanges.update(with: .LayerGeometry)
       }
 
-      if let reflection = layer.reflectionLayer(), let reflectionBacking = reflection.backing {
+      if let reflection = layer.reflectionLayer(), let reflectionBacking = reflection.backing() {
         reflectionBacking.updateCompositedBounds()
         reflectionBacking.updateGeometry(layer)
         reflectionBacking.updateAfterDescendants()
@@ -3336,7 +3329,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var overflowScrollToLastContainedLayerMap: [UInt: RenderLayerWrapper] = [:]
 
     for clippedLayer in layersClippedByScrollers {
-      let clippingStack = clippedLayer.backing!.ancestorClippingStack!
+      let clippingStack = clippedLayer.backing()!.ancestorClippingStack!
 
       for stackEntry in clippingStack.stack {
         if !stackEntry.clipData.isOverflowScroll {
@@ -3356,8 +3349,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         continue
       }
 
-      let lastContainedDescendantBacking = lastContainedDescendant!.backing
-      let overflowBacking = overflowScrollingLayer.backing
+      let lastContainedDescendantBacking = lastContainedDescendant!.backing()
+      let overflowBacking = overflowScrollingLayer.backing()
       if overflowBacking == nil {
         continue
       }
@@ -3663,7 +3656,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // The attachment can affect whether the RenderView layer's paintsIntoWindow() behavior,
     // so call updateDrawsContent() to update that.
-    if let backing = m_renderView!.layer()?.backing {
+    if let backing = m_renderView!.layer()?.backing() {
       backing.updateDrawsContent()
     }
 
@@ -4247,7 +4240,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     // Crash logs suggest that backing can be null here, but we don't know how: rdar://problem/18545452.
-    let backing = layer.backing!
+    let backing = layer.backing()!
 
     assert(treeState.v.parentNodeID != nil || nodeType == .Subframe)
     assert(nodeType != .MainFrame || !treeState.v.parentNodeID!.bool())
@@ -4428,10 +4421,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     // TODO(asuhan): add logging
 
     if changes.contains(.Layer) {
-      assert(layer.backing!.viewportAnchorLayer != nil)
+      assert(layer.backing()!.viewportAnchorLayer != nil)
       scrollingCoordinator!.setNodeLayers(
         newNodeID,
-        ScrollingCoordinatorWrapper.NodeLayers(layer: layer.backing!.viewportAnchorLayer))
+        ScrollingCoordinatorWrapper.NodeLayers(layer: layer.backing()!.viewportAnchorLayer))
     }
 
     if changes.contains(.LayerGeometry) {
@@ -4509,7 +4502,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   ) -> ScrollingNodeIDWrapper {
     assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
-    let clippingStack = layer.backing!.ancestorClippingStack
+    let clippingStack = layer.backing()!.ancestorClippingStack
     if clippingStack == nil {
       return treeState.v.parentNodeID ?? ScrollingNodeIDWrapper()
     }
@@ -4567,7 +4560,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if changes.contains(.Layer) {
       scrollingCoordinator!.setNodeLayers(
-        newNodeID, ScrollingCoordinatorWrapper.NodeLayers(layer: layer.backing!.graphicsLayer()))
+        newNodeID, ScrollingCoordinatorWrapper.NodeLayers(layer: layer.backing()!.graphicsLayer()))
     }
 
     if let renderWidget = layer.renderer() as? RenderWidgetWrapper,
@@ -4606,7 +4599,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if changes.contains(.Layer) {
-      let backing = layer.backing!
+      let backing = layer.backing()!
       scrollingCoordinator!.setNodeLayers(
         newNodeID, ScrollingCoordinatorWrapper.NodeLayers(layer: backing.graphicsLayer()))
     }
@@ -4618,7 +4611,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       let relatedNodeIDs = collectRelatedCoordinatedScrollingNodes(layer, positioningBehavior)
       scrollingCoordinator!.setRelatedOverflowScrollingNodes(newNodeID, relatedNodeIDs[...])
 
-      let graphicsLayer = layer.backing!.graphicsLayer()!
+      let graphicsLayer = layer.backing()!.graphicsLayer()!
       let constraints = AbsolutePositionConstraints(
         alignmentOffset: graphicsLayer.pixelAlignmentOffset(),
         layerPositionAtLastLayout: graphicsLayer.position())
@@ -4652,7 +4645,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     } else {
       let scrollableArea = layer.scrollableArea()!
 
-      let backing = layer.backing!
+      let backing = layer.backing()!
       scrollingCoordinator.setNodeLayers(
         nodeID,
         ScrollingCoordinatorWrapper.NodeLayers(
@@ -4669,7 +4662,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, roles: ScrollCoordinationRole
   ) {
     assert(isNativeImpl())
-    let backing = layer.backing
+    let backing = layer.backing()
     if backing == nil {
       return
     }
@@ -4719,7 +4712,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     assert(isNativeImpl())
     if role == .ScrollingProxy {
       assert(layer.isComposited())
-      let clippingStack = layer.backing!.ancestorClippingStack
+      let clippingStack = layer.backing()!.ancestorClippingStack
       if clippingStack == nil {
         return
       }
@@ -4733,7 +4726,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return
     }
 
-    let nodeID = layer.backing!.scrollingNodeIDForRole(role: role)
+    let nodeID = layer.backing()!.scrollingNodeIDForRole(role: role)
     if !nodeID.bool() {
       return
     }
@@ -4763,7 +4756,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         continue
       }
 
-      if let clippingStack = layer.backing!.ancestorClippingStack {
+      if let clippingStack = layer.backing()!.ancestorClippingStack {
         for entry in clippingStack.stack {
           if !entry.clipData.isOverflowScroll {
             continue
@@ -4784,7 +4777,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ scrollingProxyNodeID: ScrollingNodeIDWrapper, _ overflowScrollingLayer: RenderLayerWrapper
   ) -> Bool {
     assert(isNativeImpl())
-    let backing = overflowScrollingLayer.backing
+    let backing = overflowScrollingLayer.backing()
     if backing == nil {
       return false
     }
@@ -4894,7 +4887,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     assert(isNativeImpl())
     assert(layer.isComposited())
 
-    guard let anchorLayer = layer.backing!.viewportAnchorLayer else {
+    guard let anchorLayer = layer.backing()!.viewportAnchorLayer else {
       fatalError("Not reached")
     }
 
@@ -4942,7 +4935,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     let renderer = layer.renderer() as! RenderBoxModelObjectWrapper
 
-    guard let anchorLayer = layer.backing!.viewportAnchorLayer else {
+    guard let anchorLayer = layer.backing()!.viewportAnchorLayer else {
       fatalError("Not reached")
     }
 
@@ -5047,11 +5040,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return false
     }
 
-    if let backing = layer!.backing {
-      return backing.isFrameLayerWithTiledBacking
-    }
-
-    return false
+    return layer!.backing()?.isFrameLayerWithTiledBacking ?? false
   }
 
   private func isRootFrameCompositor() -> Bool {

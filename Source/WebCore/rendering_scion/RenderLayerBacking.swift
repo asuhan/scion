@@ -282,8 +282,8 @@ private func computeOffsetFromAncestorGraphicsLayer(
 
   // FIXME: This is a workaround until after webkit.org/b/162634 gets fixed. ancestorSubpixelOffsetFromRenderer
   // could be stale when a dynamic composited state change triggers a pre-order updateGeometry() traversal.
-  let ancestorSubpixelOffsetFromRenderer = compositedAncestor!.backing!.subpixelOffsetFromRenderer
-  let ancestorCompositedBounds = compositedAncestor!.backing!.compositedBounds()
+  let ancestorSubpixelOffsetFromRenderer = compositedAncestor!.backing()!.subpixelOffsetFromRenderer
+  let ancestorCompositedBounds = compositedAncestor!.backing()!.compositedBounds()
   let floored = toLayoutSize(
     point: LayoutPointWrapper(
       size: floorPointToDevicePixels(
@@ -594,7 +594,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Do cleanup while layer->backing() is still valid.
   func willBeDestroyed() {
-    assert(ObjectIdentifier(owningLayer!.backing!) == ObjectIdentifier(self))
+    assert(ObjectIdentifier(owningLayer!.backing()!) == ObjectIdentifier(self))
     compositor().removeFromScrollCoordinatedLayers(layer: owningLayer!)
 
     clearBackingSharingLayers()
@@ -661,7 +661,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     updateMaskingLayer(hasMask: renderer().hasMask(), hasClipPath: renderer().hasClipPath())
 
     if owningLayer!.hasReflection() {
-      if let backing = owningLayer!.reflectionLayer()!.backing {
+      if let backing = owningLayer!.reflectionLayer()!.backing() {
         let reflectionLayer = backing.graphicsLayer()
         m_graphicsLayer!.setReplicatedByLayer(layer: reflectionLayer)
       }
@@ -777,8 +777,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
 
     if owningLayer!.hasReflection() {
-      if owningLayer!.reflectionLayer()!.backing != nil {
-        let reflectionLayer = owningLayer!.reflectionLayer()!.backing!.graphicsLayer()
+      if owningLayer!.reflectionLayer()!.backing() != nil {
+        let reflectionLayer = owningLayer!.reflectionLayer()!.backing()!.graphicsLayer()
         m_graphicsLayer!.setReplicatedByLayer(layer: reflectionLayer)
       }
     } else {
@@ -1026,7 +1026,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       primaryGraphicsLayerRect, rendererOffset.fromParentGraphicsLayer())
 
     if owningLayer!.reflectionLayer() != nil && owningLayer!.reflectionLayer()!.isComposited() {
-      let reflectionBacking = owningLayer!.reflectionLayer()!.backing!
+      let reflectionBacking = owningLayer!.reflectionLayer()!.backing()!
       reflectionBacking.updateGeometry(owningLayer)
 
       // The reflection layer has the bounds of m_owningLayer.reflectionLayer(),
@@ -1135,7 +1135,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     // If this layer was created just for clipping or to apply perspective, it doesn't need its own backing store.
     let ancestorCompositedBounds =
-      compositedAncestor?.backing!.compositedBounds() ?? LayoutRectWrapper()
+      compositedAncestor?.backing()!.compositedBounds() ?? LayoutRectWrapper()
     setRequiresOwnBackingStore(
       compositor().requiresOwnBackingStore(
         owningLayer!, compositedAncestor,
@@ -1356,9 +1356,10 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       // into the view-transition tree, and we instead want to attach the root of the VT tree to our ancestor.
       if owningLayer!.renderer().protectedDocument().activeViewTransitionCapturedDocumentElement() {
         if let viewTransitionRoot = owningLayer!.lastChild(),
-          viewTransitionRoot.renderer().isViewTransitionRoot() && viewTransitionRoot.backing != nil
+          viewTransitionRoot.renderer().isViewTransitionRoot()
+            && viewTransitionRoot.backing() != nil
         {
-          return viewTransitionRoot.backing!.childForSuperlayers()
+          return viewTransitionRoot.backing()!.childForSuperlayers()
         }
       }
     }
@@ -1872,7 +1873,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   ) {
     assert(overflowControlsContainer != nil)
     assert(ancestorLayer.isComposited())
-    if ancestorLayer.backing == nil {
+    if ancestorLayer.backing() == nil {
       return
     }
 
@@ -3294,7 +3295,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       return LayoutRectWrapper(rect: renderer().view().documentRect())
     }
 
-    let ancestorBacking = compositedAncestor!.backing!
+    let ancestorBacking = compositedAncestor!.backing()!
     var parentGraphicsLayerRect = LayoutRectWrapper()
     if owningLayer!.isInsideFragmentedFlow() {
       // FIXME: flows/columns need work.
@@ -3373,7 +3374,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   private var m_compositedBounds = LayoutRectWrapper()
   var subpixelOffsetFromRenderer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the associated renderer's bounds.
-  var compositedBoundsOffsetFromGraphicsLayer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the render layer bounds.
+  private var compositedBoundsOffsetFromGraphicsLayer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the render layer bounds.
 
   private var viewportConstrainedNodeID = ScrollingNodeIDWrapper()
   private var scrollingNodeID = ScrollingNodeIDWrapper()

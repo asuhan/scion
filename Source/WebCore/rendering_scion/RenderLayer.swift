@@ -139,7 +139,7 @@ private func canCreateStackingContext(layer: RenderLayerWrapper) -> Bool {
 }
 
 func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
-  return layer.isComposited() && !layer.backing!.paintsIntoCompositedAncestor()
+  return layer.isComposited() && !layer.backing()!.paintsIntoCompositedAncestor()
 }
 
 private func performOverlapTests(
@@ -1157,12 +1157,12 @@ class RenderLayerWrapper {
       return
     }
     assert(isComposited())
-    if backing!.paintsIntoWindow() {
+    if backing()!.paintsIntoWindow() {
       // If we're trying to repaint the placeholder document layer, propagate the
       // repaint to the native view system.
       renderer().view().repaintViewRectangle(LayoutRectWrapper(rect: absoluteBoundingBox()))
     } else {
-      backing!.setContentsNeedDisplay(shouldClip)
+      backing()!.setContentsNeedDisplay(shouldClip)
     }
   }
 
@@ -1174,7 +1174,7 @@ class RenderLayerWrapper {
     // https://bugs.webkit.org/show_bug.cgi?id=61159 describes an unreproducible crash here,
     // so assert but check that the layer is composited.
     assert(isComposited())
-    if !isComposited() || backing!.paintsIntoWindow() {
+    if !isComposited() || backing()!.paintsIntoWindow() {
       // If we're trying to repaint the placeholder document layer, propagate the
       // repaint to the native view system.
       var absRect = r
@@ -1182,7 +1182,7 @@ class RenderLayerWrapper {
 
       renderer().view().repaintViewRectangle(absRect)
     } else {
-      backing!.setContentsNeedDisplayInRect(r, shouldClip)
+      backing()!.setContentsNeedDisplayInRect(r, shouldClip)
     }
   }
 
@@ -1423,7 +1423,7 @@ class RenderLayerWrapper {
       setNeedsCompositingConfigurationUpdate()
     }
 
-    backing?.contentChanged(changeType)
+    backing()?.contentChanged(changeType)
   }
 
   func canRender3DTransforms() -> Bool {
@@ -1907,7 +1907,7 @@ class RenderLayerWrapper {
       ).enclosingBoundingBox())
 
     if parentLayer.isComposited() {
-      if !parentLayer.backing!.paintsIntoWindow() {
+      if !parentLayer.backing()!.paintsIntoWindow() {
         parentLayer.setBackingNeedsRepaintInRect(r: parentLayerRect)
         return
       }
@@ -3215,15 +3215,12 @@ class RenderLayerWrapper {
     if !isNativeImpl() {
       return wk_interop.RenderLayer_isComposited(layerId())
     }
-    return backing != nil
+    return m_backing != nil
   }
 
   func hasCompositedMask() -> Bool {
     assert(isNativeImpl())
-    if let backing = backing {
-      return backing.hasMaskLayer()
-    }
-    return false
+    return m_backing?.hasMaskLayer() ?? false
   }
 
   func setBackingProviderLayer(backingProvider: RenderLayerWrapper?) {
@@ -3247,7 +3244,7 @@ class RenderLayerWrapper {
 
     assert(backingProviderLayer!.isComposited())
     if backingProviderLayer!.isComposited() {
-      backingProviderLayer!.backing!.removeBackingSharingLayer(layer: self)
+      backingProviderLayer!.backing()!.removeBackingSharingLayer(layer: self)
     }
   }
 
@@ -3256,21 +3253,26 @@ class RenderLayerWrapper {
     return backingProviderLayer != nil
   }
 
+  func backing() -> RenderLayerBacking? {
+    assert(isNativeImpl())
+    return m_backing
+  }
+
   @discardableResult
   func ensureBacking() -> RenderLayerBacking? {
     assert(isNativeImpl())
-    if backing == nil {
-      backing = RenderLayerBacking(layer: self)
+    if m_backing == nil {
+      m_backing = RenderLayerBacking(layer: self)
       compositor().layerBecameComposited(self)
 
       updateFilterPaintingStrategy()
     }
-    return backing
+    return m_backing
   }
 
   func clearBacking(layerBeingDestroyed: Bool = false) {
     assert(isNativeImpl())
-    if backing == nil {
+    if m_backing == nil {
       return
     }
 
@@ -3278,8 +3280,8 @@ class RenderLayerWrapper {
       compositor().layerBecameNonComposited(layer: self)
     }
 
-    backing!.willBeDestroyed()
-    backing = nil
+    m_backing!.willBeDestroyed()
+    m_backing = nil
 
     if !layerBeingDestroyed {
       updateFilterPaintingStrategy()
@@ -3310,7 +3312,7 @@ class RenderLayerWrapper {
 
   func paintsWithTransform(paintBehavior: PaintBehavior) -> Bool {
     assert(isNativeImpl())
-    let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
+    let paintsToWindow = !isComposited() || backing()!.paintsIntoWindow()
     return transform != nil
       && (paintBehavior.contains(.FlattenCompositingLayers) || paintsToWindow)
   }
@@ -3321,7 +3323,7 @@ class RenderLayerWrapper {
       return false
     }
 
-    let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
+    let paintsToWindow = !isComposited() || backing()!.paintsIntoWindow()
     if paintsToWindow || paintBehavior.contains(.FlattenCompositingLayers) {
       return true
     }
@@ -3335,7 +3337,7 @@ class RenderLayerWrapper {
       return false
     }
 
-    let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
+    let paintsToWindow = !isComposited() || backing()!.paintsIntoWindow()
     if paintsToWindow || paintBehavior.contains(.FlattenCompositingLayers) {
       return true
     }
@@ -3430,7 +3432,7 @@ class RenderLayerWrapper {
       return true
     }
 
-    return !backing!.canCompositeFilters()
+    return !m_backing!.canCompositeFilters()
   }
 
   func requiresFullLayerImageForFilters() -> Bool {
@@ -4716,8 +4718,8 @@ class RenderLayerWrapper {
 
   private func shouldContinuePaint(paintFlags: PaintLayerFlag) -> Bool {
     assert(isNativeImpl())
-    return backing!.paintsIntoWindow()
-      || backing!.paintsIntoCompositedAncestor()
+    return backing()!.paintsIntoWindow()
+      || backing()!.paintsIntoCompositedAncestor()
       || shouldDoSoftwarePaint(
         layer: self, paintingReflection: paintFlags.contains(.PaintingReflection))
       || RenderLayerWrapper.paintForFixedRootBackground(layer: self, paintFlags: paintFlags)
@@ -6631,7 +6633,7 @@ class RenderLayerWrapper {
   let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
 
   private var filters: RenderLayerFilters? = nil
-  var backing: RenderLayerBacking? = nil
+  private var m_backing: RenderLayerBacking? = nil
 
   private var m_scrollableArea: RenderLayerScrollableArea? = nil
 

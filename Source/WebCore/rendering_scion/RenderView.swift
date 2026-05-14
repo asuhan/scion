@@ -458,7 +458,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
       }
 
       if let compositingLayer = layer.enclosingCompositingLayerForRepaint().layer {
-        if !compositingLayer.backing!.paintsIntoWindow() {
+        if !compositingLayer.backing()!.paintsIntoWindow() {
           protectedFrameView().setCannotBlitToWindow()
           break
         }

@@ -1062,7 +1062,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
         return false
       }
 
-      return rootLayer.backing!.backgroundLayerPaintsFixedRootBackground
+      return rootLayer.backing()!.backgroundLayerPaintsFixedRootBackground
     }
 
     return false
