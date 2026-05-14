@@ -253,6 +253,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_isComposited(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->isComposited();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderLayer_backing(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->backing();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden)
 {
     static_cast<WebCore::RenderLayer*>(p)->setIsHiddenByOverflowTruncation(is_hidden);

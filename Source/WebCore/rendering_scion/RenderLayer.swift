@@ -3254,7 +3254,10 @@ class RenderLayerWrapper {
   }
 
   func backing() -> RenderLayerBacking? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let backingRaw = wk_interop.RenderLayer_backing(pInterop) else { return nil }
+      return RenderLayerBacking(backingRaw)
+    }
     return m_backing
   }
 

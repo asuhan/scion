@@ -1282,6 +1282,7 @@ void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 bool RenderLayer_isBackdropRoot(const void*);
 bool RenderLayer_isolatesBlending(const void*);
 bool RenderLayer_isComposited(const void*);
+void* RenderLayer_backing(const void*);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
 void* Document_frame(const void*);
 void* Document_documentElement(const void*);
