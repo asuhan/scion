@@ -920,6 +920,7 @@ bool RenderStyle_isDisplayBlockLevel(const void*);
 bool RenderStyle_isOriginalDisplayBlockType(const void*);
 bool RenderStyle_isDisplayTableOrTablePart(const void*);
 bool RenderStyle_isOriginalDisplayListItemType(const void*);
+struct SRGBARaw RenderStyle_visitedDependentColorWithColorFilter(const void*, uint16_t, uint32_t);
 float RenderStyle_letterSpacing(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentRight(const void*);

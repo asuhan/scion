@@ -27,49 +27,567 @@ import wk_interop
 
 typealias LayoutBoxExtent = RectEdges<LayoutUnit>
 
-enum CSSPropertyID {
+enum CSSPropertyID: UInt16 {
   case CSSPropertyInvalid
+  case CSSPropertyCustom
+  case CSSPropertyColorScheme
+  case CSSPropertyRubyPosition
+  case CSSPropertyWritingMode
+  case CSSPropertyWebkitRubyPosition
   case CSSPropertyColor
+  case CSSPropertyDirection
   case CSSPropertyDisplay
+  case CSSPropertyFontFamily
+  case CSSPropertyFontFeatureSettings
+  case CSSPropertyFontKerning
+  case CSSPropertyFontOpticalSizing
+  case CSSPropertyFontPalette
+  case CSSPropertyFontSize
+  case CSSPropertyFontSizeAdjust
+  case CSSPropertyFontStretch
+  case CSSPropertyFontStyle
+  case CSSPropertyFontSynthesisSmallCaps
+  case CSSPropertyFontSynthesisStyle
+  case CSSPropertyFontSynthesisWeight
+  case CSSPropertyFontVariantAlternates
+  case CSSPropertyFontVariantCaps
+  case CSSPropertyFontVariantEastAsian
+  case CSSPropertyFontVariantEmoji
+  case CSSPropertyFontVariantLigatures
+  case CSSPropertyFontVariantNumeric
+  case CSSPropertyFontVariantPosition
+  case CSSPropertyFontVariationSettings
+  case CSSPropertyFontWeight
+  case CSSPropertyTextOrientation
+  case CSSPropertyTextRendering
+  case CSSPropertyZoom
+  case CSSPropertyWebkitFontSmoothing
+  case CSSPropertyWebkitLocale
+  case CSSPropertyWebkitTextZoom
+  case CSSPropertyLetterSpacing
+  case CSSPropertyTextAutospace
+  case CSSPropertyTextSpacingTrim
   case CSSPropertyAccentColor
+  case CSSPropertyAdditiveSymbols
+  case CSSPropertyAlignContent
+  case CSSPropertyAlignItems
+  case CSSPropertyAlignSelf
+  case CSSPropertyAlignmentBaseline
+  case CSSPropertyAnchorName
+  case CSSPropertyAnimationComposition
+  case CSSPropertyAnimationDelay
+  case CSSPropertyAnimationDirection
+  case CSSPropertyAnimationDuration
+  case CSSPropertyAnimationFillMode
+  case CSSPropertyAnimationIterationCount
+  case CSSPropertyAnimationName
+  case CSSPropertyAnimationPlayState
+  case CSSPropertyAnimationTimeline
+  case CSSPropertyAnimationTimingFunction
+  case CSSPropertyAppearance
+  case CSSPropertyAspectRatio
   case CSSPropertyBackdropFilter
+  case CSSPropertyBackfaceVisibility
+  case CSSPropertyBackgroundAttachment
+  case CSSPropertyBackgroundBlendMode
+  case CSSPropertyBackgroundClip
   case CSSPropertyBackgroundColor
+  case CSSPropertyBackgroundImage
+  case CSSPropertyBackgroundOrigin
+  case CSSPropertyBackgroundPositionX
+  case CSSPropertyBackgroundPositionY
+  case CSSPropertyBackgroundRepeat
+  case CSSPropertyBackgroundSize
+  case CSSPropertyBasePalette
+  case CSSPropertyBaselineShift
+  case CSSPropertyBlockEllipsis
+  case CSSPropertyBlockStepInsert
+  case CSSPropertyBlockStepSize
+  case CSSPropertyBorderCollapse
+  case CSSPropertyBorderImageOutset
+  case CSSPropertyBorderImageRepeat
+  case CSSPropertyBorderImageSlice
+  case CSSPropertyBorderImageSource
+  case CSSPropertyBorderImageWidth
+  case CSSPropertyBoxShadow
+  case CSSPropertyBoxSizing
+  case CSSPropertyBreakAfter
+  case CSSPropertyBreakBefore
+  case CSSPropertyBreakInside
+  case CSSPropertyBufferedRendering
+  case CSSPropertyCaptionSide
   case CSSPropertyCaretColor
+  case CSSPropertyClear
+  case CSSPropertyClip
   case CSSPropertyClipPath
+  case CSSPropertyClipRule
+  case CSSPropertyColorInterpolation
+  case CSSPropertyColorInterpolationFilters
+  case CSSPropertyColumnCount
+  case CSSPropertyColumnFill
+  case CSSPropertyColumnGap
   case CSSPropertyColumnRuleColor
+  case CSSPropertyColumnRuleStyle
+  case CSSPropertyColumnRuleWidth
+  case CSSPropertyColumnSpan
+  case CSSPropertyColumnWidth
+  case CSSPropertyContain
+  case CSSPropertyContainerName
+  case CSSPropertyContainerType
+  case CSSPropertyContent
+  case CSSPropertyContentVisibility
+  case CSSPropertyContinue
+  case CSSPropertyCounterIncrement
+  case CSSPropertyCounterReset
+  case CSSPropertyCounterSet
+  case CSSPropertyCursor
+  case CSSPropertyCx
+  case CSSPropertyCy
+  case CSSPropertyD
+  case CSSPropertyDominantBaseline
+  case CSSPropertyEmptyCells
+  case CSSPropertyFallback
+  case CSSPropertyFieldSizing
   case CSSPropertyFill
+  case CSSPropertyFillOpacity
+  case CSSPropertyFillRule
   case CSSPropertyFilter
+  case CSSPropertyFlexBasis
+  case CSSPropertyFlexDirection
+  case CSSPropertyFlexGrow
+  case CSSPropertyFlexShrink
+  case CSSPropertyFlexWrap
+  case CSSPropertyFloat
   case CSSPropertyFloodColor
+  case CSSPropertyFloodOpacity
+  case CSSPropertyFontDisplay
+  case CSSPropertyGlyphOrientationHorizontal
+  case CSSPropertyGlyphOrientationVertical
+  case CSSPropertyGridAutoColumns
+  case CSSPropertyGridAutoFlow
+  case CSSPropertyGridAutoRows
+  case CSSPropertyGridColumnEnd
+  case CSSPropertyGridColumnStart
+  case CSSPropertyGridRowEnd
+  case CSSPropertyGridRowStart
+  case CSSPropertyGridTemplateAreas
+  case CSSPropertyGridTemplateColumns
+  case CSSPropertyGridTemplateRows
+  case CSSPropertyHangingPunctuation
+  case CSSPropertyHyphenateCharacter
+  case CSSPropertyHyphens
+  case CSSPropertyImageOrientation
+  case CSSPropertyImageRendering
+  case CSSPropertyInherits
+  case CSSPropertyInitialValue
+  case CSSPropertyInputSecurity
+  case CSSPropertyIsolation
+  case CSSPropertyJustifyContent
+  case CSSPropertyJustifyItems
+  case CSSPropertyJustifySelf
   case CSSPropertyLightingColor
+  case CSSPropertyLineBreak
+  case CSSPropertyLineFitEdge
+  case CSSPropertyLineHeight
+  case CSSPropertyListStyleImage
+  case CSSPropertyListStylePosition
+  case CSSPropertyListStyleType
+  case CSSPropertyMarginTrim
+  case CSSPropertyMarkerEnd
+  case CSSPropertyMarkerMid
+  case CSSPropertyMarkerStart
+  case CSSPropertyMaskBorderOutset
+  case CSSPropertyMaskBorderRepeat
+  case CSSPropertyMaskBorderSlice
+  case CSSPropertyMaskBorderSource
+  case CSSPropertyMaskBorderWidth
+  case CSSPropertyMaskClip
+  case CSSPropertyMaskComposite
+  case CSSPropertyMaskImage
+  case CSSPropertyMaskMode
+  case CSSPropertyMaskOrigin
+  case CSSPropertyMaskRepeat
+  case CSSPropertyMaskSize
+  case CSSPropertyMaskType
+  case CSSPropertyMasonryAutoFlow
+  case CSSPropertyMathStyle
+  case CSSPropertyMaxLines
   case CSSPropertyMixBlendMode
+  case CSSPropertyNavigation
+  case CSSPropertyNegative
+  case CSSPropertyObjectFit
+  case CSSPropertyObjectPosition
   case CSSPropertyOffsetAnchor
   case CSSPropertyOffsetDistance
   case CSSPropertyOffsetPath
   case CSSPropertyOffsetPosition
   case CSSPropertyOffsetRotate
   case CSSPropertyOpacity
+  case CSSPropertyOrder
+  case CSSPropertyOrphans
   case CSSPropertyOutlineColor
+  case CSSPropertyOutlineOffset
+  case CSSPropertyOutlineStyle
+  case CSSPropertyOutlineWidth
+  case CSSPropertyOverflowAnchor
+  case CSSPropertyOverflowWrap
+  case CSSPropertyOverflowX
+  case CSSPropertyOverflowY
+  case CSSPropertyOverrideColors
+  case CSSPropertyPad
+  case CSSPropertyPage
+  case CSSPropertyPaintOrder
+  case CSSPropertyPerspective
+  case CSSPropertyPerspectiveOriginX
+  case CSSPropertyPerspectiveOriginY
+  case CSSPropertyPointerEvents
+  case CSSPropertyPosition
+  case CSSPropertyPositionAnchor
+  case CSSPropertyPrefix
+  case CSSPropertyPrintColorAdjust
+  case CSSPropertyQuotes
+  case CSSPropertyR
+  case CSSPropertyRange
+  case CSSPropertyResize
   case CSSPropertyRotate
+  case CSSPropertyRowGap
+  case CSSPropertyRubyAlign
+  case CSSPropertyRubyOverhang
+  case CSSPropertyRx
+  case CSSPropertyRy
   case CSSPropertyScale
+  case CSSPropertyScrollBehavior
+  case CSSPropertyScrollSnapAlign
+  case CSSPropertyScrollSnapStop
+  case CSSPropertyScrollSnapType
+  case CSSPropertyScrollTimelineAxis
+  case CSSPropertyScrollTimelineName
+  case CSSPropertyScrollbarColor
+  case CSSPropertyScrollbarGutter
+  case CSSPropertyScrollbarWidth
+  case CSSPropertyShapeImageThreshold
+  case CSSPropertyShapeMargin
+  case CSSPropertyShapeOutside
+  case CSSPropertyShapeRendering
+  case CSSPropertySize
+  case CSSPropertySizeAdjust
+  case CSSPropertySpeakAs
+  case CSSPropertySrc
   case CSSPropertyStopColor
+  case CSSPropertyStopOpacity
   case CSSPropertyStroke
   case CSSPropertyStrokeColor
+  case CSSPropertyStrokeDasharray
+  case CSSPropertyStrokeDashoffset
+  case CSSPropertyStrokeLinecap
+  case CSSPropertyStrokeLinejoin
+  case CSSPropertyStrokeMiterlimit
+  case CSSPropertyStrokeOpacity
+  case CSSPropertyStrokeWidth
+  case CSSPropertySuffix
+  case CSSPropertySymbols
+  case CSSPropertySyntax
+  case CSSPropertySystem
+  case CSSPropertyTabSize
+  case CSSPropertyTableLayout
+  case CSSPropertyTextAlign
+  case CSSPropertyTextAlignLast
+  case CSSPropertyTextAnchor
+  case CSSPropertyTextBoxEdge
+  case CSSPropertyTextBoxTrim
+  case CSSPropertyTextCombineUpright
   case CSSPropertyTextDecorationColor
+  case CSSPropertyTextDecorationLine
+  case CSSPropertyTextDecorationSkipInk
+  case CSSPropertyTextDecorationStyle
+  case CSSPropertyTextDecorationThickness
   case CSSPropertyTextEmphasisColor
+  case CSSPropertyTextEmphasisPosition
+  case CSSPropertyTextEmphasisStyle
+  case CSSPropertyTextGroupAlign
+  case CSSPropertyTextIndent
+  case CSSPropertyTextJustify
+  case CSSPropertyTextOverflow
+  case CSSPropertyTextShadow
+  case CSSPropertyTextTransform
+  case CSSPropertyTextUnderlineOffset
+  case CSSPropertyTextUnderlinePosition
+  case CSSPropertyTextWrapMode
+  case CSSPropertyTextWrapStyle
+  case CSSPropertyTimelineScope
+  case CSSPropertyTouchAction
   case CSSPropertyTransform
+  case CSSPropertyTransformBox
+  case CSSPropertyTransformOriginX
+  case CSSPropertyTransformOriginY
+  case CSSPropertyTransformOriginZ
+  case CSSPropertyTransformStyle
+  case CSSPropertyTransitionBehavior
+  case CSSPropertyTransitionDelay
+  case CSSPropertyTransitionDuration
+  case CSSPropertyTransitionProperty
+  case CSSPropertyTransitionTimingFunction
   case CSSPropertyTranslate
+  case CSSPropertyTypes
+  case CSSPropertyUnicodeBidi
+  case CSSPropertyUnicodeRange
+  case CSSPropertyVectorEffect
+  case CSSPropertyVerticalAlign
+  case CSSPropertyViewTimelineAxis
+  case CSSPropertyViewTimelineInset
+  case CSSPropertyViewTimelineName
+  case CSSPropertyViewTransitionClass
+  case CSSPropertyViewTransitionName
+  case CSSPropertyVisibility
+  case CSSPropertyWhiteSpaceCollapse
+  case CSSPropertyWidows
+  case CSSPropertyWillChange
+  case CSSPropertyWordBreak
+  case CSSPropertyX
+  case CSSPropertyY
+  case CSSPropertyZIndex
+  case CSSPropertyAppleColorFilter
   case CSSPropertyWebkitBackdropFilter
+  case CSSPropertyWebkitBackgroundClip
+  case CSSPropertyWebkitBackgroundOrigin
+  case CSSPropertyWebkitBorderHorizontalSpacing
+  case CSSPropertyWebkitBorderVerticalSpacing
+  case CSSPropertyWebkitBoxAlign
+  case CSSPropertyWebkitBoxDecorationBreak
+  case CSSPropertyWebkitBoxDirection
+  case CSSPropertyWebkitBoxFlex
+  case CSSPropertyWebkitBoxFlexGroup
+  case CSSPropertyWebkitBoxLines
+  case CSSPropertyWebkitBoxOrdinalGroup
+  case CSSPropertyWebkitBoxOrient
+  case CSSPropertyWebkitBoxPack
+  case CSSPropertyWebkitBoxReflect
+  case CSSPropertyWebkitBoxShadow
+  case CSSPropertyWebkitColumnAxis
+  case CSSPropertyWebkitColumnProgression
+  case CSSPropertyWebkitCursorVisibility
+  case CSSPropertyWebkitFontSizeDelta
+  case CSSPropertyWebkitHyphenateLimitAfter
+  case CSSPropertyWebkitHyphenateLimitBefore
+  case CSSPropertyWebkitHyphenateLimitLines
+  case CSSPropertyWebkitInitialLetter
+  case CSSPropertyWebkitLineAlign
+  case CSSPropertyWebkitLineBoxContain
+  case CSSPropertyWebkitLineClamp
+  case CSSPropertyWebkitLineGrid
+  case CSSPropertyWebkitLineSnap
+  case CSSPropertyWebkitMarqueeDirection
+  case CSSPropertyWebkitMarqueeIncrement
+  case CSSPropertyWebkitMarqueeRepetition
+  case CSSPropertyWebkitMarqueeSpeed
+  case CSSPropertyWebkitMarqueeStyle
+  case CSSPropertyWebkitMaskClip
+  case CSSPropertyWebkitMaskComposite
+  case CSSPropertyWebkitMaskPositionX
+  case CSSPropertyWebkitMaskPositionY
+  case CSSPropertyWebkitMaskSourceType
+  case CSSPropertyWebkitNbspMode
+  case CSSPropertyWebkitRtlOrdering
+  case CSSPropertyWebkitTapHighlightColor
+  case CSSPropertyWebkitTextCombine
+  case CSSPropertyWebkitTextDecorationsInEffect
   case CSSPropertyWebkitTextFillColor
+  case CSSPropertyWebkitTextSecurity
   case CSSPropertyWebkitTextStrokeColor
+  case CSSPropertyWebkitTextStrokeWidth
+  case CSSPropertyWebkitUserDrag
+  case CSSPropertyWebkitUserModify
+  case CSSPropertyWebkitUserSelect
+  case CSSPropertyWordSpacing
+  case CSSPropertyBlockSize
   case CSSPropertyBorderBlockEndColor
+  case CSSPropertyBorderBlockEndStyle
+  case CSSPropertyBorderBlockEndWidth
   case CSSPropertyBorderBlockStartColor
+  case CSSPropertyBorderBlockStartStyle
+  case CSSPropertyBorderBlockStartWidth
   case CSSPropertyBorderBottomColor
+  case CSSPropertyBorderBottomLeftRadius
+  case CSSPropertyBorderBottomRightRadius
+  case CSSPropertyBorderBottomStyle
+  case CSSPropertyBorderBottomWidth
+  case CSSPropertyBorderEndEndRadius
+  case CSSPropertyBorderEndStartRadius
   case CSSPropertyBorderInlineEndColor
+  case CSSPropertyBorderInlineEndStyle
+  case CSSPropertyBorderInlineEndWidth
   case CSSPropertyBorderInlineStartColor
+  case CSSPropertyBorderInlineStartStyle
+  case CSSPropertyBorderInlineStartWidth
   case CSSPropertyBorderLeftColor
+  case CSSPropertyBorderLeftStyle
+  case CSSPropertyBorderLeftWidth
   case CSSPropertyBorderRightColor
+  case CSSPropertyBorderRightStyle
+  case CSSPropertyBorderRightWidth
+  case CSSPropertyBorderStartEndRadius
+  case CSSPropertyBorderStartStartRadius
   case CSSPropertyBorderTopColor
+  case CSSPropertyBorderTopLeftRadius
+  case CSSPropertyBorderTopRightRadius
+  case CSSPropertyBorderTopStyle
+  case CSSPropertyBorderTopWidth
+  case CSSPropertyBottom
+  case CSSPropertyContainIntrinsicBlockSize
+  case CSSPropertyContainIntrinsicHeight
+  case CSSPropertyContainIntrinsicInlineSize
+  case CSSPropertyContainIntrinsicWidth
+  case CSSPropertyHeight
+  case CSSPropertyInlineSize
+  case CSSPropertyInsetBlockEnd
+  case CSSPropertyInsetBlockStart
+  case CSSPropertyInsetInlineEnd
+  case CSSPropertyInsetInlineStart
+  case CSSPropertyLeft
+  case CSSPropertyMarginBlockEnd
+  case CSSPropertyMarginBlockStart
+  case CSSPropertyMarginBottom
+  case CSSPropertyMarginInlineEnd
+  case CSSPropertyMarginInlineStart
+  case CSSPropertyMarginLeft
+  case CSSPropertyMarginRight
+  case CSSPropertyMarginTop
+  case CSSPropertyMaxBlockSize
+  case CSSPropertyMaxHeight
+  case CSSPropertyMaxInlineSize
+  case CSSPropertyMaxWidth
+  case CSSPropertyMinBlockSize
+  case CSSPropertyMinHeight
+  case CSSPropertyMinInlineSize
+  case CSSPropertyMinWidth
+  case CSSPropertyOverscrollBehaviorBlock
+  case CSSPropertyOverscrollBehaviorInline
+  case CSSPropertyOverscrollBehaviorX
+  case CSSPropertyOverscrollBehaviorY
+  case CSSPropertyPaddingBlockEnd
+  case CSSPropertyPaddingBlockStart
+  case CSSPropertyPaddingBottom
+  case CSSPropertyPaddingInlineEnd
+  case CSSPropertyPaddingInlineStart
+  case CSSPropertyPaddingLeft
+  case CSSPropertyPaddingRight
+  case CSSPropertyPaddingTop
+  case CSSPropertyRight
+  case CSSPropertyScrollMarginBlockEnd
+  case CSSPropertyScrollMarginBlockStart
+  case CSSPropertyScrollMarginBottom
+  case CSSPropertyScrollMarginInlineEnd
+  case CSSPropertyScrollMarginInlineStart
+  case CSSPropertyScrollMarginLeft
+  case CSSPropertyScrollMarginRight
+  case CSSPropertyScrollMarginTop
+  case CSSPropertyScrollPaddingBlockEnd
+  case CSSPropertyScrollPaddingBlockStart
+  case CSSPropertyScrollPaddingBottom
+  case CSSPropertyScrollPaddingInlineEnd
+  case CSSPropertyScrollPaddingInlineStart
+  case CSSPropertyScrollPaddingLeft
+  case CSSPropertyScrollPaddingRight
+  case CSSPropertyScrollPaddingTop
+  case CSSPropertyTop
+  case CSSPropertyWidth
+  case CSSPropertyAll
+  case CSSPropertyAnimation
+  case CSSPropertyBackground
+  case CSSPropertyBackgroundPosition
+  case CSSPropertyBorder
+  case CSSPropertyBorderBlock
+  case CSSPropertyBorderBlockColor
+  case CSSPropertyBorderBlockEnd
+  case CSSPropertyBorderBlockStart
+  case CSSPropertyBorderBlockStyle
+  case CSSPropertyBorderBlockWidth
+  case CSSPropertyBorderBottom
+  case CSSPropertyBorderColor
+  case CSSPropertyBorderImage
+  case CSSPropertyBorderInline
+  case CSSPropertyBorderInlineColor
+  case CSSPropertyBorderInlineEnd
+  case CSSPropertyBorderInlineStart
+  case CSSPropertyBorderInlineStyle
+  case CSSPropertyBorderInlineWidth
+  case CSSPropertyBorderLeft
+  case CSSPropertyBorderRadius
+  case CSSPropertyBorderRight
+  case CSSPropertyBorderSpacing
+  case CSSPropertyBorderStyle
+  case CSSPropertyBorderTop
+  case CSSPropertyBorderWidth
+  case CSSPropertyColumnRule
+  case CSSPropertyColumns
+  case CSSPropertyContainIntrinsicSize
+  case CSSPropertyContainer
+  case CSSPropertyFlex
+  case CSSPropertyFlexFlow
+  case CSSPropertyFont
+  case CSSPropertyFontSynthesis
+  case CSSPropertyFontVariant
+  case CSSPropertyGap
+  case CSSPropertyGrid
+  case CSSPropertyGridArea
+  case CSSPropertyGridColumn
+  case CSSPropertyGridRow
+  case CSSPropertyGridTemplate
+  case CSSPropertyInset
+  case CSSPropertyInsetBlock
+  case CSSPropertyInsetInline
+  case CSSPropertyLineClamp
+  case CSSPropertyListStyle
+  case CSSPropertyMargin
+  case CSSPropertyMarginBlock
+  case CSSPropertyMarginInline
+  case CSSPropertyMarker
   case CSSPropertyMask
+  case CSSPropertyMaskBorder
+  case CSSPropertyMaskPosition
+  case CSSPropertyOffset
+  case CSSPropertyOutline
+  case CSSPropertyOverflow
+  case CSSPropertyOverscrollBehavior
+  case CSSPropertyPadding
+  case CSSPropertyPaddingBlock
+  case CSSPropertyPaddingInline
+  case CSSPropertyPageBreakAfter
+  case CSSPropertyPageBreakBefore
+  case CSSPropertyPageBreakInside
+  case CSSPropertyPerspectiveOrigin
+  case CSSPropertyPlaceContent
+  case CSSPropertyPlaceItems
+  case CSSPropertyPlaceSelf
+  case CSSPropertyScrollMargin
+  case CSSPropertyScrollMarginBlock
+  case CSSPropertyScrollMarginInline
+  case CSSPropertyScrollPadding
+  case CSSPropertyScrollPaddingBlock
+  case CSSPropertyScrollPaddingInline
+  case CSSPropertyScrollTimeline
+  case CSSPropertyTextBox
+  case CSSPropertyTextDecoration
+  case CSSPropertyTextDecorationSkip
+  case CSSPropertyTextEmphasis
+  case CSSPropertyTextWrap
+  case CSSPropertyTransformOrigin
+  case CSSPropertyTransition
+  case CSSPropertyViewTimeline
+  case CSSPropertyWhiteSpace
+  case CSSPropertyWebkitBackgroundSize
+  case CSSPropertyWebkitBorderImage
+  case CSSPropertyWebkitBorderRadius
+  case CSSPropertyWebkitColumnBreakAfter
+  case CSSPropertyWebkitColumnBreakBefore
+  case CSSPropertyWebkitColumnBreakInside
+  case CSSPropertyWebkitMask
+  case CSSPropertyWebkitMaskBoxImage
+  case CSSPropertyWebkitMaskPosition
+  case CSSPropertyWebkitPerspective
+  case CSSPropertyWebkitTextDecoration
+  case CSSPropertyWebkitTextOrientation
+  case CSSPropertyWebkitTextStroke
 }
 
 struct PseudoStyleCache {
@@ -2349,8 +2867,9 @@ class RenderStyleWrapper: Equatable {
   func visitedDependentColorWithColorFilter(
     colorProperty: CSSPropertyID, paintBehavior: PaintBehavior = []
   ) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let c = wk_interop.RenderStyle_visitedDependentColorWithColorFilter(
+      p!, colorProperty.rawValue, paintBehavior.rawValue)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func colorByApplyingColorFilter(color: ColorWrapper) -> ColorWrapper {

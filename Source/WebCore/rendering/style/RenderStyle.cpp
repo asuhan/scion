@@ -701,6 +701,22 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayListItemType(const v
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayListItemType();
 }
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_visitedDependentColorWithColorFilter(const void* p, uint16_t colorPropertyRaw, uint32_t paintBehaviorRaw)
+{
+    const auto colorProperty = static_cast<WebCore::CSSPropertyID>(colorPropertyRaw);
+    const auto paintBehavior = static_cast<WebCore::PaintBehavior>(paintBehaviorRaw);
+    const auto color = static_cast<const WebCore::RenderStyle*>(p)->visitedDependentColorWithColorFilter(colorProperty, paintBehavior);
+    const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_letterSpacing(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->letterSpacing();
