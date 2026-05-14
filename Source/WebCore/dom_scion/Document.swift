@@ -139,7 +139,8 @@ class Document: TreeScopeWrapper {
   // This is the "body element" as defined by HTML5, the first body or frameset child of the
   // document element. See https://html.spec.whatwg.org/multipage/dom.html#the-body-element-2.
   func bodyOrFrameset() -> HTMLElementWrapper? {
-    return createHTMLElementWrapper(wk_interop.Document_bodyOrFrameset(p))
+    guard let raw = wk_interop.Document_bodyOrFrameset(p) else { return nil }
+    return createHTMLElementWrapper(raw)
   }
 
   func markersIfExists() -> DocumentMarkerControllerWrapper? {
