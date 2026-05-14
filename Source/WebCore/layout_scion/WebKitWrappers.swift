@@ -846,6 +846,12 @@ func RenderViewScion_hasQuotesNeedingUpdate(_ viewRaw: UnsafeRawPointer) -> Bool
   return view.hasQuotesNeedingUpdate()
 }
 
+@_cdecl("RenderViewScion_setHasQuotesNeedingUpdate")
+func RenderViewScion_setHasQuotesNeedingUpdate(_ viewRaw: UnsafeMutableRawPointer, _ b: Bool) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.setHasQuotesNeedingUpdate(b)
+}
+
 @_cdecl("RenderViewScion_incrementRendersWithOutline")
 func RenderViewScion_incrementRendersWithOutline(_ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

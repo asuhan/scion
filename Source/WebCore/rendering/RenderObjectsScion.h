@@ -629,6 +629,8 @@ public:
 
     bool hasQuotesNeedingUpdate() const;
 
+    void setHasQuotesNeedingUpdate(bool);
+
     void incrementRendersWithOutline();
 
     void decrementRendersWithOutline();

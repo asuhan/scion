@@ -181,10 +181,7 @@ public:
     FloatSize sizeForCSSDefaultViewportUnits() const;
 
     bool hasQuotesNeedingUpdate() const;
-    void setHasQuotesNeedingUpdate(bool b) {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_hasQuotesNeedingUpdate = b;
-    }
+    void setHasQuotesNeedingUpdate(bool b);
 
     void addCounterNeedingUpdate(RenderCounter&);
     SingleThreadWeakHashSet<RenderCounter> takeCountersNeedingUpdate();

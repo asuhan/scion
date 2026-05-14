@@ -998,6 +998,14 @@ bool RenderView::hasQuotesNeedingUpdate() const
     return m_hasQuotesNeedingUpdate;
 }
 
+void RenderView::setHasQuotesNeedingUpdate(bool b) {
+    if (m_scion) {
+        m_scion->setHasQuotesNeedingUpdate(b);
+        return;
+    }
+    m_hasQuotesNeedingUpdate = b;
+}
+
 Node* RenderView::nodeForHitTest() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
