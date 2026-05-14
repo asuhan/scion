@@ -117,8 +117,8 @@ class TransformationMatrix {
 
   @discardableResult
   func applyPerspective(_ p: Float64) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(
+      wk_interop.TransformationMatrix_applyPerspective(pInterop, p), false)
   }
 
   func isInvertible() -> Bool { return wk_interop.TransformationMatrix_isInvertible(pInterop) }
