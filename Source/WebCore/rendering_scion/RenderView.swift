@@ -304,6 +304,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return m_needsEventRegionUpdateForNonCompositedFrame
   }
 
+  func setNeedsEventRegionUpdateForNonCompositedFrame(_ value: Bool = true) {
+    assert(isNativeImpl())
+    m_needsEventRegionUpdateForNonCompositedFrame = value
+  }
+
   override func computeVisibleRectsInContainer(
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
@@ -1089,7 +1094,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private let m_hasSoftwareFilters = false
   private var m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = false
-  private let m_needsEventRegionUpdateForNonCompositedFrame = false
+  private var m_needsEventRegionUpdateForNonCompositedFrame = false
 
   // Note that currently RenderView::layoutBox(), if it exists, is a child of m_initialContainingBlock.
   private var m_initialContainingBlock: InitialContainingBlock? = nil
