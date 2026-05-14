@@ -1646,4 +1646,5 @@ void* TransformationMatrix_translateRight3d(void*, double, double, double);
 void* TransformationMatrix_applyPerspective(void*, double);
 bool TransformationMatrix_isInvertible(const void*);
 bool TransformationMatrix_isAffine(const void*);
+void TransformationMatrix_makeAffine(void*);
 void TransformationMatrix_destroy(const void*);

@@ -131,10 +131,7 @@ class TransformationMatrix {
   func isAffine() -> Bool { return wk_interop.TransformationMatrix_isAffine(pInterop) }
 
   // Throw away the non-affine parts of the matrix (lossy!).
-  func makeAffine() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func makeAffine() { wk_interop.TransformationMatrix_makeAffine(pInterop) }
 
   func toAffineTransform() -> AffineTransform {
     // TODO(asuhan): implement this
