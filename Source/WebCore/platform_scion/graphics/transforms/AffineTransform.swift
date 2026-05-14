@@ -139,8 +139,17 @@ class AffineTransform: Equatable {
 
   @discardableResult
   func rotate(_ a: Float64) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // angle is in degree. Switch to radian
+    return rotateRadians(deg2rad(a))
+  }
+
+  private func rotateRadians(_ a: Float64) -> AffineTransform {
+    let cosAngle = cos(a)
+    let sinAngle = sin(a)
+    let rot = AffineTransform(a: cosAngle, b: sinAngle, c: -sinAngle, d: cosAngle, e: 0, f: 0)
+
+    multiply(rot)
+    return self
   }
 
   @discardableResult
