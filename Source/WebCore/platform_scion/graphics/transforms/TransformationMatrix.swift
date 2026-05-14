@@ -145,8 +145,7 @@ class TransformationMatrix {
   }
 
   func isIntegerTranslation() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.TransformationMatrix_isIntegerTranslation(pInterop)
   }
 
   func deepCopy() -> TransformationMatrix {

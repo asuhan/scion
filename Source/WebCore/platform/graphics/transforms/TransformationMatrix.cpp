@@ -181,6 +181,11 @@ extern "C" WEBCORE_EXPORT void TransformationMatrix_makeAffine(void* p)
     static_cast<WebCore::TransformationMatrix*>(p)->makeAffine();
 }
 
+extern "C" WEBCORE_EXPORT bool TransformationMatrix_isIntegerTranslation(const void* p)
+{
+    return static_cast<const WebCore::TransformationMatrix*>(p)->isIntegerTranslation();
+}
+
 extern "C" WEBCORE_EXPORT void TransformationMatrix_destroy(const void* p)
 {
     delete static_cast<const WebCore::TransformationMatrix*>(p);
