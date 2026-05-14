@@ -385,6 +385,8 @@ extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
+extern "C" bool RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(const void*, LayoutRectRaw);
+
 extern "C" int32_t RenderBoxScion_width(const void*);
 
 extern "C" int32_t RenderBoxScion_logicalHeight(const void*);
@@ -1211,6 +1213,11 @@ RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
 bool RenderBoxScion::requiresLayerWithScrollableArea() const
 {
     return RenderBoxScion_requiresLayerWithScrollableArea(m_handle);
+}
+
+bool RenderBoxScion::backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) const
+{
+    return RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(m_handle, convertLayoutRect(localRect));
 }
 
 LayoutUnit RenderBoxScion::width() const

@@ -2216,7 +2216,7 @@ bool RenderBox::getBackgroundPaintedExtent(const LayoutPoint& paintOffset, Layou
 
 bool RenderBox::backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->backgroundIsKnownToBeOpaqueInRect(localRect); }
     if (!BackgroundPainter::paintsOwnBackground(*this))
         return false;
 

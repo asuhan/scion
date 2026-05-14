@@ -421,6 +421,8 @@ public:
 
     bool requiresLayerWithScrollableArea() const;
 
+    bool backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) const;
+
     LayoutUnit width() const;
 
     LayoutUnit logicalHeight() const;

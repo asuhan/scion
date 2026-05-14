@@ -2163,6 +2163,14 @@ func RenderBoxScion_requiresLayerWithScrollableArea(_ boxRaw: UnsafeRawPointer) 
   return box.requiresLayerWithScrollableArea()
 }
 
+@_cdecl("RenderBoxScion_backgroundIsKnownToBeOpaqueInRect")
+func RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(
+  _ boxRaw: UnsafeRawPointer, _ localRect: LayoutRectRaw
+) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.backgroundIsKnownToBeOpaqueInRect(convertLayoutRect(localRect))
+}
+
 @_cdecl("RenderBoxScion_width")
 func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
