@@ -139,8 +139,9 @@ class TransformationMatrix {
   }
 
   static func * (_ this: TransformationMatrix, _ t: TransformationMatrix) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let result = this.deepCopy()
+    result.multiply(mat: t)
+    return result
   }
 
   func isIntegerTranslation() -> Bool {
