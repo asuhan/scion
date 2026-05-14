@@ -1095,7 +1095,7 @@ RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
 
 bool RenderElementScion::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, RequiresFullRepaint requiresFullRepaint, const RenderObject::RepaintRects& oldRects, const RenderObject::RepaintRects& newRects)
 {
-    if (repaintContainer->scion()) {
+    if (repaintContainer && repaintContainer->scion()) {
         assert(is<RenderView>(repaintContainer.get()));
         return RenderElementScion_repaintAfterLayoutIfNeeded(
             m_handle,

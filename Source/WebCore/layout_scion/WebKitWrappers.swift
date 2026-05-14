@@ -2023,15 +2023,19 @@ func RenderElementScion_setNeedsSimplifiedNormalFlowLayout(_ elementRaw: UnsafeM
 
 @_cdecl("RenderElementScion_repaintAfterLayoutIfNeeded")
 func RenderElementScion_repaintAfterLayoutIfNeeded(
-  _ elementRaw: UnsafeMutableRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer,
+  _ elementRaw: UnsafeMutableRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
   _ repaintContainerIsScionView: Bool,
   _ requiresFullRepaint: Bool, _ oldRectsRaw: RepaintRectsRaw, _ newRectsRaw: RepaintRectsRaw
 ) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  let repaintContainer =
-    repaintContainerIsScionView
-    ? Unmanaged<RenderViewWrapper>.fromOpaque(repaintContainerRaw).takeUnretainedValue()
-    : createRenderObjectWrapper(repaintContainerRaw) as! RenderLayerModelObjectWrapper?
+  var repaintContainer: RenderLayerModelObjectWrapper? = nil
+  if repaintContainerIsScionView {
+    repaintContainer = Unmanaged<RenderViewWrapper>.fromOpaque(repaintContainerRaw!)
+      .takeUnretainedValue()
+  } else if repaintContainerRaw != nil {
+    repaintContainer =
+      createRenderObjectWrapper(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
+  }
   let oldRects = convertRepaintRects(oldRectsRaw)
   let newRects = convertRepaintRects(newRectsRaw)
   return element.repaintAfterLayoutIfNeeded(
