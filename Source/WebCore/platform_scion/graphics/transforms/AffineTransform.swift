@@ -154,20 +154,25 @@ class AffineTransform: Equatable {
 
   @discardableResult
   func translate(_ tx: Float64, _ ty: Float64) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isIdentityOrTranslation() {
+      transform[4] += tx
+      transform[5] += ty
+      return self
+    }
+
+    transform[4] += tx * transform[0] + ty * transform[2]
+    transform[5] += tx * transform[1] + ty * transform[3]
+    return self
   }
 
   @discardableResult
   func translate(_ t: FloatPoint) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return translate(Float64(t.x), Float64(t.y))
   }
 
   @discardableResult
   func translate(_ t: FloatSize) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return translate(Float64(t.width), Float64(t.height))
   }
 
   // These functions get the length of an axis-aligned unit vector
