@@ -1962,6 +1962,12 @@ func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: Unsafe
   return element.shouldApplyLayoutOrPaintContainment()
 }
 
+@_cdecl("RenderElementScion_setNeedsSimplifiedNormalFlowLayout")
+func RenderElementScion_setNeedsSimplifiedNormalFlowLayout(_ elementRaw: UnsafeMutableRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setNeedsSimplifiedNormalFlowLayout()
+}
+
 @_cdecl("RenderElementScion_repaintAfterLayoutIfNeeded")
 func RenderElementScion_repaintAfterLayoutIfNeeded(
   _ elementRaw: UnsafeMutableRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer,

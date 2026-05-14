@@ -335,6 +335,8 @@ extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
 
 extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
 
+extern "C" void RenderElementScion_setNeedsSimplifiedNormalFlowLayout(void*);
+
 extern "C" bool RenderElementScion_repaintAfterLayoutIfNeeded(void*, void*, bool, bool, RepaintRectsRaw, RepaintRectsRaw);
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
@@ -1052,6 +1054,11 @@ void RenderElementScion::setChildNeedsLayout(MarkingBehavior markParents)
 bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const
 {
     return RenderElementScion_shouldApplyLayoutOrPaintContainment(m_handle);
+}
+
+void RenderElementScion::setNeedsSimplifiedNormalFlowLayout()
+{
+    RenderElementScion_setNeedsSimplifiedNormalFlowLayout(m_handle);
 }
 
 namespace {
