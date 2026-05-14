@@ -738,6 +738,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return m_hasQuotesNeedingUpdate
   }
 
+  func setHasQuotesNeedingUpdate(_ b: Bool) {
+    assert(isNativeImpl())
+    m_hasQuotesNeedingUpdate = b
+  }
+
   func incrementRendersWithOutline() {
     assert(isNativeImpl())
     m_renderersWithOutlineCount += 1
@@ -1069,7 +1074,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   private var m_imageQualityController: ImageQualityController? = nil
   private var m_compositor: RenderLayerCompositorWrapper? = nil
 
-  private let m_hasQuotesNeedingUpdate = false
+  private var m_hasQuotesNeedingUpdate = false
 
   // Include this RenderView.
   private var m_rendererCount: UInt64 = 1
