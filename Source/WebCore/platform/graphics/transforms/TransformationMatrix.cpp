@@ -171,6 +171,12 @@ extern "C" WEBCORE_EXPORT bool TransformationMatrix_isInvertible(const void* p)
     return static_cast<const WebCore::TransformationMatrix*>(p)->isInvertible();
 }
 
+extern "C" WEBCORE_EXPORT void* TransformationMatrix_inverse(const void* p)
+{
+    const auto inv = static_cast<const WebCore::TransformationMatrix*>(p)->inverse();
+    return inv ? new WebCore::TransformationMatrix(*inv) : nullptr;
+}
+
 extern "C" WEBCORE_EXPORT bool TransformationMatrix_isAffine(const void* p)
 {
     return static_cast<const WebCore::TransformationMatrix*>(p)->isAffine();

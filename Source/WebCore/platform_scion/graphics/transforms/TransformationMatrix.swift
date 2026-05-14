@@ -124,8 +124,10 @@ class TransformationMatrix {
   func isInvertible() -> Bool { return wk_interop.TransformationMatrix_isInvertible(pInterop) }
 
   func inverse() -> TransformationMatrix? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let inv = wk_interop.TransformationMatrix_inverse(pInterop) {
+      return TransformationMatrix(inv, true)
+    }
+    return nil
   }
 
   func isAffine() -> Bool { return wk_interop.TransformationMatrix_isAffine(pInterop) }
