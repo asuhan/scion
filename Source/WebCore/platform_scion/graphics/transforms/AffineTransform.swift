@@ -134,8 +134,7 @@ class AffineTransform: Equatable {
 
   @discardableResult
   func scale(_ s: FloatSize) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return scale(Float64(s.width), Float64(s.height))
   }
 
   @discardableResult
