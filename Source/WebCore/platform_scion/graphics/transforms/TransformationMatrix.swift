@@ -96,8 +96,8 @@ class TransformationMatrix {
 
   @discardableResult
   func scaleNonUniform(sx: Float64, sy: Float64) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(
+      wk_interop.TransformationMatrix_scaleNonUniform(pInterop, sx, sy), false)
   }
 
   @discardableResult
