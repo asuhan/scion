@@ -89,8 +89,12 @@ class AffineTransform: Equatable {
   func setF(_ f: Float64) { transform[5] = f }
 
   func makeIdentity() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    transform[0] = 1
+    transform[1] = 0
+    transform[2] = 0
+    transform[3] = 1
+    transform[4] = 0
+    transform[5] = 0
   }
 
   @discardableResult
