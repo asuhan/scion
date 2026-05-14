@@ -89,10 +89,7 @@ class TransformationMatrix {
       wk_interop.TransformationMatrix_multiply(pInterop, mat.pInterop), false)
   }
 
-  func scale(_ s: Float64) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func scale(_ s: Float64) -> TransformationMatrix { return scaleNonUniform(sx: s, sy: s) }
 
   @discardableResult
   func scaleNonUniform(sx: Float64, sy: Float64) -> TransformationMatrix {
