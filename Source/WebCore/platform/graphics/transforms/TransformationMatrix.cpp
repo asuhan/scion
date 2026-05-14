@@ -186,6 +186,11 @@ extern "C" WEBCORE_EXPORT bool TransformationMatrix_isIntegerTranslation(const v
     return static_cast<const WebCore::TransformationMatrix*>(p)->isIntegerTranslation();
 }
 
+extern "C" WEBCORE_EXPORT void* TransformationMatrix_copy(const void* p)
+{
+    return new WebCore::TransformationMatrix(*static_cast<const WebCore::TransformationMatrix*>(p));
+}
+
 extern "C" WEBCORE_EXPORT void TransformationMatrix_destroy(const void* p)
 {
     delete static_cast<const WebCore::TransformationMatrix*>(p);

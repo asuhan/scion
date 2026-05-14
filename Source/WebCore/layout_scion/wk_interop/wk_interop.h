@@ -1648,4 +1648,5 @@ bool TransformationMatrix_isInvertible(const void*);
 bool TransformationMatrix_isAffine(const void*);
 void TransformationMatrix_makeAffine(void*);
 bool TransformationMatrix_isIntegerTranslation(const void*);
+void* TransformationMatrix_copy(const void*);
 void TransformationMatrix_destroy(const void*);

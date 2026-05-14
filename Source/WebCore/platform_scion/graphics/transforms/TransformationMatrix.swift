@@ -149,8 +149,7 @@ class TransformationMatrix {
   }
 
   func deepCopy() -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(wk_interop.TransformationMatrix_copy(pInterop), true)
   }
 
   func interop() -> UnsafeMutableRawPointer { return pInterop }
