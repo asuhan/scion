@@ -105,8 +105,8 @@ class TransformationMatrix {
   // translation added with a post-multiply
   @discardableResult
   func translateRight(tx: Float64, ty: Float64) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(
+      wk_interop.TransformationMatrix_translateRight(pInterop, tx, ty), false)
   }
 
   @discardableResult
