@@ -69,6 +69,11 @@ extern "C" WEBCORE_EXPORT bool HTMLFrameSetElement_hasBorderColor(const void* p)
     return static_cast<const WebCore::HTMLFrameSetElement*>(p)->hasBorderColor();
 }
 
+extern "C" WEBCORE_EXPORT bool is_HTMLFrameSetElement(const void* p)
+{
+    return is<WebCore::HTMLFrameSetElement>(*static_cast<const WebCore::HTMLElement*>(p));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLFrameSetElement);

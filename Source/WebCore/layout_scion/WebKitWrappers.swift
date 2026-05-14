@@ -2081,6 +2081,14 @@ func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrap
   return RenderObjectWrapper(p: p)
 }
 
+func createHTMLElementWrapper(_ p: UnsafeMutableRawPointer) -> HTMLElementWrapper {
+  if wk_interop.is_HTMLFrameSetElement(p) {
+    return HTMLFrameSetElementWrapper(p: p)
+  }
+  // TODO(asuhan): exhaustively handle the entire hierarchy
+  return HTMLElementWrapper(p: p)
+}
+
 @_cdecl("RenderElementScion_attachRendererInternal")
 func RenderElementScion_attachRendererInternal(
   _ elementRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer,
