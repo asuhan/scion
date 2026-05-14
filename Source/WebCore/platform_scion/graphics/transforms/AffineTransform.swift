@@ -129,8 +129,7 @@ class AffineTransform: Equatable {
 
   @discardableResult
   func scaleNonUniform(_ sx: Float64, _ sy: Float64) -> AffineTransform {  // Same as scale(sx, sy).
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return scale(sx, sy)
   }
 
   @discardableResult
