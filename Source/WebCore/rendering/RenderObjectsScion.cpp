@@ -523,6 +523,10 @@ extern "C" int32_t RenderViewScion_viewWidth(const void*);
 
 extern "C" int32_t RenderViewScion_viewLogicalWidth(const void*);
 
+extern "C" int32_t RenderViewScion_clientLogicalWidthForFixedPosition(const void*);
+
+extern "C" int32_t RenderViewScion_clientLogicalHeightForFixedPosition(const void*);
+
 extern "C" int32_t RenderViewScion_viewLogicalHeight(const void*);
 
 extern "C" void* RenderViewScion_frameView(const void*);
@@ -1546,6 +1550,16 @@ int RenderViewScion::viewLogicalWidth() const
 int RenderViewScion::viewLogicalHeight() const
 {
     return RenderViewScion_viewLogicalHeight(m_handle);
+}
+
+LayoutUnit RenderViewScion::clientLogicalWidthForFixedPosition() const
+{
+    return LayoutUnit::fromRawValue(RenderViewScion_clientLogicalWidthForFixedPosition(m_handle));
+}
+
+LayoutUnit RenderViewScion::clientLogicalHeightForFixedPosition() const
+{
+    return LayoutUnit::fromRawValue(RenderViewScion_clientLogicalHeightForFixedPosition(m_handle));
 }
 
 LocalFrameView& RenderViewScion::frameView() const

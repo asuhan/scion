@@ -346,7 +346,7 @@ LayoutUnit RenderView::pageOrViewLogicalHeight() const
 
 LayoutUnit RenderView::clientLogicalWidthForFixedPosition() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->clientLogicalWidthForFixedPosition(); }
     // FIXME: If the FrameView's fixedVisibleContentRect() is not empty, perhaps it should be consulted here too?
     Ref frameView = this->frameView();
     if (frameView->fixedElementsLayoutRelativeToFrame())
@@ -365,7 +365,7 @@ LayoutUnit RenderView::clientLogicalWidthForFixedPosition() const
 
 LayoutUnit RenderView::clientLogicalHeightForFixedPosition() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->clientLogicalHeightForFixedPosition(); }
     // FIXME: If the FrameView's fixedVisibleContentRect() is not empty, perhaps it should be consulted here too?
     Ref frameView = this->frameView();
     if (frameView->fixedElementsLayoutRelativeToFrame())

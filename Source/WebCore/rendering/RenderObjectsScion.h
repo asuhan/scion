@@ -583,6 +583,10 @@ public:
 
     int viewLogicalHeight() const;
 
+    LayoutUnit clientLogicalWidthForFixedPosition() const;
+
+    LayoutUnit clientLogicalHeightForFixedPosition() const;
+
     LocalFrameView& frameView() const;
 
     Ref<LocalFrameView> protectedFrameView() const;
