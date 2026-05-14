@@ -1270,6 +1270,7 @@ void* RenderLayer_create(void*);
 void RenderLayer_destroy(const void*);
 void* RenderLayer_scrollableArea(const void*);
 void* RenderLayer_renderer(const void*);
+void* RenderLayer_commonAncestorWithLayer(const void*, void*);
 void RenderLayer_insertOnlyThisLayer(void*, bool);
 void RenderLayer_setBackingNeedsRepaint(void*, bool);
 void RenderLayer_styleChanged(void*, uint8_t, const void*);

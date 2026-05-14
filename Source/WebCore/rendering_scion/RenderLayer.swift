@@ -514,6 +514,13 @@ class RenderLayerWrapper {
     return false
   }
 
+  func commonAncestorWithLayer(_ layer: RenderLayerWrapper) -> RenderLayerWrapper? {
+    assert(!isNativeImpl())
+    assert(!layer.isNativeImpl())
+    return RenderLayerWrapper(
+      p: wk_interop.RenderLayer_commonAncestorWithLayer(layerId(), layer.layerId()))
+  }
+
   // This does an ancestor tree walk. Avoid it!
   private func root() -> RenderLayerWrapper? {
     assert(isNativeImpl())

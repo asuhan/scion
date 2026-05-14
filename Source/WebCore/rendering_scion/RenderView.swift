@@ -880,8 +880,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func layerChildrenChangedDuringStyleChange(_ layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if m_styleChangeLayerMutationRoot == nil {
+      m_styleChangeLayerMutationRoot = layer
+      return
+    }
+
+    let commonAncestor = m_styleChangeLayerMutationRoot!.commonAncestorWithLayer(layer)
+    m_styleChangeLayerMutationRoot = commonAncestor
   }
 
   func takeStyleChangeLayerTreeMutationRoot() -> RenderLayerWrapper? {
