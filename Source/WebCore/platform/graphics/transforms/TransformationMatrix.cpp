@@ -146,6 +146,11 @@ extern "C" WEBCORE_EXPORT void* TransformationMatrix_scaleNonUniform(void* p, do
     return &static_cast<WebCore::TransformationMatrix*>(p)->scaleNonUniform(sx, sy);
 }
 
+extern "C" WEBCORE_EXPORT void* TransformationMatrix_translate(void* p, double tx, double ty)
+{
+    return &static_cast<WebCore::TransformationMatrix*>(p)->translate(tx, ty);
+}
+
 extern "C" WEBCORE_EXPORT bool TransformationMatrix_isInvertible(const void* p)
 {
     return static_cast<const WebCore::TransformationMatrix*>(p)->isInvertible();

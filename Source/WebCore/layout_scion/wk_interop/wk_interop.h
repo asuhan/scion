@@ -1640,6 +1640,7 @@ double TransformationMatrix_f(const void*);
 void TransformationMatrix_setF(void*, double);
 void* TransformationMatrix_multiply(void*, const void*);
 void* TransformationMatrix_scaleNonUniform(void*, double, double);
+void* TransformationMatrix_translate(void*, double, double);
 bool TransformationMatrix_isInvertible(const void*);
 bool TransformationMatrix_isAffine(const void*);
 void TransformationMatrix_destroy(const void*);
