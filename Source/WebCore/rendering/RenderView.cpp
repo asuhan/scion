@@ -1392,7 +1392,10 @@ unsigned RenderView::pageCount() const
 
 void RenderView::layerChildrenChangedDuringStyleChange(RenderLayer& layer)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->layerChildrenChangedDuringStyleChange(layer);
+        return;
+    }
     if (!m_styleChangeLayerMutationRoot) {
         m_styleChangeLayerMutationRoot = layer;
         return;

@@ -603,6 +603,8 @@ extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRa
 
 extern "C" void RenderViewScion_resumePausedImageAnimationsIfNeeded(const void*, IntRectRaw);
 
+extern "C" void RenderViewScion_layerChildrenChangedDuringStyleChange(void*, void*);
+
 extern "C" void* RenderViewScion_takeStyleChangeLayerTreeMutationRoot(const void*);
 
 extern "C" void* RenderViewScion_viewTransitionRoot(const void*);
@@ -1743,6 +1745,11 @@ void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)
 void RenderViewScion::resumePausedImageAnimationsIfNeeded(const IntRect& visibleRect)
 {
     RenderViewScion_resumePausedImageAnimationsIfNeeded(m_handle, convertIntRect(visibleRect));
+}
+
+void RenderViewScion::layerChildrenChangedDuringStyleChange(RenderLayer& layer)
+{
+    RenderViewScion_layerChildrenChangedDuringStyleChange(m_handle, &layer);
 }
 
 RenderLayer* RenderViewScion::takeStyleChangeLayerTreeMutationRoot()

@@ -914,6 +914,15 @@ func RenderViewScion_resumePausedImageAnimationsIfNeeded(
   view.resumePausedImageAnimationsIfNeeded(convertIntRect(visibleRectRaw))
 }
 
+@_cdecl("RenderViewScion_layerChildrenChangedDuringStyleChange")
+func RenderViewScion_layerChildrenChangedDuringStyleChange(
+  _ viewRaw: UnsafeMutableRawPointer, _ layerRaw: UnsafeMutableRawPointer
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let layer = RenderLayerWrapper(p: layerRaw)
+  view.layerChildrenChangedDuringStyleChange(layer)
+}
+
 @_cdecl("RenderViewScion_takeStyleChangeLayerTreeMutationRoot")
 func RenderViewScion_takeStyleChangeLayerTreeMutationRoot(_ viewRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

@@ -651,6 +651,8 @@ public:
 
     void resumePausedImageAnimationsIfNeeded(const IntRect&);
 
+    void layerChildrenChangedDuringStyleChange(RenderLayer&);
+
     RenderLayer* takeStyleChangeLayerTreeMutationRoot();
 
     const SingleThreadWeakHashSet<const RenderBox>& boxesWithScrollSnapPositions() const;
