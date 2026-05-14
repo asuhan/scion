@@ -131,6 +131,15 @@ class ScrollableAreaWrapper {
     return IntRect(x: r.location.x, y: r.location.y, width: r.size.width, height: r.size.height)
   }
 
+  func visibleWidth() -> Int32 { return visibleSize().width }
+
+  func visibleHeight() -> Int32 { return visibleSize().height }
+
+  func visibleSize() -> IntSize {
+    let size = wk_interop.ScrollableArea_visibleSize(pInterop!)
+    return IntSize(width: size.width, height: size.height)
+  }
+
   func contentsSize() -> IntSize {
     let size = wk_interop.ScrollableArea_contentsSize(pInterop!)
     return IntSize(width: size.width, height: size.height)
