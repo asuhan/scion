@@ -210,8 +210,9 @@ class AffineTransform: Equatable {
   }
 
   func deepCopy() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let copy = AffineTransform()
+    copy.transform = transform
+    return copy
   }
 
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
