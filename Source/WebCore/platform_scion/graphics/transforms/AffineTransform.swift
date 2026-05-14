@@ -96,10 +96,23 @@ class AffineTransform: Equatable {
     transform[5] = 0
   }
 
+  // Multiplies this AffineTransform by the provided AffineTransform - i.e.
+  // this = this * other;
   @discardableResult
   func multiply(_ other: AffineTransform) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let trans = AffineTransform()
+
+    trans.transform[0] = other.transform[0] * transform[0] + other.transform[1] * transform[2]
+    trans.transform[1] = other.transform[0] * transform[1] + other.transform[1] * transform[3]
+    trans.transform[2] = other.transform[2] * transform[0] + other.transform[3] * transform[2]
+    trans.transform[3] = other.transform[2] * transform[1] + other.transform[3] * transform[3]
+    trans.transform[4] =
+      other.transform[4] * transform[0] + other.transform[5] * transform[2] + transform[4]
+    trans.transform[5] =
+      other.transform[4] * transform[1] + other.transform[5] * transform[3] + transform[5]
+
+    self.transform = trans.transform
+    return self
   }
 
   @discardableResult
