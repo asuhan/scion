@@ -52,8 +52,7 @@ class AffineTransform: Equatable {
   // Rounds the resulting mapped rectangle out. This is helpful for bounding
   // box computations but may not be what is wanted in other contexts.
   func mapRect(rect: IntRect) -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return enclosingIntRect(rect: mapRect(rect: FloatRectWrapper(r: rect)))
   }
 
   func mapRect(rect: FloatRectWrapper) -> FloatRectWrapper {
