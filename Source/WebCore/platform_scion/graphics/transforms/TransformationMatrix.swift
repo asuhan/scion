@@ -85,8 +85,8 @@ class TransformationMatrix {
   // this = mat * this.
   @discardableResult
   func multiply(mat: TransformationMatrix) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(
+      wk_interop.TransformationMatrix_multiply(pInterop, mat.pInterop), false)
   }
 
   func scale(_ s: Float64) -> TransformationMatrix {

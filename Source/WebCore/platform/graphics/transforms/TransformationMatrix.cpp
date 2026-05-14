@@ -136,6 +136,11 @@ extern "C" WEBCORE_EXPORT void TransformationMatrix_setF(void* p, double f)
     static_cast<WebCore::TransformationMatrix*>(p)->setF(f);
 }
 
+extern "C" WEBCORE_EXPORT void* TransformationMatrix_multiply(void* p, const void* mat)
+{
+    return &static_cast<WebCore::TransformationMatrix*>(p)->multiply(*static_cast<const WebCore::TransformationMatrix*>(mat));
+}
+
 extern "C" WEBCORE_EXPORT bool TransformationMatrix_isInvertible(const void* p)
 {
     return static_cast<const WebCore::TransformationMatrix*>(p)->isInvertible();
