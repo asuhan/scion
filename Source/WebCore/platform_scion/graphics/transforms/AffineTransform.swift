@@ -116,15 +116,15 @@ class AffineTransform: Equatable {
   }
 
   @discardableResult
-  func scale(_ s: Float64) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func scale(_ s: Float64) -> AffineTransform { return scale(s, s) }
 
   @discardableResult
   func scale(_ sx: Float64, _ sy: Float64) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    transform[0] *= sx
+    transform[1] *= sx
+    transform[2] *= sy
+    transform[3] *= sy
+    return self
   }
 
   @discardableResult
