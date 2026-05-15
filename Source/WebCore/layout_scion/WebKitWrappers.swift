@@ -2436,6 +2436,15 @@ func RenderBlockFlowScion_containsFloats(_ blockFlowRaw: UnsafeRawPointer) -> Bo
   return blockFlow.containsFloats()
 }
 
+@_cdecl("RenderBlockFlowScion_containsFloat")
+func RenderBlockFlowScion_containsFloat(
+  _ blockFlowRaw: UnsafeRawPointer, _ rendererRaw: UnsafeMutableRawPointer
+) -> Bool {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.containsFloat(
+    renderer: createRenderObjectWrapperOrNative(rendererRaw) as! RenderBoxWrapper)
+}
+
 @_cdecl("RenderBlockFlowScion_deleteLines")
 func RenderBlockFlowScion_deleteLines(_ blockFlowRaw: UnsafeMutableRawPointer) {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()

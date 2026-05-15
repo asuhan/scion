@@ -535,6 +535,8 @@ public:
 
     bool containsFloats() const;
 
+    bool containsFloat(RenderBox&) const;
+
     void deleteLines();
 
     void setChildrenInline(bool);

@@ -480,6 +480,8 @@ extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
 extern "C" bool RenderBlockFlowScion_containsFloats(const void*);
 
+extern "C" bool RenderBlockFlowScion_containsFloat(const void*, void*);
+
 extern "C" void RenderBlockFlowScion_deleteLines(void*);
 
 extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
@@ -1457,6 +1459,11 @@ RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
 bool RenderBlockFlowScion::containsFloats() const
 {
     return RenderBlockFlowScion_containsFloats(m_handle);
+}
+
+bool RenderBlockFlowScion::containsFloat(RenderBox& renderer) const
+{
+    return RenderBlockFlowScion_containsFloat(m_handle, &renderer);
 }
 
 void RenderBlockFlowScion::deleteLines()

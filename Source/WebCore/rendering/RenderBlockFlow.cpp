@@ -2358,7 +2358,7 @@ void RenderBlockFlow::adjustSizeContainmentChildForPagination(RenderBox& child, 
 
 bool RenderBlockFlow::containsFloat(RenderBox& renderer) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->containsFloat(renderer); }
     return m_floatingObjects && m_floatingObjects->set().contains<FloatingObjectHashTranslator>(renderer);
 }
 
