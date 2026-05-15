@@ -153,6 +153,11 @@ extern "C" WEBCORE_EXPORT void* LocalFrameView_frame(const void* p)
     return &static_cast<const WebCore::LocalFrameView*>(p)->frame();
 }
 
+extern "C" WEBCORE_EXPORT void* LocalFrameView_renderView(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->renderView();
+}
+
 extern "C" WEBCORE_EXPORT void* LocalFrameView_layoutContext(const void* p)
 {
     return const_cast<WebCore::LocalFrameViewLayoutContext*>(&static_cast<const WebCore::LocalFrameView*>(p)->layoutContext());

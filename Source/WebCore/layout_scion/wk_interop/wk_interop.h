@@ -655,6 +655,7 @@ bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSize
 void LocalFrameViewLayoutContext_popLayoutState(void*);
 void LocalFrameViewLayoutContext_enablePaintOffsetCache(void*);
 void* LocalFrameView_frame(const void*);
+void* LocalFrameView_renderView(const void*);
 void* LocalFrameView_layoutContext(const void*);
 bool LocalFrameView_needsLayout(const void*);
 void LocalFrameView_setNeedsOneShotDrawingSynchronization(void*);

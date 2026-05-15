@@ -30,8 +30,10 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func renderView() -> RenderViewWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let p = wk_interop.LocalFrameView_renderView(pInterop) else { return nil }
+    assert(wk_interop.RenderObject_isRenderView(p))
+    return Unmanaged<RenderViewWrapper>.fromOpaque(wk_interop.RenderView_scion(p)!)
+      .takeUnretainedValue()
   }
 
   func layoutContext() -> LocalFrameViewLayoutContextWrapper {
