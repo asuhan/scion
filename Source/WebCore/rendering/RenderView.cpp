@@ -994,7 +994,7 @@ FloatSize RenderView::sizeForCSSDynamicViewportUnits() const
 
 FloatSize RenderView::sizeForCSSDefaultViewportUnits() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->sizeForCSSDefaultViewportUnits(); }
     return protectedFrameView()->sizeForCSSDefaultViewportUnits();
 }
 

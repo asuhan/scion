@@ -608,6 +608,13 @@ extern "C" bool RenderViewScion_shouldPaintBaseBackground(const void*);
 
 extern "C" bool RenderViewScion_hasQuotesNeedingUpdate(const void*);
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+extern "C" FloatSizeRaw RenderViewScion_sizeForCSSDefaultViewportUnits(const void*);
+
 extern "C" void RenderViewScion_setHasQuotesNeedingUpdate(void*, bool);
 
 extern "C" void RenderViewScion_incrementRendersWithOutline(void*);
@@ -1762,6 +1769,12 @@ bool RenderViewScion::shouldPaintBaseBackground() const
 bool RenderViewScion::hasQuotesNeedingUpdate() const
 {
     return RenderViewScion_hasQuotesNeedingUpdate(m_handle);
+}
+
+FloatSize RenderViewScion::sizeForCSSDefaultViewportUnits() const
+{
+    const auto size = RenderViewScion_sizeForCSSDefaultViewportUnits(m_handle);
+    return { size.width, size.height };
 }
 
 void RenderViewScion::setHasQuotesNeedingUpdate(bool b)

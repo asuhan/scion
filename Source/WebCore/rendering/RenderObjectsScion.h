@@ -651,6 +651,8 @@ public:
 
     bool hasQuotesNeedingUpdate() const;
 
+    FloatSize sizeForCSSDefaultViewportUnits() const;
+
     void setHasQuotesNeedingUpdate(bool);
 
     void incrementRendersWithOutline();

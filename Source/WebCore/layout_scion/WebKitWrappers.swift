@@ -866,6 +866,13 @@ func RenderViewScion_hasQuotesNeedingUpdate(_ viewRaw: UnsafeRawPointer) -> Bool
   return view.hasQuotesNeedingUpdate()
 }
 
+@_cdecl("RenderViewScion_sizeForCSSDefaultViewportUnits")
+func RenderViewScion_sizeForCSSDefaultViewportUnits(_ viewRaw: UnsafeRawPointer) -> FloatSizeRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let size = view.sizeForCSSDefaultViewportUnits()
+  return FloatSizeRaw(width: size.width, height: size.height)
+}
+
 @_cdecl("RenderViewScion_setHasQuotesNeedingUpdate")
 func RenderViewScion_setHasQuotesNeedingUpdate(_ viewRaw: UnsafeMutableRawPointer, _ b: Bool) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
