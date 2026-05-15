@@ -58,8 +58,8 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   func isTransparent() -> Bool { return wk_interop.LocalFrameView_isTransparent(pInterop) }
 
   func baseBackgroundColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let c = wk_interop.LocalFrameView_baseBackgroundColor(pInterop)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func updateExtendBackgroundIfNecessary() {
