@@ -140,6 +140,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_childrenInline(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->childrenInline();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_hasIntrinsicAspectRatio(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasIntrinsicAspectRatio();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isFloating(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isFloating();

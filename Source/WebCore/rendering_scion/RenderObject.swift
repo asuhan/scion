@@ -1326,7 +1326,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasIntrinsicAspectRatio() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasIntrinsicAspectRatio(id()) }
     return isReplacedOrInlineBlock()
       && (isImage() || isRenderVideo() || isRenderHTMLCanvas() || isRenderViewTransitionCapture())
   }

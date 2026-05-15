@@ -575,6 +575,7 @@ bool RenderObject_isRenderMultiColumnSet(const void*);
 bool RenderObject_isBody(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
+bool RenderObject_hasIntrinsicAspectRatio(const void*);
 bool RenderObject_isFloating(const void*);
 bool RenderObject_isOutOfFlowPositioned(const void*);
 bool RenderObject_isFixedPositioned(const void*);
