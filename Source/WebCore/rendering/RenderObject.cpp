@@ -205,6 +205,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_needsPositionedMovementLayoutOnly(co
     return static_cast<const WebCore::RenderObject*>(p)->needsPositionedMovementLayoutOnly();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_normalChildNeedsLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->normalChildNeedsLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_hasNonVisibleOverflow(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->hasNonVisibleOverflow();
