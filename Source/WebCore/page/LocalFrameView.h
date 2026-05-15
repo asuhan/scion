@@ -839,7 +839,9 @@ private:
 
     WEBCORE_EXPORT void adjustTiledBackingCoverage();
 
+public:
     void repaintContentRectangle(const IntRect&) final;
+private:
     void addedOrRemovedScrollbar() final;
 
     void scrollToFocusedElementTimerFired();

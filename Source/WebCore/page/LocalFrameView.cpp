@@ -426,6 +426,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_useSlowRepaintsIfNotOverlapped(con
     return static_cast<const WebCore::LocalFrameView*>(p)->useSlowRepaintsIfNotOverlapped();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_repaintContentRectangle(void* p, IntRectRaw r)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->repaintContentRectangle({ r.location.x, r.location.y, r.size.width, r.size.height });
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

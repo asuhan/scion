@@ -689,6 +689,7 @@ void LocalFrameView_updateScrollbarSteps(void*);
 void LocalFrameView_scrollbarWidthChanged(void*, uint8_t);
 bool LocalFrameView_layerAccessPrevented(const void*);
 bool LocalFrameView_useSlowRepaintsIfNotOverlapped(const void*);
+void LocalFrameView_repaintContentRectangle(void*, struct IntRectRaw);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void* RenderElement_lastChild(const void*);

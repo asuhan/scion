@@ -26,7 +26,7 @@
 
 import wk_interop
 
-private func convertIntRect(_ r: IntRect) -> IntRectRaw {
+func convertIntRect(_ r: IntRect) -> IntRectRaw {
   return IntRectRaw(
     location: IntPointRaw(x: r.location.x, y: r.location.y),
     size: IntSizeRaw(width: r.size.width, height: r.size.height))

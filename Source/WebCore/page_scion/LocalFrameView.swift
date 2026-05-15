@@ -292,7 +292,6 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   override final func repaintContentRectangle(_ r: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_repaintContentRectangle(pInterop, convertIntRect(r))
   }
 }
