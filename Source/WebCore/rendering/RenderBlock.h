@@ -375,11 +375,7 @@ public:
     void updateHitTestResult(HitTestResult&, const LayoutPoint&) override;
 
     bool canHaveChildren() const override;
-    virtual bool canDropAnonymousBlockChild() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return true;
-    }
+    virtual bool canDropAnonymousBlockChild() const { return true; }
 
     RenderFragmentedFlow* cachedEnclosingFragmentedFlow() const;
     void setCachedEnclosingFragmentedFlowNeedsUpdate();
