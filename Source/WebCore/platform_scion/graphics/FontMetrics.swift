@@ -30,11 +30,7 @@ class FontMetricsWrapper {
   }
 
   func intHeight(baselineType: FontBaseline = .AlphabeticBaseline) -> Int {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Int(wk_interop.FontMetrics_intHeight(p, baselineType.rawValue))
+    return Int(wk_interop.FontMetrics_intHeight(p!, baselineType.rawValue))
   }
 
   func ascent(baselineType: FontBaseline = .AlphabeticBaseline) -> Float32 {
@@ -43,11 +39,7 @@ class FontMetricsWrapper {
   }
 
   func intAscent(baselineType: FontBaseline = .AlphabeticBaseline) -> Int {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Int(wk_interop.FontMetrics_intAscent(p, baselineType.rawValue))
+    return Int(wk_interop.FontMetrics_intAscent(p!, baselineType.rawValue))
   }
 
   func descent(_ baselineType: FontBaseline = .AlphabeticBaseline) -> Float32 {
@@ -56,35 +48,19 @@ class FontMetricsWrapper {
   }
 
   func intDescent(baselineType: FontBaseline = .AlphabeticBaseline) -> Int {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Int(wk_interop.FontMetrics_intDescent(p, baselineType.rawValue))
+    return Int(wk_interop.FontMetrics_intDescent(p!, baselineType.rawValue))
   }
 
   func lineSpacing() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.FontMetrics_lineSpacing(p)
+    return wk_interop.FontMetrics_lineSpacing(p!)
   }
 
   func intLineSpacing() -> Int {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Int(wk_interop.FontMetrics_intLineSpacing(p))
+    return Int(wk_interop.FontMetrics_intLineSpacing(p!))
   }
 
   func xHeight() -> Float32? {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    let xHeight = wk_interop.FontMetrics_xHeight(p)
+    let xHeight = wk_interop.FontMetrics_xHeight(p!)
     if !xHeight.is_valid {
       return nil
     }
@@ -97,11 +73,7 @@ class FontMetricsWrapper {
   }
 
   func intCapHeight() -> Int {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Int(wk_interop.FontMetrics_intCapHeight(p))
+    return Int(wk_interop.FontMetrics_intCapHeight(p!))
   }
 
   // TODO(asuhan): use a Markable equivalent instead
