@@ -2578,6 +2578,17 @@ func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
   return block.canHaveChildren()
 }
 
+@_cdecl("RenderBlockScion_availableLogicalHeightForPercentageComputation")
+func RenderBlockScion_availableLogicalHeightForPercentageComputation(_ blockRaw: UnsafeRawPointer)
+  -> OptionalLayoutUnitRaw
+{
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  guard let height = block.availableLogicalHeightForPercentageComputation() else {
+    return OptionalLayoutUnitRaw(value: 0, is_valid: false)
+  }
+  return OptionalLayoutUnitRaw(value: height.rawValue(), is_valid: true)
+}
+
 @_cdecl("RenderBlockScion_debugDescription")
 func RenderBlockScion_debugDescription(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

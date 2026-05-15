@@ -3358,7 +3358,7 @@ bool RenderBlock::hasDefiniteLogicalHeight() const
 
 std::optional<LayoutUnit> RenderBlock::availableLogicalHeightForPercentageComputation() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->availableLogicalHeightForPercentageComputation(); }
     // For anonymous blocks that are skipped during percentage height calculation,
     // we consider them to have an indefinite height.
     if (skipContainingBlockForPercentHeightCalculation(*this, false))

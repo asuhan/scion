@@ -520,6 +520,8 @@ public:
 
     bool canHaveChildren() const;
 
+    std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
+
     String debugDescription() const;
 
     bool isInlineBlockOrInlineTable() const;
