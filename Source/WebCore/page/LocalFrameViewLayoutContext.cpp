@@ -106,6 +106,12 @@ extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_addLayoutDelta(void* 
     static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->addLayoutDelta(delta);
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_layoutDeltaMatches(void* p, LayoutSizeRaw delta_raw)
+{
+    const auto delta = WebCore::LayoutSize { WebCore::LayoutUnit::fromRawValue(delta_raw.width), WebCore::LayoutUnit::fromRawValue(delta_raw.height) };
+    return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->layoutDeltaMatches(delta);
+}
+
 extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void* p)
 {
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransactionIfExists();

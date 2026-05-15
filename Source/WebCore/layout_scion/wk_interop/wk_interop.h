@@ -651,6 +651,7 @@ bool LocalFrameViewLayoutContext_isPaintOffsetCacheEnabled(const void*);
 void LocalFrameViewLayoutContext_checkLayoutState(void*);
 struct LayoutSizeRaw LocalFrameViewLayoutContext_layoutDelta(const void*);
 void LocalFrameViewLayoutContext_addLayoutDelta(void*, struct LayoutSizeRaw);
+bool LocalFrameViewLayoutContext_layoutDeltaMatches(void*, struct LayoutSizeRaw);
 void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void*);
 int UpdateScrollInfoAfterLayoutTransaction_nestedCount(const void*);
 bool UpdateScrollInfoAfterLayoutTransaction_blocksIsEmpty(const void*);

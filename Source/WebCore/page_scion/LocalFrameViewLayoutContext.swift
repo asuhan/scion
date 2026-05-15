@@ -89,8 +89,8 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func layoutDeltaMatches(delta: LayoutSizeWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameViewLayoutContext_layoutDeltaMatches(
+      p, LayoutSizeRaw(width: delta.width().rawValue(), height: delta.height().rawValue()))
   }
 
   func updateScrollInfoAfterLayoutTransactionIfExists() -> UpdateScrollInfoAfterLayoutTransaction? {
