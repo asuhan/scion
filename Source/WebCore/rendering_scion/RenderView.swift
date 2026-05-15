@@ -738,6 +738,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return false
   }
 
+  func sizeForCSSDefaultViewportUnits() -> FloatSize {
+    assert(isNativeImpl())
+    return protectedFrameView().sizeForCSSDefaultViewportUnits()
+  }
+
   func hasQuotesNeedingUpdate() -> Bool {
     assert(isNativeImpl())
     return m_hasQuotesNeedingUpdate

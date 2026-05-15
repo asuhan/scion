@@ -74,6 +74,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     return convertIntRect(wk_interop.LocalFrameView_extendedBackgroundRectForPainting(pInterop))
   }
 
+  func sizeForCSSDefaultViewportUnits() -> FloatSize {
+    let size = wk_interop.LocalFrameView_sizeForCSSDefaultViewportUnits(pInterop)
+    return FloatSize(width: size.width, height: size.height)
+  }
+
   override func windowClipRect() -> IntRect {
     return convertIntRect(wk_interop.LocalFrameView_windowClipRect(pInterop))
   }

@@ -228,6 +228,17 @@ extern "C" WEBCORE_EXPORT IntRectRaw LocalFrameView_extendedBackgroundRectForPai
     return { rect.x(), rect.y(), rect.width(), rect.height() };
 }
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT FloatSizeRaw LocalFrameView_sizeForCSSDefaultViewportUnits(const void* p)
+{
+    const auto size = static_cast<const WebCore::LocalFrameView*>(p)->sizeForCSSDefaultViewportUnits();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT IntRectRaw LocalFrameView_windowClipRect(const void* p)
 {
     const auto rect = static_cast<const WebCore::LocalFrameView*>(p)->windowClipRect();

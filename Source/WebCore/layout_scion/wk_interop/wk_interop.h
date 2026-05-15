@@ -672,6 +672,7 @@ struct SRGBARaw LocalFrameView_baseBackgroundColor(const void*);
 void LocalFrameView_updateExtendBackgroundIfNecessary(void*);
 bool LocalFrameView_hasExtendedBackgroundRectForPainting(const void*);
 struct IntRectRaw LocalFrameView_extendedBackgroundRectForPainting(const void*);
+struct FloatSizeRaw LocalFrameView_sizeForCSSDefaultViewportUnits(const void*);
 struct IntRectRaw LocalFrameView_windowClipRect(const void*);
 struct OptionalLayoutRectRaw LocalFrameView_visualViewportOverrideRect(const void*);
 struct LayoutRectRaw LocalFrameView_fixedScrollableAreaBoundsInflatedForScrolling(const void*, struct LayoutRectRaw);
