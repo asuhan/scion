@@ -5134,8 +5134,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isFlexItem() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderBox_isFlexItem(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_isFlexItem(id())
+    }
+    return (parent()?.isRenderFlexibleBox() ?? false) && !isExcludedFromNormalLayout()
   }
 
   func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {}
