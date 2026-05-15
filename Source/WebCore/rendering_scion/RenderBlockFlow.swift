@@ -2034,8 +2034,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func containsFloat(renderer: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!renderer.isNativeImpl())
+    return floatingObjects != nil
+      && !floatingObjects!.set().contains(FloatingObjectWrapper(p: renderer.id()))
   }
 
   func subtreeContainsFloats() -> Bool {
