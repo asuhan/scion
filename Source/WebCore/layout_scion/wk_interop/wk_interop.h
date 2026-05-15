@@ -603,6 +603,7 @@ bool RenderObject_needsPositionedMovementLayoutOnly(const void*);
 bool RenderObject_normalChildNeedsLayout(const void*);
 bool RenderObject_hasNonVisibleOverflow(const void*);
 void* RenderObject_view(const void*);
+void* RenderObject_container(const void*);
 bool RenderObject_isComposited(const void*);
 int32_t RenderObject_minPreferredLogicalWidth(const void*);
 int32_t RenderObject_maxPreferredLogicalWidth(const void*);

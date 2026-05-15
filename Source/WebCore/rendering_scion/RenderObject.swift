@@ -1795,7 +1795,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // If repaintContainer and repaintContainerSkipped are not null, on return *repaintContainerSkipped
   // is true if the renderer returned is an ancestor of repaintContainer.
   func container() -> RenderElementWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return createRenderObjectWrapperOrNative(wk_interop.RenderObject_container(id()))
+        as! RenderElementWrapper?
+    }
     var repaintContainerSkipped: Bool? = nil
     return containerForElement(
       renderer: self, repaintContainer: nil, repaintContainerSkipped: &repaintContainerSkipped)

@@ -225,6 +225,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_view(const void* p)
     return &static_cast<const WebCore::RenderObject*>(p)->view();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_container(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->container();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isComposited(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isComposited();
