@@ -193,6 +193,29 @@ extern "C" WEBCORE_EXPORT void RenderLayer_setBackingNeedsRepaint(void* p, bool 
     static_cast<WebCore::RenderLayer*>(p)->setBackingNeedsRepaint(shouldClip ? WebCore::GraphicsLayer::ClipToLayer : WebCore::GraphicsLayer::DoNotClipToLayer);
 }
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+namespace {
+
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height)  };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void RenderLayer_setBackingNeedsRepaintInRect(void* p, LayoutRectRaw r, bool shouldClip)
+{
+    static_cast<WebCore::RenderLayer*>(p)->setBackingNeedsRepaintInRect(
+        convertLayoutRectRaw(r),
+        shouldClip ? WebCore::GraphicsLayer::ClipToLayer : WebCore::GraphicsLayer::DoNotClipToLayer);
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_styleChanged(void* p, uint8_t diff_raw, const void* old_style_raw)
 {
     const auto diff = static_cast<WebCore::StyleDifference>(diff_raw);

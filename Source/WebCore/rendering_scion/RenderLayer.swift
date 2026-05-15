@@ -1177,7 +1177,11 @@ class RenderLayerWrapper {
   func setBackingNeedsRepaintInRect(
     r: LayoutRectWrapper, shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_setBackingNeedsRepaintInRect(
+        layerId(), convertLayoutRect(r), shouldClip == .ClipToLayer)
+      return
+    }
     // https://bugs.webkit.org/show_bug.cgi?id=61159 describes an unreproducible crash here,
     // so assert but check that the layer is composited.
     assert(isComposited())

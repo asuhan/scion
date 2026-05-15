@@ -1273,6 +1273,7 @@ void* RenderLayer_renderer(const void*);
 void* RenderLayer_commonAncestorWithLayer(const void*, void*);
 void RenderLayer_insertOnlyThisLayer(void*, bool);
 void RenderLayer_setBackingNeedsRepaint(void*, bool);
+void RenderLayer_setBackingNeedsRepaintInRect(void*, struct LayoutRectRaw, bool);
 void RenderLayer_styleChanged(void*, uint8_t, const void*);
 bool RenderLayer_cannotBlitToWindow(const void*);
 void RenderLayer_updateTransform(void*);
