@@ -60,6 +60,11 @@ extern "C" WEBCORE_EXPORT const void* Font_fontMetrics(const void* font)
     return &static_cast<const WebCore::Font*>(font)->fontMetrics();
 }
 
+extern "C" WEBCORE_EXPORT float Font_maxCharWidth(const void* font)
+{
+    return static_cast<const WebCore::Font*>(font)->maxCharWidth();
+}
+
 struct FloatRectRaw {
     float x;
     float y;

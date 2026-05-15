@@ -348,6 +348,7 @@ uint8_t RenderStyle_whiteSpaceCollapse(const void*);
 bool RenderStyle_textWrapMode(const void*);
 bool Font_hasVerticalGlyphs(const void*);
 const void* Font_fontMetrics(const void*);
+float Font_maxCharWidth(const void*);
 struct FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph);
 float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion);
 const void* FontCascade_fontDescription(const void*);
