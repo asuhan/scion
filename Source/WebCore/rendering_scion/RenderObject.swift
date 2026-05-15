@@ -1267,8 +1267,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Unfortunately we don't have such a class yet, because it's not possible for all renderers
   // to inherit from RenderSVGObject -> RenderObject (some need RenderBlock inheritance for instance)
   func invalidateCachedBoundaries() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var renderer: RenderObjectWrapper? = self
+    while renderer != nil && renderer!.isSVGRenderer() {
+      if renderer!.usesBoundaryCaching() {
+        renderer!.setNeedsBoundariesUpdate()
+        break
+      }
+      renderer = renderer!.parent()
+    }
   }
 
   private func usesBoundaryCaching() -> Bool {
@@ -1282,6 +1289,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       || (m_typeSpecificFlags.kind == .SVGModelObject
         && m_typeSpecificFlags.svgFlags().contains(.UsesBoundaryCaching))
   }
+
+  func setNeedsBoundariesUpdate() {}
 
   func setNeedsTransformUpdate() {}
 

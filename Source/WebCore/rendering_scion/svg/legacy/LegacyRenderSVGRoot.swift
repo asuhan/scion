@@ -77,6 +77,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func setNeedsBoundariesUpdate() {
+    assert(isNativeImpl())
+    needsBoundariesOrTransformUpdate = true
+  }
+
   override func setNeedsTransformUpdate() { needsBoundariesOrTransformUpdate = true }
 
   // The flag is cleared at the beginning of each layout() pass. Elements then call this

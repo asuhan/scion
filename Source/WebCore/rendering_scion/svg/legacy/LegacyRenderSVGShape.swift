@@ -33,6 +33,8 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
+  override final func setNeedsBoundariesUpdate() { needsBoundariesUpdate = true }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   func isRenderingDisabled() -> Bool { fatalError("Not reached") }

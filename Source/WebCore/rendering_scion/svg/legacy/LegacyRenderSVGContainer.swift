@@ -91,6 +91,11 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
     }
   }
 
+  override final func setNeedsBoundariesUpdate() {
+    assert(isNativeImpl())
+    needsBoundariesUpdate = true
+  }
+
   func didTransformToRootUpdate() -> Bool { return false }
 
   func isObjectBoundingBoxValid() -> Bool { return objectBoundingBoxValid }

@@ -36,6 +36,11 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  override final func setNeedsBoundariesUpdate() {
+    assert(isNativeImpl())
+    needsBoundariesUpdate = true
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   // Note: Assumes the PaintInfo context has had all local transforms applied.
