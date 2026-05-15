@@ -2496,7 +2496,10 @@ void RenderObject::setNeedsBoundariesUpdate()
 
 void RenderObject::invalidateCachedBoundaries()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->invalidateCachedBoundaries();
+        return;
+    }
     for (CheckedPtr renderer = this; renderer && renderer->isSVGRenderer(); renderer = renderer->parent()) {
         if (renderer->usesBoundaryCaching()) {
             renderer->setNeedsBoundariesUpdate();

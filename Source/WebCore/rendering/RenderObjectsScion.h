@@ -163,6 +163,8 @@ public:
 
     bool isSVGRenderer() const;
 
+    void invalidateCachedBoundaries();
+
     bool isAnonymous() const;
 
     bool isAnonymousBlock() const;

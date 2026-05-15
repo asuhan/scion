@@ -1395,6 +1395,12 @@ func RenderObjectScion_isSVGRenderer(_ objectRaw: UnsafeMutableRawPointer) -> Bo
   return object.isSVGRenderer()
 }
 
+@_cdecl("RenderObjectScion_invalidateCachedBoundaries")
+func RenderObjectScion_invalidateCachedBoundaries(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.invalidateCachedBoundaries()
+}
+
 @_cdecl("RenderObjectScion_isAnonymous")
 func RenderObjectScion_isAnonymous(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
