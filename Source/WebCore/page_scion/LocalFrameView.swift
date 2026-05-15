@@ -262,8 +262,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func viewExposedRect() -> FloatRectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.LocalFrameView_viewExposedRect(pInterop)
+    if !r.is_valid {
+      return nil
+    }
+    return FloatRectWrapper(x: r.rect.x, y: r.rect.y, width: r.rect.width, height: r.rect.height)
   }
 
   override func layerForHorizontalScrollbar() -> GraphicsLayer? {

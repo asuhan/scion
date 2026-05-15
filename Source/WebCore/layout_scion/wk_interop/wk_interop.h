@@ -133,6 +133,11 @@ struct FloatRectRaw {
     float height;
 };
 
+struct OptionalFloatRectRaw {
+    struct FloatRectRaw rect;
+    bool is_valid;
+};
+
 struct LayoutPointRaw {
     int32_t x;
     int32_t y;
@@ -685,6 +690,7 @@ void LocalFrameView_topContentDirectionDidChange(void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 bool LocalFrameView_hasFlippedBlockRenderers(const void*);
 void LocalFrameView_setHasFlippedBlockRenderers(void*, bool);
+struct OptionalFloatRectRaw LocalFrameView_viewExposedRect(const void*);
 void LocalFrameView_updateScrollbarSteps(void*);
 void LocalFrameView_scrollbarWidthChanged(void*, uint8_t);
 bool LocalFrameView_layerAccessPrevented(const void*);

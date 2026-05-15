@@ -406,6 +406,28 @@ extern "C" WEBCORE_EXPORT void LocalFrameView_setHasFlippedBlockRenderers(void* 
     return static_cast<WebCore::LocalFrameView*>(p)->setHasFlippedBlockRenderers(b);
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+struct OptionalFloatRectRaw {
+    struct FloatRectRaw rect;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT OptionalFloatRectRaw LocalFrameView_viewExposedRect(const void* p)
+{
+    const auto opt_rect = static_cast<const WebCore::LocalFrameView*>(p)->viewExposedRect();
+    if (!opt_rect) {
+        return { {}, false };
+    }
+    const auto& r = *opt_rect;
+    return { { r.x(), r.y(), r.width(), r.height() }, true };
+}
+
 extern "C" WEBCORE_EXPORT void LocalFrameView_updateScrollbarSteps(void* p)
 {
     static_cast<WebCore::LocalFrameView*>(p)->updateScrollbarSteps();
