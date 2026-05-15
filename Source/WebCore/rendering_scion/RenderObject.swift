@@ -1271,6 +1271,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func usesBoundaryCaching() -> Bool {
+    assert(isNativeImpl())
+    // Use the same bit for UsesBoundaryCaching so that compiler can collapse two comparisons into one.
+    assert(
+      ReplacedFlag.UsesBoundaryCaching.rawValue == SVGModelObjectFlag.UsesBoundaryCaching.rawValue)
+    return
+      (m_typeSpecificFlags.kind == .Replaced
+      && m_typeSpecificFlags.replacedFlags().contains(.UsesBoundaryCaching))
+      || (m_typeSpecificFlags.kind == .SVGModelObject
+        && m_typeSpecificFlags.svgFlags().contains(.UsesBoundaryCaching))
+  }
+
   func setNeedsTransformUpdate() {}
 
   // Per SVG 1.1 objectBoundingBox ignores clipping, masking, filter effects, opacity and stroke-width.
