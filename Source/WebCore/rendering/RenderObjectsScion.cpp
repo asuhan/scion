@@ -414,6 +414,10 @@ extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
 
+extern "C" int32_t RenderBoxScion_clientWidth(const void*);
+
+extern "C" int32_t RenderBoxScion_clientHeight(const void*);
+
 extern "C" int32_t RenderBoxScion_clientLogicalWidth(const void*);
 
 extern "C" int32_t RenderBoxScion_clientLogicalHeight(const void*);
@@ -1288,6 +1292,16 @@ LayoutRect RenderBoxScion::visualOverflowRect() const
 LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
 {
     return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
+}
+
+LayoutUnit RenderBoxScion::clientWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_clientWidth(m_handle));
+}
+
+LayoutUnit RenderBoxScion::clientHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_clientHeight(m_handle));
 }
 
 LayoutUnit RenderBoxScion::clientLogicalWidth() const

@@ -835,13 +835,13 @@ void RenderBox::layout()
 // excluding border and scrollbar.
 LayoutUnit RenderBox::clientWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->clientWidth(); }
     return paddingBoxWidth();
 }
 
 LayoutUnit RenderBox::clientHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->clientHeight(); }
     return paddingBoxHeight();
 }
 

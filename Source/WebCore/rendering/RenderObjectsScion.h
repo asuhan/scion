@@ -445,6 +445,10 @@ public:
 
     LayoutRect paddingBoxRectIncludingScrollbar() const;
 
+    LayoutUnit clientWidth() const;
+
+    LayoutUnit clientHeight() const;
+
     LayoutUnit clientLogicalWidth() const;
 
     LayoutUnit clientLogicalHeight() const;
