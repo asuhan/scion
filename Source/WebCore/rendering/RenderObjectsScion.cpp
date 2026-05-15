@@ -287,6 +287,8 @@ extern "C" RepaintContainerStatusRaw RenderObjectScion_containerForRepaint(const
 
 extern "C" void RenderObjectScion_repaintUsingContainer(const void*, void*, LayoutRectRaw, bool);
 
+extern "C" void RenderObjectScion_repaintRectangle(void*, LayoutRectRaw, bool);
+
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
 
 extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
@@ -966,6 +968,11 @@ LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 void RenderObjectScion::repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect& r, bool shouldClipToLayer) const
 {
     RenderObjectScion_repaintUsingContainer(m_handle, const_cast<RenderLayerModelObject*>(repaintContainer.get()), convertLayoutRect(r), shouldClipToLayer);
+}
+
+void RenderObjectScion::repaintRectangle(const LayoutRect& repaintRect, bool shouldClipToLayer) const
+{
+    RenderObjectScion_repaintRectangle(m_handle, convertLayoutRect(repaintRect), shouldClipToLayer);
 }
 
 LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerModelObject* repaintContainer) const
