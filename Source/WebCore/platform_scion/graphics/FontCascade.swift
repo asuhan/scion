@@ -47,18 +47,10 @@ class FontCascadeWrapper: Equatable {
   }
 
   func fontDescription() -> FontCascadeDescriptionWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return FontCascadeDescriptionWrapper(p: wk_interop.FontCascade_fontDescription(p!))
   }
 
   func size() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_size(p: p!)
   }
 
@@ -111,70 +103,38 @@ class FontCascadeWrapper: Equatable {
   func widthForTextUsingSimplifiedMeasuring(
     text: StringWrapperView, textDirection: TextDirection = .LTR
   ) -> Float32 {
-    if p != nil {
-      return font_cascade_width_for_text_using_simplified_measuring(
-        fontCascadePtr: p!, textPtr: text.p, textDirection: textDirection == .LTR)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return font_cascade_width_for_text_using_simplified_measuring(
+      fontCascadePtr: p!, textPtr: text.p, textDirection: textDirection == .LTR)
   }
 
   func widthForSimpleTextWithFixedPitch(
     text: StringWrapperView, whitespaceIsCollapsed: Bool
   ) -> Float32 {
-    if p != nil {
-      return font_cascade_width_for_simple_text_with_fixed_pitch(
-        fontCascadePtr: p!, textPtr: text.p, whitespaceIsCollapsed: whitespaceIsCollapsed)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return font_cascade_width_for_simple_text_with_fixed_pitch(
+      fontCascadePtr: p!, textPtr: text.p, whitespaceIsCollapsed: whitespaceIsCollapsed)
   }
 
   func letterSpacing() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.FontCascade_letterSpacing(p)
+    return wk_interop.FontCascade_letterSpacing(p!)
   }
 
   func canTakeFixedPitchFastContentMeasuring() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_canTakeFixedPitchFastContentMeasuring(p: p!)
   }
 
   func enableKerning() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_enableKerning(p: p!)
   }
 
   func requiresShaping() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_requiresShaping(p: p!)
   }
 
   func primaryFontSpaceWidth() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_primaryFontSpaceWidth(p: p!)
   }
 
   func widthOfSpaceString() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_widthOfSpaceString(p: p!)
   }
 
@@ -193,27 +153,15 @@ class FontCascadeWrapper: Equatable {
   }
 
   func isSmallCaps() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return wk_interop.FontCascade_isSmallCaps(p!)
   }
 
   func wordSpacing() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return font_cascade_wordSpacing(p: p!)
   }
 
   func metricsOfPrimaryFont() -> FontMetricsWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return FontMetricsWrapper(p: wk_interop.FontCascade_metricsOfPrimaryFont(p))
+    return FontMetricsWrapper(p: wk_interop.FontCascade_metricsOfPrimaryFont(p!))
   }
 
   func emphasisMarkAscent(mark: AtomStringWrapper) -> Int {
@@ -227,19 +175,11 @@ class FontCascadeWrapper: Equatable {
   }
 
   func floatEmphasisMarkHeight(mark: AtomStringWrapper) -> Float32 {
-    if p == nil || mark.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.FontCascade_floatEmphasisMarkHeight(p, mark.p)
+    return wk_interop.FontCascade_floatEmphasisMarkHeight(p!, mark.p!)
   }
 
   func primaryFont() -> FontWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return FontWrapper(p: wk_interop.FontCascade_primaryFont(p))
+    return FontWrapper(p: wk_interop.FontCascade_primaryFont(p!))
   }
 
   func glyphDataForCharacter(c: UInt32, mirror: Bool, variant: FontVariant = .AutoVariant)
