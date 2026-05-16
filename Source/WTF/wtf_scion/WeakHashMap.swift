@@ -35,8 +35,9 @@ final class WeakHashMap<KeyType: AnyObject, ValueType> {
     if let value = m_impl[objId] {
       return AddResult(isNewEntry: false, value: value)
     }
-    m_impl[objId] = functor()
-    return AddResult(isNewEntry: true, value: functor())
+    let newValue = functor()
+    m_impl[objId] = newValue
+    return AddResult(isNewEntry: true, value: newValue)
   }
 
   func add(_ key: KeyType, _ value: ValueType) -> AddResult {
