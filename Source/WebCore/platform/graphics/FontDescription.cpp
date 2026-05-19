@@ -132,6 +132,11 @@ extern "C" WEBCORE_EXPORT OptionalFloatRaw FontMetrics_underlineThickness(const 
     return underlineThickness ? OptionalFloatRaw{*underlineThickness, true} : OptionalFloatRaw{0, false};
 }
 
+extern "C" WEBCORE_EXPORT bool FontMetrics_hasIdenticalAscentDescentAndLineGap(const void* p, const void* other)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->hasIdenticalAscentDescentAndLineGap(*static_cast<const WebCore::FontMetrics*>(other));
+}
+
 namespace WebCore {
 
 FontDescription::FontDescription()

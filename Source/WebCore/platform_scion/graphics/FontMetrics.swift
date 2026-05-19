@@ -86,8 +86,7 @@ class FontMetricsWrapper {
   }
 
   func hasIdenticalAscentDescentAndLineGap(_ other: FontMetricsWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FontMetrics_hasIdenticalAscentDescentAndLineGap(p!, other.p!)
   }
 
   private var p: UnsafeRawPointer?
