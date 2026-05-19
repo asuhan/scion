@@ -83,6 +83,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setStrokeStyle(void* p, uint8_t s
     static_cast<WebCore::GraphicsContext*>(p)->setStrokeStyle(static_cast<WebCore::StrokeStyle>(style));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_clearDropShadow(void* p)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->clearDropShadow();
+}
+
 extern "C" WEBCORE_EXPORT float GraphicsContext_strokeThickness(const void* p)
 {
     return static_cast<const WebCore::GraphicsContext*>(p)->strokeThickness();

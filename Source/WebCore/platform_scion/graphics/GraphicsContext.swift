@@ -137,10 +137,7 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
-  func clearDropShadow() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clearDropShadow() { wk_interop.GraphicsContext_clearDropShadow(p!) }
 
   func compositeOperation() -> CompositeOperator {
     return CompositeOperator(rawValue: wk_interop.GraphicsContext_compositeOperation(p!))!
