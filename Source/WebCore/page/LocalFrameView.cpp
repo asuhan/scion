@@ -257,6 +257,13 @@ struct OptionalLayoutRectRaw {
     bool is_valid;
 };
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
 namespace {
 
 LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
@@ -267,6 +274,11 @@ LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
 WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 {
     return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height)  };
+}
+
+WebCore::FloatRect toFloatRect(const FloatRectRaw& r)
+{
+    return { r.x, r.y, r.width, r.height };
 }
 
 } // namespace
@@ -414,15 +426,13 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_hasFlippedBlockRenderers(const voi
 
 extern "C" WEBCORE_EXPORT void LocalFrameView_setHasFlippedBlockRenderers(void* p, bool b)
 {
-    return static_cast<WebCore::LocalFrameView*>(p)->setHasFlippedBlockRenderers(b);
+    static_cast<WebCore::LocalFrameView*>(p)->setHasFlippedBlockRenderers(b);
 }
 
-struct FloatRectRaw {
-    float x;
-    float y;
-    float width;
-    float height;
-};
+extern "C" WEBCORE_EXPORT void LocalFrameView_addTrackedRepaintRect(void* p, FloatRectRaw r)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->addTrackedRepaintRect(toFloatRect(r));
+}
 
 struct OptionalFloatRectRaw {
     struct FloatRectRaw rect;

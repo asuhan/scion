@@ -262,8 +262,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func addTrackedRepaintRect(_ r: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_addTrackedRepaintRect(pInterop, toFloatRectRaw(r))
   }
 
   func viewExposedRect() -> FloatRectWrapper? {

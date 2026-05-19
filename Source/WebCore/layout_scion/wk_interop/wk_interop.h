@@ -710,6 +710,7 @@ void LocalFrameView_topContentDirectionDidChange(void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 bool LocalFrameView_hasFlippedBlockRenderers(const void*);
 void LocalFrameView_setHasFlippedBlockRenderers(void*, bool);
+void LocalFrameView_addTrackedRepaintRect(void*, struct FloatRectRaw);
 struct OptionalFloatRectRaw LocalFrameView_viewExposedRect(const void*);
 void LocalFrameView_updateScrollbarSteps(void*);
 void LocalFrameView_scrollbarWidthChanged(void*, uint8_t);
