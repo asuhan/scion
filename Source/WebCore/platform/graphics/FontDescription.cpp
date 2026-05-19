@@ -115,6 +115,12 @@ extern "C" WEBCORE_EXPORT OptionalFloatRaw FontMetrics_xHeight(const void* p)
     return xHeight ? OptionalFloatRaw{*xHeight, true} : OptionalFloatRaw{0, false};
 }
 
+extern "C" WEBCORE_EXPORT OptionalFloatRaw FontMetrics_capHeight(const void* p)
+{
+    const auto capHeight = static_cast<const WebCore::FontMetrics*>(p)->capHeight();
+    return capHeight ? OptionalFloatRaw{*capHeight, true} : OptionalFloatRaw{0, false};
+}
+
 extern "C" WEBCORE_EXPORT int32_t FontMetrics_intCapHeight(const void* p)
 {
     return static_cast<const WebCore::FontMetrics*>(p)->intCapHeight();
