@@ -26,10 +26,7 @@
 final class ScaleTransformOperation: TransformOperation {
   static func create(sx: Float64, sy: Float64, type: TransformOperation.`Type`)
     -> ScaleTransformOperation
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  { return ScaleTransformOperation(sx: sx, sy: sy, sz: 1, type: type) }
 
   override final func isRepresentableIn2D() -> Bool { return m_z == 1 }
 
