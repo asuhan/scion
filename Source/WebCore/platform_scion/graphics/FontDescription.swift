@@ -59,7 +59,6 @@ class FontDescriptionWrapper {
   }
 
   func setWidthVariant(_ widthVariant: FontWidthVariant) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FontDescription_setWidthVariant(p, widthVariant.rawValue)
   }
 }

@@ -377,6 +377,7 @@ uint8_t FontDescription_orientation(const void*);
 bool FontDescription_shouldAllowUserInstalledFonts(const void*);
 void FontDescription_setComputedSize(const void*, float);
 void FontDescription_setOrientation(const void*, bool);
+void FontDescription_setWidthVariant(const void*, uint8_t);
 int32_t FontMetrics_intHeight(const void*, uint8_t);
 int32_t FontMetrics_intAscent(const void*, uint8_t);
 int32_t FontMetrics_intDescent(const void*, uint8_t);

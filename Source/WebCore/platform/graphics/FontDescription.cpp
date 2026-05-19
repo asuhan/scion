@@ -64,6 +64,11 @@ extern "C" WEBCORE_EXPORT void FontDescription_setOrientation(const void* p, boo
     static_cast<WebCore::FontDescription*>(const_cast<void*>(p))->setOrientation(orientation ? WebCore::FontOrientation::Vertical : WebCore::FontOrientation::Horizontal);
 }
 
+extern "C" WEBCORE_EXPORT void FontDescription_setWidthVariant(const void* p, uint8_t widthVariant)
+{
+    static_cast<WebCore::FontDescription*>(const_cast<void*>(p))->setWidthVariant(static_cast<WebCore::FontWidthVariant>(widthVariant));
+}
+
 extern "C" WEBCORE_EXPORT int32_t FontMetrics_intHeight(const void* p, uint8_t baselineType)
 {
     return static_cast<const WebCore::FontMetrics*>(p)->intHeight(static_cast<WebCore::FontBaseline>(baselineType));
