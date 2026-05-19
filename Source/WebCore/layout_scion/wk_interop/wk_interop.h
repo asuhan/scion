@@ -1496,6 +1496,7 @@ void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);
 const void* InitialContainingBlock_create(const void*);
 void InitialContainingBlock_destroy(const void*);
+uint32_t ContainerNode_countChildNodes(const void*);
 void* ContainerNode_renderer(const void*);
 struct SRGBARaw LocalFrameView_documentBackgroundColor(const void*);
 bool LocalFrameView_hasEnoughContentForVisualMilestones(const void*);

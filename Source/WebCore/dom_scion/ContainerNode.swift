@@ -29,10 +29,7 @@ class ContainerNodeWrapper: NodeWrapper {
     fatalError("Not implemented")
   }
 
-  override func countChildNodes() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func countChildNodes() -> UInt32 { return wk_interop.ContainerNode_countChildNodes(p) }
 
   func containerRenderer() -> RenderElementWrapper? {
     return createRenderObjectWrapper(wk_interop.ContainerNode_renderer(p)) as! RenderElementWrapper?
