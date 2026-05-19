@@ -25,7 +25,7 @@
 import wk_interop
 
 class FontDescriptionWrapper {
-  private var p: UnsafeRawPointer
+  let p: UnsafeRawPointer
 
   init(p: UnsafeRawPointer) {
     self.p = p

@@ -37,6 +37,11 @@
 #include "FontCascade.h"
 #endif
 
+extern "C" WEBCORE_EXPORT float FontCascadeDescription_specifiedSize(const void* p)
+{
+    return static_cast<const WebCore::FontCascadeDescription*>(p)->specifiedSize();
+}
+
 namespace WebCore {
 
 struct SameSizeAsFontCascadeDescription {

@@ -22,6 +22,8 @@
  *
  */
 
+import wk_interop
+
 class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
   override init(p: UnsafeRawPointer) {
     super.init(p: p)
@@ -32,10 +34,7 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     fatalError("Not implemented")
   }
 
-  func specifiedSize() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func specifiedSize() -> Float32 { return wk_interop.FontCascadeDescription_specifiedSize(p) }
 
   func isAbsoluteSize() -> Bool {
     // TODO(asuhan): implement this
