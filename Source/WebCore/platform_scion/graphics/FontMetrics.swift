@@ -25,8 +25,7 @@ class FontMetricsWrapper {
   }
 
   func height(_ baselineType: FontBaseline = .AlphabeticBaseline) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ascent(baselineType: baselineType) + descent(baselineType)
   }
 
   func intHeight(baselineType: FontBaseline = .AlphabeticBaseline) -> Int {
