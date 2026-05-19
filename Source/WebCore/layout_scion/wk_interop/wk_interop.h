@@ -370,6 +370,7 @@ struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
     uint8_t expansion_behavior_right);
 float FontCascadeDescription_specifiedSize(const void*);
 bool FontCascadeDescription_isAbsoluteSize(const void*);
+void FontCascadeDescription_setSpecifiedSize(const void*, float);
 float FontDescription_computedSize(const void*);
 uint8_t FontDescription_orientation(const void*);
 int32_t FontMetrics_intHeight(const void*, uint8_t);

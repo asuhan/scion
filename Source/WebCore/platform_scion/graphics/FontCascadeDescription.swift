@@ -48,10 +48,7 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     fatalError("Not implemented")
   }
 
-  func setSpecifiedSize(s: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setSpecifiedSize(s: Float32) { wk_interop.FontCascadeDescription_setSpecifiedSize(p, s) }
 
   func deepCopy() -> FontCascadeDescriptionWrapper {
     // TODO(asuhan): implement this
