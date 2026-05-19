@@ -54,6 +54,11 @@ extern "C" WEBCORE_EXPORT bool FontDescription_shouldAllowUserInstalledFonts(con
     return static_cast<const WebCore::FontDescription*>(p)->shouldAllowUserInstalledFonts() == WebCore::AllowUserInstalledFonts::Yes;
 }
 
+extern "C" WEBCORE_EXPORT void FontDescription_setComputedSize(const void* p, float s)
+{
+    static_cast<WebCore::FontDescription*>(const_cast<void*>(p))->setComputedSize(s);
+}
+
 extern "C" WEBCORE_EXPORT int32_t FontMetrics_intHeight(const void* p, uint8_t baselineType)
 {
     return static_cast<const WebCore::FontMetrics*>(p)->intHeight(static_cast<WebCore::FontBaseline>(baselineType));
