@@ -78,8 +78,11 @@ class FontMetricsWrapper {
 
   // TODO(asuhan): use a Markable equivalent instead
   func underlineThickness() -> Float32? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let underlineThickness = wk_interop.FontMetrics_underlineThickness(p!)
+    if !underlineThickness.is_valid {
+      return nil
+    }
+    return underlineThickness.value
   }
 
   func hasIdenticalAscentDescentAndLineGap(_ other: FontMetricsWrapper) -> Bool {

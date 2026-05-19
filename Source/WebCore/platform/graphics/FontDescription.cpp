@@ -126,6 +126,12 @@ extern "C" WEBCORE_EXPORT int32_t FontMetrics_intCapHeight(const void* p)
     return static_cast<const WebCore::FontMetrics*>(p)->intCapHeight();
 }
 
+extern "C" WEBCORE_EXPORT OptionalFloatRaw FontMetrics_underlineThickness(const void* p)
+{
+    const auto underlineThickness = static_cast<const WebCore::FontMetrics*>(p)->underlineThickness();
+    return underlineThickness ? OptionalFloatRaw{*underlineThickness, true} : OptionalFloatRaw{0, false};
+}
+
 namespace WebCore {
 
 FontDescription::FontDescription()
