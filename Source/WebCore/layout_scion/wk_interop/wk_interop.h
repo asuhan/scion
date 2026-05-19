@@ -543,6 +543,7 @@ struct EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(
     const void* text_content_raw, const void* style_raw);
 float TextUtil_hyphenWidth(const void*);
 bool AtomString_isNull(const void*);
+bool AtomString_isEmpty(const void*);
 void AtomString_destroy(const void*);
 const void* AtomString_nullAtom();
 const void* AtomString_string(const void*);

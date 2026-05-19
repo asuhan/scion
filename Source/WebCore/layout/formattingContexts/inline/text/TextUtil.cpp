@@ -828,6 +828,11 @@ extern "C" bool AtomString_isNull(const void* p)
     return static_cast<const AtomString*>(p)->isNull();
 }
 
+extern "C" bool AtomString_isEmpty(const void* p)
+{
+    return static_cast<const AtomString*>(p)->isEmpty();
+}
+
 extern "C" void AtomString_destroy(const void* p)
 {
     delete static_cast<const AtomString*>(p);
