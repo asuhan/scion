@@ -31,8 +31,17 @@ final class ScaleTransformOperation: TransformOperation {
     fatalError("Not implemented")
   }
 
-  override final func isRepresentableIn2D() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func isRepresentableIn2D() -> Bool { return m_z == 1 }
+
+  private init(sx: Float64, sy: Float64, sz: Float64, type: TransformOperation.`Type`) {
+    m_x = sx
+    m_y = sy
+    m_z = sz
+    super.init(type)
+    assert(TransformOperation.isScaleTransformOperationType(type))
   }
+
+  private let m_x: Float64
+  private let m_y: Float64
+  private let m_z: Float64
 }

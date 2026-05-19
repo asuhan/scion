@@ -79,5 +79,13 @@ class TransformOperation {
       || type == .Rotate3D
   }
 
+  static func isScaleTransformOperationType(_ type: `Type`) -> Bool {
+    return type == .ScaleX
+      || type == .ScaleY
+      || type == .ScaleZ
+      || type == .Scale
+      || type == .Scale3D
+  }
+
   private let m_type: `Type`
 }
