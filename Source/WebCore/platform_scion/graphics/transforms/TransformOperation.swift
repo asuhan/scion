@@ -87,5 +87,13 @@ class TransformOperation {
       || type == .Scale3D
   }
 
+  static func isTranslateTransformOperationType(_ type: `Type`) -> Bool {
+    return type == .TranslateX
+      || type == .TranslateY
+      || type == .TranslateZ
+      || type == .Translate
+      || type == .Translate3D
+  }
+
   private let m_type: `Type`
 }

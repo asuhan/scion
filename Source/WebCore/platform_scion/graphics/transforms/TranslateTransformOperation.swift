@@ -26,11 +26,21 @@ final class TranslateTransformOperation: TransformOperation {
   static func create(tx: LengthWrapper, ty: LengthWrapper, type: TransformOperation.`Type`)
     -> TranslateTransformOperation
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TranslateTransformOperation(
+      tx: tx, ty: ty, tz: LengthWrapper(value: Int32(0), type: .Fixed), type: type)
   }
 
   override final func isRepresentableIn2D() -> Bool { return m_z.isZero() }
+
+  private init(
+    tx: LengthWrapper, ty: LengthWrapper, tz: LengthWrapper, type: TransformOperation.`Type`
+  ) {
+    m_x = tx
+    m_y = ty
+    m_z = tz
+    super.init(type)
+    assert(TranslateTransformOperation.isTranslateTransformOperationType(type))
+  }
 
   private let m_x: LengthWrapper
   private let m_y: LengthWrapper
