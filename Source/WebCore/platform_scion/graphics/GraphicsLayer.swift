@@ -186,13 +186,11 @@ class GraphicsLayer {
   }
 
   func setTransform(matrix: TransformationMatrix) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setTransform(self.p, matrix.interop())
   }
 
   func setChildrenTransform(_ matrix: TransformationMatrix) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setChildrenTransform(self.p, matrix.interop())
   }
 
   func setPreserves3D(_ b: Bool) { wk_interop.GraphicsLayer_setPreserves3D(p, b) }

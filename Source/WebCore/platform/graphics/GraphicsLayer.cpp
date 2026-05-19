@@ -162,6 +162,16 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_syncBoundsOrigin(void* p, FloatPoin
     static_cast<WebCore::GraphicsLayer*>(p)->syncBoundsOrigin({ point.x, point.y });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setTransform(void* p, const void* matrix)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setTransform(*static_cast<const WebCore::TransformationMatrix*>(matrix));
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setChildrenTransform(void* p, const void* matrix)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setChildrenTransform(*static_cast<const WebCore::TransformationMatrix*>(matrix));
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsLayer_setPreserves3D(void* p, bool b)
 {
     static_cast<WebCore::GraphicsLayer*>(p)->setPreserves3D(b);
