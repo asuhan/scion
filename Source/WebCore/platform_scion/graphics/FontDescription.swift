@@ -55,8 +55,7 @@ class FontDescriptionWrapper {
   }
 
   func setOrientation(_ orientation: FontOrientation) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FontDescription_setOrientation(p, orientation == .Vertical)
   }
 
   func setWidthVariant(_ widthVariant: FontWidthVariant) {
