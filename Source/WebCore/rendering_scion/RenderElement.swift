@@ -1333,7 +1333,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       parent.m_firstChild = nextSibling
     }
     if CPtrToInt(parent.lastChild()?.id()) == CPtrToInt(renderer.id()) {
-      parent.m_lastChild = renderer
+      parent.m_lastChild = renderer.previousSibling()
     }
 
     renderer.setPreviousSibling(previous: nil)
