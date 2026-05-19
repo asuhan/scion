@@ -42,6 +42,11 @@ extern "C" WEBCORE_EXPORT float FontCascadeDescription_specifiedSize(const void*
     return static_cast<const WebCore::FontCascadeDescription*>(p)->specifiedSize();
 }
 
+extern "C" WEBCORE_EXPORT bool FontCascadeDescription_isAbsoluteSize(const void* p)
+{
+    return static_cast<const WebCore::FontCascadeDescription*>(p)->isAbsoluteSize();
+}
+
 namespace WebCore {
 
 struct SameSizeAsFontCascadeDescription {

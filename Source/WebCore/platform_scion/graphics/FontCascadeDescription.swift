@@ -36,10 +36,7 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
 
   func specifiedSize() -> Float32 { return wk_interop.FontCascadeDescription_specifiedSize(p) }
 
-  func isAbsoluteSize() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isAbsoluteSize() -> Bool { return wk_interop.FontCascadeDescription_isAbsoluteSize(p) }
 
   func bolderWeight() -> FontSelectionValue {
     // TODO(asuhan): implement this
