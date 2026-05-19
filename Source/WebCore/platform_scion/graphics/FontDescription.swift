@@ -36,8 +36,7 @@ class FontDescriptionWrapper {
   }
 
   func textRenderingMode() -> TextRenderingMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextRenderingMode(rawValue: wk_interop.FontDescription_textRenderingMode(p))!
   }
 
   func orientation() -> FontOrientation {
