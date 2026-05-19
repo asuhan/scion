@@ -23,8 +23,21 @@
  */
 
 final class RotateTransformOperation: TransformOperation {
-  func isRepresentableIn2D() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(x: Float64, y: Float64, z: Float64, angle: Float64, type: TransformOperation.`Type`) {
+    m_x = x
+    m_y = y
+    m_z = z
+    m_angle = angle
+    super.init(type)
+    assert(TransformOperation.isRotateTransformOperationType(type))
   }
+
+  override final func isRepresentableIn2D() -> Bool {
+    return (m_x == 0 && m_y == 0) || m_angle == 0
+  }
+
+  private let m_x: Float64
+  private let m_y: Float64
+  private let m_z: Float64
+  private let m_angle: Float64
 }

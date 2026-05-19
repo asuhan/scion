@@ -69,5 +69,15 @@ class TransformOperation {
       || opType == .Perspective
   }
 
+  func isRepresentableIn2D() -> Bool { return true }
+
+  static func isRotateTransformOperationType(_ type: `Type`) -> Bool {
+    return type == .RotateX
+      || type == .RotateY
+      || type == .RotateZ
+      || type == .Rotate
+      || type == .Rotate3D
+  }
+
   private let m_type: `Type`
 }
