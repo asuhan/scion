@@ -74,6 +74,11 @@ extern "C" WEBCORE_EXPORT int32_t FontMetrics_intHeight(const void* p, uint8_t b
     return static_cast<const WebCore::FontMetrics*>(p)->intHeight(static_cast<WebCore::FontBaseline>(baselineType));
 }
 
+extern "C" WEBCORE_EXPORT float FontMetrics_ascent(const void* p, uint8_t baselineType)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->ascent(static_cast<WebCore::FontBaseline>(baselineType));
+}
+
 extern "C" WEBCORE_EXPORT int32_t FontMetrics_intAscent(const void* p, uint8_t baselineType)
 {
     return static_cast<const WebCore::FontMetrics*>(p)->intAscent(static_cast<WebCore::FontBaseline>(baselineType));
