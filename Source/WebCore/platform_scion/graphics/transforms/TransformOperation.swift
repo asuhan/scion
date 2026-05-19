@@ -52,8 +52,22 @@ enum TransformOperationType {
 class TransformOperation {
   typealias `Type` = TransformOperationType
 
+  init(_ type: `Type`) { m_type = type }
+
+  private func type() -> `Type` { return m_type }
+
   func is3DOperation() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let opType = type()
+    return opType == .ScaleZ
+      || opType == .Scale3D
+      || opType == .TranslateZ
+      || opType == .Translate3D
+      || opType == .RotateX
+      || opType == .RotateY
+      || opType == .Rotate3D
+      || opType == .Matrix3D
+      || opType == .Perspective
   }
+
+  private let m_type: `Type`
 }
