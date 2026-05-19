@@ -381,6 +381,7 @@ void FontDescription_setWidthVariant(const void*, uint8_t);
 int32_t FontMetrics_intHeight(const void*, uint8_t);
 float FontMetrics_ascent(const void*, uint8_t);
 int32_t FontMetrics_intAscent(const void*, uint8_t);
+float FontMetrics_descent(const void*, uint8_t);
 int32_t FontMetrics_intDescent(const void*, uint8_t);
 float FontMetrics_lineSpacing(const void*);
 int32_t FontMetrics_intLineSpacing(const void*);
