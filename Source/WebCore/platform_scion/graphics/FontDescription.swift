@@ -44,8 +44,7 @@ class FontDescriptionWrapper {
   }
 
   func shouldAllowUserInstalledFonts() -> AllowUserInstalledFonts {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FontDescription_shouldAllowUserInstalledFonts(p) ? .Yes : .No
   }
 
   func setComputedSize(s: Float32) {
