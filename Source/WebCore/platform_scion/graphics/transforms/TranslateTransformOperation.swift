@@ -30,8 +30,9 @@ final class TranslateTransformOperation: TransformOperation {
     fatalError("Not implemented")
   }
 
-  override final func isRepresentableIn2D() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override final func isRepresentableIn2D() -> Bool { return m_z.isZero() }
+
+  private let m_x: LengthWrapper
+  private let m_y: LengthWrapper
+  private let m_z: LengthWrapper
 }
