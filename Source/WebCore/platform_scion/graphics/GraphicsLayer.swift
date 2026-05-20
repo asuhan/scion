@@ -325,20 +325,18 @@ class GraphicsLayer {
 
   func usesContentsLayer() -> Bool { return wk_interop.GraphicsLayer_usesContentsLayer(p) }
 
-  enum ScalingFilter {
+  enum ScalingFilter: UInt8 {
     case Linear
     case Nearest
     case Trilinear
   }
 
   func setContentsMinificationFilter(filter: ScalingFilter) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsMinificationFilter(p, filter.rawValue)
   }
 
   func setContentsMagnificationFilter(filter: ScalingFilter) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsMagnificationFilter(p, filter.rawValue)
   }
 
   func setShowDebugBorder(show: Bool) {

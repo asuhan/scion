@@ -1610,6 +1610,8 @@ void GraphicsLayer_setContentsRect(void*, struct FloatRectRaw);
 void GraphicsLayer_setContentsRectClipsDescendants(void*, bool);
 void GraphicsLayer_setShapeLayerWindRule(void*, bool);
 bool GraphicsLayer_usesContentsLayer(const void*);
+void GraphicsLayer_setContentsMinificationFilter(void*, uint8_t);
+void GraphicsLayer_setContentsMagnificationFilter(void*, uint8_t);
 void GraphicsLayer_setShowRepaintCounter(void*, bool);
 struct FloatSizeRaw GraphicsLayer_pixelAlignmentOffset(const void*);
 void GraphicsLayer_setAppliesPageScale(void*, bool);
