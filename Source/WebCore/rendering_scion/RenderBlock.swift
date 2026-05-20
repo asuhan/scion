@@ -76,16 +76,16 @@ private class PositionedDescendantsMap {
       previousContainingBlockRef != nil ? *(previousContainingBlockRef!) : nil
     if previousContainingBlock != nil
       && CPtrToInt(previousContainingBlock!.id()) != CPtrToInt(containingBlock.id()),
-      let descendants = descendantsMap[ObjectIdentifier(previousContainingBlock!)]
+      let descendants = descendantsMap[previousContainingBlock!.id()]
     {
       descendants.remove(value: positionedDescendant)
     }
 
-    let maybeDescendants = descendantsMap[ObjectIdentifier(containingBlock)]
+    let maybeDescendants = descendantsMap[containingBlock.id()]
     if maybeDescendants == nil {
-      descendantsMap[ObjectIdentifier(containingBlock)] = TrackedRendererListHashSet()
+      descendantsMap[containingBlock.id()] = TrackedRendererListHashSet()
     }
-    let descendants = descendantsMap[ObjectIdentifier(containingBlock)]!
+    let descendants = descendantsMap[containingBlock.id()]!
 
     var isNewEntry = false
     if !(containingBlock is RenderViewWrapper) || descendants.isEmptyIgnoringNullReferences() {
@@ -124,20 +124,20 @@ private class PositionedDescendantsMap {
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
     guard let containingBlock = containerMap[positionedDescendant.id()] else { return }
 
-    let descendants = descendantsMap[ObjectIdentifier(*containingBlock)]!
+    let descendants = descendantsMap[(*containingBlock).id()]!
     assert(descendants.contains(value: positionedDescendant))
 
     descendants.remove(value: positionedDescendant)
     if descendants.isEmptyIgnoringNullReferences() {
-      descendantsMap.removeValue(forKey: ObjectIdentifier(*containingBlock))
+      descendantsMap.removeValue(forKey: (*containingBlock).id())
     }
   }
 
   func positionedRenderers(_ containingBlock: RenderBlockWrapper) -> TrackedRendererListHashSet? {
-    return descendantsMap[ObjectIdentifier(containingBlock)]
+    return descendantsMap[containingBlock.id()]
   }
 
-  private typealias DescendantsMap = [ObjectIdentifier: TrackedRendererListHashSet]
+  private typealias DescendantsMap = [UnsafeMutableRawPointer: TrackedRendererListHashSet]
   private typealias ContainerMap = [UnsafeMutableRawPointer: WeakRef<RenderBlockWrapper>]
 
   private var descendantsMap = DescendantsMap()
