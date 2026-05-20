@@ -141,8 +141,8 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func hasLineIfEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   private func adjustInnerStyle() {
