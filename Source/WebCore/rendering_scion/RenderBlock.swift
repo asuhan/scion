@@ -71,7 +71,7 @@ enum ContainingBlockState {
 private class PositionedDescendantsMap {
   func addDescendant(containingBlock: RenderBlockWrapper, positionedDescendant: RenderBoxWrapper) {
     // Protect against double insert where a descendant would end up with multiple containing blocks.
-    let previousContainingBlockRef = containerMap[ObjectIdentifier(positionedDescendant)]
+    let previousContainingBlockRef = containerMap[positionedDescendant.id()]
     let previousContainingBlock =
       previousContainingBlockRef != nil ? *(previousContainingBlockRef!) : nil
     if previousContainingBlock != nil
@@ -115,14 +115,14 @@ private class PositionedDescendantsMap {
     }
 
     if !isNewEntry {
-      assert(containerMap[ObjectIdentifier(positionedDescendant)] != nil)
+      assert(containerMap[positionedDescendant.id()] != nil)
       return
     }
-    containerMap[ObjectIdentifier(positionedDescendant)] = WeakRef(containingBlock)
+    containerMap[positionedDescendant.id()] = WeakRef(containingBlock)
   }
 
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
-    guard let containingBlock = containerMap[ObjectIdentifier(positionedDescendant)] else { return }
+    guard let containingBlock = containerMap[positionedDescendant.id()] else { return }
 
     let descendants = descendantsMap[ObjectIdentifier(*containingBlock)]!
     assert(descendants.contains(value: positionedDescendant))
@@ -138,7 +138,7 @@ private class PositionedDescendantsMap {
   }
 
   private typealias DescendantsMap = [ObjectIdentifier: TrackedRendererListHashSet]
-  private typealias ContainerMap = [ObjectIdentifier: WeakRef<RenderBlockWrapper>]
+  private typealias ContainerMap = [UnsafeMutableRawPointer: WeakRef<RenderBlockWrapper>]
 
   private var descendantsMap = DescendantsMap()
   private var containerMap = ContainerMap()
