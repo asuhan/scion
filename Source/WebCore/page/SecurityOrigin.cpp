@@ -49,6 +49,11 @@
 #include <wtf/cocoa/RuntimeApplicationChecksCocoa.h>
 #endif
 
+extern "C" WEBCORE_EXPORT bool SecurityOrigin_isSameOriginDomain(const void* p, const void* other)
+{
+    return static_cast<const WebCore::SecurityOrigin*>(p)->isSameOriginDomain(*static_cast<const WebCore::SecurityOrigin*>(other));
+}
+
 namespace WebCore {
 
 constexpr unsigned maximumURLSize = 0x04000000;

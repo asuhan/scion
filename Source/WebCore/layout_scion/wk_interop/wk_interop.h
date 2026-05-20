@@ -1659,6 +1659,7 @@ uint32_t Editor_compositionEnd(const void*);
 bool Editor_compositionUsesCustomUnderlines(const void*);
 bool Editor_compositionUsesCustomHighlights(const void*);
 bool Editor_markedTextMatchesAreHighlighted(const void*);
+bool SecurityOrigin_isSameOriginDomain(const void*, const void*);
 void* TransformState_create(bool, struct FloatPointRaw, struct FloatQuadRaw);
 void* TransformState_create_from_point(bool, struct FloatPointRaw);
 void TransformState_destroy(void*);

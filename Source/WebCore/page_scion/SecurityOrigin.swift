@@ -26,6 +26,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 struct SecurityOriginWrapper {
   init(p: UnsafeRawPointer?) {
     self.p = p
@@ -38,8 +40,7 @@ struct SecurityOriginWrapper {
   // script from one security origin to read or write objects from
   // another SecurityOrigin.
   func isSameOriginDomain(_ other: SecurityOriginWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SecurityOrigin_isSameOriginDomain(p!, other.p!)
   }
 
   var p: UnsafeRawPointer?
