@@ -180,10 +180,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   // Called when a descendant box's layout is finished and it has been positioned within its container.
-  func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {}
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
