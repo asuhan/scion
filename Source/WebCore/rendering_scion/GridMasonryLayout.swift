@@ -279,8 +279,9 @@ class GridMasonryLayout {
   private func hasDefiniteGridAxisPosition(
     gridItem: RenderBoxWrapper, gridAxisDirection: GridTrackSizingDirection
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let itemSpan = GridPositionsResolver.resolveGridPositionsFromStyle(
+      gridContainer: renderGrid, gridItem: gridItem, direction: gridAxisDirection)
+    return !itemSpan.isIndefinite()
   }
 
   private func masonryGridAreaFromGridAxisSpan(gridAxisSpan: GridSpan) -> GridArea {
