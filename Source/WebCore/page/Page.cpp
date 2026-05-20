@@ -268,6 +268,12 @@ extern "C" WEBCORE_EXPORT bool Page_useSystemAppearance(const void* raw)
     return static_cast<const WebCore::Page*>(raw)->useSystemAppearance();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t Page_preferredFilterRenderingModes(const void* raw)
+{
+    const auto o = static_cast<const WebCore::Page*>(raw)->preferredFilterRenderingModes();
+    return o.toRaw();
+}
+
 extern "C" WEBCORE_EXPORT bool Page_isVisible(const void* raw)
 {
     return static_cast<const WebCore::Page*>(raw)->isVisible();

@@ -60,8 +60,7 @@ class PageWrapper {
   func useSystemAppearance() -> Bool { return wk_interop.Page_useSystemAppearance(p) }
 
   func preferredFilterRenderingModes() -> FilterRenderingMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FilterRenderingMode(rawValue: wk_interop.Page_preferredFilterRenderingModes(p))
   }
 
   func pageOverlayController() -> PageOverlayControllerWrapper {

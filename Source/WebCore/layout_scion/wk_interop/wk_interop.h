@@ -1424,6 +1424,7 @@ float Page_pageScaleFactor(const void*);
 bool Page_delegatesScaling(const void*);
 float Page_deviceScaleFactor(const void*);
 bool Page_useSystemAppearance(const void*);
+uint8_t Page_preferredFilterRenderingModes(const void*);
 bool Page_isVisible(const void*);
 bool Page_isInWindow(const void*);
 bool Page_hasEverSetVisibilityAdjustment(const void*);
