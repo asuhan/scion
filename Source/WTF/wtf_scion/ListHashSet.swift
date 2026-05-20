@@ -134,6 +134,16 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     return end()
   }
 
+  func insertBefore(_ it: iterator, _ newValue: T) -> AddResult {
+    let existingNode = m_impl[newValue]
+    if existingNode == nil {
+      let node = ListHashSetNode(newValue)
+      m_impl[newValue] = node
+      insertNodeBefore(beforeNode: it.node(), newNode: node)
+    }
+    return AddResult(isNewEntry: existingNode == nil)
+  }
+
   @discardableResult
   func remove(_ it: iterator) -> Bool {
     if it == end() {
@@ -183,6 +193,23 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     }
 
     m_tail = node
+  }
+
+  private func insertNodeBefore(beforeNode: Node?, newNode: Node) {
+    if beforeNode == nil {
+      return appendNode(newNode)
+    }
+
+    newNode.m_next = beforeNode
+    newNode.m_prev = beforeNode!.m_prev
+    if beforeNode!.m_prev != nil {
+      beforeNode!.m_prev!.m_next = newNode
+    }
+    beforeNode!.m_prev = newNode
+
+    if newNode.m_prev == nil {
+      m_head = newNode
+    }
   }
 
   private func makeIterator(_ position: Node?) -> iterator {

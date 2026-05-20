@@ -81,7 +81,7 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     }
 
     private let m_set: WeakListHashSet
-    private let m_position: WeakPtrImplSet.iterator
+    let m_position: WeakPtrImplSet.iterator
     private let m_beginPosition: WeakPtrImplSet.iterator
     private let m_endPosition: WeakPtrImplSet.iterator
   }
@@ -116,8 +116,8 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
   }
 
   func insertBefore(_ it: WeakListHashSetIterator, _ value: T) -> AddResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    amortizedCleanupIfNeeded()
+    return m_set.insertBefore(it.m_position, WeakPtr(value))
   }
 
   @discardableResult
