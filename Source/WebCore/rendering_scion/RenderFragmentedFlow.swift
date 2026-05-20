@@ -107,8 +107,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func hasFragments() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !fragmentList.isEmptyIgnoringNullReferences()
   }
 
   func fragmentChangedWritingMode(_ fragment: RenderFragmentContainerWrapper?) {}
