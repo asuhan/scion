@@ -53,8 +53,12 @@ class RenderOverflow {
   }
 
   func addVisualOverflow(rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let maxX = max(rect.maxX(), visualOverflow.maxX())
+    let maxY = max(rect.maxY(), visualOverflow.maxY())
+    visualOverflow.setX(x: min(rect.x(), visualOverflow.x()))
+    visualOverflow.setY(y: min(rect.y(), visualOverflow.y()))
+    visualOverflow.setWidth(width: maxX - visualOverflow.x())
+    visualOverflow.setHeight(height: maxY - visualOverflow.y())
   }
 
   func setLayoutOverflow(_ rect: LayoutRectWrapper) {
@@ -62,7 +66,7 @@ class RenderOverflow {
   }
 
   private var layoutOverflow: LayoutRectWrapper
-  private let visualOverflow: LayoutRectWrapper
+  private var visualOverflow: LayoutRectWrapper
 
   var layoutClientAfterEdge = LayoutUnit()
 }
