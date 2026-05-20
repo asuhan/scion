@@ -505,8 +505,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     _ layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!fragmentsInvalidated)
+
+    for fragment in fragmentList {
+      fragment.collectLayerFragments(
+        &layerFragments, layerBoundingBox: layerBoundingBox, dirtyRect: dirtyRect)
+    }
   }
 
   func fragmentsBoundingBox(layerBoundingBox: LayoutRectWrapper) -> LayoutRectWrapper {
