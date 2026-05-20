@@ -31,6 +31,5 @@
 func floatValueForCenterCoordinate(_ center: BasicShapeCenterCoordinate, _ boxDimension: Float32)
   -> Float32
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return floatValueForLength(center.length(), boxDimension)
 }

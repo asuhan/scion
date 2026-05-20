@@ -44,7 +44,13 @@ class BasicShape {
   }
 }
 
-struct BasicShapeCenterCoordinate {}
+struct BasicShapeCenterCoordinate {
+  init() { m_length = LengthWrapper(value: Int32(100), type: .Percent) }
+
+  func length() -> LengthWrapper { return m_length }
+
+  private let m_length: LengthWrapper
+}
 
 struct BasicShapeRadius {
   enum `Type` {
