@@ -175,8 +175,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func hasValidFragmentInfo() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !fragmentsInvalidated && !fragmentList.isEmptyIgnoringNullReferences()
   }
 
   // Called when a descendant box's layout is finished and it has been positioned within its container.
