@@ -289,8 +289,7 @@ class GridMasonryLayout {
   }
 
   private func gridAxisSpanFromArea(gridArea: GridArea) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return gridAxisDirection() == .ForRows ? gridArea.rows : gridArea.columns
   }
 
   private func hasEnoughSpaceAtPosition(startingPosition: UInt32, spanLength: UInt32) -> Bool {
