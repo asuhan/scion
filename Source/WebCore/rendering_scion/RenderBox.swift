@@ -4821,8 +4821,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func markForPaginationRelayoutIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    wk_interop.RenderBox_markForPaginationRelayoutIfNeeded(id())
   }
 
   override func lineHeight(

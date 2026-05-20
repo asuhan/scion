@@ -319,6 +319,11 @@ extern "C" WEBCORE_EXPORT bool RenderBox_avoidsFloats(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->avoidsFloats();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_markForPaginationRelayoutIfNeeded(void* p)
+{
+    static_cast<WebCore::RenderBox*>(p)->markForPaginationRelayoutIfNeeded();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(void* p, LayoutPointRaw position)
 {
     static_cast<WebCore::RenderBox*>(p)->flipForWritingMode(WebCore::LayoutPoint(
