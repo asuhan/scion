@@ -625,8 +625,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   func clearCachedMainSizeForFlexItem(flexItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    intrinsicSizeAlongMainAxis.removeValue(forKey: CPtrToInt(flexItem.id()))
   }
 
   private func cachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) -> LayoutUnit
