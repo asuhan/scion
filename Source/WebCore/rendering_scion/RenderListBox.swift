@@ -213,8 +213,22 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     _ result: inout HitTestResultWrapper, locationInContainer: LayoutPointWrapper,
     accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard let activeScrollbar = verticalScrollbar() ?? horizontalScrollbar() else { return false }
+
+    if !activeScrollbar.shouldParticipateInHitTesting() {
+      return false
+    }
+
+    var scrollbarRect = rectForScrollbar(activeScrollbar)
+    scrollbarRect.moveBy(offset: accumulatedOffset)
+
+    if !scrollbarRect.contains(point: locationInContainer) {
+      return false
+    }
+
+    result.setScrollbar(activeScrollbar)
+    return true
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
