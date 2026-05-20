@@ -460,8 +460,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func layerTransform() -> TransformationMatrix? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if hasLayer() {
+      return layer()!.transform
+    }
+    return nil
   }
 
   func updateLayerTransform() {
