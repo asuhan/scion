@@ -819,8 +819,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
   // FIXME: Eventually as column and fragment flow threads start nesting, this may end up changing.
   func shouldCheckColumnBreaks() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   // Always create a RenderLayer for the RenderFragmentedFlow so that we
