@@ -122,8 +122,12 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
 
   @discardableResult
   func remove(value: T) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    amortizedCleanupIfNeeded()
+    let it = m_set.find(value: WeakPtr(value))
+    if it != m_set.end() {
+      return m_set.remove(it)
+    }
+    return false
   }
 
   func clear() {

@@ -127,7 +127,7 @@ final class ListHashSet<T: Equatable & Hashable>: Sequence {
     return m_tail!.m_value
   }
 
-  func find(value: T) -> ListHashSetIterator<T> {
+  func find(value: T) -> iterator {
     if let it = m_impl[value] {
       return makeIterator(it)
     }
