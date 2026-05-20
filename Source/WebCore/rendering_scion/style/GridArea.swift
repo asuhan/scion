@@ -45,6 +45,10 @@ struct GridSpan: Sequence, IteratorProtocol {
     return GridSpan(startLine: 0, endLine: 1, type: .Indefinite)
   }
 
+  static func masonryAxisTranslatedDefiniteGridSpan() -> GridSpan {
+    return GridSpan(startLine: 0, endLine: 1, type: .TranslatedDefinite)
+  }
+
   func integerSpan() -> UInt32 {
     assert(!isIndefinite())
     return UInt32(m_endLine - m_startLine)

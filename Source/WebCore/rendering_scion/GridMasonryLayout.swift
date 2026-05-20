@@ -284,8 +284,9 @@ class GridMasonryLayout {
   }
 
   private func masonryGridAreaFromGridAxisSpan(gridAxisSpan: GridSpan) -> GridArea {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return masonryAxisDirection == .ForRows
+      ? GridArea(r: m_masonryAxisSpan, c: gridAxisSpan)
+      : GridArea(r: gridAxisSpan, c: m_masonryAxisSpan)
   }
 
   private func gridAxisSpanFromArea(gridArea: GridArea) -> GridSpan {
@@ -309,6 +310,7 @@ class GridMasonryLayout {
   var gridContentSize = LayoutUnit()
 
   private var masonryAxisDirection: GridTrackSizingDirection = .ForColumns
+  private let m_masonryAxisSpan = GridSpan.masonryAxisTranslatedDefiniteGridSpan()
 
   private var autoFlowNextCursor: UInt32 = 0
 }
