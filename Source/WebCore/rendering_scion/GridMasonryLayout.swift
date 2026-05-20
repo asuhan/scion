@@ -294,8 +294,8 @@ class GridMasonryLayout {
   }
 
   private func hasEnoughSpaceAtPosition(startingPosition: UInt32, spanLength: UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(startingPosition < gridAxisTracksCount)
+    return (startingPosition + spanLength) <= gridAxisTracksCount
   }
 
   private var gridAxisTracksCount: UInt32 = 0
