@@ -373,8 +373,8 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
 
 final class RenderTextControlInnerBlockWrapper: RenderBlockFlowWrapper {
   override func hasLineIfEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   override final func canBeProgramaticallyScrolled() -> Bool {
