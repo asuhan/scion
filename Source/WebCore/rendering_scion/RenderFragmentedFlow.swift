@@ -496,8 +496,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func applyBreakAfterContent(offsetBreak: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): should this be a no-op?
   }
 
   func isPageLogicalHeightKnown() -> Bool { return true }
