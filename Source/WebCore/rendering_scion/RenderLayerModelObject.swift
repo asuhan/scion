@@ -484,10 +484,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   func applyTransform(
     transform: inout TransformationMatrix, style: RenderStyleWrapper, boundingBox: FloatRectWrapper,
     options: RenderStyleWrapper.TransformOperationOption
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  ) { fatalError("Not reached") }
 
   private func createLayer() {
     assert(isNativeImpl())
