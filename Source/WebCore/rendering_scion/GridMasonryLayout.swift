@@ -266,8 +266,8 @@ class GridMasonryLayout {
   }
 
   private func updateItemOffset(gridItem: RenderBoxWrapper, offset: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We set() and not add() to update the value if the |gridItem| is already inserted
+    itemOffsets[CPtrToInt(gridItem.id())] = offset
   }
 
   private func gridAxisDirection() -> GridTrackSizingDirection {
@@ -305,7 +305,7 @@ class GridMasonryLayout {
   private var itemsWithIndefiniteGridAxisPosition: [RenderBoxWrapper] = []
 
   private var runningPositions: [LayoutUnit] = []
-  private let itemOffsets: [UInt: LayoutUnit] = [:]
+  private var itemOffsets: [UInt: LayoutUnit] = [:]
   private let renderGrid: RenderGridWrapper
   private var masonryAxisGridGap = LayoutUnit()
   var gridContentSize = LayoutUnit()
