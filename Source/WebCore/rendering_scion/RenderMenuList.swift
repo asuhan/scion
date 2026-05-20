@@ -32,8 +32,8 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   func innerRenderer() -> RenderBlockWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return innerBlock
   }
 
   func setInnerRenderer(innerRenderer: RenderBlockWrapper) {
