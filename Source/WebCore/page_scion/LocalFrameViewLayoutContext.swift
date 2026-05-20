@@ -146,8 +146,7 @@ class LocalFrameViewLayoutContextWrapper {
   // Note that even when disabled, LayoutState is still used to store layoutDelta.
   // These functions may only be accessed by LayoutStateMaintainer or LayoutStateDisabler.
   func disablePaintOffsetCache() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameViewLayoutContext_disablePaintOffsetCache(p)
   }
 
   func enablePaintOffsetCache() { wk_interop.LocalFrameViewLayoutContext_enablePaintOffsetCache(p) }

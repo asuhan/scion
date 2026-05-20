@@ -149,6 +149,11 @@ extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_popLayoutState(void* 
     static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->popLayoutState();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_disablePaintOffsetCache(void* p)
+{
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->disablePaintOffsetCache();
+}
+
 extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_enablePaintOffsetCache(void* p)
 {
     static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->enablePaintOffsetCache();
