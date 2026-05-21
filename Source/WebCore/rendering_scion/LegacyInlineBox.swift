@@ -113,6 +113,10 @@ class LegacyInlineBox {
     return result
   }
 
+  func frameRect() -> FloatRectWrapper {
+    return FloatRectWrapper(location: topLeft(), size: size())
+  }
+
   func dirtyLineBoxes() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
