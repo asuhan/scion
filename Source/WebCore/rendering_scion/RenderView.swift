@@ -753,6 +753,18 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     m_hasQuotesNeedingUpdate = b
   }
 
+  func addCounterNeedingUpdate(_ renderer: RenderCounter) {
+    assert(isNativeImpl())
+    m_countersNeedingUpdate[CPtrToInt(renderer.id())] = renderer
+  }
+
+  func takeCountersNeedingUpdate() -> [RenderCounter] {
+    assert(isNativeImpl())
+    let result = [RenderCounter](m_countersNeedingUpdate.values)
+    m_countersNeedingUpdate = [:]
+    return result
+  }
+
   func incrementRendersWithOutline() {
     assert(isNativeImpl())
     m_renderersWithOutlineCount += 1
@@ -1123,6 +1135,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
+
+  private var m_countersNeedingUpdate: [UInt: RenderCounter] = [:]
 
   private let m_renderersWithPausedImageAnimation: [UInt: [WeakRef<CachedImageWrapper>]] =
     [:]
