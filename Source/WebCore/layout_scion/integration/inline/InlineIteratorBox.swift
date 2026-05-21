@@ -200,6 +200,8 @@ extension InlineIterator {
 
     init(_ pathVariant: InlineIterator.Box.PathVariant) { m_box = InlineIterator.Box(pathVariant) }
 
+    init(_ run: InlineIterator.Box) { m_box = run }
+
     func bool() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

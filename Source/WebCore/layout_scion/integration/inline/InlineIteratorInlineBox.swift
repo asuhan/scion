@@ -92,10 +92,7 @@ extension InlineIterator {
 
     init(pathVariant: InlineIterator.Box.PathVariant) { super.init(pathVariant) }
 
-    init(box: InlineIterator.Box) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    init(box: InlineIterator.Box) { super.init(box) }
 
     @discardableResult
     func traverseNextInlineBox() -> InlineBoxIterator {
