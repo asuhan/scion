@@ -145,6 +145,8 @@ extension InlineDisplay {
 
     func isVisible() -> Bool { return !isFullyTruncated && style().usedVisibility() == .Visible }
 
+    func isHorizontal() -> Bool { return style().isHorizontalWritingMode() }
+
     func isVisibleIgnoringUsedVisibility() -> Bool {
       return !isFullyTruncated && style().visibility() == .Visible
     }
