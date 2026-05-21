@@ -240,8 +240,11 @@ extension LayoutIntegration {
       }
 
       if renderBox is RenderTableWrapper {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // Tables have their special collapsed border values (updated at layout).
+        let style = layoutBox.parent().style
+        boxGeometry.setBorder(
+          border: logicalBorder(
+            renderer: renderBox, isLeftToRightInlineDirection: style.isLeftToRightDirection()))
       }
 
       if BoxGeometryUpdater.needsFullGeometryUpdate(layoutBox: layoutBox, renderBox: renderBox) {
