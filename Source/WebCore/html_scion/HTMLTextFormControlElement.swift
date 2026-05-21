@@ -22,14 +22,15 @@
  *
  */
 
+import wk_interop
+
 class HTMLTextFormControlElementWrapper: HTMLFormControlElementWrapper {
   func placeholderElement() -> HTMLElementWrapper? {
     fatalError("Not reached")
   }
 
   func updatePlaceholderVisibility() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.HTMLTextFormControlElement_updatePlaceholderVisibility(p)
   }
 
   func createInnerTextStyle(_ style: RenderStyleWrapper) -> RenderStyleWrapper {

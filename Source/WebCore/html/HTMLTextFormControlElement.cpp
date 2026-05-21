@@ -67,6 +67,11 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/StringBuilder.h>
 
+extern "C" WEBCORE_EXPORT void HTMLTextFormControlElement_updatePlaceholderVisibility(void* p)
+{
+    static_cast<WebCore::HTMLTextFormControlElement*>(p)->updatePlaceholderVisibility();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTextFormControlElement);
