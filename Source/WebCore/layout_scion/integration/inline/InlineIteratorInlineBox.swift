@@ -83,16 +83,14 @@ extension InlineIterator {
   {
     assert(content.displayContent.boxes[Int(boxIndex)].isInlineBox())
     return InlineBoxIterator(
-      pathVariant: InlineIterator.BoxModernPath(inlineContent: content, startIndex: boxIndex))
+      pathVariant: .modern(
+        InlineIterator.BoxModernPath(inlineContent: content, startIndex: boxIndex)))
   }
 
   class InlineBoxIterator: BoxIterator<InlineBox> {
     override init() { super.init() }
 
-    init(pathVariant: BoxPath) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    init(pathVariant: InlineIterator.Box.PathVariant) { super.init(pathVariant) }
 
     init(box: InlineIterator.Box) {
       // TODO(asuhan): implement this
