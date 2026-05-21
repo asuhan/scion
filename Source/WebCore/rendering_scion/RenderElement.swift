@@ -1576,6 +1576,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     m_layoutIdentifier = layoutIdentifier
   }
 
+  private func layoutIdentifier() -> LayoutIdentifier {
+    assert(isNativeImpl())
+    return m_layoutIdentifier
+  }
+
+  func didVisitSinceLayout(_ identifier: LayoutIdentifier) -> Bool {
+    assert(isNativeImpl())
+    return layoutIdentifier() >= identifier
+  }
+
   func setFirstChild(_ firstChild: RenderObjectWrapper?) {
     assert(isNativeImpl())
     m_firstChild = firstChild
