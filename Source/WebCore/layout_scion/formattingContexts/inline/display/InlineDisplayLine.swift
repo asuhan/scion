@@ -124,8 +124,25 @@ extension InlineDisplay {
     func boxCount() -> UInt64 { return m_boxCount }
 
     func moveInBlockDirection(offset: Float32, isHorizontalWritingMode: Bool) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(isHorizontalWritingMode == isHorizontal)
+
+      if offset == 0 {
+        return
+      }
+
+      let physicalOffset =
+        isHorizontalWritingMode
+        ? FloatSize(width: 0, height: offset) : FloatSize(width: offset, height: 0)
+
+      lineBoxRect.move(delta: physicalOffset)
+      scrollableOverflow.move(delta: physicalOffset)
+      contentOverflow.move(delta: physicalOffset)
+      inkOverflow.move(delta: physicalOffset)
+      ellipsis?.visualRect.move(delta: physicalOffset)
+
+      lineBoxLogicalRect.move(delta: FloatSize(width: 0, height: offset))
+      enclosingLogicalTopAndBottom.top += offset
+      enclosingLogicalTopAndBottom.bottom += offset
     }
 
     struct Ellipsis {
