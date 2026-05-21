@@ -70,6 +70,11 @@
 #include "ImageControlsMac.h"
 #endif
 
+extern "C" WEBCORE_EXPORT uint8_t HTMLImageElement_decodingMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::HTMLImageElement*>(p)->decodingMode());
+}
+
 extern "C" WEBCORE_EXPORT bool HTMLImageElement_isDeferred(const void* p)
 {
     return static_cast<const WebCore::HTMLImageElement*>(p)->isDeferred();

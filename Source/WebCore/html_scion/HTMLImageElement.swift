@@ -24,8 +24,7 @@ import wk_interop
 
 class HTMLImageElementWrapper: HTMLElementWrapper {
   func decodingMode() -> DecodingMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return DecodingMode(rawValue: wk_interop.HTMLImageElement_decodingMode(p))!
   }
 
   func isDeferred() -> Bool { return wk_interop.HTMLImageElement_isDeferred(p) }
