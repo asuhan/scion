@@ -1459,7 +1459,10 @@ const SingleThreadWeakHashSet<const RenderBox>& RenderView::containerQueryBoxes(
 
 void RenderView::addCounterNeedingUpdate(RenderCounter& renderer)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->addCounterNeedingUpdate(renderer);
+        return;
+    }
     m_countersNeedingUpdate.add(renderer);
 }
 

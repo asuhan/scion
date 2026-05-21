@@ -619,6 +619,8 @@ extern "C" FloatSizeRaw RenderViewScion_sizeForCSSDefaultViewportUnits(const voi
 
 extern "C" void RenderViewScion_setHasQuotesNeedingUpdate(void*, bool);
 
+extern "C" void RenderViewScion_addCounterNeedingUpdate(void*, void*);
+
 extern "C" void RenderViewScion_incrementRendersWithOutline(void*);
 
 extern "C" void RenderViewScion_decrementRendersWithOutline(void*);
@@ -1787,6 +1789,11 @@ FloatSize RenderViewScion::sizeForCSSDefaultViewportUnits() const
 void RenderViewScion::setHasQuotesNeedingUpdate(bool b)
 {
     RenderViewScion_setHasQuotesNeedingUpdate(m_handle, b);
+}
+
+void RenderViewScion::addCounterNeedingUpdate(RenderCounter& renderer)
+{
+    RenderViewScion_addCounterNeedingUpdate(m_handle, &renderer);
 }
 
 void RenderViewScion::incrementRendersWithOutline()

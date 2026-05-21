@@ -879,6 +879,14 @@ func RenderViewScion_setHasQuotesNeedingUpdate(_ viewRaw: UnsafeMutableRawPointe
   view.setHasQuotesNeedingUpdate(b)
 }
 
+@_cdecl("RenderViewScion_addCounterNeedingUpdate")
+func RenderViewScion_addCounterNeedingUpdate(
+  _ viewRaw: UnsafeMutableRawPointer, _ renderer: UnsafeMutableRawPointer
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.addCounterNeedingUpdate(RenderCounter(p: renderer))
+}
+
 @_cdecl("RenderViewScion_incrementRendersWithOutline")
 func RenderViewScion_incrementRendersWithOutline(_ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

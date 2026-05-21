@@ -37,6 +37,7 @@ namespace WebCore {
 class HitTestLocation;
 class HitTestRequest;
 class HitTestResult;
+class RenderCounter;
 class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
@@ -656,6 +657,8 @@ public:
     FloatSize sizeForCSSDefaultViewportUnits() const;
 
     void setHasQuotesNeedingUpdate(bool);
+
+    void addCounterNeedingUpdate(RenderCounter&);
 
     void incrementRendersWithOutline();
 
