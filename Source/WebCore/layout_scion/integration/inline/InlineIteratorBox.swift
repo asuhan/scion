@@ -119,15 +119,9 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func direction() -> TextDirection {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
-    func isLeftToRightDirection() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isLeftToRightDirection() -> Bool { return direction() == .LTR }
 
     func renderer() -> RenderObjectWrapper {
       // TODO(asuhan): implement this
