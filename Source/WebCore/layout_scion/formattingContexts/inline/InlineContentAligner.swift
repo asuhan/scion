@@ -131,7 +131,7 @@ internal func isInsideCurrentRubyBase(
   return false
 }
 
-internal func shiftRubyBaseContentByAlignmentOffset(
+private func shiftRubyBaseContentByAlignmentOffset(
   baseIndexAndOffset: BaseIndexAndOffset, displayBoxes: InlineDisplay.Boxes,
   alignmentOffsetList: [UInt: InlineLayoutUnit],
   adjustContentOnlyInsideRubyBase: InlineContentAligner.AdjustContentOnlyInsideRubyBase,
@@ -147,7 +147,7 @@ internal func shiftRubyBaseContentByAlignmentOffset(
   // Shift base content within the base (no resize) as part of the alignment process.
   let rootBox = inlineFormattingContext.root()
   let rubyBaseBox = displayBoxes[Int(baseIndex)].layoutBox
-  let baseOffset = baseIndexAndOffset.offset
+  var baseOffset = baseIndexAndOffset.offset
   let baseContentOffset = alignmentOffset(
     layoutBox: rubyBaseBox, alignmentOffsetList: alignmentOffsetList)
   var baseContentIndex = baseIndex + 1
@@ -164,8 +164,17 @@ internal func shiftRubyBaseContentByAlignmentOffset(
         inlineFormattingContext: inlineFormattingContext)
     }
     if layoutBox.isRubyBase() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let baseEndIndexAndAlignment = shiftRubyBaseContentByAlignmentOffset(
+        baseIndexAndOffset: BaseIndexAndOffset(
+          index: baseContentIndex, offset: baseOffset + baseContentOffset),
+        displayBoxes: displayBoxes, alignmentOffsetList: alignmentOffsetList,
+        adjustContentOnlyInsideRubyBase: adjustContentOnlyInsideRubyBase,
+        inlineFormattingContext: inlineFormattingContext)
+      baseContentIndex = baseEndIndexAndAlignment.index
+      if adjustContentOnlyInsideRubyBase == .No {
+        baseOffset += baseEndIndexAndAlignment.offset
+      }
+      continue
     }
     baseContentIndex += 1
   }
