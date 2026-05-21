@@ -2690,7 +2690,7 @@ private:
     mutable std::unique_ptr<CSSParserContext> m_cachedCSSParserContext;
     mutable std::unique_ptr<PermissionsPolicy> m_permissionsPolicy;
 
-    static bool s_useScionRendering;
+    static uint8_t s_useScionRendering;
 };
 
 Element* eventTargetElementForDocument(Document*);

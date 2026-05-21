@@ -11337,7 +11337,7 @@ void Document::securityOriginDidChange()
     m_permissionsPolicy = nullptr;
 }
 
-bool Document::s_useScionRendering = parseInteger<uint8_t>(StringView::fromLatin1(getenv("SCION_USE_RENDERING"))).value_or(0);
+uint8_t Document::s_useScionRendering = parseInteger<uint8_t>(StringView::fromLatin1(getenv("SCION_USE_RENDERING"))).value_or(0);
 
 } // namespace WebCore
 
