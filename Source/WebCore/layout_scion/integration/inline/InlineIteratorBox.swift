@@ -124,8 +124,12 @@ extension InlineIterator {
     func isLeftToRightDirection() -> Bool { return direction() == .LTR }
 
     func renderer() -> RenderObjectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.renderer()
+      case .legacy(let path):
+        return path.renderer()
+      }
     }
 
     private func formattingContextRoot() -> RenderBlockFlowWrapper {
