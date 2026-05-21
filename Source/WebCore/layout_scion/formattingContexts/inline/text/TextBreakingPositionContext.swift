@@ -25,7 +25,18 @@
 
 struct TextBreakingPositionContext {
   init(style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    whitespace = style.whiteSpace()
+    overflowWrap = style.overflowWrap()
+    lineBreak = style.lineBreak()
+    wordBreak = style.wordBreak()
+    nbspMode = style.nbspMode()
+    locale = style.computedLocale()
   }
+
+  let whitespace: WhiteSpace
+  let overflowWrap: OverflowWrap
+  let lineBreak: LineBreak
+  let wordBreak: WordBreak
+  let nbspMode: NBSPMode
+  let locale: AtomStringWrapper
 }
