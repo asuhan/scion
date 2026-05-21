@@ -25,7 +25,7 @@
 
 extension InlineIterator {
   class SVGTextBox: TextBox {
-    override init() {
+    init() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

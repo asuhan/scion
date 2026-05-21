@@ -26,6 +26,13 @@
 extension InlineIterator {
 
   class Box {
+    enum PathVariant {
+      case modern(BoxModernPath)
+      case legacy(BoxLegacyPath)
+    }
+
+    init(_ path: PathVariant) { m_pathVariant = path }
+
     func isText() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -78,8 +85,12 @@ extension InlineIterator {
     }
 
     func isHorizontal() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.isHorizontal()
+      case .legacy(let path):
+        return path.isHorizontal()
+      }
     }
 
     func minimumCaretOffset() -> UInt32 {
@@ -167,6 +178,8 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let m_pathVariant: PathVariant
   }
 
   class BoxIterator<Box>: Equatable, IteratorProtocol {
