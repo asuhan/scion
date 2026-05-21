@@ -49,8 +49,9 @@ extension InlineIterator {
     }
 
     func visualRect() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var rect = visualRectIgnoringBlockDirection()
+      formattingContextRoot().flipForWritingMode(rect: &rect)
+      return rect
     }
 
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
@@ -135,6 +136,15 @@ extension InlineIterator {
     func renderer() -> RenderObjectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    private func formattingContextRoot() -> RenderBlockFlowWrapper {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.formattingContextRoot()
+      case .legacy(let path):
+        return path.formattingContextRoot()
+      }
     }
 
     func style() -> RenderStyleWrapper {
