@@ -28,8 +28,9 @@ struct InlineInvalidation {
     inlineDamage: InlineDamageWrapper, inlineItemList: InlineItemList,
     displayContent: InlineDisplay.Content
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_inlineDamage = inlineDamage
+    m_inlineItemList = inlineItemList
+    m_displayContent = displayContent
   }
 
   func rootStyleWillChange(formattingContextRoot: ElementBoxWrapper, newStyle: RenderStyleWrapper)
@@ -89,4 +90,8 @@ struct InlineInvalidation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_inlineDamage: InlineDamageWrapper
+  private let m_inlineItemList: InlineItemList
+  private let m_displayContent: InlineDisplay.Content
 }
