@@ -29,10 +29,10 @@ private func clamp(value: UInt32, low: UInt32, high: UInt32) -> UInt32 {
 struct TextBoxSelectableRange {
   let start: UInt32
   let length: UInt32
-  let additionalLengthAtEnd: UInt32 = 0
-  let isLineBreak = false
+  let additionalLengthAtEnd: UInt32
+  let isLineBreak: Bool
   // FIXME: Consider holding onto the truncation position instead. See webkit.org/b/164999
-  let truncation: UInt32? = nil
+  let truncation: UInt32?
 
   func clamp(offset: UInt32) -> UInt32 {
     var clampedOffset = layout_scion.clamp(value: offset, low: start, high: start + length) - start

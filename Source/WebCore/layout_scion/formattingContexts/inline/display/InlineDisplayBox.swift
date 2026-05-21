@@ -43,8 +43,15 @@ extension InlineDisplay {
         self.hasHyphen = hasHyphen
       }
 
+      func partiallyVisibleContentLength() -> UInt32? {
+        if !hasPartiallyVisibleContentLength {
+          return nil
+        }
+        return m_partiallyVisibleContentLength
+      }
+
       func setPartiallyVisibleContentLength(truncatedLength: UInt64) {
-        partiallyVisibleContentLength = UInt32(truncatedLength)
+        m_partiallyVisibleContentLength = UInt32(truncatedLength)
         hasPartiallyVisibleContentLength = true
       }
 
@@ -66,7 +73,7 @@ extension InlineDisplay {
 
       var start: UInt32 = 0
       var length: UInt32 = 0
-      var partiallyVisibleContentLength: UInt32 = 0
+      var m_partiallyVisibleContentLength: UInt32 = 0
       var hasPartiallyVisibleContentLength = false
       var hasHyphen = false
     }

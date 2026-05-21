@@ -50,8 +50,24 @@ extension InlineIterator {
     func length() -> UInt32 { return box().text().length }
 
     func selectableRange() -> TextBoxSelectableRange {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let box = box()
+      let textContent = box.text()
+      let extraTrailingLength = { () -> UInt32 in
+        if textContent.hasHyphen {
+          return box.style().hyphenString().length()
+        }
+        if (box.layoutBox as! InlineTextBoxWrapper).isCombined {
+          assert(textContent.renderedContent().length() >= self.length())
+          return textContent.renderedContent().length() - self.length()
+        }
+        return 0
+      }
+      return TextBoxSelectableRange(
+        start: start(),
+        length: length(),
+        additionalLengthAtEnd: extraTrailingLength(),
+        isLineBreak: box.isLineBreak(),
+        truncation: textContent.partiallyVisibleContentLength())
     }
 
     func textRun(mode: InlineIterator.TextRunMode) -> TextRunWrapper {

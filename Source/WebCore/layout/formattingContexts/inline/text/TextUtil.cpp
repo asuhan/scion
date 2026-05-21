@@ -833,6 +833,11 @@ extern "C" bool AtomString_isEmpty(const void* p)
     return static_cast<const AtomString*>(p)->isEmpty();
 }
 
+extern "C" uint32_t AtomString_length(const void* p)
+{
+    return static_cast<const AtomString*>(p)->length();
+}
+
 extern "C" void AtomString_destroy(const void* p)
 {
     delete static_cast<const AtomString*>(p);

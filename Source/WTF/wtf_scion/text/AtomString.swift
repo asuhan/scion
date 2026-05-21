@@ -42,6 +42,8 @@ class AtomStringWrapper: Hashable, CustomStringConvertible {
     return StringWrapper(p: wk_interop.AtomString_string(p), owner: false)
   }
 
+  func length() -> UInt32 { return wk_interop.AtomString_length(p) }
+
   func isNull() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this

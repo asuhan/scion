@@ -229,7 +229,7 @@ public func InlineFormattingContext_layout(
       box.isTextOrSoftLineBreak()
       ? wk_interop.Text_new(
         UInt64(box.text().start), UInt64(box.text().length),
-        box.text().partiallyVisibleContentLength,
+        box.text().m_partiallyVisibleContentLength,
         box.text().hasPartiallyVisibleContentLength, box.text().m_originalContent.p,
         wk_interop.String_new_copy(box.text().adjustedContentToRender.p),
         box.text().hasHyphen) : nil
@@ -395,7 +395,7 @@ public func LineLayout_layout(
       box.isTextOrSoftLineBreak()
       ? wk_interop.Text_new(
         UInt64(box.text().start), UInt64(box.text().length),
-        box.text().partiallyVisibleContentLength,
+        box.text().m_partiallyVisibleContentLength,
         box.text().hasPartiallyVisibleContentLength, box.text().m_originalContent.p,
         wk_interop.String_new_copy(box.text().adjustedContentToRender.p),
         box.text().hasHyphen) : nil
