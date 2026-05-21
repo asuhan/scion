@@ -76,10 +76,7 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func isFirstLine() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isFirstLine() -> Bool { return box().lineIndex == 0 }
 
     func box() -> InlineDisplay.Box { return boxes()[Int(boxIndex)] }
 
