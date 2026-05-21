@@ -59,10 +59,7 @@ extension InlineIterator {
       return self.textRun(mode: .Painting)
     }
 
-    func renderer() -> RenderObjectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func renderer() -> RenderObjectWrapper { return box().layoutBox.rendererForIntegration()! }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
       return inlineContent.formattingContextRoot()
