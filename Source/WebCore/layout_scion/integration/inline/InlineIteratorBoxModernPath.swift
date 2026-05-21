@@ -37,20 +37,11 @@ extension InlineIterator {
 
     func isHorizontal() -> Bool { return box().isHorizontal() }
 
-    func start() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func start() -> UInt32 { return box().text().start }
 
-    func end() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func end() -> UInt32 { return UInt32(box().text().end()) }
 
-    func length() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func length() -> UInt32 { return box().text().length }
 
     func selectableRange() -> TextBoxSelectableRange {
       // TODO(asuhan): implement this
