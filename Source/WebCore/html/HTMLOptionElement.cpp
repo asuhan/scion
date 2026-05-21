@@ -48,6 +48,12 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT bool HTMLOptionElement_selected(const void* p, bool allowStyleInvalidation)
+{
+    return static_cast<const WebCore::HTMLOptionElement*>(p)->selected(
+        allowStyleInvalidation ? WebCore::AllowStyleInvalidation::Yes : WebCore::AllowStyleInvalidation::No);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLOptionElement);

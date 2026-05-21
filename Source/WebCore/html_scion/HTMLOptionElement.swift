@@ -24,6 +24,8 @@
  *
  */
 
+import wk_interop
+
 enum AllowStyleInvalidation {
   case No
   case Yes
@@ -31,8 +33,7 @@ enum AllowStyleInvalidation {
 
 final class HTMLOptionElementWrapper: HTMLElementWrapper {
   func selected(_ allowStyleInvalidation: AllowStyleInvalidation = .Yes) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.HTMLOptionElement_selected(p, allowStyleInvalidation == .Yes)
   }
 
   func textIndentedToRespectGroupLabel() -> StringWrapper {

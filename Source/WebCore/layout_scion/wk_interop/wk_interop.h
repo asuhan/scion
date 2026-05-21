@@ -1646,6 +1646,7 @@ bool HTMLFrameSetElement_hasBorderColor(const void*);
 bool is_HTMLFrameSetElement(const void*);
 void HTMLCanvasElement_setIsSnapshotting(void*, bool);
 uint8_t HTMLImageElement_decodingMode(const void*);
+bool HTMLOptionElement_selected(const void*, bool);
 bool HTMLImageElement_isDeferred(const void*);
 bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
 uint32_t HTMLSelectElement_size(const void*);
