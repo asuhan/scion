@@ -45,10 +45,7 @@ class InlineLayoutState {
     return parentBlockLayoutState.placedFloats
   }
 
-  func setLegacyClampedLineIndex(lineIndex: UInt64) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setLegacyClampedLineIndex(lineIndex: UInt64) { legacyClampedLineIndex = lineIndex }
 
   func setHyphenationLimitLines(hyphenationLimitLines: UInt64) {
     self.hyphenationLimitLines = hyphenationLimitLines
@@ -95,6 +92,7 @@ class InlineLayoutState {
   var clearGapAfterLastLine = InlineLayoutUnit()
   var firstLineStartTrimForInitialLetter = InlineLayoutUnit()
   var clampedLineIndex: UInt64? = nil
+  var legacyClampedLineIndex: UInt64? = nil
   var hyphenationLimitLines: UInt64? = nil
   var successiveHyphenatedLineCount: UInt64 = 0
   private var nestedListMarkerOffsets: [UInt: LayoutUnit] = [:]
