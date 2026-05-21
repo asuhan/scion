@@ -152,8 +152,12 @@ extension InlineIterator {
 
     // FIXME: Remove. For intermediate porting steps only.
     func legacyInlineBox() -> LegacyInlineBox? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern:
+        return nil
+      case .legacy(let path):
+        return path.legacyInlineBox()
+      }
     }
 
     func nextOnLine() -> LeafBoxIterator {
