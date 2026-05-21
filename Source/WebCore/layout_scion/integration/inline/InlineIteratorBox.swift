@@ -70,10 +70,7 @@ extension InlineIterator {
 
     func logicalTop() -> Float32 { return logicalRectIgnoringInlineDirection().y() }
 
-    func logicalBottom() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func logicalBottom() -> Float32 { return logicalRectIgnoringInlineDirection().maxY() }
 
     func logicalWidth() -> Float32 {
       // TODO(asuhan): implement this
