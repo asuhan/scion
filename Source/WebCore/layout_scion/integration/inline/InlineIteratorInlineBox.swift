@@ -49,10 +49,7 @@ extension InlineIterator {
       return InlineBoxIterator(box: self).traversePreviousInlineBox()
     }
 
-    func iterator() -> InlineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func iterator() -> InlineBoxIterator { return InlineBoxIterator(box: self) }
 
     func firstLeafBox() -> LeafBoxIterator {
       // TODO(asuhan): implement this
