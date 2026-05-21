@@ -62,10 +62,13 @@ extension InlineIterator {
       }
     }
 
-    func logicalTop() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    // Visual in inline direction, logical for writing mode.
+    private func logicalRectIgnoringInlineDirection() -> FloatRectWrapper {
+      let rect = visualRectIgnoringBlockDirection()
+      return isHorizontal() ? rect : rect.transposedRect()
     }
+
+    func logicalTop() -> Float32 { return logicalRectIgnoringInlineDirection().y() }
 
     func logicalBottom() -> Float32 {
       // TODO(asuhan): implement this
