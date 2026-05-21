@@ -36,13 +36,11 @@ extension InlineIterator {
     }
 
     func nextInlineBox() -> InlineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return InlineBoxIterator(box: self).traverseNextInlineBox()
     }
 
     func previousInlineBox() -> InlineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return InlineBoxIterator(box: self).traversePreviousInlineBox()
     }
 
     func iterator() -> InlineBoxIterator {
