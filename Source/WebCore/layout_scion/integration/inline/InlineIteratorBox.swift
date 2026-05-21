@@ -104,13 +104,11 @@ extension InlineIterator {
     }
 
     func leftmostCaretOffset() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return isLeftToRightDirection() ? minimumCaretOffset() : maximumCaretOffset()
     }
 
     func rightmostCaretOffset() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return isLeftToRightDirection() ? maximumCaretOffset() : minimumCaretOffset()
     }
 
     func bidiLevel() -> UInt8 {
