@@ -1045,8 +1045,7 @@ class LayoutIntegration {
     func flow() -> RenderBlockFlowWrapper { return boxTree.rootRenderer as! RenderBlockFlowWrapper }
 
     func contentNeedsVisualReordering() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return inlineContentCache!.inlineItems.requiresVisualReordering()
     }
 
     func damage() -> InlineDamageWrapper? {
