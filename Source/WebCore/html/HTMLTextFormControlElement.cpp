@@ -72,6 +72,11 @@ extern "C" WEBCORE_EXPORT void HTMLTextFormControlElement_updatePlaceholderVisib
     static_cast<WebCore::HTMLTextFormControlElement*>(p)->updatePlaceholderVisibility();
 }
 
+extern "C" WEBCORE_EXPORT bool HTMLTextFormControlElement_isInnerTextElementEditable(const void* p)
+{
+    return static_cast<const WebCore::HTMLTextFormControlElement*>(p)->isInnerTextElementEditable();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTextFormControlElement);
