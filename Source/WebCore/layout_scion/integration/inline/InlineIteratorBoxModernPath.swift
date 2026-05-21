@@ -81,9 +81,10 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func box() -> InlineDisplay.Box {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    func box() -> InlineDisplay.Box { return boxes()[Int(boxIndex)] }
+
+    private func boxes() -> ArraySlice<InlineDisplay.Box> {
+      return inlineContent.displayContent.boxes[...]
     }
 
     func deepCopy() -> BoxPath {
