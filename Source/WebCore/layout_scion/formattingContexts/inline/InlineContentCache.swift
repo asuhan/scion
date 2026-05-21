@@ -51,8 +51,9 @@ class InlineContentCache {
       insertionPosition: UInt64, inlineItemList: InlineItemList,
       contentAttributes: ContentAttributes
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.inlineItemList.removeSubrange(Int(insertionPosition)...)
+      self.inlineItemList += inlineItemList
+      self.contentAttributes = contentAttributes
     }
 
     func isEmpty() -> Bool {
