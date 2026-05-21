@@ -54,8 +54,12 @@ extension InlineIterator {
     }
 
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.visualRectIgnoringBlockDirection()
+      case .legacy(let path):
+        return path.visualRectIgnoringBlockDirection()
+      }
     }
 
     func logicalTop() -> Float32 {
