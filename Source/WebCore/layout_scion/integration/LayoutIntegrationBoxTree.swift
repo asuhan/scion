@@ -73,8 +73,16 @@ extension LayoutIntegration {
     }
 
     func contains(rendererToFind: RenderElementWrapper) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      guard let boxToFind = rendererToFind.layoutBox() else { return false }
+
+      var ancestor = boxToFind.parent()
+      while true {
+        if ancestor.establishesFormattingContext() {
+          break
+        }
+        ancestor = ancestor.parent()
+      }
+      return CPtrToInt(ancestor.p) == CPtrToInt(rootLayoutBox().p)
     }
 
     private func buildTreeForInlineContent() {
