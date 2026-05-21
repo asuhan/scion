@@ -142,8 +142,12 @@ extension InlineIterator {
     }
 
     func style() -> RenderStyleWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.style()
+      case .legacy(let path):
+        return path.style()
+      }
     }
 
     // FIXME: Remove. For intermediate porting steps only.
