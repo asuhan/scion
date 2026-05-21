@@ -184,8 +184,9 @@ class LayoutIntegration {
   static func flippedRectForWritingMode(root: RenderBlockFlowWrapper, rect: FloatRectWrapper)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var flippedRect = LayoutRectWrapper(r: rect)
+    root.flipForWritingMode(rect: &flippedRect)
+    return flippedRect
   }
 
   class LineLayout {
