@@ -1468,10 +1468,7 @@ void RenderView::addCounterNeedingUpdate(RenderCounter& renderer)
 
 SingleThreadWeakHashSet<RenderCounter> RenderView::takeCountersNeedingUpdate()
 {
-    if (m_scion) {
-        ASSERT(m_countersNeedingUpdate.isEmptyIgnoringNullReferences());
-        return {};
-    }
+    if (m_scion) { return m_scion->takeCountersNeedingUpdate(); }
     return std::exchange(m_countersNeedingUpdate, { });
 }
 

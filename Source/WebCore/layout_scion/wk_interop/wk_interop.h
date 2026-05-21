@@ -1698,3 +1698,4 @@ void TransformationMatrix_makeAffine(void*);
 bool TransformationMatrix_isIntegerTranslation(const void*);
 void* TransformationMatrix_copy(const void*);
 void TransformationMatrix_destroy(const void*);
+void RenderCounterSet_add(void* set, void* counter);

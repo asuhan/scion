@@ -42,6 +42,12 @@
 #include <stdio.h>
 #endif
 
+extern "C" WEBCORE_EXPORT void RenderCounterSet_add(void* set, void* counter)
+{
+    static_cast<WTF::SingleThreadWeakHashSet<WebCore::RenderCounter>*>(set)->add(
+        *static_cast<WebCore::RenderCounter*>(counter));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

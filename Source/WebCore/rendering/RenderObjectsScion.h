@@ -660,6 +660,8 @@ public:
 
     void addCounterNeedingUpdate(RenderCounter&);
 
+    WTF::SingleThreadWeakHashSet<RenderCounter> takeCountersNeedingUpdate();
+
     void incrementRendersWithOutline();
 
     void decrementRendersWithOutline();

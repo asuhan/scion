@@ -32,6 +32,7 @@
 #include "LayoutIntegrationLineLayout.h"
 #include "LayoutRect.h"
 #include "LayoutRectRaw.h"
+#include "RenderCounter.h"
 #include "RenderFragmentContainer.h"
 #include "RenderLayer.h"
 #include "RenderSelection.h"
@@ -620,6 +621,8 @@ extern "C" FloatSizeRaw RenderViewScion_sizeForCSSDefaultViewportUnits(const voi
 extern "C" void RenderViewScion_setHasQuotesNeedingUpdate(void*, bool);
 
 extern "C" void RenderViewScion_addCounterNeedingUpdate(void*, void*);
+
+extern "C" void RenderViewScion_takeCountersNeedingUpdate(void*, void*);
 
 extern "C" void RenderViewScion_incrementRendersWithOutline(void*);
 
@@ -1794,6 +1797,13 @@ void RenderViewScion::setHasQuotesNeedingUpdate(bool b)
 void RenderViewScion::addCounterNeedingUpdate(RenderCounter& renderer)
 {
     RenderViewScion_addCounterNeedingUpdate(m_handle, &renderer);
+}
+
+WTF::SingleThreadWeakHashSet<RenderCounter> RenderViewScion::takeCountersNeedingUpdate()
+{
+    WTF::SingleThreadWeakHashSet<RenderCounter> counters;
+    RenderViewScion_takeCountersNeedingUpdate(m_handle, &counters);
+    return counters;
 }
 
 void RenderViewScion::incrementRendersWithOutline()
