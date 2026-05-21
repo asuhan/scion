@@ -69,7 +69,20 @@ extension LayoutIntegration {
   static func formattingContextRootLogicalWidthForType(
     _ box: ElementBoxWrapper, _ logicalWidthType: LogicalWidthType
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(box.establishesFormattingContext())
+
+    let renderer = box.rendererForIntegration() as! RenderBoxWrapper
+    switch logicalWidthType {
+    case .PreferredMaximum:
+      return renderer.maxPreferredLogicalWidth()
+    case .PreferredMinimum:
+      return renderer.minPreferredLogicalWidth()
+    case .MaxContent, .MinContent:
+      var minimumLogicalWidth = LayoutUnit()
+      var maximumLogicalWidth = LayoutUnit()
+      renderer.computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minimumLogicalWidth, maxLogicalWidth: &maximumLogicalWidth)
+      return logicalWidthType == .MaxContent ? maximumLogicalWidth : minimumLogicalWidth
+    }
   }
 }
