@@ -36,6 +36,10 @@ extension LayoutIntegration {
 
     func setHasVisualOverflow() { hasVisualOverflow = true }
 
+    func lineForBox(_ box: InlineDisplay.Box) -> InlineDisplay.Line {
+      return displayContent.lines[Int(box.lineIndex)]
+    }
+
     func boxesForRect(rect: LayoutRectWrapper) -> ArraySlice<InlineDisplay.Box> {
       if displayContent.boxes.isEmpty {
         return [][...]

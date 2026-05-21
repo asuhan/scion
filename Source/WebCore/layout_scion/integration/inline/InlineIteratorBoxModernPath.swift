@@ -35,9 +35,13 @@ extension InlineIterator {
       return box().visualRectIgnoringBlockDirection()
     }
 
+    func isText() -> Bool { return box().isTextOrSoftLineBreak() }
+
     func isHorizontal() -> Bool { return box().isHorizontal() }
 
     private func bidiLevel() -> UBiDiLevel { return box().bidiLevel }
+
+    private func originalText() -> StringWrapperView { return box().text().originalContent() }
 
     func start() -> UInt32 { return box().text().start }
 
@@ -51,8 +55,26 @@ extension InlineIterator {
     }
 
     func textRun(mode: InlineIterator.TextRunMode) -> TextRunWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let style = box().style()
+      let expansion = box().expansion()
+      let logicalLeft = { () in
+        if style.isLeftToRightDirection() {
+          return self.visualRectIgnoringBlockDirection().x()
+            - (self.line().lineBoxLeft() + self.line().contentLogicalLeft)
+        }
+        return self.line().lineBoxRight()
+          - (self.visualRectIgnoringBlockDirection().maxX() + self.line().contentLogicalLeft)
+      }
+      let characterScanForCodePath = isText() && !renderText().canUseSimpleFontCodePath()
+      let textRun = TextRunWrapper(
+        stringView: mode == .Editing ? originalText() : box().text().renderedContent(),
+        xpos: logicalLeft(),
+        expansion: expansion.horizontalExpansion, expansionBehavior: expansion.behavior,
+        direction: direction(),
+        directionalOverride: style.rtlOrdering() == .Visual,
+        characterScanForCodePath: characterScanForCodePath)
+      textRun.setTabSize(allow: !style.collapseWhiteSpace(), size: style.tabSize())
+      return textRun
     }
 
     func textRun() -> TextRunWrapper {
@@ -78,6 +100,10 @@ extension InlineIterator {
     private func boxes() -> ArraySlice<InlineDisplay.Box> {
       return inlineContent.displayContent.boxes[...]
     }
+
+    private func line() -> InlineDisplay.Line { return inlineContent.lineForBox(box()) }
+
+    private func renderText() -> RenderTextWrapper { return renderer() as! RenderTextWrapper }
 
     func deepCopy() -> BoxPath {
       // TODO(asuhan): implement this
