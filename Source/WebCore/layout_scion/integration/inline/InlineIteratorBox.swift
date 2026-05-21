@@ -77,8 +77,7 @@ extension InlineIterator {
 
     // Return visual left/right coords in inline direction (they are still considered logical values as there's no flip for writing mode).
     func logicalLeftIgnoringInlineDirection() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return logicalRectIgnoringInlineDirection().x()
     }
 
     func logicalRightIgnoringInlineDirection() -> Float32 {
