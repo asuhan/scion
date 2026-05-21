@@ -25,6 +25,11 @@
 
 struct SimpleRange {}
 
+struct OffsetRange {
+  let start: UInt32
+  let end: UInt32
+}
+
 struct IntersectingNodeRange: Sequence, IteratorProtocol {
   init(range: SimpleRange) {
     // TODO(asuhan): implement this

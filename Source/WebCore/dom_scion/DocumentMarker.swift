@@ -81,17 +81,16 @@ class DocumentMarker {
     case TransparentContentData(TransparentContentData)
   }
 
-  func startOffset() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func startOffset() -> UInt32 { return range.start }
 
-  func endOffset() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func endOffset() -> UInt32 { return range.end }
 
   var type: `Type` {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var range: OffsetRange {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
