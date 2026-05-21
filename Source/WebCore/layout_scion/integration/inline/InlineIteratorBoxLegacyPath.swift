@@ -35,10 +35,7 @@ extension InlineIterator {
 
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper { return m_inlineBox!.frameRect() }
 
-    func isHorizontal() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isHorizontal() -> Bool { return m_inlineBox!.isHorizontal() }
 
     func start() -> UInt32 {
       // TODO(asuhan): implement this
