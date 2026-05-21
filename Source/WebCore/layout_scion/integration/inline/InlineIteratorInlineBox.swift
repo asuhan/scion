@@ -27,8 +27,7 @@ extension InlineIterator {
 
   class InlineBox: Box {
     override func renderer() -> RenderBoxModelObjectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return super.renderer() as! RenderBoxModelObjectWrapper
     }
 
     func hasClosedLeftAndRightEdge() -> (Bool, Bool) {
