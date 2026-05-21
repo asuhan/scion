@@ -196,6 +196,8 @@ extension InlineIterator {
   }
 
   class BoxIterator<Box>: Equatable, IteratorProtocol {
+    init() { m_box = InlineIterator.Box(.legacy(BoxLegacyPath(nil))) }
+
     func bool() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -215,6 +217,8 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let m_box: InlineIterator.Box
   }
 
   class LeafBoxIterator: BoxIterator<Box> {

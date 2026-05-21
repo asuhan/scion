@@ -31,6 +31,8 @@ extension InlineIterator {
   }
 
   class BoxLegacyPath: BoxPath {
+    init(_ inlineBox: LegacyInlineBox?) { m_inlineBox = inlineBox }
+
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -105,6 +107,8 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let m_inlineBox: LegacyInlineBox?
   }
 
 }

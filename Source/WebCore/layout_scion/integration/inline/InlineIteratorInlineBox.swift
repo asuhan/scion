@@ -87,10 +87,7 @@ extension InlineIterator {
   }
 
   class InlineBoxIterator: BoxIterator<InlineBox> {
-    override init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    override init() { super.init() }
 
     init(pathVariant: BoxPath) {
       // TODO(asuhan): implement this
