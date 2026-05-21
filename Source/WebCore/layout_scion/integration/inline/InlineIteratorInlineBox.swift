@@ -31,8 +31,14 @@ extension InlineIterator {
     }
 
     func hasClosedLeftAndRightEdge() -> (Bool, Bool) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // FIXME: Layout knows the answer to this question so we should consult it.
+      if style().boxDecorationBreak() == .Clone {
+        return (true, true)
+      }
+      let isLTR = style().isLeftToRightDirection()
+      let isFirst = !previousInlineBox().bool() && !renderer().isContinuation()
+      let isLast = !nextInlineBox().bool() && renderer().continuation() == nil
+      return (isLTR ? isFirst : isLast, isLTR ? isLast : isFirst)
     }
 
     func nextInlineBox() -> InlineBoxIterator {
