@@ -41,14 +41,20 @@ private func adjustBorderForTableAndFieldset(
   renderer: RenderBoxModelObjectWrapper, borderLeft: inout LayoutUnit,
   borderRight: inout LayoutUnit, borderTop: inout LayoutUnit, borderBottom: inout LayoutUnit
 ) {
-  if renderer as? RenderTableWrapper != nil {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  if let table = renderer as? RenderTableWrapper, table.collapseBorders() {
+    borderLeft = table.borderLeft()
+    borderRight = table.borderRight()
+    borderTop = table.borderTop()
+    borderBottom = table.borderBottom()
+    return
   }
 
-  if renderer as? RenderTableCellWrapper != nil {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  if let tableCell = renderer as? RenderTableCellWrapper, tableCell.table()!.collapseBorders() {
+    borderLeft = tableCell.borderLeft()
+    borderRight = tableCell.borderRight()
+    borderTop = tableCell.borderTop()
+    borderBottom = tableCell.borderBottom()
+    return
   }
 
   if renderer.isFieldset() {
