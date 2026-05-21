@@ -139,7 +139,7 @@ struct LineBoxBuilder {
 
     if let adjustment = formattingContext().quirks().adjustmentForLineGridLineSnap(lineBox: lineBox)
     {
-      expandAboveRootInlineBox(lineBox: lineBox, expansion: adjustment)
+      expandAboveRootInlineBox(lineBox: &lineBox, expansion: adjustment)
     }
 
     return lineBox
@@ -1015,9 +1015,11 @@ struct LineBoxBuilder {
       ? min(LayoutUnit(value: 0), max(floatConstraints.left!.x, nestedOffset)) : nestedOffset
   }
 
-  private func expandAboveRootInlineBox(lineBox: LineBox, expansion: InlineLayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func expandAboveRootInlineBox(lineBox: inout LineBox, expansion: InlineLayoutUnit) {
+    lineBox.rootInlineBox.setLogicalTop(logicalTop: lineBox.rootInlineBox.logicalTop() + expansion)
+    var lineBoxRect = lineBox.logicalRect
+    lineBoxRect.expandVertically(delta: expansion)
+    lineBox.setLogicalRect(logicalRect: lineBoxRect)
   }
 
   private func isFirstLine() -> Bool {
