@@ -26,8 +26,8 @@
 extension LayoutIntegration {
   final class FlexLayout {
     init(flexBoxRenderer: RenderFlexibleBoxWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      m_boxTree = BoxTree(rootRenderer: flexBoxRenderer)
+      m_layoutState = flexBoxRenderer.view().layoutState()
     }
 
     func updateFormattingContexGeometries(availableLogicalWidth: LayoutUnit) {
@@ -44,5 +44,8 @@ extension LayoutIntegration {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let m_boxTree: BoxTree
+    private let m_layoutState: LayoutStateWrapper
   }
 }
