@@ -85,8 +85,9 @@ class InlineContentCache {
   }
 
   func resetMinimumMaximumContentSizes() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    minimumContentSize = nil
+    maximumContentSize = nil
+    maximumIntrinsicWidthLineContent = nil
   }
 
   var inlineItems = InlineItems()
