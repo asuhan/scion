@@ -376,6 +376,8 @@ public:
 
     bool renderBlockHasRareData() const;
 
+    bool didVisitSinceLayout(RenderElement::LayoutIdentifier) const;
+
     void setFirstChild(RenderObject*);
 
     void setLastChild(RenderObject*);

@@ -1284,7 +1284,7 @@ void RenderElement::willBeRemovedFromTree()
 
 bool RenderElement::didVisitSinceLayout(LayoutIdentifier identifier) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->didVisitSinceLayout(identifier); }
     return layoutIdentifier() >= identifier;
 }
 

@@ -2190,6 +2190,14 @@ func RenderElementScion_renderBlockHasRareData(_ elementRaw: UnsafeRawPointer) -
   return element.renderBlockHasRareData
 }
 
+@_cdecl("RenderElementScion_didVisitSinceLayout")
+func RenderElementScion_didVisitSinceLayout(_ elementRaw: UnsafeRawPointer, _ identifier: UInt32)
+  -> Bool
+{
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.didVisitSinceLayout(identifier)
+}
+
 @_cdecl("RenderElementScion_setFirstChild")
 func RenderElementScion_setFirstChild(
   _ elementRaw: UnsafeMutableRawPointer, _ firstChildRaw: UnsafeMutableRawPointer?
