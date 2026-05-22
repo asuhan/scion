@@ -192,7 +192,7 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    private let m_pathVariant: PathVariant
+    let m_pathVariant: PathVariant
   }
 
   class BoxIterator<Box>: Equatable, IteratorProtocol {

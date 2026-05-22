@@ -26,19 +26,33 @@
 extension InlineIterator {
 
   class TextBox: Box {
+    override init(_ path: PathVariant) { super.init(path) }
+
     func start() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.start()
+      case .legacy(let path):
+        return path.start()
+      }
     }
 
     func end() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.end()
+      case .legacy(let path):
+        return path.end()
+      }
     }
 
     func length() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.length()
+      case .legacy(let path):
+        return path.length()
+      }
     }
 
     func selectableRange() -> TextBoxSelectableRange {
