@@ -253,8 +253,8 @@ class BoxWrapper: Hashable {
   }
 
   func isContainingBlockForFixedPosition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return isInitialContainingBlock() || isLayoutContainmentBox() || style.hasTransform()
   }
 
   func isContainingBlockForOutOfFlowPosition() -> Bool {
