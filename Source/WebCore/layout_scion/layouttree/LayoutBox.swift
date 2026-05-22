@@ -388,13 +388,13 @@ class BoxWrapper: Hashable {
   }
 
   func isTableWrapperBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_nodeType == .TableWrapperBox
   }
 
   func isTableBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_nodeType == .TableBox
   }
 
   func isTableCaption() -> Bool { return style.display() == .TableCaption }
