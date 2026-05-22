@@ -68,8 +68,8 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
   }
 
   override func isLineBreak() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer().style().preserveNewline() && len() == 1
+      && renderer().text()[start()] == UChar(Character("\n").asciiValue!)
   }
 
   override func paint(
