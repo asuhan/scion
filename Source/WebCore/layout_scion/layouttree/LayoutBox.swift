@@ -373,26 +373,17 @@ class BoxWrapper: Hashable {
   }
 
   func isRuby() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if p == nil { return style.display() == .Ruby }
     return wk_interop.Box_isRuby(p)
   }
 
   func isRubyBase() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if p == nil { return style.display() == .RubyBase }
     return wk_interop.Box_isRubyBase(p)
   }
 
   func isRubyInlineBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if p == nil { return isRuby() || isRubyBase() }
     return wk_interop.Box_isRubyInlineBox(p)
   }
 
