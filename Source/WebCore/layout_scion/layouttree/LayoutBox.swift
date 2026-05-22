@@ -376,11 +376,10 @@ class BoxWrapper: Hashable {
   }
 
   func isRubyAnnotationBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isRubyAnnotationBox(p!)
     }
-    return wk_interop.Box_isRubyAnnotationBox(p)
+    return style.display() == .RubyAnnotation
   }
 
   func isDocumentBox() -> Bool {
