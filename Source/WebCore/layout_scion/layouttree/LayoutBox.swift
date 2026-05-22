@@ -258,11 +258,11 @@ class BoxWrapper: Hashable {
   }
 
   func isContainingBlockForOutOfFlowPosition() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isContainingBlockForOutOfFlowPosition(p!)
     }
-    return wk_interop.Box_isContainingBlockForOutOfFlowPosition(p)
+    return isInitialContainingBlock() || isPositioned() || isLayoutContainmentBox()
+      || style.hasTransform()
   }
 
   func isAnonymous() -> Bool {
