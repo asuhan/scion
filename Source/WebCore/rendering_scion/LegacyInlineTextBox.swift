@@ -44,6 +44,14 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
 
   func len() -> UInt32 { return m_len }
 
+  func selectableRange() -> TextBoxSelectableRange {
+    // Fix up the offset if we are combined text because we manage these embellishments.
+    // That is, they are not reflected in renderer().text(). We treat combined text as a single unit.
+    return TextBoxSelectableRange(
+      start: m_start, length: m_len, additionalLengthAtEnd: 0, isLineBreak: isLineBreak(),
+      truncation: nil)
+  }
+
   func logicalLeftVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
