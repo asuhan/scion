@@ -358,13 +358,13 @@ class BoxWrapper: Hashable {
   }
 
   func isDocumentBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_nodeType == .DocumentElement
   }
 
   func isBodyBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_nodeType == .Body
   }
 
   func isInputButton() -> Bool {
