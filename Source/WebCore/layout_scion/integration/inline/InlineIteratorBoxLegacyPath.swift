@@ -56,10 +56,7 @@ extension InlineIterator {
       return m_inlineBox!.root().blockFlow()
     }
 
-    func style() -> RenderStyleWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func style() -> RenderStyleWrapper { return m_inlineBox!.lineStyle() }
 
     func direction() -> TextDirection {
       // TODO(asuhan): implement this

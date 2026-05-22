@@ -126,7 +126,7 @@ class LegacyInlineBox {
     return rendererObject().selectionState()
   }
 
-  private func lineStyle() -> RenderStyleWrapper {
+  func lineStyle() -> RenderStyleWrapper {
     return m_bitfields.firstLine ? rendererObject().firstLineStyle() : rendererObject().style()
   }
 
