@@ -53,8 +53,7 @@ extension InlineIterator {
     func renderer() -> RenderObjectWrapper { return m_inlineBox!.renderer }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return m_inlineBox!.root().blockFlow()
     }
 
     func style() -> RenderStyleWrapper {
