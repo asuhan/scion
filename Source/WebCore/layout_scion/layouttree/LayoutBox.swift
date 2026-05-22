@@ -351,8 +351,28 @@ class BoxWrapper: Hashable {
   }
 
   func isSizeContainmentBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    let supportsSizeContainment = { () in
+      // If the element does not generate a principal box (as is the case with display: contents or display: none),
+      // or its inner display type is table, or its principal box is an internal table box, or an internal ruby box,
+      // or a non-atomic inline-level box, size containment has no effect.
+      if self.isInternalTableBox() || self.isTableBox() {
+        return false
+      }
+      if self.isInternalRubyBox() {
+        return false
+      }
+      if self.isInlineLevelBox() {
+        return self.isAtomicInlineBox()
+      }
+      return true
+    }
+    return style.usedContain().contains(.Size) && supportsSizeContainment()
+  }
+
+  func isInternalRubyBox() -> Bool {
+    assert(p == nil)
+    return style.display() == .RubyBase || style.display() == .RubyAnnotation
   }
 
   func isRubyAnnotationBox() -> Bool {
@@ -405,7 +425,48 @@ class BoxWrapper: Hashable {
 
   func isTableCaption() -> Bool { return style.display() == .TableCaption }
 
-  func isTableCell() -> Bool { return style.display() == .TableCell }
+  func isTableHeader() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableHeaderGroup
+  }
+
+  func isTableBody() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableRowGroup
+  }
+
+  func isTableFooter() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableFooterGroup
+  }
+
+  func isTableRow() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableRow
+  }
+
+  func isTableColumnGroup() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableColumnGroup
+  }
+
+  func isTableColumn() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableColumn
+  }
+
+  func isTableCell() -> Bool {
+    assert(p == nil)
+    return style.display() == .TableCell
+  }
+
+  func isInternalTableBox() -> Bool {
+    assert(p == nil)
+    // table-row-group, table-header-group, table-footer-group, table-row, table-cell, table-column-group, table-column
+    // generates the appropriate internal table box which participates in a table formatting context.
+    return isTableBody() || isTableHeader() || isTableFooter() || isTableRow() || isTableCell()
+      || isTableColumnGroup() || isTableColumn()
+  }
 
   func isFlexBox() -> Bool {
     return style.display() == .Flex || style.display() == .InlineFlex || isInputButton()
