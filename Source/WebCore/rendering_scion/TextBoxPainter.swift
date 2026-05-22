@@ -35,7 +35,6 @@ protocol BoxPath {
   func style() -> RenderStyleWrapper
   func direction() -> TextDirection
   func isFirstLine() -> Bool
-  func box() -> InlineDisplay.Box
   func deepCopy() -> BoxPath
 }
 
