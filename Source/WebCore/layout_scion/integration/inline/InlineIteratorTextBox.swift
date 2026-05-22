@@ -73,8 +73,12 @@ extension InlineIterator {
     }
 
     func textRun(mode: TextRunMode = .Painting) -> TextRunWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.textRun()
+      case .legacy(let path):
+        return path.textRun()
+      }
     }
 
     override func renderer() -> RenderTextWrapper {
