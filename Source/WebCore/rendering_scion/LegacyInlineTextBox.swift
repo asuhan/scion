@@ -33,10 +33,7 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     fatalError("Not implemented")
   }
 
-  func hasTextContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasTextContent() -> Bool { return m_len != 0 }
 
   func start() -> UInt32 { return m_start }
 
