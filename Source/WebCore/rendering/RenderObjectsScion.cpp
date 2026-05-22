@@ -322,6 +322,8 @@ extern "C" void RenderObjectScion_setNeedsLayoutIsForbidden(const void*, bool);
 
 extern "C" const void* RenderElementScion_style(const void*);
 
+extern "C" const void* RenderElementScion_firstLineStyle(const void*);
+
 extern "C" const void* RenderElementScion_mutableStyle(void*);
 
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
@@ -1054,6 +1056,11 @@ void RenderObjectScion::setNeedsLayoutIsForbidden(bool flag) const { RenderObjec
 const RenderStyle& RenderElementScion::style() const
 {
     return *static_cast<const RenderStyle*>(RenderElementScion_style(m_handle));
+}
+
+const RenderStyle& RenderElementScion::firstLineStyle() const
+{
+    return *static_cast<const RenderStyle*>(RenderElementScion_firstLineStyle(m_handle));
 }
 
 RenderStyle& RenderElementScion::mutableStyle()

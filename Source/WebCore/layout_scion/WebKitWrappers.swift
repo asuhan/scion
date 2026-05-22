@@ -1973,6 +1973,12 @@ func RenderElementScion_style(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointe
   return element.elementStyle().p!
 }
 
+@_cdecl("RenderElementScion_firstLineStyle")
+func RenderElementScion_firstLineStyle(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.elementFirstLineStyle().p!
+}
+
 @_cdecl("RenderElementScion_mutableStyle")
 func RenderElementScion_mutableStyle(_ elementRaw: UnsafeMutableRawPointer) -> UnsafeRawPointer {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

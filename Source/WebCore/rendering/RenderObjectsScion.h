@@ -319,6 +319,8 @@ public:
 
     const RenderStyle& style() const;
 
+    const RenderStyle& firstLineStyle() const;
+
     RenderStyle& mutableStyle();
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);

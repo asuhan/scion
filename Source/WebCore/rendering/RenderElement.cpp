@@ -342,7 +342,7 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
 
 const RenderStyle& RenderElement::firstLineStyle() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->firstLineStyle(); }
     // FIXME: It would be better to just set anonymous block first-line styles correctly.
     if (isAnonymousBlock()) {
         if (!previousInFlowSibling()) {
