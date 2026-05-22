@@ -174,8 +174,8 @@ class BoxWrapper: Hashable {
   }
 
   private func establishesGridFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return isGridBox()
   }
 
   private func establishesIndependentFormattingContext() -> Bool {
@@ -413,6 +413,11 @@ class BoxWrapper: Hashable {
   func isFlexItem() -> Bool {
     // Each in-flow child of a flex container becomes a flex item (https://www.w3.org/TR/css-flexbox-1/#flex-items).
     return isInFlow() && parent().isFlexBox()
+  }
+
+  private func isGridBox() -> Bool {
+    assert(p == nil)
+    return style.display() == .Grid || style.display() == .InlineGrid
   }
 
   func isLineBreakBox() -> Bool {
