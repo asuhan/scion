@@ -186,10 +186,7 @@ class BoxWrapper: Hashable {
   func isInFlow() -> Bool { return !isFloatingOrOutOfFlowPositioned() }
 
   func isPositioned() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if p == nil { return isInFlowPositioned() || isOutOfFlowPositioned() }
     return wk_interop.Box_isPositioned(p)
   }
 
