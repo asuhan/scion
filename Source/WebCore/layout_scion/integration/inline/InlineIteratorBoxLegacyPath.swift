@@ -37,6 +37,8 @@ extension InlineIterator {
 
     func isHorizontal() -> Bool { return m_inlineBox!.isHorizontal() }
 
+    private func bidiLevel() -> UInt8 { return m_inlineBox!.bidiLevel() }
+
     func start() -> UInt32 { return inlineTextBox().start() }
 
     func end() -> UInt32 { return inlineTextBox().end() }
@@ -58,10 +60,7 @@ extension InlineIterator {
 
     func style() -> RenderStyleWrapper { return m_inlineBox!.lineStyle() }
 
-    func direction() -> TextDirection {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool {
       // TODO(asuhan): implement this
