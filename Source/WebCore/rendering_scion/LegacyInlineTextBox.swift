@@ -103,8 +103,8 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
   }
 
   override final func selectionState() -> RenderObjectWrapper.HighlightState {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer().view().selection().highlightStateForTextBox(
+      renderer: renderer(), textBoxRange: selectableRange())
   }
 
   private let m_start: UInt32 = 0
