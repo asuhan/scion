@@ -212,11 +212,14 @@ class BoxWrapper: Hashable {
   }
 
   func isFloatingPositioned() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isFloatingPositioned(p!)
     }
-    return wk_interop.Box_isFloatingPositioned(p)
+    // FIXME: Rendering code caches values like this. (style="position: absolute; float: left")
+    if isOutOfFlowPositioned() {
+      return false
+    }
+    return style.floating() != .None
   }
 
   func hasFloatClear() -> Bool {
