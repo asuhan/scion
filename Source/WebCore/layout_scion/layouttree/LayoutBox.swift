@@ -367,6 +367,11 @@ class BoxWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func isInputButton() -> Bool {
+    assert(p == nil)
+    return m_nodeType == .InputButton
+  }
+
   func isRuby() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this
@@ -406,8 +411,7 @@ class BoxWrapper: Hashable {
   func isTableCell() -> Bool { return style.display() == .TableCell }
 
   func isFlexBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style.display() == .Flex || style.display() == .InlineFlex || isInputButton()
   }
 
   func isFlexItem() -> Bool {
