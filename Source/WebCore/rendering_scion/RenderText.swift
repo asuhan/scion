@@ -313,6 +313,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     return super.node() as! TextWrapper?
   }
 
+  func textFirstLineStyle() -> RenderStyleWrapper {
+    assert(isNativeImpl())
+    return parent()!.elementFirstLineStyle()
+  }
+
   func getCachedPseudoStyle(
     pseudoElementIdentifier: Style.PseudoElementIdentifier, parentStyle: RenderStyleWrapper? = nil
   ) -> RenderStyleWrapper? {
@@ -655,7 +660,7 @@ class RenderTextWrapper: RenderObjectWrapper {
       return 0
     }
 
-    let lineStyle = firstLine ? firstLineStyle() : style()
+    let lineStyle = firstLine ? textFirstLineStyle() : style()
     return width(
       from, from + len > text().length() ? text().length() - from : len, lineStyle.fontCascade(),
       xPos, fallbackFonts, &glyphOverflow)
@@ -771,7 +776,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     let needsLayoutBoxStyleUpdate =
       (diff >= .Repaint
         || ((parent() is RenderInlineWrapper)
-          && CPtrToInt(style().p) != CPtrToInt(firstLineStyle().p)))
+          && CPtrToInt(style().p) != CPtrToInt(textFirstLineStyle().p)))
       && layoutBox() != nil
     if needsLayoutBoxStyleUpdate {
       LayoutIntegration.LineLayout.updateStyle(self)

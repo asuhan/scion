@@ -2451,9 +2451,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func firstLineStyle() -> RenderStyleWrapper {
     assert(isNativeImpl())
     if isRenderText() {
-      return m_parent!.firstLineStyle()
+      return m_parent!.elementFirstLineStyle()
     }
-    return (self as! RenderElementWrapper).firstLineStyle()
+    return (self as! RenderElementWrapper).elementFirstLineStyle()
   }
 
   // Anonymous blocks that are part of of a continuation chain will return their inline continuation's outline style instead.

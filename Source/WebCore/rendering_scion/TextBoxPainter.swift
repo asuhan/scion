@@ -88,7 +88,7 @@ private func decoratingBoxStyleForInlineBox(inlineBox: InlineIterator.InlineBox,
   var ancestor: RenderElementWrapper? = inlineBox.renderer()
   while ancestor != nil {
     if !ancestor!.isAnonymous() {
-      return isFirstLine ? ancestor!.firstLineStyle() : ancestor!.style()
+      return isFirstLine ? ancestor!.elementFirstLineStyle() : ancestor!.style()
     }
     ancestor = ancestor!.parent()
   }
@@ -321,7 +321,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     if !contentMayNeedStyledMarkedText(
       hasDecoration: hasDecoration, shouldPaintSelectionForeground: shouldPaintSelectionForeground)
     {
-      let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+      let lineStyle = isFirstLine ? renderer.textFirstLineStyle() : renderer.style()
       let markedText = MarkedText(
         startOffset: startPosition(hasBackwardTruncation: hasBackwardTruncation),
         endOffset: endPosition(hasBackwardTruncation: hasBackwardTruncation),
@@ -658,7 +658,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         backgroundColor: nil,
         foregroundColor: nil))
 
-    let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+    let lineStyle = isFirstLine ? renderer.textFirstLineStyle() : renderer.style()
 
     for highlight in highlightsWithForeground {
       var style = StyledMarkedText.computeStyleForUnmarkedMarkedText(
@@ -980,7 +980,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     decorationPainter: TextDecorationPainter, markedText: StyledMarkedText,
     textBoxPaintRect: FloatRectWrapper
   ) {
-    let styleToUse = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+    let styleToUse = isFirstLine ? renderer.textFirstLineStyle() : renderer.style()
     let computedTextDecorationType = styleToUse.textDecorationsInEffect().union(
       TextDecorationPainter.textDecorationsInEffectForStyle(
         style: markedText.style.textDecorationStyles))
@@ -1238,7 +1238,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       decoratingBoxList.append(
         DecoratingBox(
           inlineBox: ancestorInlineBox,
-          style: isFirstLine ? renderer.firstLineStyle() : renderer.style(),
+          style: isFirstLine ? renderer.textFirstLineStyle() : renderer.style(),
           textDecorationStyles: overrideDecorationStyle, location: textBoxLocation))
       return
     }

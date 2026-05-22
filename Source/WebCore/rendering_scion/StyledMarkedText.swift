@@ -295,7 +295,7 @@ final class StyledMarkedText: MarkedText {
       }
     }
 
-    let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+    let lineStyle = isFirstLine ? renderer.textFirstLineStyle() : renderer.style()
     let baseStyle = computeStyleForUnmarkedMarkedText(
       renderer: renderer, lineStyle: lineStyle, isFirstLine: isFirstLine, paintInfo: paintInfo)
 

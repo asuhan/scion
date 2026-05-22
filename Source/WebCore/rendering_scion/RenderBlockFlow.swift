@@ -5099,7 +5099,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     marginBeforeOffset: inout LayoutUnit
   ) {
     assert(isNativeImpl())
-    let style = firstLineStyle()
+    let style = elementFirstLineStyle()
     let fontMetrics = style.metricsOfPrimaryFont()
     if fontMetrics.capHeight() == nil {
       return

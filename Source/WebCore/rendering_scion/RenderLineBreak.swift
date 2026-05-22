@@ -70,7 +70,7 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   {
     assert(isNativeImpl())
     if firstLine {
-      let firstLineStyle = firstLineStyle()
+      let firstLineStyle = elementFirstLineStyle()
       if CPtrToInt(firstLineStyle.p) != CPtrToInt(style().p) {
         return LayoutUnit.fromFloatCeil(value: firstLineStyle.computedLineHeight())
       }

@@ -858,7 +858,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     -> LayoutUnit
   {
     assert(isNativeImpl())
-    let lineStyle = firstLine ? firstLineStyle() : style()
+    let lineStyle = firstLine ? elementFirstLineStyle() : style()
     return LayoutUnit.fromFloatCeil(value: lineStyle.computedLineHeight())
   }
 

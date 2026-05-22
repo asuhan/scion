@@ -155,6 +155,28 @@ class RenderElementWrapper: RenderObjectWrapper {
     return self.style!
   }
 
+  func elementFirstLineStyle() -> RenderStyleWrapper {
+    assert(isNativeImpl())
+    // FIXME: It would be better to just set anonymous block first-line styles correctly.
+    if isAnonymousBlock() {
+      if previousInFlowSibling() == nil,
+        let firstLineStyle = parent()!.style().getCachedPseudoStyle(
+          pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine))
+      {
+        return firstLineStyle
+      }
+      return style()
+    }
+
+    if let firstLineStyle = style().getCachedPseudoStyle(
+      pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine))
+    {
+      return firstLineStyle
+    }
+
+    return style()
+  }
+
   // FIXME: Style shouldn't be mutated.
   func mutableStyle() -> RenderStyleWrapper {
     assert(isNativeImpl())
@@ -2070,7 +2092,8 @@ class RenderElementWrapper: RenderObjectWrapper {
     // FIXME: First line change on the block comes in as equal on inline boxes.
     let needsLayoutBoxStyleUpdate =
       (diff >= .Repaint
-        || ((self is RenderInlineWrapper) && CPtrToInt(style().p) != CPtrToInt(firstLineStyle().p)))
+        || ((self is RenderInlineWrapper)
+          && CPtrToInt(style().p) != CPtrToInt(elementFirstLineStyle().p)))
       && layoutBox() != nil
     if needsLayoutBoxStyleUpdate {
       LayoutIntegration.LineLayout.updateStyle(self)

@@ -343,7 +343,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
         firstLine: firstLine, direction: direction, linePositionMode: linePositionMode)
     }
 
-    let lineStyle = firstLine ? firstLineStyle() : style()
+    let lineStyle = firstLine ? elementFirstLineStyle() : style()
     return LayoutUnit.fromFloatCeil(value: lineStyle.computedLineHeight())
   }
 

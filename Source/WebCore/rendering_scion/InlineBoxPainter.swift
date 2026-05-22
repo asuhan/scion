@@ -474,7 +474,7 @@ class InlineBoxPainter {
   }
 
   private func style() -> RenderStyleWrapper {
-    return isFirstLineBox ? renderer.firstLineStyle() : renderer.style()
+    return isFirstLineBox ? renderer.elementFirstLineStyle() : renderer.style()
   }
 
   private let inlineBox: InlineIterator.InlineBox
