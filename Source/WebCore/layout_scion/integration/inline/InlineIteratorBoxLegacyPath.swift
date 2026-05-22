@@ -62,10 +62,7 @@ extension InlineIterator {
 
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
-    func isFirstLine() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isFirstLine() -> Bool { return rootInlineBox().prevRootBox() == nil }
 
     func box() -> InlineDisplay.Box {
       // TODO(asuhan): implement this
@@ -81,6 +78,8 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private func rootInlineBox() -> LegacyRootInlineBox { return m_inlineBox!.root() }
 
     private func inlineTextBox() -> LegacyInlineTextBox {
       return m_inlineBox! as! LegacyInlineTextBox
