@@ -37,20 +37,11 @@ extension InlineIterator {
 
     func isHorizontal() -> Bool { return m_inlineBox!.isHorizontal() }
 
-    func start() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func start() -> UInt32 { return inlineTextBox()!.start() }
 
-    func end() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func end() -> UInt32 { return inlineTextBox()!.end() }
 
-    func length() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func length() -> UInt32 { return inlineTextBox()!.len() }
 
     func selectableRange() -> TextBoxSelectableRange {
       // TODO(asuhan): implement this
@@ -100,6 +91,10 @@ extension InlineIterator {
     func legacyInlineBox() -> LegacyInlineBox? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    private func inlineTextBox() -> LegacyInlineTextBox? {
+      return m_inlineBox as! LegacyInlineTextBox?
     }
 
     private let m_inlineBox: LegacyInlineBox?

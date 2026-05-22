@@ -21,6 +21,8 @@
  */
 
 class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
+  init(_ renderer: RenderTextWrapper) { super.init(renderer) }
+
   func renderer() -> RenderTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -36,10 +38,11 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     fatalError("Not implemented")
   }
 
-  func start() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func start() -> UInt32 { return m_start }
+
+  func end() -> UInt32 { return m_start + m_len }
+
+  func len() -> UInt32 { return m_len }
 
   func logicalLeftVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -95,4 +98,7 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_start: UInt32 = 0
+  private let m_len: UInt32 = 0
 }
