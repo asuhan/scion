@@ -191,16 +191,23 @@ class BoxWrapper: Hashable {
   }
 
   func isInFlowPositioned() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.Box_isInFlowPositioned(p)
+    if p != nil { return wk_interop.Box_isInFlowPositioned(p!) }
+    return isRelativelyPositioned() || isStickyPositioned()
   }
 
   func isOutOfFlowPositioned() -> Bool {
     if p == nil { return isAbsolutelyPositioned() }
     return wk_interop.Box_isOutOfFlowPositioned(p)
+  }
+
+  func isRelativelyPositioned() -> Bool {
+    assert(p == nil)
+    return style.position() == .Relative
+  }
+
+  func isStickyPositioned() -> Bool {
+    assert(p == nil)
+    return style.position() == .Sticky
   }
 
   func isAbsolutelyPositioned() -> Bool {
