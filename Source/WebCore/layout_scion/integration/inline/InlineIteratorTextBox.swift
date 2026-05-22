@@ -65,8 +65,11 @@ extension InlineIterator {
     }
 
     func fontCascade() -> FontCascadeWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let renderer = renderer() as? RenderCombineTextWrapper, renderer.isCombined() {
+        return renderer.textCombineFont()
+      }
+
+      return style().fontCascade()
     }
 
     func textRun(mode: TextRunMode = .Painting) -> TextRunWrapper {
