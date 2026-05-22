@@ -2690,6 +2690,7 @@ private:
     mutable std::unique_ptr<CSSParserContext> m_cachedCSSParserContext;
     mutable std::unique_ptr<PermissionsPolicy> m_permissionsPolicy;
 
+public:
     static uint8_t s_useScionRendering;
 };
 
