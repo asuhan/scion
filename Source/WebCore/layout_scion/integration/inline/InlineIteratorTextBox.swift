@@ -81,10 +81,7 @@ extension InlineIterator {
       }
     }
 
-    override func renderer() -> RenderTextWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    override func renderer() -> RenderTextWrapper { return super.renderer() as! RenderTextWrapper }
   }
 
   class TextBoxIterator: LeafBoxIterator {
