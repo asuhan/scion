@@ -207,10 +207,7 @@ class BoxWrapper: Hashable {
   }
 
   func isFixedPositioned() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if p == nil { return style.position() == .Fixed }
     return wk_interop.Box_isFixedPositioned(p)
   }
 
