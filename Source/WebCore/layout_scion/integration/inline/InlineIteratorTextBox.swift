@@ -56,8 +56,12 @@ extension InlineIterator {
     }
 
     func selectableRange() -> TextBoxSelectableRange {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.selectableRange()
+      case .legacy(let path):
+        return path.selectableRange()
+      }
     }
 
     func fontCascade() -> FontCascadeWrapper {
