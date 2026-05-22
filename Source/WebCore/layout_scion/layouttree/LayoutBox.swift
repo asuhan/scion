@@ -179,8 +179,8 @@ class BoxWrapper: Hashable {
   }
 
   private func establishesIndependentFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return isLayoutContainmentBox() || isAbsolutelyPositioned() || isFlexItem()
   }
 
   func isInFlow() -> Bool { return !isFloatingOrOutOfFlowPositioned() }
@@ -348,6 +348,26 @@ class BoxWrapper: Hashable {
       fatalError("Not implemented")
     }
     return wk_interop.Box_isInitialContainingBlock(p)
+  }
+
+  func isLayoutContainmentBox() -> Bool {
+    assert(p == nil)
+    let supportsLayoutContainment = { () in
+      // If the element does not generate a principal box (as is the case with display values of contents or none),
+      // or its principal box is an internal table box other than table-cell, or an internal ruby box, or a non-atomic inline-level box,
+      // layout containment has no effect.
+      if self.isInternalTableBox() {
+        return self.isTableCell()
+      }
+      if self.isInternalRubyBox() {
+        return false
+      }
+      if self.isInlineLevelBox() {
+        return self.isAtomicInlineBox()
+      }
+      return true
+    }
+    return style.usedContain().contains(.Layout) && supportsLayoutContainment()
   }
 
   func isSizeContainmentBox() -> Bool {
