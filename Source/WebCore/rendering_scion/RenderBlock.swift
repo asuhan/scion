@@ -315,6 +315,16 @@ private let continuationOutlineTable = ContinuationOutlineTableMap()
 
 class RenderBlockWrapper: RenderBoxWrapper {
   override init(
+    _ type: RenderObjectWrapper.`Type`, _ element: ElementWrapper, _ style: RenderStyleWrapper,
+    _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags =
+      RenderObjectWrapper.TypeSpecificFlags()
+  ) {
+    super.init(type, element, style, baseTypeFlags.union(.IsRenderBlock), typeSpecificFlags)
+    assert(isRenderBlock())
+  }
+
+  override init(
     _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
     _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
     _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags =

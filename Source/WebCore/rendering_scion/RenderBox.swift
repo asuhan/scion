@@ -478,6 +478,16 @@ enum StretchingMode {
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override init(
+    _ type: RenderObjectWrapper.`Type`, _ element: ElementWrapper, _ style: RenderStyleWrapper,
+    _ flags: RenderObjectWrapper.TypeFlag = [],
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags =
+      RenderObjectWrapper.TypeSpecificFlags()
+  ) {
+    super.init(type, element, style, flags.union(.IsBox), typeSpecificFlags)
+    assert(isRenderBox())
+  }
+
+  override init(
     _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
     _ flags: RenderObjectWrapper.TypeFlag = [],
     _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags =

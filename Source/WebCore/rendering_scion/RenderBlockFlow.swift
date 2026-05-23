@@ -251,6 +251,14 @@ private func preferredWidth(preferredWidth: LayoutUnit, result: Float32) -> Layo
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
   init(
+    type: `Type`, element: ElementWrapper, style: RenderStyleWrapper, flags: BlockFlowFlag = []
+  ) {
+    super.init(type, element, style, [], RenderObjectWrapper.TypeSpecificFlags(flags))
+    assert(isRenderBlockFlow())
+    setChildrenInline(b: true)
+  }
+
+  init(
     type: `Type`, document: Document, style: RenderStyleWrapper, flags: BlockFlowFlag = []
   ) {
     super.init(type, document, style, [], RenderObjectWrapper.TypeSpecificFlags(flags))

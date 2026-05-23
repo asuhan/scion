@@ -145,6 +145,15 @@ private func resolveAgainstIntrinsicRatio(
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   override init(
+    _ type: RenderObjectWrapper.`Type`, _ element: ElementWrapper, _ style: RenderStyleWrapper,
+    _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
+  ) {
+    super.init(type, element, style, baseTypeFlags.union(.IsBoxModelObject), typeSpecificFlags)
+    assert(isRenderBoxModelObject())
+  }
+
+  override init(
     _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
     _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
     _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags

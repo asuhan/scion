@@ -24,6 +24,17 @@ import wk_interop
 
 class RenderLayerModelObjectWrapper: RenderElementWrapper {
   init(
+    _ type: RenderObjectWrapper.`Type`, _ element: ElementWrapper, _ style: RenderStyleWrapper,
+    _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
+  ) {
+    super.init(
+      type: type, element: element, style, baseTypeFlags.union(.IsLayerModelObject),
+      typeSpecificFlags)
+    assert(isRenderLayerModelObject())
+  }
+
+  init(
     _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
     _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
     _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
