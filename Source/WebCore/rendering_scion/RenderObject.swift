@@ -967,11 +967,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isHTMLMarquee() -> Bool {
     assert(isNativeImpl())
-    if node() == nil {
-      return false
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CPtrToInt(node()?.renderer()?.id()) == CPtrToInt(id())
+      && (node()?.hasMarqueeTagName() ?? false)
   }
 
   func isTablePart() -> Bool {
