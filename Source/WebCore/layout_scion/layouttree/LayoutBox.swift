@@ -531,11 +531,10 @@ class BoxWrapper: Hashable {
   }
 
   func isListMarkerBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isListMarkerBox(p!)
     }
-    return wk_interop.Box_isListMarkerBox(p)
+    return m_nodeType == .ListMarker
   }
 
   func isReplacedBox() -> Bool {
