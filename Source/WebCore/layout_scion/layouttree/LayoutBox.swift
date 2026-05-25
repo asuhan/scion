@@ -538,11 +538,10 @@ class BoxWrapper: Hashable {
   }
 
   func isReplacedBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isReplacedBox(p!)
     }
-    return wk_interop.Box_isReplacedBox(p)
+    return m_nodeType == .ReplacedElement || m_nodeType == .Image || m_nodeType == .ListMarker
   }
 
   func isInlineIntegrationRoot() -> Bool {
