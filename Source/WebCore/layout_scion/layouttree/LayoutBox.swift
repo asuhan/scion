@@ -623,11 +623,10 @@ class BoxWrapper: Hashable {
   }
 
   func isElementBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isElementBox(p!)
     }
-    return wk_interop.Box_isElementBox(p)
+    return baseTypeFlags().contains(.ElementBoxFlag)
   }
 
   func isInlineTextBox() -> Bool {
