@@ -41,6 +41,8 @@ extension InlineIterator {
 
     func isHorizontal() -> Bool { return m_inlineBox!.isHorizontal() }
 
+    func isLineBreak() -> Bool { return m_inlineBox!.isLineBreak() }
+
     private func bidiLevel() -> UInt8 { return m_inlineBox!.bidiLevel() }
 
     func start() -> UInt32 { return inlineTextBox().start() }

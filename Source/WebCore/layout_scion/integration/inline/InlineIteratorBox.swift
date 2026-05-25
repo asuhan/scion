@@ -52,8 +52,12 @@ extension InlineIterator {
     }
 
     func isLineBreak() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.isLineBreak()
+      case .legacy(let path):
+        return path.isLineBreak()
+      }
     }
 
     func visualRect() -> FloatRectWrapper {

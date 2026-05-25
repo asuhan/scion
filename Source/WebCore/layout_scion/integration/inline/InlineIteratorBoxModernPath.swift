@@ -41,6 +41,8 @@ extension InlineIterator {
 
     func isHorizontal() -> Bool { return box().isHorizontal() }
 
+    func isLineBreak() -> Bool { return box().isLineBreak() }
+
     private func bidiLevel() -> UBiDiLevel { return box().bidiLevel }
 
     private func originalText() -> StringWrapperView { return box().text().originalContent() }
