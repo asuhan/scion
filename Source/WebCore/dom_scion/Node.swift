@@ -30,6 +30,8 @@ class NodeWrapper {
   }
 
   // TODO(asuhan): implement proper hasTagName accessors
+  func hasFieldsetTagName() -> Bool { return wk_interop.Node_hasFieldsetTagName(p) }
+
   func hasBodyTagName() -> Bool { return wk_interop.Node_hasBodyTagName(p) }
 
   func hasLegendTagName() -> Bool { return wk_interop.Node_hasLegendTagName(p) }
