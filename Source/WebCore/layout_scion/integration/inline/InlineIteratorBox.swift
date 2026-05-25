@@ -173,10 +173,7 @@ extension InlineIterator {
       }
     }
 
-    func nextOnLine() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func nextOnLine() -> LeafBoxIterator { return LeafBoxIterator(self).traverseNextOnLine() }
 
     func previousOnLine() -> LeafBoxIterator {
       // TODO(asuhan): implement this
