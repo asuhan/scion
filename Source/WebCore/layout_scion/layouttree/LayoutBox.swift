@@ -326,11 +326,13 @@ class BoxWrapper: Hashable {
   }
 
   func isInlineBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInlineBox(p!)
     }
-    return wk_interop.Box_isInlineBox(p)
+    // An inline box is one that is both inline-level and whose contents participate in its containing inline formatting context.
+    // A non-replaced element with a 'display' value of 'inline' generates an inline box.
+    let display = style.display()
+    return (display == .Inline || display == .Ruby || display == .RubyBase) && !isReplacedBox()
   }
 
   func isAtomicInlineBox() -> Bool {
