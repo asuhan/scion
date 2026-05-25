@@ -29,6 +29,9 @@ class NodeWrapper {
     self.p = p
   }
 
+  // TODO(asuhan): implement proper hasTagName accessors
+  func hasBodyTagName() -> Bool { return wk_interop.Node_hasBodyTagName(p) }
+
   func parentElement() -> ElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

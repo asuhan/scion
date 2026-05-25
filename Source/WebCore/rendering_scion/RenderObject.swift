@@ -953,11 +953,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isBody() -> Bool {
     if !isNativeImpl() { return wk_interop.RenderObject_isBody(id()) }
-    if node() == nil {
-      return false
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return node()?.hasBodyTagName() ?? false
   }
 
   func isLegend() -> Bool {

@@ -102,6 +102,11 @@
 #include "ContentChangeObserver.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool Node_hasBodyTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::bodyTag);
+}
+
 extern "C" WEBCORE_EXPORT bool Node_hasChildNodes(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->hasChildNodes();
