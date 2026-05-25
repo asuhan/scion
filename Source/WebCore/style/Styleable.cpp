@@ -74,6 +74,11 @@ extern "C" WEBCORE_EXPORT void Styleable_destroy(void* styleable_raw)
     delete static_cast<WebCore::Styleable*>(styleable_raw);
 }
 
+extern "C" WEBCORE_EXPORT bool Styleable_capturedInViewTransition(const void* styleable_raw)
+{
+    return static_cast<const WebCore::Styleable*>(styleable_raw)->capturedInViewTransition();
+}
+
 namespace WebCore {
 
 const std::optional<const Styleable> Styleable::fromRenderer(const RenderElement& renderer)

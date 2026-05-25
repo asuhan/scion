@@ -84,8 +84,7 @@ class StyleableWrapper {
   }
 
   func capturedInViewTransition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Styleable_capturedInViewTransition(p)
   }
 
   func keyframeEffectStack() -> KeyframeEffectStackWrapper? {
