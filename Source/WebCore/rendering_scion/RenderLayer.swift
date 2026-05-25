@@ -329,7 +329,7 @@ class RenderLayerWrapper {
   init(_ renderer: RenderLayerModelObjectWrapper) {
     if renderer.isNativeImpl() {
       m_renderer = nil
-      pInterop = wk_interop.RenderLayer_create((renderer as! RenderViewWrapper).getWk())
+      pInterop = wk_interop.RenderLayer_create((renderer as! RenderBlockFlowWrapper).getWk())
       owner = true
       return
     }
