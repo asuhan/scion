@@ -274,11 +274,17 @@ class BoxWrapper: Hashable {
 
   // Block level elements generate block level boxes.
   func isBlockLevelBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isBlockLevelBox(p!)
     }
-    return wk_interop.Box_isBlockLevelBox(p)
+    // Block level elements generate block level boxes.
+    let display = style.display()
+    return display == .Block
+      || display == .ListItem
+      || display == .Table
+      || display == .Flex
+      || display == .Grid
+      || display == .FlowRoot
   }
 
   // A block-level box that is also a block container.
