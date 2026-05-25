@@ -630,11 +630,10 @@ class BoxWrapper: Hashable {
   }
 
   func isInlineTextBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInlineTextBox(p!)
     }
-    return wk_interop.Box_isInlineTextBox(p)
+    return baseTypeFlags().contains(.InlineTextBoxFlag)
   }
 
   func isPaddingApplicable() -> Bool {
