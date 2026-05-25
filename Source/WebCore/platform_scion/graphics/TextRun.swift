@@ -88,10 +88,7 @@ class TextRunWrapper {
     self.m_size = size
   }
 
-  func setXPos(_ xPos: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setXPos(_ xPos: Float32) { wk_interop.TextRun_setXPos(p!, xPos) }
 
   func direction() -> TextDirection {
     assert(self.p != nil)

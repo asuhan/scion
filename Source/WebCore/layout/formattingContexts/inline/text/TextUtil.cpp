@@ -306,6 +306,11 @@ extern "C" WEBCORE_EXPORT bool TextRun_is8Bit(const void* p)
     return static_cast<const WebCore::TextRun*>(p)->is8Bit();
 }
 
+extern "C" WEBCORE_EXPORT void TextRun_setXPos(void* p, float xPos)
+{
+    static_cast<WebCore::TextRun*>(p)->setXPos(xPos);
+}
+
 extern "C" WEBCORE_EXPORT bool TextRun_rtl(const void* p)
 {
     return static_cast<const WebCore::TextRun*>(p)->rtl();
