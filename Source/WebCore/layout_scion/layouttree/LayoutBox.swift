@@ -359,11 +359,10 @@ class BoxWrapper: Hashable {
   }
 
   func isInitialContainingBlock() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInitialContainingBlock(p!)
     }
-    return wk_interop.Box_isInitialContainingBlock(p)
+    return baseTypeFlags().contains(.InitialContainingBlockFlag)
   }
 
   func isLayoutContainmentBox() -> Bool {
@@ -722,6 +721,11 @@ class BoxWrapper: Hashable {
       fatalError("Not implemented")
     }
     wk_interop.Box_setShape(p, shape.p)
+  }
+
+  private func baseTypeFlags() -> BaseTypeFlag {
+    assert(p == nil)
+    return m_baseTypeFlags
   }
 
   static func == (lhs: BoxWrapper, rhs: BoxWrapper) -> Bool {
