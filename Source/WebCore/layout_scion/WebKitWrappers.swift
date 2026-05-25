@@ -1878,6 +1878,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   if wk_interop.RenderObject_isRenderView(raw), let viewRaw = wk_interop.RenderView_scion(raw) {
     return Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderBlockFlow(raw),
+    let blockFlowRaw = wk_interop.RenderBlockFlow_scion(raw)
+  {
+    return Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  }
   return createRenderObjectWrapper(raw)
 }
 
