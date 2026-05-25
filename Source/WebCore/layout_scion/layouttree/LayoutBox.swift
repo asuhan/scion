@@ -266,11 +266,10 @@ class BoxWrapper: Hashable {
   }
 
   func isAnonymous() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isAnonymous(p!)
     }
-    return wk_interop.Box_isAnonymous(p)
+    return m_isAnonymous
   }
 
   // Block level elements generate block level boxes.
