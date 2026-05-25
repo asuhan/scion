@@ -141,7 +141,10 @@ class NodeWrapper {
   func renderer() -> RenderObjectWrapper? {
     guard let raw = wk_interop.Node_renderer(p) else { return nil }
     assert(
-      !wk_interop.RenderObject_isRenderView(raw) && !wk_interop.RenderObject_isRenderBlockFlow(p))
+      !wk_interop.RenderObject_isRenderView(raw)
+        && (!wk_interop.RenderObject_isRenderBlockFlow(raw)
+          || wk_interop.RenderBlockFlow_scion(raw) == nil)
+    )
     return createRenderObjectWrapper(raw)
   }
 
