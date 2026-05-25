@@ -3513,6 +3513,11 @@ bool RenderObject::isLegacyRenderSVGResourceContainer() const {
     return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsResourceContainer);
 }
 
+bool RenderObject::isRenderOrLegacyRenderSVGRoot() const {
+    if (m_scion) { return m_scion->isRenderOrLegacyRenderSVGRoot(); }
+    return isRenderSVGRoot() || isLegacyRenderSVGRoot();
+}
+
 bool RenderObject::isSVGLayerAwareRenderer() const
 {
     if (m_scion) { return m_scion->isSVGLayerAwareRenderer(); }

@@ -906,10 +906,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGResourceRadialGradient;
     }
-    bool isRenderOrLegacyRenderSVGRoot() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderSVGRoot() || isLegacyRenderSVGRoot();
-    }
+    bool isRenderOrLegacyRenderSVGRoot() const;
     bool isRenderOrLegacyRenderSVGShape() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderSVGShape() || isLegacyRenderSVGShape();

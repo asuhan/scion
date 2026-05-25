@@ -162,6 +162,8 @@ public:
 
     bool isLegacyRenderSVGResourceContainer() const;
 
+    bool isRenderOrLegacyRenderSVGRoot() const;
+
     bool isSVGLayerAwareRenderer() const;
 
     bool isSVGRenderer() const;
