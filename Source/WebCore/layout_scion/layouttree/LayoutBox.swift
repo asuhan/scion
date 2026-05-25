@@ -713,8 +713,14 @@ class BoxWrapper: Hashable {
 
   func associatedRubyAnnotationBox() -> ElementBoxWrapper? {
     if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if style.display() != .RubyBase {
+        return nil
+      }
+
+      guard let next = nextSibling() else { return nil }
+      if next.style.display() != .RubyAnnotation { return nil }
+
+      return next as? ElementBoxWrapper
     }
     if let unwrapped = wk_interop.Box_associatedRubyAnnotationBox(p) {
       let box = ElementBoxWrapper()
