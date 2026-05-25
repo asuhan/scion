@@ -43,7 +43,7 @@ extension InlineIterator {
 
     func isLineBreak() -> Bool { return m_inlineBox!.isLineBreak() }
 
-    private func bidiLevel() -> UInt8 { return m_inlineBox!.bidiLevel() }
+    func bidiLevel() -> UInt8 { return m_inlineBox!.bidiLevel() }
 
     func start() -> UInt32 { return inlineTextBox().start() }
 

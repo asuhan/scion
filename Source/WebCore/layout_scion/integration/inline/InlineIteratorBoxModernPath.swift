@@ -43,7 +43,7 @@ extension InlineIterator {
 
     func isLineBreak() -> Bool { return box().isLineBreak() }
 
-    private func bidiLevel() -> UBiDiLevel { return box().bidiLevel }
+    func bidiLevel() -> UInt8 { return box().bidiLevel.rawValue }
 
     private func originalText() -> StringWrapperView { return box().text().originalContent() }
 
@@ -111,7 +111,7 @@ extension InlineIterator {
       return box().style()
     }
 
-    func direction() -> TextDirection { return bidiLevel().rawValue % 2 != 0 ? .RTL : .LTR }
+    func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool { return box().lineIndex == 0 }
 

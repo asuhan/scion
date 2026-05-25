@@ -124,8 +124,12 @@ extension InlineIterator {
     }
 
     func bidiLevel() -> UInt8 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.bidiLevel()
+      case .legacy(let path):
+        return path.bidiLevel()
+      }
     }
 
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
