@@ -552,11 +552,10 @@ class BoxWrapper: Hashable {
   }
 
   func isFirstChildForIntegration() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isFirstChildForIntegration(p)
     }
-    return wk_interop.Box_isFirstChildForIntegration(p)
+    return m_isFirstChildForIntegration
   }
 
   func parent() -> ElementBoxWrapper {
@@ -705,11 +704,11 @@ class BoxWrapper: Hashable {
   }
 
   func setIsFirstChildForIntegration(value: Bool) {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      wk_interop.Box_setIsFirstChildForIntegration(p, value)
+      return
     }
-    wk_interop.Box_setIsFirstChildForIntegration(p, value)
+    m_isFirstChildForIntegration = value
   }
 
   func associatedRubyAnnotationBox() -> ElementBoxWrapper? {
@@ -776,6 +775,7 @@ class BoxWrapper: Hashable {
 
   private let m_baseTypeFlags: BaseTypeFlag
   private var m_isInlineIntegrationRoot = false
+  private var m_isFirstChildForIntegration = false
 
   var style: RenderStyleWrapper
 
