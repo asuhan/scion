@@ -213,10 +213,7 @@ extension InlineIterator {
 
     init(_ run: InlineIterator.Box) { m_box = run }
 
-    func bool() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func bool() -> Bool { return !atEnd() }
 
     static func == (self: BoxIterator, other: BoxIterator) -> Bool {
       // TODO(asuhan): implement this
@@ -231,6 +228,15 @@ extension InlineIterator {
     func get() -> Box {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    private func atEnd() -> Bool {
+      switch m_box.m_pathVariant {
+      case .modern(let path):
+        return path.atEnd()
+      case .legacy(let path):
+        return path.atEnd()
+      }
     }
 
     private let m_box: InlineIterator.Box

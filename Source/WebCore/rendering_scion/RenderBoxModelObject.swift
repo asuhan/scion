@@ -1198,7 +1198,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
           continue
         }
         let textBoxPainter = ModernTextBoxPainterWrapper(
-          inlineContent: box.get().modernPath().inlineContent, box: box.get().modernPath().box(),
+          inlineContent: box.get().modernPath().inlineContent(), box: box.get().modernPath().box(),
           paintInfo: maskInfo, paintOffset: paintOffset)
         textBoxPainter.paint()
         box.traverseNextOnLine()

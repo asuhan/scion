@@ -27,7 +27,7 @@ extension InlineIterator {
 
   class BoxModernPath: BoxPath {
     init(inlineContent: LayoutIntegration.InlineContent, startIndex: UInt64) {
-      self.inlineContent = inlineContent
+      self.m_inlineContent = inlineContent
       self.boxIndex = startIndex
     }
 
@@ -104,7 +104,7 @@ extension InlineIterator {
     func renderer() -> RenderObjectWrapper { return box().layoutBox.rendererForIntegration()! }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
-      return inlineContent.formattingContextRoot()
+      return m_inlineContent!.formattingContextRoot()
     }
 
     func style() -> RenderStyleWrapper {
@@ -115,13 +115,17 @@ extension InlineIterator {
 
     func isFirstLine() -> Bool { return box().lineIndex == 0 }
 
+    func atEnd() -> Bool { return m_inlineContent == nil || boxIndex == boxes().count }
+
     func box() -> InlineDisplay.Box { return boxes()[Int(boxIndex)] }
 
+    func inlineContent() -> LayoutIntegration.InlineContent { return m_inlineContent! }
+
     private func boxes() -> ArraySlice<InlineDisplay.Box> {
-      return inlineContent.displayContent.boxes[...]
+      return m_inlineContent!.displayContent.boxes[...]
     }
 
-    private func line() -> InlineDisplay.Line { return inlineContent.lineForBox(box()) }
+    private func line() -> InlineDisplay.Line { return m_inlineContent!.lineForBox(box()) }
 
     private func renderText() -> RenderTextWrapper { return renderer() as! RenderTextWrapper }
 
@@ -130,7 +134,7 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    let inlineContent: LayoutIntegration.InlineContent
+    private let m_inlineContent: LayoutIntegration.InlineContent?
     private let boxIndex: UInt64
   }
 

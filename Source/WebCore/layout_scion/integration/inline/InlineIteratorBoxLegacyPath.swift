@@ -75,6 +75,8 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func atEnd() -> Bool { return m_inlineBox == nil }
+
     func legacyInlineBox() -> LegacyInlineBox? { return m_inlineBox }
 
     private func rootInlineBox() -> LegacyRootInlineBox { return m_inlineBox!.root() }
