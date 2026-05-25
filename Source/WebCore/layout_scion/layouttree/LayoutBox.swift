@@ -553,7 +553,7 @@ class BoxWrapper: Hashable {
 
   func isFirstChildForIntegration() -> Bool {
     if p != nil {
-      return wk_interop.Box_isFirstChildForIntegration(p)
+      return wk_interop.Box_isFirstChildForIntegration(p!)
     }
     return m_isFirstChildForIntegration
   }
@@ -705,7 +705,7 @@ class BoxWrapper: Hashable {
 
   func setIsFirstChildForIntegration(value: Bool) {
     if p != nil {
-      wk_interop.Box_setIsFirstChildForIntegration(p, value)
+      wk_interop.Box_setIsFirstChildForIntegration(p!, value)
       return
     }
     m_isFirstChildForIntegration = value
