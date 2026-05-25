@@ -757,7 +757,6 @@ void RenderElement::didAttachChild(RenderObject& child, RenderObject*)
 RenderObject* RenderElement::attachRendererInternal(RenderPtr<RenderObject> child, RenderObject* beforeChild)
 {
     if (m_scion) {
-        ASSERT(!child->isScion());
         ASSERT(!beforeChild || !beforeChild->isScion());
         m_scion->attachRendererInternal(child.get(), beforeChild);
         return child.release();
