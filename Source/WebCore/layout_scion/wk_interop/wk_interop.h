@@ -1709,3 +1709,5 @@ bool TransformationMatrix_isIntegerTranslation(const void*);
 void* TransformationMatrix_copy(const void*);
 void TransformationMatrix_destroy(const void*);
 void RenderCounterSet_add(void* set, void* counter);
+void* Styleable_fromElement(void*);
+void Styleable_destroy(void*);

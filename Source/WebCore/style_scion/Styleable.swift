@@ -23,15 +23,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct StyleableWrapper {
+import wk_interop
+
+class StyleableWrapper {
   init(element: ElementWrapper, pseudoElementIdentifier: Style.PseudoElementIdentifier?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
+  deinit { wk_interop.Styleable_destroy(p) }
+
   static func fromElement(element: ElementWrapper) -> StyleableWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StyleableWrapper(wk_interop.Styleable_fromElement(element.p))
   }
 
   static func fromRenderer(_ renderer: RenderElementWrapper) -> StyleableWrapper? {
@@ -97,6 +102,8 @@ struct StyleableWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
 
 class WeakStyleableWrapper {
