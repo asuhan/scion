@@ -352,11 +352,10 @@ class BoxWrapper: Hashable {
   }
 
   func isInlineTableBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInlineTableBox(p!)
     }
-    return wk_interop.Box_isInlineTableBox(p)
+    return style.display() == .InlineTable
   }
 
   func isInitialContainingBlock() -> Bool {
