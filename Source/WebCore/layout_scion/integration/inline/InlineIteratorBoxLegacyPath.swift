@@ -33,6 +33,8 @@ extension InlineIterator {
   class BoxLegacyPath: BoxPath {
     init(_ inlineBox: LegacyInlineBox?) { m_inlineBox = inlineBox }
 
+    func isText() -> Bool { return m_inlineBox!.isInlineTextBox() }
+
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper { return m_inlineBox!.frameRect() }
 
     func isHorizontal() -> Bool { return m_inlineBox!.isHorizontal() }

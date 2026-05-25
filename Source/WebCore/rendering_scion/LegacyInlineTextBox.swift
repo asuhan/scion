@@ -104,6 +104,8 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
       renderer: renderer(), textBoxRange: selectableRange())
   }
 
+  override final func isInlineTextBox() -> Bool { return true }
+
   private let m_start: UInt32 = 0
   private let m_len: UInt32 = 0
 }

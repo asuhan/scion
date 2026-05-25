@@ -37,6 +37,8 @@ class LegacyInlineBox {
 
   func isInlineFlowBox() -> Bool { return false }
 
+  func isInlineTextBox() -> Bool { return false }
+
   private func hasVirtualLogicalHeight() -> Bool { return m_bitfields.hasVirtualLogicalHeight }
 
   func virtualLogicalHeight() -> Float32 { fatalError("Not reached") }

@@ -34,8 +34,12 @@ extension InlineIterator {
     init(_ path: PathVariant) { m_pathVariant = path }
 
     func isText() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.isText()
+      case .legacy(let path):
+        return path.isText()
+      }
     }
 
     func isRootInlineBox() -> Bool {
