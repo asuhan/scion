@@ -958,11 +958,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isLegend() -> Bool {
     assert(isNativeImpl())
-    if node() == nil {
-      return false
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return node()?.hasLegendTagName() ?? false
   }
 
   func isHTMLMarquee() -> Bool {

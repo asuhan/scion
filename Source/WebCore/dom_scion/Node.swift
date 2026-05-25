@@ -32,6 +32,8 @@ class NodeWrapper {
   // TODO(asuhan): implement proper hasTagName accessors
   func hasBodyTagName() -> Bool { return wk_interop.Node_hasBodyTagName(p) }
 
+  func hasLegendTagName() -> Bool { return wk_interop.Node_hasLegendTagName(p) }
+
   func hasMarqueeTagName() -> Bool { return wk_interop.Node_hasMarqueeTagName(p) }
 
   func parentElement() -> ElementWrapper? {
