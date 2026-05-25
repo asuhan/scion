@@ -199,8 +199,8 @@ extension InlineIterator {
     }
 
     func modernPath() -> BoxModernPath {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      guard case .modern(let path) = m_pathVariant else { fatalError("Expected modern path") }
+      return path
     }
 
     let m_pathVariant: PathVariant
