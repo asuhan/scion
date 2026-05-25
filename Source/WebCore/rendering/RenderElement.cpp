@@ -609,7 +609,10 @@ bool RenderElement::repaintBeforeStyleChange(StyleDifference diff, const RenderS
 
 void RenderElement::initializeStyle()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->initializeStyle();
+        return;
+    }
     Style::loadPendingResources(m_style, protectedDocument(), protectedElement().get());
 
     styleWillChange(StyleDifference::NewStyle, style());

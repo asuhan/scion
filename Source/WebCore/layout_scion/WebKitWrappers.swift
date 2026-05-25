@@ -1101,7 +1101,9 @@ func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutab
 }
 
 @_cdecl("RenderBlockFlowScion_setWk")
-func RenderBlockFlowScion_setWk(_ wk: UnsafeMutableRawPointer, _ blockFlowRaw: UnsafeMutableRawPointer) {
+func RenderBlockFlowScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ blockFlowRaw: UnsafeMutableRawPointer
+) {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
   blockFlow.setWk(wk)
 }
@@ -2005,6 +2007,12 @@ func RenderElementScion_firstLineStyle(_ elementRaw: UnsafeRawPointer) -> Unsafe
 func RenderElementScion_mutableStyle(_ elementRaw: UnsafeMutableRawPointer) -> UnsafeRawPointer {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   return element.mutableStyle().p!
+}
+
+@_cdecl("RenderElementScion_initializeStyle")
+func RenderElementScion_initializeStyle(_ elementRaw: UnsafeMutableRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.initializeStyle()
 }
 
 @_cdecl("RenderElementScion_setStyle")

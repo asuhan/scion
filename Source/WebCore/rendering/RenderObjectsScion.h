@@ -325,6 +325,8 @@ public:
 
     RenderStyle& mutableStyle();
 
+    void initializeStyle();
+
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
     Element* element() const;

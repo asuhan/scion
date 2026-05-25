@@ -326,6 +326,8 @@ extern "C" const void* RenderElementScion_firstLineStyle(const void*);
 
 extern "C" const void* RenderElementScion_mutableStyle(void*);
 
+extern "C" void RenderElementScion_initializeStyle(void*);
+
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
 
 extern "C" void* RenderElementScion_element(const void*);
@@ -1068,6 +1070,11 @@ const RenderStyle& RenderElementScion::firstLineStyle() const
 RenderStyle& RenderElementScion::mutableStyle()
 {
     return *static_cast<RenderStyle*>(const_cast<void*>(RenderElementScion_mutableStyle(m_handle)));
+}
+
+void RenderElementScion::initializeStyle()
+{
+    RenderElementScion_initializeStyle(m_handle);
 }
 
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
