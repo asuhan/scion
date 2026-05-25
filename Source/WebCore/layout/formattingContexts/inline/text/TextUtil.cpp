@@ -447,6 +447,11 @@ extern "C" WEBCORE_EXPORT void TextRun_destroy(const void* p)
     delete static_cast<const WebCore::TextRun*>(p);
 }
 
+extern "C" WEBCORE_EXPORT uint16_t TextRun_subscript(const void* p, uint32_t i)
+{
+    return (*static_cast<const WebCore::TextRun*>(p))[i];
+}
+
 extern "C" WEBCORE_EXPORT const void* String_new()
 {
     return new String();
