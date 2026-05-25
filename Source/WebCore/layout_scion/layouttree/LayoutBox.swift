@@ -524,11 +524,10 @@ class BoxWrapper: Hashable {
   }
 
   func isWordBreakOpportunity() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isWordBreakOpportunity(p!)
     }
-    return wk_interop.Box_isWordBreakOpportunity(p)
+    return m_nodeType == .WordBreakOpportunity
   }
 
   func isListMarkerBox() -> Bool {
