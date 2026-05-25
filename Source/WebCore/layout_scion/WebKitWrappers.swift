@@ -2212,7 +2212,9 @@ func RenderElementScion_hasBlendMode(_ elementRaw: UnsafeRawPointer) -> Bool {
 }
 
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
+  assert(!wk_interop.RenderObject_isRenderView(p))
   if wk_interop.RenderObject_isRenderBlockFlow(p) {
+    assert(wk_interop.RenderBlockFlow_scion(p) == nil)
     return RenderBlockFlowWrapper(p: p)
   }
   if wk_interop.RenderObject_isRenderBlock(p) {

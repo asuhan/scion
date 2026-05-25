@@ -148,6 +148,11 @@ extern "C" WEBCORE_EXPORT void PaintInfo_setPhase(void* p, uint16_t phase)
     static_cast<WebCore::PaintInfo*>(p)->phase = static_cast<WebCore::PaintPhase>(phase);
 }
 
+extern "C" WEBCORE_EXPORT void* RenderBlockFlow_scion(const void* p)
+{
+    return static_cast<const WebCore::RenderBlockFlow*>(p)->scion();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBlockFlow);
@@ -5087,6 +5092,11 @@ bool RenderBlockFlow::tryComputePreferredWidthsUsingInlinePath(LayoutUnit& minLo
             renderText->resetMinMaxWidth();
     }
     return true;
+}
+
+void* RenderBlockFlow::scion() const
+{
+    return m_scion ? m_scion->handle() : nullptr;
 }
 
 }

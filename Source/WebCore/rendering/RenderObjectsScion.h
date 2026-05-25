@@ -576,6 +576,8 @@ public:
 
     void setWk(void*);
 
+    void* handle() const { return m_handle; }
+
 private:
     void* m_handle;
 };

@@ -675,6 +675,8 @@ public:
     }
 #endif
 
+    void* scion() const;
+
 protected:
     std::unique_ptr<FloatingObjects> m_floatingObjects;
     std::unique_ptr<RenderBlockFlowRareData> m_rareBlockFlowData;
