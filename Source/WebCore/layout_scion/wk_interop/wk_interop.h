@@ -638,6 +638,7 @@ void* RenderLayerCompositor_create(void*);
 void RenderLayerCompositor_destroy(void*);
 bool RenderLayerCompositor_usesCompositing(const void* p);
 bool RenderLayerCompositor_hasContentCompositingLayers(const void*);
+void RenderLayerCompositor_rootOrBodyStyleChanged(void*, void*, const void*);
 void RenderLayerCompositor_rootBackgroundColorOrTransparencyChanged(void*);
 void RenderLayerCompositor_repaintCompositedLayers(void*);
 void RenderLayerCompositor_setIsInWindow(void*, bool);

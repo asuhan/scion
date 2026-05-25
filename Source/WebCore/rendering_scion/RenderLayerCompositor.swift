@@ -884,7 +884,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // We can't rely on getting layerStyleChanged() for a style change that affects the root background, because the style change may
   // be on the body which has no RenderLayer.
   func rootOrBodyStyleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      assert(renderer.isNativeImpl())
+      wk_interop.RenderLayerCompositor_rootOrBodyStyleChanged(
+        interop(), (renderer as! RenderBlockFlowWrapper).getWk(), oldStyle?.p)
+      return
+    }
+
     if !usesCompositing() {
       return
     }

@@ -130,6 +130,13 @@ extern "C" WEBCORE_EXPORT bool RenderLayerCompositor_hasContentCompositingLayers
     return static_cast<const WebCore::RenderLayerCompositor*>(p)->hasContentCompositingLayers();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayerCompositor_rootOrBodyStyleChanged(void* p, void* rendererRaw, const void* oldStyleRaw)
+{
+    auto& renderer = *static_cast<WebCore::RenderElement*>(rendererRaw);
+    const auto oldStyle = static_cast<const WebCore::RenderStyle*>(oldStyleRaw);
+    static_cast<WebCore::RenderLayerCompositor*>(p)->rootOrBodyStyleChanged(renderer, oldStyle);
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayerCompositor_rootBackgroundColorOrTransparencyChanged(void* p)
 {
     return static_cast<WebCore::RenderLayerCompositor*>(p)->rootBackgroundColorOrTransparencyChanged();
