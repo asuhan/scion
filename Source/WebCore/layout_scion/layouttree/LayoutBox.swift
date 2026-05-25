@@ -658,8 +658,33 @@ class BoxWrapper: Hashable {
   }
 
   func isOverflowVisible() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    let isOverflowVisible = style.overflowX() == .Visible || style.overflowY() == .Visible
+    // UAs must apply the 'overflow' property set on the root element to the viewport. When the root element is an HTML "HTML" element
+    // or an XHTML "html" element, and that element has an HTML "BODY" element or an XHTML "body" element as a child,
+    // user agents must instead apply the 'overflow' property from the first such child element to the viewport,
+    // if the value on the root element is 'visible'. The 'visible' value when used for the viewport must be interpreted as 'auto'.
+    // The element from which the value is propagated must have a used value for 'overflow' of 'visible'.
+    if isBodyBox() {
+      let documentBox = parent()
+      if !documentBox.isDocumentBox() {
+        return isOverflowVisible
+      }
+      if !documentBox.isOverflowVisible() {
+        return isOverflowVisible
+      }
+      return true
+    }
+    if self is InitialContainingBlock {
+      let documentBox = (self as! ElementBoxWrapper).firstChild()
+      if !(documentBox?.isDocumentBox() ?? false) { return isOverflowVisible }
+      guard let elementBox = documentBox! as? ElementBoxWrapper else { return isOverflowVisible }
+      let bodyBox = elementBox.firstChild()
+      if !(bodyBox?.isBodyBox() ?? false) { return isOverflowVisible }
+      let bodyBoxStyle = bodyBox!.style
+      return bodyBoxStyle.overflowX() == .Visible || bodyBoxStyle.overflowY() == .Visible
+    }
+    return isOverflowVisible
   }
 
   func firstLineStyle() -> RenderStyleWrapper {
