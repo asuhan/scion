@@ -309,11 +309,20 @@ class BoxWrapper: Hashable {
   }
 
   func isInlineLevelBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInlineLevelBox(p!)
     }
-    return wk_interop.Box_isInlineLevelBox(p)
+    // Inline level elements generate inline level boxes.
+    let display = style.display()
+    return display == .Inline
+      || display == .InlineBox
+      || display == .InlineFlex
+      || display == .InlineGrid
+      || display == .Ruby
+      || display == .RubyBase
+      || display == .RubyAnnotation
+      || isInlineBlockBox()
+      || isInlineTableBox()
   }
 
   func isInlineBox() -> Bool {
