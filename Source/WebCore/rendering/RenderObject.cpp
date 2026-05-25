@@ -3386,6 +3386,24 @@ bool RenderObject::isRenderTableCell() const
     return type() == Type::TableCell;
 }
 
+bool RenderObject::isRenderTableCol() const
+{
+    if (m_scion) { return m_scion->isRenderTableCol(); }
+    return type() == Type::TableCol;
+}
+
+bool RenderObject::isRenderTableCaption() const
+{
+    if (m_scion) { return m_scion->isRenderTableCaption(); }
+    return type() == Type::TableCaption;
+}
+
+bool RenderObject::isRenderTableSection() const
+{
+    if (m_scion) { return m_scion->isRenderTableSection(); }
+    return type() == Type::TableSection;
+}
+
 bool RenderObject::isRenderVideo() const
 {
     if (m_scion) { return m_scion->isRenderVideo(); }

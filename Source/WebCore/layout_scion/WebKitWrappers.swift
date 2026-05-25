@@ -1283,6 +1283,24 @@ func RenderObjectScion_isRenderTableCell(_ objectRaw: UnsafeRawPointer) -> Bool 
   return object.isRenderTableCell()
 }
 
+@_cdecl("RenderObjectScion_isRenderTableCol")
+func RenderObjectScion_isRenderTableCol(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTableCol()
+}
+
+@_cdecl("RenderObjectScion_isRenderTableCaption")
+func RenderObjectScion_isRenderTableCaption(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTableCaption()
+}
+
+@_cdecl("RenderObjectScion_isRenderTableSection")
+func RenderObjectScion_isRenderTableSection(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTableSection()
+}
+
 @_cdecl("RenderObjectScion_isRenderVideo")
 func RenderObjectScion_isRenderVideo(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

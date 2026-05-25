@@ -112,6 +112,12 @@ public:
 
     bool isRenderTableCell() const;
 
+    bool isRenderTableCol() const;
+
+    bool isRenderTableCaption() const;
+
+    bool isRenderTableSection() const;
+
     bool isRenderVideo() const;
 
     bool isRenderViewTransitionCapture() const;

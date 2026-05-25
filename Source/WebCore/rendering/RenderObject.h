@@ -560,21 +560,9 @@ public:
     }
     bool isRenderTable() const;
     bool isRenderTableCell() const;
-    bool isRenderTableCol() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TableCol;
-    }
-    bool isRenderTableCaption() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TableCaption;
-    }
-    bool isRenderTableSection() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TableSection;
-    }
+    bool isRenderTableCol() const;
+    bool isRenderTableCaption() const;
+    bool isRenderTableSection() const;
     bool isRenderTextControl() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
