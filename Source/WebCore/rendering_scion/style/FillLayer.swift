@@ -162,6 +162,8 @@ class FillLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func interop() -> UnsafeRawPointer { return p }
+
   private func isNativeImpl() -> Bool { return false }
 
   private let p: UnsafeRawPointer

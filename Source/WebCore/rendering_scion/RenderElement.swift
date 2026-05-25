@@ -2375,9 +2375,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   private func updateFillImages(oldLayers: FillLayerWrapper?, newLayers: FillLayerWrapper?) {
     assert(isNativeImpl())
     let fillImagesAreIdentical = { (layer1: FillLayerWrapper?, layer2: FillLayerWrapper?) in
-      if (layer1 == nil && layer2 == nil)
-        || (ObjectIdentifier(layer1!) == ObjectIdentifier(layer2!))
-      {
+      if CPtrToInt(layer1?.interop()) == CPtrToInt(layer2?.interop()) {
         return true
       }
 
