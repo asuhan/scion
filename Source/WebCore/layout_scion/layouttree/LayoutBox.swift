@@ -336,11 +336,12 @@ class BoxWrapper: Hashable {
   }
 
   func isAtomicInlineBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isAtomicInlineBox(p!)
     }
-    return wk_interop.Box_isAtomicInlineBox(p)
+    // Inline-level boxes that are not inline boxes (such as replaced inline-level elements, inline-block elements, and inline-table elements)
+    // are called atomic inline-level boxes because they participate in their inline formatting context as a single opaque box.
+    return isInlineLevelBox() && !isInlineBox()
   }
 
   func isInlineBlockBox() -> Bool {
