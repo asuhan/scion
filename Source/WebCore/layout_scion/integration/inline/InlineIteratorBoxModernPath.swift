@@ -37,6 +37,8 @@ extension InlineIterator {
 
     func isText() -> Bool { return box().isTextOrSoftLineBreak() }
 
+    func isRootInlineBox() -> Bool { return box().isRootInlineBox() }
+
     func isHorizontal() -> Bool { return box().isHorizontal() }
 
     private func bidiLevel() -> UBiDiLevel { return box().bidiLevel }

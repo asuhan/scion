@@ -43,8 +43,12 @@ extension InlineIterator {
     }
 
     func isRootInlineBox() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.isRootInlineBox()
+      case .legacy(let path):
+        return path.isRootInlineBox()
+      }
     }
 
     func isLineBreak() -> Bool {

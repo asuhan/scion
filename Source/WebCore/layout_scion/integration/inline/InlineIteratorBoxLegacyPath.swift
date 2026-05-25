@@ -35,6 +35,8 @@ extension InlineIterator {
 
     func isText() -> Bool { return m_inlineBox!.isInlineTextBox() }
 
+    func isRootInlineBox() -> Bool { return m_inlineBox!.isRootInlineBox() }
+
     func visualRectIgnoringBlockDirection() -> FloatRectWrapper { return m_inlineBox!.frameRect() }
 
     func isHorizontal() -> Bool { return m_inlineBox!.isHorizontal() }

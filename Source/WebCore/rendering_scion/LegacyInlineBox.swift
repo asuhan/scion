@@ -39,6 +39,8 @@ class LegacyInlineBox {
 
   func isInlineTextBox() -> Bool { return false }
 
+  func isRootInlineBox() -> Bool { return false }
+
   private func hasVirtualLogicalHeight() -> Bool { return m_bitfields.hasVirtualLogicalHeight }
 
   func virtualLogicalHeight() -> Float32 { fatalError("Not reached") }
