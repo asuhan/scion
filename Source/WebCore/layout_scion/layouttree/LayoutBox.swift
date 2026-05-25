@@ -697,11 +697,11 @@ class BoxWrapper: Hashable {
   }
 
   func setIsInlineIntegrationRoot() {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      wk_interop.Box_setIsInlineIntegrationRoot(p!)
+      return
     }
-    wk_interop.Box_setIsInlineIntegrationRoot(p)
+    m_isInlineIntegrationRoot = true
   }
 
   func setIsFirstChildForIntegration(value: Bool) {
@@ -775,7 +775,7 @@ class BoxWrapper: Hashable {
   private let m_isAnonymous: Bool
 
   private let m_baseTypeFlags: BaseTypeFlag
-  private let m_isInlineIntegrationRoot = false
+  private var m_isInlineIntegrationRoot = false
 
   var style: RenderStyleWrapper
 
