@@ -534,6 +534,22 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderBlockFlowScion_create")
+func RenderBlockFlowScion_create(
+  _ typeRaw: UInt8, _ element: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,
+  _ flagsRaw: UInt8
+) -> UnsafeMutableRawPointer {
+  let style = RenderStyleWrapper()
+  style.p = styleRaw
+  style.pOwner = true
+  assert(typeRaw == 0)
+  let renderBlockFlow = RenderBlockFlowWrapper(
+    type: .BlockFlow, element: ElementWrapper(p: element),
+    style: style, flags: RenderObjectWrapper.BlockFlowFlag(rawValue: flagsRaw))
+  let unmanaged = Unmanaged.passRetained(renderBlockFlow)
+  return unmanaged.toOpaque()
+}
+
 func convertLayoutRect(_ raw: LayoutRectRaw) -> LayoutRectWrapper {
   return LayoutRectWrapper(
     x: LayoutUnit.fromRawValue(value: raw.x), y: LayoutUnit.fromRawValue(value: raw.y),
@@ -1082,6 +1098,12 @@ func RenderViewScion_containerQueryBoxesIsEmpty(_ viewRaw: UnsafeRawPointer) -> 
 func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   view.setWk(wk)
+}
+
+@_cdecl("RenderBlockFlowScion_setWk")
+func RenderBlockFlowScion_setWk(_ wk: UnsafeMutableRawPointer, _ blockFlowRaw: UnsafeMutableRawPointer) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  blockFlow.setWk(wk)
 }
 
 @_cdecl("RenderLayerModelObjectNative_layer")

@@ -1090,12 +1090,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   // TODO(asuhan): remove
-  func setWk(_ wk: UnsafeMutableRawPointer) {
+  override func setWk(_ wk: UnsafeMutableRawPointer) {
     self.wk = wk
     m_selection!.setWk(wk)
   }
 
-  func getWk() -> UnsafeMutableRawPointer { return wk! }
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
 
   private var m_frameView: LocalFrameViewWrapper? = nil
 

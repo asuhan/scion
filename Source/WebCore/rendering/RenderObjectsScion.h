@@ -32,6 +32,8 @@
 
 extern "C" void* RenderViewScion_create(void*, const void*);
 
+extern "C" void* RenderBlockFlowScion_create(uint8_t, void*, const void*, uint8_t);
+
 namespace WebCore {
 
 class HitTestLocation;
@@ -561,6 +563,8 @@ public:
     LayoutIntegration::LineLayout* inlineLayout();
 
     void styleWillChange(StyleDifference, const RenderStyle&);
+
+    void setWk(void*);
 
 private:
     void* m_handle;

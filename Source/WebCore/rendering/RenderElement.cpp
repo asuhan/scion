@@ -286,6 +286,12 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
     case DisplayType::Block:
     case DisplayType::FlowRoot:
     case DisplayType::InlineBlock:
+        if (Document::s_useScionRendering >= 2) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
+            renderer->setScionHandle(RenderBlockFlowScion_create(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &element, clonedStyle.release(), 0));
+            return renderer;
+        }
         return createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
     case DisplayType::ListItem:
         if (rendererTypeOverride.contains(ConstructBlockLevelRendererFor::ListItem))

@@ -225,7 +225,14 @@ RenderBlockFlow::RenderBlockFlow(Type type, Document& document, RenderStyle&& st
 RenderBlockFlow::~RenderBlockFlow() = default;
 
 void RenderBlockFlow::setScionHandle(void* handle) {
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    RenderBlock::setScionHandle(handle);
     m_scion = std::make_unique<RenderBlockFlowScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderBlockFlow::willBeDestroyed()

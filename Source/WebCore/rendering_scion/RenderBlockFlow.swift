@@ -5360,6 +5360,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     m_rareBlockFlowData = RenderBlockFlowRareData(self)
   }
 
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  func getWk() -> UnsafeMutableRawPointer { return wk! }
+
   // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.
   private var previousInlineLayoutContentBoxLogicalHeight: LayoutUnit?
 
@@ -5373,4 +5378,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   var lineLayout: LineLayout = .None
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }

@@ -510,6 +510,8 @@ extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
 
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
+extern "C" void RenderBlockFlowScion_setWk(void*, void*);
+
 struct ComputedMarginValuesRaw {
     int32_t before;
     int32_t after;
@@ -1556,6 +1558,11 @@ LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
 void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
     RenderBlockFlowScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+}
+
+void RenderBlockFlowScion::setWk(void* wk)
+{
+    RenderBlockFlowScion_setWk(wk, m_handle);
 }
 
 RenderViewScion::~RenderViewScion()
