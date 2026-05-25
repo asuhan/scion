@@ -418,6 +418,7 @@ const void* TextRun_span16(const void*);
 bool TextRun_is8Bit(const void*);
 void TextRun_setXPos(void*, float);
 bool TextRun_rtl(const void*);
+void TextRun_setCharacterScanForCodePath(void*, bool);
 uint32_t TextRun_length(const void*);
 void TextRun_setTabSize(void*, bool, float, bool);
 void TextRun_setTextSpacingState(void*, const void*);

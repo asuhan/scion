@@ -106,8 +106,7 @@ class TextRunWrapper {
   }
 
   func setCharacterScanForCodePath(_ scan: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.TextRun_setCharacterScanForCodePath(p!, scan)
   }
 
   func setTextSpacingState(spacingStatePtr: UnsafeRawPointer?) {
