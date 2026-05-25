@@ -94,8 +94,8 @@ class TextRunWrapper {
   }
 
   func direction() -> TextDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(self.p != nil)
+    return rtl() ? .RTL : .LTR
   }
 
   func rtl() -> Bool {
@@ -104,8 +104,8 @@ class TextRunWrapper {
   }
 
   func ltr() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(self.p != nil)
+    return !rtl()
   }
 
   func setCharacterScanForCodePath(_ scan: Bool) {
