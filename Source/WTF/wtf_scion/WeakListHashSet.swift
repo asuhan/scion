@@ -115,6 +115,7 @@ final class WeakListHashSet<T: AnyObject>: Sequence {
     return m_set.appendOrMoveToLast(WeakPtr(value))
   }
 
+  @discardableResult
   func insertBefore(_ it: WeakListHashSetIterator, _ value: T) -> AddResult {
     amortizedCleanupIfNeeded()
     return m_set.insertBefore(it.m_position, WeakPtr(value))

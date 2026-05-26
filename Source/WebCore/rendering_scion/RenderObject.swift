@@ -3112,8 +3112,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // FIXME: Renderers should not need to be notified about internal reparenting (webkit.org/b/224143).
   func insertedIntoTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // FIXME: We should ASSERT(isRooted()) here but generated content makes some out-of-order insertion.
+    if !isFloating() && parent()!.isSVGRenderer() && parent()!.childrenInline() {
+      checkedParent()!.dirtyLineFromChangedChild()
+    }
   }
 
   func willBeRemovedFromTree() {

@@ -531,7 +531,7 @@ class RenderLayerWrapper {
     return curr
   }
 
-  private func addChild(_ child: RenderLayerWrapper, beforeChild: RenderLayerWrapper? = nil) {
+  func addChild(_ child: RenderLayerWrapper, beforeChild: RenderLayerWrapper? = nil) {
     assert(isNativeImpl())
     if let prevSibling = beforeChild?.previousSibling() ?? lastChild() {
       child.setPreviousSibling(prev: prevSibling)

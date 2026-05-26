@@ -56,6 +56,28 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
       isLastPortion: isLastFragment())
   }
 
+  private func attachFragment() {
+    assert(isNativeImpl())
+    if renderTreeBeingDestroyed() {
+      return
+    }
+
+    // A fragment starts off invalid.
+    isValid = false
+
+    // Initialize the flow thread reference and create the flow thread object if needed.
+    // The flow thread lifetime is influenced by the number of fragments attached to it,
+    // and we are attaching the fragment to the flow thread.
+    installFragmentedFlow()
+
+    if fragmentedFlow == nil {
+      return
+    }
+
+    // Only after adding the fragment to the thread, the fragment is marked to be valid.
+    (fragmentedFlow! as! RenderMultiColumnFlowWrapper).addFragmentToThread(self)
+  }
+
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -440,11 +462,19 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     repaintRectangle(repaintRect: clippedRect)
   }
 
+  override final func insertedIntoTree() {
+    assert(isNativeImpl())
+    attachFragment()
+    if isValid { super.insertedIntoTree() }
+  }
+
+  func installFragmentedFlow() { fatalError("Not reached") }
+
   let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
 
   private var m_fragmentedFlowPortionRect = LayoutRectWrapper()
 
-  private let isValid = false
+  var isValid = false
 }
 
 func use(_ x: CurrentRenderFragmentContainerMaintainer) {}

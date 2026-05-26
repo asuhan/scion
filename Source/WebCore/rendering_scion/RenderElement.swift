@@ -22,6 +22,102 @@
 
 import wk_interop
 
+private func findNextLayer(
+  _ currRenderer: RenderElementWrapper, _ parentLayer: RenderLayerWrapper,
+  _ siblingToTraverseFrom: RenderObjectWrapper?, _ checkParent: Bool = true
+) -> RenderLayerWrapper? {
+  // Step 1: If our layer is a child of the desired parent, then return our layer.
+  let ourLayer =
+    currRenderer.hasLayer() ? (currRenderer as! RenderLayerModelObjectWrapper).layer() : nil
+  if CPtrToInt(ourLayer?.parent()?.layerId()) == CPtrToInt(parentLayer.layerId()) {
+    return ourLayer
+  }
+
+  // Step 2: If we don't have a layer, or our layer is the desired parent, then descend
+  // into our siblings trying to find the next layer whose parent is the desired parent.
+  if ourLayer == nil || ourLayer!.layerId() == parentLayer.layerId() {
+    var child =
+      siblingToTraverseFrom != nil
+      ? siblingToTraverseFrom!.nextSibling() : currRenderer.firstChild()
+    while child != nil {
+      guard let element = child! as? RenderElementWrapper else {
+        child = child!.nextSibling()
+        continue
+      }
+      if let nextLayer = findNextLayer(element, parentLayer, nil, false) {
+        return nextLayer
+      }
+      child = child!.nextSibling()
+    }
+  }
+
+  // Step 3: If our layer is the desired parent layer, then we're finished. We didn't
+  // find anything.
+  if CPtrToInt(ourLayer?.layerId()) == CPtrToInt(parentLayer.layerId()) {
+    return nil
+  }
+
+  // Step 4: If |checkParent| is set, climb up to our parent and check its siblings that
+  // follow us to see if we can locate a layer.
+  if checkParent && currRenderer.parent() != nil {
+    return findNextLayer(currRenderer.checkedParent()!, parentLayer, currRenderer, true)
+  }
+
+  return nil
+}
+
+private func layerNextSiblingRespectingTopLayer(
+  _ renderer: RenderElementWrapper, _ parentLayer: RenderLayerWrapper
+) -> RenderLayerWrapper? {
+  #if ASSERT_ENABLED
+    if isInTopLayerOrBackdrop(style: renderer.style(), element: renderer.element()) {
+      assert(renderer.hasLayer())
+    }
+  #endif
+
+  if let layerModelObject = renderer as? RenderLayerModelObjectWrapper,
+    isInTopLayerOrBackdrop(style: renderer.style(), element: renderer.element())
+  {
+    assert(layerModelObject.hasLayer())
+    let topLayerLayers = RenderLayerWrapper.topLayerRenderLayers(renderView: renderer.view())
+    if let layerIndex = topLayerLayers.firstIndex(where: { element in
+      CPtrToInt(element.layerId()) == CPtrToInt(layerModelObject.layer()?.layerId())
+    }), layerIndex < topLayerLayers.count - 1 {
+      return topLayerLayers[layerIndex + 1]
+    }
+
+    return nil
+  }
+
+  return findNextLayer(renderer.checkedParent()!, parentLayer, renderer)
+}
+
+private func addLayers(
+  insertedRenderer: RenderElementWrapper, currentRenderer: RenderElementWrapper,
+  _ parentLayer: RenderLayerWrapper
+) {
+  if currentRenderer.hasLayer() {
+    var layerToUse = parentLayer
+    if isInTopLayerOrBackdrop(style: currentRenderer.style(), element: currentRenderer.element()) {
+      // The special handling of a toplayer/backdrop content may result in trying to insert the associated
+      // layer twice as we connect subtrees.
+      if let parentLayer = (currentRenderer as! RenderLayerModelObjectWrapper).layer()!.parent() {
+        assert(parentLayer.layerId() == currentRenderer.view().layer()?.layerId())
+        return
+      }
+      layerToUse = insertedRenderer.view().layer()!
+    }
+    let beforeChild = layerNextSiblingRespectingTopLayer(insertedRenderer, layerToUse)
+    layerToUse.addChild(
+      (currentRenderer as! RenderLayerModelObjectWrapper).checkedLayer()!, beforeChild: beforeChild)
+    return
+  }
+
+  for child: RenderElementWrapper in childrenOfType(parent: currentRenderer) {
+    addLayers(insertedRenderer: insertedRenderer, currentRenderer: child, parentLayer)
+  }
+}
+
 private func rendererHasBackground(renderer: RenderElementWrapper?) -> Bool {
   return renderer != nil && renderer!.hasBackground()
 }
@@ -2124,6 +2220,25 @@ class RenderElementWrapper: RenderObjectWrapper {
     if needsLayoutBoxStyleUpdate {
       LayoutIntegration.LineLayout.updateStyle(self)
     }
+  }
+
+  override func insertedIntoTree() {
+    assert(isNativeImpl())
+    // Keep our layer hierarchy updated. Optimize for the common case where we don't have any children
+    // and don't have a layer attached to ourselves.
+    if firstChild() != nil || hasLayer(), let parentLayer = layerParent() {
+      addLayers(insertedRenderer: self, currentRenderer: self, parentLayer)
+    }
+
+    // If |this| is visible but this object was not, tell the layer it has some visible content
+    // that needs to be drawn and layer visibility optimization can't be used
+    if parent()!.style().usedVisibility() != .Visible && style().usedVisibility() == .Visible
+      && !hasLayer(), let parentLayer = layerParent()
+    {
+      parentLayer.dirtyVisibleContentStatus()
+    }
+
+    super.insertedIntoTree()
   }
 
   override func willBeDestroyed() {

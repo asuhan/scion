@@ -120,6 +120,12 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override final func insertedIntoTree() {
+    assert(isNativeImpl())
+    super.insertedIntoTree()
+    table()!.addColumn()
+  }
+
   override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
     -> Bool
   {

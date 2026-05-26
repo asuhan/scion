@@ -18,8 +18,19 @@
  */
 
 final class RenderTableCaptionWrapper: RenderBlockFlowWrapper {
+  override final func insertedIntoTree() {
+    assert(isNativeImpl())
+    super.insertedIntoTree()
+    table().addCaption(self)
+  }
+
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {
     assert(isNativeImpl())
     return containingBlock()?.logicalWidth() ?? LayoutUnit()
+  }
+
+  private func table() -> RenderTableWrapper {
+    assert(isNativeImpl())
+    return parent() as! RenderTableWrapper
   }
 }

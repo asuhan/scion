@@ -973,7 +973,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     private let offset: LayoutUnit
   }
 
-  private let fragmentList = RenderFragmentContainerList()
+  let fragmentList = RenderFragmentContainerList()
 
   // Map a line to its containing fragment.
   private let lineToFragmentMap: ContainingFragmentMap? = nil

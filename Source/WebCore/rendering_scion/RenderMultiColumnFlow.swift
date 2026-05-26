@@ -231,6 +231,19 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func addFragmentToThread(_ fragmentContainer: RenderFragmentContainerWrapper) {
+    assert(isNativeImpl())
+    let columnSet = fragmentContainer as! RenderMultiColumnSetWrapper
+    if let nextSet = columnSet.nextSiblingMultiColumnSet() {
+      let it = fragmentList.find(value: nextSet)
+      assert(it != fragmentList.end())
+      fragmentList.insertBefore(it, columnSet)
+    } else {
+      fragmentList.add(value: columnSet)
+    }
+    fragmentContainer.isValid = true
+  }
+
   override func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

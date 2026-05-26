@@ -107,6 +107,12 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  override final func insertedIntoTree() {
+    assert(isNativeImpl())
+    super.insertedIntoTree()
+    view().setHasQuotesNeedingUpdate(true)
+  }
+
   private func computeText() -> StringWrapper {
     if m_depth < 0 {
       return emptyString()

@@ -799,6 +799,17 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func addCaption(_ caption: RenderTableCaptionWrapper) {
+    assert(isNativeImpl())
+    assert(!captions.contains { element in CPtrToInt(element?.id()) == CPtrToInt(caption.id()) })
+    captions.append(caption)
+  }
+
+  func addColumn() {
+    assert(isNativeImpl())
+    invalidateCachedColumns()
+  }
+
   func willInsertTableColumn(child: RenderTableColWrapper, beforeChild: RenderObjectWrapper?) {
     hasColElements = true
   }
@@ -1457,6 +1468,13 @@ class RenderTableWrapper: RenderBlockWrapper {
     return nil
   }
 
+  private func invalidateCachedColumns() {
+    assert(isNativeImpl())
+    m_columnRenderersValid = false
+    m_columnRenderers.removeAll()
+    m_effectiveColumnIndexMap!.clear()
+  }
+
   private func invalidateCachedColumnOffsets() {
     columnOffsetTop = LayoutUnit(value: -1)
     columnOffsetHeight = LayoutUnit(value: -1)
@@ -1869,7 +1887,12 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private var columnPos: [LayoutUnit] = []
   private var m_columns: [ColumnStruct] = []
-  private let captions: [RenderTableCaptionWrapper?] = []
+  private var captions: [RenderTableCaptionWrapper?] = []
+  private var m_columnRenderers: [WeakPtr<RenderTableColWrapper>] = []
+
+  private typealias EffectiveColumnIndexMap = HashMap<WeakRef<RenderTableColWrapper>, UInt32>
+  // TODO(asuhan): make it not nil when HashMap is implemented.
+  private let m_effectiveColumnIndexMap: EffectiveColumnIndexMap? = nil
 
   private var head: RenderTableSectionWrapper? = nil
   private var foot: RenderTableSectionWrapper? = nil
@@ -1886,6 +1909,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   var needsSectionRecalc = false
 
   private var columnLogicalWidthChanged = false
+  private var m_columnRenderersValid = false
   private var hasCellColspanThatDeterminesTableWidth = false
 
   private var hSpacing = LayoutUnit()

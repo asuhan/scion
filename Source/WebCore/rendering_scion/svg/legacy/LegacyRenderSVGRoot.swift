@@ -289,6 +289,12 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     childPaintInfo.context().restore()
   }
 
+  override final func insertedIntoTree() {
+    assert(isNativeImpl())
+    super.insertedIntoTree()
+    SVGResourcesCache.clientWasAddedToTree(renderer: self)
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     if diff == .Layout {
       invalidateCachedBoundaries()

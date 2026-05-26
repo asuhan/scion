@@ -35,6 +35,11 @@
 // FIXME: For now we derive from RenderFragmentContainer, but this may change at some point.
 
 class RenderFragmentContainerSetWrapper: RenderFragmentContainerWrapper {
+  override final func installFragmentedFlow() {
+    // We don't have to do anything, since we were able to connect the flow thread
+    // in the constructor.
+  }
+
   override func isRenderFragmentContainerSet() -> Bool {
     assert(isNativeImpl())
     return true
