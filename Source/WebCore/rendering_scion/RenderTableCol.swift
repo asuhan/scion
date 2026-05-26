@@ -103,13 +103,13 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   func borderAdjoiningCellStartBorder() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningCellEndBorder() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningCellBefore(cell: RenderTableCellWrapper) -> BorderValue {
