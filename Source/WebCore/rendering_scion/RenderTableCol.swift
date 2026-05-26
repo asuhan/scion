@@ -70,8 +70,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   func enclosingColumnGroupIfAdjacentAfter() -> RenderTableColWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if nextSibling() != nil {
+      return nil
+    }
+    return enclosingColumnGroup()
   }
 
   // Returns the next column or column-group.
