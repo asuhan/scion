@@ -113,13 +113,16 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   func borderAdjoiningCellBefore(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(
+      CPtrToInt(table()!.colElement(col: cell.col() + cell.colSpan())?.id()) == CPtrToInt(id()))
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningCellAfter(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(CPtrToInt(table()!.colElement(col: cell.col() - 1)?.id()) == CPtrToInt(id()))
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   override func computePreferredLogicalWidths() {
