@@ -98,8 +98,11 @@ private func styleForFirstLetter(firstLetterContainer: RenderElementWrapper) -> 
 // "Punctuation (i.e, characters defined in Unicode [UNICODE] in the "open" (Ps), "close" (Pe),
 // "initial" (Pi). "final" (Pf) and "other" (Po) punctuation classes), that precedes or follows the first letter should be included"
 private func isPunctuationForFirstLetter(c: UInt32) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return
+    (UCharMasks.U_GET_GC_MASK(c: Int32(c))
+    & (UCharMasks.U_GC_PS_MASK | UCharMasks.U_GC_PE_MASK | UCharMasks.U_GC_PI_MASK
+      | UCharMasks.U_GC_PF_MASK | UCharMasks.U_GC_PO_MASK))
+    != 0
 }
 
 private func shouldSkipForFirstLetter(c: UInt32) -> Bool {
