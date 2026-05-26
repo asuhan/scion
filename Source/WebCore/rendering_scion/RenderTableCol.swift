@@ -25,8 +25,9 @@
 
 final class RenderTableColWrapper: RenderBoxWrapper {
   init(document: Document, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(.TableCol, document, style)
+    setInline(true)
+    assert(isRenderTableCol())
   }
 
   func clearPreferredLogicalWidthsDirtyBits() {
