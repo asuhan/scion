@@ -38,8 +38,8 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   func isTableColumnGroupWithColumnChildren() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return firstChild() != nil
   }
 
   func isTableColumn() -> Bool {
