@@ -43,13 +43,13 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   func isTableColumn() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().display() == .TableColumn
   }
 
   func isTableColumnGroup() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().display() == .TableColumnGroup
   }
 
   func enclosingColumnGroup() -> RenderTableColWrapper? {
