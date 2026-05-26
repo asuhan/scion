@@ -169,8 +169,10 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Ignore RepaintOutlineBounds because it doesn't make sense to use the table's outline bounds to repaint a column.
+    return RepaintRects(
+      rect: clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint))
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
