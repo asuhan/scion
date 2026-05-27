@@ -187,6 +187,13 @@ extern "C" WEBCORE_EXPORT void* RenderLayer_commonAncestorWithLayer(const void* 
     return static_cast<const WebCore::RenderLayer*>(p)->commonAncestorWithLayer(*static_cast<const WebCore::RenderLayer*>(layer));
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_addChild(void* p, void* childRaw, void* beforeChildRaw)
+{
+    auto& child = *static_cast<WebCore::RenderLayer*>(childRaw);
+    auto beforeChild = static_cast<WebCore::RenderLayer*>(beforeChildRaw);
+    static_cast<WebCore::RenderLayer*>(p)->addChild(child, beforeChild);
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool timing_raw)
 {
     auto timing = timing_raw ? WebCore::RenderLayer::LayerChangeTiming::RenderTreeConstruction : WebCore::RenderLayer::LayerChangeTiming::StyleChange;
