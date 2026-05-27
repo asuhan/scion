@@ -32,6 +32,7 @@ class ContainerNodeWrapper: NodeWrapper {
   override func countChildNodes() -> UInt32 { return wk_interop.ContainerNode_countChildNodes(p) }
 
   func containerRenderer() -> RenderElementWrapper? {
-    return createRenderObjectWrapper(wk_interop.ContainerNode_renderer(p)) as! RenderElementWrapper?
+    return createRenderObjectWrapperOrNative(wk_interop.ContainerNode_renderer(p))
+      as! RenderElementWrapper?
   }
 }
