@@ -649,8 +649,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func logicalLeft() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(id()))
+    }
+    return style().isHorizontalWritingMode() ? x() : y()
   }
 
   func logicalTop() -> LayoutUnit {
