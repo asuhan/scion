@@ -167,6 +167,12 @@ extension LayoutBoxExtent {
         makeTextFlow(writingMode: writingMode, direction: direction), .InlineStart), start)
   }
 
+  mutating func setEnd(end: LayoutUnit, writingMode: WritingMode, direction: TextDirection = .LTR) {
+    setSide(
+      mapLogicalSideToPhysicalSide(
+        makeTextFlow(writingMode: writingMode, direction: direction), .InlineEnd), end)
+  }
+
 }
 
 extension LayoutOptionalOutsets {
