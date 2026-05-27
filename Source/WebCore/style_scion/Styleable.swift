@@ -79,8 +79,7 @@ class StyleableWrapper {
   }
 
   func hasRunningAcceleratedAnimations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Styleable_hasRunningAcceleratedAnimations(p)
   }
 
   func capturedInViewTransition() -> Bool {

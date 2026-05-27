@@ -1717,4 +1717,5 @@ void TransformationMatrix_destroy(const void*);
 void RenderCounterSet_add(void* set, void* counter);
 void* Styleable_fromElement(void*);
 void Styleable_destroy(void*);
+bool Styleable_hasRunningAcceleratedAnimations(const void*);
 bool Styleable_capturedInViewTransition(const void*);
