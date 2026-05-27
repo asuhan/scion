@@ -561,6 +561,8 @@ public:
 
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
 
+    void paint(PaintInfo&, const LayoutPoint&);
+
     String debugDescription() const;
 
     bool isInlineBlockOrInlineTable() const;

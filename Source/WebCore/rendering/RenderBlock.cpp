@@ -1064,7 +1064,10 @@ void RenderBlock::paintCarets(PaintInfo& paintInfo, const LayoutPoint& paintOffs
 
 void RenderBlock::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->paint(paintInfo, paintOffset);
+        return;
+    }
     auto adjustedPaintOffset = paintOffset + location();
     PaintPhase phase = paintInfo.phase;
 

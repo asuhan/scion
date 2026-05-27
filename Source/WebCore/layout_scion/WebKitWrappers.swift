@@ -2783,6 +2783,16 @@ func RenderBlockScion_availableLogicalHeightForPercentageComputation(_ blockRaw:
   return OptionalLayoutUnitRaw(value: height.rawValue(), is_valid: true)
 }
 
+@_cdecl("RenderBlockScion_paint")
+func RenderBlockScion_paint(
+  _ blockRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,
+  _ paintOffset: LayoutPointRaw
+) {
+  var paintInfo = PaintInfoWrapper(p: paintInfoRaw)
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.paint(paintInfo: &paintInfo, paintOffset: convertLayoutPointRaw(paintOffset))
+}
+
 @_cdecl("RenderBlockScion_debugDescription")
 func RenderBlockScion_debugDescription(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

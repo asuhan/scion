@@ -520,6 +520,8 @@ struct OptionalLayoutUnitRaw {
 
 extern "C" OptionalLayoutUnitRaw RenderBlockScion_availableLogicalHeightForPercentageComputation(const void*);
 
+extern "C" void RenderBlockScion_paint(void*, void*, LayoutPointRaw);
+
 extern "C" const void* RenderBlockScion_debugDescription(const void*);
 
 extern "C" bool RenderBlockScion_isInlineBlockOrInlineTable(const void*);
@@ -1587,6 +1589,11 @@ std::optional<LayoutUnit> RenderBlockScion::availableLogicalHeightForPercentageC
         return std::nullopt;
     }
     return LayoutUnit::fromRawValue(height.value);
+}
+
+void RenderBlockScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
+{
+    RenderBlockScion_paint(m_handle, &paintInfo, convertLayoutPoint(paintOffset));
 }
 
 String RenderBlockScion::debugDescription() const
