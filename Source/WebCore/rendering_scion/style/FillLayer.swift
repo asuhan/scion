@@ -155,8 +155,7 @@ class FillLayerWrapper {
   }
 
   func clipOccludesNextLayers(firstLayer: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FillLayer_clipOccludesNextLayers(p, firstLayer)
   }
 
   func interop() -> UnsafeRawPointer { return p }

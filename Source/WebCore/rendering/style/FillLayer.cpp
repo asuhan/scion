@@ -41,6 +41,11 @@ extern "C" WEBCORE_EXPORT const void* FillLayer_next(const void* p)
     return static_cast<const WebCore::FillLayer*>(p)->next();
 }
 
+extern "C" WEBCORE_EXPORT bool FillLayer_clipOccludesNextLayers(const void* p, bool firstLayer)
+{
+    return static_cast<const WebCore::FillLayer*>(p)->clipOccludesNextLayers(firstLayer);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(FillLayer);
