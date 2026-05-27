@@ -228,10 +228,7 @@ struct PaintInfoWrapper {
 
   var paintBehavior: PaintBehavior {
     get {
-      if n == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
-      }
+      if n == nil { return PaintBehavior(rawValue: wk_interop.PaintInfo_paintBehavior(p!)) }
       return n!.paintBehavior
     }
     set {

@@ -1277,6 +1277,7 @@ void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void
 struct LayoutRectRaw PaintInfo_rect(const void*);
 uint16_t PaintInfo_phase(const void*);
 void PaintInfo_setPhase(void*, uint16_t);
+uint32_t PaintInfo_paintBehavior(const void*);
 bool RenderBlock_hasMarginBeforeQuirk(const void*);
 bool RenderBlock_hasMarginAfterQuirk(const void*);
 void RenderBlock_markForPaginationRelayoutIfNeeded(void*);
