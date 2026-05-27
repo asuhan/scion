@@ -46,6 +46,8 @@ extern "C" void* RenderObjectScion_parent(const void*);
 
 extern "C" void* RenderObjectScion_nextSibling(const void*);
 
+extern "C" void* RenderObjectScion_nextInPreOrder(const void*, void*);
+
 extern "C" void* RenderObjectScion_nextInPreOrderAfterChildren(const void*);
 
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
@@ -713,6 +715,8 @@ namespace WebCore {
 RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElement*>(RenderObjectScion_parent(m_handle)); }
 
 RenderObject* RenderObjectScion::nextSibling() const { return static_cast<RenderObject*>(RenderObjectScion_nextSibling(m_handle)); }
+
+RenderObject* RenderObjectScion::nextInPreOrder(const RenderObject* stayWithin) const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrder(m_handle, const_cast<void*>(static_cast<const void*>(stayWithin)))); }
 
 RenderObject* RenderObjectScion::nextInPreOrderAfterChildren() const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrderAfterChildren(m_handle)); }
 

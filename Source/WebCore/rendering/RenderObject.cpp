@@ -590,7 +590,7 @@ RenderObject* RenderObject::nextInPreOrderAfterChildren() const
 
 RenderObject* RenderObject::nextInPreOrder(const RenderObject* stayWithin) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->nextInPreOrder(stayWithin); }
     if (RenderObject* o = firstChildSlow())
         return o;
 

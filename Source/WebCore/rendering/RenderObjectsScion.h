@@ -68,6 +68,8 @@ public:
 
     RenderObject* nextSibling() const;
 
+    RenderObject* nextInPreOrder(const RenderObject*) const;
+
     RenderObject* nextInPreOrderAfterChildren() const;
 
     RenderLayer* enclosingLayer() const;

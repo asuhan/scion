@@ -1142,6 +1142,20 @@ func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutab
   return nil
 }
 
+@_cdecl("RenderObjectScion_nextInPreOrder")
+func RenderObjectScion_nextInPreOrder(
+  _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
+)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let next = object.nextInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin))
+  else {
+    return nil
+  }
+  return next.isNativeImpl() ? (next as! RenderBlockFlowWrapper).getWk() : next.id()
+}
+
 @_cdecl("RenderObjectScion_nextInPreOrderAfterChildren")
 func RenderObjectScion_nextInPreOrderAfterChildren(_ objectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?
