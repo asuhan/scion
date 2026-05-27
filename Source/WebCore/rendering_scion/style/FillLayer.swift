@@ -91,10 +91,7 @@ class FillLayerWrapper {
     fatalError("Not implemented")
   }
 
-  var blendMode: BlendMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var blendMode: BlendMode { return BlendMode(rawValue: wk_interop.FillLayer_blendMode(p))! }
 
   var sizeLength: LengthSize {
     // TODO(asuhan): implement this

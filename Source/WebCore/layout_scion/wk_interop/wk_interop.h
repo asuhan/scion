@@ -1437,6 +1437,7 @@ void* InlineWalker_current(void*);
 bool InlineWalker_atEnd(void*);
 void InlineWalker_advance(void*);
 void* FillLayer_image(const void*);
+uint8_t FillLayer_blendMode(const void*);
 const void* FillLayer_next(const void*);
 void* NinePieceImage_image(const void*);
 void* ShapeValue_image(const void*);
