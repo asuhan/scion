@@ -854,8 +854,18 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   /* This function performs a layout only if one is needed. */
   func layoutIfNeeded() {
-    assert(!isNativeImpl())
-    wk_interop.RenderElement_layoutIfNeeded(id())
+    if !isNativeImpl() {
+      wk_interop.RenderElement_layoutIfNeeded(id())
+      return
+    }
+    if !needsLayout() {
+      return
+    }
+    if isSkippedContentForLayout() {
+      clearNeedsLayoutForSkippedContent()
+      return
+    }
+    layout()
   }
 
   // Repaint only if our old bounds and new bounds are different. The caller may pass in newBounds and newOutlineBox if they are known.
