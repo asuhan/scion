@@ -302,6 +302,8 @@ public:
 
     bool isFlexibleBoxIncludingDeprecated() const;
 
+    void initializeFragmentedFlowStateOnInsertion();
+
     bool isSkippedContent() const;
 
     PointerEvents usedPointerEvents() const;

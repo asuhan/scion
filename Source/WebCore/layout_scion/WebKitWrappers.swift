@@ -1973,6 +1973,14 @@ func RenderObjectScion_isFlexibleBoxIncludingDeprecated(_ objectRaw: UnsafeRawPo
   return object.isFlexibleBoxIncludingDeprecated()
 }
 
+@_cdecl("RenderObjectScion_initializeFragmentedFlowStateOnInsertion")
+func RenderObjectScion_initializeFragmentedFlowStateOnInsertion(
+  _ objectRaw: UnsafeMutableRawPointer
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.initializeFragmentedFlowStateOnInsertion()
+}
+
 @_cdecl("RenderObjectScion_isSkippedContent")
 func RenderObjectScion_isSkippedContent(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

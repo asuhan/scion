@@ -316,6 +316,8 @@ extern "C" bool RenderObjectScion_isRenderFlexibleBox(const void*);
 
 extern "C" bool RenderObjectScion_isFlexibleBoxIncludingDeprecated(const void*);
 
+extern "C" void RenderObjectScion_initializeFragmentedFlowStateOnInsertion(void*);
+
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
@@ -1062,6 +1064,8 @@ bool RenderObjectScion::isRenderDeprecatedFlexibleBox() const { return RenderObj
 bool RenderObjectScion::isRenderFlexibleBox() const { return RenderObjectScion_isRenderFlexibleBox(m_handle); }
 
 bool RenderObjectScion::isFlexibleBoxIncludingDeprecated() const { return RenderObjectScion_isFlexibleBoxIncludingDeprecated(m_handle); }
+
+void RenderObjectScion::initializeFragmentedFlowStateOnInsertion() { RenderObjectScion_initializeFragmentedFlowStateOnInsertion(m_handle); }
 
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 

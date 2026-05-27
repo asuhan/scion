@@ -521,7 +521,10 @@ RenderObject::FragmentedFlowState RenderObject::computedFragmentedFlowState(cons
 
 void RenderObject::initializeFragmentedFlowStateOnInsertion()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->initializeFragmentedFlowStateOnInsertion();
+        return;
+    }
     ASSERT(parent());
 
     // A RenderFragmentedFlow is always considered to be inside itself, so it never has to change its state in response to parent changes.
