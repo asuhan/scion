@@ -69,15 +69,9 @@ class FillLayerWrapper {
     return FillAttachment(rawValue: wk_interop.FillLayer_attachment(p))!
   }
 
-  var clip: FillBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var clip: FillBox { return FillBox(rawValue: wk_interop.FillLayer_clip(p))! }
 
-  var origin: FillBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var origin: FillBox { return FillBox(rawValue: wk_interop.FillLayer_origin(p))! }
 
   var `repeat`: FillRepeatXY {
     // TODO(asuhan): implement this
