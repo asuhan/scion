@@ -23,6 +23,7 @@
 import wk_interop
 
 private typealias OverridingLengthMap = WeakHashMap<RenderBoxWrapper, LengthWrapper>
+private let gOverridingLogicalHeightLengthMap: OverridingLengthMap? = nil
 private let gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
 
 // FIXME: We should store these based on physical direction.
@@ -1982,8 +1983,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // (the size in the main direction) than the one specified by the item in order to compute the value of flex basis, i.e.,
   // the initial main size of the flex item before the free space is distributed.
   func overridingLogicalHeightLength() -> LengthWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if gOverridingLogicalHeightLengthMap == nil {
+      return nil
+    }
+    // TODO(asuhan): implement find in WeakHashMap and use it here
+    if gOverridingLogicalHeightLengthMap!.contains(self) {
+      return gOverridingLogicalHeightLengthMap!.get(self, LengthWrapper())
+    }
+    return nil
   }
 
   func overridingLogicalWidthLength() -> LengthWrapper? {
