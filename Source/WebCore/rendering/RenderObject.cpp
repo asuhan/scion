@@ -2657,6 +2657,12 @@ bool RenderObject::isFloatingOrOutOfFlowPositioned() const
     return (isFloating() || isOutOfFlowPositioned());
 }
 
+bool RenderObject::isInFlow() const
+{
+    if (m_scion) { return m_scion->isInFlow(); }
+    return !isFloatingOrOutOfFlowPositioned();
+}
+
 Vector<FloatQuad> RenderObject::absoluteTextQuads(const SimpleRange& range, OptionSet<RenderObject::BoundingRectBehavior> behavior)
 {
     Vector<FloatQuad> quads;

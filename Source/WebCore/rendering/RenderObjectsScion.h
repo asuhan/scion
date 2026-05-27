@@ -294,6 +294,8 @@ public:
 
     bool isFloatingOrOutOfFlowPositioned() const;
 
+    bool isInFlow() const;
+
     bool renderTreeBeingDestroyed() const;
 
     void destroy();

@@ -1526,11 +1526,7 @@ public:
     virtual unsigned length() const { return 1; }
 
     bool isFloatingOrOutOfFlowPositioned() const;
-    bool isInFlow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return !isFloatingOrOutOfFlowPositioned();
-    }
+    bool isInFlow() const;
 
     enum class HighlightState : uint8_t {
         None, // The object is not selected.

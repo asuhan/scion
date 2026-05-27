@@ -1949,6 +1949,12 @@ func RenderObjectScion_isFloatingOrOutOfFlowPositioned(_ objectRaw: UnsafeRawPoi
   return object.isFloatingOrOutOfFlowPositioned()
 }
 
+@_cdecl("RenderObjectScion_isInFlow")
+func RenderObjectScion_isInFlow(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isInFlow()
+}
+
 @_cdecl("RenderObjectScion_renderTreeBeingDestroyed")
 func RenderObjectScion_renderTreeBeingDestroyed(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -308,6 +308,8 @@ extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const
 
 extern "C" bool RenderObjectScion_isFloatingOrOutOfFlowPositioned(const void*);
 
+extern "C" bool RenderObjectScion_isInFlow(const void*);
+
 extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
 
 extern "C" void RenderObjectScion_destroy(void*);
@@ -1058,6 +1060,8 @@ RenderObject::RepaintRects RenderObjectScion::rectsForRepaintingAfterLayout(cons
 }
 
 bool RenderObjectScion::isFloatingOrOutOfFlowPositioned() const { return RenderObjectScion_isFloatingOrOutOfFlowPositioned(m_handle); }
+
+bool RenderObjectScion::isInFlow() const { return RenderObjectScion_isInFlow(m_handle); }
 
 bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
 
