@@ -1792,8 +1792,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func container(_ repaintContainer: RenderLayerModelObjectWrapper?) -> (
     RenderElementWrapper?, Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var repaintContainerSkipped: Bool? = false
+    let element = containerForElement(
+      renderer: self, repaintContainer: repaintContainer,
+      repaintContainerSkipped: &repaintContainerSkipped)
+    return (element, repaintContainerSkipped!)
   }
 
   func setPreferredLogicalWidthsDirty(
