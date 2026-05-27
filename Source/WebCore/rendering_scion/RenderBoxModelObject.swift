@@ -947,8 +947,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func hasRunningAcceleratedAnimations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let styleable = StyleableWrapper.fromRenderer(self) {
+      return styleable.hasRunningAcceleratedAnimations()
+    }
+    return false
   }
 
   override func willBeDestroyed() {
