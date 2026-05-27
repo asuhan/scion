@@ -1439,6 +1439,7 @@ void InlineWalker_advance(void*);
 void* FillLayer_image(const void*);
 uint8_t FillLayer_blendMode(const void*);
 const void* FillLayer_next(const void*);
+bool FillLayer_hasOpaqueImage(const void*, const void*);
 bool FillLayer_clipOccludesNextLayers(const void*, bool);
 void* NinePieceImage_image(const void*);
 void* ShapeValue_image(const void*);

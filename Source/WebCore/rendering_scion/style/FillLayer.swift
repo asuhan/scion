@@ -145,8 +145,8 @@ class FillLayerWrapper {
   }
 
   func hasOpaqueImage(renderer: RenderElementWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FillLayer_hasOpaqueImage(
+      p, renderer.isNativeImpl() ? (renderer as! RenderBlockFlowWrapper).getWk() : renderer.id())
   }
 
   func hasRepeatXY() -> Bool {
