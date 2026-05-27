@@ -233,11 +233,6 @@ inline bool RenderBox::shouldTrimChildMargin(MarginTrimType type, const RenderBo
     }
     return style().marginTrim().contains(type) && isChildEligibleForMarginTrim(type, child);
 }
-inline bool RenderBox::stretchesToViewport() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return document().inQuirksMode() && style().logicalHeight().isAuto() && !isFloatingOrOutOfFlowPositioned() && (isDocumentElementRenderer() || isBody()) && !shouldComputeLogicalHeightFromAspectRatio() && !isInline();
-}
 
 inline LayoutRect RenderBox::paddingBoxRectIncludingScrollbar() const
 {

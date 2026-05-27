@@ -3241,6 +3241,12 @@ void RenderBox::computeLogicalWidthInFragment(LogicalExtentComputedValues& compu
     }
 }
 
+bool RenderBox::stretchesToViewport() const
+{
+    if (m_scion) { return m_scion->stretchesToViewport(); }
+    return document().inQuirksMode() && style().logicalHeight().isAuto() && !isFloatingOrOutOfFlowPositioned() && (isDocumentElementRenderer() || isBody()) && !shouldComputeLogicalHeightFromAspectRatio() && !isInline();
+}
+
 LayoutUnit RenderBox::fillAvailableMeasure(LayoutUnit availableLogicalWidth) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

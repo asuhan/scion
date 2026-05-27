@@ -492,6 +492,8 @@ public:
 
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
+    bool stretchesToViewport() const;
+
     LayoutUnit availableLogicalWidth() const;
 
     bool canBeScrolledAndHasScrollableArea() const;

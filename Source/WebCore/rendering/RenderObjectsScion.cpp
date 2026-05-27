@@ -459,6 +459,8 @@ extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, 
 
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
 
+extern "C" bool RenderBoxScion_stretchesToViewport(const void*);
+
 extern "C" int32_t RenderBoxScion_availableLogicalWidth(const void*);
 
 extern "C" bool RenderBoxScion_canBeScrolledAndHasScrollableArea(const void*);
@@ -1431,6 +1433,11 @@ bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, con
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const
 {
     return convertRepaintRectsRaw(RenderBoxScion_localRectsForRepaint(m_handle, repaintOutlineBounds == RepaintOutlineBounds::Yes));
+}
+
+bool RenderBoxScion::stretchesToViewport() const
+{
+    return RenderBoxScion_stretchesToViewport(m_handle);
 }
 
 LayoutUnit RenderBoxScion::availableLogicalWidth() const

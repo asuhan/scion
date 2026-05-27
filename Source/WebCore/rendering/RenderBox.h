@@ -555,7 +555,7 @@ public:
     RenderBoxFragmentInfo* renderBoxFragmentInfo(RenderFragmentContainer*, RenderBoxFragmentInfoFlags = CacheRenderBoxFragmentInfo) const;
     void computeLogicalWidthInFragment(LogicalExtentComputedValues&, RenderFragmentContainer* = nullptr) const;
 
-    inline bool stretchesToViewport() const;
+    bool stretchesToViewport() const;
 
     virtual LayoutSize intrinsicSize() const
     {
