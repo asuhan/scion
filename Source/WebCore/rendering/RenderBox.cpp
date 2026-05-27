@@ -300,6 +300,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(c
     return padding_box_rect.y().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_marginStart(const void* p, const void* other_style)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->marginStart(static_cast<const WebCore::RenderStyle*>(other_style)).rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_repaintDuringLayoutIfMoved(void* p, LayoutRectRaw rect)
 {
     static_cast<WebCore::RenderBox*>(p)->repaintDuringLayoutIfMoved(WebCore::LayoutRect(

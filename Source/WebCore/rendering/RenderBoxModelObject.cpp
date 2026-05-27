@@ -103,11 +103,6 @@ extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_borderAndPaddingAfter(con
     return static_cast<const WebCore::RenderBoxModelObject*>(p)->borderAndPaddingAfter().rawValue();
 }
 
-extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_marginStart(const void* p, const void* other_style)
-{
-    return static_cast<const WebCore::RenderBoxModelObject*>(p)->marginStart(static_cast<const WebCore::RenderStyle*>(other_style)).rawValue();
-}
-
 extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_baselinePosition(const void* p, uint8_t baseline_type, bool first_line, uint8_t direction, uint8_t line_position_mode)
 {
     return static_cast<const WebCore::RenderBoxModelObject*>(p)->baselinePosition(

@@ -816,9 +816,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_marginStart(id(), otherStyle?.p))
+    fatalError("Not reached")
   }
 
   func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit { fatalError("Not reached") }
