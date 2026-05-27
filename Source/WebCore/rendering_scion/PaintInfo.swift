@@ -289,10 +289,7 @@ struct PaintInfoWrapper {
 
   var requireSecurityOriginAccessForWidgets: Bool {
     get {
-      if n == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
-      }
+      if n == nil { return wk_interop.PaintInfo_requireSecurityOriginAccessForWidgets(p!) }
       return n!.requireSecurityOriginAccessForWidgets
     }
     set {

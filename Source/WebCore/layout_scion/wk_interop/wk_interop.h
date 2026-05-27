@@ -1220,6 +1220,7 @@ bool PaintInfo_forceWhiteText(const void*);
 bool PaintInfo_skipRootBackground(const void*);
 bool PaintInfo_paintRootBackgroundOnly(const void*);
 void* PaintInfo_eventRegionContext(void*);
+bool PaintInfo_requireSecurityOriginAccessForWidgets(const void*);
 struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);
 bool InlineDamage_isInlineItemListDirty(const void*);
 void InlineDamage_setInlineItemListClean(void*);
