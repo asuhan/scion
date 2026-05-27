@@ -465,7 +465,7 @@ extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollMargin(const void* p)
 
 extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollPadding(const void* p)
 {
-    auto scrollPadding = static_cast<const WebCore::RenderStyle*>(p)->scrollPadding();
+    auto& scrollPadding = static_cast<const WebCore::RenderStyle*>(p)->scrollPadding();
     return { &scrollPadding.top(), &scrollPadding.right(), &scrollPadding.bottom(), &scrollPadding.left() };
 }
 
