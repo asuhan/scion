@@ -422,7 +422,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func layoutBox() -> BoxWrapper? {
-    assert(!isNativeImpl())
+    if isNativeImpl() { return m_layoutBox }
     let unwrapped = wk_interop.RenderObject_layoutBox(id())
     if unwrapped == nil {
       return nil
@@ -3656,6 +3656,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     RenderObjectWrapper.rareDataMap.removeValue(forKey: ObjectIdentifier(self))
     m_stateBitfields.clearFlag(.HasRareData)
   }
+
+  private let m_layoutBox: BoxWrapper? = nil
 
   typealias RareDataMap = [ObjectIdentifier: RenderObjectRareData]
 
