@@ -141,6 +141,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return computeMargin(self, style().marginStartUsing(otherStyle: otherStyle ?? style()))
   }
 
+  override final func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    assert(isNativeImpl())
+    return computeMargin(self, style().marginEndUsing(otherStyle: otherStyle ?? style()))
+  }
+
   override final func offsetFromContainer(
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?

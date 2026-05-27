@@ -107,6 +107,11 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit(value: 0)
   }
 
+  override final func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    assert(isNativeImpl())
+    return LayoutUnit(value: 0)
+  }
+
   override final func borderBoundingBox() -> LayoutRectWrapper {
     assert(isNativeImpl())
     return LayoutRectWrapper(
