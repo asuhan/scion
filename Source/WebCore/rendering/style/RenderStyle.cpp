@@ -64,6 +64,18 @@
 #include <wtf/PointerComparison.h>
 #include <wtf/StdLibExtras.h>
 
+struct ChangedContextSensitiveProperties {
+    uint8_t diff;
+    bool requires_layout;
+};
+
+extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRequiresLayout(const void* p, const void* other)
+{
+    OptionSet<WebCore::StyleDifferenceContextSensitiveProperty> diff;
+    auto requires_layout = static_cast<const WebCore::RenderStyle*>(p)->changeRequiresLayout(*static_cast<const WebCore::RenderStyle*>(other), diff);
+    return { diff.toRaw(), requires_layout };
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_clone(const void* p)
 {
     auto cloned = WebCore::RenderStyle::clonePtr(*static_cast<const WebCore::RenderStyle*>(p));

@@ -345,6 +345,11 @@ struct LayoutBoxExtentRaw {
     int32_t left;
 };
 
+struct ChangedContextSensitiveProperties {
+    uint8_t diff;
+    bool requires_layout;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1727,3 +1732,4 @@ void* Styleable_fromElement(void*);
 void Styleable_destroy(void*);
 bool Styleable_hasRunningAcceleratedAnimations(const void*);
 bool Styleable_capturedInViewTransition(const void*);
+struct ChangedContextSensitiveProperties RenderStyle_changeRequiresLayout(const void*, const void*);

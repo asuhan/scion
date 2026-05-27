@@ -3385,8 +3385,9 @@ class RenderStyleWrapper: Equatable {
     _ other: RenderStyleWrapper,
     _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.RenderStyle_changeRequiresLayout(p!, other.p!)
+    changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty(rawValue: r.diff)
+    return r.requires_layout
   }
 
   func changeRequiresPositionedLayoutOnly(
