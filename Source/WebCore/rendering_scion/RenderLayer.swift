@@ -478,7 +478,10 @@ class RenderLayerWrapper {
   }
 
   func parent() -> RenderLayerWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let parentRaw = wk_interop.RenderLayer_parent(pInterop!) else { return nil }
+      return RenderLayerWrapper(p: parentRaw)
+    }
     return m_parent
   }
 
