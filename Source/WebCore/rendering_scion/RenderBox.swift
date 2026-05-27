@@ -1244,14 +1244,26 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addVisualOverflow(rect: LayoutRectWrapper) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_addVisualOverflow(
-      id(),
-      LayoutRectRaw(
-        x: rect.x().rawValue(),
-        y: rect.y().rawValue(),
-        width: rect.width().rawValue(),
-        height: rect.height().rawValue()))
+    if !isNativeImpl() {
+      wk_interop.RenderBox_addVisualOverflow(
+        id(),
+        LayoutRectRaw(
+          x: rect.x().rawValue(),
+          y: rect.y().rawValue(),
+          width: rect.width().rawValue(),
+          height: rect.height().rawValue()))
+      return
+    }
+    let borderBox = borderBoxRect()
+    if borderBox.contains(other: rect) || rect.isEmpty() {
+      return
+    }
+
+    if overflow == nil {
+      overflow = RenderOverflow(layoutRect: flippedClientBoxRect(), visualRect: borderBox)
+    }
+
+    overflow!.addVisualOverflow(rect: rect)
   }
 
   func clearOverflow() {
