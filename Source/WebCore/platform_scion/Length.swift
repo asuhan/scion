@@ -65,9 +65,9 @@ class LengthWrapper: Equatable {
     self.owner = true
   }
 
-  init(p: UnsafeRawPointer) {
+  init(p: UnsafeRawPointer, owner: Bool = false) {
     self.p = p
-    self.owner = false
+    self.owner = owner
   }
 
   deinit { if self.owner { wk_interop.Length_destroy(p) } }

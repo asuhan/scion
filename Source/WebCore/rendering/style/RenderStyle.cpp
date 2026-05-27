@@ -1913,6 +1913,12 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_overflowContinue(const void* p)
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->overflowContinue());
 }
 
+extern "C" WEBCORE_EXPORT void* RenderStyle_blockStepSize(const void* p)
+{
+    const auto blockStepSize = static_cast<const WebCore::RenderStyle*>(p)->blockStepSize();
+    return blockStepSize ? new WebCore::Length(*blockStepSize) : nullptr;
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif

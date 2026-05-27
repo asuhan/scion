@@ -3349,8 +3349,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func blockStepSize() -> LengthWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.RenderStyle_blockStepSize(p!) else { return nil }
+    return LengthWrapper(p: raw, owner: true)
   }
 
   func scrollAnchoringSuppressionStyleDidChange(_ other: RenderStyleWrapper?) -> Bool {
