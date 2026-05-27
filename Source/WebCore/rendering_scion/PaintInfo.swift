@@ -107,7 +107,7 @@ struct PaintInfoWrapper {
     if n == nil {
       assert(renderer.isNativeImpl())
       return wk_interop.PaintInfo_shouldPaintWithinRoot(
-        p!, (renderer as! RenderViewWrapper).getWk())
+        p!, (renderer as! RenderBlockFlowWrapper).getWk())
     }
     if let subtreePaintRoot = n!.subtreePaintRoot {
       // TODO(asuhan): use ObjectIdentifier for comparison once gone native
