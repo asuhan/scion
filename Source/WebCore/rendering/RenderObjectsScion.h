@@ -266,6 +266,8 @@ public:
 
     void setPreferredLogicalWidthsDirty(bool, MarkingBehavior = MarkContainingBlockChain);
 
+    void setNeedsLayoutAndPrefWidthsRecalc();
+
     void invalidateBackgroundObscurationStatus();
 
     bool isComposited() const;

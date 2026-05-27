@@ -1746,6 +1746,12 @@ func RenderObjectScion_setPreferredLogicalWidthsDirty(
     markParents: markParents ? .MarkContainingBlockChain : .MarkOnlyThis)
 }
 
+@_cdecl("RenderObjectScion_setNeedsLayoutAndPrefWidthsRecalc")
+func RenderObjectScion_setNeedsLayoutAndPrefWidthsRecalc(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setNeedsLayoutAndPrefWidthsRecalc()
+}
+
 @_cdecl("RenderObjectScion_invalidateBackgroundObscurationStatus")
 func RenderObjectScion_invalidateBackgroundObscurationStatus(_ objectRaw: UnsafeMutableRawPointer) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

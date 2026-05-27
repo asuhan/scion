@@ -1935,13 +1935,6 @@ inline bool RenderObject::needsPositionedMovementLayoutOnly() const
         && !needsSimplifiedNormalFlowLayout();
 }
 
-inline void RenderObject::setNeedsLayoutAndPrefWidthsRecalc()
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    setNeedsLayout();
-    setPreferredLogicalWidthsDirty(true);
-}
-
 inline void RenderObject::setPositionState(PositionType position)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

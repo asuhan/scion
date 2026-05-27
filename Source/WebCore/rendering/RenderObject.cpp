@@ -952,6 +952,16 @@ void RenderObject::invalidateContainerPreferredLogicalWidths()
     }
 }
 
+void RenderObject::setNeedsLayoutAndPrefWidthsRecalc()
+{
+    if (m_scion) {
+        m_scion->setNeedsLayoutAndPrefWidthsRecalc();
+        return;
+    }
+    setNeedsLayout();
+    setPreferredLogicalWidthsDirty(true);
+}
+
 void RenderObject::invalidateBackgroundObscurationStatus()
 {
     if (m_scion) {
