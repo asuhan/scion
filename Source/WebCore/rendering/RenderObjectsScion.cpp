@@ -388,6 +388,8 @@ extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
 
 extern "C" bool RenderElementScion_hasCachedSVGResource(const void*);
 
+extern "C" void RenderElementScion_insertedIntoTree(void*);
+
 extern "C" bool RenderElementScion_renderBlockHasRareData(const void*);
 
 extern "C" bool RenderElementScion_didVisitSinceLayout(const void*, uint32_t);
@@ -1253,6 +1255,11 @@ RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject&
 bool RenderElementScion::hasCachedSVGResource() const
 {
     return RenderElementScion_hasCachedSVGResource(m_handle);
+}
+
+void RenderElementScion::insertedIntoTree()
+{
+    RenderElementScion_insertedIntoTree(m_handle);
 }
 
 bool RenderElementScion::renderBlockHasRareData() const

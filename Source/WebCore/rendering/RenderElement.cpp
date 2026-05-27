@@ -1256,7 +1256,10 @@ void RenderElement::styleDidChange(StyleDifference diff, const RenderStyle* oldS
 
 void RenderElement::insertedIntoTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->insertedIntoTree();
+        return;
+    }
     // Keep our layer hierarchy updated. Optimize for the common case where we don't have any children
     // and don't have a layer attached to ourselves.
     if (firstChild() || hasLayer()) {

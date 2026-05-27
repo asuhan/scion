@@ -389,6 +389,8 @@ public:
 
     bool hasCachedSVGResource() const;
 
+    void insertedIntoTree();
+
     bool renderBlockHasRareData() const;
 
     bool didVisitSinceLayout(RenderElement::LayoutIdentifier) const;

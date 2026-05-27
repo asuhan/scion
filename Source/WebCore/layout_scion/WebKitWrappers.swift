@@ -2270,6 +2270,12 @@ func RenderElementScion_hasCachedSVGResource(_ elementRaw: UnsafeRawPointer) -> 
   return element.hasCachedSVGResource()
 }
 
+@_cdecl("RenderElementScion_insertedIntoTree")
+func RenderElementScion_insertedIntoTree(_ elementRaw: UnsafeMutableRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.insertedIntoTree()
+}
+
 @_cdecl("RenderElementScion_renderBlockHasRareData")
 func RenderElementScion_renderBlockHasRareData(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
