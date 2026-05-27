@@ -1149,7 +1149,6 @@ bool RenderElementScion::shouldApplyPaintContainment() const
 
 void RenderElementScion::didAttachChild(RenderObject& child)
 {
-    assert(!child.isScion());
     RenderElementScion_didAttachChild(m_handle, &child);
 }
 

@@ -2123,7 +2123,7 @@ func RenderElementScion_didAttachChild(
   _ elementRaw: UnsafeMutableRawPointer, _ child: UnsafeMutableRawPointer
 ) {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  element.didAttachChild(child: createRenderObjectWrapper(child))
+  element.didAttachChild(child: createRenderObjectWrapperOrNative(child))
 }
 
 @_cdecl("RenderElementScion_setChildNeedsLayout")
