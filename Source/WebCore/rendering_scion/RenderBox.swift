@@ -4243,6 +4243,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       || style().overflowY() == .Auto
   }
 
+  func scrollPaddingForViewportRect(_ viewportRect: LayoutRectWrapper) -> LayoutBoxExtent {
+    assert(isNativeImpl())
+    // We are using minimumValueForLength here, because scroll-padding values might be "auto". WebKit currently
+    // interprets "auto" as 0. See: https://drafts.csswg.org/css-scroll-snap-1/#propdef-scroll-padding
+    let padding = style().scrollPadding()
+    return LayoutBoxExtent(
+      top: minimumValueForLength(length: padding.top(), maximumValue: viewportRect.height()),
+      right: minimumValueForLength(length: padding.right(), maximumValue: viewportRect.width()),
+      bottom: minimumValueForLength(length: padding.bottom(), maximumValue: viewportRect.height()),
+      left: minimumValueForLength(length: padding.left(), maximumValue: viewportRect.width()))
+  }
+
   private func usesCompositedScrolling() -> Bool {
     assert(isNativeImpl())
     return hasNonVisibleOverflow() && hasLayer() && layer()!.usesCompositedScrolling()
