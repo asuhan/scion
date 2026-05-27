@@ -2091,8 +2091,8 @@ func RenderElementScion_element(_ elementRaw: UnsafeRawPointer) -> UnsafeMutable
 func RenderElementScion_firstChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   guard let firstChild = element.firstChild() else { return nil }
-  assert(!firstChild.isNativeImpl())
-  return firstChild.id()
+  return firstChild.isNativeImpl()
+    ? (firstChild as! RenderBlockFlowWrapper).getWk() : firstChild.id()
 }
 
 @_cdecl("RenderElementScion_lastChild")
