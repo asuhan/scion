@@ -2526,6 +2526,20 @@ func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.scrollsOverflow()
 }
 
+@_cdecl("RenderBoxScion_scrollPaddingForViewportRect")
+func RenderBoxScion_scrollPaddingForViewportRect(
+  _ boxRaw: UnsafeMutableRawPointer, _ viewportRectRaw: LayoutRectRaw
+) -> LayoutBoxExtentRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let padding = box.scrollPaddingForViewportRect(convertLayoutRect(viewportRectRaw))
+  return LayoutBoxExtentRaw(
+    top: padding.top.rawValue(),
+    right: padding.right.rawValue(),
+    bottom: padding.bottom.rawValue(),
+    left: padding.left.rawValue()
+  )
+}
+
 @_cdecl("RenderBoxScion_isUnsplittableForPagination")
 func RenderBoxScion_isUnsplittableForPagination(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

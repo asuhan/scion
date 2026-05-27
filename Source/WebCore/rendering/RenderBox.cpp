@@ -6340,7 +6340,7 @@ LayoutUnit RenderBox::offsetFromLogicalTopOfFirstPage() const
 
 LayoutBoxExtent RenderBox::scrollPaddingForViewportRect(const LayoutRect& viewportRect)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->scrollPaddingForViewportRect(viewportRect); }
     // We are using minimumValueForLength here, because scroll-padding values might be "auto". WebKit currently
     // interprets "auto" as 0. See: https://drafts.csswg.org/css-scroll-snap-1/#propdef-scroll-padding
     const auto& padding = style().scrollPadding();

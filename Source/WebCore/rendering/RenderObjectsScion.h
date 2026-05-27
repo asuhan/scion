@@ -502,6 +502,8 @@ public:
 
     bool scrollsOverflow() const;
 
+    LayoutBoxExtent scrollPaddingForViewportRect(const LayoutRect&);
+
     bool isUnsplittableForPagination() const;
 
     LayoutPoint flipForWritingModeForChild(const RenderBox& child, const LayoutPoint&) const;

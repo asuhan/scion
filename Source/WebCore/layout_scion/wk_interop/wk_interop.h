@@ -338,6 +338,13 @@ struct HitTestResultRaw {
     struct LayoutPointRaw localPoint;
 };
 
+struct LayoutBoxExtentRaw {
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+    int32_t left;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

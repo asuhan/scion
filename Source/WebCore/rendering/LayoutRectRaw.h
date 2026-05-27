@@ -68,3 +68,10 @@ struct ScrollbarGutterRaw {
     bool isAuto;
     bool bothEdges;
 };
+
+struct LayoutBoxExtentRaw {
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+    int32_t left;
+};
