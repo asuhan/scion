@@ -3045,7 +3045,7 @@ class RenderLayerWrapper {
   }
 
   func isTransformed() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderLayer_isTransformed(layerId()) }
     return renderer().isTransformed()
   }
 
