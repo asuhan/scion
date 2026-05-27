@@ -803,8 +803,7 @@ func RenderViewScion_rendererForRootBackground(_ viewRaw: UnsafeRawPointer)
 {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   guard let element = view.rendererForRootBackground() else { return nil }
-  assert(!element.isNativeImpl())
-  return element.id()
+  return element.isNativeImpl() ? (element as! RenderBlockFlowWrapper).getWk() : element.id()
 }
 
 @_cdecl("RenderViewScion_printRect")
