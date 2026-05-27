@@ -263,8 +263,11 @@ class GraphicsContextWrapper {
     rect: FloatRectWrapper, color: ColorWrapper, op: CompositeOperator,
     blendMode: BlendMode = .Normal
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = color.toSRGBA()
+    wk_interop.GraphicsContext_fillRectComposite(
+      p!, toFloatRectRaw(rect),
+      SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha),
+      op.rawValue, blendMode.rawValue)
   }
 
   func fillRoundedRect(rect: FloatRoundedRect, color: ColorWrapper, blendMode: BlendMode = .Normal)
