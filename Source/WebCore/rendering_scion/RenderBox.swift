@@ -22,6 +22,9 @@
 
 import wk_interop
 
+private typealias OverridingLengthMap = WeakHashMap<RenderBoxWrapper, LengthWrapper>
+private let gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
+
 // FIXME: We should store these based on physical direction.
 private typealias OverrideOptionalSizeMap = WeakHashMap<
   RenderBoxWrapper, RenderBoxWrapper.ContainingBlockOverrideValue
@@ -1982,8 +1985,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overridingLogicalWidthLength() -> LengthWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if gOverridingLogicalWidthLengthMap == nil {
+      return nil
+    }
+    // TODO(asuhan): implement find in WeakHashMap and use it here
+    if gOverridingLogicalWidthLengthMap!.contains(self) {
+      return gOverridingLogicalWidthLengthMap!.get(self, LengthWrapper())
+    }
+    return nil
   }
 
   func setOverridingLogicalHeightLength(height: LengthWrapper) {
