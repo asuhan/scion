@@ -77,11 +77,6 @@ struct RectEdges<T: Equatable>: Equatable {
     return copy
   }
 
-  func setStart(start: T, writingMode: WritingMode, direction: TextDirection = .LTR) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func isZero() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -163,4 +158,37 @@ extension LayoutBoxExtent {
     setSide(mapLogicalSideToPhysicalSide(writingMode, .BlockEnd), after)
   }
 
+  // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+  mutating func setStart(
+    start: LayoutUnit, writingMode: WritingMode, direction: TextDirection = .LTR
+  ) {
+    setSide(
+      mapLogicalSideToPhysicalSide(
+        makeTextFlow(writingMode: writingMode, direction: direction), .InlineStart), start)
+  }
+
+}
+
+extension LayoutOptionalOutsets {
+  private mutating func setSide(_ side: BoxSide, _ value: LayoutUnit?) {
+    switch side {
+    case .Top:
+      top = value
+    case .Right:
+      right = value
+    case .Bottom:
+      bottom = value
+    case .Left:
+      left = value
+    }
+  }
+
+  // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+  mutating func setStart(
+    start: LayoutUnit?, writingMode: WritingMode, direction: TextDirection = .LTR
+  ) {
+    setSide(
+      mapLogicalSideToPhysicalSide(
+        makeTextFlow(writingMode: writingMode, direction: direction), .InlineStart), start)
+  }
 }
