@@ -1612,7 +1612,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   override final func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     assert(isNativeImpl())
-    return marginBox.end((otherStyle ?? style()).writingMode())
+    let styleToUse = otherStyle ?? style()
+    return marginBox.end(styleToUse.writingMode(), styleToUse.direction())
   }
 
   func marginBlockStart(writingMode: WritingMode) -> LayoutUnit {
