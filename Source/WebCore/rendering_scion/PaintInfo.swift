@@ -100,7 +100,7 @@ struct PaintInfoWrapper {
     assert(n == nil)
     assert(renderer.isNativeImpl())
     wk_interop.PaintInfo_updateSubtreePaintRootForChildren(
-      p!, (renderer as! RenderViewWrapper).getWk())
+      p!, (renderer as! RenderBlockFlowWrapper).getWk())
   }
 
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
