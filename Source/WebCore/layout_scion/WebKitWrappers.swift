@@ -1132,8 +1132,8 @@ func RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(
 @_cdecl("RenderObjectScion_parent")
 func RenderObjectScion_parent(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  assert(object.parent() == nil)
-  return nil
+  guard let parent = object.parent() else { return nil }
+  return parent.isNativeImpl() ? (parent as! RenderBlockFlowWrapper).getWk() : parent.id()
 }
 
 @_cdecl("RenderObjectScion_nextSibling")
