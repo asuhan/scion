@@ -66,8 +66,7 @@ class FillLayerWrapper {
   var backgroundYOrigin: Edge { return Edge(rawValue: wk_interop.FillLayer_backgroundYOrigin(p))! }
 
   var attachment: FillAttachment {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FillAttachment(rawValue: wk_interop.FillLayer_attachment(p))!
   }
 
   var clip: FillBox {

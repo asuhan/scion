@@ -1443,6 +1443,7 @@ void InlineWalker_advance(void*);
 void* FillLayer_image(const void*);
 uint8_t FillLayer_backgroundXOrigin(const void*);
 uint8_t FillLayer_backgroundYOrigin(const void*);
+uint8_t FillLayer_attachment(const void*);
 uint8_t FillLayer_blendMode(const void*);
 const void* FillLayer_next(const void*);
 bool FillLayer_hasOpaqueImage(const void*, const void*);
