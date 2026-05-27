@@ -788,7 +788,6 @@ RenderObject* RenderElement::attachRendererInternal(RenderPtr<RenderObject> chil
 RenderPtr<RenderObject> RenderElement::detachRendererInternal(RenderObject& renderer)
 {
     if (m_scion) {
-        assert(!renderer.isScion());
         return m_scion->detachRendererInternal(renderer);
     }
     CheckedPtr parent = renderer.parent();

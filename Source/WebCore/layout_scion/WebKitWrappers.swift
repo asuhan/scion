@@ -2299,7 +2299,7 @@ func RenderElementScion_detachRendererInternal(
   -> UnsafeMutableRawPointer?
 {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  let renderer = createRenderObjectWrapper(rendererRaw)
+  let renderer = createRenderObjectWrapperOrNative(rendererRaw)
   return element.detachRendererInternal(renderer: renderer)?.id()
 }
 
