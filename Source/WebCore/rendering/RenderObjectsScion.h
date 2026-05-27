@@ -395,6 +395,8 @@ public:
 
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);
 
+    SingleThreadWeakPtr<RenderBlockFlow> backdropRenderer() const;
+
     bool hasCachedSVGResource() const;
 
     void insertedIntoTree();

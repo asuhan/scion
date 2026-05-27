@@ -394,6 +394,8 @@ extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
 
+extern "C" void* RenderElementScion_backdropRenderer(const void*);
+
 extern "C" bool RenderElementScion_hasCachedSVGResource(const void*);
 
 extern "C" void RenderElementScion_insertedIntoTree(void*);
@@ -1265,6 +1267,11 @@ void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObjec
 RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject& renderer)
 {
     return RenderPtr<RenderObject>(static_cast<RenderObject*>(RenderElementScion_detachRendererInternal(m_handle, &renderer)));
+}
+
+SingleThreadWeakPtr<RenderBlockFlow> RenderElementScion::backdropRenderer() const
+{
+    return { static_cast<RenderBlockFlow*>(RenderElementScion_backdropRenderer(m_handle)) };
 }
 
 bool RenderElementScion::hasCachedSVGResource() const

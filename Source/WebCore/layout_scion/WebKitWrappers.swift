@@ -2290,6 +2290,14 @@ func RenderElementScion_detachRendererInternal(
   return element.detachRendererInternal(renderer: renderer)?.id()
 }
 
+@_cdecl("RenderElementScion_backdropRenderer")
+func RenderElementScion_backdropRenderer(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer?
+{
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  assert(element.backdropRenderer() == nil)
+  return nil
+}
+
 @_cdecl("RenderElementScion_hasCachedSVGResource")
 func RenderElementScion_hasCachedSVGResource(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
