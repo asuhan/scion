@@ -1175,6 +1175,15 @@ static inline bool areCursorsEqual(const RenderStyle* a, const RenderStyle* b)
 }
 #endif
 
+extern "C" WEBCORE_EXPORT bool RenderElement_areCursorsEqual(const void* a, const void* b)
+{
+#if !PLATFORM(IOS_FAMILY)
+    return areCursorsEqual(static_cast<const WebCore::RenderStyle*>(a), static_cast<const WebCore::RenderStyle*>(b));
+#else
+    ASSERT_NOT_REACHED();
+#endif
+}
+
 void RenderElement::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -123,8 +123,7 @@ private func rendererHasBackground(renderer: RenderElementWrapper?) -> Bool {
 }
 
 private func areCursorsEqual(_ a: RenderStyleWrapper, _ b: RenderStyleWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return wk_interop.RenderElement_areCursorsEqual(a.p!, b.p!)
 }
 
 private func paintPhase(
