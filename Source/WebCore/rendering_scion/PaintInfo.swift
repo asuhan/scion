@@ -119,18 +119,12 @@ struct PaintInfoWrapper {
   func forceTextColor() -> Bool { return forceBlackText() || forceWhiteText() }
 
   func forceBlackText() -> Bool {
-    if n == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if n == nil { return wk_interop.PaintInfo_forceBlackText(p!) }
     return n!.paintBehavior.contains(.ForceBlackText)
   }
 
   func forceWhiteText() -> Bool {
-    if n == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if n == nil { return wk_interop.PaintInfo_forceWhiteText(p!) }
     return n!.paintBehavior.contains(.ForceWhiteText)
   }
 
