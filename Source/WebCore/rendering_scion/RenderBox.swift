@@ -1346,7 +1346,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // Only propagate layout overflow from the child if the child isn't clipping its overflow.  If it is, then
     // its overflow is internal to it, and we don't care about it. layoutOverflowRectForPropagation takes care of this
     // and just propagates the border box rect instead.
-    var childLayoutOverflowRect = child.layoutOverflowRectForPropagation(style: style())
+    var childLayoutOverflowRect = child.layoutOverflowRectForPropagation(parentStyle: style())
     childLayoutOverflowRect.move(size: delta)
     addLayoutOverflow(rect: childLayoutOverflowRect, clientBox: flippedClientRect)
 
@@ -5034,14 +5034,83 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return rect
   }
 
-  func layoutOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
-    assert(!isNativeImpl())
-    let raw = wk_interop.RenderBox_layoutOverflowRectForPropagation(id(), style.p!)
-    return LayoutRectWrapper(
-      x: LayoutUnit.fromRawValue(value: raw.x),
-      y: LayoutUnit.fromRawValue(value: raw.y),
-      width: LayoutUnit.fromRawValue(value: raw.width),
-      height: LayoutUnit.fromRawValue(value: raw.height))
+  func layoutOverflowRectForPropagation(parentStyle: RenderStyleWrapper) -> LayoutRectWrapper {
+    if !isNativeImpl() {
+      let raw = wk_interop.RenderBox_layoutOverflowRectForPropagation(id(), parentStyle.p!)
+      return LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: raw.x),
+        y: LayoutUnit.fromRawValue(value: raw.y),
+        width: LayoutUnit.fromRawValue(value: raw.width),
+        height: LayoutUnit.fromRawValue(value: raw.height))
+    }
+    // Only propagate interior layout overflow if we don't completely clip it.
+    var rect = borderBoxRect()
+    if isGridItem() {
+      // As per https://github.com/w3c/csswg-drafts/issues/3653, child's margins should contribute to the scrollable overflow area.
+      // FIXME: Expand it to non-grid cases when applicable.
+      rect.setWidth(width: rect.width() + max(LayoutUnit(value: UInt64(0)), marginEnd()))
+    }
+    if !shouldApplyLayoutContainment() {
+      if hasNonVisibleOverflow() {
+        if elementStyle().overflowX() == .Clip && elementStyle().overflowY() == .Visible {
+          var clippedOverflowRect = layoutOverflowRect()
+          clippedOverflowRect.setX(x: rect.x())
+          clippedOverflowRect.setWidth(width: rect.width())
+          rect.unite(other: clippedOverflowRect)
+        } else if elementStyle().overflowY() == .Clip && elementStyle().overflowX() == .Visible {
+          var clippedOverflowRect = layoutOverflowRect()
+          clippedOverflowRect.setY(y: rect.y())
+          clippedOverflowRect.setHeight(height: rect.height())
+          rect.unite(other: clippedOverflowRect)
+        }
+      } else {
+        rect.unite(other: layoutOverflowRect())
+      }
+    }
+
+    let isTransformed = self.isTransformed()
+    // While a stickily positioned renderer is also inflow positioned, they stretch the overflow rect with their inflow geometry
+    // (as opposed to the paint geometry) because they are not stationary.
+    let paintGeometryAffectsLayoutOverflow =
+      isTransformed || (isInFlowPositioned() && !isStickilyPositioned())
+    if paintGeometryAffectsLayoutOverflow {
+      // If we are relatively positioned or if we have a transform, then we have to convert
+      // this rectangle into physical coordinates, apply relative positioning and transforms
+      // to it, and then convert it back.
+      // It ensures that the overflow rect tracks the paint geometry and not the inflow layout position.
+      flipForWritingMode(rect: &rect)
+
+      if isTransformed && hasLayer() {
+        rect = layer()!.currentTransform().mapRect(rect)
+      }
+
+      if isInFlowPositioned() {
+        rect.move(size: offsetForInFlowPosition())
+      }
+
+      // Now we need to flip back.
+      flipForWritingMode(rect: &rect)
+    }
+
+    // If the writing modes of the child and parent match, then we don't have to
+    // do anything fancy. Just return the result.
+    if parentStyle.blockFlowDirection() == elementStyle().blockFlowDirection() {
+      return rect
+    }
+
+    // We are putting ourselves into our parent's coordinate space.  If there is a flipped block mismatch
+    // in a particular axis, then we have to flip the rect along that axis.
+    if elementStyle().blockFlowDirection() == .RightToLeft
+      || parentStyle.blockFlowDirection() == .RightToLeft
+    {
+      rect.setX(x: width() - rect.maxX())
+    } else if elementStyle().blockFlowDirection() == .BottomToTop
+      || parentStyle.blockFlowDirection() == .BottomToTop
+    {
+      rect.setY(y: height() - rect.maxY())
+    }
+
+    return rect
   }
 
   func hasRenderOverflow() -> Bool {

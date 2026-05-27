@@ -363,7 +363,7 @@ extension LayoutIntegration {
               inkOverflowRect.unite(other: childInkOverflow.FloatRect())
             }
             var childScrollableOverflow = renderer.layoutOverflowRectForPropagation(
-              style: renderer.parent()!.style())
+              parentStyle: renderer.parent()!.style())
             childScrollableOverflow.move(dx: box.left(), dy: box.top())
             scrollableOverflowRect.unite(other: childScrollableOverflow.FloatRect())
             boxIndex += 1
