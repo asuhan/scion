@@ -3434,6 +3434,12 @@ bool RenderObject::isRenderGrid() const
     return type() == Type::Grid;
 }
 
+bool RenderObject::isRenderScrollbarPart() const
+{
+    if (m_scion) { return m_scion->isRenderScrollbarPart(); }
+    return type() == Type::ScrollbarPart;
+}
+
 bool RenderObject::isDocumentElementRenderer() const
 {
     if (m_scion) { return m_scion->isDocumentElementRenderer(); }

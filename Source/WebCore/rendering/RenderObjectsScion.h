@@ -128,6 +128,8 @@ public:
 
     bool isRenderGrid() const;
 
+    bool isRenderScrollbarPart() const;
+
     bool isDocumentElementRenderer() const;
 
     bool isBody() const;

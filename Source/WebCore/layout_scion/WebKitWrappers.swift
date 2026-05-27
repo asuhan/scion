@@ -1331,6 +1331,12 @@ func RenderObjectScion_isRenderGrid(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderGrid()
 }
 
+@_cdecl("RenderObjectScion_isRenderScrollbarPart")
+func RenderObjectScion_isRenderScrollbarPart(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderScrollbarPart()
+}
+
 @_cdecl("RenderObjectScion_isDocumentElementRenderer")
 func RenderObjectScion_isDocumentElementRenderer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

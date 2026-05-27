@@ -617,11 +617,7 @@ public:
         return type() == Type::MultiColumnSpannerPlaceholder;
     }
 
-    bool isRenderScrollbarPart() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::ScrollbarPart;
-    }
+    bool isRenderScrollbarPart() const;
     bool isRenderVTTCue() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
