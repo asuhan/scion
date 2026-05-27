@@ -85,10 +85,7 @@ class FillLayerWrapper {
     fatalError("Not implemented")
   }
 
-  var sizeType: FillSizeType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var sizeType: FillSizeType { return FillSizeType(rawValue: wk_interop.FillLayer_sizeType(p))! }
 
   func size() -> FillSize {
     // TODO(asuhan): implement this

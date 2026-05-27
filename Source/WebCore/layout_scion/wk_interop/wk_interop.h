@@ -1447,6 +1447,7 @@ uint8_t FillLayer_attachment(const void*);
 uint8_t FillLayer_clip(const void*);
 uint8_t FillLayer_origin(const void*);
 uint8_t FillLayer_blendMode(const void*);
+uint8_t FillLayer_sizeType(const void*);
 const void* FillLayer_next(const void*);
 bool FillLayer_hasOpaqueImage(const void*, const void*);
 bool FillLayer_clipOccludesNextLayers(const void*, bool);
