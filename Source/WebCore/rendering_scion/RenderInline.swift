@@ -128,11 +128,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return computeMargin(self, style().marginBottom())
   }
 
-  override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+  override final func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     return computeMargin(self, style().marginBeforeUsing(otherStyle: otherStyle ?? style()))
   }
 
-  override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+  override final func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     return computeMargin(self, style().marginAfterUsing(otherStyle: otherStyle ?? style()))
   }
 

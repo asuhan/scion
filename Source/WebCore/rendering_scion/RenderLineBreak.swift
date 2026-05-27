@@ -92,12 +92,12 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit(value: 0)
   }
 
-  override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+  override final func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     assert(isNativeImpl())
     return LayoutUnit(value: 0)
   }
 
-  override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+  override final func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     assert(isNativeImpl())
     return LayoutUnit(value: 0)
   }
