@@ -22,6 +22,12 @@
 
 import wk_interop
 
+// FIXME: We should store these based on physical direction.
+private typealias OverrideOptionalSizeMap = WeakHashMap<
+  RenderBoxWrapper, RenderBoxWrapper.ContainingBlockOverrideValue
+>
+private let gOverridingContainingBlockContentLogicalWidthMap: OverrideOptionalSizeMap? = nil
+
 private let backgroundObscurationTestMaxDepth: UInt32 = 4
 
 enum AvailableLogicalHeightType {
@@ -1927,8 +1933,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if gOverridingContainingBlockContentLogicalWidthMap == nil {
+      return nil
+    }
+    // TODO(asuhan): implement find in WeakHashMap and use it here
+    return gOverridingContainingBlockContentLogicalWidthMap!.get(self, nil)
   }
 
   func overridingContainingBlockContentLogicalHeight() -> ContainingBlockOverrideValue? {
