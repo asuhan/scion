@@ -1733,3 +1733,4 @@ void Styleable_destroy(void*);
 bool Styleable_hasRunningAcceleratedAnimations(const void*);
 bool Styleable_capturedInViewTransition(const void*);
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresLayout(const void*, const void*);
+void RenderCounter_rendererStyleChanged(void*, const void*, const void*);

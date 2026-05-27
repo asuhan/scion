@@ -42,6 +42,14 @@
 #include <stdio.h>
 #endif
 
+extern "C" WEBCORE_EXPORT void RenderCounter_rendererStyleChanged(void* rendererRaw, const void* oldStyleRaw, const void* newStyleRaw)
+{
+    auto& renderer = *static_cast<WebCore::RenderElement*>(rendererRaw);
+    const auto oldStyle = static_cast<const WebCore::RenderStyle*>(oldStyleRaw);
+    const auto& newStyle = *static_cast<const WebCore::RenderStyle*>(newStyleRaw);
+    WebCore::RenderCounter::rendererStyleChanged(renderer, oldStyle, newStyle);
+}
+
 extern "C" WEBCORE_EXPORT void RenderCounterSet_add(void* set, void* counter)
 {
     static_cast<WTF::SingleThreadWeakHashSet<WebCore::RenderCounter>*>(set)->add(

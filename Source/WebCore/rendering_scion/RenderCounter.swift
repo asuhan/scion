@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 final class RenderCounter: RenderTextWrapper {
   static func destroyCounterNodes(_ owner: RenderElementWrapper) {
     // TODO(asuhan): implement this
@@ -29,8 +31,9 @@ final class RenderCounter: RenderTextWrapper {
   static func rendererStyleChanged(
     renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?, newStyle: RenderStyleWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rendererRaw =
+      renderer.isNativeImpl() ? (renderer as! RenderBlockFlowWrapper).getWk() : renderer.id()
+    wk_interop.RenderCounter_rendererStyleChanged(rendererRaw, oldStyle?.p!, newStyle.p!)
   }
 
   override final func canBeSelectionLeaf() -> Bool {
