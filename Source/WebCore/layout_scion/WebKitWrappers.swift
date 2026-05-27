@@ -2297,6 +2297,18 @@ func RenderElementScion_backdropRenderer(_ elementRaw: UnsafeRawPointer) -> Unsa
   return nil
 }
 
+@_cdecl("RenderElementScion_effectiveOverflowX")
+func RenderElementScion_effectiveOverflowX(_ elementRaw: UnsafeRawPointer) -> UInt8 {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.effectiveOverflowX().rawValue
+}
+
+@_cdecl("RenderElementScion_effectiveOverflowY")
+func RenderElementScion_effectiveOverflowY(_ elementRaw: UnsafeRawPointer) -> UInt8 {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.effectiveOverflowY().rawValue
+}
+
 @_cdecl("RenderElementScion_hasCachedSVGResource")
 func RenderElementScion_hasCachedSVGResource(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

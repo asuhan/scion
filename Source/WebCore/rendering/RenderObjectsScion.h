@@ -397,6 +397,10 @@ public:
 
     SingleThreadWeakPtr<RenderBlockFlow> backdropRenderer() const;
 
+    Overflow effectiveOverflowX() const;
+
+    Overflow effectiveOverflowY() const;
+
     bool hasCachedSVGResource() const;
 
     void insertedIntoTree();

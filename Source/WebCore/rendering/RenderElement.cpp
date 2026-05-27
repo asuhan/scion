@@ -2734,7 +2734,7 @@ void RenderElement::setBackdropRenderer(RenderBlockFlow& renderer)
 
 Overflow RenderElement::effectiveOverflowX() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->effectiveOverflowX(); }
     auto overflowX = style().overflowX();
     if (paintContainmentApplies() && overflowX == Overflow::Visible)
         return Overflow::Clip;
@@ -2743,7 +2743,7 @@ Overflow RenderElement::effectiveOverflowX() const
 
 Overflow RenderElement::effectiveOverflowY() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->effectiveOverflowY(); }
     auto overflowY = style().overflowY();
     if (paintContainmentApplies() && overflowY == Overflow::Visible)
         return Overflow::Clip;

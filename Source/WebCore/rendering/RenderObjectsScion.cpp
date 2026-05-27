@@ -396,6 +396,10 @@ extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
 
 extern "C" void* RenderElementScion_backdropRenderer(const void*);
 
+extern "C" uint8_t RenderElementScion_effectiveOverflowX(const void*);
+
+extern "C" uint8_t RenderElementScion_effectiveOverflowY(const void*);
+
 extern "C" bool RenderElementScion_hasCachedSVGResource(const void*);
 
 extern "C" void RenderElementScion_insertedIntoTree(void*);
@@ -1274,6 +1278,16 @@ RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject&
 SingleThreadWeakPtr<RenderBlockFlow> RenderElementScion::backdropRenderer() const
 {
     return { static_cast<RenderBlockFlow*>(RenderElementScion_backdropRenderer(m_handle)) };
+}
+
+Overflow RenderElementScion::effectiveOverflowX() const
+{
+    return static_cast<Overflow>(RenderElementScion_effectiveOverflowX(m_handle));
+}
+
+Overflow RenderElementScion::effectiveOverflowY() const
+{
+    return static_cast<Overflow>(RenderElementScion_effectiveOverflowY(m_handle));
 }
 
 bool RenderElementScion::hasCachedSVGResource() const
