@@ -25,7 +25,9 @@
 import wk_interop
 
 struct InlineWalker: ~Copyable {
-  init(root: RenderBlockFlowWrapper) { p = InlineWalker_new(root.id()) }
+  init(root: RenderBlockFlowWrapper) {
+    p = InlineWalker_new(root.isNativeImpl() ? root.getWk() : root.id())
+  }
 
   deinit { wk_interop.InlineWalker_destroy(p) }
 
