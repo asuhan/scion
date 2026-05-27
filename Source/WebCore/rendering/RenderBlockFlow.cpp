@@ -4496,7 +4496,7 @@ void RenderBlockFlow::checkForPaginationLogicalHeightChange(bool& relayoutChildr
 
 bool RenderBlockFlow::requiresColumns(int desiredColumnCount) const
 {    
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->requiresColumns(desiredColumnCount); }
     return willCreateColumns(desiredColumnCount);
 }
 

@@ -520,6 +520,8 @@ extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
 extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
+extern "C" bool RenderBlockFlowScion_requiresColumns(const void*, int32_t);
+
 extern "C" bool RenderBlockFlowScion_containsFloats(const void*);
 
 extern "C" bool RenderBlockFlowScion_containsFloat(const void*, void*);
@@ -1575,6 +1577,11 @@ void RenderBlockFlowScion::willBeDestroyed()
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
 {
     return static_cast<RenderMultiColumnFlow*>(RenderBlockFlowScion_multiColumnFlow(m_handle));
+}
+
+bool RenderBlockFlowScion::requiresColumns(int desiredColumnCount) const
+{
+    return RenderBlockFlowScion_requiresColumns(m_handle, desiredColumnCount);
 }
 
 bool RenderBlockFlowScion::containsFloats() const

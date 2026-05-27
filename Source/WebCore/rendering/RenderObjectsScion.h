@@ -572,6 +572,8 @@ public:
 
     RenderMultiColumnFlow* multiColumnFlow() const;
 
+    bool requiresColumns(int) const;
+
     bool containsFloats() const;
 
     bool containsFloat(RenderBox&) const;

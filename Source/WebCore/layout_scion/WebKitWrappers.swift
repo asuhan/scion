@@ -2598,6 +2598,14 @@ func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
   return nil
 }
 
+@_cdecl("RenderBlockFlowScion_requiresColumns")
+func RenderBlockFlowScion_requiresColumns(
+  _ blockFlowRaw: UnsafeRawPointer, _ desiredColumnCount: Int32
+) -> Bool {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.requiresColumns(desiredColumnCount: desiredColumnCount)
+}
+
 @_cdecl("RenderBlockFlowScion_containsFloats")
 func RenderBlockFlowScion_containsFloats(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
