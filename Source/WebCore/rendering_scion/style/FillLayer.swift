@@ -61,15 +61,9 @@ class FillLayerWrapper {
     fatalError("Not implemented")
   }
 
-  var backgroundXOrigin: Edge {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var backgroundXOrigin: Edge { return Edge(rawValue: wk_interop.FillLayer_backgroundXOrigin(p))! }
 
-  var backgroundYOrigin: Edge {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var backgroundYOrigin: Edge { return Edge(rawValue: wk_interop.FillLayer_backgroundYOrigin(p))! }
 
   var attachment: FillAttachment {
     // TODO(asuhan): implement this

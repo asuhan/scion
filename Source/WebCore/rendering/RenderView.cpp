@@ -145,7 +145,7 @@ extern "C" WEBCORE_EXPORT void* PaintInfo_eventRegionContext(void* p)
 
 extern "C" WEBCORE_EXPORT bool PaintInfo_requireSecurityOriginAccessForWidgets(const void* p)
 {
-    return static_cast<const WebCore::PaintInfo*>(p)->requireSecurityOriginAccessForWidgets();
+    return static_cast<const WebCore::PaintInfo*>(p)->requireSecurityOriginAccessForWidgets;
 }
 
 namespace WebCore {
