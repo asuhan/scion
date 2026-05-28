@@ -1438,6 +1438,7 @@ bool Node_isEditingText(const void*);
 bool Node_hasEditableStyle(const void*, bool);
 uint32_t Node_computeNodeIndex(const void*);
 void* Node_document(const void*);
+bool Node_isDescendantOf(const void*, const void*);
 void* Node_renderer(const void*);
 void* Node_renderBox(const void*);
 const void* BoxTree_handleNullRootBox(void*);

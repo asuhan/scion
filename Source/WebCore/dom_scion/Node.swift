@@ -130,8 +130,7 @@ class NodeWrapper {
   func countChildNodes() -> UInt32 { return 0 }
 
   func isDescendantOf(_ other: NodeWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Node_isDescendantOf(p, other?.p)
   }
 
   // -----------------------------------------------------------------------------

@@ -204,6 +204,11 @@ extern "C" WEBCORE_EXPORT void* Node_document(const void* raw)
     return &static_cast<const WebCore::Node*>(raw)->document();
 }
 
+extern "C" WEBCORE_EXPORT bool Node_isDescendantOf(const void* raw, const void* other)
+{
+    return static_cast<const WebCore::Node*>(raw)->isDescendantOf(static_cast<const WebCore::Node*>(other));
+}
+
 extern "C" WEBCORE_EXPORT void* Node_renderer(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->renderer();
