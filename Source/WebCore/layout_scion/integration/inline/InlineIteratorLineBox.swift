@@ -30,15 +30,9 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
-    func logicalTop() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func logicalTop() -> Float32 { return m_path.logicalTop() }
 
-    func logicalBottom() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func logicalBottom() -> Float32 { return m_path.logicalBottom() }
 
     func logicalHeight() -> Float32 { return logicalBottom() - logicalTop() }
 
@@ -136,6 +130,8 @@ class InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let m_path: LineBoxIteratorModernPath
   }
 
   class LineBoxIterator: IteratorProtocol {

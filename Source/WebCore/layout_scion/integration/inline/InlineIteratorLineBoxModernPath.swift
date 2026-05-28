@@ -31,6 +31,16 @@ extension InlineIterator {
       self.lineIndex = lineIndex
     }
 
+    func logicalTop() -> Float32 { return line().lineBoxLogicalRect.y() }
+
+    func logicalBottom() -> Float32 { return line().lineBoxLogicalRect.maxY() }
+
+    private func lines() -> ArraySlice<InlineDisplay.Line> {
+      return inlineContent!.displayContent.lines[...]
+    }
+
+    private func line() -> InlineDisplay.Line { return lines()[Int(lineIndex)] }
+
     private let inlineContent: LayoutIntegration.InlineContent?
     private let lineIndex: UInt64
   }
