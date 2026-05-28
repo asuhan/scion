@@ -129,8 +129,10 @@ class LayoutStateWrapper {
   }
 
   func hasFormattingState(formattingContextRoot: ElementBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(formattingContextRoot.establishesFormattingContext())
+    return blockFormattingStates[CPtrToInt(formattingContextRoot.p)] != nil
+      || blockFormattingStates[CPtrToInt(formattingContextRoot.p)] != nil
   }
 
   func geometryForBox(layoutBox: BoxWrapper) -> BoxGeometry {
