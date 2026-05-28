@@ -183,11 +183,10 @@ class LayoutStateWrapper {
   }
 
   func securityOrigin() -> SecurityOriginWrapper {
-    if self.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return SecurityOriginWrapper(p: wk_interop.LayoutState_securityOrigin(self.p!))
     }
-    return SecurityOriginWrapper(p: wk_interop.LayoutState_securityOrigin(self.p))
+    return m_securityOrigin!
   }
 
   func root() -> ElementBoxWrapper {
