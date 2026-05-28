@@ -24,6 +24,7 @@
  */
 
 typealias GridCell = [RenderBoxWrapper]
+typealias GridCellView = ArraySlice<RenderBoxWrapper>
 private typealias GridAsMatrix = [[GridCell]]
 typealias OrderedTrackIndexSet = ListHashSet<UInt64>
 
@@ -122,9 +123,15 @@ final class Grid {
       : GridSpan.translatedDefiniteGridSpan(startLine: currentLine + 1, endLine: span.integerSpan())
   }
 
-  func cell(row: UInt32, column: UInt32) -> GridCell {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func cell(row: UInt32, column: UInt32) -> GridCellView {
+    // Storage for rows other than the first is lazily allocated. We can
+    // just return a fake entry if the request is outside the allocated area,
+    // since it must be empty.
+    if row != 0 && grid[Int(row)].count <= column {
+      return Grid.emptyCell[...]
+    }
+
+    return grid[Int(row)][Int(column)][...]
   }
 
   func explicitGridStart(direction: GridTrackSizingDirection) -> UInt32 {
@@ -243,6 +250,8 @@ final class Grid {
 
   private var m_autoRepeatEmptyColumns: OrderedTrackIndexSet? = nil
   private var m_autoRepeatEmptyRows: OrderedTrackIndexSet? = nil
+
+  private static let emptyCell = GridCell()
 }
 
 class GridIterator {
