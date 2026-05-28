@@ -232,8 +232,8 @@ final class Grid {
   private var m_autoRepeatColumns: UInt32 = 0
   private var m_autoRepeatRows: UInt32 = 0
 
-  private var maxColumns: UInt32 = 0
-  private var maxRows: UInt32 = 0
+  var maxColumns: UInt32 = 0
+  var maxRows: UInt32 = 0
 
   private var m_needsItemsPlacement = true
 
@@ -283,8 +283,27 @@ class GridIterator {
   }
 
   func nextGridItem() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_grid.maxRows != 0 {
+      assert(m_grid.numTracks(direction: .ForRows) != 0)
+    }
+    if m_grid.maxColumns != 0 {
+      assert(m_grid.numTracks(direction: .ForColumns) != 0)
+    }
+    let endOfVaryingTrackIndex =
+      (direction == .ForColumns)
+      ? m_grid.numTracks(direction: .ForRows) : m_grid.numTracks(direction: .ForColumns)
+    while (direction == .ForColumns ? m_rowIndex : m_columnIndex) < endOfVaryingTrackIndex {
+      let gridItems = m_grid.cell(row: m_rowIndex, column: m_columnIndex)
+      if m_gridItemIndex < gridItems.count {
+        let cell = gridItems[Int(m_gridItemIndex)]
+        m_gridItemIndex += 1
+        return cell
+      }
+
+      m_gridItemIndex = 0
+      if direction == .ForColumns { m_rowIndex += 1 } else { m_columnIndex += 1 }
+    }
+    return nil
   }
 
   func nextEmptyGridArea(fixedTrackSpan: UInt32, varyingTrackSpan: UInt32) -> GridArea? {
@@ -292,7 +311,9 @@ class GridIterator {
     fatalError("Not implemented")
   }
 
+  private let m_grid: Grid
   let direction: GridTrackSizingDirection
-  private let m_rowIndex: UInt32
-  private let m_columnIndex: UInt32
+  private var m_rowIndex: UInt32
+  private var m_columnIndex: UInt32
+  private var m_gridItemIndex: UInt32
 }
