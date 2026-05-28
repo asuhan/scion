@@ -72,6 +72,11 @@ extension InlineIterator {
     fatalError("Not implemented")
   }
 
+  static func inlineBoxFor(legacyInlineFlowBox: LegacyInlineFlowBox) -> InlineBoxIterator {
+    return InlineBoxIterator(
+      pathVariant: .legacy(InlineIterator.BoxLegacyPath(legacyInlineFlowBox)))
+  }
+
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
     -> InlineBoxIterator
   {
