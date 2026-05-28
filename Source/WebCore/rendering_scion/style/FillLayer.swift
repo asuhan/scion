@@ -30,8 +30,8 @@ struct FillSize {
 }
 
 struct FillRepeatXY {
-  let x: FillRepeat = .Repeat
-  let y: FillRepeat = .Repeat
+  let x: FillRepeat
+  let y: FillRepeat
 }
 
 class FillLayerWrapper {
@@ -74,8 +74,8 @@ class FillLayerWrapper {
   var origin: FillBox { return FillBox(rawValue: wk_interop.FillLayer_origin(p))! }
 
   var `repeat`: FillRepeatXY {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.FillLayer_repeat(p)
+    return FillRepeatXY(x: FillRepeat(rawValue: r.x)!, y: FillRepeat(rawValue: r.y)!)
   }
 
   var blendMode: BlendMode { return BlendMode(rawValue: wk_interop.FillLayer_blendMode(p))! }

@@ -56,6 +56,17 @@ extern "C" WEBCORE_EXPORT uint8_t FillLayer_origin(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::FillLayer*>(p)->origin());
 }
 
+struct FillRepeatXYRaw {
+    uint8_t x;
+    uint8_t y;
+};
+
+extern "C" WEBCORE_EXPORT struct FillRepeatXYRaw FillLayer_repeat(const void* p)
+{
+    const auto r = static_cast<const WebCore::FillLayer*>(p)->repeat();
+    return { static_cast<uint8_t>(r.x), static_cast<uint8_t>(r.y) };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t FillLayer_blendMode(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::FillLayer*>(p)->blendMode());

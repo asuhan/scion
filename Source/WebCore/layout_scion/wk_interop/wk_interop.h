@@ -350,6 +350,11 @@ struct ChangedContextSensitiveProperties {
     bool requires_layout;
 };
 
+struct FillRepeatXYRaw {
+    uint8_t x;
+    uint8_t y;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1446,6 +1451,7 @@ uint8_t FillLayer_backgroundYOrigin(const void*);
 uint8_t FillLayer_attachment(const void*);
 uint8_t FillLayer_clip(const void*);
 uint8_t FillLayer_origin(const void*);
+struct FillRepeatXYRaw FillLayer_repeat(const void*);
 uint8_t FillLayer_blendMode(const void*);
 uint8_t FillLayer_sizeType(const void*);
 const void* FillLayer_next(const void*);
