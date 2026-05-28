@@ -160,10 +160,7 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
-  func hasTextPathTagName() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasTextPathTagName() -> Bool { return wk_interop.Node_hasTextPathTagName(p) }
 
   func hasUseTagName() -> Bool {
     // TODO(asuhan): implement this

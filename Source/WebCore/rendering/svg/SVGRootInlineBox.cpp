@@ -37,6 +37,11 @@
 #include "SVGTextPositioningElement.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool Node_hasTextPathTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::SVGNames::textPathTag);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(SVGRootInlineBox);
