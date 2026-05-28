@@ -166,13 +166,13 @@ final class Grid {
   }
 
   func setAutoRepeatEmptyColumns(autoRepeatEmptyColumns: OrderedTrackIndexSet?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(autoRepeatEmptyColumns == nil || (autoRepeatEmptyColumns!.size() <= m_autoRepeatColumns))
+    m_autoRepeatEmptyColumns = autoRepeatEmptyColumns
   }
 
   func setAutoRepeatEmptyRows(autoRepeatEmptyRows: OrderedTrackIndexSet?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(autoRepeatEmptyRows == nil || (autoRepeatEmptyRows!.size() <= m_autoRepeatRows))
+    m_autoRepeatEmptyRows = autoRepeatEmptyRows
   }
 
   func hasAutoRepeatEmptyTracks(direction: GridTrackSizingDirection) -> Bool {
