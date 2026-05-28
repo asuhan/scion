@@ -87,6 +87,21 @@ extern "C" WEBCORE_EXPORT uint8_t FillLayer_compositeForPainting(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::FillLayer*>(p)->compositeForPainting());
 }
 
+extern "C" WEBCORE_EXPORT bool FillLayer_isEmpty(const void* p)
+{
+    return static_cast<const WebCore::FillLayer*>(p)->isEmpty();
+}
+
+extern "C" WEBCORE_EXPORT bool FillLayer_hasImage(const void* p)
+{
+    return static_cast<const WebCore::FillLayer*>(p)->hasImage();
+}
+
+extern "C" WEBCORE_EXPORT bool FillLayer_hasRepeatXY(const void* p)
+{
+    return static_cast<const WebCore::FillLayer*>(p)->hasRepeatXY();
+}
+
 extern "C" WEBCORE_EXPORT const void* FillLayer_next(const void* p)
 {
     return static_cast<const WebCore::FillLayer*>(p)->next();

@@ -109,30 +109,21 @@ class FillLayerWrapper {
     return FillLayerWrapper(raw!)
   }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return wk_interop.FillLayer_isEmpty(p) }
 
   func imagesAreLoaded(renderer: RenderElementWrapper?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func hasImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasImage() -> Bool { return wk_interop.FillLayer_hasImage(p) }
 
   func hasOpaqueImage(renderer: RenderElementWrapper) -> Bool {
     return wk_interop.FillLayer_hasOpaqueImage(
       p, renderer.isNativeImpl() ? (renderer as! RenderBlockFlowWrapper).getWk() : renderer.id())
   }
 
-  func hasRepeatXY() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasRepeatXY() -> Bool { return wk_interop.FillLayer_hasRepeatXY(p) }
 
   func clipOccludesNextLayers(firstLayer: Bool) -> Bool {
     return wk_interop.FillLayer_clipOccludesNextLayers(p, firstLayer)
