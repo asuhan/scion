@@ -252,8 +252,19 @@ class GridIterator {
     grid: Grid, direction: GridTrackSizingDirection, fixedTrackIndex: UInt32,
     varyingTrackIndex: UInt32 = 0
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_grid = grid
+    self.direction = direction
+    m_rowIndex = direction == .ForColumns ? varyingTrackIndex : fixedTrackIndex
+    m_columnIndex = direction == .ForColumns ? fixedTrackIndex : varyingTrackIndex
+    m_gridItemIndex = 0
+    if m_grid.maxRows != 0 {
+      assert(m_grid.numTracks(direction: .ForRows) != 0)
+      assert(m_rowIndex < m_grid.numTracks(direction: .ForRows))
+    }
+    if m_grid.maxColumns != 0 {
+      assert(m_grid.numTracks(direction: .ForColumns) != 0)
+      assert(m_columnIndex < m_grid.numTracks(direction: .ForColumns))
+    }
   }
 
   static func createForSubgrid(
