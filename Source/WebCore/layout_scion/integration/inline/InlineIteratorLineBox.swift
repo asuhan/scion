@@ -42,10 +42,7 @@ class InlineIterator {
 
     func contentLogicalLeft() -> Float32 { return m_path.contentLogicalLeft() }
 
-    func contentLogicalHeight() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func contentLogicalHeight() -> Float32 { return contentLogicalBottom() - contentLogicalTop() }
 
     func inkOverflowLogicalTop() -> Float32 {
       // TODO(asuhan): implement this
