@@ -111,6 +111,10 @@ extension InlineDisplay {
         bottomRight: FloatPoint(x: lineBoxRect.maxX(), y: lineBoxRect.maxY()))
     }
 
+    func enclosingContentLogicalTop() -> Float32 { return enclosingLogicalTopAndBottom.top }
+
+    func enclosingContentLogicalBottom() -> Float32 { return enclosingLogicalTopAndBottom.bottom }
+
     func baseline() -> Float32 {
       return alignmentBaseline
     }

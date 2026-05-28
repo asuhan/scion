@@ -31,6 +31,10 @@ extension InlineIterator {
       self.lineIndex = lineIndex
     }
 
+    func contentLogicalTop() -> Float32 { return line().enclosingContentLogicalTop() }
+
+    func contentLogicalBottom() -> Float32 { return line().enclosingContentLogicalBottom() }
+
     func logicalTop() -> Float32 { return line().lineBoxLogicalRect.y() }
 
     func logicalBottom() -> Float32 { return line().lineBoxLogicalRect.maxY() }
