@@ -162,10 +162,7 @@ class NodeWrapper {
 
   func hasTextPathTagName() -> Bool { return wk_interop.Node_hasTextPathTagName(p) }
 
-  func hasUseTagName() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasUseTagName() -> Bool { return wk_interop.Node_hasUseTagName(p) }
 
   let p: UnsafeMutableRawPointer
 }

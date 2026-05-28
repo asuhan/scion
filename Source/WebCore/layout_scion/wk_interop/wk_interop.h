@@ -1421,6 +1421,7 @@ bool Node_hasBodyTagName(const void*);
 bool Node_hasLegendTagName(const void*);
 bool Node_hasMarqueeTagName(const void*);
 bool Node_hasTextPathTagName(const void*);
+bool Node_hasUseTagName(const void*);
 bool Node_hasChildNodes(const void*);
 bool Node_isSVGElement(const void*);
 bool Node_isPseudoElement(const void*);
