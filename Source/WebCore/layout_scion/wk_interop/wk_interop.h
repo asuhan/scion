@@ -1455,6 +1455,7 @@ struct FillRepeatXYRaw FillLayer_repeat(const void*);
 uint8_t FillLayer_blendMode(const void*);
 uint8_t FillLayer_sizeType(const void*);
 uint8_t FillLayer_maskMode(const void*);
+uint8_t FillLayer_compositeForPainting(const void*);
 const void* FillLayer_next(const void*);
 bool FillLayer_hasOpaqueImage(const void*, const void*);
 bool FillLayer_clipOccludesNextLayers(const void*, bool);

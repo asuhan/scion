@@ -97,8 +97,7 @@ class FillLayerWrapper {
   // https://drafts.fxtf.org/css-masking/#the-mask-composite
   // If there is no further mask layer, the compositing operator must be ignored.
   func compositeForPainting() -> CompositeOperator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CompositeOperator(rawValue: wk_interop.FillLayer_compositeForPainting(p))!
   }
 
   func next() -> FillLayerWrapper? {
