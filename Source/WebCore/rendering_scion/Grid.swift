@@ -306,9 +306,63 @@ class GridIterator {
     return nil
   }
 
+  private func isEmptyAreaEnough(rowSpan: UInt32, columnSpan: UInt32) -> Bool {
+    if m_grid.maxRows != 0 {
+      assert(m_grid.numTracks(direction: .ForRows) != 0)
+    }
+    if m_grid.maxColumns != 0 {
+      assert(m_grid.numTracks(direction: .ForColumns) != 0)
+    }
+    // Ignore cells outside current grid as we will grow it later if needed.
+    let maxRows = min(m_rowIndex + rowSpan, m_grid.numTracks(direction: .ForRows))
+    let maxColumns = min(m_columnIndex + columnSpan, m_grid.numTracks(direction: .ForColumns))
+
+    // This adds a O(N^2) behavior that shouldn't be a big deal as we expect spanning areas to be small.
+    for row in m_rowIndex..<maxRows {
+      for column in m_columnIndex..<maxColumns {
+        let gridItems = m_grid.cell(row: row, column: column)
+        if !gridItems.isEmpty {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+
   func nextEmptyGridArea(fixedTrackSpan: UInt32, varyingTrackSpan: UInt32) -> GridArea? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_grid.maxRows != 0 {
+      assert(m_grid.numTracks(direction: .ForRows) != 0)
+    }
+    if m_grid.maxColumns != 0 {
+      assert(m_grid.numTracks(direction: .ForColumns) != 0)
+    }
+    assert(fixedTrackSpan >= 1)
+    assert(varyingTrackSpan >= 1)
+
+    if !m_grid.hasGridItems() {
+      return nil
+    }
+
+    let rowSpan = direction == .ForColumns ? varyingTrackSpan : fixedTrackSpan
+    let columnSpan = direction == .ForColumns ? fixedTrackSpan : varyingTrackSpan
+
+    let endOfVaryingTrackIndex =
+      (direction == .ForColumns)
+      ? m_grid.numTracks(direction: .ForRows) : m_grid.numTracks(direction: .ForColumns)
+    while (direction == .ForColumns ? m_rowIndex : m_columnIndex) < endOfVaryingTrackIndex {
+      if isEmptyAreaEnough(rowSpan: rowSpan, columnSpan: columnSpan) {
+        let result = GridArea(
+          r: GridSpan.translatedDefiniteGridSpan(
+            startLine: m_rowIndex, endLine: m_rowIndex + rowSpan),
+          c: GridSpan.translatedDefiniteGridSpan(
+            startLine: m_columnIndex, endLine: m_columnIndex + columnSpan))
+        // Advance the iterator to avoid an infinite loop where we would return the same grid area over and over.
+        if direction == .ForColumns { m_rowIndex += 1 } else { m_columnIndex += 1 }
+        return result
+      }
+    }
+    return nil
   }
 
   private let m_grid: Grid
