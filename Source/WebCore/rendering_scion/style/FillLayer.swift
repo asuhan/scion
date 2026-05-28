@@ -92,10 +92,7 @@ class FillLayerWrapper {
     fatalError("Not implemented")
   }
 
-  var maskMode: MaskMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var maskMode: MaskMode { return MaskMode(rawValue: wk_interop.FillLayer_maskMode(p))! }
 
   // https://drafts.fxtf.org/css-masking/#the-mask-composite
   // If there is no further mask layer, the compositing operator must be ignored.

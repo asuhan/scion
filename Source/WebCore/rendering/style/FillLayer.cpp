@@ -77,6 +77,11 @@ extern "C" WEBCORE_EXPORT uint8_t FillLayer_sizeType(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::FillLayer*>(p)->sizeType());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t FillLayer_maskMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::FillLayer*>(p)->maskMode());
+}
+
 extern "C" WEBCORE_EXPORT const void* FillLayer_next(const void* p)
 {
     return static_cast<const WebCore::FillLayer*>(p)->next();
