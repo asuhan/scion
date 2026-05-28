@@ -259,8 +259,27 @@ class GridIterator {
   static func createForSubgrid(
     _ subgrid: RenderGridWrapper, _ outer: GridIterator, _ subgridSpanInOuter: GridSpan
   ) -> GridIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(subgrid.isSubgridInParentDirection(parentDirection: outer.direction))
+    let parent = subgrid.parent()! as! RenderGridWrapper
+
+    // Translate the current row/column indices into the coordinate
+    // space of the subgrid.
+    var fixedIndex = (outer.direction == .ForColumns) ? outer.m_columnIndex : outer.m_rowIndex
+    fixedIndex -= subgridSpanInOuter.startLine()
+
+    let innerDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: parent, gridItem: subgrid, direction: outer.direction)
+    assert(subgrid.isSubgrid(direction: innerDirection))
+
+    if GridLayoutFunctions.isSubgridReversedDirection(
+      grid: parent, outerDirection: outer.direction, subgrid: subgrid)
+    {
+      let fixedMax = subgrid.currentGrid().numTracks(direction: innerDirection)
+      fixedIndex = fixedMax - fixedIndex - 1
+    }
+
+    return GridIterator(
+      grid: subgrid.currentGrid(), direction: innerDirection, fixedTrackIndex: fixedIndex)
   }
 
   func nextGridItem() -> RenderBoxWrapper? {
@@ -274,4 +293,6 @@ class GridIterator {
   }
 
   let direction: GridTrackSizingDirection
+  private let m_rowIndex: UInt32
+  private let m_columnIndex: UInt32
 }
