@@ -213,8 +213,9 @@ final class Grid {
   func needsItemsPlacement() -> Bool { return m_needsItemsPlacement }
 
   func setupGridForMasonryLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME(248472): See if we can resize grid instead of clearing it here: https://bugs.webkit.org/show_bug.cgi?id=248472
+    grid.removeAll()
+    m_gridItemArea.removeAll()
   }
 
   private func ensureStorageForRow(row: UInt32) {
