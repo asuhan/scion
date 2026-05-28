@@ -162,8 +162,12 @@ class LayoutStateWrapper {
   }
 
   func hasBoxGeometry(layoutBox: BoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if m_type == .Primary {
+      return layoutBox.m_cachedGeometryForPrimaryLayoutState != nil
+    }
+
+    return m_layoutBoxToBoxGeometry[ObjectIdentifier(layoutBox)] != nil
   }
 
   private enum QuirksMode {
