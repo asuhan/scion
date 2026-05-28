@@ -171,16 +171,15 @@ class LayoutStateWrapper {
   }
 
   func inQuirksMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_quirksMode == .Yes
   }
 
   func inStandardsMode() -> Bool {
-    if self.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return wk_interop.LayoutState_inStandardsMode(self.p!)
     }
-    return wk_interop.LayoutState_inStandardsMode(self.p)
+    return m_quirksMode == .No
   }
 
   func securityOrigin() -> SecurityOriginWrapper {
