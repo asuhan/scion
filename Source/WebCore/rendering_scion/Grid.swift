@@ -219,8 +219,9 @@ final class Grid {
   }
 
   private func ensureStorageForRow(row: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    while grid[Int(row)].count < grid[0].count {
+      grid[Int(row)].append(GridCell())
+    }
   }
 
   let orderIterator: OrderIterator
