@@ -122,6 +122,8 @@ public:
 
     bool isRenderTableSection() const;
 
+    bool isRenderTextControl() const;
+
     bool isRenderVideo() const;
 
     bool isRenderViewTransitionCapture() const;

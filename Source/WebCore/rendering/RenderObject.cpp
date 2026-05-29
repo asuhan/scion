@@ -3429,6 +3429,12 @@ bool RenderObject::isRenderTableSection() const
     return type() == Type::TableSection;
 }
 
+bool RenderObject::isRenderTextControl() const
+{
+    if (m_scion) { return m_scion->isRenderTextControl(); }
+    return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsTextControl);
+}
+
 bool RenderObject::isRenderVideo() const
 {
     if (m_scion) { return m_scion->isRenderVideo(); }

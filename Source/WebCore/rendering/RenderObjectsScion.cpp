@@ -100,6 +100,8 @@ extern "C" bool RenderObjectScion_isRenderTableCaption(const void*);
 
 extern "C" bool RenderObjectScion_isRenderTableSection(const void*);
 
+extern "C" bool RenderObjectScion_isRenderTextControl(const void*);
+
 extern "C" bool RenderObjectScion_isRenderVideo(const void*);
 
 extern "C" bool RenderObjectScion_isRenderViewTransitionCapture(const void*);
@@ -777,6 +779,8 @@ bool RenderObjectScion::isRenderTableCol() const { return RenderObjectScion_isRe
 bool RenderObjectScion::isRenderTableCaption() const { return RenderObjectScion_isRenderTableCaption(m_handle); }
 
 bool RenderObjectScion::isRenderTableSection() const { return RenderObjectScion_isRenderTableSection(m_handle); }
+
+bool RenderObjectScion::isRenderTextControl() const { return RenderObjectScion_isRenderTextControl(m_handle); }
 
 bool RenderObjectScion::isRenderVideo() const { return RenderObjectScion_isRenderVideo(m_handle); }
 

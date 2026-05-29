@@ -1320,6 +1320,12 @@ func RenderObjectScion_isRenderTableSection(_ objectRaw: UnsafeRawPointer) -> Bo
   return object.isRenderTableSection()
 }
 
+@_cdecl("RenderObjectScion_isRenderTextControl")
+func RenderObjectScion_isRenderTextControl(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTextControl()
+}
+
 @_cdecl("RenderObjectScion_isRenderVideo")
 func RenderObjectScion_isRenderVideo(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

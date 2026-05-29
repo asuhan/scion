@@ -559,11 +559,7 @@ public:
     bool isRenderTableCol() const;
     bool isRenderTableCaption() const;
     bool isRenderTableSection() const;
-    bool isRenderTextControl() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsTextControl);
-    }
+    bool isRenderTextControl() const;
     bool isRenderTextControlMultiLine() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
