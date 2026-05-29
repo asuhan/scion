@@ -32,7 +32,9 @@ extension LayoutIntegration {
       var rootBox = self.rootRenderer.layoutBox()
       if rootBox == nil {
         rootBox = ElementBoxWrapper()
-        rootBox!.p = wk_interop.BoxTree_handleNullRootBox(rootRenderer.id())
+        rootBox!.p = wk_interop.BoxTree_handleNullRootBox(
+          rootRenderer.isNativeImpl()
+            ? (rootRenderer as! RenderBlockFlowWrapper).getWk() : rootRenderer.id())
       }
 
       if rootRenderer is RenderBlockFlowWrapper {
