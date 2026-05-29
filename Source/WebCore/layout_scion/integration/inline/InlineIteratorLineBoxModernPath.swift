@@ -27,8 +27,8 @@ extension InlineIterator {
 
   class LineBoxIteratorModernPath {
     init(inlineContent: LayoutIntegration.InlineContent, lineIndex: UInt64) {
-      self.inlineContent = inlineContent
-      self.lineIndex = lineIndex
+      m_inlineContent = inlineContent
+      m_lineIndex = lineIndex
     }
 
     func contentLogicalTop() -> Float32 { return line().enclosingContentLogicalTop() }
@@ -52,17 +52,19 @@ extension InlineIterator {
     }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
-      return inlineContent!.formattingContextRoot()
+      return m_inlineContent!.formattingContextRoot()
     }
+
+    func lineIndex() -> UInt64 { return m_lineIndex }
 
     private func lines() -> ArraySlice<InlineDisplay.Line> {
-      return inlineContent!.displayContent.lines[...]
+      return m_inlineContent!.displayContent.lines[...]
     }
 
-    private func line() -> InlineDisplay.Line { return lines()[Int(lineIndex)] }
+    private func line() -> InlineDisplay.Line { return lines()[Int(m_lineIndex)] }
 
-    private let inlineContent: LayoutIntegration.InlineContent?
-    let lineIndex: UInt64
+    private let m_inlineContent: LayoutIntegration.InlineContent?
+    private let m_lineIndex: UInt64
   }
 
 }

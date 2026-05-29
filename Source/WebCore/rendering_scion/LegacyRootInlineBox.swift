@@ -81,8 +81,15 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     return super.logicalTopVisualOverflow(lineTop: lineTop)
   }
 
+  func logicalBottomVisualOverflow() -> LayoutUnit {
+    return super.logicalBottomVisualOverflow(lineBottom: lineBottom)
+  }
+
   override final func isRootInlineBox() -> Bool { return true }
 
   var lineTop = LayoutUnit()
   var lineBottom = LayoutUnit()
+
+  var lineBoxTop = LayoutUnit()
+  var lineBoxBottom = LayoutUnit()
 }

@@ -25,28 +25,82 @@
 
 class InlineIterator {
   struct LineBox {
+    enum PathVariant {
+      case modern(LineBoxIteratorModernPath)
+      case legacy(LineBoxIteratorLegacyPath)
+    }
+
     init(path: LineBoxIteratorModernPath) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    func logicalTop() -> Float32 { return m_path.logicalTop() }
+    func logicalTop() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.logicalTop()
+      case .legacy(let path):
+        return path.logicalTop()
+      }
+    }
 
-    func logicalBottom() -> Float32 { return m_path.logicalBottom() }
+    func logicalBottom() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.logicalBottom()
+      case .legacy(let path):
+        return path.logicalBottom()
+      }
+    }
 
     func logicalHeight() -> Float32 { return logicalBottom() - logicalTop() }
 
-    func contentLogicalTop() -> Float32 { return m_path.contentLogicalTop() }
+    func contentLogicalTop() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.contentLogicalTop()
+      case .legacy(let path):
+        return path.contentLogicalTop()
+      }
+    }
 
-    func contentLogicalBottom() -> Float32 { return m_path.contentLogicalBottom() }
+    func contentLogicalBottom() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.contentLogicalBottom()
+      case .legacy(let path):
+        return path.contentLogicalBottom()
+      }
+    }
 
-    func contentLogicalLeft() -> Float32 { return m_path.contentLogicalLeft() }
+    func contentLogicalLeft() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.contentLogicalLeft()
+      case .legacy(let path):
+        return path.contentLogicalLeft()
+      }
+    }
 
     func contentLogicalHeight() -> Float32 { return contentLogicalBottom() - contentLogicalTop() }
 
-    func inkOverflowLogicalTop() -> Float32 { return m_path.inkOverflowLogicalTop() }
+    func inkOverflowLogicalTop() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.inkOverflowLogicalTop()
+      case .legacy(let path):
+        return path.inkOverflowLogicalTop()
+      }
+    }
 
-    func inkOverflowLogicalBottom() -> Float32 { return m_path.inkOverflowLogicalBottom() }
+    func inkOverflowLogicalBottom() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.inkOverflowLogicalBottom()
+      case .legacy(let path):
+        return path.inkOverflowLogicalBottom()
+      }
+    }
 
     func style() -> RenderStyleWrapper {
       return isFirst() ? formattingContextRoot().firstLineStyle() : formattingContextRoot().style()
@@ -72,7 +126,14 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
-    func formattingContextRoot() -> RenderBlockFlowWrapper { return m_path.formattingContextRoot() }
+    func formattingContextRoot() -> RenderBlockFlowWrapper {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.formattingContextRoot()
+      case .legacy(let path):
+        return path.formattingContextRoot()
+      }
+    }
 
     func containingFragment() -> RenderFragmentContainerWrapper? {
       // TODO(asuhan): implement this
@@ -104,9 +165,16 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
-    func lineIndex() -> UInt64 { return m_path.lineIndex }
+    func lineIndex() -> UInt64 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.lineIndex()
+      case .legacy(let path):
+        return path.lineIndex()
+      }
+    }
 
-    private let m_path: LineBoxIteratorModernPath
+    private let m_pathVariant: PathVariant
   }
 
   class LineBoxIterator: IteratorProtocol {
