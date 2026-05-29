@@ -57,6 +57,21 @@ extension InlineIterator {
 
     func lineIndex() -> UInt64 { return m_lineIndex }
 
+    func traversePrevious() {
+      assert(!atEnd())
+
+      if m_lineIndex == 0 {
+        setAtEnd()
+        return
+      }
+
+      m_lineIndex -= 1
+    }
+
+    private func atEnd() -> Bool { return m_inlineContent == nil || m_lineIndex == lines().count }
+
+    private func setAtEnd() { m_lineIndex = UInt64(lines().count) }
+
     private func lines() -> ArraySlice<InlineDisplay.Line> {
       return m_inlineContent!.displayContent.lines[...]
     }
@@ -64,7 +79,7 @@ extension InlineIterator {
     private func line() -> InlineDisplay.Line { return lines()[Int(m_lineIndex)] }
 
     private let m_inlineContent: LayoutIntegration.InlineContent?
-    private let m_lineIndex: UInt64
+    private var m_lineIndex: UInt64
   }
 
 }

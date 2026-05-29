@@ -158,8 +158,7 @@ class InlineIterator {
     }
 
     func previous() -> LineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return LineBoxIterator(self).traversePrevious()
     }
 
     func lineIndex() -> UInt64 {
@@ -171,14 +170,28 @@ class InlineIterator {
       }
     }
 
-    private let m_pathVariant: PathVariant
+    let m_pathVariant: PathVariant
   }
 
   class LineBoxIterator: IteratorProtocol {
+    init() { m_lineBox = LineBox(path: .legacy(LineBoxIteratorLegacyPath(nil))) }
+
+    init(_ lineBox: LineBox) { m_lineBox = lineBox }
+
     @discardableResult
     func traverseNext() -> LineBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    func traversePrevious() -> LineBoxIterator {
+      switch m_lineBox.m_pathVariant {
+      case .modern(let path):
+        path.traversePrevious()
+      case .legacy(let path):
+        path.traversePrevious()
+      }
+      return self
     }
 
     func next() -> LineBox? {
@@ -195,6 +208,8 @@ class InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let m_lineBox: LineBox
   }
 
   static func firstLineBoxFor(flow: RenderBlockFlowWrapper) -> LineBoxIterator {

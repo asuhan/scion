@@ -24,7 +24,7 @@
  */
 
 class LineBoxIteratorLegacyPath {
-  init(_ rootInlineBox: LegacyRootInlineBox) { m_rootInlineBox = rootInlineBox }
+  init(_ rootInlineBox: LegacyRootInlineBox?) { m_rootInlineBox = rootInlineBox }
 
   func contentLogicalTop() -> Float32 { return m_rootInlineBox!.lineTop.toFloat() }
 
@@ -48,5 +48,7 @@ class LineBoxIteratorLegacyPath {
 
   func lineIndex() -> UInt64 { return formattingContextRoot().legacyRootBox() != nil ? 1 : 0 }
 
-  private let m_rootInlineBox: LegacyRootInlineBox?
+  func traversePrevious() { m_rootInlineBox = m_rootInlineBox?.prevRootBox() }
+
+  private var m_rootInlineBox: LegacyRootInlineBox?
 }
