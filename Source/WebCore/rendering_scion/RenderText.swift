@@ -368,8 +368,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func text() -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_text!
   }
 
   func dirtyLegacyLineBoxes(fullLayout: Bool) {
