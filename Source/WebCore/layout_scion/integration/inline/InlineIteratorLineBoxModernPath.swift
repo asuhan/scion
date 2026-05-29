@@ -55,6 +55,8 @@ extension InlineIterator {
       return m_inlineContent!.formattingContextRoot()
     }
 
+    func isFirstAfterPageBreak() -> Bool { return line().isFirstAfterPageBreak }
+
     func lineIndex() -> UInt64 { return m_lineIndex }
 
     func traversePrevious() {

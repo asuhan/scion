@@ -140,8 +140,12 @@ class InlineIterator {
     func isFirst() -> Bool { return !previous().bool() }
 
     func isFirstAfterPageBreak() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.isFirstAfterPageBreak()
+      case .legacy(let path):
+        return path.isFirstAfterPageBreak()
+      }
     }
 
     func firstLeafBox() -> LeafBoxIterator {

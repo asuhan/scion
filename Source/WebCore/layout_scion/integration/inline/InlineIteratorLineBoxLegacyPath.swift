@@ -46,6 +46,8 @@ class LineBoxIteratorLegacyPath {
 
   func formattingContextRoot() -> RenderBlockFlowWrapper { m_rootInlineBox!.blockFlow() }
 
+  func isFirstAfterPageBreak() -> Bool { return false }
+
   func lineIndex() -> UInt64 { return formattingContextRoot().legacyRootBox() != nil ? 1 : 0 }
 
   func traversePrevious() { m_rootInlineBox = m_rootInlineBox?.prevRootBox() }
