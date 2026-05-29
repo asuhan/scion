@@ -1440,6 +1440,7 @@ uint32_t Node_computeNodeIndex(const void*);
 void* Node_document(const void*);
 bool Node_isDescendantOf(const void*, const void*);
 void* Node_renderer(const void*);
+void Node_setRenderer(void*, void*);
 void* Node_renderBox(const void*);
 const void* BoxTree_handleNullRootBox(void*);
 void BoxTree_buildTreeForInlineContent(void*);

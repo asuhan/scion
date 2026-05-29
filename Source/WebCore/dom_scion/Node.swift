@@ -144,8 +144,8 @@ class NodeWrapper {
   }
 
   func setRenderer(renderer: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(renderer == nil)
+    wk_interop.Node_setRenderer(p, nil)
   }
 
   // Use these two methods with caution.
