@@ -137,10 +137,7 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
-    func isFirst() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isFirst() -> Bool { return !previous().bool() }
 
     func isFirstAfterPageBreak() -> Bool {
       // TODO(asuhan): implement this
