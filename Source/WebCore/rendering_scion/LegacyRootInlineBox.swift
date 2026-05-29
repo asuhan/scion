@@ -39,8 +39,12 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
   }
 
   override func adjustPosition(_ dx: Float32, _ dy: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.adjustPosition(dx, dy)
+    let blockDirectionDelta = LayoutUnit(value: isHorizontal() ? dy : dx)  // The block direction delta is a LayoutUnit.
+    lineTop += blockDirectionDelta
+    lineBottom += blockDirectionDelta
+    lineBoxTop += blockDirectionDelta
+    lineBoxBottom += blockDirectionDelta
   }
 
   func selectionTop() -> LayoutUnit {
