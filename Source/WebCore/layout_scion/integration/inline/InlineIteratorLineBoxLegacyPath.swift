@@ -50,7 +50,9 @@ class LineBoxIteratorLegacyPath {
 
   func lineIndex() -> UInt64 { return formattingContextRoot().legacyRootBox() != nil ? 1 : 0 }
 
-  func traversePrevious() { m_rootInlineBox = m_rootInlineBox?.prevRootBox() }
+  func traverseNext() { m_rootInlineBox = m_rootInlineBox!.nextRootBox() }
+
+  func traversePrevious() { m_rootInlineBox = m_rootInlineBox!.prevRootBox() }
 
   private var m_rootInlineBox: LegacyRootInlineBox?
 }

@@ -154,8 +154,7 @@ class InlineIterator {
     }
 
     func next() -> LineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return LineBoxIterator(self).traverseNext()
     }
 
     func previous() -> LineBoxIterator {
@@ -181,8 +180,13 @@ class InlineIterator {
 
     @discardableResult
     func traverseNext() -> LineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_lineBox.m_pathVariant {
+      case .modern(let path):
+        path.traverseNext()
+      case .legacy(let path):
+        path.traverseNext()
+      }
+      return self
     }
 
     func traversePrevious() -> LineBoxIterator {

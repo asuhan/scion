@@ -59,6 +59,12 @@ extension InlineIterator {
 
     func lineIndex() -> UInt64 { return m_lineIndex }
 
+    func traverseNext() {
+      assert(!atEnd())
+
+      m_lineIndex += 1
+    }
+
     func traversePrevious() {
       assert(!atEnd())
 
