@@ -98,6 +98,8 @@ public:
 
     bool isRenderFileUploadControl() const;
 
+    bool isRenderFrameSet() const;
+
     bool isRenderListItem() const;
 
     bool isRenderListMarker() const;

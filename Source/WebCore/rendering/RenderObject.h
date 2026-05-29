@@ -492,11 +492,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::Frame;
     }
-    bool isRenderFrameSet() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::FrameSet;
-    }
+    bool isRenderFrameSet() const;
     virtual bool isImage() const { return false; }
     virtual bool isInlineBlockOrInlineTable() const { return false; }
     bool isRenderListBox() const

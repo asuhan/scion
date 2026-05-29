@@ -76,6 +76,8 @@ extern "C" bool RenderObjectScion_isFieldset(const void*);
 
 extern "C" bool RenderObjectScion_isRenderFileUploadControl(const void*);
 
+extern "C" bool RenderObjectScion_isRenderFrameSet(const void*);
+
 extern "C" bool RenderObjectScion_isRenderListItem(const void*);
 
 extern "C" bool RenderObjectScion_isRenderListMarker(const void*);
@@ -751,6 +753,8 @@ bool RenderObjectScion::isRenderEmbeddedObject() const { return RenderObjectScio
 bool RenderObjectScion::isFieldset() const { return RenderObjectScion_isFieldset(m_handle); }
 
 bool RenderObjectScion::isRenderFileUploadControl() const { return RenderObjectScion_isRenderFileUploadControl(m_handle); }
+
+bool RenderObjectScion::isRenderFrameSet() const { return RenderObjectScion_isRenderFrameSet(m_handle); }
 
 bool RenderObjectScion::isRenderListItem() const { return RenderObjectScion_isRenderListItem(m_handle); }
 

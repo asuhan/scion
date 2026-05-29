@@ -431,6 +431,12 @@ bool RenderObject::isRenderFileUploadControl() const
     return type() == Type::FileUploadControl;
 }
 
+bool RenderObject::isRenderFrameSet() const
+{
+    if (m_scion) { return m_scion->isRenderFrameSet(); }
+    return type() == Type::FrameSet;
+}
+
 bool RenderObject::isHTMLMarquee() const
 {
     if (m_scion) { return m_scion->isHTMLMarquee(); }

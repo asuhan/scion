@@ -1248,6 +1248,12 @@ func RenderObjectScion_isRenderFileUploadControl(_ objectRaw: UnsafeRawPointer) 
   return object.isRenderFileUploadControl()
 }
 
+@_cdecl("RenderObjectScion_isRenderFrameSet")
+func RenderObjectScion_isRenderFrameSet(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderFrameSet()
+}
+
 @_cdecl("RenderObjectScion_isRenderListItem")
 func RenderObjectScion_isRenderListItem(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
