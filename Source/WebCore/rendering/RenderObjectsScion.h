@@ -80,6 +80,8 @@ public:
 
     bool isRenderElement() const;
 
+    bool isRenderReplaced() const;
+
     bool isRenderBoxModelObject() const;
 
     bool isRenderBlock() const;

@@ -459,11 +459,7 @@ public:
     bool isPseudoElement() const;
 
     WEBCORE_EXPORT bool isRenderElement() const;
-    bool isRenderReplaced() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced;
-    }
+    bool isRenderReplaced() const;
     bool isRenderBoxModelObject() const;
     bool isRenderBlock() const;
     WEBCORE_EXPORT bool isRenderBlockFlow() const;

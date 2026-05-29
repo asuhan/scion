@@ -58,6 +58,8 @@ extern "C" bool RenderObjectScion_isPseudoElement(const void*);
 
 extern "C" bool RenderObjectScion_isRenderElement(const void*);
 
+extern "C" bool RenderObjectScion_isRenderReplaced(const void*);
+
 extern "C" bool RenderObjectScion_isRenderBoxModelObject(const void*);
 
 extern "C" bool RenderObjectScion_isRenderBlock(const void*);
@@ -741,6 +743,8 @@ RenderFragmentedFlow* RenderObjectScion::enclosingFragmentedFlow() const { retur
 bool RenderObjectScion::isPseudoElement() const { return RenderObjectScion_isPseudoElement(m_handle); }
 
 bool RenderObjectScion::isRenderElement() const { return RenderObjectScion_isRenderElement(m_handle); }
+
+bool RenderObjectScion::isRenderReplaced() const { return RenderObjectScion_isRenderReplaced(m_handle); }
 
 bool RenderObjectScion::isRenderBoxModelObject() const { return RenderObjectScion_isRenderBoxModelObject(m_handle); }
 

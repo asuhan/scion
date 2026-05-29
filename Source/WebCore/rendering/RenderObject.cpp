@@ -3312,6 +3312,12 @@ bool RenderObject::isRenderElement() const
     return !isRenderText();
 }
 
+bool RenderObject::isRenderReplaced() const
+{
+    if (m_scion) { return m_scion->isRenderReplaced(); }
+    return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced;
+}
+
 bool RenderObject::isRenderBoxModelObject() const
 {
     if (m_scion) { return m_scion->isRenderBoxModelObject(); }
