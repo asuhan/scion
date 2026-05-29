@@ -25,10 +25,7 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
 
   func renderer() -> RenderTextWrapper { return rendererObject() as! RenderTextWrapper }
 
-  func nextTextBox() -> LegacyInlineTextBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func nextTextBox() -> LegacyInlineTextBox? { return m_nextTextBox }
 
   func hasTextContent() -> Bool { return m_len != 0 }
 
@@ -102,6 +99,8 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
   }
 
   override final func isInlineTextBox() -> Bool { return true }
+
+  private let m_nextTextBox: LegacyInlineTextBox? = nil  // The next box that also uses our RenderObject
 
   private let m_start: UInt32 = 0
   private let m_len: UInt32 = 0
