@@ -33,8 +33,10 @@ struct BidiIsolatedRun {
 // optionally notifying a BidiResolver every time it steps into/out of a RenderInline.
 class LegacyInlineIterator {
   init(root: RenderElementWrapper?, o: RenderObjectWrapper?, p: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_root = root
+    m_renderer = o
+    m_pos = p
+    m_refersToEndOfPreviousNode = false
   }
 
   func renderer() -> RenderObjectWrapper? {
@@ -56,4 +58,16 @@ class LegacyInlineIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_root: RenderElementWrapper?
+  private let m_renderer: RenderObjectWrapper?
+
+  private let m_pos: UInt32
+
+  // There are a couple places where we want to decrement an LegacyInlineIterator.
+  // Usually this take the form of decrementing m_pos; however, m_pos might be 0.
+  // However, we shouldn't ever need to decrement an LegacyInlineIterator more than
+  // once, so rather than implementing a decrement() function which traverses
+  // nodes, we can simply keep track of this state and handle it.
+  private let m_refersToEndOfPreviousNode: Bool
 }
