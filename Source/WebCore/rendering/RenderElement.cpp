@@ -255,6 +255,18 @@ bool RenderElement::canContainAbsolutelyPositionedObjects() const
         || shouldApplyLayoutOrPaintContainment();
 }
 
+bool RenderElement::shouldApplyLayoutContainment() const
+{
+    if (m_scion) { return m_scion->shouldApplyLayoutContainment(); }
+    return shouldApplyLayoutOrPaintContainment(style().containsLayout() || style().contentVisibility() != ContentVisibility::Visible);
+}
+
+bool RenderElement::shouldApplySizeContainment() const
+{
+    if (m_scion) { return m_scion->shouldApplySizeContainment(); }
+    return WebCore::isSkippedContentRoot(style(), element()) || shouldApplySizeOrStyleContainment(style().containsSize());
+}
+
 bool RenderElement::isContentDataSupported(const ContentData& contentData)
 {
     // Minimal support for content properties replacing an entire element.

@@ -2144,6 +2144,18 @@ func RenderElementScion_canContainAbsolutelyPositionedObjects(_ elementRaw: Unsa
   return element.canContainAbsolutelyPositionedObjects()
 }
 
+@_cdecl("RenderElementScion_shouldApplyLayoutContainment")
+func RenderElementScion_shouldApplyLayoutContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.shouldApplyLayoutContainment()
+}
+
+@_cdecl("RenderElementScion_shouldApplySizeContainment")
+func RenderElementScion_shouldApplySizeContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.shouldApplySizeContainment()
+}
+
 @_cdecl("RenderElementScion_shouldApplyPaintContainment")
 func RenderElementScion_shouldApplyPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

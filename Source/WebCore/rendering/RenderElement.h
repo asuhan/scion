@@ -117,8 +117,8 @@ public:
     bool canContainAbsolutelyPositionedObjects() const;
     bool canEstablishContainingBlockWithTransform() const;
 
-    inline bool shouldApplyLayoutContainment() const;
-    inline bool shouldApplySizeContainment() const;
+    bool shouldApplyLayoutContainment() const;
+    bool shouldApplySizeContainment() const;
     inline bool shouldApplyInlineSizeContainment() const;
     inline bool shouldApplySizeOrInlineSizeContainment() const;
     inline bool shouldApplyStyleContainment() const;

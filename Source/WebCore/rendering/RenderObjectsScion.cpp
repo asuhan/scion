@@ -362,6 +362,10 @@ extern "C" bool RenderElementScion_canContainFixedPositionObjects(const void*);
 
 extern "C" bool RenderElementScion_canContainAbsolutelyPositionedObjects(const void*);
 
+extern "C" bool RenderElementScion_shouldApplyLayoutContainment(const void*);
+
+extern "C" bool RenderElementScion_shouldApplySizeContainment(const void*);
+
 extern "C" bool RenderElementScion_shouldApplyPaintContainment(const void*);
 
 extern "C" void RenderElementScion_didAttachChild(void*, void*);
@@ -1172,6 +1176,16 @@ bool RenderElementScion::canContainFixedPositionObjects() const
 bool RenderElementScion::canContainAbsolutelyPositionedObjects() const
 {
     return RenderElementScion_canContainAbsolutelyPositionedObjects(m_handle);
+}
+
+bool RenderElementScion::shouldApplyLayoutContainment() const
+{
+    return RenderElementScion_shouldApplyLayoutContainment(m_handle);
+}
+
+bool RenderElementScion::shouldApplySizeContainment() const
+{
+    return RenderElementScion_shouldApplySizeContainment(m_handle);
 }
 
 bool RenderElementScion::shouldApplyPaintContainment() const

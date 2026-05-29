@@ -363,6 +363,10 @@ public:
 
     bool canContainAbsolutelyPositionedObjects() const;
 
+    bool shouldApplyLayoutContainment() const;
+
+    bool shouldApplySizeContainment() const;
+
     bool shouldApplyPaintContainment() const;
 
     void didAttachChild(RenderObject&);

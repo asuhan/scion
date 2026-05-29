@@ -82,22 +82,10 @@ inline bool RenderElement::shouldApplyInlineSizeContainment() const
     return WebCore::isSkippedContentRoot(style(), element()) || shouldApplySizeOrStyleContainment(style().containsInlineSize());
 }
 
-inline bool RenderElement::shouldApplyLayoutContainment() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return shouldApplyLayoutOrPaintContainment(style().containsLayout() || style().contentVisibility() != ContentVisibility::Visible);
-}
-
 inline bool RenderElement::shouldApplyLayoutOrPaintContainment(bool containsAccordingToStyle) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox()) && style().display() != DisplayType::RubyAnnotation && (!isTablePart() || isRenderBlockFlow());
-}
-
-inline bool RenderElement::shouldApplySizeContainment() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return WebCore::isSkippedContentRoot(style(), element()) || shouldApplySizeOrStyleContainment(style().containsSize());
 }
 
 inline bool RenderElement::shouldApplySizeOrInlineSizeContainment() const
