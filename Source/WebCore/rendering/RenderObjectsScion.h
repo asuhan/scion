@@ -393,6 +393,8 @@ public:
 
     bool hasBlendMode() const;
 
+    bool hasContinuationChainNode() const;
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);

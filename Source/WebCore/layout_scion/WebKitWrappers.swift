@@ -2255,6 +2255,12 @@ func RenderElementScion_hasBlendMode(_ elementRaw: UnsafeRawPointer) -> Bool {
   return element.hasBlendMode()
 }
 
+@_cdecl("RenderElementScion_hasContinuationChainNode")
+func RenderElementScion_hasContinuationChainNode(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasContinuationChainNode()
+}
+
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   assert(!wk_interop.RenderObject_isRenderView(p))
   if wk_interop.RenderObject_isRenderBlockFlow(p) {

@@ -392,6 +392,8 @@ extern "C" bool RenderElementScion_hasBackdropFilter(const void*);
 
 extern "C" bool RenderElementScion_hasBlendMode(const void*);
 
+extern "C" bool RenderElementScion_hasContinuationChainNode(const void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
@@ -1273,6 +1275,11 @@ bool RenderElementScion::hasBackdropFilter() const
 bool RenderElementScion::hasBlendMode() const
 {
     return RenderElementScion_hasBlendMode(m_handle);
+}
+
+bool RenderElementScion::hasContinuationChainNode() const
+{
+    return RenderElementScion_hasContinuationChainNode(m_handle);
 }
 
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)

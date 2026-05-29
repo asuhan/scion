@@ -294,11 +294,7 @@ public:
     // the child.
     virtual void updateAnonymousChildStyle(RenderStyle&) const { };
 
-    bool hasContinuationChainNode() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_hasContinuationChainNode;
-    }
+    bool hasContinuationChainNode() const;
     bool isContinuation() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

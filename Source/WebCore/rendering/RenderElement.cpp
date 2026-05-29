@@ -2553,6 +2553,12 @@ void RenderElement::resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants
         child->resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(fragmentedFlow);
 }
 
+bool RenderElement::hasContinuationChainNode() const
+{
+    if (m_scion) { return m_scion->hasContinuationChainNode(); }
+    return m_hasContinuationChainNode;
+}
+
 ReferencedSVGResources& RenderElement::ensureReferencedSVGResources()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
