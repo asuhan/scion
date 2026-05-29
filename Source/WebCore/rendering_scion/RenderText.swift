@@ -377,10 +377,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func characterAt(_ i: UInt32) -> UChar {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func characterAt(_ i: UInt32) -> UChar { return i >= length() ? 0 : text()[i] }
 
   private final func length() -> UInt32 { return text().length() }
 

@@ -48,9 +48,11 @@ class LegacyInlineIterator {
 
   func atEnd() -> Bool { return m_renderer == nil }
 
-  func current() -> UChar {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func current() -> UChar { return characterAt(m_pos) }
+
+  private func characterAt(_ index: UInt32) -> UChar {
+    guard let textRenderer = m_renderer as? RenderTextWrapper else { return 0 }
+    return textRenderer.characterAt(index)
   }
 
   private let m_root: RenderElementWrapper?
