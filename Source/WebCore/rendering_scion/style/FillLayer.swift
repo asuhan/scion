@@ -46,10 +46,8 @@ class FillLayerWrapper {
     return StyleImage(raw!)
   }
 
-  func protectedImage() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  // TODO(asuhan): remove this, it's not needed in Swift
+  func protectedImage() -> StyleImage? { return image() }
 
   var xPosition: LengthWrapper {
     // TODO(asuhan): implement this
