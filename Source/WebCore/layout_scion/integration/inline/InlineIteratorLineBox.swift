@@ -44,15 +44,9 @@ class InlineIterator {
 
     func contentLogicalHeight() -> Float32 { return contentLogicalBottom() - contentLogicalTop() }
 
-    func inkOverflowLogicalTop() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func inkOverflowLogicalTop() -> Float32 { return m_path.inkOverflowLogicalTop() }
 
-    func inkOverflowLogicalBottom() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func inkOverflowLogicalBottom() -> Float32 { return m_path.inkOverflowLogicalBottom() }
 
     func style() -> RenderStyleWrapper {
       // TODO(asuhan): implement this

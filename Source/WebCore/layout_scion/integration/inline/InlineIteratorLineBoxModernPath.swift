@@ -39,6 +39,14 @@ extension InlineIterator {
 
     func logicalBottom() -> Float32 { return line().lineBoxLogicalRect.maxY() }
 
+    func inkOverflowLogicalTop() -> Float32 {
+      return line().isHorizontal ? line().inkOverflow.y() : line().inkOverflow.x()
+    }
+
+    func inkOverflowLogicalBottom() -> Float32 {
+      return line().isHorizontal ? line().inkOverflow.maxY() : line().inkOverflow.maxX()
+    }
+
     func contentLogicalLeft() -> Float32 {
       return line().lineBoxLeft() + line().contentLogicalLeftIgnoringInlineDirection
     }
