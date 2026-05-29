@@ -1696,8 +1696,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func maskBorder() -> NinePieceImage {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return NinePieceImage(wk_interop.RenderStyle_maskBorder(p!)!)
   }
 
   func borderCollapse() -> BorderCollapse {

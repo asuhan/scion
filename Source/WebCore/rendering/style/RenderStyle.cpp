@@ -276,6 +276,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_maskLayers(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->maskLayers();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_maskBorder(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->maskBorder();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_borderCollapse(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->borderCollapse());
