@@ -34,8 +34,13 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   }
 
   override func adjustPosition(_ dx: Float32, _ dy: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.adjustPosition(dx, dy)
+    var child = firstChild()
+    while child != nil {
+      child!.adjustPosition(dx, dy)
+      child = child!.nextOnLine()
+    }
+    overflow?.move(LayoutUnit(value: dx), LayoutUnit(value: dy))
   }
 
   override func paint(

@@ -40,6 +40,11 @@ class RenderOverflow {
   func layoutOverflowRect() -> LayoutRectWrapper { return layoutOverflow }
   func visualOverflowRect() -> LayoutRectWrapper { return visualOverflow }
 
+  func move(_ dx: LayoutUnit, _ dy: LayoutUnit) {
+    layoutOverflow.move(dx: dx, dy: dy)
+    visualOverflow.move(dx: dx, dy: dy)
+  }
+
   func addLayoutOverflow(rect: LayoutRectWrapper) {
     let maxX = max(rect.maxX(), layoutOverflow.maxX())
     let maxY = max(rect.maxY(), layoutOverflow.maxY())
