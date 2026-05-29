@@ -62,7 +62,7 @@ extension InlineIterator {
     private func line() -> InlineDisplay.Line { return lines()[Int(lineIndex)] }
 
     private let inlineContent: LayoutIntegration.InlineContent?
-    private let lineIndex: UInt64
+    let lineIndex: UInt64
   }
 
 }

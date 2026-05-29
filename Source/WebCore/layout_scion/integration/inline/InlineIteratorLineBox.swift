@@ -104,10 +104,7 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
-    func lineIndex() -> UInt64 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func lineIndex() -> UInt64 { return m_path.lineIndex }
 
     private let m_path: LineBoxIteratorModernPath
   }
