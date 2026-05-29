@@ -96,10 +96,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     }
   }
 
-  override func selectionState() -> RenderObjectWrapper.HighlightState {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func selectionState() -> RenderObjectWrapper.HighlightState { return .None }
 
   func visualOverflowRect(lineTop: LayoutUnit, lineBottom: LayoutUnit) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
