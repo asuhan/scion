@@ -382,8 +382,12 @@ class RenderTextWrapper: RenderObjectWrapper {
   private final func length() -> UInt32 { return text().length() }
 
   private func maxLogicalWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if preferredLogicalWidthsDirty() || maxWidth == nil {
+      computePreferredLogicalWidths(0, !preferredLogicalWidthsDirty())
+    }
+
+    return maxWidth!
   }
 
   struct Widths {
