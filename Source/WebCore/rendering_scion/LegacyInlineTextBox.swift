@@ -23,10 +23,7 @@
 class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
   init(_ renderer: RenderTextWrapper) { super.init(renderer) }
 
-  func renderer() -> RenderTextWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func renderer() -> RenderTextWrapper { return rendererObject() as! RenderTextWrapper }
 
   func nextTextBox() -> LegacyInlineTextBox? {
     // TODO(asuhan): implement this
