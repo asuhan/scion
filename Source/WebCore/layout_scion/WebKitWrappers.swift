@@ -2300,7 +2300,8 @@ func RenderElementScion_detachRendererInternal(
 {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   let renderer = createRenderObjectWrapperOrNative(rendererRaw)
-  return element.detachRendererInternal(renderer: renderer)?.id()
+  guard let detached = element.detachRendererInternal(renderer: renderer) else { return nil }
+  return detached.isNativeImpl() ? (detached as! RenderBlockFlowWrapper).getWk() : detached.id()
 }
 
 @_cdecl("RenderElementScion_backdropRenderer")
