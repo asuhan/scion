@@ -51,6 +51,10 @@ extension InlineIterator {
       return line().lineBoxLeft() + line().contentLogicalLeftIgnoringInlineDirection
     }
 
+    func formattingContextRoot() -> RenderBlockFlowWrapper {
+      return inlineContent!.formattingContextRoot()
+    }
+
     private func lines() -> ArraySlice<InlineDisplay.Line> {
       return inlineContent!.displayContent.lines[...]
     }

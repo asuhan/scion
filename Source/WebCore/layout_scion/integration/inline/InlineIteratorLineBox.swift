@@ -49,8 +49,7 @@ class InlineIterator {
     func inkOverflowLogicalBottom() -> Float32 { return m_path.inkOverflowLogicalBottom() }
 
     func style() -> RenderStyleWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return isFirst() ? formattingContextRoot().firstLineStyle() : formattingContextRoot().style()
     }
 
     enum AdjustedForSelection {
@@ -73,10 +72,7 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
-    func formattingContextRoot() -> RenderBlockFlowWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func formattingContextRoot() -> RenderBlockFlowWrapper { return m_path.formattingContextRoot() }
 
     func containingFragment() -> RenderFragmentContainerWrapper? {
       // TODO(asuhan): implement this
