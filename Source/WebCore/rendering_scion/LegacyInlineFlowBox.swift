@@ -26,10 +26,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     return rendererObject() as! RenderBoxModelObjectWrapper
   }
 
-  func nextLineBox() -> LegacyInlineFlowBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func nextLineBox() -> LegacyInlineFlowBox? { return m_nextLineBox }
 
   func firstChild() -> LegacyInlineBox? {
     // TODO(asuhan): implement this
@@ -132,4 +129,6 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   override final func isInlineFlowBox() -> Bool { return true }
 
   private let overflow: RenderOverflow? = nil
+
+  private let m_nextLineBox: LegacyInlineFlowBox? = nil  // The next box that also uses our RenderObject
 }
