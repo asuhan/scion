@@ -467,7 +467,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       {
         return Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
       }
-      return createRenderObjectWrapper(raw) as! RenderElementWrapper?
+      return createRenderObjectWrapperOrNative(raw) as! RenderElementWrapper?
     }
     return m_parent
   }
