@@ -76,7 +76,7 @@ extension InlineIterator {
       m_lineIndex -= 1
     }
 
-    private func atEnd() -> Bool { return m_inlineContent == nil || m_lineIndex == lines().count }
+    func atEnd() -> Bool { return m_inlineContent == nil || m_lineIndex == lines().count }
 
     private func setAtEnd() { m_lineIndex = UInt64(lines().count) }
 

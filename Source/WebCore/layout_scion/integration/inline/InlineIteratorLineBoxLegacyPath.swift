@@ -54,5 +54,7 @@ class LineBoxIteratorLegacyPath {
 
   func traversePrevious() { m_rootInlineBox = m_rootInlineBox!.prevRootBox() }
 
+  func atEnd() -> Bool { return m_rootInlineBox == nil }
+
   private var m_rootInlineBox: LegacyRootInlineBox?
 }

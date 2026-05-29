@@ -200,18 +200,22 @@ class InlineIterator {
     }
 
     func next() -> LineBox? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let current = get()
+      traverseNext()
+      return current
     }
 
-    func bool() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func bool() -> Bool { return !atEnd() }
 
-    func get() -> LineBox {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    func get() -> LineBox { return m_lineBox }
+
+    private func atEnd() -> Bool {
+      switch m_lineBox.m_pathVariant {
+      case .modern(let path):
+        path.atEnd()
+      case .legacy(let path):
+        path.atEnd()
+      }
     }
 
     private let m_lineBox: LineBox
