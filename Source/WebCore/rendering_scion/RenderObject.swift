@@ -2119,7 +2119,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func clearNeedsLayout(hadSkippedLayout: HadSkippedLayout = .No) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_clearNeedsLayout(id(), hadSkippedLayout == .Yes)
+      return
+    }
     // FIXME: Consider not setting the "ever had layout" bit to true when "hadSkippedLayout"
     setEverHadLayout()
     setHadSkippedLayout(hadSkippedLayout == .Yes)

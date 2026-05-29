@@ -647,6 +647,7 @@ void RenderObject_setPreviousSibling(void* p, void* previous);
 void RenderObject_setNextSibling(void* p, void* next);
 void RenderObject_setParent(void* p, void* parent);
 void RenderObject_setNeedsLayout(void*, uint8_t);
+void RenderObject_clearNeedsLayout(void*, bool);
 void* RenderObject_containingBlock(const void*);
 const void* RenderObject_style(const void*);
 void* RenderObject_layoutBox(void*);

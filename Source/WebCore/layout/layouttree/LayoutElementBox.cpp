@@ -145,6 +145,14 @@ extern "C" WEBCORE_EXPORT void RenderObject_setNeedsLayout(void* object_raw_ptr,
     object->setNeedsLayout(static_cast<WebCore::MarkingBehavior>(marking_behavior));
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_clearNeedsLayout(void* object_raw_ptr, bool hadSkippedLayout)
+{
+    static_cast<WebCore::RenderObject*>(object_raw_ptr)->clearNeedsLayout(
+        hadSkippedLayout
+            ? WebCore::RenderObject::HadSkippedLayout::Yes
+            : WebCore::RenderObject::HadSkippedLayout::No);
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_containingBlock(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->containingBlock();
