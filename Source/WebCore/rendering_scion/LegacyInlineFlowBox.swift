@@ -104,13 +104,16 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   }
 
   func logicalLeftVisualOverflow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return overflow != nil
+      ? (isHorizontal() ? overflow!.visualOverflowRect().x() : overflow!.visualOverflowRect().y())
+      : LayoutUnit(value: logicalLeft())
   }
 
   func logicalRightVisualOverflow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return overflow != nil
+      ? (isHorizontal()
+        ? overflow!.visualOverflowRect().maxX() : overflow!.visualOverflowRect().maxY())
+      : LayoutUnit(value: logicalRight().rounded(.up))
   }
 
   func logicalTopVisualOverflow(lineTop: LayoutUnit) -> LayoutUnit {
