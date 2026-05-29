@@ -108,6 +108,8 @@ public:
 
     bool isRenderMedia() const;
 
+    bool isRenderButton() const;
+
     bool isRenderIFrame() const;
 
     bool isRenderImage() const;

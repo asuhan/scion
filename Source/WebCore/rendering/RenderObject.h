@@ -514,11 +514,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::Progress;
     }
-    bool isRenderButton() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::Button;
-    }
+    bool isRenderButton() const;
     bool isRenderIFrame() const;
     bool isRenderImage() const;
     bool isRenderTextFragment() const
