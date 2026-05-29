@@ -30,10 +30,7 @@ class InlineIterator {
       case legacy(LineBoxIteratorLegacyPath)
     }
 
-    init(path: LineBoxIteratorModernPath) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    init(path: PathVariant) { m_pathVariant = path }
 
     func logicalTop() -> Float32 {
       switch m_pathVariant {

@@ -155,8 +155,9 @@ extension LayoutIntegration {
         return
       }
       let lineBox = InlineIterator.LineBox(
-        path: InlineIterator.LineBoxIteratorModernPath(
-          inlineContent: inlineContent, lineIndex: lineIndex)
+        path: .modern(
+          InlineIterator.LineBoxIteratorModernPath(
+            inlineContent: inlineContent, lineIndex: lineIndex))
       )
       EllipsisBoxPainter(
         lineBox: lineBox, paintInfo: paintInfo, paintOffset: paintOffset,
