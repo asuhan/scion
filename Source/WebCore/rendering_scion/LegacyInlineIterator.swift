@@ -39,20 +39,14 @@ class LegacyInlineIterator {
     m_refersToEndOfPreviousNode = false
   }
 
-  func renderer() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func renderer() -> RenderObjectWrapper? { return m_renderer }
 
   func increment(resolver: InlineBidiResolver? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func atEnd() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func atEnd() -> Bool { return m_renderer == nil }
 
   func current() -> UChar {
     // TODO(asuhan): implement this
