@@ -176,6 +176,8 @@ class InlineIterator {
   class LineBoxIterator: IteratorProtocol {
     init() { m_lineBox = LineBox(path: .legacy(LineBoxIteratorLegacyPath(nil))) }
 
+    init(_ pathVariant: LineBox.PathVariant) { m_lineBox = LineBox(path: pathVariant) }
+
     init(_ lineBox: LineBox) { m_lineBox = lineBox }
 
     @discardableResult

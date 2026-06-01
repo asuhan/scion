@@ -194,8 +194,15 @@ extension InlineIterator {
     }
 
     func lineBox() -> LineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return LineBoxIterator(
+          .modern(
+            LineBoxIteratorModernPath(
+              inlineContent: path.inlineContent(), lineIndex: UInt64(path.box().lineIndex))))
+      case .legacy(let path):
+        return LineBoxIterator(.legacy(LineBoxIteratorLegacyPath(path.rootInlineBox())))
+      }
     }
 
     func modernPath() -> BoxModernPath {

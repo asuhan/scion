@@ -79,7 +79,7 @@ extension InlineIterator {
 
     func legacyInlineBox() -> LegacyInlineBox? { return m_inlineBox }
 
-    private func rootInlineBox() -> LegacyRootInlineBox { return m_inlineBox!.root() }
+    func rootInlineBox() -> LegacyRootInlineBox { return m_inlineBox!.root() }
 
     private func inlineTextBox() -> LegacyInlineTextBox {
       return m_inlineBox! as! LegacyInlineTextBox
