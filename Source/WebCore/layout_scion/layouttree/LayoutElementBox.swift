@@ -194,32 +194,9 @@ class ElementBoxWrapper: BoxWrapper {
   }
 
   override func rendererForIntegration() -> RenderElementWrapper? {
-    let unwrapped = wk_interop.ElementBox_rendererForIntegration(p)
-    if unwrapped == nil {
+    guard let unwrapped = wk_interop.ElementBox_rendererForIntegration(p) else {
       return nil
     }
-    if wk_interop.RenderObject_isRenderListMarker(unwrapped!) {
-      return RenderListMarkerWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderListBox(unwrapped!) {
-      return RenderListBoxWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderBlockFlow(unwrapped!) {
-      return RenderBlockFlowWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderFlexibleBox(unwrapped!) {
-      return RenderFlexibleBoxWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderBlock(unwrapped!) {
-      return RenderBlockWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderBox(unwrapped!) {
-      return RenderBoxWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderInline(unwrapped!) {
-      return RenderInlineWrapper(p: unwrapped!)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return createRenderObjectWrapperOrNative(unwrapped) as! RenderElementWrapper?
   }
 }

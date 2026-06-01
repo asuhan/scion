@@ -737,11 +737,12 @@ class BoxWrapper: Hashable {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    let unwrapped = wk_interop.Box_rendererForIntegration(p)
-    if unwrapped == nil {
+    guard let unwrapped = wk_interop.Box_rendererForIntegration(p) else {
       return nil
     }
-    return RenderObjectWrapper.createFromRawPointer(p: unwrapped!)
+    let renderer = createRenderObjectWrapperOrNative(unwrapped)
+    assert(renderer is RenderElementWrapper || renderer is RenderTextWrapper)
+    return renderer
   }
 
   func shape() -> ShapeWrapper? {
