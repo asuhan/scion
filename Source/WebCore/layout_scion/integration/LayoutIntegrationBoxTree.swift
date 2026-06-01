@@ -88,7 +88,9 @@ extension LayoutIntegration {
     }
 
     private func buildTreeForInlineContent() {
-      wk_interop.BoxTree_buildTreeForInlineContent(rootRenderer.id())
+      wk_interop.BoxTree_buildTreeForInlineContent(
+        rootRenderer.isNativeImpl()
+          ? (rootRenderer as! RenderBlockFlowWrapper).getWk() : rootRenderer.id())
     }
 
     private func buildTreeForFlexContent() {
