@@ -149,8 +149,8 @@ private func calculateDocumentMarkerBounds(
   return FloatRectWrapper(x: 0, y: y, width: textBox.get().logicalWidth(), height: height)
 }
 
-class TextBoxPainter<TextBoxPath: BoxPath> {
-  init(textBox: TextBoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+class TextBoxPainter {
+  init(textBox: BoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     self.textBox = textBox
     self.renderer = textBox.renderer() as! RenderTextWrapper
     self.document = renderer.document()
@@ -1317,7 +1317,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     fatalError("Not implemented")
   }
 
-  let textBox: TextBoxPath
+  let textBox: BoxPath
   private let renderer: RenderTextWrapper
   private let document: Document
   private let style: RenderStyleWrapper
@@ -1336,14 +1336,14 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private var emphasisMarkExistsAndIsAbove: Bool? = nil
 }
 
-class LegacyTextBoxPainter: TextBoxPainter<InlineIterator.BoxLegacyPath> {
+class LegacyTextBoxPainter: TextBoxPainter {
   init(textBox: LegacyInlineTextBox, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 }
 
-class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> {
+class ModernTextBoxPainterWrapper: TextBoxPainter {
   init(
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper

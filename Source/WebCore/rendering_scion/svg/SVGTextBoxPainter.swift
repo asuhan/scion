@@ -52,7 +52,7 @@ private func thicknessForDecoration(_ font: FontCascadeWrapper) -> Float32 {
   return font.size() / 20
 }
 
-class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
+class SVGTextBoxPainter: TextBoxPainter {
   override func paint() {
     assert(paintInfo.shouldPaintWithinRoot(renderer: renderer()))
     assert(paintInfo.phase == .Foreground || paintInfo.phase == .Selection)
@@ -636,7 +636,7 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   private var legacyPaintingResource: LegacyRenderSVGResource? = nil
 }
 
-class LegacySVGTextBoxPainter: SVGTextBoxPainter<InlineIterator.BoxLegacyPath> {
+class LegacySVGTextBoxPainter: SVGTextBoxPainter {
   init(
     _ textBox: SVGInlineTextBox, _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
