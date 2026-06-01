@@ -206,12 +206,14 @@ extension InlineIterator {
     let m_pathVariant: PathVariant
   }
 
-  class BoxIterator<Box>: Equatable, IteratorProtocol {
-    init() { m_box = InlineIterator.Box(.legacy(BoxLegacyPath(nil))) }
+  class BoxIterator<BoxType: Box>: Equatable, IteratorProtocol {
+    init() { m_box = Box(.legacy(BoxLegacyPath(nil))) }
 
-    init(_ pathVariant: InlineIterator.Box.PathVariant) { m_box = InlineIterator.Box(pathVariant) }
+    init(_ pathVariant: Box.PathVariant, isInline: Bool) {
+      m_box = isInline ? InlineBox(pathVariant) : Box(pathVariant)
+    }
 
-    init(_ run: InlineIterator.Box) { m_box = run }
+    init(_ run: Box) { m_box = run }
 
     func bool() -> Bool { return !atEnd() }
 
@@ -220,15 +222,12 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func next() -> Box? {
+    func next() -> BoxType? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    func get() -> Box {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func get() -> BoxType { return m_box as! BoxType }
 
     private func atEnd() -> Bool {
       switch m_box.m_pathVariant {
@@ -239,7 +238,7 @@ extension InlineIterator {
       }
     }
 
-    private let m_box: InlineIterator.Box
+    let m_box: Box
   }
 
   class LeafBoxIterator: BoxIterator<Box> {

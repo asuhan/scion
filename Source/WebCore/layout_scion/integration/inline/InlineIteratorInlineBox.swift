@@ -73,8 +73,7 @@ extension InlineIterator {
   }
 
   static func inlineBoxFor(legacyInlineFlowBox: LegacyInlineFlowBox) -> InlineBoxIterator {
-    return InlineBoxIterator(
-      pathVariant: .legacy(InlineIterator.BoxLegacyPath(legacyInlineFlowBox)))
+    return InlineBoxIterator(pathVariant: .legacy(BoxLegacyPath(legacyInlineFlowBox)))
   }
 
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
@@ -88,16 +87,15 @@ extension InlineIterator {
   {
     assert(content.displayContent.boxes[Int(boxIndex)].isInlineBox())
     return InlineBoxIterator(
-      pathVariant: .modern(
-        InlineIterator.BoxModernPath(inlineContent: content, startIndex: boxIndex)))
+      pathVariant: .modern(BoxModernPath(inlineContent: content, startIndex: boxIndex)))
   }
 
   class InlineBoxIterator: BoxIterator<InlineBox> {
     override init() { super.init() }
 
-    init(pathVariant: InlineIterator.Box.PathVariant) { super.init(pathVariant) }
+    init(pathVariant: Box.PathVariant) { super.init(pathVariant, isInline: true) }
 
-    init(box: InlineIterator.Box) { super.init(box) }
+    init(box: Box) { super.init(box) }
 
     @discardableResult
     func traverseNextInlineBox() -> InlineBoxIterator {
