@@ -1233,14 +1233,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_addLayoutOverflow(
-      id(),
-      LayoutRectRaw(
-        x: rect.x().rawValue(),
-        y: rect.y().rawValue(),
-        width: rect.width().rawValue(),
-        height: rect.height().rawValue()))
+    if !isNativeImpl() {
+      wk_interop.RenderBox_addLayoutOverflow(
+        id(),
+        LayoutRectRaw(
+          x: rect.x().rawValue(),
+          y: rect.y().rawValue(),
+          width: rect.width().rawValue(),
+          height: rect.height().rawValue()))
+      return
+    }
+    addLayoutOverflow(rect: rect, clientBox: flippedClientBoxRect())
   }
 
   func addVisualOverflow(rect: LayoutRectWrapper) {
