@@ -126,6 +126,8 @@ class RenderBlockFlowRareData {
   var lineBreakToAvoidWidow: Int32
   var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
 
+  let multiColumnFlow: RenderMultiColumnFlowWrapper? = nil
+
   var didBreakAtLineToAvoidWidow = false
 }
 
@@ -1963,8 +1965,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func multiColumnFlowSlowCase() -> RenderMultiColumnFlowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return rareBlockFlowData().multiColumnFlow
   }
 
   func setMultiColumnFlow(fragmentedFlow: RenderMultiColumnFlowWrapper) {
