@@ -377,9 +377,15 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func characterAt(_ i: UInt32) -> UChar { return i >= length() ? 0 : text()[i] }
+  func characterAt(_ i: UInt32) -> UChar {
+    assert(isNativeImpl())
+    return i >= length() ? 0 : text()[i]
+  }
 
-  private final func length() -> UInt32 { return text().length() }
+  private final func length() -> UInt32 {
+    assert(isNativeImpl())
+    return text().length()
+  }
 
   private func maxLogicalWidth() -> Float32 {
     assert(isNativeImpl())
@@ -406,6 +412,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func trimmedPreferredWidths(leadWidth: Float32, stripFrontSpaces: inout Bool) -> Widths {
+    assert(isNativeImpl())
     let style = style()
     let collapseWhiteSpace = style.collapseWhiteSpace()
 
@@ -502,6 +509,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func hangablePunctuationStartWidth(index: UInt32) -> Float32 {
+    assert(isNativeImpl())
     let length = text().length()
     if index >= length {
       return 0
@@ -517,6 +525,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func hangablePunctuationEndWidth(index: UInt32) -> Float32 {
+    assert(isNativeImpl())
     let length = text().length()
     if index >= length {
       return 0
@@ -532,6 +541,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func firstCharacterIndexStrippingSpaces() -> UInt32 {
+    assert(isNativeImpl())
     if !style().collapseWhiteSpace() {
       return 0
     }
@@ -551,6 +561,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func lastCharacterIndexStrippingSpaces() -> UInt32 {
+    assert(isNativeImpl())
     if text().length() == 0 {
       return 0
     }
@@ -571,6 +582,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setText(newContent: StringWrapper, force: Bool = false) {
+    assert(isNativeImpl())
     let isDifferent = newContent != text()
     setTextInternal(newContent, force)
     if isDifferent || force {
@@ -580,6 +592,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setTextWithOffset(newText: StringWrapper, offset: UInt32, force: Bool = false) {
+    assert(isNativeImpl())
     if !force && text() == newText {
       return
     }
@@ -601,6 +614,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ from: UInt32, _ length: UInt32, _ fontCascade: FontCascadeWrapper, _ xPos: Float32,
     _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: inout GlyphOverflow?
   ) -> Float32 {
+    assert(isNativeImpl())
     assert(from + length <= text().length())
     if text().length() == 0 || length == 0 {
       return 0
@@ -657,6 +671,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool,
     fallbackFonts: WeakHashSet<FontWrapper>?, glyphOverflow: inout GlyphOverflow?
   ) -> Float32 {
+    assert(isNativeImpl())
     if from >= text().length() {
       return 0
     }
@@ -735,6 +750,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     // There is no need to ever schedule repaints from a style change of a text run, since
     // we already did this for the parent of the text run.
     // We do have to schedule layouts, though, since a style change can force us to
@@ -788,6 +804,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   func containsOnlyPossiblyCollapsibleWhitespace<CharacterType>(
     _ characters: CharSpanWrapper<CharacterType>
   ) -> Bool {
+    assert(isNativeImpl())
     for i in 0..<characters.size() {
       let character = characters[i]
       if !(character == UChar(Character("\n").asciiValue!)
@@ -801,6 +818,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   private func containsOnlyCSSWhitespace(from: UInt32, length: UInt32) -> Bool {
+    assert(isNativeImpl())
     assert(from <= text().length())
     assert(length <= text().length())
     assert(from + length <= text().length())
@@ -813,6 +831,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   func contentRangesBetweenOffsetsForType(
     type: DocumentMarker.`Type`, startOffset: UInt32, endOffset: UInt32
   ) -> [(UInt32, UInt32)] {
+    assert(isNativeImpl())
     if textNode() == nil {
       return []
     }
@@ -941,6 +960,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
+    assert(isNativeImpl())
     let firstRun = InlineIterator.firstTextBoxFor(self)
 
     if !firstRun.bool() || text().length() == 0 {
@@ -1003,6 +1023,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   override final func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var rendererToRepaint: RenderObjectWrapper? = containingBlock()
 
     // Do not cross self-painting layer boundaries.
@@ -1037,6 +1058,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ glyphOverflow: inout GlyphOverflow,
     _ forcedMinMaxWidthComputation: Bool = false
   ) {
+    assert(isNativeImpl())
     assert(
       hasTab || preferredLogicalWidthsDirty() || forcedMinMaxWidthComputation
         || !knownToHaveNoOverflowAndNoFallbackFonts)
@@ -1332,6 +1354,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: GlyphOverflow?,
     _ style: RenderStyleWrapper
   ) -> Float32 {
+    assert(isNativeImpl())
     if let width = combineTextWidth(self, fontCascade, style) {
       return width
     }
@@ -1355,6 +1378,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     wordTrailingSpace: inout WordTrailingSpace, fallbackFonts: WeakHashSet<FontWrapper>,
     glyphOverflow: inout GlyphOverflow
   ) -> Float32 {
+    assert(isNativeImpl())
     var suffixStart: UInt32 = 0
     if word.length() <= minimumSuffixLength {
       return entireWordWidth
