@@ -2664,8 +2664,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func endPaddingWidthForCaret() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(id()))
+    }
+    if (element()?.isRootEditableElement() ?? false) && hasNonVisibleOverflow()
+      && style().isLeftToRightDirection() && !paddingEnd().bool()
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LayoutUnit()
   }
 
   func lowestInitialLetterLogicalBottom() -> LayoutUnit? {
