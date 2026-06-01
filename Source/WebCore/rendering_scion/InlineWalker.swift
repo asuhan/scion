@@ -33,7 +33,9 @@ struct InlineWalker: ~Copyable {
 
   func current() -> RenderObjectWrapper? {
     if let raw = InlineWalker_current(p) {
-      return RenderObjectWrapper.createFromRawPointer(p: raw)
+      let renderer = createRenderObjectWrapperOrNative(raw)
+      assert(renderer is RenderElementWrapper || renderer is RenderTextWrapper)
+      return renderer
     }
     return nil
   }
