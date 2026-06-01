@@ -1740,7 +1740,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func document() -> Document {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return Document(wk_interop.RenderObject_document(id()))
+    }
     return m_node!.document()
   }
 
