@@ -2678,7 +2678,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func lowestInitialLetterLogicalBottom() -> LayoutUnit? {
-    assert(!isNativeImpl())
+    if isNativeImpl() {
+      if floatingObjects == nil {
+        return nil
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
     let raw = wk_interop.RenderBlockFlow_lowestInitialLetterLogicalBottom(id())
     if !raw.is_valid {
       return nil
