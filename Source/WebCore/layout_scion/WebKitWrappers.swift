@@ -2300,18 +2300,33 @@ func RenderElementScion_hasContinuationChainNode(_ elementRaw: UnsafeRawPointer)
 
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   assert(!wk_interop.RenderObject_isRenderView(p))
+  if wk_interop.RenderObject_isRenderListBox(p) {
+    return RenderListBoxWrapper(p: p)
+  }
+  if wk_interop.RenderObject_isRenderListItem(p) {
+    return RenderListItemWrapper(p: p)
+  }
   if wk_interop.RenderObject_isRenderBlockFlow(p) {
     assert(wk_interop.RenderBlockFlow_scion(p) == nil)
     return RenderBlockFlowWrapper(p: p)
   }
+  if wk_interop.RenderObject_isRenderFlexibleBox(p) {
+    return RenderFlexibleBoxWrapper(p: p)
+  }
   if wk_interop.RenderObject_isRenderBlock(p) {
     return RenderBlockWrapper(p: p)
+  }
+  if wk_interop.RenderObject_isRenderListMarker(p) {
+    return RenderListMarkerWrapper(p: p)
   }
   if wk_interop.RenderObject_isRenderBox(p) {
     return RenderBoxWrapper(p: p)
   }
   if wk_interop.RenderObject_isRenderElement(p) {
     return RenderElementWrapper(p: p)
+  }
+  if wk_interop.RenderObject_isRenderText(p) {
+    return RenderTextWrapper(p: p)
   }
   return RenderObjectWrapper(p: p)
 }
