@@ -83,6 +83,13 @@ extern "C" WEBCORE_EXPORT void RenderText_setNeedsVisualReordering(void* p)
     static_cast<WebCore::RenderText*>(p)->setNeedsVisualReordering();
 }
 
+extern "C" WEBCORE_EXPORT void RenderText_styleDidChange(void* p, uint8_t diffRaw, const void* oldStyleRaw)
+{
+    const auto oldStyle = static_cast<const WebCore::RenderStyle*>(oldStyleRaw);
+    const auto diff = static_cast<WebCore::StyleDifference>(diffRaw);
+    static_cast<WebCore::RenderText*>(p)->styleDidChange(diff, oldStyle);
+}
+
 namespace WebCore {
 
 using namespace WTF::Unicode;

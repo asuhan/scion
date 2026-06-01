@@ -750,7 +750,10 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderText_styleDidChange(id(), diff.rawValue, oldStyle?.p)
+      return
+    }
     // There is no need to ever schedule repaints from a style change of a text run, since
     // we already did this for the parent of the text run.
     // We do have to schedule layouts, though, since a style change can force us to
