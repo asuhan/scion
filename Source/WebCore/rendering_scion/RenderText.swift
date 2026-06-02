@@ -351,13 +351,15 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    guard let raw = wk_interop.RenderText_spellingErrorPseudoStyle(id()) else { return nil }
+    return convert_render_style(p: raw)
   }
 
   func grammarErrorPseudoStyle() -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    guard let raw = wk_interop.RenderText_grammarErrorPseudoStyle(id()) else { return nil }
+    return convert_render_style(p: raw)
   }
 
   func targetTextPseudoStyle() -> RenderStyleWrapper? {

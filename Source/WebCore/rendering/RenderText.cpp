@@ -83,6 +83,16 @@ extern "C" WEBCORE_EXPORT void* RenderText_textNode(const void* p)
     return static_cast<const WebCore::RenderText*>(p)->textNode();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderText_spellingErrorPseudoStyle(const void* p)
+{
+    return static_cast<const WebCore::RenderText*>(p)->spellingErrorPseudoStyle();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderText_grammarErrorPseudoStyle(const void* p)
+{
+    return static_cast<const WebCore::RenderText*>(p)->grammarErrorPseudoStyle();
+}
+
 extern "C" WEBCORE_EXPORT void RenderText_setNeedsVisualReordering(void* p)
 {
     static_cast<WebCore::RenderText*>(p)->setNeedsVisualReordering();
