@@ -159,6 +159,9 @@ extension LayoutIntegration {
           InlineIterator.LineBoxIteratorModernPath(
             inlineContent: inlineContent, lineIndex: lineIndex))
       )
+      if !lineBox.hasEllipsis() {
+        return
+      }
       EllipsisBoxPainter(
         lineBox: lineBox, paintInfo: paintInfo, paintOffset: paintOffset,
         selectionForegroundColor: root().selectionForegroundColor(),

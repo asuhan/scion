@@ -42,6 +42,8 @@ class LineBoxIteratorLegacyPath {
     return m_rootInlineBox!.logicalBottomVisualOverflow().float()
   }
 
+  func hasEllipsis() -> Bool { return false }
+
   func contentLogicalLeft() -> Float32 { return m_rootInlineBox!.logicalLeft() }
 
   func formattingContextRoot() -> RenderBlockFlowWrapper { m_rootInlineBox!.blockFlow() }

@@ -103,6 +103,15 @@ class InlineIterator {
       return isFirst() ? formattingContextRoot().firstLineStyle() : formattingContextRoot().style()
     }
 
+    func hasEllipsis() -> Bool {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.hasEllipsis()
+      case .legacy(let path):
+        return path.hasEllipsis()
+      }
+    }
+
     enum AdjustedForSelection {
       case No
       case Yes
