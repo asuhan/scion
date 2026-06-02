@@ -323,7 +323,7 @@ struct TextPainter {
   private let renderStyle: RenderStyleWrapper
   private var style = TextPaintStyle()
   private var emphasisMark = AtomStringWrapper()
-  private var shadow = ShadowData()
+  private var shadow: ShadowData? = nil
   private var shadowColorFilter = FilterOperations()
   private var combinedText: RenderCombineTextWrapper? = nil
   private var glyphDisplayList: DisplayList.DisplayListWrapper? = nil
