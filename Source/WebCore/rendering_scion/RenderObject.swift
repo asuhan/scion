@@ -1757,7 +1757,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func frame() -> LocalFrameWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LocalFrameWrapper(wk_interop.RenderObject_frame(id()))
+    }
     return document().frame()!
   }
 

@@ -230,6 +230,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_document(const void* p)
     return &static_cast<const WebCore::RenderObject*>(p)->document();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_frame(const void* p)
+{
+    return &static_cast<const WebCore::RenderObject*>(p)->frame();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_container(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->container();
