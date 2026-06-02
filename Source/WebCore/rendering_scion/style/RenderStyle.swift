@@ -2871,8 +2871,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func colorByApplyingColorFilter(color: ColorWrapper) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = color.toSRGBA()
+    let c = wk_interop.RenderStyle_colorByApplyingColorFilter(
+      p!, SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func colorWithColorFilter(color: StyleColorWrapper) -> ColorWrapper {

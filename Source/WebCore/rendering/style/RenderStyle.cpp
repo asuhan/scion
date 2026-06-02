@@ -739,6 +739,13 @@ extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_visitedDependentColorWithColorFil
     return { r, g, b, a };
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_colorByApplyingColorFilter(const void* p, SRGBARaw color)
+{
+    const auto new_color = static_cast<const WebCore::RenderStyle*>(p)->colorByApplyingColorFilter(WebCore::SRGBA { color.red, color.green, color.blue, color.alpha });
+    const auto [r, g, b, a] = new_color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_letterSpacing(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->letterSpacing();
