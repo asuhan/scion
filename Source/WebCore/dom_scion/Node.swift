@@ -79,6 +79,7 @@ class NodeWrapper {
   }
 
   func containingShadowRoot() -> ShadowRootWrapper? {
+    if wk_interop.Node_containingShadowRoot(p) == nil { return nil }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
