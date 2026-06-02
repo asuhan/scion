@@ -60,8 +60,8 @@ class GraphicsContextWrapper {
   }
 
   func fillColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let c = wk_interop.GraphicsContext_fillColor(p!)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func fillGradient() -> GradientWrapper? {

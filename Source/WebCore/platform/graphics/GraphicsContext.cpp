@@ -68,6 +68,20 @@ extern "C" WEBCORE_EXPORT bool GraphicsContext_detectingContentfulPaint(const vo
     return static_cast<const WebCore::GraphicsContext*>(p)->detectingContentfulPaint();
 }
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+extern "C" WEBCORE_EXPORT SRGBARaw GraphicsContext_fillColor(const void* p)
+{
+    const auto& color = static_cast<const WebCore::GraphicsContext*>(p)->fillColor();
+    const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_setFillRule(void* p, uint8_t fillRule)
 {
     static_cast<WebCore::GraphicsContext*>(p)->setFillRule(static_cast<WebCore::WindRule>(fillRule));
@@ -214,13 +228,6 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_fillRectWithClipping(void* p, Flo
             ? WebCore::GraphicsContext::RequiresClipToRect::Yes
             : WebCore::GraphicsContext::RequiresClipToRect::No);
 }
-
-struct SRGBARaw {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-    uint8_t alpha;
-};
 
 extern "C" WEBCORE_EXPORT void GraphicsContext_fillRect(void* p, FloatRectRaw rect_raw, SRGBARaw srgba)
 {
