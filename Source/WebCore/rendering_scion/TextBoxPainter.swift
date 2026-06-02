@@ -170,7 +170,8 @@ class TextBoxPainter {
     self.haveSelection = computeHaveSelection()
     self.containsComposition =
       renderer.textNode() != nil
-      && renderer.frame().editor().compositionNode() == renderer.textNode()
+      && CPtrToInt(renderer.frame().editor().compositionNode()?.p)
+        == CPtrToInt(renderer.textNode()?.p)
     self.useCustomUnderlines =
       containsComposition && renderer.frame().editor().compositionUsesCustomUnderlines()
     self.emphasisMarkExistsAndIsAbove = RenderTextWrapper.emphasisMarkExistsAndIsAbove(

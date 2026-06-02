@@ -19,18 +19,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class TextWrapper: CharacterDataWrapper, Equatable {
+class TextWrapper: CharacterDataWrapper {
   func createTextRenderer(style: RenderStyleWrapper) -> RenderTextWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   override func renderer() -> RenderTextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func == (lhs: TextWrapper, rhs: TextWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
