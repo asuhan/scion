@@ -145,6 +145,11 @@
 #include "PromisedAttachmentInfo.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* Editor_compositionNode(const void* p)
+{
+    return static_cast<const WebCore::Editor*>(p)->compositionNode();
+}
+
 extern "C" WEBCORE_EXPORT uint32_t Editor_compositionStart(const void* p)
 {
     return static_cast<const WebCore::Editor*>(p)->compositionStart();

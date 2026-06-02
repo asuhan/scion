@@ -31,8 +31,8 @@ final class EditorWrapper {
 
   // getting international text input composition state (for use by LegacyInlineTextBox)
   func compositionNode() -> TextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Editor_compositionNode(p) else { return nil }
+    return TextWrapper(p: raw)
   }
 
   func compositionStart() -> UInt32 { return wk_interop.Editor_compositionStart(p) }
