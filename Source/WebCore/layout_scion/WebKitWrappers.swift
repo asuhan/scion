@@ -2175,13 +2175,16 @@ func RenderElementScion_shouldApplyPaintContainment(_ elementRaw: UnsafeRawPoint
 }
 
 @_cdecl("RenderElementScion_spellingErrorPseudoStyle")
-func RenderElementScion_spellingErrorPseudoStyle(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointer? {
+func RenderElementScion_spellingErrorPseudoStyle(_ elementRaw: UnsafeRawPointer)
+  -> UnsafeRawPointer?
+{
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   return element.spellingErrorPseudoStyle()?.p
 }
 
 @_cdecl("RenderElementScion_grammarErrorPseudoStyle")
-func RenderElementScion_grammarErrorPseudoStyle(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointer? {
+func RenderElementScion_grammarErrorPseudoStyle(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointer?
+{
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   return element.grammarErrorPseudoStyle()?.p
 }
