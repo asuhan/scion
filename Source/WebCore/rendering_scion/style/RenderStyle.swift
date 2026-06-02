@@ -1003,8 +1003,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasPseudoStyle(pseudo: PseudoId) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasPseudoStyle(p!, pseudo.rawValue)
   }
 
   func hasDisplayAffectedByAnimations() -> Bool {
