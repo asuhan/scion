@@ -235,6 +235,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_frame(const void* p)
     return &static_cast<const WebCore::RenderObject*>(p)->frame();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_settings(const void* p)
+{
+    return &static_cast<const WebCore::RenderObject*>(p)->settings();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_container(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->container();

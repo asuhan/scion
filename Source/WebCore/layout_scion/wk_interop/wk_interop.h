@@ -653,6 +653,7 @@ bool RenderObject_hasNonVisibleOverflow(const void*);
 void* RenderObject_view(const void*);
 void* RenderObject_document(const void*);
 void* RenderObject_frame(const void*);
+void* RenderObject_settings(const void*);
 void* RenderObject_container(const void*);
 bool RenderObject_isComposited(const void*);
 int32_t RenderObject_minPreferredLogicalWidth(const void*);

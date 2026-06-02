@@ -1776,7 +1776,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func settings() -> SettingsWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return SettingsWrapper(wk_interop.RenderObject_settings(id())) }
     return page().settings()
   }
 
