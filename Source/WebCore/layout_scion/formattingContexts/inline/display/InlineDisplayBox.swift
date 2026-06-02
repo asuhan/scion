@@ -268,8 +268,10 @@ extension InlineDisplay {
     func moveToLine(lineIndex: UInt32) { self.lineIndex = lineIndex }
 
     func removeFromGlyphDisplayListCache() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if isInGlyphDisplayListCache {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
     }
 
     var layoutBox: BoxWrapper
@@ -288,6 +290,7 @@ extension InlineDisplay {
     var isFirstForLayoutBox = false
     var isLastForLayoutBox = false
     var isFullyTruncated = false
+    private let isInGlyphDisplayListCache = false
 
     var m_text = Text()
   }
