@@ -180,7 +180,18 @@ class RenderHighlight {
   func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
     -> RenderObjectWrapper.HighlightState
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      assert(!renderer.isNativeImpl())
+      return RenderObjectWrapper.HighlightState(
+        rawValue: wk_interop.RenderHighlight_highlightStateForTextBox(
+          p, renderer.id(),
+          TextBoxSelectableRangeRaw(
+            start: textBoxRange.start, length: textBoxRange.length,
+            additionalLengthAtEnd: textBoxRange.additionalLengthAtEnd,
+            isLineBreak: textBoxRange.isLineBreak,
+            truncation: OptionalUIntRaw(
+              value: textBoxRange.truncation ?? 0, is_valid: textBoxRange.truncation != nil))))!
+    }
     let state = highlightStateForRenderer(renderer)
 
     if state == .None || state == .Inside {

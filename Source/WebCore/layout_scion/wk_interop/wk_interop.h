@@ -78,6 +78,19 @@ struct OptionalIntRaw {
     bool is_valid;
 };
 
+struct OptionalUIntRaw {
+    uint32_t value;
+    bool is_valid;
+};
+
+struct TextBoxSelectableRangeRaw {
+    uint32_t start;
+    uint32_t length;
+    uint32_t additionalLengthAtEnd;
+    bool isLineBreak;
+    struct OptionalUIntRaw truncation;
+};
+
 struct OptionalLayoutUnitRaw {
     int32_t value;
     bool is_valid;
@@ -813,6 +826,7 @@ void* RenderListMarker_listItem(void*);
 void RenderText_setNeedsVisualReordering(void*);
 bool RenderText_canUseSimpleFontCodePath(const void*);
 void RenderText_styleDidChange(void*, uint8_t, const void*);
+uint8_t RenderHighlight_highlightStateForTextBox(void*, const void*, struct TextBoxSelectableRangeRaw);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);
 bool Box_isBlockLevelBox(const void*);

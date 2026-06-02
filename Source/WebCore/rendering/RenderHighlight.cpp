@@ -45,6 +45,31 @@
 #include "VisibleSelection.h"
 #include <wtf/text/TextStream.h>
 
+struct OptionalUIntRaw {
+    uint32_t value;
+    bool is_valid;
+};
+
+struct TextBoxSelectableRangeRaw {
+    uint32_t start;
+    uint32_t length;
+    uint32_t additionalLengthAtEnd;
+    bool isLineBreak;
+    OptionalUIntRaw truncation;
+};
+
+extern "C" WEBCORE_EXPORT uint8_t RenderHighlight_highlightStateForTextBox(void* p, const void* rendererRaw, TextBoxSelectableRangeRaw textBoxRangeRaw)
+{
+    WebCore::TextBoxSelectableRange textBoxRange {
+        textBoxRangeRaw.start,
+        textBoxRangeRaw.length,
+        textBoxRangeRaw.additionalLengthAtEnd,
+        textBoxRangeRaw.isLineBreak,
+        textBoxRangeRaw.truncation.is_valid ? textBoxRangeRaw.truncation.value : std::optional<uint32_t>()
+    };
+    return static_cast<uint8_t>(static_cast<WebCore::RenderHighlight*>(p)->highlightStateForTextBox(*static_cast<const WebCore::RenderText*>(rendererRaw), textBoxRange));
+}
+
 namespace WebCore {
 
 
