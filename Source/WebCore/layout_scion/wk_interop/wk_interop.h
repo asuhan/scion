@@ -1394,6 +1394,7 @@ bool Document_inLimitedQuirksMode(const void* raw);
 bool Document_inNoQuirksMode(const void*);
 void* Document_ownerElement(const void*);
 void* Document_bodyOrFrameset(const void*);
+void* Document_markersIfExists(void*);
 void* Document_topDocument(const void* raw);
 uint8_t Document_backForwardCacheState(const void*);
 void Document_invalidateRenderingDependentRegions(void*);

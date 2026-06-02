@@ -25,6 +25,8 @@
  */
 
 class DocumentMarkerControllerWrapper {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   func hasMarkers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -41,4 +43,6 @@ class DocumentMarkerControllerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }

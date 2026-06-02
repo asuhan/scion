@@ -144,8 +144,8 @@ class Document: TreeScopeWrapper {
   }
 
   func markersIfExists() -> DocumentMarkerControllerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Document_markersIfExists(p) else { return nil }
+    return DocumentMarkerControllerWrapper(raw)
   }
 
   func topDocument() -> Document { return Document(wk_interop.Document_topDocument(p)) }

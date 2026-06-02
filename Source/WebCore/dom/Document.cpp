@@ -510,6 +510,11 @@ extern "C" WEBCORE_EXPORT void* Document_bodyOrFrameset(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->bodyOrFrameset();
 }
 
+extern "C" WEBCORE_EXPORT void* Document_markersIfExists(void* raw)
+{
+    return static_cast<WebCore::Document*>(raw)->markersIfExists();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_topDocument(const void* raw)
 {
     return &static_cast<const WebCore::Document*>(raw)->topDocument();
