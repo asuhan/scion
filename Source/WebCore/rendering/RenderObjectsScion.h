@@ -373,6 +373,10 @@ public:
 
     bool shouldApplyPaintContainment() const;
 
+    const RenderStyle* spellingErrorPseudoStyle() const;
+
+    const RenderStyle* grammarErrorPseudoStyle() const;
+
     void didAttachChild(RenderObject&);
 
     void setChildNeedsLayout(MarkingBehavior = MarkContainingBlockChain);

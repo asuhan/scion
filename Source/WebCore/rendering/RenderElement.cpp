@@ -2087,13 +2087,13 @@ Color RenderElement::selectionBackgroundColor() const
 
 const RenderStyle* RenderElement::spellingErrorPseudoStyle() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->spellingErrorPseudoStyle(); }
     return textSegmentPseudoStyle(PseudoId::SpellingError);
 }
 
 const RenderStyle* RenderElement::grammarErrorPseudoStyle() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->grammarErrorPseudoStyle(); }
     return textSegmentPseudoStyle(PseudoId::GrammarError);
 }
 

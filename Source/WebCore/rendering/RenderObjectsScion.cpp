@@ -372,6 +372,10 @@ extern "C" bool RenderElementScion_shouldApplySizeContainment(const void*);
 
 extern "C" bool RenderElementScion_shouldApplyPaintContainment(const void*);
 
+extern "C" const void* RenderElementScion_spellingErrorPseudoStyle(const void*);
+
+extern "C" const void* RenderElementScion_grammarErrorPseudoStyle(const void*);
+
 extern "C" void RenderElementScion_didAttachChild(void*, void*);
 
 extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
@@ -1199,6 +1203,16 @@ bool RenderElementScion::shouldApplySizeContainment() const
 bool RenderElementScion::shouldApplyPaintContainment() const
 {
     return RenderElementScion_shouldApplyPaintContainment(m_handle);
+}
+
+const RenderStyle* RenderElementScion::spellingErrorPseudoStyle() const
+{
+    return static_cast<const RenderStyle*>(RenderElementScion_spellingErrorPseudoStyle(m_handle));
+}
+
+const RenderStyle* RenderElementScion::grammarErrorPseudoStyle() const
+{
+    return static_cast<const RenderStyle*>(RenderElementScion_grammarErrorPseudoStyle(m_handle));
 }
 
 void RenderElementScion::didAttachChild(RenderObject& child)
