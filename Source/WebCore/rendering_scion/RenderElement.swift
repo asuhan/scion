@@ -685,6 +685,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     return true
   }
 
+  func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
+    assert(isNativeImpl())
+    return textSegmentPseudoStyle(.SpellingError)
+  }
+
+  func grammarErrorPseudoStyle() -> RenderStyleWrapper? {
+    assert(isNativeImpl())
+    return textSegmentPseudoStyle(.GrammarError)
+  }
+
   func didAttachChild(child: RenderObjectWrapper) {
     assert(isNativeImpl())
     if let textRenderer = child as? RenderTextWrapper {
@@ -2701,6 +2711,29 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
 
     ensureRareData().referencedSVGResources = nil
+  }
+
+  private func textSegmentPseudoStyle(_ pseudoId: PseudoId) -> RenderStyleWrapper? {
+    assert(isNativeImpl())
+    if isAnonymous() {
+      return nil
+    }
+
+    if let pseudoStyle = getCachedPseudoStyle(
+      pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: pseudoId))
+    {
+      // We intentionally return the pseudo style here if it exists before ascending to the
+      // shadow host element. This allows us to apply pseudo styles in user agent shadow
+      // roots, instead of always deferring to the shadow host's selection pseudo style.
+      return pseudoStyle
+    }
+
+    if let renderer = rendererForPseudoStyleAcrossShadowBoundary() {
+      return renderer.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: pseudoId))
+    }
+
+    return nil
   }
 
   private var m_firstChild: RenderObjectWrapper?
