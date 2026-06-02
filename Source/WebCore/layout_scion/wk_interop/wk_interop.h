@@ -824,6 +824,7 @@ int32_t RenderBoxModelObject_baselinePosition(const void*, uint8_t, bool, uint8_
 void* RenderBoxModelObject_inlineContinuation(const void*);
 bool RenderListMarker_isInside(const void*);
 void* RenderListMarker_listItem(void*);
+const void* RenderText_firstLineStyle(const void*);
 void* RenderText_textNode(const void*);
 const void* RenderText_spellingErrorPseudoStyle(const void*);
 const void* RenderText_grammarErrorPseudoStyle(const void*);

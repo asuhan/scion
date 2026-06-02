@@ -317,7 +317,9 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func textFirstLineStyle() -> RenderStyleWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return convert_render_style(p: wk_interop.RenderText_firstLineStyle(id()))
+    }
     return parent()!.elementFirstLineStyle()
   }
 

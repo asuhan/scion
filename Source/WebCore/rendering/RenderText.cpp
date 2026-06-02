@@ -78,6 +78,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT const void* RenderText_firstLineStyle(const void* p)
+{
+    return &static_cast<const WebCore::RenderText*>(p)->firstLineStyle();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderText_textNode(const void* p)
 {
     return static_cast<const WebCore::RenderText*>(p)->textNode();
