@@ -310,7 +310,8 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   func textNode() -> TextWrapper? {
     if !isNativeImpl() {
-      return TextWrapper(p: wk_interop.RenderText_textNode(id()))
+      guard let textNode = wk_interop.RenderText_textNode(id()) else { return nil }
+      return TextWrapper(p: textNode)
     }
     return super.node() as! TextWrapper?
   }
