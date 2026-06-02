@@ -811,6 +811,7 @@ void* RenderBoxModelObject_inlineContinuation(const void*);
 bool RenderListMarker_isInside(const void*);
 void* RenderListMarker_listItem(void*);
 void RenderText_setNeedsVisualReordering(void*);
+bool RenderText_canUseSimpleFontCodePath(const void*);
 void RenderText_styleDidChange(void*, uint8_t, const void*);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);

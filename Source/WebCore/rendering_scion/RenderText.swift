@@ -740,7 +740,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func canUseSimpleFontCodePath() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderText_canUseSimpleFontCodePath(id()) }
     return m_canUseSimpleFontCodePath
   }
 
