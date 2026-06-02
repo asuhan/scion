@@ -78,6 +78,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderText_textNode(const void* p)
+{
+    return static_cast<const WebCore::RenderText*>(p)->textNode();
+}
+
 extern "C" WEBCORE_EXPORT void RenderText_setNeedsVisualReordering(void* p)
 {
     static_cast<WebCore::RenderText*>(p)->setNeedsVisualReordering();

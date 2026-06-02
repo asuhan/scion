@@ -823,6 +823,7 @@ int32_t RenderBoxModelObject_baselinePosition(const void*, uint8_t, bool, uint8_
 void* RenderBoxModelObject_inlineContinuation(const void*);
 bool RenderListMarker_isInside(const void*);
 void* RenderListMarker_listItem(void*);
+void* RenderText_textNode(const void*);
 void RenderText_setNeedsVisualReordering(void*);
 bool RenderText_canUseSimpleFontCodePath(const void*);
 void RenderText_styleDidChange(void*, uint8_t, const void*);
