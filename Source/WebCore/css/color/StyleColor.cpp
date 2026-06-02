@@ -41,6 +41,16 @@
 #include "StyleRelativeColor.h"
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void* StyleColor_create()
+{
+    return new WebCore::StyleColor();
+}
+
+extern "C" WEBCORE_EXPORT void StyleColor_destroy(const void* p)
+{
+    delete static_cast<const WebCore::StyleColor*>(p);
+}
+
 namespace WebCore {
 
 StyleColor::StyleColor(StyleColor::ColorKind&& color)

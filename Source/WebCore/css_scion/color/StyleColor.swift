@@ -29,6 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 struct StyleColorOptions: OptionSet {
   let rawValue: Int
 
@@ -41,16 +43,15 @@ struct StyleColorOptions: OptionSet {
 class StyleColorWrapper {
   // The default constructor initializes to StyleCurrentColor to preserve old behavior,
   // we might want to change it to invalid color at some point.
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init() { p = wk_interop.StyleColor_create()! }
 
   // Convenience constructors that create StyleAbsoluteColor.
   init(_ color: ColorWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  deinit { wk_interop.StyleColor_destroy(p) }
 
   func isCurrentColor() -> Bool {
     // TODO(asuhan): implement this
@@ -61,4 +62,6 @@ class StyleColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
