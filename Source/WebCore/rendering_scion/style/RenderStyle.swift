@@ -2980,8 +2980,8 @@ class RenderStyleWrapper: Equatable {
   func hasVisibleStroke() -> Bool { return wk_interop.RenderStyle_hasVisibleStroke(p!) }
 
   func computedStrokeColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let c = wk_interop.RenderStyle_computedStrokeColor(p!)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func strokeMiterLimit() -> Float32 { return wk_interop.RenderStyle_strokeMiterLimit(p!) }

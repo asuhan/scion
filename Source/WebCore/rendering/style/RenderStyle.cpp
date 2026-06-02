@@ -1863,6 +1863,13 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasVisibleStroke(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasVisibleStroke();
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_computedStrokeColor(const void* p)
+{
+    const auto color = static_cast<const WebCore::RenderStyle*>(p)->computedStrokeColor();
+    const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_strokeMiterLimit(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->strokeMiterLimit();
