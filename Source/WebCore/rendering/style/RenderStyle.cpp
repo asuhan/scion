@@ -933,6 +933,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_preserveNewline(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->preserveNewline();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_textShadow(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->textShadow();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_top(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().top().rawValue();
