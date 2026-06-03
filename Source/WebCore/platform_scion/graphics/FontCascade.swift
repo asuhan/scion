@@ -230,10 +230,7 @@ class FontCascadeWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func isLoadingCustomFonts() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isLoadingCustomFonts() -> Bool { return wk_interop.FontCascade_isLoadingCustomFonts(p!) }
 }
 
 struct GlyphOverflow {

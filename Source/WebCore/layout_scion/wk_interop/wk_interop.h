@@ -398,6 +398,7 @@ struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
     uint8_t direction,
     uint8_t expansion_behavior_left,
     uint8_t expansion_behavior_right);
+bool FontCascade_isLoadingCustomFonts(const void*);
 float FontCascadeDescription_specifiedSize(const void*);
 bool FontCascadeDescription_isAbsoluteSize(const void*);
 void FontCascadeDescription_setSpecifiedSize(const void*, float);
