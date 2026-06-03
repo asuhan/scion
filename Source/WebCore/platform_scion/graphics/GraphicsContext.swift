@@ -501,6 +501,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func scaleFactor() -> FloatSize {
+    let size = wk_interop.GraphicsContext_scaleFactor(p!)
+    return FloatSize(width: size.width, height: size.height)
+  }
+
   func setContentfulPaintDetected() { wk_interop.GraphicsContext_setContentfulPaintDetected(p!) }
 
   func contentfulPaintDetected() -> Bool {

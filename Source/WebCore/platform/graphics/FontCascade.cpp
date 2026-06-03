@@ -43,6 +43,11 @@
 #include <wtf/text/AtomStringHash.h>
 #include <wtf/text/StringBuilder.h>
 
+extern "C" WEBCORE_EXPORT uint32_t FontCascade_generation(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->generation();
+}
+
 extern "C" WEBCORE_EXPORT void* FontCascade_fonts(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->fonts();

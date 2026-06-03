@@ -398,6 +398,7 @@ struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
     uint8_t direction,
     uint8_t expansion_behavior_left,
     uint8_t expansion_behavior_right);
+uint32_t FontCascade_generation(const void*);
 void* FontCascade_fonts(const void*);
 bool FontCascade_isLoadingCustomFonts(const void*);
 float FontCascadeDescription_specifiedSize(const void*);
@@ -1661,6 +1662,7 @@ void GraphicsContext_rotate(void* p, float);
 void GraphicsContext_translateBySize(void*, struct FloatSizeRaw);
 void GraphicsContext_translateByPoint(void*, struct FloatPointRaw);
 void GraphicsContext_translateByXy(void*, float, float);
+struct FloatSizeRaw GraphicsContext_scaleFactor(const void*);
 void GraphicsContext_setContentfulPaintDetected(void*);
 bool GraphicsContext_contentfulPaintDetected(const void*);
 uint8_t GraphicsLayer_type(const void*);

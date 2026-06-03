@@ -45,9 +45,26 @@ private final class GlyphDisplayListCacheEntry {
 
 struct GlyphDisplayListCacheKey: Hashable {
   init(_ textRun: TextRunWrapper, _ font: FontCascadeWrapper, _ context: GraphicsContextWrapper) {
+    self.textRun = textRun
+    self.scaleFactor = context.scaleFactor()
+    self.fontCascadeGeneration = font.generation()
+    self.shouldSubpixelQuantizeFonts = context.shouldSubpixelQuantizeFonts()
+  }
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hash(into hasher: inout Hasher) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let textRun: TextRunWrapper
+  private let scaleFactor: FloatSize
+  private let fontCascadeGeneration: UInt32
+  private let shouldSubpixelQuantizeFonts: Bool
 }
 
 class GlyphDisplayListCache {

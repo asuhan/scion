@@ -211,6 +211,8 @@ class FontCascadeWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func generation() -> UInt32 { return wk_interop.FontCascade_generation(p!) }
+
   enum CodePath {
     case Auto
     case Simple

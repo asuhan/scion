@@ -325,6 +325,12 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_translateByXy(void* p, float x, f
     static_cast<WebCore::GraphicsContext*>(p)->translate(x, y);
 }
 
+extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsContext_scaleFactor(const void* p)
+{
+    const auto size = static_cast<const WebCore::GraphicsContext*>(p)->scaleFactor();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_setContentfulPaintDetected(void* p)
 {
     static_cast<WebCore::GraphicsContext*>(p)->setContentfulPaintDetected();
