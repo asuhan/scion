@@ -242,7 +242,7 @@ extern "C" void* RenderObjectScion_document(const void*);
 
 extern "C" void* RenderObjectScion_frame(void*);
 
-extern "C" const void* RenderObjectScion_page(const void*);
+extern "C" void* RenderObjectScion_page(const void*);
 
 extern "C" const void* RenderObjectScion_settings(const void*);
 

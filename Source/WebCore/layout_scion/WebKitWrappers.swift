@@ -1749,7 +1749,7 @@ func RenderObjectScion_frame(_ objectRaw: UnsafeMutableRawPointer) -> UnsafeMuta
 }
 
 @_cdecl("RenderObjectScion_page")
-func RenderObjectScion_page(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+func RenderObjectScion_page(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.page().p
 }

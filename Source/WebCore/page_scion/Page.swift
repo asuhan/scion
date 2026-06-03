@@ -26,7 +26,7 @@ enum CompositingPolicy {
 }
 
 class PageWrapper {
-  init(_ p: UnsafeRawPointer) { self.p = p }
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func mainFrame() -> FrameWrapper { return FrameWrapper(wk_interop.Page_mainFrame(p)) }
 
@@ -73,8 +73,8 @@ class PageWrapper {
   func isInWindow() -> Bool { return wk_interop.Page_isInWindow(p) }
 
   func addRelevantRepaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!object.isNativeImpl())
+    wk_interop.Page_addRelevantRepaintedObject(p, object.id(), convertLayoutRect(objectPaintRect))
   }
 
   func addRelevantUnpaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
@@ -96,5 +96,5 @@ class PageWrapper {
     return wk_interop.Page_hasEverSetVisibilityAdjustment(p)
   }
 
-  let p: UnsafeRawPointer
+  let p: UnsafeMutableRawPointer
 }

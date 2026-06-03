@@ -96,6 +96,7 @@
 #include "InspectorInstrumentation.h"
 #include "LayoutDisallowedScope.h"
 #include "LegacySchemeRegistry.h"
+#include "LayoutRectRaw.h"
 #include "LoaderStrategy.h"
 #include "LocalFrameLoaderClient.h"
 #include "LocalFrameView.h"
@@ -282,6 +283,22 @@ extern "C" WEBCORE_EXPORT bool Page_isVisible(const void* raw)
 extern "C" WEBCORE_EXPORT bool Page_isInWindow(const void* raw)
 {
     return static_cast<const WebCore::Page*>(raw)->isInWindow();
+}
+
+namespace {
+
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height)  };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void Page_addRelevantRepaintedObject(void* raw, const void* objectRaw, LayoutRectRaw objectPaintRectRaw)
+{
+    const auto& object = *static_cast<const WebCore::RenderObject*>(objectRaw);
+    const auto objectPaintRect = convertLayoutRectRaw(objectPaintRectRaw);
+    static_cast<WebCore::Page*>(raw)->addRelevantRepaintedObject(object, objectPaintRect);
 }
 
 extern "C" WEBCORE_EXPORT bool Page_hasEverSetVisibilityAdjustment(const void* raw)
