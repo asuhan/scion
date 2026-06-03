@@ -20,6 +20,7 @@ target_sources(layout_scion PRIVATE
     FontBaseline.swift
     FontCascade.swift
     FontCascadeDescription.swift
+    FontCascadeFonts.swift
     FontDescription.swift
     FontMetrics.swift
     FontSelectionAlgorithm.swift

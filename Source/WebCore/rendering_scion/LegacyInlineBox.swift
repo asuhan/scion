@@ -151,11 +151,22 @@ class LegacyInlineBox {
     root().blockFlow().flipForWritingMode(rect: &rect)
   }
 
+  func setIsInGlyphDisplayListCache() { setIsInGlyphDisplayListCache(true) }
+
+  func setIsInGlyphDisplayListCache(_ inCache: Bool) {
+    m_bitfields.isInGlyphDisplayListCache = inCache
+  }
+
+  // For LegacyInlineTextBox
+  var isInGlyphDisplayListCache: Bool { return m_bitfields.isInGlyphDisplayListCache }
+
   private struct InlineBoxBitfields {
     let firstLine = false
     let bidiEmbeddingLevel: UInt8 = 0
     let hasVirtualLogicalHeight = false
     var isHorizontal = true
+    // for LegacyInlineTextBox
+    var isInGlyphDisplayListCache = false
   }
 
   private let m_nextOnLine: LegacyInlineBox? = nil  // The next element on the same line as us.

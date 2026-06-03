@@ -23,8 +23,10 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-protocol DisplayTextBox {
+protocol DisplayTextBox: AnyObject {
+  func setIsInGlyphDisplayListCache()
   func removeFromGlyphDisplayListCache()
+  var isInGlyphDisplayListCache: Bool { get }
 }
 
 extension InlineDisplay {
@@ -267,6 +269,8 @@ extension InlineDisplay {
 
     func moveToLine(lineIndex: UInt32) { self.lineIndex = lineIndex }
 
+    func setIsInGlyphDisplayListCache() { isInGlyphDisplayListCache = true }
+
     func removeFromGlyphDisplayListCache() {
       if isInGlyphDisplayListCache {
         // TODO(asuhan): implement this
@@ -290,7 +294,7 @@ extension InlineDisplay {
     var isFirstForLayoutBox = false
     var isLastForLayoutBox = false
     var isFullyTruncated = false
-    private let isInGlyphDisplayListCache = false
+    var isInGlyphDisplayListCache = false
 
     var m_text = Text()
   }

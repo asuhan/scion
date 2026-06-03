@@ -203,6 +203,14 @@ class FontCascadeWrapper: Equatable {
     return (UInt64(raw.count), raw.isAfterExpansion)
   }
 
+  func displayListForTextRun(
+    _ context: GraphicsContextWrapper, _ run: TextRunWrapper, from: UInt32 = 0, to: UInt32? = nil,
+    _ customFontNotReadyAction: CustomFontNotReadyAction = .DoNotPaintIfFontNotReady
+  ) -> DisplayList.DisplayListWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum CodePath {
     case Auto
     case Simple
@@ -228,6 +236,11 @@ class FontCascadeWrapper: Equatable {
   func useBackslashAsYenSymbol() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func fonts() -> FontCascadeFontsWrapper? {
+    guard let raw = wk_interop.FontCascade_fonts(p!) else { return nil }
+    return FontCascadeFontsWrapper(raw)
   }
 
   func isLoadingCustomFonts() -> Bool { return wk_interop.FontCascade_isLoadingCustomFonts(p!) }

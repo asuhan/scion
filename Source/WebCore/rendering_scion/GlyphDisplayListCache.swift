@@ -23,16 +23,91 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class GlyphDisplayListCache {
-  func get<LayoutRun>(
-    run: LayoutRun, font: FontCascadeWrapper, context: GraphicsContextWrapper,
-    textRun: TextRunWrapper, paintInfo: PaintInfoWrapper
-  )
-    -> DisplayList.DisplayListWrapper
-  {
+private final class GlyphDisplayListCacheEntry {
+  static func create(
+    _ displayList: DisplayList.DisplayListWrapper, _ textRun: TextRunWrapper,
+    _ font: FontCascadeWrapper, _ context: GraphicsContextWrapper
+  ) -> GlyphDisplayListCacheEntry {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func displayList() -> DisplayList.DisplayListWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func key() -> GlyphDisplayListCacheKey {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+struct GlyphDisplayListCacheKey: Hashable {
+  init(_ textRun: TextRunWrapper, _ font: FontCascadeWrapper, _ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+class GlyphDisplayListCache {
+  func get<LayoutRun: DisplayTextBox>(
+    run: LayoutRun, font: FontCascadeWrapper, context: GraphicsContextWrapper,
+    textRun: TextRunWrapper, paintInfo: PaintInfoWrapper
+  )
+    -> DisplayList.DisplayListWrapper?
+  { return getDisplayList(run, font, context, textRun, paintInfo) }
+
+  private static func canShareDisplayList(_ displayList: DisplayList.DisplayListWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func getDisplayList<LayoutRun: DisplayTextBox>(
+    _ run: LayoutRun, _ font: FontCascadeWrapper, _ context: GraphicsContextWrapper,
+    _ textRun: TextRunWrapper, _ paintInfo: PaintInfoWrapper
+  ) -> DisplayList.DisplayListWrapper? {
+    // TODO(asuhan): implement memory pressure handling
+
+    if font.isLoadingCustomFonts() || font.fonts() == nil {
+      return nil
+    }
+
+    if let result = getIfExists(run) { return result }
+
+    // TODO(asuhan): implement maximum cache size cap
+
+    if let entry = m_entries[GlyphDisplayListCacheKey(textRun, font, context)] {
+      let result = entry.displayList()
+      run.setIsInGlyphDisplayListCache()
+      m_entriesForLayoutRun[ObjectIdentifier(run)] = entry
+      return result
+    }
+
+    guard let displayList = font.displayListForTextRun(context, textRun) else { return nil }
+
+    let entry = GlyphDisplayListCacheEntry.create(displayList, textRun, font, context)
+    let result = entry.displayList()
+    if GlyphDisplayListCache.canShareDisplayList(result) {
+      m_entries[entry.key()] = entry
+    }
+    run.setIsInGlyphDisplayListCache()
+    m_entriesForLayoutRun[ObjectIdentifier(run)] = entry
+    return result
+  }
+
+  private func getIfExists<LayoutRun: DisplayTextBox>(_ run: LayoutRun) -> DisplayList
+    .DisplayListWrapper?
+  {
+    if !run.isInGlyphDisplayListCache {
+      return nil
+    }
+    return m_entriesForLayoutRun[ObjectIdentifier(run)]?.displayList()
+  }
+
+  private var m_entriesForLayoutRun: [ObjectIdentifier: GlyphDisplayListCacheEntry] = [:]
+  // TODO(asuhan): use more compact data structure for m_entries
+  private var m_entries: [GlyphDisplayListCacheKey: GlyphDisplayListCacheEntry] = [:]
 
   static var singleton = GlyphDisplayListCache()
 }
