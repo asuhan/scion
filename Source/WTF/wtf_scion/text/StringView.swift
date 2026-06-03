@@ -25,6 +25,22 @@
 
 import wk_interop
 
+extension WTF {
+
+  static func containsOnly<CharacterType: BinaryInteger>(
+    _ isSpecialCharacter: (UChar) -> Bool, _ characters: CharSpanWrapper<CharacterType>
+  ) -> Bool {
+    let data = characters.data()
+    for character in data {
+      if !isSpecialCharacter(UChar(character)) {
+        return false
+      }
+    }
+    return true
+  }
+
+}
+
 class StringWrapperView {
   init(s: StringWrapper) { self.p = string_view_from_string(p: s.p) }
 
@@ -97,8 +113,10 @@ class StringWrapperView {
   }
 
   func containsOnly(isSpecialCharacter: (UChar) -> Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if is8Bit() {
+      return WTF.containsOnly(isSpecialCharacter, span8())
+    }
+    return WTF.containsOnly(isSpecialCharacter, span16())
   }
 
   var p: UnsafeRawPointer
