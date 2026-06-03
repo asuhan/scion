@@ -144,8 +144,8 @@ struct PaintInfoWrapper {
 
   func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
     if n == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      guard let enclosing = wk_interop.PaintInfo_enclosingSelfPaintingLayer(p!) else { return nil }
+      return RenderLayerWrapper(p: enclosing)
     }
     return n!.enclosingSelfPaintingLayer
   }

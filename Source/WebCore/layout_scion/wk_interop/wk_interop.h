@@ -1254,6 +1254,7 @@ bool PaintInfo_forceBlackText(const void*);
 bool PaintInfo_forceWhiteText(const void*);
 bool PaintInfo_skipRootBackground(const void*);
 bool PaintInfo_paintRootBackgroundOnly(const void*);
+void* PaintInfo_enclosingSelfPaintingLayer(const void*);
 void* PaintInfo_eventRegionContext(void*);
 bool PaintInfo_requireSecurityOriginAccessForWidgets(const void*);
 struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);

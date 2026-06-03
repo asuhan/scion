@@ -138,6 +138,12 @@ extern "C" WEBCORE_EXPORT bool PaintInfo_paintRootBackgroundOnly(const void* p)
     return static_cast<const WebCore::PaintInfo*>(p)->paintRootBackgroundOnly();
 }
 
+extern "C" WEBCORE_EXPORT void* PaintInfo_enclosingSelfPaintingLayer(const void* p)
+{
+    const auto layer = static_cast<const WebCore::PaintInfo*>(p)->enclosingSelfPaintingLayer();
+    return const_cast<void*>(static_cast<const void*>(layer));
+}
+
 extern "C" WEBCORE_EXPORT void* PaintInfo_eventRegionContext(void* p)
 {
     return static_cast<WebCore::PaintInfo*>(p)->eventRegionContext();
