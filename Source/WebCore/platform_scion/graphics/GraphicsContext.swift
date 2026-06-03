@@ -512,5 +512,5 @@ class GraphicsContextWrapper {
     return wk_interop.GraphicsContext_contentfulPaintDetected(p!)
   }
 
-  private let p: UnsafeMutableRawPointer?
+  let p: UnsafeMutableRawPointer?
 }

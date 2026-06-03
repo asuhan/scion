@@ -23,9 +23,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class DisplayList {
 
   class DisplayListWrapper {
+    init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
+    deinit { wk_interop.DisplayList_destroy(p) }
+
     func items() -> [ItemWrapper] {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -35,6 +41,8 @@ class DisplayList {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let p: UnsafeMutableRawPointer
   }
 
 }

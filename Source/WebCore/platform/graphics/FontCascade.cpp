@@ -43,6 +43,29 @@
 #include <wtf/text/AtomStringHash.h>
 #include <wtf/text/StringBuilder.h>
 
+struct OptionalUIntRaw {
+    uint32_t value;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT void* FontCascade_displayListForTextRun(const void* p, void* contextRaw, const void* runRaw, uint32_t from, OptionalUIntRaw toRaw, bool useFallbackIfFontNotReady)
+{
+    auto fontCascade = static_cast<const WebCore::FontCascade*>(p);
+    auto& context = *static_cast<WebCore::GraphicsContext*>(contextRaw);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    const auto to = toRaw.is_valid ? toRaw.value : std::optional<unsigned>();
+    const auto customFontNotReadyAction = useFallbackIfFontNotReady
+        ? WebCore::FontCascade::CustomFontNotReadyAction::UseFallbackIfFontNotReady
+        : WebCore::FontCascade::CustomFontNotReadyAction::DoNotPaintIfFontNotReady;
+    auto dl = fontCascade->displayListForTextRun(context, run, from, to, customFontNotReadyAction);
+    return dl.release();
+}
+
+extern "C" WEBCORE_EXPORT void DisplayList_destroy(const void* p)
+{
+    delete static_cast<const WebCore::DisplayList::DisplayList*>(p);
+}
+
 extern "C" WEBCORE_EXPORT uint32_t FontCascade_generation(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->generation();

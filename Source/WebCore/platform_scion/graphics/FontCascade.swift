@@ -207,8 +207,12 @@ class FontCascadeWrapper: Equatable {
     _ context: GraphicsContextWrapper, _ run: TextRunWrapper, from: UInt32 = 0, to: UInt32? = nil,
     _ customFontNotReadyAction: CustomFontNotReadyAction = .DoNotPaintIfFontNotReady
   ) -> DisplayList.DisplayListWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard
+      let dlRaw = wk_interop.FontCascade_displayListForTextRun(
+        p!, context.p!, run.p!, from, OptionalUIntRaw(value: to ?? 0, is_valid: to != nil),
+        customFontNotReadyAction == .UseFallbackIfFontNotReady)
+    else { return nil }
+    return DisplayList.DisplayListWrapper(dlRaw)
   }
 
   func generation() -> UInt32 { return wk_interop.FontCascade_generation(p!) }

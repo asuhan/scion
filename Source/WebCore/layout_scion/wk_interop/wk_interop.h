@@ -398,6 +398,14 @@ struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
     uint8_t direction,
     uint8_t expansion_behavior_left,
     uint8_t expansion_behavior_right);
+void* FontCascade_displayListForTextRun(
+    const void* p,
+    void* contextRaw,
+    const void* runRaw,
+    uint32_t from,
+    struct OptionalUIntRaw toRaw,
+    bool useFallbackIfFontNotReady);
+void DisplayList_destroy(const void*);
 uint32_t FontCascade_generation(const void*);
 void* FontCascade_fonts(const void*);
 bool FontCascade_isLoadingCustomFonts(const void*);
