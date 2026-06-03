@@ -37,7 +37,7 @@ struct SurrogatePairAwareTextIterator: TextIterator {
     let relativeIndex = currentIndex - originalIndex
     var clusterLengthOut: UInt64 = 0
     character = U16_NEXT_buff(
-      s: characters + Int(relativeIndex), i: &clusterLengthOut,
+      s: characters.baseAddress! + Int(relativeIndex), i: &clusterLengthOut,
       length: endIndex - currentIndex)
     clusterLength = UInt32(clusterLengthOut)
     return true
@@ -47,7 +47,7 @@ struct SurrogatePairAwareTextIterator: TextIterator {
     currentIndex += advanceLength
   }
 
-  private let characters: UnsafePointer<UChar>
+  private let characters: UnsafeBufferPointer<UChar>
   private var currentIndex: UInt32
   private let originalIndex: UInt32
   private let lastIndex: UInt32

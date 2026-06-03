@@ -68,12 +68,16 @@ class CharSpanWrapper<CharacterType> {
     fatalError("Not implemented")
   }
 
-  func data() -> UnsafePointer<CharacterType> {
+  func data() -> UnsafeBufferPointer<CharacterType> {
     switch MemoryLayout<CharacterType>.size {
     case 1:
-      return wk_interop.span8_data(p).assumingMemoryBound(to: CharacterType.self)
+      return UnsafeBufferPointer<CharacterType>(
+        start: wk_interop.span8_data(p).assumingMemoryBound(to: CharacterType.self),
+        count: Int(size()))
     case 2:
-      return wk_interop.span16_data(p).assumingMemoryBound(to: CharacterType.self)
+      return UnsafeBufferPointer<CharacterType>(
+        start: wk_interop.span16_data(p).assumingMemoryBound(to: CharacterType.self),
+        count: Int(size()))
     default:
       fatalError("Not reached")
     }
