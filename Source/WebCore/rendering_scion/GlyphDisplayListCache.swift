@@ -34,8 +34,5 @@ class GlyphDisplayListCache {
     fatalError("Not implemented")
   }
 
-  static var singleton: GlyphDisplayListCache {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static var singleton = GlyphDisplayListCache()
 }
