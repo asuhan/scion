@@ -28,19 +28,28 @@ private final class GlyphDisplayListCacheEntry {
     _ displayList: DisplayList.DisplayListWrapper, _ textRun: TextRunWrapper,
     _ font: FontCascadeWrapper, _ context: GraphicsContextWrapper
   ) -> GlyphDisplayListCacheEntry {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return GlyphDisplayListCacheEntry(displayList, textRun, font, context)
   }
 
-  func displayList() -> DisplayList.DisplayListWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func displayList() -> DisplayList.DisplayListWrapper { return m_displayList }
+
+  private init(
+    _ displayList: DisplayList.DisplayListWrapper, _ textRun: TextRunWrapper,
+    _ font: FontCascadeWrapper, _ context: GraphicsContextWrapper
+  ) {
+    m_displayList = displayList
+    m_textRun = textRun.isolatedCopy()
+    m_scaleFactor = context.scaleFactor()
+    m_fontCascadeGeneration = font.generation()
+    m_shouldSubpixelQuantizeFont = context.shouldSubpixelQuantizeFonts()
   }
 
-  func key() -> GlyphDisplayListCacheKey {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  private let m_displayList: DisplayList.DisplayListWrapper
+
+  private let m_textRun: TextRunWrapper
+  private let m_scaleFactor: FloatSize
+  private let m_fontCascadeGeneration: UInt32
+  private let m_shouldSubpixelQuantizeFont: Bool
 }
 
 struct GlyphDisplayListCacheKey: Hashable {
@@ -106,7 +115,7 @@ class GlyphDisplayListCache {
     let entry = GlyphDisplayListCacheEntry.create(displayList, textRun, font, context)
     let result = entry.displayList()
     if GlyphDisplayListCache.canShareDisplayList(result) {
-      m_entries[entry.key()] = entry
+      m_entries[GlyphDisplayListCacheKey(textRun, font, context)] = entry
     }
     run.setIsInGlyphDisplayListCache()
     m_entriesForLayoutRun[ObjectIdentifier(run)] = entry

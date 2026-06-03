@@ -47,6 +47,8 @@ class TextRunWrapper {
       directionalOverride: directionalOverride)
   }
 
+  private init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   deinit { wk_interop.TextRun_destroy(p!) }
 
   func subRun(startOffset: UInt32, length: UInt32) -> TextRunWrapper {
@@ -114,6 +116,10 @@ class TextRunWrapper {
   func text() -> StringWrapperView {
     assert(self.p != nil)
     return StringWrapperView(p: TextRun_text(self.p!))
+  }
+
+  func isolatedCopy() -> TextRunWrapper {
+    return TextRunWrapper(wk_interop.TextRun_isolatedCopy(p!))
   }
 
   var m_allow: Bool = false
