@@ -1314,6 +1314,9 @@ class TextBoxPainter {
   }
 
   private func debugTextShadow() -> ShadowData? {
+    if !renderer.settings().legacyLineLayoutVisualCoverageEnabled() {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
