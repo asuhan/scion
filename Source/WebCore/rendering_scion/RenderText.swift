@@ -294,13 +294,11 @@ private func invalidateLineLayoutPathOnContentChangeIfNeeded(
 
 class RenderTextWrapper: RenderObjectWrapper {
   convenience init(type: `Type`, textNode: TextWrapper, text: StringWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.init(type, textNode, text)
   }
 
   convenience init(type: `Type`, document: Document, text: StringWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.init(type, document.ContainerNode(), text)
   }
 
   private init(_ type: `Type`, _ node: NodeWrapper, _ text: StringWrapper) {
