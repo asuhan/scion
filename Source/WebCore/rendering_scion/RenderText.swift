@@ -303,6 +303,17 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private init(_ type: `Type`, _ node: NodeWrapper, _ text: StringWrapper) {
+    super.init(type, node, .IsText, RenderObjectWrapper.TypeSpecificFlags())
+    m_text = text
+    m_containsOnlyASCII = text.containsOnlyASCII()
+    assert(!m_text!.isNull())
+    m_canUseSimpleFontCodePath = computeCanUseSimpleFontCodePath()
+    assert(isRenderText())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override func layoutBox() -> InlineTextBoxWrapper? {
     assert(isNativeImpl())
     return super.layoutBox() as! InlineTextBoxWrapper?
@@ -951,6 +962,13 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func computeCanUseSimpleFontCodePath() -> Bool {
+    if m_containsOnlyASCII || text().is8Bit() {
+      return true
+    }
+    return FontCascadeWrapper.characterRangeCodePath(text().span16()) == .Simple
+  }
+
   func setRenderedText(_ newText: StringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1478,7 +1496,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   private var beginMinWidth: Float32 = 0
   private var endMinWidth: Float32 = 0
 
-  private let m_text: StringWrapper? = nil
+  private var m_text: StringWrapper? = nil
 
   var m_canUseSimplifiedTextMeasuring: Bool? = nil
   private var m_hasStrongDirectionalityContent: Bool? = nil
@@ -1492,6 +1510,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   // just dirtying everything when character data is modified (e.g., appended/inserted
   // or removed).
   private var linesDirty = false
+  private var m_containsOnlyASCII = false
   private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
   private var useBackslashAsYenSymbol = false

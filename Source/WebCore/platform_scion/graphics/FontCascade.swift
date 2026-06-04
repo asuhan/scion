@@ -217,7 +217,7 @@ class FontCascadeWrapper: Equatable {
 
   func generation() -> UInt32 { return wk_interop.FontCascade_generation(p!) }
 
-  enum CodePath {
+  enum CodePath: UInt8 {
     case Auto
     case Simple
     case Complex
@@ -227,6 +227,10 @@ class FontCascadeWrapper: Equatable {
   func codePath(_ run: TextRunWrapper, from: UInt32? = nil, to: UInt32? = nil) -> CodePath {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func characterRangeCodePath(_ span: CharSpanWrapper<UChar>) -> CodePath {
+    return CodePath(rawValue: wk_interop.FontCascade_characterRangeCodePath(span.p))!
   }
 
   func fontSelector() -> FontSelectorWrapper? {

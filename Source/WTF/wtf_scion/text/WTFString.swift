@@ -127,6 +127,8 @@ class StringWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func containsOnlyASCII() -> Bool { return wk_interop.String_containsOnlyASCII(p) }
+
   static func == (this: StringWrapper, other: StringWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

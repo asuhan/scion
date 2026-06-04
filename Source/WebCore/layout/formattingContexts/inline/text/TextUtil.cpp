@@ -286,6 +286,11 @@ extern "C" WEBCORE_EXPORT uint32_t String_hash(const void* p)
     return static_cast<String*>(const_cast<void*>(p))->hash();
 }
 
+extern "C" WEBCORE_EXPORT bool String_containsOnlyASCII(const void* p)
+{
+    return static_cast<String*>(const_cast<void*>(p))->impl()->containsOnlyASCII();
+}
+
 extern "C" WEBCORE_EXPORT bool StringView_is8Bit(const void* p)
 {
     return static_cast<const StringView*>(p)->is8Bit();

@@ -407,6 +407,7 @@ void* FontCascade_displayListForTextRun(
     bool useFallbackIfFontNotReady);
 void DisplayList_destroy(const void*);
 uint32_t FontCascade_generation(const void*);
+uint8_t FontCascade_characterRangeCodePath(const void*);
 void* FontCascade_fonts(const void*);
 bool FontCascade_isLoadingCustomFonts(const void*);
 float FontCascadeDescription_specifiedSize(const void*);
@@ -453,6 +454,7 @@ const void* String_substring(const void* p, uint32_t position, uint32_t length);
 bool String_is8Bit(const void*);
 void String_convertTo16Bit(const void*);
 uint32_t String_hash(const void*);
+bool String_containsOnlyASCII(const void*);
 bool StringView_is8Bit(const void*);
 const void* TextRun_span8(const void*);
 const void* TextRun_span16(const void*);
