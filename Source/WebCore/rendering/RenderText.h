@@ -78,14 +78,34 @@ public:
 
     virtual String originalText() const;
 
-    void extractTextBox(LegacyInlineTextBox& box) { m_legacyLineBoxes.extract(box); }
-    void attachTextBox(LegacyInlineTextBox& box) { m_legacyLineBoxes.attach(box); }
-    void removeTextBox(LegacyInlineTextBox& box) { m_legacyLineBoxes.remove(box); }
+    void extractTextBox(LegacyInlineTextBox& box)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_legacyLineBoxes.extract(box);
+    }
+    void attachTextBox(LegacyInlineTextBox& box)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_legacyLineBoxes.attach(box);
+    }
+    void removeTextBox(LegacyInlineTextBox& box)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_legacyLineBoxes.remove(box);
+    }
 
-    const String& text() const { return m_text; }
+    const String& text() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_text;
+    }
     String textWithoutConvertingBackslashToYenSymbol() const;
 
-    LegacyInlineTextBox* createInlineTextBox() { return m_legacyLineBoxes.createAndAppendLineBox(*this); }
+    LegacyInlineTextBox* createInlineTextBox()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyLineBoxes.createAndAppendLineBox(*this);
+    }
     void dirtyLegacyLineBoxes(bool fullLayout);
     void deleteLegacyLineBoxes();
 
@@ -102,10 +122,18 @@ public:
 
     Position positionForPoint(const LayoutPoint&, HitTestSource) final;
 
-    bool hasEmptyText() const { return m_text.isEmpty(); }
+    bool hasEmptyText() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_text.isEmpty();
+    }
 
     UChar characterAt(unsigned) const;
-    unsigned length() const final { return text().length(); }
+    unsigned length() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return text().length();
+    }
 
     void positionLineBox(LegacyInlineTextBox&);
 
@@ -143,14 +171,22 @@ public:
     void setText(const String&, bool force = false);
     void setTextWithOffset(const String&, unsigned offset, unsigned len, bool force = false);
 
-    bool canBeSelectionLeaf() const override { return true; }
+    bool canBeSelectionLeaf() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return true;
+    }
 
     LayoutRect collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>&);
 
     inline LayoutUnit marginLeft() const;
     inline LayoutUnit marginRight() const;
 
-    LegacyInlineTextBox* firstLegacyTextBox() const { return m_legacyLineBoxes.first(); }
+    LegacyInlineTextBox* firstLegacyTextBox() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyLineBoxes.first();
+    }
 
     int caretMinOffset() const final;
     int caretMaxOffset() const final;
@@ -164,14 +200,26 @@ public:
     int previousOffsetForBackwardDeletion(int current) const final;
     int nextOffset(int current) const final;
 
-    bool needsVisualReordering() const { return m_needsVisualReordering; }
-    void setNeedsVisualReordering() { m_needsVisualReordering = true; }
+    bool needsVisualReordering() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_needsVisualReordering;
+    }
+    void setNeedsVisualReordering()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_needsVisualReordering = true;
+    }
 
     void momentarilyRevealLastTypedCharacter(unsigned offsetAfterLastTypedCharacter);
 
     bool containsOnlyCollapsibleWhitespace() const;
 
-    bool canUseSimpleFontCodePath() const { return m_canUseSimpleFontCodePath; }
+    bool canUseSimpleFontCodePath() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_canUseSimpleFontCodePath;
+    }
 
     void removeAndDestroyLegacyTextBoxes();
 
@@ -202,12 +250,36 @@ public:
 
     void resetMinMaxWidth();
 
-    void setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring) { m_canUseSimplifiedTextMeasuring = canUseSimplifiedTextMeasuring; }
-    std::optional<bool> canUseSimplifiedTextMeasuring() const { return m_canUseSimplifiedTextMeasuring; }
-    void setHasPositionDependentContentWidth(bool hasPositionDependentContentWidth) { m_hasPositionDependentContentWidth = hasPositionDependentContentWidth; }
-    std::optional<bool> hasPositionDependentContentWidth() const { return m_hasPositionDependentContentWidth; }
-    void setHasStrongDirectionalityContent(bool hasStrongDirectionalityContent) { m_hasStrongDirectionalityContent = hasStrongDirectionalityContent; }
-    std::optional<bool> hasStrongDirectionalityContent() const { return m_hasStrongDirectionalityContent; }
+    void setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_canUseSimplifiedTextMeasuring = canUseSimplifiedTextMeasuring;
+    }
+    std::optional<bool> canUseSimplifiedTextMeasuring() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_canUseSimplifiedTextMeasuring;
+    }
+    void setHasPositionDependentContentWidth(bool hasPositionDependentContentWidth)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasPositionDependentContentWidth = hasPositionDependentContentWidth;
+    }
+    std::optional<bool> hasPositionDependentContentWidth() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasPositionDependentContentWidth;
+    }
+    void setHasStrongDirectionalityContent(bool hasStrongDirectionalityContent)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasStrongDirectionalityContent = hasStrongDirectionalityContent;
+    }
+    std::optional<bool> hasStrongDirectionalityContent() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasStrongDirectionalityContent;
+    }
 
 protected:
     virtual void computePreferredLogicalWidths(float leadWidth, bool forcedMinMaxWidthComputation = false);
@@ -225,7 +297,11 @@ private:
 
     ASCIILiteral renderName() const override;
 
-    bool canHaveChildren() const final { return false; }
+    bool canHaveChildren() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return false;
+    }
 
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*) override;
 
@@ -299,21 +375,25 @@ TextBreakIterator::ContentAnalysis mapWordBreakToContentAnalysis(WordBreak);
 
 inline UChar RenderText::characterAt(unsigned i) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return i >= length() ? 0 : text()[i];
 }
 
 inline const RenderStyle& RenderText::style() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return parent()->style();
 }
 
 inline const RenderStyle& RenderText::firstLineStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return parent()->firstLineStyle();
 }
 
 inline const RenderStyle* RenderText::getCachedPseudoStyle(const Style::PseudoElementIdentifier& pseudoElementIdentifier, const RenderStyle* parentStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Pseudostyle is associated with an element, so ascend the tree until we find a non-anonymous ancestor.
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->getCachedPseudoStyle(pseudoElementIdentifier, parentStyle);
@@ -322,6 +402,7 @@ inline const RenderStyle* RenderText::getCachedPseudoStyle(const Style::PseudoEl
 
 inline Color RenderText::selectionBackgroundColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->selectionBackgroundColor();
     return Color();
@@ -329,6 +410,7 @@ inline Color RenderText::selectionBackgroundColor() const
 
 inline Color RenderText::selectionForegroundColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->selectionForegroundColor();
     return Color();
@@ -336,6 +418,7 @@ inline Color RenderText::selectionForegroundColor() const
 
 inline Color RenderText::selectionEmphasisMarkColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->selectionEmphasisMarkColor();
     return Color();
@@ -343,6 +426,7 @@ inline Color RenderText::selectionEmphasisMarkColor() const
 
 inline std::unique_ptr<RenderStyle> RenderText::selectionPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->selectionPseudoStyle();
     return nullptr;
@@ -350,6 +434,7 @@ inline std::unique_ptr<RenderStyle> RenderText::selectionPseudoStyle() const
 
 inline const RenderStyle* RenderText::spellingErrorPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->spellingErrorPseudoStyle();
     return nullptr;
@@ -357,6 +442,7 @@ inline const RenderStyle* RenderText::spellingErrorPseudoStyle() const
 
 inline const RenderStyle* RenderText::grammarErrorPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->grammarErrorPseudoStyle();
     return nullptr;
@@ -364,6 +450,7 @@ inline const RenderStyle* RenderText::grammarErrorPseudoStyle() const
 
 inline const RenderStyle* RenderText::targetTextPseudoStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* ancestor = firstNonAnonymousAncestor())
         return ancestor->targetTextPseudoStyle();
     return nullptr;
@@ -376,6 +463,7 @@ inline RenderText* Text::renderer() const
 
 inline void RenderText::resetMinMaxWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_minWidth = { };
     m_maxWidth = { };
 }

@@ -320,26 +320,31 @@ void RenderText::setScionHandle(void* handle) {
 
 Layout::InlineTextBox* RenderText::layoutBox()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<Layout::InlineTextBox>(RenderObject::layoutBox());
 }
 
 const Layout::InlineTextBox* RenderText::layoutBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<Layout::InlineTextBox>(RenderObject::layoutBox());
 }
 
 ASCIILiteral RenderText::renderName() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return "RenderText"_s;
 }
 
 Text* RenderText::textNode() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<Text>(RenderObject::node());
 }
 
 bool RenderText::computeUseBackslashAsYenSymbol() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle& style = this->style();
     const auto& fontDescription = style.fontDescription();
     if (style.fontCascade().useBackslashAsYenSymbol())
@@ -354,6 +359,7 @@ bool RenderText::computeUseBackslashAsYenSymbol() const
 
 void RenderText::initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifiedTextMeasuring(const String& textContent)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& style = this->style();
     auto& fontCascade = style.fontCascade();
     // See webkit.org/b/252668
@@ -397,6 +403,7 @@ void RenderText::initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifi
 
 void RenderText::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // There is no need to ever schedule repaints from a style change of a text run, since
     // we already did this for the parent of the text run.
     // We do have to schedule layouts, though, since a style change can force us to
@@ -434,6 +441,7 @@ void RenderText::styleDidChange(StyleDifference diff, const RenderStyle* oldStyl
 
 void RenderText::removeAndDestroyLegacyTextBoxes()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!renderTreeBeingDestroyed())
         m_legacyLineBoxes.removeAllFromParent(*this);
 #if !ASSERT_WITH_SECURITY_IMPLICATION_DISABLED
@@ -445,6 +453,7 @@ void RenderText::removeAndDestroyLegacyTextBoxes()
 
 void RenderText::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_hasSecureTextTimer)
         secureTextTimers().remove(*this);
 
@@ -460,11 +469,13 @@ void RenderText::willBeDestroyed()
 
 String RenderText::originalText() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_originalTextDiffersFromRendered ? originalTextMap().get(this) : m_text;
 }
 
 void RenderText::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto& run : InlineIterator::textBoxesFor(*this)) {
         auto rect = LayoutRect { run.visualRectIgnoringBlockDirection() };
         rect.moveBy(accumulatedOffset);
@@ -474,6 +485,7 @@ void RenderText::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& acc
 
 Vector<IntRect> RenderText::absoluteRectsForRange(unsigned start, unsigned end, bool useSelectionHeight, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     OptionSet<RenderObject::BoundingRectBehavior> behavior;
     if (useSelectionHeight)
         behavior.add(RenderObject::BoundingRectBehavior::UseSelectionHeight);
@@ -488,6 +500,7 @@ Vector<IntRect> RenderText::absoluteRectsForRange(unsigned start, unsigned end, 
 // Full annotations are added in this class.
 void RenderText::collectSelectionGeometries(Vector<SelectionGeometry>& rects, unsigned start, unsigned end)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto textBox = InlineIterator::firstTextBoxFor(*this); textBox; textBox = textBox.traverseNextTextBox()) {
         LayoutRect rect;
         if (start <= textBox->start() && textBox->end() <= end)
@@ -585,11 +598,13 @@ static Vector<FloatQuad> collectAbsoluteQuads(const RenderText& textRenderer, bo
 
 Vector<FloatQuad> RenderText::absoluteQuadsClippedToEllipsis() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return collectAbsoluteQuads(*this, nullptr, ClippingOption::ClipToEllipsis);
 }
 
 void RenderText::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     quads.appendVector(collectAbsoluteQuads(*this, wasFixed, ClippingOption::NoClipping));
 }
 
@@ -634,6 +649,7 @@ static Vector<LayoutRect> characterRects(const InlineIterator::TextBox& run, uns
 
 Vector<FloatQuad> RenderText::absoluteQuadsForRange(unsigned start, unsigned end, OptionSet<RenderObject::BoundingRectBehavior> behavior, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool useSelectionHeight = behavior.contains(RenderObject::BoundingRectBehavior::UseSelectionHeight);
     bool ignoreEmptyTextSelections = behavior.contains(RenderObject::BoundingRectBehavior::IgnoreEmptyTextSelections);
     bool computeIndividualCharacterRects = behavior.contains(RenderObject::BoundingRectBehavior::ComputeIndividualCharacterRects);
@@ -712,6 +728,7 @@ Vector<FloatQuad> RenderText::absoluteQuadsForRange(unsigned start, unsigned end
 
 Position RenderText::positionForPoint(const LayoutPoint& point, HitTestSource source)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return positionForPoint(point, source, nullptr).deepEquivalent();
 }
 
@@ -848,6 +865,7 @@ static VisiblePosition createVisiblePositionAfterAdjustingOffsetForBiDi(const In
 
 VisiblePosition RenderText::positionForPoint(const LayoutPoint& point, HitTestSource, const RenderFragmentContainer*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto firstRun = InlineIterator::firstTextBoxFor(*this);
 
     if (!firstRun || !text().length())
@@ -905,6 +923,7 @@ static inline std::optional<float> combineTextWidth(const RenderText& renderer, 
 
 ALWAYS_INLINE float RenderText::widthFromCache(const FontCascade& fontCascade, unsigned start, unsigned length, float xPos, SingleThreadWeakHashSet<const Font>* fallbackFonts, GlyphOverflow* glyphOverflow, const RenderStyle& style) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto width = combineTextWidth(*this, fontCascade, style))
         return *width;
 
@@ -934,6 +953,7 @@ inline bool isHangablePunctuationAtLineEnd(UChar c)
 
 float RenderText::hangablePunctuationStartWidth(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned length = text().length();
     if (index >= length)
         return 0;
@@ -947,6 +967,7 @@ float RenderText::hangablePunctuationStartWidth(unsigned index) const
 
 float RenderText::hangablePunctuationEndWidth(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned length = text().length();
     if (index >= length)
         return 0;
@@ -967,6 +988,7 @@ bool RenderText::isHangableStopOrComma(UChar c)
 
 unsigned RenderText::firstCharacterIndexStrippingSpaces() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!style().collapseWhiteSpace())
         return 0;
 
@@ -980,6 +1002,7 @@ unsigned RenderText::firstCharacterIndexStrippingSpaces() const
 
 unsigned RenderText::lastCharacterIndexStrippingSpaces() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!text().length())
         return 0;
 
@@ -996,6 +1019,7 @@ unsigned RenderText::lastCharacterIndexStrippingSpaces() const
 
 RenderText::Widths RenderText::trimmedPreferredWidths(float leadWidth, bool& stripFrontSpaces)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& style = this->style();
     bool collapseWhiteSpace = style.collapseWhiteSpace();
 
@@ -1083,6 +1107,7 @@ static inline bool isSpaceAccordingToStyle(UChar c, const RenderStyle& style)
 
 float RenderText::minLogicalWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (preferredLogicalWidthsDirty() || !m_minWidth)
         const_cast<RenderText*>(this)->computePreferredLogicalWidths(0, !preferredLogicalWidthsDirty());
 
@@ -1091,6 +1116,7 @@ float RenderText::minLogicalWidth() const
 
 float RenderText::maxLogicalWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (preferredLogicalWidthsDirty() || !m_maxWidth)
         const_cast<RenderText*>(this)->computePreferredLogicalWidths(0, !preferredLogicalWidthsDirty());
 
@@ -1131,6 +1157,7 @@ TextBreakIterator::ContentAnalysis mapWordBreakToContentAnalysis(WordBreak wordB
 
 void RenderText::computePreferredLogicalWidths(float leadWidth, bool forcedMinMaxWidthComputation)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     SingleThreadWeakHashSet<const Font> fallbackFonts;
     GlyphOverflow glyphOverflow;
     computePreferredLogicalWidths(leadWidth, fallbackFonts, glyphOverflow, forcedMinMaxWidthComputation);
@@ -1147,6 +1174,7 @@ static inline float hyphenWidth(RenderText& renderer, const FontCascade& font)
 
 float RenderText::maxWordFragmentWidth(const RenderStyle& style, const FontCascade& font, StringView word, unsigned minimumPrefixLength, unsigned minimumSuffixLength, bool currentCharacterIsSpace, unsigned characterIndex, float xPos, float entireWordWidth, WordTrailingSpace& wordTrailingSpace, SingleThreadWeakHashSet<const Font>& fallbackFonts, GlyphOverflow& glyphOverflow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned suffixStart = 0;
     if (word.length() <= minimumSuffixLength)
         return entireWordWidth;
@@ -1200,6 +1228,7 @@ float RenderText::maxWordFragmentWidth(const RenderStyle& style, const FontCasca
 
 void RenderText::computePreferredLogicalWidths(float leadWidth, SingleThreadWeakHashSet<const Font>& fallbackFonts, GlyphOverflow& glyphOverflow, bool forcedMinMaxWidthComputation)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(forcedMinMaxWidthComputation, m_hasTab || preferredLogicalWidthsDirty() || forcedMinMaxWidthComputation || !m_knownToHaveNoOverflowAndNoFallbackFonts);
 
     m_minWidth = 0;
@@ -1437,6 +1466,7 @@ template<typename CharacterType> static inline bool containsOnlyCollapsibleWhite
 
 bool RenderText::containsOnlyCollapsibleWhitespace() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (text().is8Bit())
         return WebCore::containsOnlyCollapsibleWhitespace(text().span8(), style());
     return WebCore::containsOnlyCollapsibleWhitespace(text().span16(), style());
@@ -1454,6 +1484,7 @@ template<typename CharacterType> static inline bool containsOnlyPossiblyCollapsi
 
 bool RenderText::containsOnlyCSSWhitespace(unsigned from, unsigned length) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(from <= text().length());
     ASSERT(length <= text().length());
     ASSERT(from + length <= text().length());
@@ -1464,6 +1495,7 @@ bool RenderText::containsOnlyCSSWhitespace(unsigned from, unsigned length) const
 
 Vector<std::pair<unsigned, unsigned>> RenderText::contentRangesBetweenOffsetsForType(DocumentMarker::Type type, unsigned startOffset, unsigned endOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!textNode())
         return { };
 
@@ -1489,6 +1521,7 @@ Vector<std::pair<unsigned, unsigned>> RenderText::contentRangesBetweenOffsetsFor
 
 IntPoint RenderText::firstRunLocation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto first = InlineIterator::firstTextBoxFor(*this);
     if (!first)
         return { };
@@ -1497,6 +1530,7 @@ IntPoint RenderText::firstRunLocation() const
 
 void RenderText::setSelectionState(HighlightState state)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderObject::setSelectionState(state);
 
     // The containing block can be null in case of an orphaned tree.
@@ -1515,6 +1549,7 @@ static inline bool isInlineFlowOrEmptyText(const RenderObject& renderer)
 
 UChar RenderText::previousCharacter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderObject* previousText = this;
     while ((previousText = previousText->previousInPreOrder())) {
         if (!previousText->isInFlow())
@@ -1644,6 +1679,7 @@ String applyTextTransform(const RenderStyle& style, const String& text, UChar pr
 
 void RenderText::setRenderedText(const String& newText)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!newText.isNull());
 
     String originalText = this->originalText();
@@ -1701,6 +1737,7 @@ void RenderText::setRenderedText(const String& newText)
 
 void RenderText::secureText(UChar maskingCharacter)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // This hides the text by replacing all the characters with the masking character.
     // Offsets within the hidden text have to match offsets within the original text
     // to handle things like carets and selection, so this won't work right if any
@@ -1753,6 +1790,7 @@ static void invalidateLineLayoutPathOnContentChangeIfNeeded(RenderText& renderer
 
 void RenderText::setTextInternal(const String& text, bool force)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!text.isNull());
 
     if (!force && text == originalText())
@@ -1775,6 +1813,7 @@ void RenderText::setTextInternal(const String& text, bool force)
 
 void RenderText::setText(const String& newContent, bool force)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto isDifferent = newContent != text();
     setTextInternal(newContent, force);
     if (isDifferent || force)
@@ -1783,6 +1822,7 @@ void RenderText::setText(const String& newContent, bool force)
 
 void RenderText::setTextWithOffset(const String& newText, unsigned offset, unsigned, bool force)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!force && text() == newText)
         return;
 
@@ -1796,6 +1836,7 @@ void RenderText::setTextWithOffset(const String& newText, unsigned offset, unsig
 
 String RenderText::textWithoutConvertingBackslashToYenSymbol() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_useBackslashAsYenSymbol || style().textSecurity() != TextSecurity::None)
         return text();
 
@@ -1807,6 +1848,7 @@ String RenderText::textWithoutConvertingBackslashToYenSymbol() const
 
 void RenderText::dirtyLegacyLineBoxes(bool fullLayout)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (fullLayout)
         deleteLegacyLineBoxes();
     else if (!m_linesDirty)
@@ -1816,21 +1858,25 @@ void RenderText::dirtyLegacyLineBoxes(bool fullLayout)
 
 void RenderText::deleteLegacyLineBoxes()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_legacyLineBoxes.deleteAll();
 }
 
 std::unique_ptr<LegacyInlineTextBox> RenderText::createTextBox()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return makeUnique<LegacyInlineTextBox>(*this);
 }
 
 bool RenderText::usesLegacyLineLayoutPath() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !LayoutIntegration::LineLayout::containing(*this);
 }
 
 float RenderText::width(unsigned from, unsigned len, float xPos, bool firstLine, SingleThreadWeakHashSet<const Font>* fallbackFonts, GlyphOverflow* glyphOverflow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (from >= text().length())
         return 0;
 
@@ -1843,6 +1889,7 @@ float RenderText::width(unsigned from, unsigned len, float xPos, bool firstLine,
 
 float RenderText::width(unsigned from, unsigned length, const FontCascade& fontCascade, float xPos, SingleThreadWeakHashSet<const Font>* fallbackFonts, GlyphOverflow* glyphOverflow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(from + length <= text().length());
     if (!text().length() || !length)
         return 0.f;
@@ -1887,6 +1934,7 @@ float RenderText::width(unsigned from, unsigned length, const FontCascade& fontC
 
 IntRect RenderText::linesBoundingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto firstTextBox = InlineIterator::firstTextBoxFor(*this);
     if (!firstTextBox)
         return { };
@@ -1900,6 +1948,7 @@ IntRect RenderText::linesBoundingBox() const
 
 LayoutRect RenderText::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderObject* rendererToRepaint = containingBlock();
 
     // Do not cross self-painting layer boundaries.
@@ -1916,11 +1965,13 @@ LayoutRect RenderText::clippedOverflowRect(const RenderLayerModelObject* repaint
 
 auto RenderText::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return { clippedOverflowRect(repaintContainer, visibleRectContextForRepaint()) };
 }
 
 LayoutRect RenderText::collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>* quads)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsLayout());
 
     if (selectionState() == HighlightState::None)
@@ -1970,16 +2021,19 @@ LayoutRect RenderText::collectSelectionGeometriesForLineBoxes(const RenderLayerM
 
 LayoutRect RenderText::collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>& quads)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return collectSelectionGeometriesForLineBoxes(repaintContainer, clipToVisibleContent, &quads);
 }
 
 LayoutRect RenderText::selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return collectSelectionGeometriesForLineBoxes(repaintContainer, clipToVisibleContent, nullptr);
 }
 
 int RenderText::caretMinOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto first = InlineIterator::firstTextBoxFor(*this);
     if (!first)
         return 0;
@@ -1993,6 +2047,7 @@ int RenderText::caretMinOffset() const
 
 int RenderText::caretMaxOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto first = InlineIterator::firstTextBoxFor(*this);
     if (!first)
         return text().length();
@@ -2006,6 +2061,7 @@ int RenderText::caretMaxOffset() const
 
 unsigned RenderText::countRenderedCharacterOffsetsUntil(unsigned offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned result = 0;
     for (auto& run : InlineIterator::textBoxesFor(*this)) {
         auto start = run.start();
@@ -2043,16 +2099,19 @@ static bool containsOffset(const RenderText& text, unsigned offset, OffsetType t
 
 bool RenderText::containsRenderedCharacterOffset(unsigned offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return containsOffset(*this, offset, OffsetType::Character);
 }
 
 bool RenderText::containsCaretOffset(unsigned offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return containsOffset(*this, offset, OffsetType::Caret);
 }
 
 bool RenderText::hasRenderedText() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto& box : InlineIterator::textBoxesFor(*this)) {
         if (box.length())
             return true;
@@ -2062,6 +2121,7 @@ bool RenderText::hasRenderedText() const
 
 int RenderText::previousOffset(int current) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_containsOnlyASCII || text().is8Bit())
         return current - 1;
 
@@ -2071,12 +2131,14 @@ int RenderText::previousOffset(int current) const
 
 int RenderText::previousOffsetForBackwardDeletion(int current) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CachedTextBreakIterator iterator(text(), { }, TextBreakIterator::DeleteMode { }, nullAtom());
     return iterator.preceding(current).value_or(0);
 }
 
 int RenderText::nextOffset(int current) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_containsOnlyASCII || text().is8Bit())
         return current + 1;
 
@@ -2086,6 +2148,7 @@ int RenderText::nextOffset(int current) const
 
 bool RenderText::computeCanUseSimpleFontCodePath() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_containsOnlyASCII || text().is8Bit())
         return true;
     return FontCascade::characterRangeCodePath(text().span16()) == FontCascade::CodePath::Simple;
@@ -2093,6 +2156,7 @@ bool RenderText::computeCanUseSimpleFontCodePath() const
 
 void RenderText::momentarilyRevealLastTypedCharacter(unsigned offsetAfterLastTypedCharacter)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().textSecurity() == TextSecurity::None)
         return;
     m_hasSecureTextTimer = true;
@@ -2104,6 +2168,7 @@ void RenderText::momentarilyRevealLastTypedCharacter(unsigned offsetAfterLastTyp
 
 StringView RenderText::stringView(unsigned start, std::optional<unsigned> stop) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned destination = stop.value_or(text().length());
     ASSERT(start <= length());
     ASSERT(destination <= length());
@@ -2113,6 +2178,7 @@ StringView RenderText::stringView(unsigned start, std::optional<unsigned> stop) 
 
 RenderInline* RenderText::inlineWrapperForDisplayContents()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_hasInlineWrapperForDisplayContents == inlineWrapperForDisplayContentsMap().contains(this));
 
     if (!m_hasInlineWrapperForDisplayContents)
@@ -2122,6 +2188,7 @@ RenderInline* RenderText::inlineWrapperForDisplayContents()
 
 void RenderText::setInlineWrapperForDisplayContents(RenderInline* wrapper)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_hasInlineWrapperForDisplayContents == inlineWrapperForDisplayContentsMap().contains(this));
 
     if (!wrapper) {
