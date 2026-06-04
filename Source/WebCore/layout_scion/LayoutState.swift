@@ -101,13 +101,6 @@ class LayoutStateWrapper {
     return cache
   }
 
-  func ensureBlockFormattingStateWrapper(formattingContextRoot: ElementBoxWrapper)
-    -> BlockFormattingState
-  {
-    return BlockFormattingState(
-      p: wk_interop.LayoutState_ensureBlockFormattingState(p, formattingContextRoot.p))
-  }
-
   func ensureBlockFormattingState(formattingContextRoot: ElementBoxWrapper) -> BlockFormattingState
   {
     assert(formattingContextRoot.establishesBlockFormattingContext())
