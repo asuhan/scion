@@ -1662,6 +1662,7 @@ void GraphicsContext_setLineJoin(void*, uint8_t);
 void GraphicsContext_setMiterLimit(void*, float);
 void GraphicsContext_clip(void*, struct FloatRectRaw);
 void GraphicsContext_clipOut(void*, struct FloatRectRaw);
+struct FloatSizeRaw GraphicsContext_drawText(void*, const void*, const void*, struct FloatPointRaw, uint32_t, struct OptionalUIntRaw);
 struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct FloatRectRaw, bool);
 void GraphicsContext_drawLineForText(void*, struct FloatRectRaw, bool printing, bool doubleUnderlines, uint8_t);
 void GraphicsContext_beginTransparencyLayer(void*, float);

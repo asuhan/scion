@@ -274,6 +274,27 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clipOut(void* p, FloatRectRaw rec
     static_cast<WebCore::GraphicsContext*>(p)->clipOut({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
 }
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+struct OptionalUIntRaw {
+    uint32_t value;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsContext_drawText(void* p, const void* fontRaw, const void* runRaw, FloatPointRaw pointRaw, uint32_t from, OptionalUIntRaw toRaw)
+{
+    auto context = static_cast<WebCore::GraphicsContext*>(p);
+    const auto& font = *static_cast<const WebCore::FontCascade*>(fontRaw);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    WebCore::FloatPoint point { pointRaw.x, pointRaw.y };
+    auto to = toRaw.is_valid ? std::make_optional(toRaw.value) : std::optional<uint32_t>();
+    const auto size = context->drawText(font, run, point, from, to);
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void* p, FloatRectRaw rect_raw, bool printing)
 {
     const auto bounds = static_cast<WebCore::GraphicsContext*>(p)->computeUnderlineBoundsForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing);
@@ -304,11 +325,6 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_rotate(void* p, float angleInRadi
 {
     static_cast<WebCore::GraphicsContext*>(p)->rotate(angleInRadians);
 }
-
-struct FloatSizeRaw {
-    float width;
-    float height;
-};
 
 extern "C" WEBCORE_EXPORT void GraphicsContext_translateBySize(void* p, FloatSizeRaw size)
 {

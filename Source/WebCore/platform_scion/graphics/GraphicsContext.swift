@@ -395,8 +395,10 @@ class GraphicsContextWrapper {
     font: FontCascadeWrapper, run: TextRunWrapper, point: FloatPoint,
     from: UInt32 = 0, to: UInt32? = nil
   ) -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let size = wk_interop.GraphicsContext_drawText(
+      p!, font.p!, run.p!, FloatPointRaw(x: point.x, y: point.y), from,
+      OptionalUIntRaw(value: to ?? 0, is_valid: to != nil))
+    return FloatSize(width: size.width, height: size.height)
   }
 
   func drawBidiText(
