@@ -78,8 +78,12 @@ class Document: TreeScopeWrapper {
   func compositeOperatorForBackgroundColor(color: ColorWrapper, renderer: RenderObjectWrapper)
     -> CompositeOperator
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(renderer.isNativeImpl())
+    let srgba = color.toSRGBA()
+    return CompositeOperator(
+      rawValue: wk_interop.Document_compositeOperatorForBackgroundColor(
+        p, SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha),
+        renderer.id()))!
   }
 
   func renderView() -> RenderViewWrapper? {

@@ -1405,6 +1405,7 @@ bool Document_isPluginDocument(const void*);
 bool Document_hasSVGRootNode(const void*);
 float Document_deviceScaleFactor(const void*);
 bool Document_useDarkAppearance(const void* raw, const void* style_raw);
+uint8_t Document_compositeOperatorForBackgroundColor(const void*, struct SRGBARaw, const void*);
 void* Document_view(const void* raw);
 void* Document_page(const void*);
 const void* Document_settings(const void* raw);

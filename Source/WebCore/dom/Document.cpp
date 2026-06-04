@@ -445,6 +445,21 @@ extern "C" WEBCORE_EXPORT bool Document_useDarkAppearance(const void* raw, const
     return static_cast<const WebCore::Document*>(raw)->useDarkAppearance(static_cast<const WebCore::RenderStyle*>(style_raw));
 }
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+extern "C" WEBCORE_EXPORT uint8_t Document_compositeOperatorForBackgroundColor(const void* raw, SRGBARaw srgba, const void* rendererRaw)
+{
+    const auto document = static_cast<const WebCore::Document*>(raw);
+    WebCore::Color color(WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha });
+    const auto& renderer = *static_cast<const WebCore::RenderObject*>(rendererRaw);
+    return static_cast<uint8_t>(document->compositeOperatorForBackgroundColor(color, renderer));
+}
+
 extern "C" WEBCORE_EXPORT void* Document_view(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->view();
