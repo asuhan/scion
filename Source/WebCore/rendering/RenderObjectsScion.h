@@ -34,6 +34,8 @@ extern "C" void* RenderViewScion_create(void*, const void*);
 
 extern "C" void* RenderBlockFlowScion_create(uint8_t, void*, const void*, uint8_t);
 
+extern "C" void* RenderText_create(uint8_t, void*, const void*);
+
 namespace WebCore {
 
 class HitTestLocation;
@@ -432,6 +434,17 @@ public:
     void setFirstChild(RenderObject*);
 
     void setLastChild(RenderObject*);
+
+private:
+    void* m_handle;
+};
+
+class RenderTextScion final {
+public:
+    RenderTextScion(void* handle)
+        : m_handle(handle)
+    {
+    }
 
 private:
     void* m_handle;

@@ -37,6 +37,7 @@ class Font;
 class LegacyInlineTextBox;
 struct GlyphOverflow;
 struct WordTrailingSpace;
+class RenderTextScion;
 
 namespace Layout {
 class InlineTextBox;
@@ -54,6 +55,8 @@ public:
     RenderText(Type, Document&, const String&);
 
     virtual ~RenderText();
+
+    void setScionHandle(void* handle);
 
     Layout::InlineTextBox* layoutBox();
     const Layout::InlineTextBox* layoutBox() const;
@@ -285,6 +288,8 @@ private:
     unsigned m_originalTextDiffersFromRendered : 1 { false };
     unsigned m_hasInlineWrapperForDisplayContents : 1 { false };
     unsigned m_hasSecureTextTimer : 1 { false };
+
+    std::unique_ptr<RenderTextScion> m_scion;
 };
 
 String applyTextTransform(const RenderStyle&, const String&, UChar previousCharacter);

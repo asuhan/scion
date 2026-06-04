@@ -49,6 +49,7 @@
 #include "RenderCombineText.h"
 #include "RenderInline.h"
 #include "RenderLayer.h"
+#include "RenderObjectsScion.h"
 #include "RenderTextInlines.h"
 #include "RenderView.h"
 #include "RenderedDocumentMarker.h"
@@ -132,6 +133,7 @@ struct SameSizeAsRenderText : public RenderObject {
     std::optional<bool> hasPositionDependentContentWidth;
     std::optional<bool> m_hasStrongDirectionalityContent;
     uint32_t bitfields : 16;
+    std::unique_ptr<RenderTextScion> m_scion;
 };
 
 static_assert(sizeof(RenderText) == sizeof(SameSizeAsRenderText), "RenderText should stay small");
@@ -309,6 +311,11 @@ RenderText::~RenderText()
 {
     // Do not add any code here. Add it to willBeDestroyed() instead.
     ASSERT(!originalTextMap().contains(this));
+}
+
+void RenderText::setScionHandle(void* handle) {
+    RenderObject::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextScion>(handle);
 }
 
 Layout::InlineTextBox* RenderText::layoutBox()

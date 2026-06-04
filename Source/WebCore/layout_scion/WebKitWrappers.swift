@@ -550,6 +550,17 @@ func RenderBlockFlowScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderText_create")
+func RenderText_create(
+  _ typeRaw: UInt8, _ textNode: UnsafeMutableRawPointer, _ text: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  assert(typeRaw == 39)
+  let renderText = RenderTextWrapper(
+    type: .Text, textNode: TextWrapper(p: textNode), text: StringWrapper(p: text, owner: false))
+  let unmanaged = Unmanaged.passRetained(renderText)
+  return unmanaged.toOpaque()
+}
+
 func convertLayoutRect(_ raw: LayoutRectRaw) -> LayoutRectWrapper {
   return LayoutRectWrapper(
     x: LayoutUnit.fromRawValue(value: raw.x), y: LayoutUnit.fromRawValue(value: raw.y),
