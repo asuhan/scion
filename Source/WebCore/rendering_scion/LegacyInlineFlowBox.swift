@@ -77,7 +77,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     }
 
     let paintPhase = paintInfo.phase == .ChildOutlines ? .Outline : paintInfo.phase
-    var childInfo = paintInfo
+    let childInfo = paintInfo.deepCopy()
     childInfo.phase = paintPhase
     childInfo.updateSubtreePaintRootForChildren(renderer: renderer())
 

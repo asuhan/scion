@@ -138,6 +138,16 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxNegativeMarginAfter(const v
     return margin.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void* PaintInfo_deepCopy(const void* p)
+{
+    return new WebCore::PaintInfo(*static_cast<const WebCore::PaintInfo*>(p));
+}
+
+extern "C" WEBCORE_EXPORT void PaintInfo_destroy(const void* p)
+{
+    delete static_cast<const WebCore::PaintInfo*>(p);
+}
+
 extern "C" WEBCORE_EXPORT uint16_t PaintInfo_phase(const void* p)
 {
     return static_cast<uint16_t>(static_cast<const WebCore::PaintInfo*>(p)->phase);

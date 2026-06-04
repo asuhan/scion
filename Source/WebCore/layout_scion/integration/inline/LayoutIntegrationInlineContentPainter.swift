@@ -106,7 +106,7 @@ extension LayoutIntegration {
           return
         }
 
-        var inlineBoxPaintInfo = paintInfo.deepCopy()
+        let inlineBoxPaintInfo = paintInfo.deepCopy()
         inlineBoxPaintInfo.phase = paintInfo.phase == .ChildOutlines ? .Outline : paintInfo.phase
         inlineBoxPaintInfo.outlineObjects = outlineObjects
 

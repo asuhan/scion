@@ -24,7 +24,8 @@
 
 struct EllipsisBoxPainter {
   init(
-    lineBox: InlineIterator.LineBox, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
+    lineBox: InlineIterator.LineBox, paintInfo: PaintInfoWrapper,
+    paintOffset: LayoutPointWrapper,
     selectionForegroundColor: ColorWrapper, selectionBackgroundColor: ColorWrapper
   ) {
     self.lineBox = lineBox

@@ -1326,6 +1326,8 @@ int32_t RenderBlockFlow_maxNegativeMarginAfter(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
 struct LayoutRectRaw PaintInfo_rect(const void*);
+void* PaintInfo_deepCopy(const void*);
+void PaintInfo_destroy(const void*);
 uint16_t PaintInfo_phase(const void*);
 void PaintInfo_setPhase(void*, uint16_t);
 uint32_t PaintInfo_paintBehavior(const void*);

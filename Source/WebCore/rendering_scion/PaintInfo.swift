@@ -32,7 +32,7 @@ import wk_interop
 
 typealias OverlapTestRequestMap = HashMap<OverlapTestRequestClient, IntRect>
 
-struct PaintInfoWrapper {
+class PaintInfoWrapper {
   init(
     newContext: GraphicsContextWrapper, newRect: LayoutRectWrapper, newPhase: PaintPhase,
     newPaintBehavior: PaintBehavior, newSubtreePaintRoot: RenderObjectWrapper? = nil,
@@ -49,6 +49,7 @@ struct PaintInfoWrapper {
       requireSecurityOriginAccessForWidgets: newRequireSecurityOriginAccessForWidgets,
       enclosingSelfPaintingLayer: enclosingSelfPaintingLayer,
       context: newContext)
+    self.pOwner = false
   }
 
   init(from: PaintInfoRaw) {
@@ -76,12 +77,16 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
-  init(p: UnsafeMutableRawPointer) {
+  init(p: UnsafeMutableRawPointer, owner: Bool = false) {
     self.p = p
+    self.pOwner = owner
   }
+
+  deinit { if self.pOwner { wk_interop.PaintInfo_destroy(p!) } }
 
   private init(n: native) {
     self.n = n
+    self.pOwner = false
   }
 
   func context() -> GraphicsContextWrapper {
@@ -175,10 +180,7 @@ struct PaintInfoWrapper {
   }
 
   func deepCopy() -> PaintInfoWrapper {
-    if n == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    if n == nil { return PaintInfoWrapper(p: wk_interop.PaintInfo_deepCopy(p!)!, owner: true) }
     return PaintInfoWrapper(n: n!)
   }
 
@@ -316,5 +318,6 @@ struct PaintInfoWrapper {
   }
 
   private var p: UnsafeMutableRawPointer? = nil
+  private let pOwner: Bool
   private var n: native? = nil
 }

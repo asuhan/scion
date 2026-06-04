@@ -62,7 +62,7 @@ class RenderLineBoxList {
       return
     }
 
-    var info = paintInfo
+    let info = paintInfo.deepCopy()
     let outlineObjects = WeakListHashSet<RenderInlineWrapper>()
     info.outlineObjects = outlineObjects
 
