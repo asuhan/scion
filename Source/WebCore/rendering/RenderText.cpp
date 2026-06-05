@@ -1834,6 +1834,12 @@ void RenderText::setTextWithOffset(const String& newText, unsigned offset, unsig
     invalidateLineLayoutPathOnContentChangeIfNeeded(*this, offset, delta);
 }
 
+const String& RenderText::text() const
+{
+    if (m_scion) { return m_scion->text(); }
+    return m_text;
+}
+
 String RenderText::textWithoutConvertingBackslashToYenSymbol() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -2087,6 +2087,13 @@ func RenderObjectScion_setNeedsLayoutIsForbidden(_ objectRaw: UnsafeRawPointer, 
   object.setNeedsLayoutIsForbidden(flag)
 }
 
+@_cdecl("RenderTextScion_text")
+func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let text = renderText.text()
+  return text.p
+}
+
 @_cdecl("RenderSelectionScion_create")
 func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

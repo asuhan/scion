@@ -94,11 +94,7 @@ public:
         m_legacyLineBoxes.remove(box);
     }
 
-    const String& text() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_text;
-    }
+    const String& text() const;
     String textWithoutConvertingBackslashToYenSymbol() const;
 
     LegacyInlineTextBox* createInlineTextBox()

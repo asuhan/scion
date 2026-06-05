@@ -447,6 +447,8 @@ public:
     {
     }
 
+    const String& text() const;
+
 private:
     void* m_handle;
 };
