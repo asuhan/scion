@@ -325,6 +325,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     return super.node() as! TextWrapper?
   }
 
+  private func textStyle() -> RenderStyleWrapper {
+    assert(isNativeImpl())
+    return parent()!.style()
+  }
+
   func textFirstLineStyle() -> RenderStyleWrapper {
     if !isNativeImpl() {
       return convert_render_style(p: wk_interop.RenderText_firstLineStyle(id()))
@@ -1483,8 +1488,50 @@ class RenderTextWrapper: RenderObjectWrapper {
   private func initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifiedTextMeasuring(
     _ textContent: StringWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let style = self.textStyle()
+    let fontCascade = style.fontCascade()
+    m_canUseSimplifiedTextMeasuring = canUseSimpleFontCodePath()
+    let whitespaceIsCollapsed = style.collapseWhiteSpace()
+    let primaryFont = fontCascade.primaryFont()
+    m_canUseSimplifiedTextMeasuring =
+      m_canUseSimplifiedTextMeasuring! && fontCascade.wordSpacing() == 0
+      && fontCascade.letterSpacing() == 0
+      && primaryFont.syntheticBoldOffset() == 0
+      && (CPtrToInt(firstLineStyle().p) == CPtrToInt(style.p)
+        || CPtrToInt(fontCascade.p) == CPtrToInt(firstLineStyle().fontCascade().p))
+
+    if m_canUseSimplifiedTextMeasuring! {
+      // Additional check on the font codepath.
+      let run = TextRunWrapper(text: textContent)
+      run.setCharacterScanForCodePath(false)
+      m_canUseSimplifiedTextMeasuring = fontCascade.codePath(run) == .Simple
+    }
+
+    m_hasPositionDependentContentWidth = false
+    m_hasStrongDirectionalityContent = false
+    let mayHaveStrongDirectionalityContent = !textContent.is8Bit()
+    // FIXME: Pre-warm glyph loading in FontCascade with the most common range.
+    var hasSeen = [Bool](repeating: false, count: 256)
+    for character in StringWrapperView(s: textContent).codePoints() {
+      if character < 256 {
+        if hasSeen[Int(character)] {
+          continue
+        }
+        hasSeen[Int(character)] = true
+      }
+      // See webkit.org/b/252668
+      m_canUseSimplifiedTextMeasuring =
+        m_canUseSimplifiedTextMeasuring!
+        && fontCascade.canUseSimplifiedTextMeasuring(
+          character, .AutoVariant, whitespaceIsCollapsed, primaryFont)
+      m_hasPositionDependentContentWidth =
+        m_hasPositionDependentContentWidth! || character == CharacterNames.Unicode.tabCharacter
+      m_hasStrongDirectionalityContent =
+        m_hasStrongDirectionalityContent!
+        || (mayHaveStrongDirectionalityContent
+          && TextUtil.isStrongDirectionalityCharacter(character))
+    }
   }
 
   private let legacyLineBoxes: RenderTextLineBoxes? = nil
@@ -1497,6 +1544,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   private var m_text: StringWrapper? = nil
 
   var m_canUseSimplifiedTextMeasuring: Bool? = nil
+  private var m_hasPositionDependentContentWidth: Bool? = nil
   private var m_hasStrongDirectionalityContent: Bool? = nil
   private var hasBreakableChar = false  // Whether or not we can be broken into multiple lines.
   private var hasBreak = false  // Whether or not we have a hard break (e.g., <pre> with '\n').

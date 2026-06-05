@@ -73,5 +73,7 @@ class FontWrapper: Hashable {
     return wk_interop.Font_widthForGlyph(p, glyph, syntheticBoldInclusion.rawValue)
   }
 
+  func syntheticBoldOffset() -> Float32 { return wk_interop.Font_syntheticBoldOffset(p) }
+
   var p: UnsafeRawPointer
 }

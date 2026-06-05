@@ -18,6 +18,10 @@
 
 import wk_interop
 
+func U16_GET(s: UnsafePointer<UChar>, start: Int32, i: Int32, length: UInt32) -> UInt32 {
+  return wk_interop.U16_GET_scion(s, start, i, length)
+}
+
 func U16_NEXT(s: CharSpanWrapper<UChar>, i: inout UInt64, length: UInt32) -> UInt32 {
   let raw = wk_interop.U16_NEXT_scion(s.p, i, length)
   i = raw.position
@@ -32,6 +36,10 @@ func U16_NEXT_buff(s: UnsafePointer<UChar>, i: inout UInt64, length: UInt32) -> 
 
 internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {
   i = wk_interop.U16_FWD_1_scion(s.p, i, length)
+}
+
+func U16_FWD_1(s: UnsafePointer<UChar>, i: inout UInt32, length: UInt32) {
+  i = wk_interop.U16_FWD_1_uchar_scion(s, i, length)
 }
 
 internal func U16_SET_CP_START(s: StringWrapper, start: UInt32, i: UInt32) {

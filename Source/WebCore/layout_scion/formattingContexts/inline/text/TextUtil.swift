@@ -452,6 +452,44 @@ class TextUtil {
     return style.whiteSpaceCollapse() == .Preserve && style.textWrapMode() != .NoWrap
   }
 
+  // True if the character may need the Bidi reordering. If false, the
+  // `Bidi_Class` of `ch` isn't `R`, `AL`, nor Bidi controls.
+  // https://util.unicode.org/UnicodeJsps/list-unicodeset.jsp?a=%5B%5B%3Abc%3DR%3A%5D%5B%3Abc%3DAL%3A%5D%5D&g=bc
+  // https://util.unicode.org/UnicodeJsps/list-unicodeset.jsp?a=[:Bidi_C:]
+  private static func mayBeBidiRTL(_ ch: UInt32) -> Bool {
+    if ch < 0x0590 {
+      return false
+    }
+    // General Punctuation such as curly quotes.
+    if ch >= 0x2010 && ch <= 0x2029 {
+      return false
+    }
+    // CJK etc., up to Surrogate Pairs.
+    if ch >= 0x206A && ch <= 0xD7FF {
+      return false
+    }
+    // Common in CJK.
+    if ch >= 0xFF00 && ch <= 0xFFFF {
+      return false
+    }
+    return true
+  }
+
+  static func isStrongDirectionalityCharacter(_ character: UInt32) -> Bool {
+    if !mayBeBidiRTL(character) {
+      return false
+    }
+
+    let bidiCategory = u_charDirection(UChar(character))
+    return bidiCategory == .U_RIGHT_TO_LEFT
+      || bidiCategory == .U_RIGHT_TO_LEFT_ARABIC
+      || bidiCategory == .U_RIGHT_TO_LEFT_EMBEDDING
+      || bidiCategory == .U_RIGHT_TO_LEFT_OVERRIDE
+      || bidiCategory == .U_LEFT_TO_RIGHT_EMBEDDING
+      || bidiCategory == .U_LEFT_TO_RIGHT_OVERRIDE
+      || bidiCategory == .U_POP_DIRECTIONAL_FORMAT
+  }
+
   static func containsStrongDirectionalityText(text: StringWrapperView) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

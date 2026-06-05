@@ -68,6 +68,8 @@ class StringWrapperView {
     return characterAt(index: index)
   }
 
+  func codePoints() -> CodePoints { return CodePoints(self) }
+
   func is8Bit() -> Bool {
     return wk_interop.StringView_is8Bit(p)
   }
@@ -117,6 +119,60 @@ class StringWrapperView {
       return WTF.containsOnly(isSpecialCharacter, span8())
     }
     return WTF.containsOnly(isSpecialCharacter, span16())
+  }
+
+  class CodePoints: Sequence {
+    init(_ stringView: StringWrapperView) { m_stringView = stringView }
+
+    func makeIterator() -> Iterator { return Iterator(m_stringView) }
+
+    class Iterator: IteratorProtocol {
+      init(_ stringView: StringWrapperView) {
+        m_is8Bit = stringView.is8Bit()
+        m_stringView = stringView
+        if m_is8Bit {
+          let begin = stringView.span8().data()
+          m_current = UnsafeRawPointer(begin.baseAddress!)
+          m_end = UnsafeRawPointer(begin.baseAddress!.advanced(by: Int(stringView.length())))
+        } else {
+          let begin = stringView.span16().data()
+          m_current = UnsafeRawPointer(begin.baseAddress!)
+          m_end = UnsafeRawPointer(begin.baseAddress!.advanced(by: Int(stringView.length())))
+        }
+      }
+
+      func next() -> UInt32? {
+        if m_current == m_end {
+          return nil
+        }
+        // TODO(asuhan): check that the underlying string of m_stringView is valid
+        if m_is8Bit {
+          let asLChar = m_current.assumingMemoryBound(to: LChar.self)
+          let codePoint = UInt32(asLChar.pointee)
+          m_current = UnsafeRawPointer(
+            UnsafePointer<LChar>(m_current.assumingMemoryBound(to: LChar.self)).advanced(by: 1))
+          return codePoint
+        } else {
+          let endAsUChar = m_end.assumingMemoryBound(to: UChar.self)
+          let currentAsUChar = m_current.assumingMemoryBound(to: UChar.self)
+          let length = UInt32(endAsUChar - currentAsUChar)
+          let codePoint = U16_GET(s: currentAsUChar, start: 0, i: 0, length: length)
+          var i: UInt32 = 0
+          U16_FWD_1(s: currentAsUChar, i: &i, length: length)
+          m_current = UnsafeRawPointer(
+            UnsafePointer<LChar>(m_current.assumingMemoryBound(to: LChar.self)).advanced(by: Int(i))
+          )
+          return codePoint
+        }
+      }
+
+      private var m_current: UnsafeRawPointer
+      private let m_end: UnsafeRawPointer
+      private let m_is8Bit: Bool
+      private let m_stringView: StringWrapperView
+    }
+
+    private let m_stringView: StringWrapperView
   }
 
   var p: UnsafeRawPointer

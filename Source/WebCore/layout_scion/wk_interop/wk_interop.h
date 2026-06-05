@@ -381,6 +381,7 @@ const void* Font_fontMetrics(const void*);
 float Font_maxCharWidth(const void*);
 struct FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph);
 float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion);
+float Font_syntheticBoldOffset(const void*);
 const void* FontCascade_fontDescription(const void*);
 float FontCascade_size(const void*);
 float FontCascade_letterSpacing(const void*);
@@ -398,6 +399,7 @@ struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
     uint8_t direction,
     uint8_t expansion_behavior_left,
     uint8_t expansion_behavior_right);
+bool FontCascade_canUseSimplifiedTextMeasuring(const void*, uint32_t, uint8_t, bool, const void*);
 void* FontCascade_displayListForTextRun(
     const void* p,
     void* contextRaw,
@@ -1350,9 +1352,11 @@ int32_t ubidi_setPara_scion(void* p, const void* text, uint32_t length, uint8_t 
 void ubidi_reorderVisual_scion(const uint8_t* levels, uint64_t length, int32_t* index_map);
 uint8_t ubidi_getBaseDirection_scion(const uint16_t* text, int32_t length);
 int8_t u_charType_scion(int32_t);
+uint32_t U16_GET_scion(const uint16_t* s, int32_t start, int32_t i, uint32_t length);
 struct NextU16Raw U16_NEXT_scion(const void* characters_raw, uint64_t position, uint32_t content_length);
 struct NextU16Raw U16_NEXT_buff_scion(const void* characters_raw, uint64_t position, uint32_t content_length);
 uint32_t U16_FWD_1_scion(const void* s_raw, uint32_t i, uint32_t length);
+uint32_t U16_FWD_1_uchar_scion(const uint16_t* s, uint32_t i, uint32_t length);
 void U16_SET_CP_START_scion(const void* s_raw, uint32_t start, uint32_t i);
 bool Hyphenation_canHyphenate(const void*);
 uint64_t Hyphenation_lastHyphenLocation(const void* string_raw, uint64_t before_index, const void* locale_identifier_raw);

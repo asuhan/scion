@@ -43,6 +43,14 @@
 #include <wtf/text/AtomStringHash.h>
 #include <wtf/text/StringBuilder.h>
 
+extern "C" WEBCORE_EXPORT bool FontCascade_canUseSimplifiedTextMeasuring(const void* p, uint32_t character, uint8_t fontVariantRaw, bool whitespaceIsCollapsed, const void* primaryFontRaw)
+{
+    const auto fontVariant = static_cast<WebCore::FontVariant>(fontVariantRaw);
+    const auto& primaryFont = *static_cast<const WebCore::Font*>(primaryFontRaw);
+    auto fontCascade = static_cast<const WebCore::FontCascade*>(p);
+    return fontCascade->canUseSimplifiedTextMeasuring(character, fontVariant, whitespaceIsCollapsed, primaryFont);
+}
+
 struct OptionalUIntRaw {
     uint32_t value;
     bool is_valid;

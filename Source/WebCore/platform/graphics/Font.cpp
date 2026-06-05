@@ -83,6 +83,11 @@ extern "C" WEBCORE_EXPORT float Font_widthForGlyph(const void* font, uint16_t gl
     return static_cast<const WebCore::Font*>(font)->widthForGlyph(glyph, static_cast<WebCore::Font::SyntheticBoldInclusion>(synthetic_bold_inclusion));
 }
 
+extern "C" WEBCORE_EXPORT float Font_syntheticBoldOffset(const void* font)
+{
+    return static_cast<const WebCore::Font*>(font)->syntheticBoldOffset();
+}
+
 namespace WebCore {
 
 unsigned GlyphPage::s_count = 0;

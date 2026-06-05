@@ -193,6 +193,14 @@ class FontCascadeWrapper: Equatable {
       colorGlyphType: ColorGlyphType(rawValue: glyphDataRaw.color_glyph_type)!)
   }
 
+  func canUseSimplifiedTextMeasuring(
+    _ character: UInt32, _ fontVariant: FontVariant, _ whitespaceIsCollapsed: Bool,
+    _ primaryFont: FontWrapper
+  ) -> Bool {
+    return wk_interop.FontCascade_canUseSimplifiedTextMeasuring(
+      p!, character, fontVariant.rawValue, whitespaceIsCollapsed, primaryFont.p)
+  }
+
   static func expansionOpportunityCount(
     stringView: StringWrapperView, direction: TextDirection,
     expansionBehavior: ExpansionBehaviorWrapper

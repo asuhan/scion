@@ -123,6 +123,13 @@ extern "C" WEBCORE_EXPORT int8_t u_charType_scion(int32_t c)
     return u_charType(c);
 }
 
+extern "C" WEBCORE_EXPORT uint32_t U16_GET_scion(const uint16_t* s, int32_t start, int32_t i, uint32_t length)
+{
+    uint32_t c;
+    U16_GET(s, start, i, length, c);
+    return c;
+}
+
 struct NextU16Raw {
     uint32_t character;
     uint64_t position;
@@ -147,6 +154,12 @@ extern "C" WEBCORE_EXPORT NextU16Raw U16_NEXT_buff_scion(const void* characters_
 extern "C" WEBCORE_EXPORT uint32_t U16_FWD_1_scion(const void* s_raw, uint32_t i, uint32_t length)
 {
     const auto& s = *static_cast<const String*>(s_raw);
+    U16_FWD_1(s, i, length);
+    return i;
+}
+
+extern "C" WEBCORE_EXPORT uint32_t U16_FWD_1_uchar_scion(const uint16_t* s, uint32_t i, uint32_t length)
+{
     U16_FWD_1(s, i, length);
     return i;
 }
