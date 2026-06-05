@@ -24,6 +24,7 @@
 
 #include "Event.h"
 #include "RenderCombineText.h"
+#include "RenderObjectsScion.h"
 #include "RenderSVGInlineText.h"
 #include "RenderText.h"
 #include "SVGElementInlines.h"
@@ -183,6 +184,11 @@ RenderPtr<RenderText> Text::createTextRenderer(const RenderStyle& style)
     if (style.hasTextCombine())
         return createRenderer<RenderCombineText>(*this, data());
 
+    if (Document::s_useScionRendering >= 3) {
+        auto renderer = createRenderer<RenderText>(RenderObject::Type::Text, *this, data());
+        renderer->setScionHandle(RenderTextScion_create(static_cast<uint8_t>(RenderObject::Type::Text), this, &data()));
+        return renderer;
+    }
     return createRenderer<RenderText>(RenderObject::Type::Text, *this, data());
 }
 

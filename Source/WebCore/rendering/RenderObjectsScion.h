@@ -26,6 +26,7 @@
 #pragma once
 
 #include "LayoutUnit.h"
+#include "RenderBox.h"
 #include "RenderObject.h"
 #include "RenderStyle.h"
 #include "ScrollTypes.h"
