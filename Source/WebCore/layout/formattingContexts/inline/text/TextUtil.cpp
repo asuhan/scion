@@ -442,6 +442,11 @@ extern "C" WEBCORE_EXPORT void UpconvertedCharactersWithSize_destroy(const void*
     delete static_cast<const StringView::UpconvertedCharactersWithSize<32>*>(p);
 }
 
+extern "C" WEBCORE_EXPORT void* TextRun_fromString(const void* p, float xpos, float expansion, bool direction, bool directionalOverride)
+{
+    return new WebCore::TextRun(*static_cast<const String*>(p), xpos, expansion, WebCore::ExpansionBehavior::defaultBehavior(), static_cast<WebCore::TextDirection>(direction), directionalOverride);
+}
+
 extern "C" WEBCORE_EXPORT void* TextRun_fromStringView(const void* p, float xpos, float expansion, bool direction, bool directionalOverride)
 {
     return new WebCore::TextRun(*static_cast<const StringView*>(p), xpos, expansion, WebCore::ExpansionBehavior::defaultBehavior(), static_cast<WebCore::TextDirection>(direction), directionalOverride);

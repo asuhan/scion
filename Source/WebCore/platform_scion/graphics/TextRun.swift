@@ -31,8 +31,8 @@ class TextRunWrapper {
     directionalOverride: Bool = false,
     characterScanForCodePath: Bool = true
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.TextRun_fromString(
+      text.p, xpos, expansion, direction == .RTL, directionalOverride)
   }
 
   init(

@@ -486,6 +486,7 @@ const void* StringView_substring(const void*, unsigned, unsigned);
 void StringView_destroy(const void*);
 const void* StringView_upconvertedCharacters(const void*);
 void UpconvertedCharactersWithSize_destroy(const void*);
+void* TextRun_fromString(const void*, float, float, bool, bool);
 void* TextRun_fromStringView(const void*, float, float, bool, bool);
 void* TextRun_isolatedCopy(const void*);
 void TextRun_destroy(const void*);
