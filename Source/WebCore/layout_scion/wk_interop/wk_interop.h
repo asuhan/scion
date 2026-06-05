@@ -847,6 +847,7 @@ const void* RenderText_grammarErrorPseudoStyle(const void*);
 void RenderText_setNeedsVisualReordering(void*);
 bool RenderText_canUseSimpleFontCodePath(const void*);
 void RenderText_styleDidChange(void*, uint8_t, const void*);
+void* RenderText_scion(const void*);
 uint8_t RenderHighlight_highlightStateForTextBox(void*, const void*, struct TextBoxSelectableRangeRaw);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);

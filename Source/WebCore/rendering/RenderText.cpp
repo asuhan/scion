@@ -116,6 +116,11 @@ extern "C" WEBCORE_EXPORT void RenderText_styleDidChange(void* p, uint8_t diffRa
     static_cast<WebCore::RenderText*>(p)->styleDidChange(diff, oldStyle);
 }
 
+extern "C" WEBCORE_EXPORT void* RenderText_scion(const void* p)
+{
+    return static_cast<const WebCore::RenderText*>(p)->scion();
+}
+
 namespace WebCore {
 
 using namespace WTF::Unicode;
@@ -2240,6 +2245,11 @@ std::optional<bool> RenderText::emphasisMarkExistsAndIsAbove(const RenderText& r
     }
 
     return isAbove;
+}
+
+void* RenderText::scion() const
+{
+    return m_scion ? m_scion->handle() : nullptr;
 }
 
 } // namespace WebCore

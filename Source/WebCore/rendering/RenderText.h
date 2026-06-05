@@ -277,6 +277,8 @@ public:
         return m_hasStrongDirectionalityContent;
     }
 
+    void* scion() const;
+
 protected:
     virtual void computePreferredLogicalWidths(float leadWidth, bool forcedMinMaxWidthComputation = false);
     void willBeDestroyed() override;
