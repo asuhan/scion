@@ -251,8 +251,7 @@ class FontCascadeWrapper: Equatable {
   }
 
   func useBackslashAsYenSymbol() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FontCascade_useBackslashAsYenSymbol(p!)
   }
 
   func fonts() -> FontCascadeFontsWrapper? {

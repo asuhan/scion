@@ -89,6 +89,11 @@ extern "C" WEBCORE_EXPORT uint8_t FontCascade_characterRangeCodePath(const void*
     return static_cast<uint8_t>(WebCore::FontCascade::characterRangeCodePath(*static_cast<const std::span<const UChar>*>(p)));
 }
 
+extern "C" WEBCORE_EXPORT bool FontCascade_useBackslashAsYenSymbol(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->useBackslashAsYenSymbol();
+}
+
 extern "C" WEBCORE_EXPORT void* FontCascade_fonts(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->fonts();

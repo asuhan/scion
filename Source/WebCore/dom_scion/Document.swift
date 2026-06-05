@@ -164,6 +164,11 @@ class Document: TreeScopeWrapper {
     return BackForwardCacheState(rawValue: wk_interop.Document_backForwardCacheState(p))!
   }
 
+  func decoder() -> TextResourceDecoder? {
+    guard let decoderRaw = wk_interop.Document_decoder(p) else { return nil }
+    return TextResourceDecoder(p: decoderRaw)
+  }
+
   func displayStringModifiedByEncoding(_ string: StringWrapper) -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

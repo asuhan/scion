@@ -34,6 +34,16 @@
 #include <wtf/ASCIICType.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT const void* TextResourceDecoder_encoding(const void* p)
+{
+    return &static_cast<const WebCore::TextResourceDecoder*>(p)->encoding();
+}
+
+extern "C" WEBCORE_EXPORT uint16_t TextEncoding_backslashAsCurrencySymbol(const void* p)
+{
+    return static_cast<const PAL::TextEncoding*>(p)->backslashAsCurrencySymbol();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

@@ -43,6 +43,8 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     fatalError("Not implemented")
   }
 
+  func isSpecifiedFont() -> Bool { return wk_interop.FontCascadeDescription_isSpecifiedFont(p) }
+
   func setOneFamily(_ family: AtomStringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1398,8 +1398,17 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   private func computeUseBackslashAsYenSymbol() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = textStyle()
+    let fontDescription = style.fontDescription()
+    if style.fontCascade().useBackslashAsYenSymbol() {
+      return true
+    }
+    if fontDescription.isSpecifiedFont() {
+      return false
+    }
+    guard let encoding = document().decoder()?.encoding() else { return false }
+    if encoding.backslashAsCurrencySymbol() != UChar(Character("\\").asciiValue!) { return true }
+    return false
   }
 
   private func maxWordFragmentWidth(
@@ -1489,7 +1498,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ textContent: StringWrapper
   ) {
     assert(isNativeImpl())
-    let style = self.textStyle()
+    let style = textStyle()
     let fontCascade = style.fontCascade()
     m_canUseSimplifiedTextMeasuring = canUseSimpleFontCodePath()
     let whitespaceIsCollapsed = style.collapseWhiteSpace()
