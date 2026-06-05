@@ -233,8 +233,7 @@ class FontCascadeWrapper: Equatable {
   }
 
   func codePath(_ run: TextRunWrapper, from: UInt32? = nil, to: UInt32? = nil) -> CodePath {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CodePath(rawValue: wk_interop.FontCascade_codePath(p!))!
   }
 
   static func characterRangeCodePath(_ span: CharSpanWrapper<UChar>) -> CodePath {

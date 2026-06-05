@@ -409,6 +409,7 @@ void* FontCascade_displayListForTextRun(
     bool useFallbackIfFontNotReady);
 void DisplayList_destroy(const void*);
 uint32_t FontCascade_generation(const void*);
+uint8_t FontCascade_codePath(const void*);
 uint8_t FontCascade_characterRangeCodePath(const void*);
 void* FontCascade_fonts(const void*);
 bool FontCascade_isLoadingCustomFonts(const void*);

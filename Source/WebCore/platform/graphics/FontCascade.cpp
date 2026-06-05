@@ -79,6 +79,11 @@ extern "C" WEBCORE_EXPORT uint32_t FontCascade_generation(const void* p)
     return static_cast<const WebCore::FontCascade*>(p)->generation();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t FontCascade_codePath(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::FontCascade*>(p)->codePath());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t FontCascade_characterRangeCodePath(const void* p)
 {
     return static_cast<uint8_t>(WebCore::FontCascade::characterRangeCodePath(*static_cast<const std::span<const UChar>*>(p)));
