@@ -319,6 +319,8 @@ public:
 
     bool isFlexibleBoxIncludingDeprecated() const;
 
+    void insertedIntoTree();
+
     void initializeFragmentedFlowStateOnInsertion();
 
     bool isSkippedContent() const;

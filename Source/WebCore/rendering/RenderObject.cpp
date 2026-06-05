@@ -2230,7 +2230,10 @@ void RenderObject::willBeDestroyed()
 
 void RenderObject::insertedIntoTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->insertedIntoTree();
+        return;
+    }
     // FIXME: We should ASSERT(isRooted()) here but generated content makes some out-of-order insertion.
     if (!isFloating() && parent()->isSVGRenderer() && parent()->childrenInline())
         checkedParent()->dirtyLineFromChangedChild();

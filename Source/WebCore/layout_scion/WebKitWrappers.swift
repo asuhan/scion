@@ -2038,6 +2038,12 @@ func RenderObjectScion_isFlexibleBoxIncludingDeprecated(_ objectRaw: UnsafeRawPo
   return object.isFlexibleBoxIncludingDeprecated()
 }
 
+@_cdecl("RenderObjectScion_insertedIntoTree")
+func RenderObjectScion_insertedIntoTree(_ objectRaw: UnsafeRawPointer) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.insertedIntoTree()
+}
+
 @_cdecl("RenderObjectScion_initializeFragmentedFlowStateOnInsertion")
 func RenderObjectScion_initializeFragmentedFlowStateOnInsertion(
   _ objectRaw: UnsafeMutableRawPointer
