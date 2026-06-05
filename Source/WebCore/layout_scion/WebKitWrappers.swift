@@ -550,8 +550,8 @@ func RenderBlockFlowScion_create(
   return unmanaged.toOpaque()
 }
 
-@_cdecl("RenderText_create")
-func RenderText_create(
+@_cdecl("RenderTextScion_create")
+func RenderTextScion_create(
   _ typeRaw: UInt8, _ textNode: UnsafeMutableRawPointer, _ text: UnsafeRawPointer
 ) -> UnsafeMutableRawPointer {
   assert(typeRaw == 39)
