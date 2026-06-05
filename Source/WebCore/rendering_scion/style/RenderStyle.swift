@@ -658,9 +658,7 @@ class RenderStyleWrapper: Equatable {
 
   static func clone(style: RenderStyleWrapper) -> RenderStyleWrapper {
     if style.p != nil {
-      let cloned = RenderStyleWrapper()
-      // TODO(asuhan): convert native fields
-      cloned.p = wk_interop.RenderStyle_clone(style.p)
+      let cloned = convert_render_style(p: style.p!)
       cloned.pOwner = true
       return cloned
     }
@@ -788,9 +786,7 @@ class RenderStyleWrapper: Equatable {
     if raw == nil {
       return nil
     }
-    // TODO(asuhan): convert native fields
-    let cachedStyle = RenderStyleWrapper()
-    cachedStyle.p = raw
+    let cachedStyle = convert_render_style(p: raw!)
     return cachedStyle
   }
 

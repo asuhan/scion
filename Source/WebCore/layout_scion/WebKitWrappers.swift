@@ -526,8 +526,7 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   -> UnsafeMutableRawPointer
 {
   let document = Document(documentRaw)
-  let style = RenderStyleWrapper()
-  style.p = styleRaw
+  let style = convert_render_style(p: styleRaw)
   style.pOwner = true
   let renderView = RenderViewWrapper(document, style)
   let unmanaged = Unmanaged.passUnretained(renderView)
@@ -539,8 +538,7 @@ func RenderBlockFlowScion_create(
   _ typeRaw: UInt8, _ element: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,
   _ flagsRaw: UInt8
 ) -> UnsafeMutableRawPointer {
-  let style = RenderStyleWrapper()
-  style.p = styleRaw
+  let style = convert_render_style(p: styleRaw)
   style.pOwner = true
   assert(typeRaw == 0)
   let renderBlockFlow = RenderBlockFlowWrapper(
@@ -652,8 +650,7 @@ func RenderViewScion_isChildAllowed(
   _ viewRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
 ) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  let style = RenderStyleWrapper()
-  style.p = styleRaw
+  let style = convert_render_style(p: styleRaw)
   return view.isChildAllowed(RenderObjectWrapper(p: childRaw), style)
 }
 
