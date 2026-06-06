@@ -1149,6 +1149,13 @@ func RenderObjectScion_parent(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRaw
   return parent.isNativeImpl() ? parent.getWk() : parent.id()
 }
 
+@_cdecl("RenderObjectScion_previousSibling")
+func RenderObjectScion_previousSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  assert(object.previousSibling() == nil)
+  return nil
+}
+
 @_cdecl("RenderObjectScion_nextSibling")
 func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -417,6 +417,12 @@ bool RenderObject::isDescendantOf(const RenderObject* ancestor) const
     return false;
 }
 
+RenderObject* RenderObject::previousSibling() const
+{
+    if (m_scion) { return m_scion->previousSibling(); }
+    return m_previous.get();
+}
+
 RenderObject* RenderObject::nextSibling() const
 {
     if (m_scion) { return m_scion->nextSibling(); }

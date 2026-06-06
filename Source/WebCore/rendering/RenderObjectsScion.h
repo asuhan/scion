@@ -69,6 +69,8 @@ public:
 
     RenderElement* parent() const;
 
+    RenderObject* previousSibling() const;
+
     RenderObject* nextSibling() const;
 
     RenderObject* nextInPreOrder(const RenderObject*) const;

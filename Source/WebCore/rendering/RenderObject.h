@@ -361,11 +361,7 @@ public:
     inline CheckedPtr<RenderElement> checkedParent() const; // Defined in RenderElement.h.
     bool isDescendantOf(const RenderObject*) const;
 
-    RenderObject* previousSibling() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_previous.get();
-    }
+    RenderObject* previousSibling() const;
     RenderObject* nextSibling() const;
     RenderObject* previousInFlowSibling() const;
     RenderObject* nextInFlowSibling() const;

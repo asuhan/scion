@@ -44,6 +44,8 @@
 
 extern "C" void* RenderObjectScion_parent(const void*);
 
+extern "C" void* RenderObjectScion_previousSibling(const void*);
+
 extern "C" void* RenderObjectScion_nextSibling(const void*);
 
 extern "C" void* RenderObjectScion_nextInPreOrder(const void*, void*);
@@ -741,6 +743,8 @@ extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 namespace WebCore {
 
 RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElement*>(RenderObjectScion_parent(m_handle)); }
+
+RenderObject* RenderObjectScion::previousSibling() const { return static_cast<RenderObject*>(RenderObjectScion_previousSibling(m_handle)); }
 
 RenderObject* RenderObjectScion::nextSibling() const { return static_cast<RenderObject*>(RenderObjectScion_nextSibling(m_handle)); }
 
