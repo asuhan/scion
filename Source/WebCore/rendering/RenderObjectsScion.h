@@ -459,6 +459,8 @@ public:
 
     const String& text() const;
 
+    bool canUseSimpleFontCodePath() const;
+
     void setWk(void*);
 
     void* handle() const { return m_handle; }

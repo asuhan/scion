@@ -211,11 +211,7 @@ public:
 
     bool containsOnlyCollapsibleWhitespace() const;
 
-    bool canUseSimpleFontCodePath() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_canUseSimpleFontCodePath;
-    }
+    bool canUseSimpleFontCodePath() const;
 
     void removeAndDestroyLegacyTextBoxes();
 

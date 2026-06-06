@@ -1484,6 +1484,12 @@ bool RenderText::containsOnlyCollapsibleWhitespace() const
     return WebCore::containsOnlyCollapsibleWhitespace(text().span16(), style());
 }
 
+bool RenderText::canUseSimpleFontCodePath() const
+{
+    if (m_scion) { return m_scion->canUseSimpleFontCodePath(); }
+    return m_canUseSimpleFontCodePath;
+}
+
 // FIXME: merge this with isCSSSpace somehow
 template<typename CharacterType> static inline bool containsOnlyPossiblyCollapsibleWhitespace(std::span<const CharacterType> characters)
 {
