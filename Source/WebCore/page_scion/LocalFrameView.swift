@@ -115,8 +115,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
 
   func hasSlowRepaintObject(_ renderer: RenderElementWrapper) -> Bool {
     assert(renderer.isNativeImpl())
-    return wk_interop.LocalFrameView_hasSlowRepaintObject(
-      pInterop, (renderer as! RenderBlockFlowWrapper).getWk())
+    return wk_interop.LocalFrameView_hasSlowRepaintObject(pInterop, renderer.getWk())
   }
 
   func slowRepaintObjects() -> WeakHashSet<RenderElementWrapper>? {

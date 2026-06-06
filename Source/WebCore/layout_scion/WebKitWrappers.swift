@@ -811,7 +811,7 @@ func RenderViewScion_rendererForRootBackground(_ viewRaw: UnsafeRawPointer)
 {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   guard let element = view.rendererForRootBackground() else { return nil }
-  return element.isNativeImpl() ? (element as! RenderBlockFlowWrapper).getWk() : element.id()
+  return element.isNativeImpl() ? element.getWk() : element.id()
 }
 
 @_cdecl("RenderViewScion_printRect")
@@ -1146,7 +1146,7 @@ func RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(
 func RenderObjectScion_parent(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   guard let parent = object.parent() else { return nil }
-  return parent.isNativeImpl() ? (parent as! RenderBlockFlowWrapper).getWk() : parent.id()
+  return parent.isNativeImpl() ? parent.getWk() : parent.id()
 }
 
 @_cdecl("RenderObjectScion_nextSibling")
@@ -1167,7 +1167,7 @@ func RenderObjectScion_nextInPreOrder(
   else {
     return nil
   }
-  return next.isNativeImpl() ? (next as! RenderBlockFlowWrapper).getWk() : next.id()
+  return next.isNativeImpl() ? next.getWk() : next.id()
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrderAfterChildren")
@@ -1779,7 +1779,7 @@ func RenderObjectScion_container(_ objectRaw: UnsafeRawPointer) -> UnsafeMutable
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   guard let container = object.container() else { return nil }
   assert(container.isNativeImpl())
-  return (container as! RenderBlockFlowWrapper).getWk()
+  return container.getWk()
 }
 
 @_cdecl("RenderObjectScion_setNeedsLayout")
@@ -2407,7 +2407,7 @@ func RenderElementScion_detachRendererInternal(
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   let renderer = createRenderObjectWrapperOrNative(rendererRaw)
   guard let detached = element.detachRendererInternal(renderer: renderer) else { return nil }
-  return detached.isNativeImpl() ? (detached as! RenderBlockFlowWrapper).getWk() : detached.id()
+  return detached.isNativeImpl() ? detached.getWk() : detached.id()
 }
 
 @_cdecl("RenderElementScion_backdropRenderer")

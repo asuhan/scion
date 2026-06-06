@@ -104,15 +104,13 @@ class PaintInfoWrapper {
   func updateSubtreePaintRootForChildren(renderer: RenderObjectWrapper) {
     assert(n == nil)
     assert(renderer.isNativeImpl())
-    wk_interop.PaintInfo_updateSubtreePaintRootForChildren(
-      p!, (renderer as! RenderBlockFlowWrapper).getWk())
+    wk_interop.PaintInfo_updateSubtreePaintRootForChildren(p!, renderer.getWk())
   }
 
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
     if n == nil {
       assert(renderer.isNativeImpl())
-      return wk_interop.PaintInfo_shouldPaintWithinRoot(
-        p!, (renderer as! RenderBlockFlowWrapper).getWk())
+      return wk_interop.PaintInfo_shouldPaintWithinRoot(p!, renderer.getWk())
     }
     if let subtreePaintRoot = n!.subtreePaintRoot {
       // TODO(asuhan): use ObjectIdentifier for comparison once gone native

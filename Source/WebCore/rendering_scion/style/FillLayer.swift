@@ -118,7 +118,7 @@ class FillLayerWrapper {
 
   func hasOpaqueImage(renderer: RenderElementWrapper) -> Bool {
     return wk_interop.FillLayer_hasOpaqueImage(
-      p, renderer.isNativeImpl() ? (renderer as! RenderBlockFlowWrapper).getWk() : renderer.id())
+      p, renderer.isNativeImpl() ? renderer.getWk() : renderer.id())
   }
 
   func hasRepeatXY() -> Bool { return wk_interop.FillLayer_hasRepeatXY(p) }

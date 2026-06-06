@@ -887,7 +887,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     if !isNativeImpl() {
       assert(renderer.isNativeImpl())
       wk_interop.RenderLayerCompositor_rootOrBodyStyleChanged(
-        interop(), (renderer as! RenderBlockFlowWrapper).getWk(), oldStyle?.p)
+        interop(), renderer.getWk(), oldStyle?.p)
       return
     }
 

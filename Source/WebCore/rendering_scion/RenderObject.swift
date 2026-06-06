@@ -3243,7 +3243,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       if parent == nil {
         wk_interop.RenderObject_setParent(id(), nil)
       } else {
-        wk_interop.RenderObject_setParent(id(), (parent! as! RenderBlockFlowWrapper).getWk())
+        wk_interop.RenderObject_setParent(id(), parent!.getWk())
       }
       return
     }

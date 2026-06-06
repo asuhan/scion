@@ -133,7 +133,7 @@ class LocalFrameViewLayoutContextWrapper {
   ) -> Bool {
     assert(renderer.isNativeImpl())
     return wk_interop.LocalFrameViewLayoutContext_pushLayoutState(
-      p, (renderer as! RenderBlockFlowWrapper).getWk(),
+      p, renderer.getWk(),
       LayoutSizeRaw(width: offset.width().rawValue(), height: offset.height().rawValue()),
       pageHeight.rawValue(), pageHeightChanged)
   }

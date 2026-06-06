@@ -31,8 +31,7 @@ final class RenderCounter: RenderTextWrapper {
   static func rendererStyleChanged(
     renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?, newStyle: RenderStyleWrapper
   ) {
-    let rendererRaw =
-      renderer.isNativeImpl() ? (renderer as! RenderBlockFlowWrapper).getWk() : renderer.id()
+    let rendererRaw = renderer.isNativeImpl() ? renderer.getWk() : renderer.id()
     wk_interop.RenderCounter_rendererStyleChanged(rendererRaw, oldStyle?.p!, newStyle.p!)
   }
 
