@@ -2054,6 +2054,12 @@ func RenderObjectScion_isFlexibleBoxIncludingDeprecated(_ objectRaw: UnsafeRawPo
   return object.isFlexibleBoxIncludingDeprecated()
 }
 
+@_cdecl("RenderObjectScion_isRenderCombineText")
+func RenderObjectScion_isRenderCombineText(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderCombineText()
+}
+
 @_cdecl("RenderObjectScion_insertedIntoTree")
 func RenderObjectScion_insertedIntoTree(_ objectRaw: UnsafeRawPointer) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

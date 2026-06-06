@@ -323,6 +323,8 @@ public:
 
     bool isFlexibleBoxIncludingDeprecated() const;
 
+    bool isRenderCombineText() const;
+
     void insertedIntoTree();
 
     void initializeFragmentedFlowStateOnInsertion();

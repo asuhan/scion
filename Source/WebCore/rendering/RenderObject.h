@@ -1547,11 +1547,7 @@ public:
     bool isRenderFlexibleBox() const;
     bool isFlexibleBoxIncludingDeprecated() const;
 
-    bool isRenderCombineText() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::CombineText;
-    }
+    bool isRenderCombineText() const;
 
     virtual int caretMinOffset() const;
     virtual int caretMaxOffset() const;

@@ -334,6 +334,8 @@ extern "C" bool RenderObjectScion_isRenderFlexibleBox(const void*);
 
 extern "C" bool RenderObjectScion_isFlexibleBoxIncludingDeprecated(const void*);
 
+extern "C" bool RenderObjectScion_isRenderCombineText(const void*);
+
 extern "C" void RenderObjectScion_insertedIntoTree(const void*);
 
 extern "C" void RenderObjectScion_initializeFragmentedFlowStateOnInsertion(void*);
@@ -1132,6 +1134,8 @@ bool RenderObjectScion::isRenderDeprecatedFlexibleBox() const { return RenderObj
 bool RenderObjectScion::isRenderFlexibleBox() const { return RenderObjectScion_isRenderFlexibleBox(m_handle); }
 
 bool RenderObjectScion::isFlexibleBoxIncludingDeprecated() const { return RenderObjectScion_isFlexibleBoxIncludingDeprecated(m_handle); }
+
+bool RenderObjectScion::isRenderCombineText() const { return RenderObjectScion_isRenderCombineText(m_handle); }
 
 void RenderObjectScion::insertedIntoTree() { RenderObjectScion_insertedIntoTree(m_handle); }
 

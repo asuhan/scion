@@ -3820,6 +3820,12 @@ bool RenderObject::isFlexibleBoxIncludingDeprecated() const
     return isRenderFlexibleBox() || isRenderDeprecatedFlexibleBox();
 }
 
+bool RenderObject::isRenderCombineText() const
+{
+    if (m_scion) { return m_scion->isRenderCombineText(); }
+    return type() == Type::CombineText;
+}
+
 #if ASSERT_ENABLED
 void RenderObject::setNeedsLayoutIsForbidden(bool flag) const
 {
