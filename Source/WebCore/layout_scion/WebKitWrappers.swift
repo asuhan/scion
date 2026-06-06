@@ -2138,6 +2138,15 @@ func RenderTextScion_canUseSimpleFontCodePath(_ renderTextRaw: UnsafeRawPointer)
   return renderText.canUseSimpleFontCodePath()
 }
 
+@_cdecl("RenderTextScion_canUseSimplifiedTextMeasuring")
+func RenderTextScion_canUseSimplifiedTextMeasuring(_ renderTextRaw: UnsafeRawPointer)
+  -> OptionalBool
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let b = renderText.canUseSimplifiedTextMeasuring()
+  return OptionalBool(value: b ?? false, is_valid: b != nil)
+}
+
 @_cdecl("RenderSelectionScion_create")
 func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

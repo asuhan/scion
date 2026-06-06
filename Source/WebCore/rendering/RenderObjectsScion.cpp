@@ -360,6 +360,13 @@ extern "C" const void* RenderTextScion_text(const void*);
 
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
+struct OptionalBool {
+    bool value;
+    bool is_valid;
+};
+
+extern "C" OptionalBool RenderTextScion_canUseSimplifiedTextMeasuring(const void*);
+
 extern "C" void RenderTextScion_setWk(void*, void*);
 
 extern "C" const void* RenderElementScion_style(const void*);
@@ -1418,6 +1425,12 @@ const String& RenderTextScion::text() const
 bool RenderTextScion::canUseSimpleFontCodePath() const
 {
     return RenderTextScion_canUseSimpleFontCodePath(m_handle);
+}
+
+std::optional<bool> RenderTextScion::canUseSimplifiedTextMeasuring() const
+{
+    const auto b = RenderTextScion_canUseSimplifiedTextMeasuring(m_handle);
+    return b.is_valid ? std::make_optional(b.value) : std::nullopt;
 }
 
 void RenderTextScion::setWk(void* wk)

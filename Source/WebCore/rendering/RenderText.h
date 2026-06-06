@@ -247,11 +247,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_canUseSimplifiedTextMeasuring = canUseSimplifiedTextMeasuring;
     }
-    std::optional<bool> canUseSimplifiedTextMeasuring() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_canUseSimplifiedTextMeasuring;
-    }
+    std::optional<bool> canUseSimplifiedTextMeasuring() const;
     void setHasPositionDependentContentWidth(bool hasPositionDependentContentWidth)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

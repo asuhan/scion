@@ -461,6 +461,8 @@ public:
 
     bool canUseSimpleFontCodePath() const;
 
+    std::optional<bool> canUseSimplifiedTextMeasuring() const;
+
     void setWk(void*);
 
     void* handle() const { return m_handle; }

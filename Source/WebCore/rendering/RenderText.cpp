@@ -2260,6 +2260,12 @@ std::optional<bool> RenderText::emphasisMarkExistsAndIsAbove(const RenderText& r
     return isAbove;
 }
 
+std::optional<bool> RenderText::canUseSimplifiedTextMeasuring() const
+{
+    if (m_scion) { return m_scion->canUseSimplifiedTextMeasuring(); }
+    return m_canUseSimplifiedTextMeasuring;
+}
+
 void* RenderText::scion() const
 {
     return m_scion ? m_scion->handle() : nullptr;
