@@ -303,6 +303,8 @@ extern "C" FloatQuadRaw RenderObjectScion_localToAbsoluteQuad(const void*, Float
 
 extern "C" const void* RenderObjectScion_style(const void*);
 
+extern "C" const void* RenderObjectScion_firstLineStyle(const void*);
+
 struct RepaintContainerStatusRaw {
     bool fullRepaintIsScheduled;
     void* renderer;
@@ -1064,6 +1066,8 @@ FloatQuad RenderObjectScion::localToAbsoluteQuad(const FloatQuad& quad, OptionSe
 }
 
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }
+
+const RenderStyle& RenderObjectScion::firstLineStyle() const { return *static_cast<const RenderStyle*>(RenderObjectScion_firstLineStyle(m_handle)); }
 
 RenderObject::RepaintContainerStatus RenderObjectScion::containerForRepaint() const
 {

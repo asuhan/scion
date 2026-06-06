@@ -2949,4 +2949,12 @@ const RenderStyle& RenderObject::style() const
     return downcast<RenderElement>(*this).style();
 }
 
+const RenderStyle& RenderObject::firstLineStyle() const
+{
+    if (m_scion) { return m_scion->firstLineStyle(); }
+    if (isRenderText())
+        return m_parent->firstLineStyle();
+    return downcast<RenderElement>(*this).firstLineStyle();
+}
+
 }

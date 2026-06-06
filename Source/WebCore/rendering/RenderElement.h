@@ -591,14 +591,6 @@ inline bool RenderElement::canEstablishContainingBlockWithTransform() const
     return isRenderBlock() || (isTablePart() && !isRenderTableCol());
 }
 
-inline const RenderStyle& RenderObject::firstLineStyle() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (isRenderText())
-        return m_parent->firstLineStyle();
-    return downcast<RenderElement>(*this).firstLineStyle();
-}
-
 inline RenderElement* ContainerNode::renderer() const
 {
     return downcast<RenderElement>(Node::renderer());

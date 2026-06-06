@@ -297,6 +297,8 @@ public:
 
     const RenderStyle& style() const;
 
+    const RenderStyle& firstLineStyle() const;
+
     RenderObject::RepaintContainerStatus containerForRepaint() const;
 
     void repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect&, bool shouldClipToLayer = true) const;
