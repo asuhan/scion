@@ -593,6 +593,7 @@ inline bool RenderElement::canEstablishContainingBlockWithTransform() const
 
 inline const RenderStyle& RenderObject::firstLineStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isRenderText())
         return m_parent->firstLineStyle();
     return downcast<RenderElement>(*this).firstLineStyle();
