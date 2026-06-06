@@ -321,6 +321,7 @@ RenderText::~RenderText()
 void RenderText::setScionHandle(void* handle) {
     RenderObject::setScionHandle(handle);
     m_scion = std::make_unique<RenderTextScion>(handle);
+    m_scion->setWk(this);
 }
 
 Layout::InlineTextBox* RenderText::layoutBox()

@@ -1115,6 +1115,12 @@ func RenderBlockFlowScion_setWk(
   blockFlow.setWk(wk)
 }
 
+@_cdecl("RenderTextScion_setWk")
+func RenderTextScion_setWk(_ wk: UnsafeMutableRawPointer, _ textRaw: UnsafeMutableRawPointer) {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(textRaw).takeUnretainedValue()
+  text.setWk(wk)
+}
+
 @_cdecl("RenderLayerModelObjectNative_layer")
 func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawPointer)
   -> UnsafeMutableRawPointer?
@@ -2155,8 +2161,7 @@ func RenderElementScion_element(_ elementRaw: UnsafeRawPointer) -> UnsafeMutable
 func RenderElementScion_firstChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   guard let firstChild = element.firstChild() else { return nil }
-  return firstChild.isNativeImpl()
-    ? (firstChild as! RenderBlockFlowWrapper).getWk() : firstChild.id()
+  return firstChild.isNativeImpl() ? firstChild.getWk() : firstChild.id()
 }
 
 @_cdecl("RenderElementScion_lastChild")

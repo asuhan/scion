@@ -1543,6 +1543,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     }
   }
 
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
   private let legacyLineBoxes: RenderTextLineBoxes? = nil
 
   private var minWidth: Float32? = nil
@@ -1569,6 +1574,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
   private var useBackslashAsYenSymbol = false
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }
 
 func applyTextTransform(

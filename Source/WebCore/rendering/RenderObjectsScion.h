@@ -451,6 +451,8 @@ public:
 
     const String& text() const;
 
+    void setWk(void*);
+
     void* handle() const { return m_handle; }
 
 private:

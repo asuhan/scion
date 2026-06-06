@@ -3641,6 +3641,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.clearFlag(.HasRareData)
   }
 
+  func getWk() -> UnsafeMutableRawPointer { fatalError("Not reached") }
+
   private let m_layoutBox: BoxWrapper? = nil
 
   typealias RareDataMap = [ObjectIdentifier: RenderObjectRareData]

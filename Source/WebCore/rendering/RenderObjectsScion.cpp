@@ -350,6 +350,8 @@ extern "C" void RenderObjectScion_setNeedsLayoutIsForbidden(const void*, bool);
 
 extern "C" const void* RenderTextScion_text(const void*);
 
+extern "C" void RenderTextScion_setWk(void*, void*);
+
 extern "C" const void* RenderElementScion_style(const void*);
 
 extern "C" const void* RenderElementScion_firstLineStyle(const void*);
@@ -1390,6 +1392,11 @@ void RenderElementScion::setLastChild(RenderObject* lastChild)
 const String& RenderTextScion::text() const
 {
     return *static_cast<const String*>(RenderTextScion_text(m_handle));
+}
+
+void RenderTextScion::setWk(void* wk)
+{
+    RenderTextScion_setWk(wk, m_handle);
 }
 
 RenderLayer* RenderLayerModelObjectScion::layer() const
