@@ -352,6 +352,8 @@ extern "C" bool RenderObjectScion_isSetNeedsLayoutForbidden(const void*);
 
 extern "C" void RenderObjectScion_setNeedsLayoutIsForbidden(const void*, bool);
 
+extern "C" const void* RenderTextScion_style(const void*);
+
 extern "C" const void* RenderTextScion_text(const void*);
 
 extern "C" void RenderTextScion_setWk(void*, void*);
@@ -1395,6 +1397,11 @@ void RenderElementScion::setFirstChild(RenderObject* firstChild)
 void RenderElementScion::setLastChild(RenderObject* lastChild)
 {
     RenderElementScion_setLastChild(m_handle, lastChild);
+}
+
+const RenderStyle& RenderTextScion::style() const
+{
+    return *static_cast<const RenderStyle*>(RenderTextScion_style(m_handle));
 }
 
 const String& RenderTextScion::text() const

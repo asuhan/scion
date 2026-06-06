@@ -325,7 +325,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     return super.node() as! TextWrapper?
   }
 
-  private func textStyle() -> RenderStyleWrapper {
+  func textStyle() -> RenderStyleWrapper {
     assert(isNativeImpl())
     return parent()!.style()
   }

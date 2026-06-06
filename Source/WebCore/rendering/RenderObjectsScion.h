@@ -453,6 +453,8 @@ public:
     {
     }
 
+    const RenderStyle& style() const;
+
     const String& text() const;
 
     void setWk(void*);

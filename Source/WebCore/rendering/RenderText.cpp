@@ -348,6 +348,12 @@ Text* RenderText::textNode() const
     return downcast<Text>(RenderObject::node());
 }
 
+const RenderStyle& RenderText::style() const
+{
+    if (m_scion) { return m_scion->style(); }
+    return parent()->style();
+}
+
 bool RenderText::computeUseBackslashAsYenSymbol() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
