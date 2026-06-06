@@ -367,6 +367,8 @@ struct OptionalBool {
 
 extern "C" OptionalBool RenderTextScion_canUseSimplifiedTextMeasuring(const void*);
 
+extern "C" OptionalBool RenderTextScion_hasPositionDependentContentWidth(const void*);
+
 extern "C" void RenderTextScion_setWk(void*, void*);
 
 extern "C" const void* RenderElementScion_style(const void*);
@@ -1430,6 +1432,12 @@ bool RenderTextScion::canUseSimpleFontCodePath() const
 std::optional<bool> RenderTextScion::canUseSimplifiedTextMeasuring() const
 {
     const auto b = RenderTextScion_canUseSimplifiedTextMeasuring(m_handle);
+    return b.is_valid ? std::make_optional(b.value) : std::nullopt;
+}
+
+std::optional<bool> RenderTextScion::hasPositionDependentContentWidth() const
+{
+    const auto b = RenderTextScion_hasPositionDependentContentWidth(m_handle);
     return b.is_valid ? std::make_optional(b.value) : std::nullopt;
 }
 

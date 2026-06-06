@@ -2147,6 +2147,15 @@ func RenderTextScion_canUseSimplifiedTextMeasuring(_ renderTextRaw: UnsafeRawPoi
   return OptionalBool(value: b ?? false, is_valid: b != nil)
 }
 
+@_cdecl("RenderTextScion_hasPositionDependentContentWidth")
+func RenderTextScion_hasPositionDependentContentWidth(_ renderTextRaw: UnsafeRawPointer)
+  -> OptionalBool
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let b = renderText.hasPositionDependentContentWidth()
+  return OptionalBool(value: b ?? false, is_valid: b != nil)
+}
+
 @_cdecl("RenderSelectionScion_create")
 func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

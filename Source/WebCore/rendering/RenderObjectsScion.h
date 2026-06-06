@@ -463,6 +463,8 @@ public:
 
     std::optional<bool> canUseSimplifiedTextMeasuring() const;
 
+    std::optional<bool> hasPositionDependentContentWidth() const;
+
     void setWk(void*);
 
     void* handle() const { return m_handle; }

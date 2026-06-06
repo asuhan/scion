@@ -2266,6 +2266,12 @@ std::optional<bool> RenderText::canUseSimplifiedTextMeasuring() const
     return m_canUseSimplifiedTextMeasuring;
 }
 
+std::optional<bool> RenderText::hasPositionDependentContentWidth() const
+{
+    if (m_scion) { return m_scion->hasPositionDependentContentWidth(); }
+    return m_hasPositionDependentContentWidth;
+}
+
 void* RenderText::scion() const
 {
     return m_scion ? m_scion->handle() : nullptr;

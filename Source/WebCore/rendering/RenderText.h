@@ -253,11 +253,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_hasPositionDependentContentWidth = hasPositionDependentContentWidth;
     }
-    std::optional<bool> hasPositionDependentContentWidth() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_hasPositionDependentContentWidth;
-    }
+    std::optional<bool> hasPositionDependentContentWidth() const;
     void setHasStrongDirectionalityContent(bool hasStrongDirectionalityContent)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
