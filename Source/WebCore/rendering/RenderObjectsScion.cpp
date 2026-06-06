@@ -369,6 +369,8 @@ extern "C" OptionalBool RenderTextScion_canUseSimplifiedTextMeasuring(const void
 
 extern "C" OptionalBool RenderTextScion_hasPositionDependentContentWidth(const void*);
 
+extern "C" OptionalBool RenderTextScion_hasStrongDirectionalityContent(const void*);
+
 extern "C" void RenderTextScion_setWk(void*, void*);
 
 extern "C" const void* RenderElementScion_style(const void*);
@@ -1438,6 +1440,12 @@ std::optional<bool> RenderTextScion::canUseSimplifiedTextMeasuring() const
 std::optional<bool> RenderTextScion::hasPositionDependentContentWidth() const
 {
     const auto b = RenderTextScion_hasPositionDependentContentWidth(m_handle);
+    return b.is_valid ? std::make_optional(b.value) : std::nullopt;
+}
+
+std::optional<bool> RenderTextScion::hasStrongDirectionalityContent() const
+{
+    const auto b = RenderTextScion_hasStrongDirectionalityContent(m_handle);
     return b.is_valid ? std::make_optional(b.value) : std::nullopt;
 }
 

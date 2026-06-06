@@ -2272,6 +2272,12 @@ std::optional<bool> RenderText::hasPositionDependentContentWidth() const
     return m_hasPositionDependentContentWidth;
 }
 
+std::optional<bool> RenderText::hasStrongDirectionalityContent() const
+{
+    if (m_scion) { return m_scion->hasStrongDirectionalityContent(); }
+    return m_hasStrongDirectionalityContent;
+}
+
 void* RenderText::scion() const
 {
     return m_scion ? m_scion->handle() : nullptr;

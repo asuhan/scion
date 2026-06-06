@@ -465,6 +465,8 @@ public:
 
     std::optional<bool> hasPositionDependentContentWidth() const;
 
+    std::optional<bool> hasStrongDirectionalityContent() const;
+
     void setWk(void*);
 
     void* handle() const { return m_handle; }

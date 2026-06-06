@@ -2156,6 +2156,15 @@ func RenderTextScion_hasPositionDependentContentWidth(_ renderTextRaw: UnsafeRaw
   return OptionalBool(value: b ?? false, is_valid: b != nil)
 }
 
+@_cdecl("RenderTextScion_hasStrongDirectionalityContent")
+func RenderTextScion_hasStrongDirectionalityContent(_ renderTextRaw: UnsafeRawPointer)
+  -> OptionalBool
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let b = renderText.hasStrongDirectionalityContent()
+  return OptionalBool(value: b ?? false, is_valid: b != nil)
+}
+
 @_cdecl("RenderSelectionScion_create")
 func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
