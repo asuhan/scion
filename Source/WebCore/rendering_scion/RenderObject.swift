@@ -2925,6 +2925,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderFlexibleBox() || isRenderDeprecatedFlexibleBox()
   }
 
+  func isRenderCombineText() -> Bool {
+    assert(isNativeImpl())
+    return type() == .CombineText
+  }
+
   func caretMinOffset() -> Int32 { return 0 }
 
   func caretMaxOffset() -> Int32 {
