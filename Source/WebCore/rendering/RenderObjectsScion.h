@@ -313,6 +313,8 @@ public:
 
     bool isInFlow() const;
 
+    RenderObject::HighlightState selectionState() const;
+
     bool renderTreeBeingDestroyed() const;
 
     void destroy();

@@ -2698,6 +2698,12 @@ bool RenderObject::isInFlow() const
     return !isFloatingOrOutOfFlowPositioned();
 }
 
+RenderObject::HighlightState RenderObject::selectionState() const
+{
+    if (m_scion) { return m_scion->selectionState(); }
+    return m_stateBitfields.selectionState();
+}
+
 Vector<FloatQuad> RenderObject::absoluteTextQuads(const SimpleRange& range, OptionSet<RenderObject::BoundingRectBehavior> behavior)
 {
     Vector<FloatQuad> quads;

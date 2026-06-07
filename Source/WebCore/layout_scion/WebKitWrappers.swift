@@ -2024,6 +2024,12 @@ func RenderObjectScion_isInFlow(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isInFlow()
 }
 
+@_cdecl("RenderObjectScion_selectionState")
+func RenderObjectScion_selectionState(_ objectRaw: UnsafeRawPointer) -> UInt8 {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.selectionState().rawValue
+}
+
 @_cdecl("RenderObjectScion_renderTreeBeingDestroyed")
 func RenderObjectScion_renderTreeBeingDestroyed(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
