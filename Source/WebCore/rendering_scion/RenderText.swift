@@ -375,9 +375,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func grammarErrorPseudoStyle() -> RenderStyleWrapper? {
-    assert(!isNativeImpl())
-    guard let raw = wk_interop.RenderText_grammarErrorPseudoStyle(id()) else { return nil }
-    return convert_render_style(p: raw)
+    if !isNativeImpl() {
+      guard let raw = wk_interop.RenderText_grammarErrorPseudoStyle(id()) else { return nil }
+      return convert_render_style(p: raw)
+    }
+    return firstNonAnonymousAncestor()?.grammarErrorPseudoStyle()
   }
 
   func targetTextPseudoStyle() -> RenderStyleWrapper? {
