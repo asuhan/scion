@@ -181,10 +181,9 @@ class RenderHighlight {
     -> RenderObjectWrapper.HighlightState
   {
     if !isNativeImpl() {
-      assert(!renderer.isNativeImpl())
       return RenderObjectWrapper.HighlightState(
         rawValue: wk_interop.RenderHighlight_highlightStateForTextBox(
-          p, renderer.id(),
+          p, renderer.isNativeImpl() ? renderer.getWk() : renderer.id(),
           TextBoxSelectableRangeRaw(
             start: textBoxRange.start, length: textBoxRange.length,
             additionalLengthAtEnd: textBoxRange.additionalLengthAtEnd,
