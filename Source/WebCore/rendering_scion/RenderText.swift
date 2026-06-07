@@ -948,6 +948,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     return m_canUseSimplifiedTextMeasuring
   }
 
+  func hasPositionDependentContentWidth() -> Bool? {
+    assert(isNativeImpl())
+    return m_hasPositionDependentContentWidth
+  }
+
   func setHasStrongDirectionalityContent(hasStrongDirectionalityContent: Bool) {
     assert(isNativeImpl())
     m_hasStrongDirectionalityContent = hasStrongDirectionalityContent
