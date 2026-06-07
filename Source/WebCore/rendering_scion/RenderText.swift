@@ -751,8 +751,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setNeedsVisualReordering() {
-    assert(!isNativeImpl())
-    wk_interop.RenderText_setNeedsVisualReordering(id())
+    if !isNativeImpl() {
+      wk_interop.RenderText_setNeedsVisualReordering(id())
+      return
+    }
+    m_needsVisualReordering = true
   }
 
   func containsOnlyCollapsibleWhitespace() -> Bool {
@@ -1575,6 +1578,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   // just dirtying everything when character data is modified (e.g., appended/inserted
   // or removed).
   private var linesDirty = false
+  private var m_needsVisualReordering = false
   private var m_containsOnlyASCII = false
   private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
