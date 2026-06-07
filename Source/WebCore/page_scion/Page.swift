@@ -73,8 +73,8 @@ class PageWrapper {
   func isInWindow() -> Bool { return wk_interop.Page_isInWindow(p) }
 
   func addRelevantRepaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
-    assert(!object.isNativeImpl())
-    wk_interop.Page_addRelevantRepaintedObject(p, object.id(), convertLayoutRect(objectPaintRect))
+    wk_interop.Page_addRelevantRepaintedObject(
+      p, object.isNativeImpl() ? object.getWk() : object.id(), convertLayoutRect(objectPaintRect))
   }
 
   func addRelevantUnpaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
