@@ -209,7 +209,7 @@ class RenderLayoutStateWrapper {
 func use(_ x: borrowing LayoutStateMaintainer) {}
 
 // Stack-based class to assist with LayoutState push/pop
-struct LayoutStateMaintainer: ~Copyable {
+class LayoutStateMaintainer {
   init(
     root: RenderBoxWrapper, offset: LayoutSizeWrapper, disablePaintOffsetCache: Bool,
     pageHeight: LayoutUnit = LayoutUnit(value: UInt64(0)), pageHeightChanged: Bool = false

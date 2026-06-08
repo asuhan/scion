@@ -15,8 +15,8 @@ git clone https://github.com/asuhan/scion scion
 
 ## Building Scion
 
-Currently, the build is hardcoded to use [Swift 5.10.1](https://download.swift.org/swift-5.10.1-release/ubuntu2404/swift-5.10.1-RELEASE/swift-5.10.1-RELEASE-ubuntu24.04.tar.gz),
-installed in the home directory, using Ubuntu Linux (24.04 or newer). Other Linux configurations might work, but haven't been tested.
+Currently, development is done using Swift 6.0.3 from Ubuntu 26.04 APT repositories.
+Other Linux and Swift combinations might work, but haven't been tested.
 
 The build command used during development and known to work:
 

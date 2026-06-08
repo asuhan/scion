@@ -2307,8 +2307,9 @@ if (USE_LIBWEBRTC)
     )
 endif ()
 
-list(APPEND WebCore_LIBRARIES $ENV{HOME}/WebKit/WebKitBuild/GTK/Debug/lib/liblayout_scion.a $ENV{HOME}/swift-5.10.1-RELEASE-ubuntu24.04/usr/lib/swift/linux/libswiftCore.so $ENV{HOME}/swift-5.10.1-RELEASE-ubuntu24.04/usr/lib/swift/linux/libswiftSwiftOnoneSupport.so)
-# list(APPEND WebCore_LIBRARIES layout_scion)
+find_library(SWIFTCORE_LIBRARY swiftCore HINTS "/usr/libexec/swift/lib/swift/linux")
+find_library(SWIFTONONE_LIBRARY swiftSwiftOnoneSupport HINTS "/usr/libexec/swift/lib/swift/linux")
+list(APPEND WebCore_LIBRARIES ${CMAKE_BINARY_DIR}/lib/liblayout_scion.a ${SWIFTCORE_LIBRARY} ${SWIFTONONE_LIBRARY})
 
 # FIXME: This needs a more scalable solution. See webkit.org/b/267080 for some related discussion.
 if (HAVE_OS_DARK_MODE_SUPPORT)
