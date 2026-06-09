@@ -26,3 +26,9 @@
 extension DisplayList {
   class ItemWrapper {}
 }
+
+class DisplayListItemsWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
+  private let p: UnsafeRawPointer
+}

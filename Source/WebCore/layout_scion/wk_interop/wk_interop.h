@@ -408,6 +408,7 @@ void* FontCascade_displayListForTextRun(
     struct OptionalUIntRaw toRaw,
     bool useFallbackIfFontNotReady);
 void DisplayList_destroy(const void*);
+const void* DisplayList_items(const void*);
 uint32_t FontCascade_generation(const void*);
 uint8_t FontCascade_codePath(const void*);
 uint8_t FontCascade_characterRangeCodePath(const void*);

@@ -32,9 +32,8 @@ class DisplayList {
 
     deinit { wk_interop.DisplayList_destroy(p) }
 
-    func items() -> [ItemWrapper] {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    func items() -> DisplayListItemsWrapper {
+      return DisplayListItemsWrapper(wk_interop.DisplayList_items(p))
     }
 
     func resourceHeap() -> ResourceHeapWrapper {

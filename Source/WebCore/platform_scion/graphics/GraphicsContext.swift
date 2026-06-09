@@ -446,7 +446,7 @@ class GraphicsContextWrapper {
 
   // DisplayList
   func drawDisplayListItems(
-    items: [DisplayList.ItemWrapper], resourceHeap: DisplayList.ResourceHeapWrapper,
+    items: DisplayListItemsWrapper, resourceHeap: DisplayList.ResourceHeapWrapper,
     controlFactory: ControlFactoryWrapper, destination: FloatPoint
   ) {
     // TODO(asuhan): implement this

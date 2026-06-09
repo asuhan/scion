@@ -74,6 +74,11 @@ extern "C" WEBCORE_EXPORT void DisplayList_destroy(const void* p)
     delete static_cast<const WebCore::DisplayList::DisplayList*>(p);
 }
 
+extern "C" WEBCORE_EXPORT const void* DisplayList_items(const void* p)
+{
+    return &static_cast<const WebCore::DisplayList::DisplayList*>(p)->items();
+}
+
 extern "C" WEBCORE_EXPORT uint32_t FontCascade_generation(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->generation();
