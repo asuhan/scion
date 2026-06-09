@@ -34,6 +34,85 @@
 #include "RenderStyleInlines.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" bool InlineDisplayBoxScion_isInGlyphDisplayListCache(const void*);
+extern "C" void InlineDisplayBoxScion_setIsInGlyphDisplayListCache(void*);
+extern "C" void InlineDisplayBoxScion_removeFromGlyphDisplayListCache(void*);
+extern "C" bool LegacyInlineTextBoxScion_isInGlyphDisplayListCache(const void*);
+extern "C" void LegacyInlineTextBoxScion_setIsInGlyphDisplayListCache(void*);
+extern "C" void LegacyInlineTextBoxScion_removeFromGlyphDisplayListCache(void*);
+
+struct InlineDisplayBoxScion {
+    InlineDisplayBoxScion(void* handle): m_handle(handle) {}
+
+    bool isInGlyphDisplayListCache() const {
+        return InlineDisplayBoxScion_isInGlyphDisplayListCache(m_handle);
+    }
+
+    void setIsInGlyphDisplayListCache() {
+        InlineDisplayBoxScion_setIsInGlyphDisplayListCache(m_handle);
+    }
+
+    void removeFromGlyphDisplayListCache() {
+        InlineDisplayBoxScion_removeFromGlyphDisplayListCache(m_handle);
+    }
+
+    void* m_handle;
+};
+
+struct LegacyInlineTextBoxScion {
+    LegacyInlineTextBoxScion(void* handle): m_handle(handle) {}
+
+    bool isInGlyphDisplayListCache() const {
+        return LegacyInlineTextBoxScion_isInGlyphDisplayListCache(m_handle);
+    }
+
+    void setIsInGlyphDisplayListCache() {
+        LegacyInlineTextBoxScion_setIsInGlyphDisplayListCache(m_handle);
+    }
+
+    void removeFromGlyphDisplayListCache() {
+        LegacyInlineTextBoxScion_removeFromGlyphDisplayListCache(m_handle);
+    }
+
+    void* m_handle;
+};
+
+extern "C" WEBCORE_EXPORT void* InlineDisplayBoxScion_create(void* handle) {
+    return new InlineDisplayBoxScion(handle);
+}
+
+extern "C" WEBCORE_EXPORT void InlineDisplayBoxScion_destroy(void* handle) {
+    delete static_cast<InlineDisplayBoxScion*>(handle);
+}
+
+extern "C" WEBCORE_EXPORT void* GlyphDisplayListCacheInlineDisplay_get(const void* runRaw, const void* fontRaw, void* contextRaw, const void* textRunRaw, const void* paintInfoRaw)
+{
+    const auto& run = *static_cast<const InlineDisplayBoxScion*>(runRaw);
+    const auto& font = *static_cast<const WebCore::FontCascade*>(fontRaw);
+    auto& context = *static_cast<WebCore::GraphicsContext*>(contextRaw);
+    const auto& textRun = *static_cast<const WebCore::TextRun*>(textRunRaw);
+    const auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(paintInfoRaw);
+    return WebCore::GlyphDisplayListCache::singleton().get(run, font, context, textRun, paintInfo);
+}
+
+extern "C" WEBCORE_EXPORT void* LegacyInlineTextBoxScion_create(void* handle) {
+    return new LegacyInlineTextBoxScion(handle);
+}
+
+extern "C" WEBCORE_EXPORT void LegacyInlineTextBoxScion_destroy(void* handle) {
+    delete static_cast<LegacyInlineTextBoxScion*>(handle);
+}
+
+extern "C" WEBCORE_EXPORT void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void* runRaw, const void* fontRaw, void* contextRaw, const void* textRunRaw, const void* paintInfoRaw)
+{
+    const auto& run = *static_cast<const LegacyInlineTextBoxScion*>(runRaw);
+    const auto& font = *static_cast<const WebCore::FontCascade*>(fontRaw);
+    auto& context = *static_cast<WebCore::GraphicsContext*>(contextRaw);
+    const auto& textRun = *static_cast<const WebCore::TextRun*>(textRunRaw);
+    const auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(paintInfoRaw);
+    return WebCore::GlyphDisplayListCache::singleton().get(run, font, context, textRun, paintInfo);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GlyphDisplayListCacheEntry);
@@ -148,6 +227,16 @@ DisplayList::DisplayList* GlyphDisplayListCache::get(const InlineDisplay::Box& r
     return getDisplayList(run, font, context, textRun, paintInfo);
 }
 
+DisplayList::DisplayList* GlyphDisplayListCache::get(const InlineDisplayBoxScion& run, const FontCascade& font, GraphicsContext& context, const TextRun& textRun, const PaintInfo& paintInfo)
+{
+    return getDisplayList(run, font, context, textRun, paintInfo);
+}
+
+DisplayList::DisplayList* GlyphDisplayListCache::get(const LegacyInlineTextBoxScion& run, const FontCascade& font, GraphicsContext& context, const TextRun& textRun, const PaintInfo& paintInfo)
+{
+    return getDisplayList(run, font, context, textRun, paintInfo);
+}
+
 template<typename LayoutRun>
 DisplayList::DisplayList* GlyphDisplayListCache::getIfExistsImpl(const LayoutRun& run)
 {
@@ -164,6 +253,16 @@ DisplayList::DisplayList* GlyphDisplayListCache::getIfExists(const LegacyInlineT
 }
 
 DisplayList::DisplayList* GlyphDisplayListCache::getIfExists(const InlineDisplay::Box& run)
+{
+    return getIfExistsImpl(run);
+}
+
+DisplayList::DisplayList* GlyphDisplayListCache::getIfExists(const InlineDisplayBoxScion& run)
+{
+    return getIfExistsImpl(run);
+}
+
+DisplayList::DisplayList* GlyphDisplayListCache::getIfExists(const LegacyInlineTextBoxScion& run)
 {
     return getIfExistsImpl(run);
 }

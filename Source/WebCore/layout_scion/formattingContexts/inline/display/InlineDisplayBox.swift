@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 protocol DisplayTextBox: AnyObject {
   func setIsInGlyphDisplayListCache()
   func removeFromGlyphDisplayListCache()
@@ -278,6 +280,17 @@ extension InlineDisplay {
       }
     }
 
+    // TODO(asuhan): remove when native GlyphDisplayListCache is available
+    func getWkHandle() -> UnsafeMutableRawPointer {
+      if self.wkHandle == nil {
+        self.wkHandle = wk_interop.InlineDisplayBoxScion_create(
+          Unmanaged.passUnretained(self).toOpaque())
+      }
+      return wkHandle!
+    }
+
+    deinit { wk_interop.InlineDisplayBoxScion_destroy(wkHandle!) }
+
     var layoutBox: BoxWrapper
     var unflippedVisualRect = FloatRectWrapper()
     var inkOverflow = FloatRectWrapper()
@@ -297,5 +310,7 @@ extension InlineDisplay {
     var isInGlyphDisplayListCache = false
 
     var m_text = Text()
+
+    private var wkHandle: UnsafeMutableRawPointer? = nil
   }
 }

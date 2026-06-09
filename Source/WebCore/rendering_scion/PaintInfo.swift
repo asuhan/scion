@@ -301,6 +301,8 @@ class PaintInfoWrapper {
     }
   }
 
+  func interop() -> UnsafeMutableRawPointer { return p! }
+
   private struct native {
     var rect: LayoutRectWrapper
     var phase: PaintPhase

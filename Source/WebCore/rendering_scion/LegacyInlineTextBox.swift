@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
   init(_ renderer: RenderTextWrapper) { super.init(renderer) }
 
@@ -100,8 +102,21 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
 
   override final func isInlineTextBox() -> Bool { return true }
 
+  // TODO(asuhan): remove when native GlyphDisplayListCache is available
+  func getWkHandle() -> UnsafeMutableRawPointer {
+    if self.wkHandle == nil {
+      self.wkHandle = wk_interop.LegacyInlineTextBoxScion_create(
+        Unmanaged.passUnretained(self).toOpaque())
+    }
+    return wkHandle!
+  }
+
+  deinit { wk_interop.LegacyInlineTextBoxScion_destroy(wkHandle!) }
+
   private let m_nextTextBox: LegacyInlineTextBox? = nil  // The next box that also uses our RenderObject
 
   private let m_start: UInt32 = 0
   private let m_len: UInt32 = 0
+
+  private var wkHandle: UnsafeMutableRawPointer? = nil
 }

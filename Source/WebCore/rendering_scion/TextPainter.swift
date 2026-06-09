@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 func rotation(boxRect: FloatRectWrapper, direction: RotationDirection) -> AffineTransform {
   return direction == .Clockwise
     ? AffineTransform(
@@ -152,8 +154,17 @@ struct TextPainter {
     if !TextPainter.shouldUseGlyphDisplayList(paintInfo: paintInfo) {
       run.removeFromGlyphDisplayListCache()
     } else {
-      glyphDisplayList = GlyphDisplayListCache.singleton.get(
-        run: run, font: font, context: context, textRun: textRun, paintInfo: paintInfo)
+      if let displayBox = run as? InlineDisplay.Box {
+        glyphDisplayList = DisplayList.DisplayListWrapper(
+          wk_interop.GlyphDisplayListCacheInlineDisplay_get(
+            displayBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop()))
+      } else {
+        let legacyInlineTextBox = run as! LegacyInlineTextBox
+        glyphDisplayList = DisplayList.DisplayListWrapper(
+          wk_interop.GlyphDisplayListCacheLegacyInlineTextBox_get(
+            legacyInlineTextBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop())
+        )
+      }
     }
   }
 

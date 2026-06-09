@@ -2981,3 +2981,40 @@ func RenderBlockScion_outlineStyleForRepaint(_ blockRaw: UnsafeRawPointer) -> Un
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.outlineStyleForRepaint().p!
 }
+
+// TODO(asuhan): remove the methods below when native GlyphDisplayListCache is available
+@_cdecl("InlineDisplayBoxScion_isInGlyphDisplayListCache")
+func InlineDisplayBoxScion_isInGlyphDisplayListCache(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<InlineDisplay.Box>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isInGlyphDisplayListCache
+}
+
+@_cdecl("InlineDisplayBoxScion_setIsInGlyphDisplayListCache")
+func InlineDisplayBoxScion_setIsInGlyphDisplayListCache(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<InlineDisplay.Box>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setIsInGlyphDisplayListCache()
+}
+
+@_cdecl("InlineDisplayBoxScion_removeFromGlyphDisplayListCache")
+func InlineDisplayBoxScion_removeFromGlyphDisplayListCache(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<InlineDisplay.Box>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.removeFromGlyphDisplayListCache()
+}
+
+@_cdecl("LegacyInlineTextBoxScion_isInGlyphDisplayListCache")
+func LegacyInlineTextBoxScion_isInGlyphDisplayListCache(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<LegacyInlineTextBox>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isInGlyphDisplayListCache
+}
+
+@_cdecl("LegacyInlineTextBoxScion_setIsInGlyphDisplayListCache")
+func LegacyInlineTextBoxScion_setIsInGlyphDisplayListCache(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<LegacyInlineTextBox>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setIsInGlyphDisplayListCache()
+}
+
+@_cdecl("LegacyInlineTextBoxScion_removeFromGlyphDisplayListCache")
+func LegacyInlineTextBoxScion_removeFromGlyphDisplayListCache(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<LegacyInlineTextBox>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.removeFromGlyphDisplayListCache()
+}

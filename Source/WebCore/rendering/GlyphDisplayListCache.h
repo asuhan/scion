@@ -37,6 +37,9 @@
 #include <wtf/TZoneMalloc.h>
 #include <wtf/WeakRef.h>
 
+struct InlineDisplayBoxScion;
+struct LegacyInlineTextBoxScion;
+
 namespace WebCore {
 
 class LegacyInlineTextBox;
@@ -111,12 +114,18 @@ public:
 
     DisplayList::DisplayList* get(const LegacyInlineTextBox&, const FontCascade&, GraphicsContext&, const TextRun&, const PaintInfo&);
     DisplayList::DisplayList* get(const InlineDisplay::Box&, const FontCascade&, GraphicsContext&, const TextRun&, const PaintInfo&);
+    DisplayList::DisplayList* get(const InlineDisplayBoxScion&, const FontCascade&, GraphicsContext&, const TextRun&, const PaintInfo&);
+    DisplayList::DisplayList* get(const LegacyInlineTextBoxScion&, const FontCascade&, GraphicsContext&, const TextRun&, const PaintInfo&);
 
     DisplayList::DisplayList* getIfExists(const LegacyInlineTextBox&);
     DisplayList::DisplayList* getIfExists(const InlineDisplay::Box&);
+    DisplayList::DisplayList* getIfExists(const InlineDisplayBoxScion&);
+    DisplayList::DisplayList* getIfExists(const LegacyInlineTextBoxScion&);
 
     void remove(const LegacyInlineTextBox& run) { remove(&run); }
     void remove(const InlineDisplay::Box& run) { remove(&run); }
+    void remove(const InlineDisplayBoxScion& run) { remove(&run); }
+    void remove(const LegacyInlineTextBoxScion& run) { remove(&run); }
 
     void clear();
     unsigned size() const;
