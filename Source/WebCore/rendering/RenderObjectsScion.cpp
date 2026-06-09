@@ -558,6 +558,13 @@ extern "C" int32_t RenderBlockScion_borderBefore(const void*);
 
 extern "C" void RenderBlockScion_setMarginBeforeForChild(const void*, void*, int32_t);
 
+struct FirstLetterRenderObjectsRaw {
+    void* firstLetter;
+    void* firstLetterContainer;
+};
+
+extern "C" FirstLetterRenderObjectsRaw RenderBlockScion_getFirstLetter(const void*, void*);
+
 extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int32_t);
 
 extern "C" bool RenderBlockScion_canHaveChildren(const void*);
@@ -1710,6 +1717,13 @@ void RenderBlockScion::setMarginBeforeForChild(RenderBox& child, LayoutUnit valu
 void RenderBlockScion::setMarginAfterForChild(RenderBox& child, LayoutUnit value) const
 {
     RenderBlockScion_setMarginAfterForChild(m_handle, &child, value.rawValue());
+}
+
+void RenderBlockScion::getFirstLetter(RenderObject*& firstLetter, RenderElement*& firstLetterContainer, RenderObject* skipObject)
+{
+    const auto objs = RenderBlockScion_getFirstLetter(m_handle, skipObject);
+    firstLetter = static_cast<RenderElement*>(objs.firstLetter);
+    firstLetterContainer = static_cast<RenderElement*>(objs.firstLetterContainer);
 }
 
 bool RenderBlockScion::canHaveChildren() const

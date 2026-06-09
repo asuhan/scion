@@ -368,6 +368,11 @@ struct FillRepeatXYRaw {
     uint8_t y;
 };
 
+struct FirstLetterRenderObjectsRaw {
+    void* firstLetter;
+    void* firstLetterContainer;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

@@ -2705,7 +2705,10 @@ static inline RenderBlock* findFirstLetterBlock(RenderBlock* start)
 
 void RenderBlock::getFirstLetter(RenderObject*& firstLetter, RenderElement*& firstLetterContainer, RenderObject* skipObject)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->getFirstLetter(firstLetter, firstLetterContainer, skipObject);
+        return;
+    }
     firstLetter = nullptr;
     firstLetterContainer = nullptr;
 

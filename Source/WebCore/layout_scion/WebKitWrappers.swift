@@ -2943,6 +2943,25 @@ func RenderBlockScion_setMarginAfterForChild(
     value: LayoutUnit.fromRawValue(value: valueRaw))
 }
 
+private func wkRenderObject(_ obj: RenderObjectWrapper?) -> UnsafeMutableRawPointer? {
+  if obj == nil { return nil }
+  return obj!.isNativeImpl() ? obj!.getWk() : obj!.id()
+}
+
+@_cdecl("RenderBlockScion_getFirstLetter")
+func RenderBlockScion_getFirstLetter(
+  _ blockRaw: UnsafeRawPointer, _ skipObjectRaw: UnsafeMutableRawPointer?
+) -> FirstLetterRenderObjectsRaw {
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let skipObject = skipObjectRaw != nil ? createRenderObjectWrapperOrNative(skipObjectRaw!) : nil
+  let firstLetterRenderObjects = block.getFirstLetter(skipObject: skipObject)
+  let firstLetter = firstLetterRenderObjects.firstLetter
+  let firstLetterContainer = firstLetterRenderObjects.firstLetterContainer
+  return FirstLetterRenderObjectsRaw(
+    firstLetter: wkRenderObject(firstLetter),
+    firstLetterContainer: wkRenderObject(firstLetterContainer))
+}
+
 @_cdecl("RenderBlockScion_canHaveChildren")
 func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
   let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

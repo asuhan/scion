@@ -617,6 +617,8 @@ public:
 
     void setMarginAfterForChild(RenderBox& child, LayoutUnit value) const;
 
+    void getFirstLetter(RenderObject*&, RenderElement*&, RenderObject*);
+
     bool canHaveChildren() const;
 
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
