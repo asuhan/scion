@@ -37,8 +37,7 @@ class DisplayList {
     }
 
     func resourceHeap() -> ResourceHeapWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return ResourceHeapWrapper(wk_interop.DisplayList_resourceHeap(p))
     }
 
     private let p: UnsafeMutableRawPointer

@@ -409,6 +409,7 @@ void* FontCascade_displayListForTextRun(
     bool useFallbackIfFontNotReady);
 void DisplayList_destroy(const void*);
 const void* DisplayList_items(const void*);
+const void* DisplayList_resourceHeap(const void*);
 uint32_t FontCascade_generation(const void*);
 uint8_t FontCascade_codePath(const void*);
 uint8_t FontCascade_characterRangeCodePath(const void*);

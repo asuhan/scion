@@ -24,5 +24,9 @@
  */
 
 extension DisplayList {
-  class ResourceHeapWrapper {}
+  class ResourceHeapWrapper {
+    init(_ p: UnsafeRawPointer) { self.p = p }
+
+    private let p: UnsafeRawPointer
+  }
 }
