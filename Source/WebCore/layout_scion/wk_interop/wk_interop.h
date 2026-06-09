@@ -1840,4 +1840,5 @@ void InlineDisplayBoxScion_destroy(void*);
 void* GlyphDisplayListCacheInlineDisplay_get(const void*, const void*, void*, const void*, const void*);
 void* LegacyInlineTextBoxScion_create(void*);
 void LegacyInlineTextBoxScion_destroy(void*);
+void* ControlFactory_shared();
 void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, void*, const void*, const void*);

@@ -30,6 +30,11 @@
 #include <wtf/NeverDestroyed.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* ControlFactory_shared()
+{
+    return &WebCore::ControlFactory::shared();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ControlFactory);

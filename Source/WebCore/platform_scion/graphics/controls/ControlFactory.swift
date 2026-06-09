@@ -23,9 +23,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class ControlFactoryWrapper {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   static func shared() -> ControlFactoryWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ControlFactoryWrapper(wk_interop.ControlFactory_shared())
   }
+
+  private let p: UnsafeMutableRawPointer
 }
