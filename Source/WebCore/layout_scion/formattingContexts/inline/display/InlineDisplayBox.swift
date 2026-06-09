@@ -289,7 +289,7 @@ extension InlineDisplay {
       return wkHandle!
     }
 
-    deinit { wk_interop.InlineDisplayBoxScion_destroy(wkHandle!) }
+    deinit { if wkHandle != nil { wk_interop.InlineDisplayBoxScion_destroy(wkHandle!) } }
 
     var layoutBox: BoxWrapper
     var unflippedVisualRect = FloatRectWrapper()
