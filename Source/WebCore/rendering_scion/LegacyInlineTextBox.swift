@@ -111,7 +111,7 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     return wkHandle!
   }
 
-  deinit { wk_interop.LegacyInlineTextBoxScion_destroy(wkHandle!) }
+  deinit { if wkHandle != nil { wk_interop.LegacyInlineTextBoxScion_destroy(wkHandle!) } }
 
   private let m_nextTextBox: LegacyInlineTextBox? = nil  // The next box that also uses our RenderObject
 
