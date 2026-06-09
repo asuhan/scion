@@ -157,12 +157,13 @@ struct TextPainter {
       if let displayBox = run as? InlineDisplay.Box {
         glyphDisplayList = DisplayList.DisplayListWrapper(
           wk_interop.GlyphDisplayListCacheInlineDisplay_get(
-            displayBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop()))
+            displayBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop()), false)
       } else {
         let legacyInlineTextBox = run as! LegacyInlineTextBox
         glyphDisplayList = DisplayList.DisplayListWrapper(
           wk_interop.GlyphDisplayListCacheLegacyInlineTextBox_get(
-            legacyInlineTextBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop())
+            legacyInlineTextBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop()),
+          false
         )
       }
     }

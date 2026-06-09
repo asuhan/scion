@@ -220,7 +220,7 @@ class FontCascadeWrapper: Equatable {
         p!, context.p!, run.p!, from, OptionalUIntRaw(value: to ?? 0, is_valid: to != nil),
         customFontNotReadyAction == .UseFallbackIfFontNotReady)
     else { return nil }
-    return DisplayList.DisplayListWrapper(dlRaw)
+    return DisplayList.DisplayListWrapper(dlRaw, true)
   }
 
   func generation() -> UInt32 { return wk_interop.FontCascade_generation(p!) }

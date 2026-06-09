@@ -28,9 +28,12 @@ import wk_interop
 class DisplayList {
 
   class DisplayListWrapper {
-    init(_ p: UnsafeMutableRawPointer) { self.p = p }
+    init(_ p: UnsafeMutableRawPointer, _ owner: Bool) {
+      self.p = p
+      self.owner = owner
+    }
 
-    deinit { wk_interop.DisplayList_destroy(p) }
+    deinit { if owner { wk_interop.DisplayList_destroy(p) } }
 
     func items() -> DisplayListItemsWrapper {
       return DisplayListItemsWrapper(wk_interop.DisplayList_items(p))
@@ -43,6 +46,7 @@ class DisplayList {
     func interop() -> UnsafeMutableRawPointer { return p }
 
     private let p: UnsafeMutableRawPointer
+    private let owner: Bool
   }
 
 }
