@@ -887,6 +887,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func inlineWrapperForDisplayContents() -> RenderInlineWrapper? {
+    if !m_hasInlineWrapperForDisplayContents { return nil }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1587,6 +1588,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
   private var useBackslashAsYenSymbol = false
+  private var m_hasInlineWrapperForDisplayContents = false
 
   private var wk: UnsafeMutableRawPointer? = nil
 }
