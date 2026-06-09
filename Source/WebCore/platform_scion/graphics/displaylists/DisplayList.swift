@@ -40,6 +40,8 @@ class DisplayList {
       return ResourceHeapWrapper(wk_interop.DisplayList_resourceHeap(p))
     }
 
+    func interop() -> UnsafeMutableRawPointer { return p }
+
     private let p: UnsafeMutableRawPointer
   }
 

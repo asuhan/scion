@@ -30,5 +30,7 @@ extension DisplayList {
 class DisplayListItemsWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
+  func interop() -> UnsafeRawPointer { return p }
+
   private let p: UnsafeRawPointer
 }

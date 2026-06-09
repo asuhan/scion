@@ -32,5 +32,7 @@ class ControlFactoryWrapper {
     return ControlFactoryWrapper(wk_interop.ControlFactory_shared())
   }
 
+  func interop() -> UnsafeMutableRawPointer { return p }
+
   private let p: UnsafeMutableRawPointer
 }

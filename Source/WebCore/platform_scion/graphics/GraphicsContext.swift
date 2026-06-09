@@ -449,8 +449,9 @@ class GraphicsContextWrapper {
     items: DisplayListItemsWrapper, resourceHeap: DisplayList.ResourceHeapWrapper,
     controlFactory: ControlFactoryWrapper, destination: FloatPoint
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_drawDisplayListItems(
+      p!, items.interop(), resourceHeap.interop(), controlFactory.interop(),
+      FloatPointRaw(x: destination.x, y: destination.y))
   }
 
   func beginTransparencyLayer(opacity: Float32) {

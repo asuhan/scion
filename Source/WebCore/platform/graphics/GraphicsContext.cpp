@@ -306,6 +306,14 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawLineForText(void* p, FloatRec
     static_cast<WebCore::GraphicsContext*>(p)->drawLineForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing, doubleUnderlines, static_cast<WebCore::StrokeStyle>(style));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawDisplayListItems(void* p, const void* itemsRaw, const void* resourceHeapRaw, void* controlFactoryRaw, FloatPointRaw destinationRaw)
+{
+    const auto& items = *static_cast<const Vector<WebCore::DisplayList::Item>*>(itemsRaw);
+    const auto& resourceHeap = *static_cast<const WebCore::DisplayList::ResourceHeap*>(resourceHeapRaw);
+    auto& controlFactory = *static_cast<WebCore::ControlFactory*>(controlFactoryRaw);
+    static_cast<WebCore::GraphicsContext*>(p)->drawDisplayListItems(items, resourceHeap, controlFactory, { destinationRaw.x, destinationRaw.y });
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_beginTransparencyLayer(void* p, float opacity)
 {
     static_cast<WebCore::GraphicsContext*>(p)->beginTransparencyLayer(opacity);
