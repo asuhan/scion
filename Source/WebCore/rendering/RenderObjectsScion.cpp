@@ -56,6 +56,8 @@ extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" void* RenderObjectScion_enclosingFragmentedFlow(const void*);
 
+extern "C" bool RenderObjectScion_canHaveGeneratedChildren(const void*);
+
 extern "C" bool RenderObjectScion_isPseudoElement(const void*);
 
 extern "C" bool RenderObjectScion_isRenderElement(const void*);
@@ -776,6 +778,8 @@ RenderObject* RenderObjectScion::nextInPreOrderAfterChildren() const { return st
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
 
 RenderFragmentedFlow* RenderObjectScion::enclosingFragmentedFlow() const { return static_cast<RenderFragmentedFlow*>(RenderObjectScion_enclosingFragmentedFlow(m_handle)); }
+
+bool RenderObjectScion::canHaveGeneratedChildren() const { return RenderObjectScion_canHaveGeneratedChildren(m_handle); }
 
 bool RenderObjectScion::isPseudoElement() const { return RenderObjectScion_isPseudoElement(m_handle); }
 

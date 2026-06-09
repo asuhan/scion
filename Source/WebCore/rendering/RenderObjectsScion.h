@@ -81,6 +81,8 @@ public:
 
     RenderFragmentedFlow* enclosingFragmentedFlow() const;
 
+    bool canHaveGeneratedChildren() const;
+
     bool isPseudoElement() const;
 
     bool isRenderElement() const;

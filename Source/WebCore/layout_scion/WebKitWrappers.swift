@@ -1203,6 +1203,12 @@ func RenderObjectScion_enclosingFragmentedFlow(_ objectRaw: UnsafeRawPointer)
   return nil
 }
 
+@_cdecl("RenderObjectScion_canHaveGeneratedChildren")
+func RenderObjectScion_canHaveGeneratedChildren(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.canHaveGeneratedChildren()
+}
+
 @_cdecl("RenderObjectScion_isPseudoElement")
 func RenderObjectScion_isPseudoElement(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

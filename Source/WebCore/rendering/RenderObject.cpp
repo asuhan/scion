@@ -2546,7 +2546,7 @@ bool RenderObject::canUpdateSelectionOnRootLineBoxes()
 // This correctly prevents form controls from having such renderers.
 bool RenderObject::canHaveGeneratedChildren() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->canHaveGeneratedChildren(); }
     return canHaveChildren();
 }
 
