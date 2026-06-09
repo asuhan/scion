@@ -364,6 +364,8 @@ extern "C" const void* RenderTextScion_text(const void*);
 
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
+extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
+
 struct OptionalBool {
     bool value;
     bool is_valid;
@@ -1447,6 +1449,11 @@ const String& RenderTextScion::text() const
 bool RenderTextScion::canUseSimpleFontCodePath() const
 {
     return RenderTextScion_canUseSimpleFontCodePath(m_handle);
+}
+
+RenderInline* RenderTextScion::inlineWrapperForDisplayContents()
+{
+    return static_cast<RenderInline*>(RenderTextScion_inlineWrapperForDisplayContents(m_handle));
 }
 
 std::optional<bool> RenderTextScion::canUseSimplifiedTextMeasuring() const

@@ -465,6 +465,8 @@ public:
 
     bool canUseSimpleFontCodePath() const;
 
+    RenderInline* inlineWrapperForDisplayContents();
+
     std::optional<bool> canUseSimplifiedTextMeasuring() const;
 
     std::optional<bool> hasPositionDependentContentWidth() const;

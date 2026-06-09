@@ -2150,6 +2150,15 @@ func RenderTextScion_canUseSimpleFontCodePath(_ renderTextRaw: UnsafeRawPointer)
   return renderText.canUseSimpleFontCodePath()
 }
 
+@_cdecl("RenderTextScion_inlineWrapperForDisplayContents")
+func RenderTextScion_inlineWrapperForDisplayContents(_ renderTextRaw: UnsafeMutableRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  assert(renderText.inlineWrapperForDisplayContents() == nil)
+  return nil
+}
+
 @_cdecl("RenderTextScion_canUseSimplifiedTextMeasuring")
 func RenderTextScion_canUseSimplifiedTextMeasuring(_ renderTextRaw: UnsafeRawPointer)
   -> OptionalBool

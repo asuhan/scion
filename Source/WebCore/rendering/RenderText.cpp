@@ -2202,7 +2202,7 @@ StringView RenderText::stringView(unsigned start, std::optional<unsigned> stop) 
 
 RenderInline* RenderText::inlineWrapperForDisplayContents()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->inlineWrapperForDisplayContents(); }
     ASSERT(m_hasInlineWrapperForDisplayContents == inlineWrapperForDisplayContentsMap().contains(this));
 
     if (!m_hasInlineWrapperForDisplayContents)
