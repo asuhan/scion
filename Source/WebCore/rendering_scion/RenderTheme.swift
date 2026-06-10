@@ -18,6 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 private func effectiveRendererForAppearance(renderObject: RenderObjectWrapper)
   -> RenderObjectWrapper?
 {
@@ -36,12 +38,11 @@ private func effectiveRendererForAppearance(renderObject: RenderObjectWrapper)
 }
 
 struct RenderTheme {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   // This function is to be implemented in platform-specific theme implementations to hand back the
   // appropriate platform theme.
-  static func singleton() -> RenderTheme {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func singleton() -> RenderTheme { return RenderTheme(wk_interop.RenderTheme_singleton()) }
 
   private func updateControlPartForRenderer(part: ControlPartWrapper, renderer: RenderObjectWrapper)
   {
@@ -57,6 +58,7 @@ struct RenderTheme {
     box: RenderBoxWrapper, part: ControlPartWrapper, paintInfo: PaintInfoWrapper,
     rect: LayoutRectWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     // If painting is disabled, but we aren't updating control tints, then just bail.
     // If we are updating control tints, just schedule a repaint if the theme supports tinting
     // for that control.
@@ -90,6 +92,7 @@ struct RenderTheme {
 
   @discardableResult
   func paint(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper) -> Bool {
+    assert(isNativeImpl())
     // If painting is disabled, but we aren't updating control tints, then just bail.
     // If we are updating control tints, just schedule a repaint if the theme supports tinting
     // for that control.
@@ -165,6 +168,7 @@ struct RenderTheme {
   func paintBorderOnly(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
     -> Bool
   {
+    assert(isNativeImpl())
     if paintInfo.context().paintingDisabled() {
       return false
     }
@@ -212,6 +216,7 @@ struct RenderTheme {
 
   func paintDecorations(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
   {
+    assert(isNativeImpl())
     if paintInfo.context().paintingDisabled() {
       return
     }
@@ -245,6 +250,7 @@ struct RenderTheme {
   }
 
   func adjustedPaintRect(box: RenderBoxWrapper, paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     return paintRect
   }
 
@@ -261,6 +267,7 @@ struct RenderTheme {
 
   // A method asking if the theme is able to draw the focus ring.
   func supportsFocusRing(style: RenderStyleWrapper) -> Bool {
+    assert(isNativeImpl())
     return style.hasUsedAppearance()
       && style.usedAppearance() != .TextField
       && style.usedAppearance() != .TextArea
@@ -268,7 +275,10 @@ struct RenderTheme {
       && style.usedAppearance() != .Listbox
   }
 
-  func supportsLargeFormControls() -> Bool { return false }
+  func supportsLargeFormControls() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
 
   // Text selection colors.
   func activeSelectionBackgroundColor(options: StyleColorOptions) -> ColorWrapper {
@@ -339,6 +349,7 @@ struct RenderTheme {
   func documentMarkerLineColor(renderer: RenderTextWrapper, mode: DocumentMarkerLineStyleMode)
     -> ColorWrapper
   {
+    assert(isNativeImpl())
     let options = renderer.styleColorOptions()
 
     switch mode {
@@ -364,10 +375,14 @@ struct RenderTheme {
   }
 
   func popupInternalPaddingBox(_ style: RenderStyleWrapper) -> LengthBox {
+    assert(isNativeImpl())
     return LengthBox(top: 0, right: 0, bottom: 0, left: 0)
   }
 
-  func popupOptionSupportsTextIndent() -> Bool { return false }
+  func popupOptionSupportsTextIndent() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
 
   func progressBarRectForBounds(_ renderProgress: RenderProgressWrapper, _ bounds: IntRect)
     -> IntRect
@@ -379,6 +394,7 @@ struct RenderTheme {
   private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
     -> ControlStyle.State
   {
+    assert(isNativeImpl())
     if let renderer = effectiveRendererForAppearance(renderObject: renderObject) {
       return extractControlStyleStatesForRendererInternal(renderer: renderer)
     }
@@ -572,6 +588,7 @@ struct RenderTheme {
   private func extractControlStyleStatesForRendererInternal(renderer: RenderObjectWrapper)
     -> ControlStyle.State
   {
+    assert(isNativeImpl())
     var states = ControlStyle.State()
     if isHovered(renderer: renderer) {
       states.update(with: .Hovered)
@@ -707,5 +724,9 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  private func isNativeImpl() -> Bool { return p == nil }
+
   private let useFormSemanticContext = false
+
+  private let p: UnsafeMutableRawPointer?
 }

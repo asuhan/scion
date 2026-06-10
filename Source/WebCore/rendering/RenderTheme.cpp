@@ -89,6 +89,11 @@
 #include "HTMLOptionElement.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderTheme_singleton()
+{
+    return &WebCore::RenderTheme::singleton();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

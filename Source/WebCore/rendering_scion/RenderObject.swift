@@ -456,8 +456,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func theme() -> RenderTheme {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RenderTheme.singleton()
   }
 
   // TODO(asuhan): override in all subclasses
