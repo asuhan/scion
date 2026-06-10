@@ -384,7 +384,10 @@ CheckedRef<RenderView> RenderObject::checkedView() const
 
 void RenderObject::setLayoutBox(Layout::Box& box)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setLayoutBox(box);
+        return;
+    }
     m_layoutBox = &box;
     m_layoutBox->setRendererForIntegration(this);
 }

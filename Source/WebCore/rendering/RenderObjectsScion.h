@@ -67,6 +67,8 @@ public:
     {
     }
 
+    void setLayoutBox(Layout::Box&);
+
     RenderElement* parent() const;
 
     RenderObject* previousSibling() const;

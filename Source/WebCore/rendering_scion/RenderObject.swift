@@ -423,25 +423,26 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func layoutBox() -> BoxWrapper? {
     if isNativeImpl() { return m_layoutBox }
-    let unwrapped = wk_interop.RenderObject_layoutBox(id())
-    if unwrapped == nil {
-      return nil
-    }
+    guard let unwrapped = wk_interop.RenderObject_layoutBox(id()) else { return nil }
+    return RenderObjectWrapper.createLayoutBoxWrapper(unwrapped)
+  }
+
+  static func createLayoutBoxWrapper(_ unwrapped: UnsafeMutableRawPointer) -> BoxWrapper {
     let styleUnwrapped = wk_interop.Box_style(unwrapped)!
     let style = convert_render_style(p: styleUnwrapped)
     if wk_interop.Box_isInlineTextBox(unwrapped) {
-      let box = convert_inline_text_box(p: unwrapped!)
-      box.p = UnsafeRawPointer(unwrapped!)
+      let box = convert_inline_text_box(p: unwrapped)
+      box.p = UnsafeRawPointer(unwrapped)
       return box
     }
     if wk_interop.Box_isInitialContainingBlock(unwrapped) {
       let box = InitialContainingBlock(wrapperStyle: style)
-      box.p = UnsafeRawPointer(unwrapped!)
+      box.p = UnsafeRawPointer(unwrapped)
       return box
     }
     if wk_interop.Box_isElementBox(unwrapped) {
       let box = ElementBoxWrapper(wrapperStyle: style)
-      box.p = UnsafeRawPointer(unwrapped!)
+      box.p = UnsafeRawPointer(unwrapped)
       return box
     }
     // TODO(asuhan): implement this
