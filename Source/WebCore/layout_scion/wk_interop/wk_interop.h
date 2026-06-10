@@ -902,6 +902,7 @@ void Box_setIsInlineIntegrationRoot(const void*);
 void Box_setIsFirstChildForIntegration(const void*, bool);
 void Box_setShape(const void* box_raw, const void* shape);
 void* Box_rendererForIntegration(const void*);
+void Box_setRendererForIntegration(const void*, void*);
 const void* RenderStyle_clone(const void*);
 const void* RenderStyle_replace(const void*, const void*);
 void RenderStyle_destroy(const void*);

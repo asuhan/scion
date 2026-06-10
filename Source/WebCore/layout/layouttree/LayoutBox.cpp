@@ -236,6 +236,12 @@ extern "C" WEBCORE_EXPORT void* Box_rendererForIntegration(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->rendererForIntegration();
 }
 
+extern "C" WEBCORE_EXPORT void Box_setRendererForIntegration(const void* p, void* renderer)
+{
+    auto box = static_cast<WebCore::Layout::Box*>(const_cast<void*>(p));
+    return box->setRendererForIntegration(static_cast<WebCore::RenderObject*>(renderer));
+}
+
 namespace WebCore {
 namespace Layout {
 

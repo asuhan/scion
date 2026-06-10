@@ -448,6 +448,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setLayoutBox(_ box: BoxWrapper) {
+    assert(isNativeImpl())
+    m_layoutBox = box
+    m_layoutBox!.setRendererForIntegration(self)
+  }
+
   func theme() -> RenderTheme {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3648,7 +3654,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func getWk() -> UnsafeMutableRawPointer { fatalError("Not reached") }
 
-  private let m_layoutBox: BoxWrapper? = nil
+  private var m_layoutBox: BoxWrapper? = nil
 
   typealias RareDataMap = [ObjectIdentifier: RenderObjectRareData]
 

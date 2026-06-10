@@ -2952,7 +2952,7 @@ func RenderBlockScion_setMarginAfterForChild(
     value: LayoutUnit.fromRawValue(value: valueRaw))
 }
 
-private func wkRenderObject(_ obj: RenderObjectWrapper?) -> UnsafeMutableRawPointer? {
+func wkRenderObject(_ obj: RenderObjectWrapper?) -> UnsafeMutableRawPointer? {
   if obj == nil { return nil }
   return obj!.isNativeImpl() ? obj!.getWk() : obj!.id()
 }
