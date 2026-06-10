@@ -242,8 +242,9 @@ class PaintInfoWrapper {
     }
     set {
       if n == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // TODO(asuhan): implement this correctly
+        assert(newValue?.isEmptyIgnoringNullReferences() ?? true)
+        return
       }
       n!.outlineObjects = newValue
     }
