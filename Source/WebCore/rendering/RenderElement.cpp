@@ -222,7 +222,7 @@ const RenderStyle& RenderElement::style() const
 
 Layout::ElementBox* RenderElement::layoutBox()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->layoutBox(); }
     return downcast<Layout::ElementBox>(RenderObject::layoutBox());
 }
 

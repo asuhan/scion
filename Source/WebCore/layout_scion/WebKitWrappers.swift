@@ -2265,6 +2265,12 @@ func RenderElementScion_lastChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutab
   return lastChild.id()
 }
 
+@_cdecl("RenderElementScion_layoutBox")
+func RenderElementScion_layoutBox(_ elementRaw: UnsafeRawPointer) -> UnsafeRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return object.layoutBox()?.p
+}
+
 @_cdecl("RenderElementScion_canContainFixedPositionObjects")
 func RenderElementScion_canContainFixedPositionObjects(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

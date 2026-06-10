@@ -399,6 +399,8 @@ extern "C" void* RenderElementScion_firstChild(const void*);
 
 extern "C" void* RenderElementScion_lastChild(const void*);
 
+extern "C" const void* RenderElementScion_layoutBox(const void*);
+
 extern "C" bool RenderElementScion_canContainFixedPositionObjects(const void*);
 
 extern "C" bool RenderElementScion_canContainAbsolutelyPositionedObjects(const void*);
@@ -1241,6 +1243,11 @@ RenderObject* RenderElementScion::firstChild() const
 RenderObject* RenderElementScion::lastChild() const
 {
     return static_cast<RenderObject*>(RenderElementScion_lastChild(m_handle));
+}
+
+Layout::ElementBox* RenderElementScion::layoutBox()
+{
+    return static_cast<Layout::ElementBox*>(const_cast<void*>(RenderElementScion_layoutBox(m_handle)));
 }
 
 bool RenderElementScion::canContainFixedPositionObjects() const

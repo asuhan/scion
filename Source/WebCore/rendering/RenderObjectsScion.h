@@ -382,6 +382,8 @@ public:
 
     RenderObject* lastChild() const;
 
+    Layout::ElementBox* layoutBox();
+
     bool canContainFixedPositionObjects() const;
 
     bool canContainAbsolutelyPositionedObjects() const;
