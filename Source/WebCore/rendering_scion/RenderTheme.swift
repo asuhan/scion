@@ -250,7 +250,11 @@ struct RenderTheme {
   }
 
   func adjustedPaintRect(box: RenderBoxWrapper, paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return convertLayoutRect(
+        wk_interop.RenderTheme_adjustedPaintRect(
+          p!, wkRenderObject(box), convertLayoutRect(paintRect)))
+    }
     return paintRect
   }
 

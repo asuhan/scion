@@ -1850,3 +1850,4 @@ void LegacyInlineTextBoxScion_destroy(void*);
 void* ControlFactory_shared();
 void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, void*, const void*, const void*);
 void* RenderTheme_singleton();
+struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);

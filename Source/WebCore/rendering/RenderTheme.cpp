@@ -94,6 +94,34 @@ extern "C" WEBCORE_EXPORT void* RenderTheme_singleton()
     return &WebCore::RenderTheme::singleton();
 }
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+namespace {
+
+LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height)  };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderTheme_adjustedPaintRect(const void* p, const void* boxRaw, LayoutRectRaw paintRectRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    const auto paintRect = convertLayoutRectRaw(paintRectRaw);
+    return convertLayoutRect(static_cast<const WebCore::RenderTheme*>(p)->adjustedPaintRect(box, paintRect));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
