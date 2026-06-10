@@ -1149,6 +1149,12 @@ func RenderObjectScion_parent(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRaw
   return parent.isNativeImpl() ? parent.getWk() : parent.id()
 }
 
+@_cdecl("RenderObjectScion_layoutBox")
+func RenderObjectScion_layoutBox(_ objectRaw: UnsafeMutableRawPointer) -> UnsafeRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.layoutBox()?.p
+}
+
 @_cdecl("RenderObjectScion_setLayoutBox")
 func RenderObjectScion_setLayoutBox(
   _ objectRaw: UnsafeMutableRawPointer, _ boxRaw: UnsafeMutableRawPointer

@@ -376,6 +376,12 @@ void RenderObject::setScionHandle(void* handle)
     m_scion = std::make_unique<RenderObjectScion>(handle);
 }
 
+Layout::Box* RenderObject::layoutBox()
+{
+    if (m_scion) { return m_scion->layoutBox(); }
+    return m_layoutBox.get();
+}
+
 CheckedRef<RenderView> RenderObject::checkedView() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

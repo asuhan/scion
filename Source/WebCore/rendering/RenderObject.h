@@ -340,11 +340,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_type;
     }
-    Layout::Box* layoutBox()
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_layoutBox.get();
-    }
+    Layout::Box* layoutBox();
     const Layout::Box* layoutBox() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

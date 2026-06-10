@@ -42,6 +42,8 @@
 #include <wtf/CheckedRef.h>
 #include <wtf/FastMalloc.h>
 
+extern "C" const void* RenderObjectScion_layoutBox(void*);
+
 extern "C" void RenderObjectScion_setLayoutBox(void*, void*);
 
 extern "C" void* RenderObjectScion_parent(const void*);
@@ -775,6 +777,8 @@ extern "C" bool RenderViewScion_boxesWithScrollSnapPositionsIsEmpty(const void*)
 extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
 
 namespace WebCore {
+
+Layout::Box* RenderObjectScion::layoutBox() { return static_cast<Layout::Box*>(const_cast<void*>(RenderObjectScion_layoutBox(m_handle))); }
 
 void RenderObjectScion::setLayoutBox(Layout::Box& box) { RenderObjectScion_setLayoutBox(m_handle, &box); }
 
