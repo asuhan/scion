@@ -1525,6 +1525,6 @@ class InlineContentBreaker {
     return WordBreakRule()
   }
 
-  private var isMinimumInIntrinsicWidthMode = false
+  var isMinimumInIntrinsicWidthMode = false
   private var hyphenationIsDisabled = false
 }

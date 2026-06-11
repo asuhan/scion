@@ -44,6 +44,11 @@ class AbstractLineBuilder {
     fatalError("Should be overridden by subclass")
   }
 
+  func setIntrinsicWidthMode(_ intrinsicWidthMode: IntrinsicWidthMode) {
+    self.intrinsicWidthMode = intrinsicWidthMode
+    inlineContentBreaker.isMinimumInIntrinsicWidthMode = (intrinsicWidthMode == .Minimum)
+  }
+
   func reset() {
     wrapOpportunityList.removeAll()
     partialLeadingTextItem = nil
