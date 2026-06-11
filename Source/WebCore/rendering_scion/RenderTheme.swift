@@ -258,6 +258,14 @@ struct RenderTheme {
     return paintRect
   }
 
+  // A method for asking if a control is a container or not.  Leaf controls have to have some special behavior (like
+  // the baseline position API above).
+  func isControlContainer(_ appearance: StyleAppearance) -> Bool {
+    // There are more leaves than this, but we'll patch this function as we add support for
+    // more controls.
+    return appearance != .Checkbox && appearance != .Radio
+  }
+
   // A method asking if the control changes its tint when the window has focus or not.
   func controlSupportsTints(o: RenderObjectWrapper) -> Bool {
     // TODO(asuhan): implement this

@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// TODO(asuhan): check StyleAppearance is consistent with C++ version
+
 // Must follow CSSValueKeywords.in order
 enum StyleAppearance: UInt8 {
   case None

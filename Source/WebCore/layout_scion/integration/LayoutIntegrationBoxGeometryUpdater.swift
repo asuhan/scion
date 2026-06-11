@@ -137,10 +137,15 @@ func hasNonSyntheticBaseline(renderBox: RenderBoxWrapper) -> Bool {
     // These are special RenderBlock renderers that override the default baseline position behavior of the inline block box.
     return true
   }
-  if let blockFlow = renderBox as? RenderBlockFlowWrapper {
+  guard let blockFlow = renderBox as? RenderBlockFlowWrapper else { return false }
+  if !blockFlow.isNativeImpl() {
     return wk_interop.RenderBlockFlow_hasNonSyntheticBaseline(blockFlow.id())
   }
-  return false
+  let hasAppareance =
+    blockFlow.style().hasUsedAppearance()
+    && !blockFlow.theme().isControlContainer(blockFlow.style().usedAppearance())
+  return hasAppareance || !blockFlow.childrenInline() || blockFlow.hasLines()
+    || blockFlow.hasLineIfEmpty()
 }
 
 extension LayoutIntegration {
