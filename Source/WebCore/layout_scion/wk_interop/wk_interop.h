@@ -373,6 +373,15 @@ struct FirstLetterRenderObjectsRaw {
     void* firstLetterContainer;
 };
 
+struct AffineTransformRaw {
+    double a;
+    double b;
+    double c;
+    double d;
+    double e;
+    double f;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1695,6 +1704,7 @@ void GraphicsContext_rotate(void* p, float);
 void GraphicsContext_translateBySize(void*, struct FloatSizeRaw);
 void GraphicsContext_translateByPoint(void*, struct FloatPointRaw);
 void GraphicsContext_translateByXy(void*, float, float);
+struct AffineTransformRaw GraphicsContext_getCTM(const void*, bool);
 struct FloatSizeRaw GraphicsContext_scaleFactor(const void*);
 void GraphicsContext_setContentfulPaintDetected(void*);
 bool GraphicsContext_contentfulPaintDetected(const void*);

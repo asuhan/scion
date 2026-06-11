@@ -349,6 +349,23 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_translateByXy(void* p, float x, f
     static_cast<WebCore::GraphicsContext*>(p)->translate(x, y);
 }
 
+struct AffineTransformRaw {
+    double a;
+    double b;
+    double c;
+    double d;
+    double e;
+    double f;
+};
+
+extern "C" WEBCORE_EXPORT AffineTransformRaw GraphicsContext_getCTM(const void* p, bool possiblyIncludeDeviceScale)
+{
+    const auto ctm = static_cast<const WebCore::GraphicsContext*>(p)->getCTM(possiblyIncludeDeviceScale
+        ? WebCore::GraphicsContext::IncludeDeviceScale::PossiblyIncludeDeviceScale
+        : WebCore::GraphicsContext::IncludeDeviceScale::DefinitelyIncludeDeviceScale);
+    return { ctm.a(), ctm.b(), ctm.c(), ctm.d(), ctm.e(), ctm.f() };
+}
+
 extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsContext_scaleFactor(const void* p)
 {
     const auto size = static_cast<const WebCore::GraphicsContext*>(p)->scaleFactor();

@@ -500,8 +500,8 @@ class GraphicsContextWrapper {
   }
 
   func getCTM(includeScale: IncludeDeviceScale = .PossiblyIncludeDeviceScale) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let ctm = wk_interop.GraphicsContext_getCTM(p!, includeScale == .PossiblyIncludeDeviceScale)
+    return AffineTransform(a: ctm.a, b: ctm.b, c: ctm.c, d: ctm.d, e: ctm.e, f: ctm.f)
   }
 
   func scaleFactor() -> FloatSize {
