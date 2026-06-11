@@ -32,6 +32,19 @@ private func isBoxEligibleForNonLineBuilderMinimumWidth(_ box: ElementBoxWrapper
     && style.whiteSpaceCollapse() != .Preserve
 }
 
+private func isContentEligibleForNonLineBuilderMaximumWidth(
+  _ rootBox: ElementBoxWrapper, _ inlineItemList: InlineItemList
+) -> Bool {
+  if inlineItemList.count != 1
+    || rootBox.style.textIndent() != RenderStyleWrapper.initialTextIndent()
+  {
+    return false
+  }
+
+  guard let inlineTextItem = inlineItemList[0] as? InlineTextItemWrapper else { return false }
+  return !inlineTextItem.isWhitespace()
+}
+
 private func isSubtreeEligibleForNonLineBuilderMinimumWidth(_ root: ElementBoxWrapper) -> Bool {
   var isSimpleBreakableContent = isBoxEligibleForNonLineBuilderMinimumWidth(root)
   var child = root.firstChild()
@@ -58,6 +71,21 @@ private func isContentEligibleForNonLineBuilderMinimumWidth(
     (mayUseSimplifiedTextOnlyInlineLayout && isBoxEligibleForNonLineBuilderMinimumWidth(rootBox))
     || (!mayUseSimplifiedTextOnlyInlineLayout
       && isSubtreeEligibleForNonLineBuilderMinimumWidth(rootBox))
+}
+
+private func mayUseContentWidthBetweenLineBreaksAsMaximumSize(
+  _ rootBox: ElementBoxWrapper, _ inlineItemList: InlineItemList
+) -> Bool {
+  if !TextUtil.shouldPreserveSpacesAndTabs(layoutBox: rootBox) {
+    return false
+  }
+  for inlineItem in inlineItemList {
+    if let inlineTextItem = inlineItem as? InlineTextItemWrapper, inlineTextItem.width() == nil {
+      // We can't accumulate individual inline items when width depends on position (e.g. tab).
+      return false
+    }
+  }
+  return true
 }
 
 struct IntrinsicWidthHandler: ~Copyable {
@@ -139,6 +167,39 @@ struct IntrinsicWidthHandler: ~Copyable {
     }
 
     return minimumContentSize
+  }
+
+  mutating func maximumContentSize() -> InlineLayoutUnit {
+    let mayCacheLayoutResult: MayCacheLayoutResult =
+      m_mayUseSimplifiedTextOnlyInlineLayoutInRange && m_inlineItemRange.startIndex() == 0
+      ? .Yes : .No
+    var maximumContentSize = InlineLayoutUnit()
+
+    if isContentEligibleForNonLineBuilderMaximumWidth(formattingContextRoot(), inlineItemList()) {
+      maximumContentSize = simplifiedMaximumWidth(mayCacheLayoutResult)
+    } else if m_mayUseSimplifiedTextOnlyInlineLayoutInRange {
+      if m_maximumContentWidthBetweenLineBreaks != nil
+        && mayUseContentWidthBetweenLineBreaksAsMaximumSize(
+          formattingContextRoot(), inlineItemList())
+      {
+        maximumContentSize = m_maximumContentWidthBetweenLineBreaks!
+        // TODO(asuhan): check against text only simple line builder
+      } else {
+        let simplifiedLineBuilder = TextOnlySimpleLineBuilder(
+          inlineFormattingContext: formattingContext(), rootBox: lineBuilderRoot(),
+          rootHorizontalConstraints: HorizontalConstraints(), inlineItemList: inlineItemList())
+        maximumContentSize = computedIntrinsicWidthForConstraint(
+          .Maximum, simplifiedLineBuilder, mayCacheLayoutResult)
+      }
+    } else {
+      let lineBuilder = LineBuilder(
+        inlineFormattingContext: formattingContext(),
+        rootHorizontalConstraints: HorizontalConstraints(), inlineItemList: inlineItemList())
+      maximumContentSize = computedIntrinsicWidthForConstraint(
+        .Maximum, lineBuilder, mayCacheLayoutResult)
+    }
+
+    return maximumContentSize
   }
 
   func maximumIntrinsicWidthLineContent() -> LineLayoutResult? {
@@ -313,6 +374,46 @@ struct IntrinsicWidthHandler: ~Copyable {
       child = child!.nextInFlowSibling()
     }
     return maximumWidth
+  }
+
+  private mutating func simplifiedMaximumWidth(_ mayCacheLayoutResult: MayCacheLayoutResult = .No)
+    -> InlineLayoutUnit
+  {
+    assert(
+      formattingContextRoot().firstChild() != nil
+        && CPtrToInt(formattingContextRoot().firstChild()!.p)
+          == CPtrToInt(formattingContextRoot().lastChild()?.p)
+    )
+    let inlineTextItem = inlineItemList()[0] as! InlineTextItemWrapper
+    let style = inlineTextItem.firstLineStyle()
+
+    let contentLogicalWidth = { () in
+      if let width = inlineTextItem.width() {
+        return width
+      }
+      return TextUtil.width(
+        inlineTextItem: inlineTextItem, fontCascade: style.fontCascade(),
+        contentLogicalLeft: InlineLayoutUnit())
+    }()
+    if mayCacheLayoutResult == .No {
+      return contentLogicalWidth
+    }
+
+    var line = Line(inlineFormattingContext: formattingContext())
+    line.initialize(lineSpanningInlineBoxes: [], isFirstFormattedLine: true)
+    line.appendTextFast(
+      inlineTextItem: inlineTextItem, style: style, logicalWidth: contentLogicalWidth)
+    let lineContent = line.close()
+    assert(contentLogicalWidth == lineContent.contentLogicalWidth)
+    m_maximumIntrinsicWidthResultForSingleLine = LineLayoutResult(
+      inlineItemRange: InlineItemRange(
+        start: InlineItemPosition(index: 0), end: InlineItemPosition(index: 1)),
+      inlineContent: lineContent.runs, floatContent: LineLayoutResult.FloatContent(),
+      contentGeometry: LineLayoutResult.ContentGeometry(
+        logicalLeft: InlineLayoutUnit(), logicalWidth: lineContent.contentLogicalWidth,
+        logicalRightIncludingNegativeMargin: lineContent.contentLogicalRight,
+        trailingOverflowingContentWidth: nil))
+    return contentLogicalWidth
   }
 
   private func formattingContext() -> InlineFormattingContext { return m_inlineFormattingContext }
