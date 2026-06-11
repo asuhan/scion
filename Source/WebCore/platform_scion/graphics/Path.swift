@@ -26,16 +26,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class PathWrapper {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init() { p = wk_interop.Path_create() }
 
   init(points: [FloatPoint]) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  deinit { wk_interop.Path_destroy(p) }
 
   func moveTo(point: FloatPoint) {
     // TODO(asuhan): implement this
@@ -122,4 +123,6 @@ class PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }

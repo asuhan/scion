@@ -1861,3 +1861,5 @@ void* ControlFactory_shared();
 void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, void*, const void*, const void*);
 void* RenderTheme_singleton();
 struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);
+void* Path_create();
+void Path_destroy(const void*);

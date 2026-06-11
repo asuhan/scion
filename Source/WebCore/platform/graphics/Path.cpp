@@ -35,6 +35,16 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void* Path_create()
+{
+    return new WebCore::Path();
+}
+
+extern "C" WEBCORE_EXPORT void Path_destroy(const void* p)
+{
+    delete static_cast<const WebCore::Path*>(p);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);
