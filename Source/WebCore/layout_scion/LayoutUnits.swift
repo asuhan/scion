@@ -113,7 +113,7 @@ internal func toLayoutUnit(value: InlineLayoutUnit) -> LayoutUnit {
   return LayoutUnit(value: value)
 }
 
-internal func ceiledLayoutUnit(value: InlineLayoutUnit) -> LayoutUnit {
+internal func ceiledLayoutUnit(_ value: InlineLayoutUnit) -> LayoutUnit {
   return LayoutUnit.fromFloatCeil(value: value)
 }
 

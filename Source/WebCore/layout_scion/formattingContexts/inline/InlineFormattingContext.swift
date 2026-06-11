@@ -229,8 +229,31 @@ class InlineFormattingContext {
 
   func minimumMaximumContentSize(lineDamage: InlineDamageWrapper? = nil) -> (LayoutUnit, LayoutUnit)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var minimumContentSize = inlineContentCache.minimumContentSize
+    var maximumContentSize = inlineContentCache.maximumContentSize
+
+    if minimumContentSize != nil && maximumContentSize != nil {
+      return (ceiledLayoutUnit(minimumContentSize!), ceiledLayoutUnit(maximumContentSize!))
+    }
+
+    rebuildInlineItemListIfNeeded(lineDamage: lineDamage)
+    let inlineItems = inlineContentCache.inlineItems
+
+    if !isEmptyInlineContent(inlineItemList: inlineItems.content()) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      minimumContentSize = minimumContentSize ?? 0
+      maximumContentSize = maximumContentSize ?? 0
+    }
+
+    // TODO(asuhan): check that content has negative implicit margin
+
+    minimumContentSize = min(minimumContentSize!, maximumContentSize!)
+
+    inlineContentCache.minimumContentSize = minimumContentSize!
+    inlineContentCache.maximumContentSize = maximumContentSize!
+    return (ceiledLayoutUnit(minimumContentSize!), ceiledLayoutUnit(maximumContentSize!))
   }
 
   func root() -> ElementBoxWrapper {
@@ -524,8 +547,7 @@ class InlineFormattingContext {
     {
       return nil
     }
-    if ceiledLayoutUnit(value: lineContent.contentGeometry.logicalWidth).float()
-      + LayoutUnit.epsilon()
+    if ceiledLayoutUnit(lineContent.contentGeometry.logicalWidth).float() + LayoutUnit.epsilon()
       <= horizontalAvailableSpace.float()
     {
       return nil
