@@ -116,6 +116,11 @@ extern "C" WEBCORE_EXPORT void RenderText_styleDidChange(void* p, uint8_t diffRa
     static_cast<WebCore::RenderText*>(p)->styleDidChange(diff, oldStyle);
 }
 
+extern "C" WEBCORE_EXPORT void RenderText_resetMinMaxWidth(void* p)
+{
+    static_cast<WebCore::RenderText*>(p)->resetMinMaxWidth();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderText_scion(const void* p)
 {
     return static_cast<const WebCore::RenderText*>(p)->scion();

@@ -941,7 +941,10 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func resetMinMaxWidth() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderText_resetMinMaxWidth(id())
+      return
+    }
     minWidth = nil
     maxWidth = nil
   }
