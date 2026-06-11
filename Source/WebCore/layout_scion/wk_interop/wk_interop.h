@@ -695,6 +695,7 @@ void* RenderObject_container(const void*);
 bool RenderObject_isComposited(const void*);
 int32_t RenderObject_minPreferredLogicalWidth(const void*);
 int32_t RenderObject_maxPreferredLogicalWidth(const void*);
+bool RenderObject_isInFlow(const void*);
 bool RenderObject_isSkippedContentForLayout(const void*);
 void RenderObject_setPreviousSibling(void* p, void* previous);
 void RenderObject_setNextSibling(void* p, void* next);

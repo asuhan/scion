@@ -2870,7 +2870,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isFloatingOrOutOfFlowPositioned() -> Bool { return isFloating() || isOutOfFlowPositioned() }
 
   func isInFlow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isInFlow(id()) }
     return !isFloatingOrOutOfFlowPositioned()
   }
 
