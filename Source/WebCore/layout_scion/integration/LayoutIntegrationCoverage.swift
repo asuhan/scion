@@ -29,6 +29,49 @@ extension LayoutIntegration {
       || rootContainer.isRenderOrLegacyRenderSVGForeignObject()
   }
 
+  static func canUseForPreferredWidthComputation(_ blockContainer: RenderBlockFlowWrapper) -> Bool {
+    let walker = InlineWalker(root: blockContainer)
+    while !walker.atEnd() {
+      let renderer = walker.current()!
+
+      let isFullySupportedRenderer =
+        renderer.isRenderText() || renderer is RenderLineBreakWrapper
+        || renderer is RenderInlineWrapper || renderer is RenderListMarkerWrapper
+      if isFullySupportedRenderer {
+        walker.advance()
+        continue
+      }
+
+      if !renderer.isInFlow() || !renderer.style().isHorizontalWritingMode()
+        || !renderer.style().logicalWidth().isFixed()
+      {
+        return false
+      }
+
+      let isNonSupportedFixedWidthContent = { () in
+        // FIXME: Implement this image special in line builder.
+        let allowImagesToBreak =
+          !blockContainer.document().inQuirksMode() || !blockContainer.isRenderTableCell()
+        if !allowImagesToBreak {
+          return true
+        }
+        // FIXME: See RenderReplaced::computePreferredLogicalWidths where m_minPreferredLogicalWidth is set to 0.
+        let isReplacedWithSpecialIntrinsicWidth =
+          renderer is RenderReplacedWrapper
+          && renderer.style().logicalMaxWidth().isPercentOrCalculated()
+        if isReplacedWithSpecialIntrinsicWidth {
+          return true
+        }
+        return false
+      }
+      if isNonSupportedFixedWidthContent() {
+        return false
+      }
+      walker.advance()
+    }
+    return true
+  }
+
   static func canUseForFlexLayout(flexBox: RenderFlexibleBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
