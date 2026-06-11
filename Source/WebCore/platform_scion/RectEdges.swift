@@ -198,3 +198,19 @@ extension LayoutOptionalOutsets {
         makeTextFlow(writingMode: writingMode, direction: direction), .InlineStart), start)
   }
 }
+
+extension BorderEdges {
+  // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+  func at(side: BoxSide) -> BorderEdge {
+    switch side {
+    case .Top:
+      return top
+    case .Right:
+      return right
+    case .Bottom:
+      return bottom
+    case .Left:
+      return left
+    }
+  }
+}
