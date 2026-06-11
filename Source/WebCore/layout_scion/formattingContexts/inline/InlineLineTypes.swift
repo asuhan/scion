@@ -36,8 +36,13 @@ struct ExpansionInfo {
 }
 
 struct InlineItemPosition: Equatable {
-  var index: UInt64 = 0
-  var offset: UInt64 = 0
+  var index: UInt64
+  var offset: UInt64
+
+  init(index: UInt64 = 0, offset: UInt64 = 0) {
+    self.index = index
+    self.offset = offset
+  }
 
   func bool() -> Bool { return index != 0 || offset != 0 }
 }

@@ -60,6 +60,8 @@ class InlineContentCache {
       return content().count == 0
     }
 
+    func size() -> UInt64 { return UInt64(content().count) }
+
     func requiresVisualReordering() -> Bool {
       return contentAttributes.requiresVisualReordering
     }

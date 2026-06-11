@@ -22,6 +22,7 @@ target_sources(layout_scion PRIVATE
     InlineRect.swift
     InlineSoftLineBreakItem.swift
     InlineTextItem.swift
+    IntrinsicWidthHandler.swift
     LineLayoutResult.swift
     RangeBasedLineBuilder.swift
     TextOnlySimpleLineBuilder.swift
