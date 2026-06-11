@@ -1658,6 +1658,7 @@ bool GraphicsContext_invalidatingControlTints(const void*);
 bool GraphicsContext_invalidatingImagesWithAsyncDecodes(const void*);
 bool GraphicsContext_detectingContentfulPaint(const void*);
 struct SRGBARaw GraphicsContext_fillColor(const void*);
+void GraphicsContext_setFillColor(void*, struct SRGBARaw);
 void GraphicsContext_setFillRule(void*, uint8_t);
 uint8_t GraphicsContext_strokeStyle(const void*);
 void GraphicsContext_setStrokeStyle(void*, uint8_t);

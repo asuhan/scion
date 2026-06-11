@@ -82,6 +82,12 @@ extern "C" WEBCORE_EXPORT SRGBARaw GraphicsContext_fillColor(const void* p)
     return { r, g, b, a };
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setFillColor(void* p, SRGBARaw color)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setFillColor(
+        WebCore::SRGBA<uint8_t> { color.red, color.green, color.blue, color.alpha });
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_setFillRule(void* p, uint8_t fillRule)
 {
     static_cast<WebCore::GraphicsContext*>(p)->setFillRule(static_cast<WebCore::WindRule>(fillRule));

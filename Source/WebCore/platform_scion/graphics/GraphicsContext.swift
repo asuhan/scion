@@ -80,8 +80,9 @@ class GraphicsContextWrapper {
   }
 
   func setFillColor(color: ColorWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = color.toSRGBA()
+    wk_interop.GraphicsContext_setFillColor(
+      p!, SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
   }
 
   func setFillPattern(pattern: PatternWrapper) {
