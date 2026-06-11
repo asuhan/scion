@@ -1366,7 +1366,7 @@ class BorderPainter {
       return
     }
 
-    var sideRect = outerBorder.rect()
+    var sideRect = outerBorder.rect().deepCopy()
     var firstRadius = LayoutSizeWrapper()
     var secondRadius = LayoutSizeWrapper()
 

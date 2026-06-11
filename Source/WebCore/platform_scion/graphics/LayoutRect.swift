@@ -65,6 +65,10 @@ struct LayoutRectWrapper: Equatable {
     self.m_size = LayoutSizeWrapper(size: r.size())
   }
 
+  func deepCopy() -> LayoutRectWrapper {
+    return LayoutRectWrapper(location: location(), size: size().deepCopy())
+  }
+
   func location() -> LayoutPointWrapper { return m_location }
 
   func size() -> LayoutSizeWrapper { return m_size }
