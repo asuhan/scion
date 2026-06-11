@@ -1403,7 +1403,6 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentSize() -> LayoutSizeWrapper {
-    assert(!isNativeImpl())
     return LayoutSizeWrapper(width: contentWidth(), height: contentHeight())
   }
 
@@ -1428,7 +1427,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentLogicalSize() -> LayoutSizeWrapper {
-    assert(!isNativeImpl())
+    if isNativeImpl() {
+      return style().isHorizontalWritingMode() ? contentSize() : contentSize().transposedSize()
+    }
     let width = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_width(id()))
     let height = LayoutUnit.fromRawValue(
       value: wk_interop.RenderBox_contentLogicalSize_height(id()))
