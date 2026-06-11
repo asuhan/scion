@@ -141,6 +141,10 @@ struct IntrinsicWidthHandler: ~Copyable {
     return minimumContentSize
   }
 
+  func maximumIntrinsicWidthLineContent() -> LineLayoutResult? {
+    return m_maximumIntrinsicWidthResultForSingleLine
+  }
+
   private enum MayCacheLayoutResult {
     case No
     case Yes
