@@ -240,8 +240,18 @@ class InlineFormattingContext {
     let inlineItems = inlineContentCache.inlineItems
 
     if !isEmptyInlineContent(inlineItemList: inlineItems.content()) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var intrinsicWidthHandler = IntrinsicWidthHandler(self, inlineItems)
+
+      if minimumContentSize == nil {
+        minimumContentSize = intrinsicWidthHandler.minimumContentSize()
+      }
+      if maximumContentSize == nil {
+        maximumContentSize = intrinsicWidthHandler.maximumContentSize()
+        if intrinsicWidthHandler.maximumIntrinsicWidthLineContent() != nil {
+          inlineContentCache.maximumIntrinsicWidthLineContent =
+            intrinsicWidthHandler.maximumIntrinsicWidthLineContent()
+        }
+      }
     } else {
       minimumContentSize = minimumContentSize ?? 0
       maximumContentSize = maximumContentSize ?? 0
