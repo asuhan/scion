@@ -250,6 +250,12 @@ extern "C" WEBCORE_EXPORT void* RenderObject_container(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->container();
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setPreferredLogicalWidthsDirty(void* p, bool shouldBeDirty, bool markParents)
+{
+    return static_cast<WebCore::RenderObject*>(p)->setPreferredLogicalWidthsDirty(
+        shouldBeDirty, markParents ? WebCore::MarkingBehavior::MarkContainingBlockChain : WebCore::MarkingBehavior::MarkOnlyThis);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isComposited(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isComposited();

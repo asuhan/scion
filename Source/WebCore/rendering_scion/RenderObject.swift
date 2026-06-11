@@ -1816,7 +1816,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func setPreferredLogicalWidthsDirty(
     shouldBeDirty: Bool, markParents: MarkingBehavior = .MarkContainingBlockChain
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setPreferredLogicalWidthsDirty(
+        id(), shouldBeDirty, markParents == .MarkContainingBlockChain)
+      return
+    }
     let alreadyDirty = preferredLogicalWidthsDirty()
     m_stateBitfields.setFlag(.PreferredLogicalWidthsDirty, shouldBeDirty)
     if shouldBeDirty && !alreadyDirty && markParents == .MarkContainingBlockChain

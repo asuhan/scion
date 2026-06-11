@@ -692,6 +692,7 @@ void* RenderObject_frame(const void*);
 void* RenderObject_page(const void*);
 void* RenderObject_settings(const void*);
 void* RenderObject_container(const void*);
+void RenderObject_setPreferredLogicalWidthsDirty(void*, bool, bool);
 bool RenderObject_isComposited(const void*);
 int32_t RenderObject_minPreferredLogicalWidth(const void*);
 int32_t RenderObject_maxPreferredLogicalWidth(const void*);
