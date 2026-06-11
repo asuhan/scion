@@ -1423,7 +1423,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderText() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderText(id()) }
     return m_typeFlags.contains(.IsText)
   }
 
