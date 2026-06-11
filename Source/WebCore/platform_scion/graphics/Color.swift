@@ -109,6 +109,6 @@ struct ColorWrapper: Equatable {
 }
 
 func equalIgnoringSemanticColor(a: ColorWrapper, b: ColorWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // TODO(asuhan): revisit this for out of line colors and semantic flags
+  return a.toSRGBA() == b.toSRGBA()
 }
