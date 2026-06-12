@@ -1051,6 +1051,19 @@ class LayoutIntegration {
           InlineIterator.LineBoxIteratorModernPath(inlineContent: inlineContent!, lineIndex: 0)))
     }
 
+    func lastLineBox() -> InlineIterator.LineBoxIterator {
+      if inlineContent == nil {
+        return InlineIterator.LineBoxIterator()
+      }
+
+      return InlineIterator.LineBoxIterator(
+        .modern(
+          InlineIterator.LineBoxIteratorModernPath(
+            inlineContent: inlineContent!,
+            lineIndex: inlineContent!.displayContent.lines.isEmpty
+              ? 0 : UInt64(inlineContent!.displayContent.lines.count - 1))))
+    }
+
     func flow() -> RenderBlockFlowWrapper { return boxTree.rootRenderer as! RenderBlockFlowWrapper }
 
     func contentNeedsVisualReordering() -> Bool {
