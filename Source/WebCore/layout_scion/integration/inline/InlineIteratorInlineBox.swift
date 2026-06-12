@@ -93,7 +93,7 @@ extension InlineIterator {
   class InlineBoxIterator: BoxIterator<InlineBox> {
     override init() { super.init() }
 
-    init(pathVariant: Box.PathVariant) { super.init(pathVariant, isInline: true) }
+    init(pathVariant: Box.PathVariant) { super.init(pathVariant, kind: .Inline) }
 
     init(box: Box) { super.init(box) }
 

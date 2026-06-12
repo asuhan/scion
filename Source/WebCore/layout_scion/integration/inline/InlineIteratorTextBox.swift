@@ -94,9 +94,9 @@ extension InlineIterator {
 
     init(pathVariant: BoxPath) {
       if let modernPath = pathVariant as? BoxModernPath {
-        super.init(.modern(modernPath), isInline: false)
+        super.init(.modern(modernPath), kind: .Text)
       } else {
-        super.init(.legacy(pathVariant as! BoxLegacyPath), isInline: false)
+        super.init(.legacy(pathVariant as! BoxLegacyPath), kind: .Text)
       }
     }
 

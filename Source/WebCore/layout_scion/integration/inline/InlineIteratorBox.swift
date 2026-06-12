@@ -31,6 +31,12 @@ extension InlineIterator {
       case legacy(BoxLegacyPath)
     }
 
+    enum Kind {
+      case Default
+      case Inline
+      case Text
+    }
+
     init(_ path: PathVariant) { m_pathVariant = path }
 
     func isText() -> Bool {
@@ -216,8 +222,15 @@ extension InlineIterator {
   class BoxIterator<BoxType: Box>: Equatable, IteratorProtocol {
     init() { m_box = Box(.legacy(BoxLegacyPath(nil))) }
 
-    init(_ pathVariant: Box.PathVariant, isInline: Bool) {
-      m_box = isInline ? InlineBox(pathVariant) : Box(pathVariant)
+    init(_ pathVariant: Box.PathVariant, kind: Box.Kind) {
+      switch kind {
+      case .Default:
+        m_box = Box(pathVariant)
+      case .Inline:
+        m_box = InlineBox(pathVariant)
+      case .Text:
+        m_box = TextBox(pathVariant)
+      }
     }
 
     init(_ run: Box) { m_box = run }
