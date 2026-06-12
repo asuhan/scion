@@ -1041,6 +1041,16 @@ class LayoutIntegration {
         ? borderBoxLogicalRect : borderBoxLogicalRect.transposedRect()
     }
 
+    func firstLineBox() -> InlineIterator.LineBoxIterator {
+      if inlineContent == nil {
+        return InlineIterator.LineBoxIterator()
+      }
+
+      return InlineIterator.LineBoxIterator(
+        .modern(
+          InlineIterator.LineBoxIteratorModernPath(inlineContent: inlineContent!, lineIndex: 0)))
+    }
+
     func flow() -> RenderBlockFlowWrapper { return boxTree.rootRenderer as! RenderBlockFlowWrapper }
 
     func contentNeedsVisualReordering() -> Bool {

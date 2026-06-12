@@ -233,8 +233,11 @@ class InlineIterator {
   }
 
   static func firstLineBoxFor(flow: RenderBlockFlowWrapper) -> LineBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = flow.inlineLayout() {
+      return lineLayout.firstLineBox()
+    }
+
+    return LineBoxIterator(.legacy(LineBoxIteratorLegacyPath(flow.legacyRootBox())))
   }
 
   static func lastLineBoxFor(flow: RenderBlockFlowWrapper) -> LineBoxIterator {
