@@ -1728,6 +1728,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func renderBoxHasShapeOutsideInfo() -> Bool {
+    assert(isNativeImpl())
+    return m_renderBoxHasShapeOutsideInfo
+  }
+
   func hasCachedSVGResource() -> Bool {
     assert(isNativeImpl())
     return m_hasCachedSVGResource
@@ -2749,6 +2754,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   var renderBlockHasMarginAfterQuirk: Bool
   var renderBlockShouldForceRelayoutChildren: Bool
   var renderBlockHasRareData = false
+  private let m_renderBoxHasShapeOutsideInfo = false
   private let m_hasCachedSVGResource = false
   private var m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
 

@@ -5497,11 +5497,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shapeOutsideInfo() -> ShapeOutsideInfoWrapper? {
-    assert(!isNativeImpl())
-    if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(id()) {
-      return ShapeOutsideInfoWrapper(p: unwrapped)
+    if !isNativeImpl() {
+      if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(id()) {
+        return ShapeOutsideInfoWrapper(p: unwrapped)
+      }
+      return nil
     }
-    return nil
+    if !renderBoxHasShapeOutsideInfo() {
+      return nil
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
