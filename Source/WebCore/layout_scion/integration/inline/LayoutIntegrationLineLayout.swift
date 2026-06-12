@@ -1041,6 +1041,19 @@ class LayoutIntegration {
         ? borderBoxLogicalRect : borderBoxLogicalRect.transposedRect()
     }
 
+    func textBoxesFor(_ renderText: RenderTextWrapper) -> InlineIterator.TextBoxIterator {
+      if inlineContent == nil {
+        return InlineIterator.TextBoxIterator()
+      }
+
+      let layoutBox = renderText.layoutBox()!
+      guard let firstIndex = inlineContent!.firstBoxIndexForLayoutBox(layoutBox: layoutBox) else {
+        return InlineIterator.TextBoxIterator()
+      }
+
+      return InlineIterator.textBoxFor(inlineContent!, firstIndex)
+    }
+
     func firstLineBox() -> InlineIterator.LineBoxIterator {
       if inlineContent == nil {
         return InlineIterator.LineBoxIterator()

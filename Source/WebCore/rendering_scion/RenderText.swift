@@ -730,6 +730,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func firstLegacyTextBox() -> LegacyInlineTextBox? {
+    assert(isNativeImpl())
+    return legacyLineBoxes!.first()
+  }
+
   override final func caretMinOffset() -> Int32 {
     assert(isNativeImpl())
     let first = InlineIterator.firstTextBoxFor(self)

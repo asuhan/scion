@@ -24,6 +24,8 @@
  */
 
 struct RenderTextLineBoxes {
+  func first() -> LegacyInlineTextBox? { return m_first }
+
   private func dirtyAll() {
     var box = m_first
     while box != nil {

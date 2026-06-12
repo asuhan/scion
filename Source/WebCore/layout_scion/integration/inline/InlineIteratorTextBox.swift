@@ -119,8 +119,17 @@ extension InlineIterator {
   }
 
   static func firstTextBoxFor(_ text: RenderTextWrapper) -> TextBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: text) {
+      return lineLayout.textBoxesFor(text)
+    }
+
+    return TextBoxIterator(pathVariant: BoxLegacyPath(text.firstLegacyTextBox()))
   }
 
+  static func textBoxFor(_ content: LayoutIntegration.InlineContent, _ boxIndex: UInt64)
+    -> TextBoxIterator
+  {
+    assert(content.displayContent.boxes[Int(boxIndex)].isTextOrSoftLineBreak())
+    return TextBoxIterator(pathVariant: BoxModernPath(inlineContent: content, startIndex: boxIndex))
+  }
 }
