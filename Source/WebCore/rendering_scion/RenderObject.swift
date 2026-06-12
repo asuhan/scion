@@ -1622,7 +1622,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func preferredLogicalWidthsDirty() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_preferredLogicalWidthsDirty(id())
+    }
     return m_stateBitfields.hasFlag(.PreferredLogicalWidthsDirty)
   }
 

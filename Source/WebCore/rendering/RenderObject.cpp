@@ -220,6 +220,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_normalChildNeedsLayout(const void* p
     return static_cast<const WebCore::RenderObject*>(p)->normalChildNeedsLayout();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_preferredLogicalWidthsDirty(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->preferredLogicalWidthsDirty();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_hasNonVisibleOverflow(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->hasNonVisibleOverflow();
