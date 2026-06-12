@@ -203,6 +203,8 @@ public:
 
     bool isAnonymousBlock() const;
 
+    bool isFloating() const;
+
     bool isPositioned() const;
 
     bool isInFlowPositioned() const;

@@ -524,6 +524,12 @@ bool RenderObject::isBlockContainer() const
         || display == DisplayType::TableCaption) && !isRenderReplaced();
 }
 
+bool RenderObject::isFloating() const
+{
+    if (m_scion) { return m_scion->isFloating(); }
+    return m_stateBitfields.hasFlag(StateFlag::Floating);
+}
+
 void RenderObject::setFragmentedFlowStateIncludingDescendants(FragmentedFlowState state, SkipDescendentFragmentedFlow skipDescendentFragmentedFlow)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

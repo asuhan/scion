@@ -1571,6 +1571,12 @@ func RenderObjectScion_isAnonymousBlock(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isAnonymousBlock()
 }
 
+@_cdecl("RenderObjectScion_isFloating")
+func RenderObjectScion_isFloating(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isFloating()
+}
+
 @_cdecl("RenderObjectScion_isPositioned")
 func RenderObjectScion_isPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

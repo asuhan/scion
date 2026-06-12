@@ -960,11 +960,7 @@ public:
     inline bool isBlockLevelBox() const;
     bool isBlockContainer() const;
 
-    bool isFloating() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::Floating);
-    }
+    bool isFloating() const;
 
     bool isPositioned() const;
     bool isInFlowPositioned() const;

@@ -178,6 +178,8 @@ extern "C" bool RenderObjectScion_isAnonymous(const void*);
 
 extern "C" bool RenderObjectScion_isAnonymousBlock(const void*);
 
+extern "C" bool RenderObjectScion_isFloating(const void*);
+
 extern "C" bool RenderObjectScion_isPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isInFlowPositioned(const void*);
@@ -915,6 +917,8 @@ void RenderObjectScion::invalidateCachedBoundaries() { RenderObjectScion_invalid
 bool RenderObjectScion::isAnonymous() const { return RenderObjectScion_isAnonymous(m_handle); }
 
 bool RenderObjectScion::isAnonymousBlock() const { return RenderObjectScion_isAnonymousBlock(m_handle); }
+
+bool RenderObjectScion::isFloating() const { return RenderObjectScion_isFloating(m_handle); }
 
 bool RenderObjectScion::isPositioned() const { return RenderObjectScion_isPositioned(m_handle); }
 
