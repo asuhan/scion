@@ -82,6 +82,11 @@ extension InlineIterator {
     }
 
     override func renderer() -> RenderTextWrapper { return super.renderer() as! RenderTextWrapper }
+
+    // FIXME: Remove. For intermediate porting steps only.
+    func legacyInlineBoxForTextBox() -> LegacyInlineTextBox? {
+      return super.legacyInlineBox() as! LegacyInlineTextBox?
+    }
   }
 
   class TextBoxIterator: LeafBoxIterator {

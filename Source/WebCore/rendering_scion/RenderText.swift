@@ -606,6 +606,21 @@ class RenderTextWrapper: RenderObjectWrapper {
     return UInt32.max
   }
 
+  func linesBoundingBox() -> IntRect {
+    assert(isNativeImpl())
+    let firstTextBox = InlineIterator.firstTextBoxFor(self)
+    if !firstTextBox.bool() { return IntRect() }
+
+    var boundingBox = firstTextBox.get().visualRectIgnoringBlockDirection()
+    let textBox = ++firstTextBox
+    while textBox.bool() {
+      boundingBox.uniteEvenIfEmpty(other: textBox.get().visualRectIgnoringBlockDirection())
+      ++textBox
+    }
+
+    return enclosingIntRect(rect: boundingBox)
+  }
+
   func setText(newContent: StringWrapper, force: Bool = false) {
     assert(isNativeImpl())
     let isDifferent = newContent != text()

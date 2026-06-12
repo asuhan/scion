@@ -30,6 +30,13 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func calculateBoundariesIncludingSVGTransform() -> FloatRectWrapper {
+      if let svgText = legacyInlineBoxForSVGTextBox() {
+        return svgText.calculateBoundaries()
+      }
+      return visualRectIgnoringBlockDirection()
+    }
+
     func textFragments() -> ArraySlice<SVGTextFragment> {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -38,6 +45,10 @@ extension InlineIterator {
     override func renderer() -> RenderSVGInlineTextWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    private func legacyInlineBoxForSVGTextBox() -> SVGInlineTextBox? {
+      return super.legacyInlineBoxForTextBox() as! SVGInlineTextBox?
     }
 
     struct Key: Equatable, Hashable {

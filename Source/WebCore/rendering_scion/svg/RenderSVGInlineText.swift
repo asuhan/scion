@@ -142,6 +142,17 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     return (true, scalingFactor, scaledFont)
   }
 
+  // Preserves floating point precision for the use in DRT. It knows how to round and does a better job than enclosingIntRect.
+  func floatLinesBoundingBox() -> FloatRectWrapper {
+    assert(isNativeImpl())
+    var boundingBox = FloatRectWrapper()
+    for box in InlineIterator.svgTextBoxesFor(self) {
+      boundingBox.unite(other: box.calculateBoundariesIncludingSVGTransform())
+    }
+
+    return boundingBox
+  }
+
   override func setRenderedText(_ text: StringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -232,6 +243,11 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
       closestDistanceFragment!, absolutePoint.x - closestDistancePosition)
     return createVisiblePosition(
       offset + Int32(closestDistanceBox!.start()), offset > 0 ? .Upstream : .Downstream)
+  }
+
+  override final func linesBoundingBox() -> IntRect {
+    assert(isNativeImpl())
+    return enclosingIntRect(rect: floatLinesBoundingBox())
   }
 
   private var m_scaledFont = FontCascadeWrapper()
