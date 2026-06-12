@@ -108,10 +108,7 @@ extension InlineIterator {
       return this.traverseNextTextBox()
     }
 
-    override func get() -> TextBox {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    override func get() -> TextBox { return m_box as! TextBox }
 
     // This traverses to the next text box generated for the same RenderText/Layout::InlineTextBox.
     @discardableResult
