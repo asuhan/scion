@@ -165,6 +165,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderView(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderView();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isInline(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isInline();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isReplacedOrInlineBlock(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isReplacedOrInlineBlock();
