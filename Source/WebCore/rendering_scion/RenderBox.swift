@@ -30,6 +30,7 @@ private let gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
 private typealias OverrideOptionalSizeMap = WeakHashMap<
   RenderBoxWrapper, RenderBoxWrapper.ContainingBlockOverrideValue
 >
+private let gOverridingContainingBlockContentLogicalHeightMap: OverrideOptionalSizeMap? = nil
 private let gOverridingContainingBlockContentLogicalWidthMap: OverrideOptionalSizeMap? = nil
 
 private let backgroundObscurationTestMaxDepth: UInt32 = 4
@@ -1983,8 +1984,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overridingContainingBlockContentLogicalHeight() -> ContainingBlockOverrideValue? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if gOverridingContainingBlockContentLogicalHeightMap == nil {
+      return nil
+    }
+    // TODO(asuhan): implement find in WeakHashMap and use it here
+    return gOverridingContainingBlockContentLogicalHeightMap!.get(self, nil)
   }
 
   func setOverridingContainingBlockContentLogicalWidth(logicalWidth: ContainingBlockOverrideValue) {
