@@ -188,6 +188,8 @@ extern "C" bool RenderObjectScion_isOutOfFlowPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isFixedPositioned(const void*);
 
+extern "C" bool RenderObjectScion_isRelativelyPositioned(const void*);
+
 extern "C" bool RenderObjectScion_isStickilyPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isRenderText(const void*);
@@ -927,6 +929,8 @@ bool RenderObjectScion::isInFlowPositioned() const { return RenderObjectScion_is
 bool RenderObjectScion::isOutOfFlowPositioned() const { return RenderObjectScion_isOutOfFlowPositioned(m_handle); }
 
 bool RenderObjectScion::isFixedPositioned() const { return RenderObjectScion_isFixedPositioned(m_handle); }
+
+bool RenderObjectScion::isRelativelyPositioned() const { return RenderObjectScion_isRelativelyPositioned(m_handle); }
 
 bool RenderObjectScion::isStickilyPositioned() const { return RenderObjectScion_isStickilyPositioned(m_handle); }
 

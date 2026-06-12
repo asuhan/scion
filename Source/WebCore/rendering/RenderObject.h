@@ -971,11 +971,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isOutOfFlowPositioned() && style().position() == PositionType::Absolute;
     }
-    bool isRelativelyPositioned() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.isRelativelyPositioned();
-    }
+    bool isRelativelyPositioned() const;
     bool isStickilyPositioned() const;
     bool shouldUsePositionedClipping() const
     {

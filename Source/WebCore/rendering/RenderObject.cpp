@@ -3718,6 +3718,12 @@ bool RenderObject::isFixedPositioned() const
     return isOutOfFlowPositioned() && style().position() == PositionType::Fixed;
 }
 
+bool RenderObject::isRelativelyPositioned() const
+{
+    if (m_scion) { return m_scion->isRelativelyPositioned(); }
+    return m_stateBitfields.isRelativelyPositioned();
+}
+
 bool RenderObject::isStickilyPositioned() const
 {
     if (m_scion) { return m_scion->isStickilyPositioned(); }

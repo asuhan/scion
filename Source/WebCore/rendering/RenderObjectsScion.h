@@ -213,6 +213,8 @@ public:
 
     bool isFixedPositioned() const;
 
+    bool isRelativelyPositioned() const;
+
     bool isStickilyPositioned() const;
 
     bool isRenderText() const;
