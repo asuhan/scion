@@ -140,15 +140,10 @@ extension InlineIterator {
       boxIndex += 1
     }
 
-    private func traversePreviousBox() {
-      assert(!atEnd())
-      boxIndex = boxIndex != 0 ? boxIndex - 1 : UInt64(boxes().count)
-    }
-
     private func traverseNextWithSameLayoutBox() {
       let layoutBox = box().layoutBox
       repeat {
-        traversePreviousBox()
+        traverseNextBox()
       } while !atEnd() && CPtrToInt(box().layoutBox.p) != CPtrToInt(layoutBox.p)
     }
 
