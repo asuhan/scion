@@ -66,6 +66,8 @@ extension InlineIterator {
 
     func style() -> RenderStyleWrapper { return m_inlineBox!.lineStyle() }
 
+    func traverseNextTextBox() { m_inlineBox = inlineTextBox().nextTextBox() }
+
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool { return rootInlineBox().prevRootBox() == nil }
@@ -85,7 +87,7 @@ extension InlineIterator {
       return m_inlineBox! as! LegacyInlineTextBox
     }
 
-    private let m_inlineBox: LegacyInlineBox?
+    private var m_inlineBox: LegacyInlineBox?
   }
 
 }

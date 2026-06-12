@@ -113,8 +113,13 @@ extension InlineIterator {
     // This traverses to the next text box generated for the same RenderText/Layout::InlineTextBox.
     @discardableResult
     func traverseNextTextBox() -> TextBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_box.m_pathVariant {
+      case .modern(let path):
+        path.traverseNextTextBox()
+      case .legacy(let path):
+        path.traverseNextTextBox()
+      }
+      return self
     }
   }
 

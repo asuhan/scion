@@ -111,6 +111,20 @@ extension InlineIterator {
       return box().style()
     }
 
+    func traverseNextTextBox() {
+      assert(!atEnd())
+      assert(box().isTextOrSoftLineBreak())
+
+      if box().isLastForLayoutBox {
+        setAtEnd()
+        return
+      }
+
+      traverseNextWithSameLayoutBox()
+
+      assert(box().isTextOrSoftLineBreak())
+    }
+
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool { return box().lineIndex == 0 }
@@ -120,6 +134,25 @@ extension InlineIterator {
     func box() -> InlineDisplay.Box { return boxes()[Int(boxIndex)] }
 
     func inlineContent() -> LayoutIntegration.InlineContent { return m_inlineContent! }
+
+    private func traverseNextBox() {
+      assert(!atEnd())
+      boxIndex += 1
+    }
+
+    private func traversePreviousBox() {
+      assert(!atEnd())
+      boxIndex = boxIndex != 0 ? boxIndex - 1 : UInt64(boxes().count)
+    }
+
+    private func traverseNextWithSameLayoutBox() {
+      let layoutBox = box().layoutBox
+      repeat {
+        traversePreviousBox()
+      } while !atEnd() && CPtrToInt(box().layoutBox.p) != CPtrToInt(layoutBox.p)
+    }
+
+    private func setAtEnd() { boxIndex = UInt64(boxes().count) }
 
     private func boxes() -> ArraySlice<InlineDisplay.Box> {
       return m_inlineContent!.displayContent.boxes[...]
@@ -135,7 +168,7 @@ extension InlineIterator {
     }
 
     private let m_inlineContent: LayoutIntegration.InlineContent?
-    private let boxIndex: UInt64
+    private var boxIndex: UInt64
   }
 
 }
