@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 private func max(_ a: LayoutUnit?, _ b: LayoutUnit?) -> LayoutUnit? { return a < b ? b : a }
 
 private func < (a: LayoutUnit?, b: LayoutUnit?) -> Bool { return b != nil && (a == nil || a! < b!) }
@@ -2955,6 +2957,16 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+  }
+
   override func firstLineBaseline() -> LayoutUnit? {
     if (isWritingModeRoot() && !isFlexItem()) || !currentGrid().hasGridItems()
       || shouldApplyLayoutContainment()
@@ -3043,6 +3055,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
       }
     }
     return baselineGridItem
+  }
+
+  override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
   }
 
   private func columnAxisBaselineOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {

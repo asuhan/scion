@@ -39,6 +39,11 @@ struct OptionalLayoutRectRaw {
     bool is_valid;
 };
 
+struct OptionalLayoutUnitRaw {
+    int32_t value;
+    bool is_valid;
+};
+
 struct RepaintRectsRaw {
     struct LayoutRectRaw clippedOverflowRect;
     struct OptionalLayoutRectRaw outlineBoundsRect;

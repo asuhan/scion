@@ -19,6 +19,8 @@
  *
  */
 
+import wk_interop
+
 class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   private func linesBoundingBox() -> IntRect {
     assert(isNativeImpl())
@@ -80,6 +82,16 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
       cachedLineHeight = LayoutUnit.fromFloatCeil(value: style().computedLineHeight())
     }
     return cachedLineHeight!
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   override func marginBottom() -> LayoutUnit {

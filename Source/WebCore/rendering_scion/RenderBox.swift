@@ -4890,6 +4890,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return nil
   }
 
+  func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(isNativeImpl())
+    return nil
+  }
+
   func shrinkToAvoidFloats() -> Bool {
     if !isNativeImpl() { return wk_interop.RenderBox_shrinkToAvoidFloats(id()) }
     // Floating objects don't shrink.  Objects that don't avoid floats don't shrink.  Marquees don't shrink.
@@ -4925,6 +4930,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         : marginBox.right + width() + marginBox.left
     }
     return LayoutUnit(value: 0)
+  }
+
+  override func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)

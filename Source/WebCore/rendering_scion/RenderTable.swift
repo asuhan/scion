@@ -22,6 +22,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 enum SkipEmptySectionsValue {
   case DoNotSkipEmptySections
   case SkipEmptySections
@@ -1433,6 +1435,16 @@ class RenderTableWrapper: RenderBlockWrapper {
     return false
   }
 
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+  }
+
   override func firstLineBaseline() -> LayoutUnit? {
     // The baseline of a 'table' is the same as the 'inline-table' baseline per CSS 3 Flexbox (CSS 2.1
     // doesn't define the baseline of a 'table' only an 'inline-table').
@@ -1466,6 +1478,12 @@ class RenderTableWrapper: RenderBlockWrapper {
     }
 
     return nil
+  }
+
+  override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
   }
 
   private func invalidateCachedColumns() {

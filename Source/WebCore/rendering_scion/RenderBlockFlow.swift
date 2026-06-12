@@ -3243,6 +3243,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not reached")
   }
 
+  override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+  }
+
   func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {
     assert(isNativeImpl())
     assert((multiColumnFlowForBlockFlow() != nil) == requiresColumns(desiredColumnCount: count))

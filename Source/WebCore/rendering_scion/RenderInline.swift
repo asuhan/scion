@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 private func inFlowPositionedInlineAncestor(_ p: RenderElementWrapper?) -> RenderElementWrapper? {
   var p = p
   while p != nil && p!.isRenderInline() {
@@ -870,6 +872,16 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     assert(isNativeImpl())
     let lineStyle = firstLine ? elementFirstLineStyle() : style()
     return LayoutUnit.fromFloatCeil(value: lineStyle.computedLineHeight())
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   private func willChangeCreatesStackingContext() -> Bool {

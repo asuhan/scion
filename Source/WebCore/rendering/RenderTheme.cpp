@@ -122,6 +122,12 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw RenderTheme_adjustedPaintRect(const void
     return convertLayoutRect(static_cast<const WebCore::RenderTheme*>(p)->adjustedPaintRect(box, paintRect));
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderTheme_baselinePosition(const void* p, const void* boxRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    return static_cast<const WebCore::RenderTheme*>(p)->baselinePosition(box);
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

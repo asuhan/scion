@@ -258,6 +258,14 @@ struct RenderTheme {
     return paintRect
   }
 
+  // A method to obtain the baseline position for a "leaf" control.  This will only be used if a baseline
+  // position cannot be determined by examining child content. Checkboxes and radio buttons are examples of
+  // controls that need to do this.
+  func baselinePosition(_ box: RenderBoxWrapper) -> Int32 {
+    assert(!isNativeImpl())
+    return wk_interop.RenderTheme_baselinePosition(p!, wkRenderObject(box))
+  }
+
   // A method for asking if a control is a container or not.  Leaf controls have to have some special behavior (like
   // the baseline position API above).
   func isControlContainer(_ appearance: StyleAppearance) -> Bool {

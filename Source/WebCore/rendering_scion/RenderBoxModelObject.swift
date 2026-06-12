@@ -877,10 +877,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   ) -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_baselinePosition(
-        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_baselinePosition(
+          id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    }
+    fatalError("Not reached")
   }
 
   override func mapAbsoluteToLocalPoint(

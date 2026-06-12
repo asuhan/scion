@@ -19,6 +19,8 @@
  *
  */
 
+import wk_interop
+
 final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   override func canBeSelectionLeaf() -> Bool {
     // TODO(asuhan): implement this
@@ -75,6 +77,16 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   func setInnerRenderer(innerRenderer: RenderBlockWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   override func hasLineIfEmpty() -> Bool {

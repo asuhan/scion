@@ -19,6 +19,8 @@
  *
  */
 
+import wk_interop
+
 class RenderTextControlWrapper: RenderBlockFlowWrapper {
   func textFormControlElement() -> HTMLTextFormControlElementWrapper {
     // TODO(asuhan): implement this
@@ -218,6 +220,22 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
 // baseline definition, and then inputs of different types wouldn't line up
 // anymore.
 final class RenderTextControlInnerContainerWrapper: RenderFlexibleBoxWrapper {
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+  }
+
+  override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+  }
+
   override func isFlexibleBoxImpl() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

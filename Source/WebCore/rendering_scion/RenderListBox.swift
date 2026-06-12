@@ -29,6 +29,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 private let itemBlockSpacing: Int32 = 1
 
 private let optionsSpacingInlineStart: Int32 = 2
@@ -288,6 +290,16 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
         ? horizontalBorderAndPaddingExtent() : verticalBorderAndPaddingExtent())
 
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)

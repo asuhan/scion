@@ -262,6 +262,16 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
       firstLine: firstLine, direction: direction, linePositionMode: linePositionMode)
   }
 
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+  }
+
   override final func canBeSelectionLeaf() -> Bool { return true }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {

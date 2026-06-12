@@ -577,11 +577,6 @@ extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int3
 
 extern "C" bool RenderBlockScion_canHaveChildren(const void*);
 
-struct OptionalLayoutUnitRaw {
-    int32_t value;
-    bool is_valid;
-};
-
 extern "C" OptionalLayoutUnitRaw RenderBlockScion_availableLogicalHeightForPercentageComputation(const void*);
 
 extern "C" void RenderBlockScion_paint(void*, void*, LayoutPointRaw);

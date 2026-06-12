@@ -23,6 +23,7 @@
  */
 
 import Foundation
+import wk_interop
 
 // TODO(asuhan): inherit from PopupMenuClient as well
 final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
@@ -143,6 +144,22 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   override func hasLineIfEmpty() -> Bool {
     assert(isNativeImpl())
     return true
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+  }
+
+  override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
   }
 
   private func adjustInnerStyle() {

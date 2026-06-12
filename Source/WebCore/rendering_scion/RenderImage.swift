@@ -26,6 +26,7 @@
  */
 
 import Foundation
+import wk_interop
 
 enum ImageSizeChangeType {
   case ImageSizeChangeNone
@@ -737,6 +738,16 @@ class RenderImageWrapper: RenderReplacedWrapper {
       return LayoutUnit()
     }
     return super.computeReplacedLogicalHeight(estimatedUsedWidth: estimatedUsedWidth)
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   private func shouldCollapseToEmpty() -> Bool {

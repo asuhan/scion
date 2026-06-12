@@ -39,6 +39,7 @@
 #include "InlineIteratorTextBox.h"
 #include "InlineWalker.h"
 #include "LayoutIntegrationLineLayout.h"
+#include "LayoutRectRaw.h"
 #include "LayoutRepainter.h"
 #include "LegacyInlineTextBox.h"
 #include "LegacyLineLayout.h"
@@ -98,11 +99,6 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_endPaddingWidthForCaret(const 
 {
     return static_cast<const WebCore::RenderBlockFlow*>(p)->endPaddingWidthForCaret().rawValue();
 }
-
-struct OptionalLayoutUnitRaw {
-    int32_t value;
-    bool is_valid;
-};
 
 extern "C" WEBCORE_EXPORT OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void* p)
 {

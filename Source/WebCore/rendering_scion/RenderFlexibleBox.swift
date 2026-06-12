@@ -28,6 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 func use(_ x: borrowing OverridingSizesScope) {}
 
 // RAII class which defines a scope in which overriding sizes of a box are either:
@@ -445,6 +447,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     inLayout = oldInLayout
   }
 
+  override func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(!isNativeImpl())
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBoxModelObject_baselinePosition(
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+  }
+
   override func firstLineBaseline() -> LayoutUnit? {
     if (isWritingModeRoot() && !isFlexItem()) || numberOfFlexItemsOnFirstLine == 0
       || shouldApplyLayoutContainment()
@@ -513,6 +525,12 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return synthesizedBaseline(
       box: baselineFlexItem!, parentStyle: style(), direction: direction, edge: .BorderBox)
       + baselineFlexItem!.logicalTop()
+  }
+
+  override func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

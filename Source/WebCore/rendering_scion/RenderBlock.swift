@@ -357,6 +357,87 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return LayoutUnit.fromFloatCeil(value: lineStyle.computedLineHeight())
   }
 
+  // These two functions are overridden for inline-block.
+  override func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_baselinePosition(
+          id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    }
+    // Inline blocks are replaced elements. Otherwise, just pass off to
+    // the base class.  If we're being queried as though we're the root line
+    // box, then the fact that we're an inline-block is irrelevant, and we behave
+    // just like a block.
+    if isReplacedOrInlineBlock() && linePositionMode == .PositionOnContainingLine {
+      // For "leaf" theme objects, let the theme decide what the baseline position is.
+      // FIXME: Might be better to have a custom CSS property instead, so that if the theme
+      // is turned off, checkboxes/radios will still have decent baselines.
+      // FIXME: Need to patch form controls to deal with vertical lines.
+      if style().hasUsedAppearance() && !theme().isControlContainer(style().usedAppearance()) {
+        return LayoutUnit(value: theme().baselinePosition(self))
+      }
+
+      // CSS2.1 states that the baseline of an inline block is the baseline of the last line box in
+      // the normal flow.  We make an exception for marquees, since their baselines are meaningless
+      // (the content inside them moves).  This matches WinIE as well, which just bottom-aligns them.
+      // We also give up on finding a baseline if we have a vertical scrollbar, or if we are scrolled
+      // vertically (e.g., an overflow:hidden block that has had scrollTop moved).
+      let ignoreBaseline = { () in
+        if self.isWritingModeRoot() {
+          return true
+        }
+
+        guard let scrollableArea = self.layer()?.scrollableArea() else { return false }
+
+        if scrollableArea.marquee() != nil {
+          return true
+        }
+
+        if direction == .HorizontalLine {
+          return scrollableArea.verticalScrollbar() != nil || scrollableArea.scrollOffset().y != 0
+        }
+        return scrollableArea.horizontalScrollbar() != nil || scrollableArea.scrollOffset().x != 0
+      }
+
+      var baselinePos = ignoreBaseline() ? nil : inlineBlockBaseline(direction)
+
+      if isRenderDeprecatedFlexibleBox() {
+        // Historically, we did this check for all baselines. But we can't
+        // remove this code from deprecated flexbox, because it effectively
+        // breaks -webkit-line-clamp, which is used in the wild -- we would
+        // calculate the baseline as if -webkit-line-clamp wasn't used.
+        // For simplicity, we use this for all uses of deprecated flexbox.
+        let bottomOfContent =
+          direction == .HorizontalLine
+          ? borderTop() + paddingTop() + contentHeight()
+          : borderRight() + paddingRight() + contentWidth()
+        if baselinePos != nil && baselinePos! > bottomOfContent {
+          baselinePos = nil
+        }
+      }
+      if baselinePos != nil {
+        return direction == .HorizontalLine
+          ? marginTop() + baselinePos! : marginRight() + baselinePos!
+      }
+
+      return super.baselinePosition(
+        baselineType: baselineType, firstLine: firstLine, direction: direction,
+        linePositionMode: linePositionMode)
+    }
+
+    let style = firstLine ? firstLineStyle() : style()
+    let fontMetrics = style.metricsOfPrimaryFont()
+    return LayoutUnit(
+      value: (Int32(fontMetrics.intAscent(baselineType: baselineType))
+        + (lineHeight(
+          firstLine: firstLine, direction: direction, linePositionMode: linePositionMode)
+          - Int32(fontMetrics.intHeight())) / 2)
+        .toInt())
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func deleteLines() {
     assert(isNativeImpl())
@@ -2124,6 +2205,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
       child = child!.previousInFlowSiblingBox()
     }
     return nil
+  }
+
+  override func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
+    assert(!isNativeImpl())
+    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
   }
 
   // Delay updating scrollbars until endAndCommitUpdateScrollInfoAfterLayoutTransaction() is called. These functions are used

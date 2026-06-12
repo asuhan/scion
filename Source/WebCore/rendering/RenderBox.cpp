@@ -319,6 +319,17 @@ extern "C" WEBCORE_EXPORT bool RenderBox_shrinkToAvoidFloats(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->shrinkToAvoidFloats();
 }
 
+extern "C" WEBCORE_EXPORT OptionalLayoutUnitRaw RenderBox_inlineBlockBaseline(const void* p, bool lineDirection)
+{
+    const auto baseline = static_cast<const WebCore::RenderBox*>(p)->inlineBlockBaseline(lineDirection
+        ? WebCore::LineDirectionMode::VerticalLine
+        : WebCore::LineDirectionMode::HorizontalLine);
+    if (baseline) {
+        return { baseline->rawValue(), true };
+    }
+    return { 0, false };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBox_avoidsFloats(const void* p)
 {
     return static_cast<const WebCore::RenderBox*>(p)->avoidsFloats();
