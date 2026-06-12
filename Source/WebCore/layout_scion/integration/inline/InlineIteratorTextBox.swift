@@ -90,11 +90,6 @@ extension InlineIterator {
   }
 
   class TextBoxIterator: LeafBoxIterator {
-    override init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
     init(pathVariant: BoxPath) {
       if let modernPath = pathVariant as? BoxModernPath {
         super.init(.modern(modernPath), isInline: false)

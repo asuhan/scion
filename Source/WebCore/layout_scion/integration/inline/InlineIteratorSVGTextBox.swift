@@ -67,11 +67,6 @@ extension InlineIterator {
   }
 
   class SVGTextBoxIterator: TextBoxIterator {
-    override init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
     override func get() -> SVGTextBox {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
