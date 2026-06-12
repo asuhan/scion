@@ -96,8 +96,11 @@ extension InlineIterator {
     }
 
     init(pathVariant: BoxPath) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let modernPath = pathVariant as? BoxModernPath {
+        super.init(.modern(modernPath), isInline: false)
+      } else {
+        super.init(.legacy(pathVariant as! BoxLegacyPath), isInline: false)
+      }
     }
 
     @discardableResult
