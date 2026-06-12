@@ -473,6 +473,8 @@ public:
 
     const String& text() const;
 
+    IntRect linesBoundingBox() const;
+
     bool canUseSimpleFontCodePath() const;
 
     RenderInline* inlineWrapperForDisplayContents();

@@ -1963,7 +1963,7 @@ float RenderText::width(unsigned from, unsigned length, const FontCascade& fontC
 
 IntRect RenderText::linesBoundingBox() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->linesBoundingBox(); }
     auto firstTextBox = InlineIterator::firstTextBoxFor(*this);
     if (!firstTextBox)
         return { };

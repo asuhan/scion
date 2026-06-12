@@ -2170,6 +2170,15 @@ func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer
   return text.p
 }
 
+@_cdecl("RenderTextScion_linesBoundingBox")
+func RenderTextScion_linesBoundingBox(_ renderTextRaw: UnsafeRawPointer) -> IntRectRaw {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let r = renderText.linesBoundingBox()
+  return IntRectRaw(
+    location: IntPointRaw(x: r.location.x, y: r.location.y),
+    size: IntSizeRaw(width: r.size.width, height: r.size.height))
+}
+
 @_cdecl("RenderTextScion_canUseSimpleFontCodePath")
 func RenderTextScion_canUseSimpleFontCodePath(_ renderTextRaw: UnsafeRawPointer) -> Bool {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

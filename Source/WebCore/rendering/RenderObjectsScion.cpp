@@ -370,6 +370,8 @@ extern "C" const void* RenderTextScion_style(const void*);
 
 extern "C" const void* RenderTextScion_text(const void*);
 
+extern "C" IntRectRaw RenderTextScion_linesBoundingBox(const void*);
+
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
@@ -1462,6 +1464,12 @@ const RenderStyle& RenderTextScion::style() const
 const String& RenderTextScion::text() const
 {
     return *static_cast<const String*>(RenderTextScion_text(m_handle));
+}
+
+IntRect RenderTextScion::linesBoundingBox() const
+{
+    const auto r = RenderTextScion_linesBoundingBox(m_handle);
+    return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
 }
 
 bool RenderTextScion::canUseSimpleFontCodePath() const
