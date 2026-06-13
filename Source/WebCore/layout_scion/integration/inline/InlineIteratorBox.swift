@@ -249,7 +249,7 @@ extension InlineIterator {
 
     func get() -> Box { return m_box }
 
-    private func atEnd() -> Bool {
+    func atEnd() -> Bool {
       switch m_box.m_pathVariant {
       case .modern(let path):
         return path.atEnd()

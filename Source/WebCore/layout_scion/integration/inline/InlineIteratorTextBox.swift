@@ -122,8 +122,10 @@ extension InlineIterator {
 
   class TextBoxIterator: TextBoxIteratorImpl, IteratorProtocol {
     override func next() -> TextBox? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if atEnd() { return nil }
+      let value = get()
+      ++self
+      return value
     }
   }
 
