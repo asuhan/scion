@@ -219,7 +219,7 @@ extension InlineIterator {
     let m_pathVariant: PathVariant
   }
 
-  class BoxIterator<BoxType: Box>: Equatable, IteratorProtocol {
+  class BoxIterator: Equatable {
     init() { m_box = Box(.legacy(BoxLegacyPath(nil))) }
 
     init(_ pathVariant: Box.PathVariant, kind: Box.Kind) {
@@ -242,12 +242,12 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func next() -> BoxType? {
+    func next() -> Box? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    func get() -> BoxType { return m_box as! BoxType }
+    func get() -> Box { return m_box }
 
     private func atEnd() -> Bool {
       switch m_box.m_pathVariant {
@@ -261,7 +261,7 @@ extension InlineIterator {
     let m_box: Box
   }
 
-  class LeafBoxIterator: BoxIterator<Box> {
+  class LeafBoxIterator: BoxIterator {
     @discardableResult
     func traverseNextOnLine() -> LeafBoxIterator {
       // TODO(asuhan): implement this
@@ -281,17 +281,17 @@ extension InlineIterator {
     }
   }
 
-  class BoxRange<BoxType: Box>: Sequence {
-    init(_ begin: BoxIterator<BoxType>) {
+  class BoxRange<IteratorType: IteratorProtocol>: Sequence {
+    init(_ begin: IteratorType) {
       self.begin = begin
     }
 
-    func makeIterator() -> BoxIterator<BoxType> {
+    func makeIterator() -> IteratorType {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    private let begin: BoxIterator<BoxType>
+    private let begin: IteratorType
   }
 
   static func boxFor(_ renderer: RenderLineBreakWrapper) -> LeafBoxIterator {

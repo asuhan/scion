@@ -132,7 +132,7 @@ class RenderBlockFlowRareData {
 }
 
 private func positionForRun(
-  _ flow: RenderBlockFlowWrapper, _ box: InlineIterator.BoxIterator<InlineIterator.Box>,
+  _ flow: RenderBlockFlowWrapper, _ box: InlineIterator.BoxIterator,
   _ start: Bool
 ) -> Position {
   if !box.bool() {

@@ -92,7 +92,7 @@ private func lineDirectionPointFitsInBox(
 }
 
 private func createVisiblePositionForBox(
-  _ run: InlineIterator.BoxIterator<InlineIterator.Box>, _ offset: UInt32,
+  _ run: InlineIterator.BoxIterator, _ offset: UInt32,
   _ shouldAffinityBeDownstream: ShouldAffinityBeDownstream
 ) -> VisiblePosition {
   var affinity = VisiblePosition.defaultAffinity
@@ -143,7 +143,7 @@ private func createVisiblePositionAfterAdjustingOffsetForBiDi(
 
     if !previousRun.bool() || previousRun.get().bidiLevel() < run.get().bidiLevel() {
       // e.g. left of D in aDC12BAb
-      var rightmostRun: InlineIterator.BoxIterator<InlineIterator.Box> = run
+      var rightmostRun: InlineIterator.BoxIterator = run
       let nextRun = run.get().nextOnLineIgnoringLineBreak()
       while nextRun.bool() {
         if nextRun.get().bidiLevel() < run.get().bidiLevel() {
@@ -189,7 +189,7 @@ private func createVisiblePositionAfterAdjustingOffsetForBiDi(
 
   if !nextRun.bool() || nextRun.get().bidiLevel() < run.get().bidiLevel() {
     // e.g. right of A in aDC12BAb
-    var leftmostRun: InlineIterator.BoxIterator<InlineIterator.Box> = run
+    var leftmostRun: InlineIterator.BoxIterator = run
     let previousRun = run.get().previousOnLineIgnoringLineBreak()
     while previousRun.bool() {
       if previousRun.get().bidiLevel() < run.get().bidiLevel() {

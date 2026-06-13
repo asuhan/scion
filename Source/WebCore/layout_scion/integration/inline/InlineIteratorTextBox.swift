@@ -89,7 +89,7 @@ extension InlineIterator {
     }
   }
 
-  class TextBoxIterator: LeafBoxIterator {
+  class TextBoxIteratorImpl: LeafBoxIterator {
     override init() { super.init() }
 
     init(pathVariant: BoxPath) {
@@ -101,7 +101,7 @@ extension InlineIterator {
     }
 
     @discardableResult
-    static prefix func ++ (this: TextBoxIterator) -> TextBoxIterator {
+    static prefix func ++ (this: TextBoxIteratorImpl) -> TextBoxIteratorImpl {
       return this.traverseNextTextBox()
     }
 
@@ -109,7 +109,7 @@ extension InlineIterator {
 
     // This traverses to the next text box generated for the same RenderText/Layout::InlineTextBox.
     @discardableResult
-    func traverseNextTextBox() -> TextBoxIterator {
+    func traverseNextTextBox() -> TextBoxIteratorImpl {
       switch m_box.m_pathVariant {
       case .modern(let path):
         path.traverseNextTextBox()
@@ -117,6 +117,13 @@ extension InlineIterator {
         path.traverseNextTextBox()
       }
       return self
+    }
+  }
+
+  class TextBoxIterator: TextBoxIteratorImpl, IteratorProtocol {
+    override func next() -> TextBox? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
   }
 
