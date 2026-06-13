@@ -28,6 +28,24 @@ extension InlineIterator {
   class TextBox: Box {
     override init(_ path: PathVariant) { super.init(path) }
 
+    func hasHyphen() -> Bool {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.hasHyphen()
+      case .legacy(let path):
+        return path.hasHyphen()
+      }
+    }
+
+    func originalText() -> StringWrapperView {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.originalText()
+      case .legacy(let path):
+        return path.originalText()
+      }
+    }
+
     func start() -> UInt32 {
       switch m_pathVariant {
       case .modern(let path):
@@ -142,5 +160,9 @@ extension InlineIterator {
   {
     assert(content.displayContent.boxes[Int(boxIndex)].isTextOrSoftLineBreak())
     return TextBoxIterator(pathVariant: BoxModernPath(inlineContent: content, startIndex: boxIndex))
+  }
+
+  static func textBoxesFor(_ text: RenderTextWrapper) -> BoxRange<TextBoxIterator> {
+    return BoxRange(firstTextBoxFor(text))
   }
 }

@@ -45,7 +45,9 @@ extension InlineIterator {
 
     func bidiLevel() -> UInt8 { return box().bidiLevel.rawValue }
 
-    private func originalText() -> StringWrapperView { return box().text().originalContent() }
+    func hasHyphen() -> Bool { return box().text().hasHyphen }
+
+    func originalText() -> StringWrapperView { return box().text().originalContent() }
 
     func start() -> UInt32 { return box().text().start }
 
