@@ -107,6 +107,13 @@ extension InlineIterator {
 
     override func get() -> TextBox { return m_box as! TextBox }
 
+    func next() -> TextBox? {
+      if atEnd() { return nil }
+      let value = get()
+      ++self
+      return value
+    }
+
     // This traverses to the next text box generated for the same RenderText/Layout::InlineTextBox.
     @discardableResult
     func traverseNextTextBox() -> TextBoxIteratorImpl {
@@ -120,14 +127,7 @@ extension InlineIterator {
     }
   }
 
-  class TextBoxIterator: TextBoxIteratorImpl, IteratorProtocol {
-    override func next() -> TextBox? {
-      if atEnd() { return nil }
-      let value = get()
-      ++self
-      return value
-    }
-  }
+  class TextBoxIterator: TextBoxIteratorImpl, IteratorProtocol {}
 
   static func firstTextBoxFor(_ text: RenderTextWrapper) -> TextBoxIterator {
     if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: text) {

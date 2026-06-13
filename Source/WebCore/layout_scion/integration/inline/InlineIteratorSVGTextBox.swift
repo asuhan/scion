@@ -72,10 +72,7 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    override func next() -> SVGTextBox? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    override func next() -> SVGTextBox? { return super.next() as! SVGTextBox? }
   }
 
   static func svgTextBoxesFor(_ text: RenderSVGInlineTextWrapper) -> BoxRange<SVGTextBoxIterator> {

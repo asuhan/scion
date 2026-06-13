@@ -242,11 +242,6 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func next() -> Box? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
     func get() -> Box { return m_box }
 
     func atEnd() -> Bool {
