@@ -286,10 +286,7 @@ extension InlineIterator {
       self.begin = begin
     }
 
-    func makeIterator() -> IteratorType {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func makeIterator() -> IteratorType { return begin }
 
     private let begin: IteratorType
   }
