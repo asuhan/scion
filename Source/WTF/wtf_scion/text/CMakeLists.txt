@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     StringCommon.swift
     StringView.swift
     TextBreakIterator.swift
+    TextStream.swift
     WTFString.swift
 )
 add_subdirectory(icu)

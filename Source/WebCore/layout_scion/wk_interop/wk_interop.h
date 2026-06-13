@@ -1871,3 +1871,8 @@ struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, str
 int32_t RenderTheme_baselinePosition(const void*, const void*);
 void* Path_create();
 void Path_destroy(const void*);
+void TextStream_writeChars(void*, const char*);
+void TextStream_writeInt(void*, int32_t);
+void TextStream_writeString(void*, const void*);
+void TextStream_writeStringView(void*, const void*);
+void TextStream_indent(void*);

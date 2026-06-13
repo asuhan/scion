@@ -86,6 +86,36 @@
 #include "ScrollbarThemeMac.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void TextStream_writeChars(void* p, const char* string)
+{
+    auto& ts = *static_cast<WTF::TextStream*>(p);
+    ts << string;
+}
+
+extern "C" WEBCORE_EXPORT void TextStream_writeInt(void* p, int32_t i)
+{
+    auto& ts = *static_cast<WTF::TextStream*>(p);
+    ts << i;
+}
+
+extern "C" WEBCORE_EXPORT void TextStream_writeString(void* p, const void* s)
+{
+    auto& ts = *static_cast<WTF::TextStream*>(p);
+    ts << *static_cast<const String*>(s);
+}
+
+extern "C" WEBCORE_EXPORT void TextStream_writeStringView(void* p, const void* s)
+{
+    auto& ts = *static_cast<WTF::TextStream*>(p);
+    ts << *static_cast<const StringView*>(s);
+}
+
+extern "C" WEBCORE_EXPORT void TextStream_indent(void* p)
+{
+    auto& ts = *static_cast<WTF::TextStream*>(p);
+    ts << indent;
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
