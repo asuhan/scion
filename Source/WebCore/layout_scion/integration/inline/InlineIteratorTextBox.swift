@@ -105,6 +105,15 @@ extension InlineIterator {
     func legacyInlineBoxForTextBox() -> LegacyInlineTextBox? {
       return super.legacyInlineBox() as! LegacyInlineTextBox?
     }
+
+    func deepCopy() -> TextBox {
+      switch m_pathVariant {
+      case .modern(let path):
+        return TextBox(.modern(path.deepCopy() as! BoxModernPath))
+      case .legacy(let path):
+        return TextBox(.legacy(path.deepCopy() as! BoxLegacyPath))
+      }
+    }
   }
 
   class TextBoxIteratorImpl: LeafBoxIterator {
@@ -127,7 +136,7 @@ extension InlineIterator {
 
     func next() -> TextBox? {
       if atEnd() { return nil }
-      let value = get()
+      let value = get().deepCopy()
       ++self
       return value
     }

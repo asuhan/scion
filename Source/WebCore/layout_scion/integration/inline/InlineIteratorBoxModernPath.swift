@@ -160,8 +160,7 @@ extension InlineIterator {
     private func renderText() -> RenderTextWrapper { return renderer() as! RenderTextWrapper }
 
     func deepCopy() -> BoxPath {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return BoxModernPath(inlineContent: m_inlineContent!, startIndex: boxIndex)
     }
 
     private let m_inlineContent: LayoutIntegration.InlineContent?
