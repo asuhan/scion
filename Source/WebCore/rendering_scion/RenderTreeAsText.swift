@@ -23,6 +23,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func quoteAndEscapeNonPrintables(_ s: StringWrapperView) -> StringWrapper {
+  let result = StringBuilderWrapper()
+  result.append(literal: "\"")
+  for i in 0..<s.length() {
+    let c: UChar = s[i]
+    if c == UChar(Character("\\").asciiValue!) {
+      result.append(literal: "\\\\")
+    } else if c == UChar(Character("\"").asciiValue!) {
+      result.append(literal: "\\\"")
+    } else if c == UChar(Character("\n").asciiValue!) || c == CharacterNames.Unicode.noBreakSpace {
+      result.append(literal: " ")
+    } else {
+      if c >= 0x20 && c < 0x7F {
+        result.append(character: c)
+      } else {
+        result.append(literal: "\\x{\(String(c, radix: 16))}")
+      }
+    }
+  }
+  result.append(literal: "\"")
+  return result.toString()
+}
+
 private func writeTextRun(
   _ textRenderer: RenderTextWrapper, _ textRun: InlineIterator.TextBox, _ ts: TextStream
 ) {
@@ -41,10 +64,11 @@ private func writeTextRun(
   if !textRun.isLeftToRightDirection() {
     ts <<< " RTL"
   }
-  // TODO(asuhan): apply quoteAndEscapeNonPrintables if needed
-  ts <<< ": " <<< textRun.originalText()
+  ts <<< ": " <<< quoteAndEscapeNonPrintables(textRun.originalText())
   if textRun.hasHyphen() {
-    ts <<< " + hyphen string " <<< textRenderer.style().hyphenString().string()
+    ts <<< " + hyphen string "
+      <<< quoteAndEscapeNonPrintables(
+        StringWrapperView(s: textRenderer.style().hyphenString().string()))
   }
   ts <<< "\n"
 }
