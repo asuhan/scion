@@ -3250,7 +3250,7 @@ bool RenderBlock::hasMarginAfterQuirk(const RenderBox& child) const
 
 ASCIILiteral RenderBlock::renderName() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // TODO(asuhan): don't route to Scion since it's correct as-is and all calls will be from Scion eventually.
     if (isBody())
         return "RenderBody"_s; // FIXME: Temporary hack until we know that the regression tests pass.
     if (isFieldset())

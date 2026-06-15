@@ -343,7 +343,7 @@ const Layout::InlineTextBox* RenderText::layoutBox() const
 
 ASCIILiteral RenderText::renderName() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // TODO(asuhan): don't route to Scion since it's correct as-is and all calls will be from Scion eventually.
     return "RenderText"_s;
 }
 
