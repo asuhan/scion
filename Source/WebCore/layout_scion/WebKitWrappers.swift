@@ -3093,3 +3093,10 @@ func LegacyInlineTextBoxScion_removeFromGlyphDisplayListCache(_ boxRaw: UnsafeMu
   let box = Unmanaged<LegacyInlineTextBox>.fromOpaque(boxRaw).takeUnretainedValue()
   box.removeFromGlyphDisplayListCache()
 }
+
+@_cdecl("RenderTreeAsText_writeTextRuns")
+func RenderTreeAsText_writeTextRuns(_ textRaw: UnsafeRawPointer, _ tsRaw: UnsafeMutableRawPointer) {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(textRaw).takeUnretainedValue()
+  let ts = TextStream(tsRaw)
+  writeTextRuns(text, ts)
+}

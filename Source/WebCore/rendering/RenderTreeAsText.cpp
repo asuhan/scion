@@ -116,6 +116,8 @@ extern "C" WEBCORE_EXPORT void TextStream_indent(void* p)
     ts << indent;
 }
 
+extern "C" void RenderTreeAsText_writeTextRuns(const void*, void*);
+
 namespace WebCore {
 
 using namespace HTMLNames;
@@ -567,9 +569,13 @@ void write(TextStream& ts, const RenderObject& o, OptionSet<RenderAsTextFlag> be
     TextStream::IndentScope indentScope(ts);
 
     if (auto* text = dynamicDowncast<RenderText>(o)) {
-        for (auto& run : InlineIterator::textBoxesFor(*text)) {
-            ts << indent;
-            writeTextRun(*text, run);
+        if (text->scion()) {
+            RenderTreeAsText_writeTextRuns(text->scion(), &ts);
+        } else {
+            for (auto& run : InlineIterator::textBoxesFor(*text)) {
+                ts << indent;
+                writeTextRun(*text, run);
+            }
         }
     } else {
         for (auto& child : childrenOfType<RenderObject>(downcast<RenderElement>(o))) {
