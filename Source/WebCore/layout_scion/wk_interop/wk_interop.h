@@ -1378,6 +1378,7 @@ void* ubidi_open_scion();
 int32_t ubidi_setPara_scion(void* p, const void* text, uint32_t length, uint8_t para_level);
 void ubidi_reorderVisual_scion(const uint8_t* levels, uint64_t length, int32_t* index_map);
 uint8_t ubidi_getBaseDirection_scion(const uint16_t* text, int32_t length);
+uint8_t u_charDirection_scion(uint16_t);
 int8_t u_charType_scion(int32_t);
 uint32_t U16_GET_scion(const uint16_t* s, int32_t start, int32_t i, uint32_t length);
 struct NextU16Raw U16_NEXT_scion(const void* characters_raw, uint64_t position, uint32_t content_length);
