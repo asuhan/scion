@@ -276,14 +276,24 @@ extension InlineIterator {
     }
   }
 
-  class BoxRange<IteratorType: IteratorProtocol>: Sequence {
-    init(_ begin: IteratorType) {
+  class BoxRangeTextBoxIterator: Sequence {
+    init(_ begin: TextBoxIterator) {
       self.begin = begin
     }
 
-    func makeIterator() -> IteratorType { return begin }
+    func makeIterator() -> TextBoxIterator { return begin }
 
-    private let begin: IteratorType
+    private let begin: TextBoxIterator
+  }
+
+  class BoxRangeSVGTextBoxIterator: Sequence {
+    init(_ begin: SVGTextBoxIterator) {
+      self.begin = begin
+    }
+
+    func makeIterator() -> SVGTextBoxIterator { return begin }
+
+    private let begin: SVGTextBoxIterator
   }
 
   static func boxFor(_ renderer: RenderLineBreakWrapper) -> LeafBoxIterator {

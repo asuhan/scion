@@ -171,7 +171,7 @@ extension InlineIterator {
     return TextBoxIterator(pathVariant: BoxModernPath(inlineContent: content, startIndex: boxIndex))
   }
 
-  static func textBoxesFor(_ text: RenderTextWrapper) -> BoxRange<TextBoxIterator> {
-    return BoxRange(firstTextBoxFor(text))
+  static func textBoxesFor(_ text: RenderTextWrapper) -> BoxRangeTextBoxIterator {
+    return BoxRangeTextBoxIterator(firstTextBoxFor(text))
   }
 }
