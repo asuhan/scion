@@ -175,6 +175,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isFixedPositioned(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isFixedPositioned();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextOrLineBreak(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTextOrLineBreak();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderView(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderView();
