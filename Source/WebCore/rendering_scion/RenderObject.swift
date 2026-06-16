@@ -1095,7 +1095,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func fragmentedFlowState() -> FragmentedFlowState {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_fragmentedFlowState(id()) ? .InsideFlow : .NotInsideFlow
+    }
     return m_stateBitfields.fragmentedFlowState()
   }
 

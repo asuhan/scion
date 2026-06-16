@@ -140,6 +140,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_childrenInline(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->childrenInline();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_fragmentedFlowState(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->fragmentedFlowState() == WebCore::RenderObject::FragmentedFlowState::InsideFlow;
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isSVGRenderer(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isSVGRenderer();
