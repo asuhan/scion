@@ -199,16 +199,74 @@ private struct InlineMinMaxIterator {
 */
 
   init(p: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    parent = p
+    current = nil
+    endOfInline = false
+    initial = true
   }
 
-  func next() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func next() -> RenderObjectWrapper? {
+    var result: RenderObjectWrapper? = nil
+    let oldEndOfInline = endOfInline
+    endOfInline = false
+    repeat {
+      if !oldEndOfInline
+        && (current != nil && !current!.isFloating() && !current!.isReplacedOrInlineBlock()
+          && !current!.isOutOfFlowPositioned())
+      {
+        result = current!.firstChildSlow()
+      } else if initial {
+        result = parent.firstChild()
+        initial = false
+      }
+
+      if result == nil {
+        // We hit the end of our inline. (It was empty, e.g., <span></span>.)
+        if !oldEndOfInline && current != nil && current!.isRenderInline() {
+          result = current
+          endOfInline = true
+          break
+        }
+
+        while current != nil && CPtrToInt(current!.id()) != CPtrToInt(parent.id()) {
+          result = current!.nextSibling()
+          if result != nil {
+            break
+          }
+          current = current!.parent()
+          if current != nil && CPtrToInt(current!.id()) != CPtrToInt(parent.id())
+            && current!.isRenderInline()
+          {
+            result = current
+            endOfInline = true
+            break
+          }
+        }
+      }
+
+      if result == nil {
+        break
+      }
+
+      if !result!.isOutOfFlowPositioned()
+        && (result!.isRenderTextOrLineBreak() || result!.isFloating()
+          || result!.isReplacedOrInlineBlock() || result!.isRenderInline())
+      {
+        break
+      }
+
+      current = result
+      result = nil
+    } while current != nil
+    // Update our position.
+    current = result
+    return result
   }
 
-  let endOfInline: Bool
+  private let parent: RenderBlockFlowWrapper
+  private var current: RenderObjectWrapper?
+  var endOfInline: Bool
+  private var initial: Bool
 }
 
 private func borderPaddingAndMarginWidth(childValue: LayoutUnit, cssUnit: LengthWrapper)
@@ -4712,7 +4770,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     var oldAutoWrap = styleToUse.autoWrap()
 
-    let childIterator = InlineMinMaxIterator(p: self)
+    var childIterator = InlineMinMaxIterator(p: self)
 
     // Only gets added to the max preffered width once.
     var addedTextIndent = false
