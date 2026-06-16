@@ -377,7 +377,8 @@ class RenderTreeUpdater {
     defer {
       if !hasDisplayContentsOrNone {
         if let box = element.renderBox(),
-          box.style().hasAutoLengthContainIntrinsicSize() && !box.isSkippedContentRoot()
+          box.style().hasAutoLengthContainIntrinsicSize()
+            && !box.isSkippedContentRootForRenderElement()
         {
           document.observeForContainIntrinsicSize(element: element)
         } else {

@@ -5826,7 +5826,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return false
     }
 
-    if isSkippedContentRoot() {
+    if isSkippedContentRootForRenderElement() {
       return false
     }
 

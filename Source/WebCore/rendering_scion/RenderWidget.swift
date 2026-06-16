@@ -123,7 +123,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
         paintInfo.context(), adjustedPaintOffset, document().deviceScaleFactor())
     }
 
-    if m_widget != nil && !isSkippedContentRoot() {
+    if m_widget != nil && !isSkippedContentRootForRenderElement() {
       paintContents(paintInfo, paintOffset)
     }
 

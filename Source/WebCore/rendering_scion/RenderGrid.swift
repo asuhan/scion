@@ -1786,7 +1786,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   override func layoutPositionedObject(
     r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
   ) {
-    if isSkippedContentRoot() {
+    if isSkippedContentRootForRenderElement() {
       r.clearNeedsLayoutForSkippedContent()
       return
     }

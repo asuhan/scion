@@ -1062,7 +1062,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
     assert(isNativeImpl())
-    if !isFieldset() || isSkippedContentRoot() {
+    if !isFieldset() || isSkippedContentRootForRenderElement() {
       return
     }
 
@@ -1576,7 +1576,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
   ) {
     assert(isNativeImpl())
-    if isSkippedContentRoot() {
+    if isSkippedContentRootForRenderElement() {
       r.clearNeedsLayoutForSkippedContent()
       return
     }
@@ -2321,7 +2321,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     let canContainFixedPosObjects = canContainFixedPositionObjects()
-    if isSkippedContentRoot() && (posChildNeedsLayout() || canContainFixedPosObjects) {
+    if isSkippedContentRootForRenderElement()
+      && (posChildNeedsLayout() || canContainFixedPosObjects)
+    {
       return false
     }
 
@@ -2688,7 +2690,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
     assert(isNativeImpl())
-    if !isFieldset() || isSkippedContentRoot() || !intrinsicBorderForFieldset().bool() {
+    if !isFieldset() || isSkippedContentRootForRenderElement()
+      || !intrinsicBorderForFieldset().bool()
+    {
       return
     }
 
@@ -3247,7 +3251,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   private func paintContents(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     assert(isNativeImpl())
-    if isSkippedContentRoot() {
+    if isSkippedContentRootForRenderElement() {
       return
     }
 

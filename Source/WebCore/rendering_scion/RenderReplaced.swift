@@ -534,7 +534,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     }
 
     if !completelyClippedOut {
-      if !isSkippedContentRoot() {
+      if !isSkippedContentRootForRenderElement() {
         paintReplaced(&paintInfo, adjustedPaintOffset)
       }
 

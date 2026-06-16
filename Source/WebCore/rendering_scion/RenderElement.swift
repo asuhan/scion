@@ -1719,7 +1719,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       || style().display() == .FlowRoot || establishesIndependentFormattingContext()
   }
 
-  func isSkippedContentRoot() -> Bool {
+  func isSkippedContentRootForRenderElement() -> Bool {
     assert(isNativeImpl())
     return layout_scion.isSkippedContentRoot(style: style(), element: element())
       && !view().frameView().layoutContext().needsSkippedContentLayout()
@@ -2044,7 +2044,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       let willBeVisible = newStyle.usedVisibility() == .Visible && !newStyle.hasSkippedContent()
       if wasVisible != willBeVisible, let layer = enclosingLayer() {
         if willBeVisible {
-          if style!.hasSkippedContent() && isSkippedContentRoot() {
+          if style!.hasSkippedContent() && isSkippedContentRootForRenderElement() {
             layer.dirtyVisibleContentStatus()
           } else {
             layer.setHasVisibleContent()
