@@ -1603,7 +1603,9 @@ protected:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_stateBitfields.setFlag(StateFlag::NeedsPositionedMovementLayout, b);
     }
+public:
     void setNormalChildNeedsLayoutBit(bool b);
+protected:
     void setPosChildNeedsLayoutBit(bool b);
     void setNeedsSimplifiedNormalFlowLayoutBit(bool b);
     void setOutOfFlowChildNeedsStaticPositionLayoutBit(bool b)

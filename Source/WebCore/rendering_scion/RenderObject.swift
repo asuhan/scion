@@ -3323,7 +3323,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNormalChildNeedsLayoutBit(b: Bool) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setNormalChildNeedsLayoutBit(id(), b)
+      return
+    }
     m_stateBitfields.setFlag(.NormalChildNeedsLayout, b)
   }
 

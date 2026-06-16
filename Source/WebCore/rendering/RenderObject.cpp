@@ -318,6 +318,11 @@ extern "C" WEBCORE_EXPORT void RenderObject_setParent(void* p, void* parent)
     static_cast<WebCore::RenderObject*>(p)->setParent(static_cast<WebCore::RenderElement*>(parent));
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setNormalChildNeedsLayoutBit(void* p, bool b)
+{
+    static_cast<WebCore::RenderObject*>(p)->setNormalChildNeedsLayoutBit(b);
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
