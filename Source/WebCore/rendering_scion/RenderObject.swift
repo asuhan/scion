@@ -856,6 +856,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsImage)
   }
 
+  func isRenderTextFragment() -> Bool {
+    assert(isNativeImpl())
+    return type() == .TextFragment
+  }
+
   func isRenderFragmentContainer() -> Bool {
     assert(isNativeImpl())
     return isRenderBlockFlow()
