@@ -277,7 +277,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func elementFirstLineStyle() -> RenderStyleWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return convert_render_style(p: wk_interop.RenderElement_firstLineStyle(id()))
+    }
     // FIXME: It would be better to just set anonymous block first-line styles correctly.
     if isAnonymousBlock() {
       if previousInFlowSibling() == nil,

@@ -1205,6 +1205,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_areCursorsEqual(const void* a, cons
 #endif
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderElement_firstLineStyle(const void* p)
+{
+    return &static_cast<const WebCore::RenderElement*>(p)->firstLineStyle();
+}
+
 void RenderElement::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
