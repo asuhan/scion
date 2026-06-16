@@ -364,6 +364,12 @@ struct AffineTransformRaw {
     double f;
 };
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_concatCTM(void* p, AffineTransformRaw t)
+{
+    WebCore::AffineTransform transform(t.a, t.b, t.c, t.d, t.e, t.f);
+    static_cast<WebCore::GraphicsContext*>(p)->concatCTM(transform);
+}
+
 extern "C" WEBCORE_EXPORT AffineTransformRaw GraphicsContext_getCTM(const void* p, bool possiblyIncludeDeviceScale)
 {
     const auto ctm = static_cast<const WebCore::GraphicsContext*>(p)->getCTM(possiblyIncludeDeviceScale

@@ -486,8 +486,11 @@ class GraphicsContextWrapper {
   func translate(x: Float32, y: Float32) { wk_interop.GraphicsContext_translateByXy(p!, x, y) }
 
   func concatCTM(transform: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_concatCTM(
+      p!,
+      AffineTransformRaw(
+        a: transform.a(), b: transform.b(), c: transform.c(), d: transform.d(), e: transform.e(),
+        f: transform.f()))
   }
 
   func setCTM(transform: AffineTransform) {

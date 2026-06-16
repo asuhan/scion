@@ -1712,6 +1712,7 @@ void GraphicsContext_rotate(void* p, float);
 void GraphicsContext_translateBySize(void*, struct FloatSizeRaw);
 void GraphicsContext_translateByPoint(void*, struct FloatPointRaw);
 void GraphicsContext_translateByXy(void*, float, float);
+void GraphicsContext_concatCTM(void*, struct AffineTransformRaw);
 struct AffineTransformRaw GraphicsContext_getCTM(const void*, bool);
 struct FloatSizeRaw GraphicsContext_scaleFactor(const void*);
 void GraphicsContext_setContentfulPaintDetected(void*);
