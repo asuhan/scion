@@ -382,6 +382,8 @@ extern "C" IntRectRaw RenderTextScion_linesBoundingBox(const void*);
 
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
+extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
+
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
 
 struct OptionalBool {
@@ -1496,6 +1498,11 @@ IntRect RenderTextScion::linesBoundingBox() const
 bool RenderTextScion::canUseSimpleFontCodePath() const
 {
     return RenderTextScion_canUseSimpleFontCodePath(m_handle);
+}
+
+void RenderTextScion::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
+{
+    RenderTextScion_styleDidChange(m_handle, static_cast<uint8_t>(diff), oldStyle);
 }
 
 RenderInline* RenderTextScion::inlineWrapperForDisplayContents()

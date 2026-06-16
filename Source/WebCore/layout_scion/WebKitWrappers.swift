@@ -2216,6 +2216,15 @@ func RenderTextScion_canUseSimpleFontCodePath(_ renderTextRaw: UnsafeRawPointer)
   return renderText.canUseSimpleFontCodePath()
 }
 
+@_cdecl("RenderTextScion_styleDidChange")
+func RenderTextScion_styleDidChange(
+  _ textRaw: UnsafeMutableRawPointer, _ diffRaw: UInt8, _ oldStyleRaw: UnsafeRawPointer?
+) {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(textRaw).takeUnretainedValue()
+  let oldStyle = oldStyleRaw != nil ? convert_render_style(p: oldStyleRaw!) : nil
+  text.styleDidChange(diff: StyleDifference(rawValue: diffRaw)!, oldStyle: oldStyle)
+}
+
 @_cdecl("RenderTextScion_inlineWrapperForDisplayContents")
 func RenderTextScion_inlineWrapperForDisplayContents(_ renderTextRaw: UnsafeMutableRawPointer)
   -> UnsafeMutableRawPointer?

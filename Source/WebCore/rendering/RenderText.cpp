@@ -420,7 +420,10 @@ void RenderText::initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifi
 
 void RenderText::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->styleDidChange(diff, oldStyle);
+        return;
+    }
     // There is no need to ever schedule repaints from a style change of a text run, since
     // we already did this for the parent of the text run.
     // We do have to schedule layouts, though, since a style change can force us to

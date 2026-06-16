@@ -489,6 +489,8 @@ public:
 
     bool canUseSimpleFontCodePath() const;
 
+    void styleDidChange(StyleDifference, const RenderStyle*);
+
     RenderInline* inlineWrapperForDisplayContents();
 
     std::optional<bool> canUseSimplifiedTextMeasuring() const;
