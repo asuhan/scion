@@ -38,7 +38,7 @@ private func quoteAndEscapeNonPrintables(_ s: StringWrapperView) -> StringWrappe
       if c >= 0x20 && c < 0x7F {
         result.append(character: c)
       } else {
-        result.append(literal: "\\x{\(String(c, radix: 16))}")
+        result.append(literal: "\\x{\(String(c, radix: 16).uppercased())}")
       }
     }
   }
