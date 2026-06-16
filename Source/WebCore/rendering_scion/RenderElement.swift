@@ -548,7 +548,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplyLayoutContainment() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderElement_shouldApplyLayoutContainment(id()) }
     return shouldApplyLayoutOrPaintContainment(
       style().containsLayout() || style().contentVisibility() != .Visible)
   }

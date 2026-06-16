@@ -122,6 +122,11 @@ extern "C" WEBCORE_EXPORT void* RenderElement_lastChild(const void* p)
     return static_cast<const WebCore::RenderElement*>(p)->lastChild();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_shouldApplyLayoutContainment(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->shouldApplyLayoutContainment();
+}
+
 extern "C" WEBCORE_EXPORT void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents)
 {
     static_cast<WebCore::RenderElement*>(p)->setChildNeedsLayout(static_cast<WebCore::MarkingBehavior>(mark_parents));
