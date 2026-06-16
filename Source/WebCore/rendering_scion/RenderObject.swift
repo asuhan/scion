@@ -3382,7 +3382,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     [.ApplyContainerClip, .ApplyCompositedContainerScrolls])
 
   func isSetNeedsLayoutForbidden() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isSetNeedsLayoutForbidden(id()) }
     #if ASSERT_ENABLED
       return m_setNeedsLayoutForbidden
     #else
