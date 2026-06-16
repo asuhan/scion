@@ -1173,8 +1173,7 @@ func RenderObjectScion_previousSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeM
 @_cdecl("RenderObjectScion_nextSibling")
 func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  assert(object.nextSibling() == nil)
-  return nil
+  return wkRenderObject(object.nextSibling())
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrder")
