@@ -2333,9 +2333,7 @@ func RenderElementScion_firstChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMuta
 @_cdecl("RenderElementScion_lastChild")
 func RenderElementScion_lastChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  guard let lastChild = element.lastChild() else { return nil }
-  assert(!lastChild.isNativeImpl())
-  return lastChild.id()
+  return wkRenderObject(element.lastChild())
 }
 
 @_cdecl("RenderElementScion_layoutBox")
