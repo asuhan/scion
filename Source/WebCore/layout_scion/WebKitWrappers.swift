@@ -1950,8 +1950,7 @@ func RenderObjectScion_hitTest(
 @_cdecl("RenderObjectScion_containingBlock")
 func RenderObjectScion_containingBlock(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  assert(object.containingBlock() == nil)
-  return nil
+  return wkRenderObject(object.containingBlock())
 }
 
 @_cdecl("RenderObjectScion_localToAbsolute")
