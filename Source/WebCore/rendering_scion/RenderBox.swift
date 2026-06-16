@@ -22,6 +22,9 @@
 
 import wk_interop
 
+private typealias OverrideSizeMap = WeakHashMap<RenderBoxWrapper, LayoutUnit>
+private let gOverridingLogicalHeightMap: OverrideSizeMap? = nil
+
 private typealias OverridingLengthMap = WeakHashMap<RenderBoxWrapper, LengthWrapper>
 private let gOverridingLogicalHeightLengthMap: OverridingLengthMap? = nil
 private let gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
@@ -1919,8 +1922,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overridingLogicalHeight() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // TODO(asuhan): implement find in WeakHashMap and use it here
+    if gOverridingLogicalHeightMap?.contains(self) ?? false {
+      return gOverridingLogicalHeightMap!.get(self, LayoutUnit())
+    }
+    return nil
   }
 
   func setOverridingLogicalHeight(height: LayoutUnit) {
