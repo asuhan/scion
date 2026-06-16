@@ -196,11 +196,7 @@ public:
     int previousOffsetForBackwardDeletion(int current) const final;
     int nextOffset(int current) const final;
 
-    bool needsVisualReordering() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_needsVisualReordering;
-    }
+    bool needsVisualReordering() const;
     void setNeedsVisualReordering()
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

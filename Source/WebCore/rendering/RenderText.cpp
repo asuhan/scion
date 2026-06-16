@@ -2178,6 +2178,12 @@ int RenderText::nextOffset(int current) const
     return iterator.following(current).value_or(current + 1);
 }
 
+bool RenderText::needsVisualReordering() const
+{
+    if (m_scion) { return m_scion->needsVisualReordering(); }
+    return m_needsVisualReordering;
+}
+
 bool RenderText::computeCanUseSimpleFontCodePath() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

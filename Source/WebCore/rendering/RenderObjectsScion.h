@@ -489,6 +489,8 @@ public:
 
     IntRect linesBoundingBox() const;
 
+    bool needsVisualReordering() const;
+
     bool canUseSimpleFontCodePath() const;
 
     void styleDidChange(StyleDifference, const RenderStyle*);
