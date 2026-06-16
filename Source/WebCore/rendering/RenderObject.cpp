@@ -632,6 +632,24 @@ void RenderObject::resetFragmentedFlowStateOnRemoval()
     setFragmentedFlowStateIncludingDescendants(FragmentedFlowState::NotInsideFlow);
 }
 
+void RenderObject::setPreviousSibling(RenderObject* previous)
+{
+    if (m_scion) {
+        m_scion->setPreviousSibling(previous);
+        return;
+    }
+    m_previous = previous;
+}
+
+void RenderObject::setNextSibling(RenderObject* next)
+{
+    if (m_scion) {
+        m_scion->setNextSibling(next);
+        return;
+    }
+    m_next = next;
+}
+
 void RenderObject::setParent(RenderElement* parent)
 {
     if (m_scion) {

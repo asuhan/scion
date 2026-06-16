@@ -347,6 +347,10 @@ public:
 
     PointerEvents usedPointerEvents() const;
 
+    void setPreviousSibling(RenderObject*);
+
+    void setNextSibling(RenderObject*);
+
     void setParent(RenderElement*);
 
     void setNormalChildNeedsLayoutBit(bool b);

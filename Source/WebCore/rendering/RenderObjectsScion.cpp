@@ -52,6 +52,10 @@ extern "C" void* RenderObjectScion_previousSibling(const void*);
 
 extern "C" void* RenderObjectScion_nextSibling(const void*);
 
+extern "C" void RenderObjectScion_setPreviousSibling(void*, void*);
+
+extern "C" void RenderObjectScion_setNextSibling(void*, void*);
+
 extern "C" void* RenderObjectScion_nextInPreOrder(const void*, void*);
 
 extern "C" void* RenderObjectScion_nextInPreOrderAfterChildren(const void*);
@@ -1198,6 +1202,10 @@ void RenderObjectScion::initializeFragmentedFlowStateOnInsertion() { RenderObjec
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 
 PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<PointerEvents>(RenderObjectScion_usedPointerEvents(m_handle)); }
+
+void RenderObjectScion::setPreviousSibling(RenderObject* previous) { RenderObjectScion_setPreviousSibling(m_handle, previous); }
+
+void RenderObjectScion::setNextSibling(RenderObject* next) { RenderObjectScion_setNextSibling(m_handle, next); }
 
 void RenderObjectScion::setParent(RenderElement* parent) { RenderObjectScion_setParent(m_handle, parent); }
 

@@ -1584,16 +1584,8 @@ public:
 public:
     //////////////////////////////////////////
     // Helper functions. Dangerous to use!
-    void setPreviousSibling(RenderObject* previous)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_previous = previous;
-    }
-    void setNextSibling(RenderObject* next)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_next = next;
-    }
+    void setPreviousSibling(RenderObject* previous);
+    void setNextSibling(RenderObject* next);
     void setParent(RenderElement*);
     //////////////////////////////////////////
 protected:

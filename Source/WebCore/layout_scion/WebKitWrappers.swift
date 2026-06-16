@@ -1175,6 +1175,24 @@ func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutab
   return wkRenderObject(object.nextSibling())
 }
 
+@_cdecl("RenderObjectScion_setPreviousSibling")
+func RenderObjectScion_setPreviousSibling(
+  _ objectRaw: UnsafeMutableRawPointer, _ previousRaw: UnsafeMutableRawPointer?
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let previous = previousRaw != nil ? createRenderObjectWrapperOrNative(previousRaw!) : nil
+  object.setPreviousSibling(previous: previous)
+}
+
+@_cdecl("RenderObjectScion_setNextSibling")
+func RenderObjectScion_setNextSibling(
+  _ objectRaw: UnsafeMutableRawPointer, _ nextRaw: UnsafeMutableRawPointer?
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let next = nextRaw != nil ? createRenderObjectWrapperOrNative(nextRaw!) : nil
+  object.setNextSibling(next: next)
+}
+
 @_cdecl("RenderObjectScion_nextInPreOrder")
 func RenderObjectScion_nextInPreOrder(
   _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
