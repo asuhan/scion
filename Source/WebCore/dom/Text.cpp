@@ -41,6 +41,11 @@
 #include <wtf/text/CString.h>
 #include <wtf/text/StringBuilder.h>
 
+extern "C" WEBCORE_EXPORT void* Text_renderer(const void* p)
+{
+    return static_cast<const WebCore::Text*>(p)->renderer();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Text);

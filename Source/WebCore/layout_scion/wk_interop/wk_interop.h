@@ -1878,3 +1878,4 @@ void TextStream_writeInt(void*, int32_t);
 void TextStream_writeString(void*, const void*);
 void TextStream_writeStringView(void*, const void*);
 void TextStream_indent(void*);
+void* Text_renderer(const void*);

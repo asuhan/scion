@@ -19,6 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class TextWrapper: CharacterDataWrapper {
   func createTextRenderer(style: RenderStyleWrapper) -> RenderTextWrapper? {
     // TODO(asuhan): implement this
@@ -26,7 +28,10 @@ class TextWrapper: CharacterDataWrapper {
   }
 
   override func renderer() -> RenderTextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Text_renderer(p) else { return nil }
+    if let renderTextRaw = wk_interop.RenderText_scion(raw) {
+      return Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+    }
+    return RenderTextWrapper(p: raw)
   }
 }
