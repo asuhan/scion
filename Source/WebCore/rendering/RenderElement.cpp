@@ -2977,4 +2977,12 @@ const RenderStyle& RenderObject::firstLineStyle() const
     return downcast<RenderElement>(*this).firstLineStyle();
 }
 
+bool RenderObject::isSkippedContentRoot() const
+{
+    if (m_scion) { return m_scion->isSkippedContentRoot(); }
+    if (isRenderText())
+        return false;
+    return downcast<RenderElement>(*this).isSkippedContentRoot();
+}
+
 }

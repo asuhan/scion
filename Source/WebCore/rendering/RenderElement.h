@@ -625,14 +625,6 @@ inline RenderObject* RenderElement::lastInFlowChild() const
     return nullptr;
 }
 
-inline bool RenderObject::isSkippedContentRoot() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (isRenderText())
-        return false;
-    return downcast<RenderElement>(*this).isSkippedContentRoot();
-}
-
 inline CheckedPtr<RenderElement> RenderObject::checkedParent() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -2140,6 +2140,12 @@ func RenderObjectScion_isSkippedContent(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isSkippedContent()
 }
 
+@_cdecl("RenderObjectScion_isSkippedContentRoot")
+func RenderObjectScion_isSkippedContentRoot(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isSkippedContentRootForRenderObject()
+}
+
 @_cdecl("RenderObjectScion_usedPointerEvents")
 func RenderObjectScion_usedPointerEvents(_ objectRaw: UnsafeRawPointer) -> UInt8 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

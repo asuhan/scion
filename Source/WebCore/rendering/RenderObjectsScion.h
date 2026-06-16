@@ -345,6 +345,8 @@ public:
 
     bool isSkippedContent() const;
 
+    bool isSkippedContentRoot() const;
+
     PointerEvents usedPointerEvents() const;
 
     void setPreviousSibling(RenderObject*);

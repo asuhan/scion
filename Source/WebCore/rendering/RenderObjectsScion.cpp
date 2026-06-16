@@ -360,6 +360,8 @@ extern "C" void RenderObjectScion_initializeFragmentedFlowStateOnInsertion(void*
 
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
+extern "C" bool RenderObjectScion_isSkippedContentRoot(const void*);
+
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
 
 extern "C" void RenderObjectScion_setParent(void*, void*);
@@ -1202,6 +1204,8 @@ void RenderObjectScion::insertedIntoTree() { RenderObjectScion_insertedIntoTree(
 void RenderObjectScion::initializeFragmentedFlowStateOnInsertion() { RenderObjectScion_initializeFragmentedFlowStateOnInsertion(m_handle); }
 
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
+
+bool RenderObjectScion::isSkippedContentRoot() const { return RenderObjectScion_isSkippedContentRoot(m_handle); }
 
 PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<PointerEvents>(RenderObjectScion_usedPointerEvents(m_handle)); }
 
