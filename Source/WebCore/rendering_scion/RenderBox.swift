@@ -2387,7 +2387,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func computeAndSetBlockDirectionMargins(containingBlock: RenderBlockWrapper) {
     if !isNativeImpl() {
-      let containingBlockRaw = (containingBlock as! RenderViewWrapper).getWk()
+      let containingBlockRaw = containingBlock.getWk()
       wk_interop.RenderBox_computeAndSetBlockDirectionMargins(id(), containingBlockRaw)
       return
     }
