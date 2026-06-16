@@ -660,6 +660,7 @@ bool RenderObject_isBody(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
 bool RenderObject_fragmentedFlowState(const void*);
+bool RenderObject_isRenderOrLegacyRenderSVGRoot(const void*);
 bool RenderObject_isSVGRenderer(const void*);
 bool RenderObject_hasIntrinsicAspectRatio(const void*);
 bool RenderObject_isFloating(const void*);
