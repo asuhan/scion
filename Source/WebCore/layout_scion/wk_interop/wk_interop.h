@@ -812,6 +812,7 @@ bool RenderElement_createsNewFormattingContext(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 bool RenderElement_areCursorsEqual(const void*, const void*);
+void* RenderElement_scion(const void*);
 int32_t RenderBox_x(const void*);
 int32_t RenderBox_y(const void*);
 int32_t RenderBox_width(const void*);

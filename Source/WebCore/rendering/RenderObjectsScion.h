@@ -347,6 +347,8 @@ public:
 
     PointerEvents usedPointerEvents() const;
 
+    void setParent(RenderElement*);
+
     void setNormalChildNeedsLayoutBit(bool b);
 
     void setPosChildNeedsLayoutBit(bool b);
@@ -461,6 +463,8 @@ public:
     void setFirstChild(RenderObject*);
 
     void setLastChild(RenderObject*);
+
+    void* handle() const { return m_handle; }
 
 private:
     void* m_handle;

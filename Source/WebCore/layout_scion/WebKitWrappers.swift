@@ -2128,6 +2128,15 @@ func RenderObjectScion_usedPointerEvents(_ objectRaw: UnsafeRawPointer) -> UInt8
   return object.usedPointerEvents().rawValue
 }
 
+@_cdecl("RenderObjectScion_setParent")
+func RenderObjectScion_setParent(
+  _ objectRaw: UnsafeMutableRawPointer, _ parent: UnsafeMutableRawPointer
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  assert(wk_interop.RenderElement_scion(parent) == nil)
+  object.setParent(parent: createRenderObjectWrapper(parent) as! RenderElementWrapper?)
+}
+
 @_cdecl("RenderObjectScion_setNormalChildNeedsLayoutBit")
 func RenderObjectScion_setNormalChildNeedsLayoutBit(_ objectRaw: UnsafeMutableRawPointer, _ b: Bool)
 {

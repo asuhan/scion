@@ -358,6 +358,8 @@ extern "C" bool RenderObjectScion_isSkippedContent(const void*);
 
 extern "C" uint8_t RenderObjectScion_usedPointerEvents(const void*);
 
+extern "C" void RenderObjectScion_setParent(void*, void*);
+
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 extern "C" void RenderObjectScion_setPosChildNeedsLayoutBit(void*, bool);
@@ -1196,6 +1198,8 @@ void RenderObjectScion::initializeFragmentedFlowStateOnInsertion() { RenderObjec
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 
 PointerEvents RenderObjectScion::usedPointerEvents() const { return static_cast<PointerEvents>(RenderObjectScion_usedPointerEvents(m_handle)); }
+
+void RenderObjectScion::setParent(RenderElement* parent) { RenderObjectScion_setParent(m_handle, parent); }
 
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
 

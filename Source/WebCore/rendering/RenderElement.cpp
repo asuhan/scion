@@ -157,6 +157,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_createsNewFormattingContext(const v
     return static_cast<const WebCore::RenderElement*>(p)->createsNewFormattingContext();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderElement_scion(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->scion();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderElement);
@@ -1317,6 +1322,11 @@ bool RenderElement::didVisitSinceLayout(LayoutIdentifier identifier) const
 {
     if (m_scion) { return m_scion->didVisitSinceLayout(identifier); }
     return layoutIdentifier() >= identifier;
+}
+
+void* RenderElement::scion() const
+{
+    return m_scion ? m_scion->handle() : nullptr;
 }
 
 inline void RenderElement::clearSubtreeLayoutRootIfNeeded() const

@@ -402,6 +402,8 @@ public:
     }
     bool didVisitSinceLayout(LayoutIdentifier) const;
 
+    void* scion() const;
+
 protected:
     RenderElement(Type, Element&, RenderStyle&&, OptionSet<TypeFlag>, TypeSpecificFlags);
     RenderElement(Type, Document&, RenderStyle&&, OptionSet<TypeFlag>, TypeSpecificFlags);

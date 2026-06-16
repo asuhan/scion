@@ -634,7 +634,10 @@ void RenderObject::resetFragmentedFlowStateOnRemoval()
 
 void RenderObject::setParent(RenderElement* parent)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setParent(parent);
+        return;
+    }
     m_parent = parent;
 }
 
