@@ -100,6 +100,8 @@ extern "C" bool RenderObjectScion_isRenderIFrame(const void*);
 
 extern "C" bool RenderObjectScion_isRenderImage(const void*);
 
+extern "C" bool RenderObjectScion_isRenderTextFragment(const void*);
+
 extern "C" bool RenderObjectScion_isRenderReplica(const void*);
 
 extern "C" bool RenderObjectScion_isRenderTable(const void*);
@@ -838,6 +840,8 @@ bool RenderObjectScion::isRenderButton() const { return RenderObjectScion_isRend
 bool RenderObjectScion::isRenderIFrame() const { return RenderObjectScion_isRenderIFrame(m_handle); }
 
 bool RenderObjectScion::isRenderImage() const { return RenderObjectScion_isRenderImage(m_handle); }
+
+bool RenderObjectScion::isRenderTextFragment() const { return RenderObjectScion_isRenderTextFragment(m_handle); }
 
 bool RenderObjectScion::isRenderReplica() const { return RenderObjectScion_isRenderReplica(m_handle); }
 

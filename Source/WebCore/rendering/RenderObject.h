@@ -509,11 +509,7 @@ public:
     bool isRenderButton() const;
     bool isRenderIFrame() const;
     bool isRenderImage() const;
-    bool isRenderTextFragment() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TextFragment;
-    }
+    bool isRenderTextFragment() const;
 #if ENABLE(MODEL_ELEMENT)
     bool isRenderModel() const
     {

@@ -125,6 +125,8 @@ public:
 
     bool isRenderImage() const;
 
+    bool isRenderTextFragment() const;
+
     bool isRenderReplica() const;
 
     bool isRenderTable() const;

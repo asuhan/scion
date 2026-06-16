@@ -3467,6 +3467,12 @@ bool RenderObject::isRenderImage() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsImage);
 }
 
+bool RenderObject::isRenderTextFragment() const
+{
+    if (m_scion) { return m_scion->isRenderTextFragment(); }
+    return type() == Type::TextFragment;
+}
+
 bool RenderObject::isRenderReplica() const
 {
     if (m_scion) { return m_scion->isRenderReplica(); }

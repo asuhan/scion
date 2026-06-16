@@ -1335,6 +1335,12 @@ func RenderObjectScion_isRenderImage(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderImage()
 }
 
+@_cdecl("RenderObjectScion_isRenderTextFragment")
+func RenderObjectScion_isRenderTextFragment(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTextFragment()
+}
+
 @_cdecl("RenderObjectScion_isRenderReplica")
 func RenderObjectScion_isRenderReplica(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
