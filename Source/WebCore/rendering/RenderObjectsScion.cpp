@@ -1259,6 +1259,11 @@ Layout::ElementBox* RenderElementScion::layoutBox()
     return static_cast<Layout::ElementBox*>(const_cast<void*>(RenderElementScion_layoutBox(m_handle)));
 }
 
+const Layout::Box* RenderElementScion::layoutBox() const
+{
+    return static_cast<const Layout::ElementBox*>(RenderElementScion_layoutBox(m_handle));
+}
+
 bool RenderElementScion::canContainFixedPositionObjects() const
 {
     return RenderElementScion_canContainFixedPositionObjects(m_handle);

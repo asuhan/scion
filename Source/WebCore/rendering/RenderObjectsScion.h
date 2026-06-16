@@ -390,6 +390,8 @@ public:
 
     Layout::ElementBox* layoutBox();
 
+    const Layout::Box* layoutBox() const;
+
     bool canContainFixedPositionObjects() const;
 
     bool canContainAbsolutelyPositionedObjects() const;

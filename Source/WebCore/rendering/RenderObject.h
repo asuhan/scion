@@ -341,11 +341,7 @@ public:
         return m_type;
     }
     Layout::Box* layoutBox();
-    const Layout::Box* layoutBox() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_layoutBox.get();
-    }
+    const Layout::Box* layoutBox() const;
     void setLayoutBox(Layout::Box&);
     void clearLayoutBox();
 

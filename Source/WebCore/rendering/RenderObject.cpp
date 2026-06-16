@@ -403,6 +403,12 @@ Layout::Box* RenderObject::layoutBox()
     return m_layoutBox.get();
 }
 
+const Layout::Box* RenderObject::layoutBox() const
+{
+    if (m_scion) { return m_scion->layoutBox(); }
+    return m_layoutBox.get();
+}
+
 CheckedRef<RenderView> RenderObject::checkedView() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
