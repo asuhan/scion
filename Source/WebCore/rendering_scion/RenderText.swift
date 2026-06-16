@@ -774,6 +774,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func needsVisualReordering() -> Bool {
+    assert(isNativeImpl())
+    return m_needsVisualReordering
+  }
+
   func setNeedsVisualReordering() {
     if !isNativeImpl() {
       wk_interop.RenderText_setNeedsVisualReordering(id())
