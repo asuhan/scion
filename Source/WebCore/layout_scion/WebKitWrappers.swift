@@ -1166,8 +1166,7 @@ func RenderObjectScion_setLayoutBox(
 @_cdecl("RenderObjectScion_previousSibling")
 func RenderObjectScion_previousSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  assert(object.previousSibling() == nil)
-  return nil
+  return wkRenderObject(object.previousSibling())
 }
 
 @_cdecl("RenderObjectScion_nextSibling")
