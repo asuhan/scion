@@ -204,10 +204,26 @@ struct BoxGeometryEdgesRaw {
     struct BoxGeometryVerticalEdgesRaw vertical;
 };
 
+namespace {
+
+WebCore::Layout::BoxGeometry::Edges toBoxGeometryEdges(const BoxGeometryEdgesRaw& edges_raw)
+{
+    return {
+        { WebCore::LayoutUnit::fromRawValue(edges_raw.horizontal.start), WebCore::LayoutUnit::fromRawValue(edges_raw.horizontal.end) },
+        { WebCore::LayoutUnit::fromRawValue(edges_raw.vertical.before), WebCore::LayoutUnit::fromRawValue(edges_raw.vertical.after) }
+    };
+}
+
+}  // namespace
+
 extern "C" WEBCORE_EXPORT void BoxGeometry_setBorder(void* p, BoxGeometryEdgesRaw border_raw)
 {
-    static_cast<WebCore::Layout::BoxGeometry*>(p)->setBorder({ { WebCore::LayoutUnit::fromRawValue(border_raw.horizontal.start), WebCore::LayoutUnit::fromRawValue(border_raw.horizontal.end) },
-        { WebCore::LayoutUnit::fromRawValue(border_raw.vertical.before), WebCore::LayoutUnit::fromRawValue(border_raw.vertical.after) } });
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setBorder(toBoxGeometryEdges(border_raw));
+}
+
+extern "C" WEBCORE_EXPORT void BoxGeometry_setPadding(void* p, BoxGeometryEdgesRaw padding_raw)
+{
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setPadding(toBoxGeometryEdges(padding_raw));
 }
 
 extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalSpaceForScrollbar(void* p, int32_t scrollbar_height)

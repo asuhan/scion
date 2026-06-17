@@ -25,6 +25,14 @@
 
 import wk_interop
 
+private func toBoxGeometryEdgesRaw(_ edges: BoxGeometry.Edges) -> BoxGeometryEdgesRaw {
+  return BoxGeometryEdgesRaw(
+    horizontal: BoxGeometryHorizontalEdgesRaw(
+      start: edges.horizontal.start.rawValue(), end: edges.horizontal.end.rawValue()),
+    vertical: BoxGeometryVerticalEdgesRaw(
+      before: edges.vertical.before.rawValue(), after: edges.vertical.after.rawValue()))
+}
+
 class BoxGeometry {
   static func borderBoxTop(box: BoxGeometry) -> LayoutUnit { return box.top() }
 
@@ -497,13 +505,7 @@ class BoxGeometry {
 
   func setBorder(border: Edges) {
     if !isNativeImpl() {
-      wk_interop.BoxGeometry_setBorder(
-        p,
-        BoxGeometryEdgesRaw(
-          horizontal: BoxGeometryHorizontalEdgesRaw(
-            start: border.horizontal.start.rawValue(), end: border.horizontal.end.rawValue()),
-          vertical: BoxGeometryVerticalEdgesRaw(
-            before: border.vertical.before.rawValue(), after: border.vertical.after.rawValue())))
+      wk_interop.BoxGeometry_setBorder(p, toBoxGeometryEdgesRaw(border))
       return
     }
     #if ASSERT_ENABLED
@@ -521,6 +523,13 @@ class BoxGeometry {
   }
 
   func setPadding(padding: Edges) {
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setPadding(p, toBoxGeometryEdgesRaw(padding))
+      return
+    }
+    #if ASSERT_ENABLED
+      setHasValidPadding()
+    #endif
     self.padding = padding
   }
 
