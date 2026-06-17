@@ -3498,6 +3498,12 @@ bool RenderObject::isRenderEmbeddedObject() const
     return type() == Type::EmbeddedObject;
 }
 
+bool RenderObject::isRenderListBox() const
+{
+    if (m_scion) { return m_scion->isRenderListBox(); }
+    return type() == Type::ListBox;
+}
+
 bool RenderObject::isRenderListItem() const
 {
     if (m_scion) { return m_scion->isRenderListItem(); }

@@ -479,11 +479,7 @@ public:
     bool isRenderFrameSet() const;
     virtual bool isImage() const { return false; }
     virtual bool isInlineBlockOrInlineTable() const { return false; }
-    bool isRenderListBox() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::ListBox;
-    }
+    WEBCORE_EXPORT bool isRenderListBox() const;
     bool isRenderListItem() const;
     bool isRenderListMarker() const;
     bool isRenderMedia() const;

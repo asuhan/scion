@@ -115,6 +115,8 @@ public:
 
     bool isRenderFrameSet() const;
 
+    bool isRenderListBox() const;
+
     bool isRenderListItem() const;
 
     bool isRenderListMarker() const;
