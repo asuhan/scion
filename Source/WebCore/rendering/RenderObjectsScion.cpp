@@ -473,6 +473,15 @@ extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" FloatRectRaw RenderElementScion_transformReferenceBoxRect(const void*, const void*);
+
 extern "C" void* RenderElementScion_backdropRenderer(const void*);
 
 extern "C" uint8_t RenderElementScion_effectiveOverflowX(const void*);
@@ -792,6 +801,15 @@ extern "C" void RepaintRegionAccumulator_destroy(void*);
 extern "C" bool RenderViewScion_boxesWithScrollSnapPositionsIsEmpty(const void*);
 
 extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
+
+namespace {
+
+WebCore::FloatRect toFloatRect(const FloatRectRaw& r)
+{
+    return { r.x, r.y, r.width, r.height };
+}
+
+} // namespace
 
 namespace WebCore {
 
@@ -1438,6 +1456,11 @@ void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObjec
 RenderPtr<RenderObject> RenderElementScion::detachRendererInternal(RenderObject& renderer)
 {
     return RenderPtr<RenderObject>(static_cast<RenderObject*>(RenderElementScion_detachRendererInternal(m_handle, &renderer)));
+}
+
+FloatRect RenderElementScion::transformReferenceBoxRect(const RenderStyle& style) const
+{
+    return toFloatRect(RenderElementScion_transformReferenceBoxRect(m_handle, &style));
 }
 
 SingleThreadWeakPtr<RenderBlockFlow> RenderElementScion::backdropRenderer() const

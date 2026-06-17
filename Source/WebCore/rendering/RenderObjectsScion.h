@@ -452,6 +452,8 @@ public:
 
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);
 
+    FloatRect transformReferenceBoxRect(const RenderStyle&) const;
+
     SingleThreadWeakPtr<RenderBlockFlow> backdropRenderer() const;
 
     Overflow effectiveOverflowX() const;

@@ -2579,6 +2579,15 @@ func RenderElementScion_detachRendererInternal(
   return detached.isNativeImpl() ? detached.getWk() : detached.id()
 }
 
+@_cdecl("RenderElementScion_transformReferenceBoxRect")
+func RenderElementScion_transformReferenceBoxRect(
+  _ elementRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPointer
+) -> FloatRectRaw {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let style = convert_render_style(p: styleRaw)
+  return toFloatRectRaw(element.transformReferenceBoxRect(style: style))
+}
+
 @_cdecl("RenderElementScion_backdropRenderer")
 func RenderElementScion_backdropRenderer(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer?
 {

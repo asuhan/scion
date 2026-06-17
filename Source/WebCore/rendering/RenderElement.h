@@ -325,7 +325,7 @@ public:
     virtual void transformRelatedPropertyDidChange() { }
 
     // https://www.w3.org/TR/css-transforms-1/#transform-box
-    inline FloatRect transformReferenceBoxRect(const RenderStyle&) const;
+    FloatRect transformReferenceBoxRect(const RenderStyle&) const;
     inline FloatRect transformReferenceBoxRect() const;
 
     // https://www.w3.org/TR/css-transforms-1/#reference-box

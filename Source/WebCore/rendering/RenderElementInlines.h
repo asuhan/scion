@@ -59,11 +59,6 @@ inline FloatRect RenderElement::transformReferenceBoxRect() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return transformReferenceBoxRect(style());
 }
-inline FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& style) const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox()));
-}
 
 inline bool RenderElement::createsGroupForStyle(const RenderStyle& style)
 {

@@ -2817,6 +2817,12 @@ bool RenderElement::establishesIndependentFormattingContext() const
     return isFloatingOrOutOfFlowPositioned() || (isBlockBox() && hasPotentiallyScrollableOverflow()) || style().containsLayout() || paintContainmentApplies() || (style().isDisplayBlockLevel() && style().blockStepSize());
 }
 
+FloatRect RenderElement::transformReferenceBoxRect(const RenderStyle& style) const
+{
+    if (m_scion) { return m_scion->transformReferenceBoxRect(style); }
+    return referenceBoxRect(transformBoxToCSSBoxType(style.transformBox()));
+}
+
 FloatRect RenderElement::referenceBoxRect(CSSBoxType boxType) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
