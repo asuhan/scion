@@ -1601,7 +1601,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func posChildNeedsLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_posChildNeedsLayout(id()) }
     return m_stateBitfields.hasFlag(.PosChildNeedsLayout)
   }
 
