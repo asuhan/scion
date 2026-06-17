@@ -815,6 +815,7 @@ bool RenderElement_shouldApplyLayoutContainment(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);
 bool RenderElement_hasBackground(const void*);
 bool RenderElement_hasClipPath(const void*);
+bool RenderElement_hasOutline(const void*);
 bool RenderElement_hasSelfPaintingLayer(const void*);
 bool RenderElement_checkForRepaintDuringLayout(const void*);
 bool RenderElement_isContinuation(const void*);

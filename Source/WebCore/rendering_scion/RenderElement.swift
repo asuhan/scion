@@ -1326,7 +1326,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasOutline() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderElement_hasOutline(id()) }
     return style().hasOutline() || hasOutlineAnnotation()
   }
 
