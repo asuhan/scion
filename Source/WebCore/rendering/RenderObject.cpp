@@ -551,6 +551,12 @@ bool RenderObject::isTablePart() const
     return isRenderTableCell() || isRenderTableCol() || isRenderTableCaption() || isRenderTableRow() || isRenderTableSection();
 }
 
+bool RenderObject::everHadLayout() const
+{
+    if (m_scion) { return m_scion->everHadLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::EverHadLayout);
+}
+
 bool RenderObject::isBlockBox() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

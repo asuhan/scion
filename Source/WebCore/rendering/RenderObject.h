@@ -620,11 +620,7 @@ public:
         return m_stateBitfields.hasFlag(StateFlag::BeingDestroyed);
     }
 
-    bool everHadLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::EverHadLayout);
-    }
+    bool everHadLayout() const;
     std::optional<bool> wasSkippedDuringLastLayoutDueToContentVisibility() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

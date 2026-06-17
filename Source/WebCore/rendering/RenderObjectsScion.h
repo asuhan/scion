@@ -165,6 +165,8 @@ public:
 
     bool isTablePart() const;
 
+    bool everHadLayout() const;
+
     bool childrenInline() const;
 
     void setChildrenInline(bool b);
