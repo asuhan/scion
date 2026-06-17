@@ -501,7 +501,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       guard let previousSiblingRaw = wk_interop.RenderObject_previousSibling(id()) else {
         return nil
       }
-      return createRenderObjectWrapper(previousSiblingRaw)
+      return createRenderObjectWrapperOrNative(previousSiblingRaw)
     }
     return m_previous
   }
@@ -509,7 +509,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func nextSibling() -> RenderObjectWrapper? {
     if !isNativeImpl() {
       guard let nextSiblingRaw = wk_interop.RenderObject_nextSibling(id()) else { return nil }
-      return createRenderObjectWrapper(nextSiblingRaw)
+      return createRenderObjectWrapperOrNative(nextSiblingRaw)
     }
     return m_next
   }
