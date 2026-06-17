@@ -155,16 +155,22 @@ struct TextPainter {
       run.removeFromGlyphDisplayListCache()
     } else {
       if let displayBox = run as? InlineDisplay.Box {
-        glyphDisplayList = DisplayList.DisplayListWrapper(
-          wk_interop.GlyphDisplayListCacheInlineDisplay_get(
-            displayBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop()), false)
+        if let raw = wk_interop.GlyphDisplayListCacheInlineDisplay_get(
+          displayBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop())
+        {
+          glyphDisplayList = DisplayList.DisplayListWrapper(raw, false)
+        } else {
+          glyphDisplayList = nil
+        }
       } else {
         let legacyInlineTextBox = run as! LegacyInlineTextBox
-        glyphDisplayList = DisplayList.DisplayListWrapper(
-          wk_interop.GlyphDisplayListCacheLegacyInlineTextBox_get(
-            legacyInlineTextBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop()),
-          false
-        )
+        if let raw = wk_interop.GlyphDisplayListCacheLegacyInlineTextBox_get(
+          legacyInlineTextBox.getWkHandle(), font.p!, context.p!, textRun.p!, paintInfo.interop())
+        {
+          glyphDisplayList = DisplayList.DisplayListWrapper(raw, false)
+        } else {
+          glyphDisplayList = nil
+        }
       }
     }
   }
