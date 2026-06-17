@@ -813,6 +813,8 @@ void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void* RenderElement_lastChild(const void*);
 bool RenderElement_shouldApplyLayoutContainment(const void*);
+const void* RenderElement_spellingErrorPseudoStyle(const void*);
+const void* RenderElement_grammarErrorPseudoStyle(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);
 bool RenderElement_hasBackground(const void*);
 bool RenderElement_hasClipPath(const void*);

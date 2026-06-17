@@ -127,6 +127,16 @@ extern "C" WEBCORE_EXPORT bool RenderElement_shouldApplyLayoutContainment(const 
     return static_cast<const WebCore::RenderElement*>(p)->shouldApplyLayoutContainment();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderElement_spellingErrorPseudoStyle(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->spellingErrorPseudoStyle();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderElement_grammarErrorPseudoStyle(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->grammarErrorPseudoStyle();
+}
+
 extern "C" WEBCORE_EXPORT void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents)
 {
     static_cast<WebCore::RenderElement*>(p)->setChildNeedsLayout(static_cast<WebCore::MarkingBehavior>(mark_parents));

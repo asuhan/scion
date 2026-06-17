@@ -688,12 +688,22 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let style_raw = wk_interop.RenderElement_spellingErrorPseudoStyle(id()) else {
+        return nil
+      }
+      return convert_render_style(p: style_raw)
+    }
     return textSegmentPseudoStyle(.SpellingError)
   }
 
   func grammarErrorPseudoStyle() -> RenderStyleWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let style_raw = wk_interop.RenderElement_grammarErrorPseudoStyle(id()) else {
+        return nil
+      }
+      return convert_render_style(p: style_raw)
+    }
     return textSegmentPseudoStyle(.GrammarError)
   }
 
