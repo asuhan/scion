@@ -118,7 +118,7 @@ extern "C" WEBCORE_EXPORT void ubidi_reorderVisual_scion(const uint8_t* levels, 
     ubidi_reorderVisual(static_cast<const UBiDiLevel*>(levels), length, index_map);
 }
 
-extern "C" WEBCORE_EXPORT uint8_t u_charDirection_scion(uint16_t c)
+extern "C" WEBCORE_EXPORT uint8_t u_charDirection_scion(int32_t c)
 {
     return u_charDirection(c);
 }

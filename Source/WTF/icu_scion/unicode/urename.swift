@@ -22,7 +22,7 @@
 
 import wk_interop
 
-func u_charDirection(_ c: UChar) -> UCharDirection {
+func u_charDirection(_ c: Int32) -> UCharDirection {
   return UCharDirection(rawValue: wk_interop.u_charDirection_scion(c))!
 }
 

@@ -480,7 +480,7 @@ class TextUtil {
       return false
     }
 
-    let bidiCategory = u_charDirection(UChar(character))
+    let bidiCategory = u_charDirection(Int32(character))
     return bidiCategory == .U_RIGHT_TO_LEFT
       || bidiCategory == .U_RIGHT_TO_LEFT_ARABIC
       || bidiCategory == .U_RIGHT_TO_LEFT_EMBEDDING

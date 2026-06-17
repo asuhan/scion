@@ -352,7 +352,7 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
       // FIXME: Depending on the string value, we may need the real bidi algorithm. (rdar://106139180)
       // Also we may need to start checking for the entire content for directionality (and whether we need to check for additional
       // directionality characters like U_RIGHT_TO_LEFT_EMBEDDING).
-      let bidiCategory = u_charDirection(content[0])
+      let bidiCategory = u_charDirection(Int32(content[0]))
       return bidiCategory != .U_RIGHT_TO_LEFT && bidiCategory != .U_RIGHT_TO_LEFT_ARABIC
     }
 
