@@ -1331,7 +1331,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymous() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isAnonymous(id()) }
     return m_typeFlags.contains(.IsAnonymous)
   }
 

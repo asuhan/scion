@@ -160,6 +160,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_hasIntrinsicAspectRatio(const void* 
     return static_cast<const WebCore::RenderObject*>(p)->hasIntrinsicAspectRatio();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isAnonymous(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isAnonymous();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isFloating(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isFloating();
