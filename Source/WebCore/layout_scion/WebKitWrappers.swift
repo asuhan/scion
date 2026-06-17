@@ -548,6 +548,21 @@ func RenderBlockFlowScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderBlockFlowScion_createFromDocument")
+func RenderBlockFlowScion_createFromDocument(
+  _ typeRaw: UInt8, _ document: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,
+  _ flagsRaw: UInt8
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  assert(typeRaw == 0)
+  let renderBlockFlow = RenderBlockFlowWrapper(
+    type: .BlockFlow, document: Document(document),
+    style: style, flags: RenderObjectWrapper.BlockFlowFlag(rawValue: flagsRaw))
+  let unmanaged = Unmanaged.passRetained(renderBlockFlow)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderTextScion_create")
 func RenderTextScion_create(
   _ typeRaw: UInt8, _ textNode: UnsafeMutableRawPointer, _ text: UnsafeRawPointer

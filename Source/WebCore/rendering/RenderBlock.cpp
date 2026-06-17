@@ -2986,10 +2986,19 @@ RenderPtr<RenderBlock> RenderBlock::createAnonymousBlockWithStyleAndDisplay(Docu
 {
     // FIXME: Do we need to convert all our inline displays to block-type in the anonymous logic ?
     RenderPtr<RenderBlock> newBox;
-    if (display == DisplayType::Flex || display == DisplayType::InlineFlex)
+    if (display == DisplayType::Flex || display == DisplayType::InlineFlex) {
+        if (Document::s_useScionRendering >= 2) { ASSERT_NOT_REACHED(); }
         newBox = createRenderer<RenderFlexibleBox>(RenderObject::Type::FlexibleBox, document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::Flex));
-    else
-        newBox = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::Block));
+    } else {
+        if (Document::s_useScionRendering >= 2) {
+            auto anonStyle = RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::Block);
+            auto clonedAnonStyle = RenderStyle::clonePtr(anonStyle);
+            newBox = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, document, std::move(anonStyle));
+            newBox->setScionHandle(RenderBlockFlowScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &document, clonedAnonStyle.release(), 0));
+        } else {
+            newBox = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::Block));
+        }
+    }
     
     newBox->initializeStyle();
     return newBox;

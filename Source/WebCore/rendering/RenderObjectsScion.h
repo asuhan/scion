@@ -35,6 +35,8 @@ extern "C" void* RenderViewScion_create(void*, const void*);
 
 extern "C" void* RenderBlockFlowScion_create(uint8_t, void*, const void*, uint8_t);
 
+extern "C" void* RenderBlockFlowScion_createFromDocument(uint8_t, void*, const void*, uint8_t);
+
 extern "C" void* RenderTextScion_create(uint8_t, void*, const void*);
 
 namespace WebCore {
