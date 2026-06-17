@@ -2993,8 +2993,9 @@ RenderPtr<RenderBlock> RenderBlock::createAnonymousBlockWithStyleAndDisplay(Docu
         if (Document::s_useScionRendering >= 2) {
             auto anonStyle = RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::Block);
             auto clonedAnonStyle = RenderStyle::clonePtr(anonStyle);
-            newBox = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, document, std::move(anonStyle));
-            newBox->setScionHandle(RenderBlockFlowScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &document, clonedAnonStyle.release(), 0));
+            auto newBlockFlow = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, document, std::move(anonStyle));
+            newBlockFlow->setScionHandle(RenderBlockFlowScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &document, clonedAnonStyle.release(), 0));
+            newBox = std::move(newBlockFlow);
         } else {
             newBox = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::Block));
         }
