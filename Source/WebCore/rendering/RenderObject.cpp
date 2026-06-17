@@ -225,6 +225,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_hasLayer(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->hasLayer();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_hasVisibleBoxDecorations(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasVisibleBoxDecorations();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_needsLayout(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->needsLayout();

@@ -1554,7 +1554,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasVisibleBoxDecorations() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasVisibleBoxDecorations(id()) }
     return m_stateBitfields.boxDecorationState != .None
   }
 
