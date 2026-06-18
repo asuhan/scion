@@ -549,6 +549,20 @@ extern "C" int32_t RenderBoxScion_clientLogicalHeight(const void*);
 
 extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
+struct OptionalRepaintRectsRaw {
+    RepaintRectsRaw rects;
+    bool is_valid;
+};
+
+struct VisibleRectContextRaw {
+    bool hasPositionFixedDescendant;
+    bool dirtyRectIsFlipped;
+    bool descendantNeedsEnclosingIntRect;
+    uint8_t options;
+};
+
+extern "C" OptionalRepaintRectsRaw RenderBoxScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
+
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
 
 extern "C" bool RenderBoxScion_stretchesToViewport(const void*);
@@ -698,18 +712,6 @@ extern "C" void RenderViewScion_updateQuirksMode(const void*);
 extern "C" bool RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(const void*);
 
 extern "C" void RenderViewScion_setNeedsEventRegionUpdateForNonCompositedFrame(void*, bool);
-
-struct OptionalRepaintRectsRaw {
-    RepaintRectsRaw rects;
-    bool is_valid;
-};
-
-struct VisibleRectContextRaw {
-    bool hasPositionFixedDescendant;
-    bool dirtyRectIsFlipped;
-    bool descendantNeedsEnclosingIntRect;
-    uint8_t options;
-};
 
 extern "C" OptionalRepaintRectsRaw RenderViewScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
 
@@ -1686,6 +1688,29 @@ RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBo
     return convertRepaintRectsRaw(RenderBoxScion_localRectsForRepaint(m_handle, repaintOutlineBounds == RepaintOutlineBounds::Yes));
 }
 
+namespace {
+
+VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRectContext context)
+{
+    return { context.hasPositionFixedDescendant, context.dirtyRectIsFlipped, context.descendantNeedsEnclosingIntRect, static_cast<uint8_t>(context.options.toRaw()) };
+}
+
+} // namespace
+
+std::optional<WebCore::RenderObject::RepaintRects> RenderBoxScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
+{
+    if (container && !container->scion()) {
+        ASSERT_NOT_REACHED();
+    }
+    const auto rectsRaw = convertRepaintRects(rects);
+    const auto contextRaw = convertVisibleRectContext(context);
+    const auto raw = RenderBoxScion_computeVisibleRectsInContainer(m_handle, rectsRaw, container ? container->scion() : nullptr, contextRaw);
+    if (!raw.is_valid) {
+        return {};
+    }
+    return convertRepaintRectsRaw(raw.rects);
+}
+
 bool RenderBoxScion::stretchesToViewport() const
 {
     return RenderBoxScion_stretchesToViewport(m_handle);
@@ -2049,15 +2074,6 @@ void RenderViewScion::setNeedsEventRegionUpdateForNonCompositedFrame(bool value)
 {
     RenderViewScion_setNeedsEventRegionUpdateForNonCompositedFrame(m_handle, value);
 }
-
-namespace {
-
-VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRectContext context)
-{
-    return { context.hasPositionFixedDescendant, context.dirtyRectIsFlipped, context.descendantNeedsEnclosingIntRect, static_cast<uint8_t>(context.options.toRaw()) };
-}
-
-} // namespace
 
 std::optional<WebCore::RenderObject::RepaintRects> RenderViewScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
 {

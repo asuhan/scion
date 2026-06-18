@@ -3000,7 +3000,7 @@ auto RenderBox::computeVisibleRectsUsingPaintOffset(const RepaintRects& rects) c
 
 auto RenderBox::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->computeVisibleRectsInContainer(rects, container, context); }
     // The rect we compute at each step is shifted by our x/y offset in the parent container's coordinate space.
     // Only when we cross a writing mode boundary will we have to possibly flipForWritingMode (to convert into a more appropriate
     // offset corner for the enclosing container).  This allows for a fully RL or BT document to repaint

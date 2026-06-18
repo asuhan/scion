@@ -594,6 +594,8 @@ public:
 
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
+    std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
+
     bool stretchesToViewport() const;
 
     LayoutUnit availableLogicalWidth() const;

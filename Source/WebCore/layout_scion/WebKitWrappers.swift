@@ -615,18 +615,16 @@ private func convertVisibleRectContext(_ raw: VisibleRectContextRaw)
   return context
 }
 
-@_cdecl("RenderViewScion_computeVisibleRectsInContainer")
-func RenderViewScion_computeVisibleRectsInContainer(
-  _ viewRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
+private func computeVisibleRectsInContainerImpl<T: RenderObjectWrapper>(
+  _ renderer: T, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
   _ contextRaw: VisibleRectContextRaw
 ) -> OptionalRepaintRectsRaw {
-  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   let rects = convertRepaintRects(rectsRaw)
   let container =
     containerRaw != nil
     ? Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw!).takeUnretainedValue() : nil
   let context = convertVisibleRectContext(contextRaw)
-  if let repaintRects = view.computeVisibleRectsInContainer(rects, container, context) {
+  if let repaintRects = renderer.computeVisibleRectsInContainer(rects, container, context) {
     return OptionalRepaintRectsRaw(rects: convertRepaintRects(repaintRects), is_valid: true)
   }
   let emptyRect = LayoutRectRaw(x: 0, y: 0, width: 0, height: 0)
@@ -634,6 +632,15 @@ func RenderViewScion_computeVisibleRectsInContainer(
     clippedOverflowRect: emptyRect,
     outlineBoundsRect: OptionalLayoutRectRaw(rect: emptyRect, is_valid: false))
   return OptionalRepaintRectsRaw(rects: emptyRepaintRects, is_valid: false)
+}
+
+@_cdecl("RenderViewScion_computeVisibleRectsInContainer")
+func RenderViewScion_computeVisibleRectsInContainer(
+  _ viewRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
+  _ contextRaw: VisibleRectContextRaw
+) -> OptionalRepaintRectsRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return computeVisibleRectsInContainerImpl(view, rectsRaw, containerRaw, contextRaw)
 }
 
 @_cdecl("RenderViewScion_selection")
@@ -2819,6 +2826,15 @@ func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOu
 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   return convertRepaintRects(box.localRectsForRepaint(repaintOutlineBounds ? .Yes : .No))
+}
+
+@_cdecl("RenderBoxScion_computeVisibleRectsInContainer")
+func RenderBoxScion_computeVisibleRectsInContainer(
+  _ boxRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
+  _ contextRaw: VisibleRectContextRaw
+) -> OptionalRepaintRectsRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return computeVisibleRectsInContainerImpl(box, rectsRaw, containerRaw, contextRaw)
 }
 
 @_cdecl("RenderBoxScion_stretchesToViewport")
