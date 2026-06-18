@@ -599,6 +599,8 @@ extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
+extern "C" void RenderBoxScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
+
 extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
 
 extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
@@ -1802,6 +1804,11 @@ void RenderBoxScion::willBeDestroyed()
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
 {
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderBoxScion::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    RenderBoxScion_mapLocalToContainer(m_handle, const_cast<RenderLayerModelObject*>(ancestorContainer), &transformState, mode.toRaw(), wasFixed);
 }
 
 void RenderBlockScion::insertPositionedObject(RenderBox& positioned)

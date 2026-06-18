@@ -630,6 +630,8 @@ public:
 
     bool shouldTrimChildMargin(MarginTrimType, const RenderBox&) const;
 
+    void mapLocalToContainer(const RenderLayerModelObject* repaintContainer, TransformState&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
+
     void* handle() const { return m_handle; }
 
 private:

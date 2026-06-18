@@ -1041,13 +1041,11 @@ func RenderViewScion_styleDidChange(
   view.styleDidChange(diff: StyleDifference(rawValue: diffRaw)!, oldStyle: oldStyle)
 }
 
-@_cdecl("RenderViewScion_mapLocalToContainer")
-func RenderViewScion_mapLocalToContainer(
-  _ viewRaw: UnsafeRawPointer, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
+private func mapLocalToContainerImpl<T: RenderObjectWrapper>(
+  _ renderer: T, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
   _ transformStateRaw: UnsafeMutableRawPointer, _ modeRaw: UInt8,
   _ wasFixed: UnsafeMutablePointer<Bool>?
 ) {
-  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   let ancestorContainer =
     ancestorContainerRaw != nil
     ? createRenderObjectWrapperOrNative(ancestorContainerRaw!) as! RenderLayerModelObjectWrapper?
@@ -1055,7 +1053,17 @@ func RenderViewScion_mapLocalToContainer(
   let transformState = TransformState(transformStateRaw)
   let mode = MapCoordinatesMode(rawValue: modeRaw)
   var wasFixedCopy = wasFixed?.pointee
-  view.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixedCopy)
+  renderer.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixedCopy)
+}
+
+@_cdecl("RenderViewScion_mapLocalToContainer")
+func RenderViewScion_mapLocalToContainer(
+  _ viewRaw: UnsafeRawPointer, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
+  _ transformStateRaw: UnsafeMutableRawPointer, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  mapLocalToContainerImpl(view, ancestorContainerRaw, transformStateRaw, modeRaw, wasFixed)
 }
 
 @_cdecl("RenderViewScion_pushMappingToContainer")
@@ -2963,6 +2971,16 @@ func RenderBoxScion_shouldTrimChildMargin(
   let type = MarginTrimType(rawValue: typeRaw)
   let child = createRenderObjectWrapper(childRaw) as! RenderBoxWrapper
   return box.shouldTrimChildMarginForBox(type: type, child: child)
+}
+
+@_cdecl("RenderBoxScion_mapLocalToContainer")
+func RenderBoxScion_mapLocalToContainer(
+  _ boxRaw: UnsafeRawPointer, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
+  _ transformStateRaw: UnsafeMutableRawPointer, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  mapLocalToContainerImpl(box, ancestorContainerRaw, transformStateRaw, modeRaw, wasFixed)
 }
 
 @_cdecl("RenderBlockFlowScion_willBeDestroyed")

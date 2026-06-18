@@ -2859,7 +2859,10 @@ LayoutUnit RenderBox::perpendicularContainingBlockLogicalHeight() const
 
 void RenderBox::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->mapLocalToContainer(ancestorContainer, transformState, mode, wasFixed);
+        return;
+    }
     if (ancestorContainer == this)
         return;
 
