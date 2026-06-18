@@ -2590,7 +2590,7 @@ func RenderElementScion_attachRendererInternal(
 ) {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   let child = createRenderObjectWrapperOrNative(childRaw)
-  let beforeChild = beforeChildRaw != nil ? RenderObjectWrapper(p: beforeChildRaw!) : nil
+  let beforeChild = beforeChildRaw != nil ? createRenderObjectWrapperOrNative(beforeChildRaw!) : nil
   element.attachRendererInternal(child: child, beforeChild: beforeChild)
 }
 
