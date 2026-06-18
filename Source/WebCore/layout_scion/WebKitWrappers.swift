@@ -2563,6 +2563,9 @@ func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrap
   if wk_interop.RenderObject_isRenderBox(p) {
     return RenderBoxWrapper(p: p)
   }
+  if wk_interop.RenderObject_isRenderLineBreak(p) {
+    return RenderLineBreakWrapper(p: p)
+  }
   if wk_interop.RenderObject_isRenderInline(p) {
     return RenderInlineWrapper(p: p)
   }
