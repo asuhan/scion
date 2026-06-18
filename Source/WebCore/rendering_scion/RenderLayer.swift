@@ -3182,7 +3182,9 @@ class RenderLayerWrapper {
   }
 
   func participatesInPreserve3D() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_participatesInPreserve3D(layerId())
+    }
     return ancestorLayerIsDOMParent(ancestor: parent()) && parent()!.preserves3D()
       && (transform != nil || renderer().style().backfaceVisibility() == .Hidden || preserves3D())
   }

@@ -283,6 +283,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_isTransformed(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->isTransformed();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_participatesInPreserve3D(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->participatesInPreserve3D();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_isBackdropRoot(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->isBackdropRoot();
