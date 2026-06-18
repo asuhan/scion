@@ -1482,6 +1482,12 @@ func RenderObjectScion_isTablePart(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isTablePart()
 }
 
+@_cdecl("RenderObjectScion_isAfterContent")
+func RenderObjectScion_isAfterContent(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isAfterContent()
+}
+
 @_cdecl("RenderObjectScion_everHadLayout")
 func RenderObjectScion_everHadLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

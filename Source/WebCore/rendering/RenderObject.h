@@ -608,7 +608,7 @@ public:
     }
 
     inline bool isBeforeContent() const;
-    inline bool isAfterContent() const;
+    bool isAfterContent() const;
     inline bool isBeforeOrAfterContent() const;
     static inline bool isBeforeContent(const RenderObject* obj) { return obj && obj->isBeforeContent(); }
     static inline bool isAfterContent(const RenderObject* obj) { return obj && obj->isAfterContent(); }
@@ -1809,17 +1809,6 @@ inline bool RenderObject::isBeforeContent() const
     if (isRenderText())
         return false;
     if (style().pseudoElementType() != PseudoId::Before)
-        return false;
-    return true;
-}
-
-inline bool RenderObject::isAfterContent() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    // Text nodes don't have their own styles, so ignore the style on a text node.
-    if (isRenderText())
-        return false;
-    if (style().pseudoElementType() != PseudoId::After)
         return false;
     return true;
 }

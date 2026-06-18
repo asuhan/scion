@@ -142,6 +142,8 @@ extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
 
 extern "C" bool RenderObjectScion_isTablePart(const void*);
 
+extern "C" bool RenderObjectScion_isAfterContent(const void*);
+
 extern "C" bool RenderObjectScion_everHadLayout(const void*);
 
 extern "C" bool RenderObjectScion_childrenInline(const void*);
@@ -912,6 +914,8 @@ bool RenderObjectScion::isBody() const { return RenderObjectScion_isBody(m_handl
 bool RenderObjectScion::isHTMLMarquee() const { return RenderObjectScion_isHTMLMarquee(m_handle); }
 
 bool RenderObjectScion::isTablePart() const { return RenderObjectScion_isTablePart(m_handle); }
+
+bool RenderObjectScion::isAfterContent() const { return RenderObjectScion_isAfterContent(m_handle); }
 
 bool RenderObjectScion::everHadLayout() const { return RenderObjectScion_everHadLayout(m_handle); }
 

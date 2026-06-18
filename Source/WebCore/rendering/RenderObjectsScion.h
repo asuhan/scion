@@ -165,6 +165,8 @@ public:
 
     bool isTablePart() const;
 
+    bool isAfterContent() const;
+
     bool everHadLayout() const;
 
     bool childrenInline() const;

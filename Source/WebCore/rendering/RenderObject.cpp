@@ -561,6 +561,17 @@ bool RenderObject::isTablePart() const
     return isRenderTableCell() || isRenderTableCol() || isRenderTableCaption() || isRenderTableRow() || isRenderTableSection();
 }
 
+bool RenderObject::isAfterContent() const
+{
+    if (m_scion) { return m_scion->isAfterContent(); }
+    // Text nodes don't have their own styles, so ignore the style on a text node.
+    if (isRenderText())
+        return false;
+    if (style().pseudoElementType() != PseudoId::After)
+        return false;
+    return true;
+}
+
 bool RenderObject::everHadLayout() const
 {
     if (m_scion) { return m_scion->everHadLayout(); }
