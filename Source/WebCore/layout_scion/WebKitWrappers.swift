@@ -1074,9 +1074,11 @@ private func pushMappingToContainerImpl<T: RenderObjectWrapper>(
     ? Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(ancestorToStopAtRaw!)
       .takeUnretainedValue()
     : nil
-  let renderObjectRaw = renderer.pushMappingToContainer(
+  if let renderObject = renderer.pushMappingToContainer(
     ancestorToStopAt, RenderGeometryMap(geometryMapRaw))
-  assert(renderObjectRaw == nil)
+  {
+    return UnsafeRawPointer(wkRenderObject(renderObject))
+  }
   return nil
 }
 
