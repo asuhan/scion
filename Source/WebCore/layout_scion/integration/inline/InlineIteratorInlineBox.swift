@@ -99,8 +99,13 @@ extension InlineIterator {
 
     @discardableResult
     func traverseNextInlineBox() -> InlineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_box.m_pathVariant {
+      case .modern(let path):
+        path.traverseNextInlineBox()
+      case .legacy(let path):
+        path.traverseNextInlineBox()
+      }
+      return self
     }
 
     @discardableResult

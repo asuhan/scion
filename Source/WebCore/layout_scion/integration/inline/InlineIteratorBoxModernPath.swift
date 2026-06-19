@@ -127,6 +127,20 @@ extension InlineIterator {
       assert(box().isTextOrSoftLineBreak())
     }
 
+    func traverseNextInlineBox() {
+      assert(!atEnd())
+      assert(box().isInlineBox())
+
+      if box().isLastForLayoutBox {
+        setAtEnd()
+        return
+      }
+
+      traverseNextWithSameLayoutBox()
+
+      assert(box().isInlineBox())
+    }
+
     func traversePreviousInlineBox() {
       assert(!atEnd())
       assert(box().isInlineBox())
