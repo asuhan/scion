@@ -39,6 +39,16 @@ struct LayoutSizeRaw {
     int32_t height;
 };
 
+extern "C" WEBCORE_EXPORT void RenderGeometryMap_push(void* raw, const void* renderer_raw, LayoutSizeRaw offsetFromContainerRaw, bool accumulatingTransform, bool isNonUniform, bool isFixedPosition, bool hasTransform)
+{
+    const auto renderer = static_cast<const WebCore::RenderObject*>(renderer_raw);
+    const auto offsetFromContainer = WebCore::LayoutSize {
+        WebCore::LayoutUnit::fromRawValue(offsetFromContainerRaw.width),
+        WebCore::LayoutUnit::fromRawValue(offsetFromContainerRaw.height)
+    };
+    static_cast<WebCore::RenderGeometryMap*>(raw)->push(renderer, offsetFromContainer, accumulatingTransform, isNonUniform, isFixedPosition, hasTransform);
+}
+
 extern "C" WEBCORE_EXPORT void RenderGeometryMap_pushView(void* raw, const void* view_raw, LayoutSizeRaw scroll_offset_raw, const void* t_raw)
 {
     const auto view = static_cast<const WebCore::RenderView*>(view_raw);

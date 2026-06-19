@@ -1628,6 +1628,7 @@ void Element_clearLastRememberedLogicalHeight(void*);
 bool Element_isRelevantToUser(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);
+void RenderGeometryMap_push(void*, const void*, struct LayoutSizeRaw, bool, bool, bool, bool);
 void RenderGeometryMap_pushView(void* raw, const void* view_raw, struct LayoutSizeRaw scroll_offset_raw, const void* t_raw);
 int32_t ScrollView_width(const void*);
 int32_t ScrollView_height(const void*);

@@ -227,7 +227,16 @@ class RenderGeometryMap {
     accumulatingTransform: Bool = false, isNonUniform: Bool = false, isFixedPosition: Bool = false,
     hasTransform: Bool = false
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderGeometryMap_push(
+        pInterop,
+        wkRenderObject(renderer),
+        LayoutSizeRaw(
+          width: offsetFromContainer.width().rawValue(),
+          height: offsetFromContainer.height().rawValue()), accumulatingTransform, isNonUniform,
+        isFixedPosition, hasTransform)
+      return
+    }
     assert(insertionPosition != RenderGeometryMap.notFound)
 
     mapping.insert(
