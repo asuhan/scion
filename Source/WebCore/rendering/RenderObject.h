@@ -957,11 +957,7 @@ public:
     }
     bool isRelativelyPositioned() const;
     bool isStickilyPositioned() const;
-    bool shouldUsePositionedClipping() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isAbsolutelyPositioned() || isRenderSVGForeignObject();
-    }
+    bool shouldUsePositionedClipping() const;
 
     bool isRenderText() const;
     bool isRenderLineBreak() const;

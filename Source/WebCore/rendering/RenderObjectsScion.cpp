@@ -204,6 +204,8 @@ extern "C" bool RenderObjectScion_isRelativelyPositioned(const void*);
 
 extern "C" bool RenderObjectScion_isStickilyPositioned(const void*);
 
+extern "C" bool RenderObjectScion_shouldUsePositionedClipping(const void*);
+
 extern "C" bool RenderObjectScion_isRenderText(const void*);
 
 extern "C" bool RenderObjectScion_isRenderLineBreak(const void*);
@@ -989,6 +991,8 @@ bool RenderObjectScion::isFixedPositioned() const { return RenderObjectScion_isF
 bool RenderObjectScion::isRelativelyPositioned() const { return RenderObjectScion_isRelativelyPositioned(m_handle); }
 
 bool RenderObjectScion::isStickilyPositioned() const { return RenderObjectScion_isStickilyPositioned(m_handle); }
+
+bool RenderObjectScion::shouldUsePositionedClipping() const { return RenderObjectScion_shouldUsePositionedClipping(m_handle); }
 
 bool RenderObjectScion::isRenderText() const { return RenderObjectScion_isRenderText(m_handle); }
 

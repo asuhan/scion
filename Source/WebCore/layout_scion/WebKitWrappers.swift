@@ -1683,6 +1683,12 @@ func RenderObjectScion_isStickilyPositioned(_ objectRaw: UnsafeRawPointer) -> Bo
   return object.isStickilyPositioned()
 }
 
+@_cdecl("RenderObjectScion_shouldUsePositionedClipping")
+func RenderObjectScion_shouldUsePositionedClipping(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.shouldUsePositionedClipping()
+}
+
 @_cdecl("RenderObjectScion_isRenderText")
 func RenderObjectScion_isRenderText(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

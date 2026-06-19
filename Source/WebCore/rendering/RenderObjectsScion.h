@@ -227,6 +227,8 @@ public:
 
     bool isStickilyPositioned() const;
 
+    bool shouldUsePositionedClipping() const;
+
     bool isRenderText() const;
 
     bool isRenderLineBreak() const;

@@ -3841,6 +3841,12 @@ bool RenderObject::isStickilyPositioned() const
     return m_stateBitfields.isStickilyPositioned();
 }
 
+bool RenderObject::shouldUsePositionedClipping() const
+{
+    if (m_scion) { return m_scion->shouldUsePositionedClipping(); }
+    return isAbsolutelyPositioned() || isRenderSVGForeignObject();
+}
+
 bool RenderObject::isRenderText() const
 {
     if (m_scion) { return m_scion->isRenderText(); }
