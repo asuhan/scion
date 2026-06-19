@@ -509,6 +509,8 @@ public:
 
     RenderInline* inlineWrapperForDisplayContents();
 
+    void resetMinMaxWidth();
+
     std::optional<bool> canUseSimplifiedTextMeasuring() const;
 
     std::optional<bool> hasPositionDependentContentWidth() const;

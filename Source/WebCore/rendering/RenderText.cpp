@@ -2274,6 +2274,16 @@ std::optional<bool> RenderText::emphasisMarkExistsAndIsAbove(const RenderText& r
     return isAbove;
 }
 
+void RenderText::resetMinMaxWidth()
+{
+    if (m_scion) {
+        m_scion->resetMinMaxWidth();
+        return;
+    }
+    m_minWidth = { };
+    m_maxWidth = { };
+}
+
 std::optional<bool> RenderText::canUseSimplifiedTextMeasuring() const
 {
     if (m_scion) { return m_scion->canUseSimplifiedTextMeasuring(); }

@@ -433,13 +433,6 @@ inline RenderText* Text::renderer() const
     return downcast<RenderText>(Node::renderer());
 }
 
-inline void RenderText::resetMinMaxWidth()
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    m_minWidth = { };
-    m_maxWidth = { };
-}
-
 } // namespace WebCore
 
 SPECIALIZE_TYPE_TRAITS_RENDER_OBJECT(RenderText, isRenderText())

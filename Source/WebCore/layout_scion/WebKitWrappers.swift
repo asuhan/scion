@@ -2307,6 +2307,13 @@ func RenderTextScion_inlineWrapperForDisplayContents(_ renderTextRaw: UnsafeMuta
   return nil
 }
 
+@_cdecl("RenderTextScion_resetMinMaxWidth")
+func RenderTextScion_resetMinMaxWidth(_ renderTextRaw: UnsafeMutableRawPointer)
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  renderText.resetMinMaxWidth()
+}
+
 @_cdecl("RenderTextScion_canUseSimplifiedTextMeasuring")
 func RenderTextScion_canUseSimplifiedTextMeasuring(_ renderTextRaw: UnsafeRawPointer)
   -> OptionalBool

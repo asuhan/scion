@@ -398,6 +398,8 @@ extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
 
+extern "C" void RenderTextScion_resetMinMaxWidth(void*);
+
 struct OptionalBool {
     bool value;
     bool is_valid;
@@ -1568,6 +1570,11 @@ void RenderTextScion::styleDidChange(StyleDifference diff, const RenderStyle* ol
 RenderInline* RenderTextScion::inlineWrapperForDisplayContents()
 {
     return static_cast<RenderInline*>(RenderTextScion_inlineWrapperForDisplayContents(m_handle));
+}
+
+void RenderTextScion::resetMinMaxWidth()
+{
+    RenderTextScion_resetMinMaxWidth(m_handle);
 }
 
 std::optional<bool> RenderTextScion::canUseSimplifiedTextMeasuring() const
