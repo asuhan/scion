@@ -1439,6 +1439,7 @@ void RenderLayer_setBackingNeedsRepaintInRect(void*, struct LayoutRectRaw, bool)
 void RenderLayer_styleChanged(void*, uint8_t, const void*);
 bool RenderLayer_cannotBlitToWindow(const void*);
 void RenderLayer_updateTransform(void*);
+struct LayoutSizeRaw RenderLayer_offsetForInFlowPosition(const void*);
 struct EnclosingCompositingLayerStatusRaw RenderLayer_enclosingCompositingLayerForRepaint(const void*, bool);
 int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);

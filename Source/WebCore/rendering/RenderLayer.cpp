@@ -205,6 +205,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_setBackingNeedsRepaint(void* p, bool 
     static_cast<WebCore::RenderLayer*>(p)->setBackingNeedsRepaint(shouldClip ? WebCore::GraphicsLayer::ClipToLayer : WebCore::GraphicsLayer::DoNotClipToLayer);
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
 struct LayoutRectRaw {
     int32_t x;
     int32_t y;
@@ -243,6 +248,12 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_cannotBlitToWindow(const void* p)
 extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
 {
     static_cast<WebCore::RenderLayer*>(p)->updateTransform();
+}
+
+extern "C" WEBCORE_EXPORT LayoutSizeRaw RenderLayer_offsetForInFlowPosition(const void* p)
+{
+    const auto offset = static_cast<const WebCore::RenderLayer*>(p)->offsetForInFlowPosition();
+    return { offset.width().rawValue(), offset.height().rawValue() };
 }
 
 struct EnclosingCompositingLayerStatusRaw {

@@ -1559,7 +1559,12 @@ class RenderLayerWrapper {
   }
 
   func offsetForInFlowPosition() -> LayoutSizeWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      let offset = RenderLayer_offsetForInFlowPosition(layerId())
+      return LayoutSizeWrapper(
+        width: LayoutUnit.fromRawValue(value: offset.width),
+        height: LayoutUnit.fromRawValue(value: offset.height))
+    }
     return offsetForPosition
   }
 
