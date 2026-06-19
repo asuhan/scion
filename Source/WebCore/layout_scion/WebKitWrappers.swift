@@ -1948,7 +1948,7 @@ private func convertHitTestResult(_ raw: HitTestResultRaw) -> HitTestResultWrapp
     convertLayoutPointRaw(raw.localPoint))
 }
 
-private func convertLayoutPoint(_ p: LayoutPointWrapper) -> LayoutPointRaw {
+func convertLayoutPoint(_ p: LayoutPointWrapper) -> LayoutPointRaw {
   return LayoutPointRaw(x: p.x.rawValue(), y: p.y.rawValue())
 }
 

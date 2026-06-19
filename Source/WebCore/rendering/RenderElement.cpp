@@ -142,6 +142,24 @@ extern "C" WEBCORE_EXPORT void RenderElement_setChildNeedsLayout(void* p, uint8_
     static_cast<WebCore::RenderElement*>(p)->setChildNeedsLayout(static_cast<WebCore::MarkingBehavior>(mark_parents));
 }
 
+struct LayoutPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+namespace {
+
+WebCore::LayoutPoint convertLayoutPoint(const LayoutPointRaw& point) { return { WebCore::LayoutUnit::fromRawValue(point.x), WebCore::LayoutUnit::fromRawValue(point.y) }; }
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void RenderElement_paintAsInlineBlock(void* p, void* paintInfoRaw, LayoutPointRaw childPointRaw)
+{
+    auto& paintInfo = *static_cast<WebCore::PaintInfo*>(paintInfoRaw);
+    const auto childPoint = convertLayoutPoint(childPointRaw);
+    static_cast<WebCore::RenderElement*>(p)->paintAsInlineBlock(paintInfo, childPoint);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderElement_hasBackground(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->hasBackground();

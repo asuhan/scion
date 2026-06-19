@@ -834,7 +834,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   // (grid items, flex items) require this behavior as well, and this function exists as a helper for them.
   // It is expected that the caller will call this function independent of the value of paintInfo.phase.
   func paintAsInlineBlock(paintInfo: inout PaintInfoWrapper, childPoint: LayoutPointWrapper) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderElement_paintAsInlineBlock(
+        id(), paintInfo.interop(), convertLayoutPoint(childPoint))
+      return
+    }
     // Paint all phases atomically, as though the element established its own stacking context.
     // (See Appendix E.2, section 6.4 on inline block/table/replaced elements in the CSS2.1 specification.)
     // This is also used by other elements (e.g. flex items and grid items).
