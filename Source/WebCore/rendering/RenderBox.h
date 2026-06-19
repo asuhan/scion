@@ -767,14 +767,7 @@ public:
     // In layout related methods you almost always want the logical location (e.g. x() and y()).
     LayoutPoint topLeftLocation() const;
 
-    LayoutSize topLeftLocationOffset() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
-        if (!document().view() || !document().view()->hasFlippedBlockRenderers())
-            return locationOffset();
-        return toLayoutSize(topLeftLocationWithFlipping());
-    }
+    LayoutSize topLeftLocationOffset() const;
 
     LayoutRect logicalVisualOverflowRectForPropagation(const RenderStyle*) const;
     LayoutRect visualOverflowRectForPropagation(const RenderStyle*) const;

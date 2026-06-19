@@ -2928,6 +2928,13 @@ func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRa
   return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
 }
 
+@_cdecl("RenderBoxScion_topLeftLocationOffset")
+func RenderBoxScion_topLeftLocationOffset(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let topLeft = box.topLeftLocationOffset()
+  return LayoutSizeRaw(width: topLeft.width().rawValue(), height: topLeft.height().rawValue())
+}
+
 @_cdecl("RenderBoxScion_hasRenderOverflow")
 func RenderBoxScion_hasRenderOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

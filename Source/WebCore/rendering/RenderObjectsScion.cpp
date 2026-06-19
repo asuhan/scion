@@ -587,6 +587,8 @@ extern "C" LayoutPointRaw RenderBoxScion_flipForWritingModeForChild(const void*,
 
 extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
+extern "C" LayoutSizeRaw RenderBoxScion_topLeftLocationOffset(const void*);
+
 extern "C" bool RenderBoxScion_hasRenderOverflow(const void*);
 
 extern "C" bool RenderBoxScion_hasVisualOverflow(const void*);
@@ -1773,6 +1775,12 @@ LayoutPoint RenderBoxScion::topLeftLocation() const
 {
     const auto point = RenderBoxScion_topLeftLocation(m_handle);
     return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
+}
+
+LayoutSize RenderBoxScion::topLeftLocationOffset() const
+{
+    const auto topLeft = RenderBoxScion_topLeftLocationOffset(m_handle);
+    return { LayoutUnit::fromRawValue(topLeft.width), LayoutUnit::fromRawValue(topLeft.height) };
 }
 
 bool RenderBoxScion::hasRenderOverflow() const

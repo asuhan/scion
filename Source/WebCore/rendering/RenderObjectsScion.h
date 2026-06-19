@@ -618,6 +618,8 @@ public:
 
     LayoutPoint topLeftLocation() const;
 
+    LayoutSize topLeftLocationOffset() const;
+
     bool hasRenderOverflow() const;
 
     bool hasVisualOverflow() const;

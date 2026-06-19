@@ -6106,6 +6106,15 @@ LayoutPoint RenderBox::topLeftLocation() const
     return topLeftLocationWithFlipping();
 }
 
+LayoutSize RenderBox::topLeftLocationOffset() const
+{
+    if (m_scion) { return m_scion->topLeftLocationOffset(); }
+    // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
+    if (!document().view() || !document().view()->hasFlippedBlockRenderers())
+        return locationOffset();
+    return toLayoutSize(topLeftLocationWithFlipping());
+}
+
 bool RenderBox::hasRenderOverflow() const
 {
     if (m_scion) { return m_scion->hasRenderOverflow(); }
