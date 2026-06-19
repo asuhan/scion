@@ -2701,6 +2701,16 @@ func RenderElementScion_setLastChild(
   element.setLastChild(lastChildRaw != nil ? createRenderObjectWrapper(lastChildRaw!) : nil)
 }
 
+@_cdecl("RenderBoxModelObjectScion_offsetForInFlowPosition")
+func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: UnsafeRawPointer)
+  -> LayoutSizeRaw
+{
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  let position = boxModelObject.offsetForInFlowPosition()
+  return LayoutSizeRaw(width: position.width().rawValue(), height: position.height().rawValue())
+}
+
 @_cdecl("RenderBoxModelObjectScion_borderLogicalLeft")
 func RenderBoxModelObjectScion_borderLogicalLeft(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
   let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)

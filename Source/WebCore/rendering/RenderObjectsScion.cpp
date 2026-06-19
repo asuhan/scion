@@ -510,6 +510,13 @@ extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
 
 extern "C" bool RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(const void* p);
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" LayoutSizeRaw RenderBoxModelObjectScion_offsetForInFlowPosition(const void* p);
+
 extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
 extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
@@ -523,11 +530,6 @@ extern "C" int32_t RenderBoxScion_width(const void*);
 extern "C" int32_t RenderBoxScion_logicalHeight(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_location(const void*);
-
-struct LayoutSizeRaw {
-    int32_t width;
-    int32_t height;
-};
 
 extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
 
@@ -1598,6 +1600,12 @@ CheckedPtr<RenderLayer> RenderLayerModelObjectScion::checkedLayer() const
 bool RenderLayerModelObjectScion::shouldPlaceVerticalScrollbarOnLeft() const
 {
     return RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(m_handle);
+}
+
+LayoutSize RenderBoxModelObjectScion::offsetForInFlowPosition() const
+{
+    const auto offset = RenderBoxModelObjectScion_offsetForInFlowPosition(m_handle);
+    return { LayoutUnit::fromRawValue(offset.width), LayoutUnit::fromRawValue(offset.height) };
 }
 
 LayoutUnit RenderBoxModelObjectScion::borderLogicalLeft() const

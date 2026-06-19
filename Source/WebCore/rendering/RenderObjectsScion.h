@@ -547,6 +547,8 @@ public:
     {
     }
 
+    LayoutSize offsetForInFlowPosition() const;
+
     LayoutUnit borderLogicalLeft() const;
 
     RenderBoxModelObject* continuation() const;
