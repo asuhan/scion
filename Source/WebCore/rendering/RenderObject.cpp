@@ -125,6 +125,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMultiColumnSet(const void* p
     return static_cast<const WebCore::RenderObject*>(p)->isRenderMultiColumnSet();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isDocumentElementRenderer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isDocumentElementRenderer();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isBody(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isBody();

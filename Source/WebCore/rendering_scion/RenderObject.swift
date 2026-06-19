@@ -960,7 +960,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isDocumentElementRenderer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isDocumentElementRenderer(id()) }
     return CPtrToInt(document().documentElement()?.p) == CPtrToInt(m_node?.p)
   }
 

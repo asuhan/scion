@@ -656,6 +656,7 @@ bool RenderObject_useDarkAppearance(const void*);
 bool RenderObject_isRenderElement(const void*);
 bool RenderObject_isRenderTableCell(const void*);
 bool RenderObject_isRenderMultiColumnSet(const void*);
+bool RenderObject_isDocumentElementRenderer(const void*);
 bool RenderObject_isBody(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
