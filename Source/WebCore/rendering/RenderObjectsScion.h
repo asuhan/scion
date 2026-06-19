@@ -638,6 +638,8 @@ public:
 
     void mapLocalToContainer(const RenderLayerModelObject* repaintContainer, TransformState&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
 
+    const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
+
     void* handle() const { return m_handle; }
 
 private:

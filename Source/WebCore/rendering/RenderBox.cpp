@@ -2909,7 +2909,7 @@ void RenderBox::mapLocalToContainer(const RenderLayerModelObject* ancestorContai
 
 const RenderObject* RenderBox::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->pushMappingToContainer(ancestorToStopAt, geometryMap); }
     ASSERT(ancestorToStopAt != this);
 
     bool ancestorSkipped;

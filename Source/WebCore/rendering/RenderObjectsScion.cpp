@@ -607,6 +607,8 @@ extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*
 
 extern "C" void RenderBoxScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
 
+extern "C" const void* RenderBoxScion_pushMappingToContainer(const void*, const void*, void*);
+
 extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
 
 extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
@@ -1829,6 +1831,11 @@ bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const 
 void RenderBoxScion::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
     RenderBoxScion_mapLocalToContainer(m_handle, const_cast<RenderLayerModelObject*>(ancestorContainer), &transformState, mode.toRaw(), wasFixed);
+}
+
+const RenderObject* RenderBoxScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
+{
+    return static_cast<const RenderObject*>(RenderBoxScion_pushMappingToContainer(m_handle, ancestorToStopAt ? ancestorToStopAt->scion() : nullptr, &geometryMap));
 }
 
 void RenderBlockScion::insertPositionedObject(RenderBox& positioned)

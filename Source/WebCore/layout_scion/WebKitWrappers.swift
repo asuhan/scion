@@ -1066,21 +1066,27 @@ func RenderViewScion_mapLocalToContainer(
   mapLocalToContainerImpl(view, ancestorContainerRaw, transformStateRaw, modeRaw, wasFixed)
 }
 
+private func pushMappingToContainerImpl<T: RenderObjectWrapper>(
+  _ renderer: T, _ ancestorToStopAtRaw: UnsafeRawPointer?, _ geometryMapRaw: UnsafeMutableRawPointer
+) -> UnsafeRawPointer? {
+  let ancestorToStopAt =
+    ancestorToStopAtRaw != nil
+    ? Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(ancestorToStopAtRaw!)
+      .takeUnretainedValue()
+    : nil
+  let renderObjectRaw = renderer.pushMappingToContainer(
+    ancestorToStopAt, RenderGeometryMap(geometryMapRaw))
+  assert(renderObjectRaw == nil)
+  return nil
+}
+
 @_cdecl("RenderViewScion_pushMappingToContainer")
 func RenderViewScion_pushMappingToContainer(
   _ viewRaw: UnsafeRawPointer, _ ancestorToStopAtRaw: UnsafeRawPointer?,
   _ geometryMapRaw: UnsafeMutableRawPointer
 ) -> UnsafeRawPointer? {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  let ancestorToStopAt =
-    ancestorToStopAtRaw != nil
-    ? Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(ancestorToStopAtRaw!)
-      .takeUnretainedValue()
-    : nil
-  let renderObjectRaw = view.pushMappingToContainer(
-    ancestorToStopAt, RenderGeometryMap(geometryMapRaw))
-  assert(renderObjectRaw == nil)
-  return nil
+  return pushMappingToContainerImpl(view, ancestorToStopAtRaw, geometryMapRaw)
 }
 
 @_cdecl("RenderViewScion_mapAbsoluteToLocalPoint")
@@ -3004,6 +3010,15 @@ func RenderBoxScion_mapLocalToContainer(
 ) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   mapLocalToContainerImpl(box, ancestorContainerRaw, transformStateRaw, modeRaw, wasFixed)
+}
+
+@_cdecl("RenderBoxScion_pushMappingToContainer")
+func RenderBoxScion_pushMappingToContainer(
+  _ boxRaw: UnsafeRawPointer, _ ancestorToStopAtRaw: UnsafeRawPointer?,
+  _ geometryMapRaw: UnsafeMutableRawPointer
+) -> UnsafeRawPointer? {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return pushMappingToContainerImpl(box, ancestorToStopAtRaw, geometryMapRaw)
 }
 
 @_cdecl("RenderBlockFlowScion_willBeDestroyed")
