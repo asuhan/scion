@@ -75,6 +75,8 @@ extension InlineIterator {
 
     func traverseNextTextBox() { m_inlineBox = inlineTextBox().nextTextBox() }
 
+    func traversePreviousInlineBox() { m_inlineBox = inlineFlowBox().prevLineBox() }
+
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool { return rootInlineBox().prevRootBox() == nil }
@@ -92,6 +94,10 @@ extension InlineIterator {
 
     private func inlineTextBox() -> LegacyInlineTextBox {
       return m_inlineBox! as! LegacyInlineTextBox
+    }
+
+    private func inlineFlowBox() -> LegacyInlineFlowBox {
+      return m_inlineBox as! LegacyInlineFlowBox
     }
 
     private var m_inlineBox: LegacyInlineBox?

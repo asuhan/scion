@@ -127,6 +127,20 @@ extension InlineIterator {
       assert(box().isTextOrSoftLineBreak())
     }
 
+    func traversePreviousInlineBox() {
+      assert(!atEnd())
+      assert(box().isInlineBox())
+
+      if box().isFirstForLayoutBox {
+        setAtEnd()
+        return
+      }
+
+      traversePreviousWithSameLayoutBox()
+
+      assert(box().isInlineBox())
+    }
+
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool { return box().lineIndex == 0 }
@@ -142,10 +156,22 @@ extension InlineIterator {
       boxIndex += 1
     }
 
+    private func traversePreviousBox() {
+      assert(!atEnd())
+      boxIndex = boxIndex != 0 ? boxIndex - 1 : UInt64(boxes().count)
+    }
+
     private func traverseNextWithSameLayoutBox() {
       let layoutBox = box().layoutBox
       repeat {
         traverseNextBox()
+      } while !atEnd() && CPtrToInt(box().layoutBox.p) != CPtrToInt(layoutBox.p)
+    }
+
+    private func traversePreviousWithSameLayoutBox() {
+      let layoutBox = box().layoutBox
+      repeat {
+        traversePreviousBox()
       } while !atEnd() && CPtrToInt(box().layoutBox.p) != CPtrToInt(layoutBox.p)
     }
 
