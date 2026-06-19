@@ -1579,6 +1579,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return Int32(roundToInt(value: max(clientHeight(), layoutOverflowRect().maxY() - borderTop())))
   }
 
+  override func marginTop() -> LayoutUnit {
+    assert(isNativeImpl())
+    return marginBox.top
+  }
+
   override func marginBottom() -> LayoutUnit {
     assert(isNativeImpl())
     return marginBox.bottom
