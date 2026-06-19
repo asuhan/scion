@@ -916,6 +916,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .Video
   }
 
+  func isRenderTextControlInnerBlock() -> Bool {
+    assert(isNativeImpl())
+    return type() == .TextControlInnerBlock
+  }
+
   func isRenderViewTransitionCapture() -> Bool {
     assert(isNativeImpl())
     return isRenderReplaced()
@@ -3637,7 +3642,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   private let m_node: NodeWrapper?
 
-  private var m_parent: RenderElementWrapper? = nil
+  var m_parent: RenderElementWrapper? = nil
   private var m_previous: RenderObjectWrapper? = nil
   private let m_typeFlags: TypeFlag
   private let m_type: `Type`

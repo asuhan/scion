@@ -980,7 +980,7 @@ class LayoutIntegration {
         line: lastLineWithInlineContent(lines: inlineContent!.displayContent.lines))
     }
 
-    func lastLineLogicalBaseline(line: InlineDisplay.Line) -> LayoutUnit {
+    func lastLineLogicalBaseline() -> LayoutUnit {
       if inlineContent == nil || inlineContent!.displayContent.lines.isEmpty {
         fatalError("Not reached")
       }

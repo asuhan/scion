@@ -3301,10 +3301,68 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not reached")
   }
 
-  override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
-    assert(!isNativeImpl())
-    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
-    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+  override final func inlineBlockBaseline(_ lineDirection: LineDirectionMode) -> LayoutUnit? {
+    if !isNativeImpl() {
+      let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), lineDirection == .VerticalLine)
+      return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+    }
+    if isWritingModeRoot() { return nil }
+
+    if shouldApplyLayoutContainment() { return super.inlineBlockBaseline(lineDirection) }
+
+    if style().display() == .InlineBlock {
+      // The baseline of an 'inline-block' is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its 'overflow'
+      // property has a computed value other than 'visible'. see https://www.w3.org/TR/CSS22/visudet.html
+      let shouldSynthesizeBaseline =
+        !style().isOverflowVisible() && !(element() is HTMLFormControlElementWrapper)
+        && !isRenderTextControlInnerBlock()
+      if shouldSynthesizeBaseline {
+        return nil
+      }
+    }
+    // Note that here we only take the left and bottom into consideration. Our caller takes the right and top into consideration.
+    let boxHeight =
+      synthesizedBaseline(
+        box: self, parentStyle: parentStyle()!, direction: lineDirection, edge: .BorderBox)
+      + (lineDirection == .HorizontalLine ? marginBox.bottom : marginBox.left)
+    var lastBaseline = LayoutUnit()
+    if !childrenInline() {
+      guard let inlineBlockBaseline = super.inlineBlockBaseline(lineDirection) else { return nil }
+      lastBaseline = inlineBlockBaseline
+    } else {
+      if !hasLines() {
+        if !hasLineIfEmpty() {
+          return nil
+        }
+        let fontMetrics = elementFirstLineStyle().metricsOfPrimaryFont()
+        return LayoutUnit(
+          value: (fontMetrics.intAscent()
+            + (lineHeight(
+              firstLine: true, direction: lineDirection,
+              linePositionMode: .PositionOfInteriorLineBoxes) - fontMetrics.intHeight()) / 2
+            + (lineDirection == .HorizontalLine
+              ? borderTop() + paddingTop() : borderRight() + paddingRight()))
+            .toInt())
+      }
+
+      if svgTextLayout() != nil {
+        let style = elementFirstLineStyle()
+        // LegacyInlineFlowBox::placeBoxesInBlockDirection will flip lines in case of verticalLR mode, so we can assume verticalRL for now.
+        lastBaseline =
+          style.metricsOfPrimaryFont().intAscent(baselineType: legacyRootBox()!.baselineType())
+          + LayoutUnit(
+            value: style.isFlippedLinesWritingMode()
+              ? logicalHeight() - legacyRootBox()!.logicalBottom() : legacyRootBox()!.logicalTop()
+          )
+      } else if inlineLayout() != nil {
+        lastBaseline = LayoutUnit(
+          value: floorToInt(value: inlineLayout()!.lastLineLogicalBaseline()))
+      }
+    }
+    // According to the CSS spec http://www.w3.org/TR/CSS21/visudet.html, we shouldn't be performing this min, but should
+    // instead be returning boxHeight directly. However, we feel that a min here is better behavior (and is consistent
+    // enough with the spec to not cause tons of breakages).
+    return style().overflowY() == .Visible ? lastBaseline : min(boxHeight, lastBaseline)
   }
 
   func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {

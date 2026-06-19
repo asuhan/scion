@@ -133,6 +133,9 @@ class LegacyInlineFlowBox: LegacyInlineBox {
 
   override final func isInlineFlowBox() -> Bool { return true }
 
+  // Whether or not this line uses alphabetic or ideographic baselines by default.
+  let m_baselineType: FontBaseline = .AlphabeticBaseline
+
   private let overflow: RenderOverflow? = nil
 
   private let m_nextLineBox: LegacyInlineFlowBox? = nil  // The next box that also uses our RenderObject

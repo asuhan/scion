@@ -276,6 +276,8 @@ class RenderElementWrapper: RenderObjectWrapper {
     return self.style!
   }
 
+  func parentStyle() -> RenderStyleWrapper? { return m_parent?.style() }
+
   func elementFirstLineStyle() -> RenderStyleWrapper {
     if !isNativeImpl() {
       return convert_render_style(p: wk_interop.RenderElement_firstLineStyle(id()))

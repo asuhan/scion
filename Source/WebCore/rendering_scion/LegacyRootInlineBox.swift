@@ -81,6 +81,8 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
+  func baselineType() -> FontBaseline { return m_baselineType }
+
   func logicalTopVisualOverflow() -> LayoutUnit {
     return super.logicalTopVisualOverflow(lineTop: lineTop)
   }
