@@ -83,10 +83,7 @@ extension InlineIterator {
 
     func isFirstLine() -> Bool { return rootInlineBox().prevRootBox() == nil }
 
-    func deepCopy() -> BoxPath {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func deepCopy() -> BoxPath { return BoxLegacyPath(m_inlineBox) }
 
     func atEnd() -> Bool { return m_inlineBox == nil }
 
