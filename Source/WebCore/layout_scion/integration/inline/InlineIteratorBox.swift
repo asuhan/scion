@@ -37,7 +37,14 @@ extension InlineIterator {
       case Text
     }
 
-    init(_ path: PathVariant) { m_pathVariant = path }
+    init(_ path: PathVariant) {
+      switch path {
+      case .modern(let path):
+        m_pathVariant = .modern(path.deepCopy() as! BoxModernPath)
+      case .legacy(let path):
+        m_pathVariant = .legacy(path.deepCopy() as! BoxLegacyPath)
+      }
+    }
 
     func isText() -> Bool {
       switch m_pathVariant {
@@ -216,6 +223,8 @@ extension InlineIterator {
       return path
     }
 
+    func deepCopy() -> Box { return Box(m_pathVariant) }
+
     let m_pathVariant: PathVariant
   }
 
@@ -233,7 +242,7 @@ extension InlineIterator {
       }
     }
 
-    init(_ run: Box) { m_box = run }
+    init(_ run: Box) { m_box = run.deepCopy() }
 
     func bool() -> Bool { return !atEnd() }
 

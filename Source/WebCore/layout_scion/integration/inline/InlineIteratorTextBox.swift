@@ -106,7 +106,7 @@ extension InlineIterator {
       return super.legacyInlineBox() as! LegacyInlineTextBox?
     }
 
-    func deepCopy() -> TextBox {
+    override func deepCopy() -> TextBox {
       switch m_pathVariant {
       case .modern(let path):
         return TextBox(.modern(path.deepCopy() as! BoxModernPath))
