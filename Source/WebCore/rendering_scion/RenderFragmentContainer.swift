@@ -78,7 +78,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     (fragmentedFlow! as! RenderMultiColumnFlowWrapper).addFragmentToThread(self)
   }
 
-  private func detachFragment() {
+  func detachFragment() {
     assert(isNativeImpl())
     fragmentedFlow?.removeFragmentFromThread(self)
     fragmentedFlow = nil

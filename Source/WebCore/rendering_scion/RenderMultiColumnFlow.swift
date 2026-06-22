@@ -245,8 +245,16 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Detach all column sets from the flow thread. Cannot destroy them at this point, since they
+    // are siblings of this object, and there may be pointers to this object's sibling somewhere
+    // further up on the call stack.
+    var columnSet = firstMultiColumnSet()
+    while columnSet != nil {
+      columnSet!.detachFragment()
+      columnSet = columnSet!.nextSiblingMultiColumnSet()
+    }
+    super.willBeRemovedFromTree()
   }
 
   override func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
