@@ -824,6 +824,7 @@ bool RenderElement_hasClipPath(const void*);
 bool RenderElement_hasOutline(const void*);
 bool RenderElement_hasSelfPaintingLayer(const void*);
 bool RenderElement_checkForRepaintDuringLayout(const void*);
+bool RenderElement_hasContinuationChainNode(const void*);
 bool RenderElement_isContinuation(const void*);
 bool RenderElement_createsNewFormattingContext(const void*);
 void RenderElement_layoutIfNeeded(void*);

@@ -1447,7 +1447,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {}
 
   func hasContinuationChainNode() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderElement_hasContinuationChainNode(id()) }
     return m_hasContinuationChainNode
   }
 
