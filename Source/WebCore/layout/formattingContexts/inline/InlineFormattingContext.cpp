@@ -110,6 +110,16 @@ extern "C" WEBCORE_EXPORT void* LayoutState_geometryForBox(const void* layout_st
     return const_cast<void*>(box);
 }
 
+extern "C" WEBCORE_EXPORT void* InlineDamage_create()
+{
+    return new WebCore::Layout::InlineDamage();
+}
+
+extern "C" WEBCORE_EXPORT void InlineDamage_destroy(const void* p)
+{
+    delete static_cast<const WebCore::Layout::InlineDamage*>(p);
+}
+
 struct InlineItemPositionRaw {
     uint64_t index;
     uint64_t offset;

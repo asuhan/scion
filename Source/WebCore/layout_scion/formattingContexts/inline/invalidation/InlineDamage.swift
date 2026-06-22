@@ -25,10 +25,18 @@
 
 import wk_interop
 
-struct InlineDamageWrapper {
+class InlineDamageWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
+    pOwner = false
   }
+
+  init() {
+    p = wk_interop.InlineDamage_create()
+    pOwner = true
+  }
+
+  deinit { if pOwner { wk_interop.InlineDamage_destroy(p) } }
 
   struct Reason: OptionSet {
     let rawValue: UInt32
@@ -87,5 +95,6 @@ struct InlineDamageWrapper {
   }
 
   var p: UnsafeMutableRawPointer
+  private let pOwner: Bool
   var damageReasons = Reason(rawValue: 0)
 }

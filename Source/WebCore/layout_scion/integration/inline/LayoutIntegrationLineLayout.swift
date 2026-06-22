@@ -1417,8 +1417,8 @@ class LayoutIntegration {
     }
 
     func ensureLineDamage() -> InlineDamageWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if lineDamage == nil { lineDamage = InlineDamageWrapper() }
+      return lineDamage!
     }
 
     private func rootLayoutBox() -> ElementBoxWrapper {
