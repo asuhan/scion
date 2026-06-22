@@ -134,8 +134,9 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // We only need to invalidate the column cache when only individual columns are being removed (as opposed to when the entire table is being collapsed).
+    table()?.invalidateColumns()
   }
 
   override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)

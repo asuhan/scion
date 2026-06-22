@@ -820,6 +820,15 @@ class RenderTableWrapper: RenderBlockWrapper {
     invalidateCachedColumns()
   }
 
+  func invalidateColumns() {
+    assert(isNativeImpl())
+    invalidateCachedColumns()
+    // We don't really need to recompute our sections, but we need to update our
+    // column count and whether we have a column. Currently, we only have one
+    // size-fit-all flag but we may have to consider splitting it.
+    setNeedsSectionRecalc()
+  }
+
   func willInsertTableColumn(child: RenderTableColWrapper, beforeChild: RenderObjectWrapper?) {
     hasColElements = true
   }
