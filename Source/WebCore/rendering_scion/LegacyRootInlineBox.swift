@@ -23,10 +23,7 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     setIsHorizontal(block.isHorizontalWritingMode())
   }
 
-  func blockFlow() -> RenderBlockFlowWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func blockFlow() -> RenderBlockFlowWrapper { return renderer() as! RenderBlockFlowWrapper }
 
   func nextRootBox() -> LegacyRootInlineBox? { return m_nextLineBox as! LegacyRootInlineBox? }
 
