@@ -60,6 +60,8 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    override func deepCopy() -> InlineBox { return InlineBox(m_pathVariant) }
   }
 
   static func firstInlineBoxFor(renderInline: RenderInlineWrapper) -> InlineBoxIterator {
