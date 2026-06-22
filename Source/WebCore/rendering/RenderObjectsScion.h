@@ -325,6 +325,8 @@ public:
 
     void repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect&, bool shouldClipToLayer = true) const;
 
+    void repaint(RenderObject::ForceRepaint = RenderObject::ForceRepaint::No) const;
+
     void repaintRectangle(const LayoutRect&, bool) const;
 
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;

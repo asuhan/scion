@@ -2094,6 +2094,12 @@ func RenderObjectScion_repaintUsingContainer(
     convertLayoutRect(r), shouldClipToLayer)
 }
 
+@_cdecl("RenderObjectScion_repaint")
+func RenderObjectScion_repaint(_ objectRaw: UnsafeRawPointer, _ forceRepaint: Bool) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.repaint(forceRepaint: forceRepaint ? .Yes : .No)
+}
+
 @_cdecl("RenderObjectScion_repaintRectangle")
 func RenderObjectScion_repaintRectangle(
   _ objectRaw: UnsafeRawPointer, _ repaintRect: LayoutRectRaw, _ shouldClipToLayer: Bool

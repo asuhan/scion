@@ -1528,7 +1528,10 @@ void RenderObject::issueRepaint(std::optional<LayoutRect> partialRepaintRect, Cl
 
 void RenderObject::repaint(ForceRepaint forceRepaint) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->repaint(forceRepaint);
+        return;
+    }
     ASSERT(isDescendantOf(&view()) || is<RenderScrollbarPart>(this) || is<RenderReplica>(this));
 
     if (view().printing())
