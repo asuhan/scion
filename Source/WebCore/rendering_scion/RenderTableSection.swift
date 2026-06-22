@@ -1078,8 +1078,12 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    super.willBeRemovedFromTree()
+
+    // Preventively invalidate our cells as we may be re-inserted into
+    // a new table which would require us to rebuild our structure.
+    setNeedsCellRecalc()
   }
 
   override func layout() {
