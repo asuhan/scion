@@ -51,6 +51,11 @@ extern "C" WEBCORE_EXPORT void StyleColor_destroy(const void* p)
     delete static_cast<const WebCore::StyleColor*>(p);
 }
 
+extern "C" WEBCORE_EXPORT bool StyleColor_isCurrentColor(const void* p)
+{
+    return static_cast<const WebCore::StyleColor*>(p)->isCurrentColor();
+}
+
 namespace WebCore {
 
 StyleColor::StyleColor(StyleColor::ColorKind&& color)

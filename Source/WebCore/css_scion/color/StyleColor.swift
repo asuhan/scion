@@ -61,10 +61,7 @@ class StyleColorWrapper {
 
   deinit { if pOwner { wk_interop.StyleColor_destroy(p) } }
 
-  func isCurrentColor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isCurrentColor() -> Bool { return wk_interop.StyleColor_isCurrentColor(p) }
 
   static func == (a: StyleColorWrapper, b: StyleColorWrapper) -> Bool {
     // TODO(asuhan): implement this

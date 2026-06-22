@@ -1883,6 +1883,7 @@ struct ChangedContextSensitiveProperties RenderStyle_changeRequiresLayout(const 
 void RenderCounter_rendererStyleChanged(void*, const void*, const void*);
 const void* StyleColor_create();
 void StyleColor_destroy(const void*);
+bool StyleColor_isCurrentColor(const void*);
 const void* TextResourceDecoder_encoding(const void*);
 uint16_t TextEncoding_backslashAsCurrencySymbol(const void*);
 void* InlineDisplayBoxScion_create(void*);
