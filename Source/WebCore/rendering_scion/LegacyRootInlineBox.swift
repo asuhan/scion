@@ -28,15 +28,9 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
-  func nextRootBox() -> LegacyRootInlineBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func nextRootBox() -> LegacyRootInlineBox? { return m_nextLineBox as! LegacyRootInlineBox? }
 
-  func prevRootBox() -> LegacyRootInlineBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func prevRootBox() -> LegacyRootInlineBox? { return m_prevLineBox as! LegacyRootInlineBox? }
 
   override func adjustPosition(_ dx: Float32, _ dy: Float32) {
     super.adjustPosition(dx, dy)

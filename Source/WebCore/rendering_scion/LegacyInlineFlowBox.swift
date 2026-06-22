@@ -140,6 +140,6 @@ class LegacyInlineFlowBox: LegacyInlineBox {
 
   private let overflow: RenderOverflow? = nil
 
-  private let m_prevLineBox: LegacyInlineFlowBox? = nil  // The previous box that also uses our RenderObject
-  private let m_nextLineBox: LegacyInlineFlowBox? = nil  // The next box that also uses our RenderObject
+  let m_prevLineBox: LegacyInlineFlowBox? = nil  // The previous box that also uses our RenderObject
+  let m_nextLineBox: LegacyInlineFlowBox? = nil  // The next box that also uses our RenderObject
 }
