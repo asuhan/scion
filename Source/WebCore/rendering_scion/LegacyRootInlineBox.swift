@@ -77,8 +77,10 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
   func setLineTopBottomPositions(
     top: LayoutUnit, bottom: LayoutUnit, lineBoxTop: LayoutUnit, lineBoxBottom: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.lineTop = top
+    self.lineBottom = bottom
+    self.lineBoxTop = lineBoxTop
+    self.lineBoxBottom = lineBoxBottom
   }
 
   override final func selectionState() -> RenderObjectWrapper.HighlightState {
