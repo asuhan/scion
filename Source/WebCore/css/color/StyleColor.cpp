@@ -41,7 +41,7 @@
 #include "StyleRelativeColor.h"
 #include <wtf/text/TextStream.h>
 
-extern "C" WEBCORE_EXPORT void* StyleColor_create()
+extern "C" WEBCORE_EXPORT const void* StyleColor_create()
 {
     return new WebCore::StyleColor();
 }

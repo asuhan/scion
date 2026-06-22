@@ -43,7 +43,15 @@ struct StyleColorOptions: OptionSet {
 class StyleColorWrapper {
   // The default constructor initializes to StyleCurrentColor to preserve old behavior,
   // we might want to change it to invalid color at some point.
-  init() { p = wk_interop.StyleColor_create()! }
+  init() {
+    p = wk_interop.StyleColor_create()!
+    pOwner = true
+  }
+
+  init(_ p: UnsafeRawPointer) {
+    self.p = p
+    pOwner = false
+  }
 
   // Convenience constructors that create StyleAbsoluteColor.
   init(_ color: ColorWrapper) {
@@ -51,7 +59,7 @@ class StyleColorWrapper {
     fatalError("Not implemented")
   }
 
-  deinit { wk_interop.StyleColor_destroy(p) }
+  deinit { if pOwner { wk_interop.StyleColor_destroy(p) } }
 
   func isCurrentColor() -> Bool {
     // TODO(asuhan): implement this
@@ -63,5 +71,6 @@ class StyleColorWrapper {
     fatalError("Not implemented")
   }
 
-  private let p: UnsafeMutableRawPointer
+  private let p: UnsafeRawPointer
+  private let pOwner: Bool
 }

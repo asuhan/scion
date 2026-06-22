@@ -683,6 +683,11 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_willChange(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->willChange();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_backgroundColor(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->backgroundColor();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_hyphenString(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->hyphenString();
