@@ -25,8 +25,9 @@ final class RenderTableCaptionWrapper: RenderBlockFlowWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    super.willBeRemovedFromTree()
+    table().removeCaption(self)
   }
 
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {

@@ -807,6 +807,14 @@ class RenderTableWrapper: RenderBlockWrapper {
     captions.append(caption)
   }
 
+  func removeCaption(_ oldCaption: RenderTableCaptionWrapper) {
+    assert(isNativeImpl())
+    captions.remove(
+      at: captions.firstIndex(where: { element in
+        return CPtrToInt(element?.id()) == CPtrToInt(oldCaption.id())
+      })!)
+  }
+
   func addColumn() {
     assert(isNativeImpl())
     invalidateCachedColumns()
