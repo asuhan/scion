@@ -751,6 +751,20 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func removeLayers() {
+    assert(isNativeImpl())
+    guard let parentLayer = layerParent() else { return }
+
+    if hasLayer() {
+      parentLayer.removeChild(oldChild: (self as! RenderLayerModelObjectWrapper).checkedLayer()!)
+      return
+    }
+
+    for child: RenderElementWrapper in childrenOfType(parent: self) {
+      child.removeLayers()
+    }
+  }
+
   func moveLayers(_ newParent: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2284,8 +2298,20 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // If we remove a visible child from an invisible parent, we don't know the layer visibility any more.
+    if parent()!.style().usedVisibility() != .Visible && style().usedVisibility() == .Visible
+      && !hasLayer()
+    {
+      // FIXME: should get parent layer. Necessary?
+      parent()!.enclosingLayer()?.dirtyVisibleContentStatus()
+    }
+    // Keep our layer hierarchy updated.
+    if firstChild() != nil || hasLayer() {
+      removeLayers()
+    }
+
+    super.willBeRemovedFromTree()
   }
 
   override func willBeDestroyed() {
