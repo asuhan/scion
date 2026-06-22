@@ -364,6 +364,8 @@ extern "C" bool RenderObjectScion_isRenderCombineText(const void*);
 
 extern "C" void RenderObjectScion_insertedIntoTree(const void*);
 
+extern "C" void RenderObjectScion_willBeRemovedFromTree(void*);
+
 extern "C" void RenderObjectScion_initializeFragmentedFlowStateOnInsertion(void*);
 
 extern "C" bool RenderObjectScion_isSkippedContent(const void*);
@@ -1248,6 +1250,8 @@ bool RenderObjectScion::isFlexibleBoxIncludingDeprecated() const { return Render
 bool RenderObjectScion::isRenderCombineText() const { return RenderObjectScion_isRenderCombineText(m_handle); }
 
 void RenderObjectScion::insertedIntoTree() { RenderObjectScion_insertedIntoTree(m_handle); }
+
+void RenderObjectScion::willBeRemovedFromTree() { RenderObjectScion_willBeRemovedFromTree(m_handle); }
 
 void RenderObjectScion::initializeFragmentedFlowStateOnInsertion() { RenderObjectScion_initializeFragmentedFlowStateOnInsertion(m_handle); }
 

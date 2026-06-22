@@ -2382,7 +2382,10 @@ void RenderObject::insertedIntoTree()
 
 void RenderObject::willBeRemovedFromTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willBeRemovedFromTree();
+        return;
+    }
     // FIXME: We should ASSERT(isRooted()) but we have some out-of-order removals which would need to be fixed first.
     // Update cached boundaries in SVG renderers, if a child is removed.
     checkedParent()->invalidateCachedBoundaries();

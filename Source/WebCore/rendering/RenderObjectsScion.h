@@ -351,6 +351,8 @@ public:
 
     void insertedIntoTree();
 
+    void willBeRemovedFromTree();
+
     void initializeFragmentedFlowStateOnInsertion();
 
     bool isSkippedContent() const;

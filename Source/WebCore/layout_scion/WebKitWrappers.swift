@@ -2187,6 +2187,12 @@ func RenderObjectScion_insertedIntoTree(_ objectRaw: UnsafeRawPointer) {
   object.insertedIntoTree()
 }
 
+@_cdecl("RenderObjectScion_willBeRemovedFromTree")
+func RenderObjectScion_willBeRemovedFromTree(_ objectRaw: UnsafeRawPointer) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.willBeRemovedFromTree()
+}
+
 @_cdecl("RenderObjectScion_initializeFragmentedFlowStateOnInsertion")
 func RenderObjectScion_initializeFragmentedFlowStateOnInsertion(
   _ objectRaw: UnsafeMutableRawPointer
@@ -2308,8 +2314,7 @@ func RenderTextScion_inlineWrapperForDisplayContents(_ renderTextRaw: UnsafeMuta
 }
 
 @_cdecl("RenderTextScion_resetMinMaxWidth")
-func RenderTextScion_resetMinMaxWidth(_ renderTextRaw: UnsafeMutableRawPointer)
-{
+func RenderTextScion_resetMinMaxWidth(_ renderTextRaw: UnsafeMutableRawPointer) {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
   renderText.resetMinMaxWidth()
 }
