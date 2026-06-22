@@ -2296,6 +2296,15 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  // applyTransform calls applyTransformOrigin(), then applyCSSTransform(), followed by unapplyTransformOrigin().
+  func applyTransform(
+    _ transform: inout TransformationMatrix, _ transformData: TransformOperationData,
+    _ options: TransformOperationOption
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasPositionedMask() -> Bool { return wk_interop.RenderStyle_hasPositionedMask(p!) }
 
   func hasMask() -> Bool { return wk_interop.RenderStyle_hasMask(p!) }

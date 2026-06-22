@@ -145,6 +145,7 @@ target_sources(layout_scion PRIVATE
     TextDecorationPainter.swift
     TextPainter.swift
     TextPaintStyle.swift
+    TransformOperationData.swift
 )
 add_subdirectory(algorithms)
 add_subdirectory(line)

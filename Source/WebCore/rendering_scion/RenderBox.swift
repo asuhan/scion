@@ -1406,6 +1406,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return childVisualOverflowRect
   }
 
+  override func applyTransform(
+    transform: inout TransformationMatrix, style: RenderStyleWrapper, boundingBox: FloatRectWrapper,
+    options: RenderStyleWrapper.TransformOperationOption
+  ) {
+    assert(isNativeImpl())
+    style.applyTransform(&transform, TransformOperationData(boundingBox, self), options)
+  }
+
   func contentSize() -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: contentWidth(), height: contentHeight())
   }
