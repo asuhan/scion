@@ -114,8 +114,9 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    view().setHasQuotesNeedingUpdate(true)
+    super.willBeRemovedFromTree()
   }
 
   private func computeText() -> StringWrapper {
