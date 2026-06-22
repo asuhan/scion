@@ -954,6 +954,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return false
   }
 
+  override func applyTransform(
+    transform: inout TransformationMatrix, style: RenderStyleWrapper, boundingBox: FloatRectWrapper,
+    options: RenderStyleWrapper.TransformOperationOption
+  ) { fatalError("Not reached") }
+
   override func willBeDestroyed() {
     assert(isNativeImpl())
     if !renderTreeBeingDestroyed() {
