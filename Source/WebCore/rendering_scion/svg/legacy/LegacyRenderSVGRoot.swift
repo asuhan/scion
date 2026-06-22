@@ -296,8 +296,9 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    SVGResourcesCache.clientWillBeRemovedFromTree(renderer: self)
+    super.willBeRemovedFromTree()
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
