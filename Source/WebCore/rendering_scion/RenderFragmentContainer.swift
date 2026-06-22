@@ -78,6 +78,12 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     (fragmentedFlow! as! RenderMultiColumnFlowWrapper).addFragmentToThread(self)
   }
 
+  private func detachFragment() {
+    assert(isNativeImpl())
+    fragmentedFlow?.removeFragmentFromThread(self)
+    fragmentedFlow = nil
+  }
+
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -469,13 +475,15 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    super.willBeRemovedFromTree()
+
+    detachFragment()
   }
 
   func installFragmentedFlow() { fatalError("Not reached") }
 
-  let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
+  var fragmentedFlow: RenderFragmentedFlowWrapper? = nil
 
   private var m_fragmentedFlowPortionRect = LayoutRectWrapper()
 

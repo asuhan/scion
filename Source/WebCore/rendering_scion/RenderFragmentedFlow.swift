@@ -49,6 +49,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func removeFragmentFromThread(_ renderFragmentContainer: RenderFragmentContainerWrapper) {
+    assert(isNativeImpl())
+    fragmentList.remove(value: renderFragmentContainer)
+  }
+
   func renderFragmentContainerList() -> RenderFragmentContainerList {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
