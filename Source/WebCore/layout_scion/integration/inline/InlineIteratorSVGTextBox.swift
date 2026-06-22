@@ -25,6 +25,8 @@
 
 extension InlineIterator {
   class SVGTextBox: TextBox {
+    override init(_ path: PathVariant) { super.init(path) }
+
     init() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -62,6 +64,15 @@ extension InlineIterator {
       func hash(into hasher: inout Hasher) {
         hasher.combine(UInt(bitPattern: ObjectIdentifier(chunk)))
         hasher.combine(start)
+      }
+    }
+
+    override func deepCopy() -> SVGTextBox {
+      switch m_pathVariant {
+      case .modern(let path):
+        return SVGTextBox(.modern(path.deepCopy() as! BoxModernPath))
+      case .legacy(let path):
+        return SVGTextBox(.legacy(path.deepCopy() as! BoxLegacyPath))
       }
     }
   }
