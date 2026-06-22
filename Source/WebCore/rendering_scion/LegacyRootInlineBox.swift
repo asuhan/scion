@@ -65,8 +65,13 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
   }
 
   func selectionBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let selectionBottom = lineBottom
+
+    if !renderer().style().isFlippedLinesWritingMode() || nextRootBox() == nil {
+      return selectionBottom
+    }
+
+    return nextRootBox()!.selectionTop()
   }
 
   func setLineTopBottomPositions(
