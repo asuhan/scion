@@ -1077,6 +1077,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     case DoNotIncludeAllIntersectingCells
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())

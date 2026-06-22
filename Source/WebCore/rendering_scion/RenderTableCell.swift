@@ -896,6 +896,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     return returnValue
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateLogicalWidth() {}
 
   override func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

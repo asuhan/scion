@@ -113,6 +113,11 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
     view().setHasQuotesNeedingUpdate(true)
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeText() -> StringWrapper {
     if m_depth < 0 {
       return emptyString()

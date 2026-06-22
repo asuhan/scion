@@ -295,6 +295,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     SVGResourcesCache.clientWasAddedToTree(renderer: self)
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     if diff == .Layout {
       invalidateCachedBoundaries()

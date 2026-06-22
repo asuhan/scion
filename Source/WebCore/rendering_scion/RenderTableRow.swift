@@ -177,6 +177,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     return true
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())

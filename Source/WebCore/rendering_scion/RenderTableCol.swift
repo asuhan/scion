@@ -133,6 +133,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     table()!.addColumn()
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
     -> Bool
   {

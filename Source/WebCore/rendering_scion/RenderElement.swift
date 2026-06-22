@@ -2283,6 +2283,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     super.insertedIntoTree()
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func willBeDestroyed() {
     // TODO(asuhan): support change observer
     assert(isNativeImpl())

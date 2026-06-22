@@ -468,6 +468,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     if isValid { super.insertedIntoTree() }
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func installFragmentedFlow() { fatalError("Not reached") }
 
   let fragmentedFlow: RenderFragmentedFlowWrapper? = nil

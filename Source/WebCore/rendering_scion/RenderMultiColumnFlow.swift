@@ -244,6 +244,11 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fragmentContainer.isValid = true
   }
 
+  override func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
