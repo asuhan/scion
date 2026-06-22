@@ -3148,8 +3148,8 @@ class RenderStyleWrapper: Equatable {
   func colorResolvingCurrentColor(color: StyleColorWrapper, visitedLink: Bool = false)
     -> ColorWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let c = wk_interop.RenderStyle_colorResolvingCurrentColor(p!, color.interop(), visitedLink)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   static func initialObjectPosition() -> LengthPoint {

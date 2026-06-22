@@ -68,6 +68,8 @@ class StyleColorWrapper {
     fatalError("Not implemented")
   }
 
+  func interop() -> UnsafeRawPointer { return p }
+
   private let p: UnsafeRawPointer
   private let pOwner: Bool
 }

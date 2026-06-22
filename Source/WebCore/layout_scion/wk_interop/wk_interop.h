@@ -1067,6 +1067,7 @@ bool RenderStyle_isDisplayBlockLevel(const void*);
 bool RenderStyle_isOriginalDisplayBlockType(const void*);
 bool RenderStyle_isDisplayTableOrTablePart(const void*);
 bool RenderStyle_isOriginalDisplayListItemType(const void*);
+struct SRGBARaw RenderStyle_colorResolvingCurrentColor(const void*, const void*, bool);
 struct SRGBARaw RenderStyle_visitedDependentColorWithColorFilter(const void*, uint16_t, uint32_t);
 struct SRGBARaw RenderStyle_colorByApplyingColorFilter(const void* p, struct SRGBARaw);
 float RenderStyle_letterSpacing(const void*);

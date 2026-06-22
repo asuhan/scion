@@ -735,6 +735,14 @@ struct SRGBARaw {
     uint8_t alpha;
 };
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_colorResolvingCurrentColor(const void* p, const void* colorRaw, bool visitedLink)
+{
+    const auto& color = *static_cast<const WebCore::StyleColor*>(colorRaw);
+    const auto currentColor = static_cast<const WebCore::RenderStyle*>(p)->colorResolvingCurrentColor(color, visitedLink);
+    const auto [r, g, b, a] = currentColor.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_visitedDependentColorWithColorFilter(const void* p, uint16_t colorPropertyRaw, uint32_t paintBehaviorRaw)
 {
     const auto colorProperty = static_cast<WebCore::CSSPropertyID>(colorPropertyRaw);
