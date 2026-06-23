@@ -590,6 +590,8 @@ public:
 
     LayoutRect visualOverflowRect() const;
 
+    void applyTransform(TransformationMatrix&, const RenderStyle&, const FloatRect&, OptionSet<RenderStyle::TransformOperationOption>) const;
+
     LayoutRect paddingBoxRectIncludingScrollbar() const;
 
     LayoutUnit clientWidth() const;

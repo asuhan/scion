@@ -2819,6 +2819,20 @@ func RenderBoxScion_visualOverflowRect(_ boxRaw: UnsafeRawPointer) -> LayoutRect
   return convertLayoutRect(box.visualOverflowRect())
 }
 
+@_cdecl("RenderBoxScion_applyTransform")
+func RenderBoxScion_applyTransform(
+  _ boxRaw: UnsafeRawPointer, _ t: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,
+  _ boundingBoxRaw: FloatRectRaw, _ optionsRaw: UInt8
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  var transform = TransformationMatrix(t, false)
+  let style = convert_render_style(p: styleRaw)
+  let boundingBox = toFloatRect(boundingBoxRaw)
+  let options = RenderStyleWrapper.TransformOperationOption(rawValue: optionsRaw)
+  box.applyTransform(
+    transform: &transform, style: style, boundingBox: boundingBox, options: options)
+}
+
 @_cdecl("RenderBoxScion_paddingBoxRectIncludingScrollbar")
 func RenderBoxScion_paddingBoxRectIncludingScrollbar(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

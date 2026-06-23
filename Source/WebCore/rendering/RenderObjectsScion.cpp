@@ -547,6 +547,8 @@ extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
+extern "C" void RenderBoxScion_applyTransform(const void*, void*, const void*, FloatRectRaw, uint8_t);
+
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
 
 extern "C" int32_t RenderBoxScion_clientWidth(const void*);
@@ -831,6 +833,11 @@ namespace {
 WebCore::FloatRect toFloatRect(const FloatRectRaw& r)
 {
     return { r.x, r.y, r.width, r.height };
+}
+
+FloatRectRaw toFloatRectRaw(const WebCore::FloatRect& r)
+{
+    return { r.x(), r.y(), r.width(), r.height() };
 }
 
 } // namespace
@@ -1687,6 +1694,11 @@ LayoutRect RenderBoxScion::layoutOverflowRect() const
 LayoutRect RenderBoxScion::visualOverflowRect() const
 {
     return convertLayoutRectRaw(RenderBoxScion_visualOverflowRect(m_handle));
+}
+
+void RenderBoxScion::applyTransform(TransformationMatrix& t, const RenderStyle& style, const FloatRect& boundingBox, OptionSet<RenderStyle::TransformOperationOption> options) const
+{
+    RenderBoxScion_applyTransform(m_handle, &t, &style, toFloatRectRaw(boundingBox), options.toRaw());
 }
 
 LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const

@@ -991,7 +991,10 @@ void RenderBox::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 
 void RenderBox::applyTransform(TransformationMatrix& t, const RenderStyle& style, const FloatRect& boundingBox, OptionSet<RenderStyle::TransformOperationOption> options) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->applyTransform(t, style, boundingBox, options);
+        return;
+    }
     style.applyTransform(t, TransformOperationData(boundingBox, this), options);
 }
 
