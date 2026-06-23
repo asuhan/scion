@@ -301,6 +301,8 @@ public:
 
     void setNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
 
+    void clearNeedsLayout(RenderObject::HadSkippedLayout = RenderObject::HadSkippedLayout::No);
+
     void setPreferredLogicalWidthsDirty(bool, MarkingBehavior = MarkContainingBlockChain);
 
     void setNeedsLayoutAndPrefWidthsRecalc();

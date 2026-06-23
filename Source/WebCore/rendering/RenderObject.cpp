@@ -970,7 +970,10 @@ static inline bool objectIsRelayoutBoundary(const RenderElement* object)
 
 void RenderObject::clearNeedsLayout(HadSkippedLayout hadSkippedLayout)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearNeedsLayout(hadSkippedLayout);
+        return;
+    }
     // FIXME: Consider not setting the "ever had layout" bit to true when "hadSkippedLayout"
     setEverHadLayout();
     setHadSkippedLayout(hadSkippedLayout == HadSkippedLayout::Yes);

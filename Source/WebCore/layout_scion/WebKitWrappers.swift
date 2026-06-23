@@ -1911,6 +1911,14 @@ func RenderObjectScion_setNeedsLayout(_ objectRaw: UnsafeMutableRawPointer, _ ma
   object.setNeedsLayout(markParents: markParents ? .MarkContainingBlockChain : .MarkOnlyThis)
 }
 
+@_cdecl("RenderObjectScion_clearNeedsLayout")
+func RenderObjectScion_clearNeedsLayout(
+  _ objectRaw: UnsafeMutableRawPointer, _ hadSkippedLayout: Bool
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.clearNeedsLayout(hadSkippedLayout: hadSkippedLayout ? .Yes : .No)
+}
+
 @_cdecl("RenderObjectScion_setPreferredLogicalWidthsDirty")
 func RenderObjectScion_setPreferredLogicalWidthsDirty(
   _ objectRaw: UnsafeMutableRawPointer, _ shouldBeDirty: Bool, _ markParents: Bool

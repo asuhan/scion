@@ -276,6 +276,8 @@ extern "C" void* RenderObjectScion_container(const void*);
 
 extern "C" void RenderObjectScion_setNeedsLayout(void*, bool);
 
+extern "C" void RenderObjectScion_clearNeedsLayout(void*, bool);
+
 extern "C" void RenderObjectScion_setPreferredLogicalWidthsDirty(void*, bool, bool);
 
 extern "C" void RenderObjectScion_setNeedsLayoutAndPrefWidthsRecalc(void*);
@@ -1080,6 +1082,10 @@ Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(st
 RenderElement* RenderObjectScion::container() const { return static_cast<RenderElement*>(RenderObjectScion_container(m_handle)); }
 
 void RenderObjectScion::setNeedsLayout(MarkingBehavior markParents) { RenderObjectScion_setNeedsLayout(m_handle, markParents == MarkContainingBlockChain); }
+
+void RenderObjectScion::clearNeedsLayout(RenderObject::HadSkippedLayout hadSkippedLayout) {
+    RenderObjectScion_clearNeedsLayout(m_handle, hadSkippedLayout == RenderObject::HadSkippedLayout::Yes);
+}
 
 void RenderObjectScion::setPreferredLogicalWidthsDirty(bool shouldBeDirty, MarkingBehavior markParents) { RenderObjectScion_setPreferredLogicalWidthsDirty(m_handle, shouldBeDirty, markParents == MarkContainingBlockChain); }
 
