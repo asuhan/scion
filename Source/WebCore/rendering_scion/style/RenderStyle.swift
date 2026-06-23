@@ -2301,8 +2301,13 @@ class RenderStyleWrapper: Equatable {
     _ transform: inout TransformationMatrix, _ transformData: TransformOperationData,
     _ options: TransformOperationOption
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(transformData.motionPathData == nil)
+    RenderStyle_applyTransform(
+      p!, transform.interop(),
+      TransformOperationDataRaw(
+        boundingBox: toFloatRectRaw(transformData.boundingBox),
+        isSVGRenderer: transformData.isSVGRenderer),
+      options.rawValue)
   }
 
   func hasPositionedMask() -> Bool { return wk_interop.RenderStyle_hasPositionedMask(p!) }

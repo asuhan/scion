@@ -382,6 +382,11 @@ struct AffineTransformRaw {
     double f;
 };
 
+struct TransformOperationDataRaw {
+    struct FloatRectRaw boundingBox;
+    bool isSVGRenderer;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1117,6 +1122,7 @@ uint8_t RenderStyle_textWrapStyle(const void*);
 uint8_t RenderStyle_backgroundClip(const void*);
 uint8_t RenderStyle_backgroundSizeType(const void*);
 bool RenderStyle_hasTransformRelatedProperty(const void*);
+void RenderStyle_applyTransform(const void*, void*, struct TransformOperationDataRaw, uint8_t);
 bool RenderStyle_hasPositionedMask(const void*);
 bool RenderStyle_hasMask(const void*);
 uint8_t RenderStyle_backfaceVisibility(const void*);

@@ -1182,6 +1182,34 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransformRelatedProperty(const voi
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransformRelatedProperty();
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+struct TransformOperationDataRaw {
+    FloatRectRaw boundingBox;
+    bool isSVGRenderer;
+};
+
+extern "C" WEBCORE_EXPORT void RenderStyle_applyTransform(const void* p, void* transformRaw, TransformOperationDataRaw transformDataRaw, uint8_t optionsRaw)
+{
+    auto& transform = *static_cast<WebCore::TransformationMatrix*>(transformRaw);
+    // TODO(asuhan): handle motionPathData in transform operation data
+    WebCore::TransformOperationData transformData(
+        {
+            transformDataRaw.boundingBox.x,
+            transformDataRaw.boundingBox.y,
+            transformDataRaw.boundingBox.width,
+            transformDataRaw.boundingBox.height
+        },
+        std::nullopt,
+        transformDataRaw.isSVGRenderer);
+    return static_cast<const WebCore::RenderStyle*>(p)->applyTransform(transform, transformData, OptionSet<WebCore::RenderStyle::TransformOperationOption>::fromRaw(optionsRaw));
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasPositionedMask(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasPositionedMask();

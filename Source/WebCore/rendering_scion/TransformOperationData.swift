@@ -36,7 +36,7 @@ struct TransformOperationData {
     }
   }
 
-  private let boundingBox: FloatRectWrapper
-  private let motionPathData: MotionPathData?
-  private let isSVGRenderer: Bool
+  let boundingBox: FloatRectWrapper
+  let motionPathData: MotionPathData?
+  let isSVGRenderer: Bool
 }
