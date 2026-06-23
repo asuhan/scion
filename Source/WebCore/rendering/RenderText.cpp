@@ -349,7 +349,7 @@ ASCIILiteral RenderText::renderName() const
 
 Text* RenderText::textNode() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->textNode(); }
     return downcast<Text>(RenderObject::node());
 }
 

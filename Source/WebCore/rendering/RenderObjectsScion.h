@@ -501,6 +501,8 @@ public:
     {
     }
 
+    Text* textNode() const;
+
     const RenderStyle& style() const;
 
     const String& text() const;
