@@ -487,6 +487,22 @@ void RenderText::willBeDestroyed()
     RenderObject::willBeDestroyed();
 }
 
+const RenderStyle* RenderText::spellingErrorPseudoStyle() const
+{
+    if (m_scion) { return m_scion->spellingErrorPseudoStyle(); }
+    if (auto* ancestor = firstNonAnonymousAncestor())
+        return ancestor->spellingErrorPseudoStyle();
+    return nullptr;
+}
+
+const RenderStyle* RenderText::grammarErrorPseudoStyle() const
+{
+    if (m_scion) { return m_scion->grammarErrorPseudoStyle(); }
+    if (auto* ancestor = firstNonAnonymousAncestor())
+        return ancestor->grammarErrorPseudoStyle();
+    return nullptr;
+}
+
 String RenderText::originalText() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

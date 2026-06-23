@@ -2287,6 +2287,20 @@ func RenderTextScion_style(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointe
   return renderText.textStyle().p!
 }
 
+@_cdecl("RenderTextScion_spellingErrorPseudoStyle")
+func RenderTextScion_spellingErrorPseudoStyle(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer?
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.spellingErrorPseudoStyle()?.p
+}
+
+@_cdecl("RenderTextScion_grammarErrorPseudoStyle")
+func RenderTextScion_grammarErrorPseudoStyle(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer?
+{
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.grammarErrorPseudoStyle()?.p
+}
+
 @_cdecl("RenderTextScion_text")
 func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

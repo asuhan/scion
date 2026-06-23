@@ -404,22 +404,6 @@ inline std::unique_ptr<RenderStyle> RenderText::selectionPseudoStyle() const
     return nullptr;
 }
 
-inline const RenderStyle* RenderText::spellingErrorPseudoStyle() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (auto* ancestor = firstNonAnonymousAncestor())
-        return ancestor->spellingErrorPseudoStyle();
-    return nullptr;
-}
-
-inline const RenderStyle* RenderText::grammarErrorPseudoStyle() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (auto* ancestor = firstNonAnonymousAncestor())
-        return ancestor->grammarErrorPseudoStyle();
-    return nullptr;
-}
-
 inline const RenderStyle* RenderText::targetTextPseudoStyle() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

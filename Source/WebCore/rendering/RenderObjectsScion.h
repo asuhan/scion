@@ -505,6 +505,10 @@ public:
 
     const RenderStyle& style() const;
 
+    const RenderStyle* spellingErrorPseudoStyle() const;
+
+    const RenderStyle* grammarErrorPseudoStyle() const;
+
     const String& text() const;
 
     IntRect linesBoundingBox() const;

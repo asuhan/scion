@@ -394,6 +394,10 @@ extern "C" void* RenderTextScion_textNode(const void*);
 
 extern "C" const void* RenderTextScion_style(const void*);
 
+extern "C" const void* RenderTextScion_spellingErrorPseudoStyle(const void*);
+
+extern "C" const void* RenderTextScion_grammarErrorPseudoStyle(const void*);
+
 extern "C" const void* RenderTextScion_text(const void*);
 
 extern "C" IntRectRaw RenderTextScion_linesBoundingBox(const void*);
@@ -1085,7 +1089,8 @@ RenderElement* RenderObjectScion::container() const { return static_cast<RenderE
 
 void RenderObjectScion::setNeedsLayout(MarkingBehavior markParents) { RenderObjectScion_setNeedsLayout(m_handle, markParents == MarkContainingBlockChain); }
 
-void RenderObjectScion::clearNeedsLayout(RenderObject::HadSkippedLayout hadSkippedLayout) {
+void RenderObjectScion::clearNeedsLayout(RenderObject::HadSkippedLayout hadSkippedLayout)
+{
     RenderObjectScion_clearNeedsLayout(m_handle, hadSkippedLayout == RenderObject::HadSkippedLayout::Yes);
 }
 
@@ -1570,6 +1575,16 @@ Text* RenderTextScion::textNode() const
 const RenderStyle& RenderTextScion::style() const
 {
     return *static_cast<const RenderStyle*>(RenderTextScion_style(m_handle));
+}
+
+const RenderStyle* RenderTextScion::spellingErrorPseudoStyle() const
+{
+    return static_cast<const RenderStyle*>(RenderTextScion_spellingErrorPseudoStyle(m_handle));
+}
+
+const RenderStyle* RenderTextScion::grammarErrorPseudoStyle() const
+{
+    return static_cast<const RenderStyle*>(RenderTextScion_grammarErrorPseudoStyle(m_handle));
 }
 
 const String& RenderTextScion::text() const
