@@ -359,6 +359,12 @@ const RenderStyle& RenderText::style() const
     return parent()->style();
 }
 
+const RenderStyle& RenderText::firstLineStyle() const
+{
+    if (m_scion) { return m_scion->firstLineStyle(); }
+    return parent()->firstLineStyle();
+}
+
 bool RenderText::computeUseBackslashAsYenSymbol() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

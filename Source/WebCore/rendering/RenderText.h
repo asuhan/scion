@@ -357,12 +357,6 @@ inline UChar RenderText::characterAt(unsigned i) const
     return i >= length() ? 0 : text()[i];
 }
 
-inline const RenderStyle& RenderText::firstLineStyle() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return parent()->firstLineStyle();
-}
-
 inline const RenderStyle* RenderText::getCachedPseudoStyle(const Style::PseudoElementIdentifier& pseudoElementIdentifier, const RenderStyle* parentStyle) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

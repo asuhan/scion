@@ -505,6 +505,8 @@ public:
 
     const RenderStyle& style() const;
 
+    const RenderStyle& firstLineStyle() const;
+
     const RenderStyle* spellingErrorPseudoStyle() const;
 
     const RenderStyle* grammarErrorPseudoStyle() const;

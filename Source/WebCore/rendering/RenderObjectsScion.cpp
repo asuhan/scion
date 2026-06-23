@@ -394,6 +394,8 @@ extern "C" void* RenderTextScion_textNode(const void*);
 
 extern "C" const void* RenderTextScion_style(const void*);
 
+extern "C" const void* RenderTextScion_firstLineStyle(const void*);
+
 extern "C" const void* RenderTextScion_spellingErrorPseudoStyle(const void*);
 
 extern "C" const void* RenderTextScion_grammarErrorPseudoStyle(const void*);
@@ -1575,6 +1577,11 @@ Text* RenderTextScion::textNode() const
 const RenderStyle& RenderTextScion::style() const
 {
     return *static_cast<const RenderStyle*>(RenderTextScion_style(m_handle));
+}
+
+const RenderStyle& RenderTextScion::firstLineStyle() const
+{
+    return *static_cast<const RenderStyle*>(RenderTextScion_firstLineStyle(m_handle));
 }
 
 const RenderStyle* RenderTextScion::spellingErrorPseudoStyle() const
