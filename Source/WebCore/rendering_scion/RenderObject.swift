@@ -747,7 +747,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderBlock() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderBlock(id()) }
     return m_typeFlags.contains(.IsRenderBlock)
   }
 
