@@ -294,6 +294,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_isTransformed(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->isTransformed();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderLayer_currentTransform(const void* p)
+{
+    return new WebCore::TransformationMatrix(static_cast<const WebCore::RenderLayer*>(p)->currentTransform());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_participatesInPreserve3D(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->participatesInPreserve3D();

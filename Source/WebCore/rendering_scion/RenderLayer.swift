@@ -3078,8 +3078,7 @@ class RenderLayerWrapper {
   }
 
   func currentTransform() -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformationMatrix(wk_interop.RenderLayer_currentTransform(layerId()), true)
   }
 
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {

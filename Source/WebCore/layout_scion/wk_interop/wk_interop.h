@@ -1457,6 +1457,7 @@ int32_t RenderLayer_staticBlockPosition(const void*);
 void RenderLayer_setStaticInlinePosition(void* p, int32_t position);
 void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 bool RenderLayer_isTransformed(const void*);
+void* RenderLayer_currentTransform(const void*);
 bool RenderLayer_participatesInPreserve3D(const void*);
 bool RenderLayer_isBackdropRoot(const void*);
 bool RenderLayer_isolatesBlending(const void*);
