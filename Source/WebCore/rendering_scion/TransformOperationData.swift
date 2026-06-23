@@ -25,7 +25,18 @@
 
 struct TransformOperationData {
   init(_ boundingBox: FloatRectWrapper, _ renderer: RenderElementWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.boundingBox = boundingBox
+    if renderer != nil {
+      motionPathData = MotionPath.motionPathDataForRenderer(renderer!)
+      isSVGRenderer =
+        renderer is RenderSVGModelObjectWrapper || renderer is LegacyRenderSVGModelObject
+    } else {
+      motionPathData = nil
+      isSVGRenderer = false
+    }
   }
+
+  private let boundingBox: FloatRectWrapper
+  private let motionPathData: MotionPathData?
+  private let isSVGRenderer: Bool
 }

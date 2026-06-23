@@ -23,7 +23,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct MotionPathData {
+  let containingBlockBoundingRect: FloatRoundedRect
+  let offsetFromContainingBlock: FloatPoint
+  let usedStartingPosition: FloatPoint
+}
+
 struct MotionPath {
+  static func motionPathDataForRenderer(_ renderer: RenderElementWrapper) -> MotionPathData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func needsUpdateAfterContainingBlockLayout(_ pathOperation: PathOperation) -> Bool {
     return pathOperation is RayPathOperation || pathOperation is BoxPathOperation
       || pathOperation is ShapePathOperation
