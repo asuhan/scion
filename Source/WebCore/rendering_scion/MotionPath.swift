@@ -31,6 +31,11 @@ struct MotionPathData {
 
 struct MotionPath {
   static func motionPathDataForRenderer(_ renderer: RenderElementWrapper) -> MotionPathData? {
+    let pathOperation = renderer.style().offsetPath()
+    if !(renderer is RenderLayerModelObjectWrapper) || pathOperation == nil {
+      return nil
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
