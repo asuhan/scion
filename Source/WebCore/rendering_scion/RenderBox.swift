@@ -1516,6 +1516,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: height() - borderWidths.top - borderWidths.bottom)
   }
 
+  override func offsetHeight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return height()
+  }
+
   // More IE extensions.  clientWidth and clientHeight represent the interior of an object
   // excluding border and scrollbar.
   private func clientLeft() -> LayoutUnit {

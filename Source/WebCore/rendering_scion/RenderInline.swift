@@ -582,6 +582,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func offsetHeight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return LayoutUnit(value: linesBoundingBox().height())
+  }
+
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {

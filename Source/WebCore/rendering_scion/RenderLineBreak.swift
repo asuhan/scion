@@ -124,6 +124,11 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit(value: 0)
   }
 
+  override func offsetHeight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return LayoutUnit(value: linesBoundingBox().height())
+  }
+
   override final func borderBoundingBox() -> LayoutRectWrapper {
     assert(isNativeImpl())
     return LayoutRectWrapper(

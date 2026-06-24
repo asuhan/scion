@@ -125,6 +125,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     return style().borderEnd(styleForFlow: table()!.style())
   }
 
+  override func offsetHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computePreferredLogicalWidths() { fatalError("Not reached") }
 
   override final func insertedIntoTree() {
