@@ -1900,9 +1900,7 @@ func RenderObjectScion_settings(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPoint
 @_cdecl("RenderObjectScion_container")
 func RenderObjectScion_container(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  guard let container = object.container() else { return nil }
-  assert(container.isNativeImpl())
-  return container.getWk()
+  return wkRenderObject(object.container())
 }
 
 @_cdecl("RenderObjectScion_setNeedsLayout")
