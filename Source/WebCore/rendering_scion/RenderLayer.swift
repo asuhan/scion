@@ -3025,7 +3025,10 @@ class RenderLayerWrapper {
   }
 
   func setIsSimplifiedLayoutRoot() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_setIsSimplifiedLayoutRoot(layerId())
+      return
+    }
     isSimplifiedLayoutRoot = true
   }
 

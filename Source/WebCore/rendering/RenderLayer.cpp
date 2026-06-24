@@ -267,6 +267,11 @@ extern "C" WEBCORE_EXPORT EnclosingCompositingLayerStatusRaw RenderLayer_enclosi
     return { status.fullRepaintAlreadyScheduled, status.layer };
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_setIsSimplifiedLayoutRoot(void* p)
+{
+    static_cast<WebCore::RenderLayer*>(p)->setIsSimplifiedLayoutRoot();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticInlinePosition(const void* p)
 {
     const auto position = static_cast<const WebCore::RenderLayer*>(p)->staticInlinePosition();
