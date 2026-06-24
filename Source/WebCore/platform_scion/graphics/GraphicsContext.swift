@@ -415,8 +415,9 @@ class GraphicsContextWrapper {
     font: FontCascadeWrapper, run: TextRunWrapper, mark: AtomStringWrapper, point: FloatPoint,
     from: UInt32 = 0, to: UInt32? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_drawEmphasisMarks(
+      p!, font.p!, run.p!, mark.p!, FloatPointRaw(x: point.x, y: point.y), from,
+      OptionalUIntRaw(value: to ?? 0, is_valid: to != nil))
   }
 
   func computeUnderlineBoundsForText(rect: FloatRectWrapper, printing: Bool) -> FloatRectWrapper {

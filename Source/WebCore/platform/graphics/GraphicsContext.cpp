@@ -301,6 +301,17 @@ extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsContext_drawText(void* p, const v
     return { size.width(), size.height() };
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawEmphasisMarks(void* p, const void* fontRaw, const void* runRaw, const void* markRaw, FloatPointRaw pointRaw, uint32_t from, OptionalUIntRaw toRaw)
+{
+    auto context = static_cast<WebCore::GraphicsContext*>(p);
+    const auto& font = *static_cast<const WebCore::FontCascade*>(fontRaw);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    const auto& mark = *static_cast<const AtomString*>(markRaw);
+    WebCore::FloatPoint point { pointRaw.x, pointRaw.y };
+    auto to = toRaw.is_valid ? std::make_optional(toRaw.value) : std::optional<uint32_t>();
+    context->drawEmphasisMarks(font, run, mark, point, from, to);
+}
+
 extern "C" WEBCORE_EXPORT FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void* p, FloatRectRaw rect_raw, bool printing)
 {
     const auto bounds = static_cast<WebCore::GraphicsContext*>(p)->computeUnderlineBoundsForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing);
