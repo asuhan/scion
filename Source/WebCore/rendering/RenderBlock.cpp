@@ -83,6 +83,16 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void RenderBlock_setHasMarginBeforeQuirk(void* p, bool b)
+{
+    return static_cast<WebCore::RenderBlock*>(p)->setHasMarginBeforeQuirk(b);
+}
+
+extern "C" WEBCORE_EXPORT void RenderBlock_setHasMarginAfterQuirk(void* p, bool b)
+{
+    return static_cast<WebCore::RenderBlock*>(p)->setHasMarginAfterQuirk(b);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBlock_hasMarginBeforeQuirk(const void* p)
 {
     return static_cast<const WebCore::RenderBlock*>(p)->hasMarginBeforeQuirk();
