@@ -163,6 +163,11 @@ extern "C" WEBCORE_EXPORT bool InlineDamage_hasDetachedContent(const void* p)
     return static_cast<const WebCore::Layout::InlineDamage*>(p)->hasDetachedContent();
 }
 
+extern "C" WEBCORE_EXPORT void InlineDamage_setInlineItemListDirty(void* p)
+{
+    static_cast<WebCore::Layout::InlineDamage*>(p)->setInlineItemListDirty();
+}
+
 extern "C" WEBCORE_EXPORT const void* CPtrArrElement(const void* const* arr, uint64_t idx)
 {
     return arr[idx];

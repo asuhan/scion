@@ -32,10 +32,14 @@ enum TabSizeValueType {
   case SpaceValueType
 }
 
-class TabSizeWrapper {
+class TabSizeWrapper: Equatable {
   init(numOrLength: Float32, isSpaces: TabSizeValueType) {
     self.value = numOrLength
     self.isSpaces = isSpaces
+  }
+
+  static func == (_ lhs: TabSizeWrapper, _ rhs: TabSizeWrapper) -> Bool {
+    return lhs.value == rhs.value && lhs.isSpaces == rhs.isSpaces
   }
 
   func bool() -> Bool {

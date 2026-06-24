@@ -79,8 +79,10 @@ private:
     void setLayoutStartPosition(LayoutPosition position) { m_layoutStartPosition = position; }
     void resetLayoutPosition();
     void setTrailingDisplayBoxes(TrailingDisplayBoxList&& trailingDisplayBoxes) { m_trailingDisplayBoxes = WTFMove(trailingDisplayBoxes); }
+public:
     void setInlineItemListDirty() { m_isInlineItemListDirty = true; }
 
+private:
     OptionSet<Reason> m_damageReasons;
     bool m_isInlineItemListDirty { false };
     std::optional<LayoutPosition> m_layoutStartPosition;

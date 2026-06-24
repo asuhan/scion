@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct TextBreakingPositionContext {
+struct TextBreakingPositionContext: Equatable {
   init(style: RenderStyleWrapper) {
     whitespace = style.whiteSpace()
     overflowWrap = style.overflowWrap()

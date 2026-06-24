@@ -1334,6 +1334,7 @@ struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);
 bool InlineDamage_isInlineItemListDirty(const void*);
 void InlineDamage_setInlineItemListClean(void*);
 bool InlineDamage_hasDetachedContent(const void*);
+void InlineDamage_setInlineItemListDirty(void*);
 const void* CPtrArrElement(const void* const*, uint64_t);
 int32_t I32ArrElement(const void*, uint64_t);
 struct BoxGeometryHorizontalEdgesRaw BoxGeometry_horizontalMargin(const void*);

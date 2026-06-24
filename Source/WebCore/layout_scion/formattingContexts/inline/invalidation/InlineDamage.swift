@@ -94,6 +94,8 @@ class InlineDamageWrapper {
     return wk_interop.InlineDamage_hasDetachedContent(p)
   }
 
+  func setInlineItemListDirty() { wk_interop.InlineDamage_setInlineItemListDirty(p) }
+
   var p: UnsafeMutableRawPointer
   private let pOwner: Bool
   var damageReasons = Reason(rawValue: 0)

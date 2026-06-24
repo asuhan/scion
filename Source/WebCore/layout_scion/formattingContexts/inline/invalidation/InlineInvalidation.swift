@@ -36,8 +36,57 @@ struct InlineInvalidation {
   func rootStyleWillChange(formattingContextRoot: ElementBoxWrapper, newStyle: RenderStyleWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(formattingContextRoot.establishesInlineFormattingContext())
+
+    if m_inlineDamage.isInlineItemListDirty() {
+      return true
+    }
+
+    let inlineItemListNeedsUpdate = { () in
+      let oldStyle = formattingContextRoot.style
+
+      if TextBreakingPositionContext(style: oldStyle)
+        != TextBreakingPositionContext(style: newStyle)
+      {
+        return true
+      }
+
+      if oldStyle.fontCascade() != newStyle.fontCascade() {
+        return true
+      }
+
+      let newFirstLineStyle = newStyle.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine))
+      let oldFirstLineStyle = oldStyle.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine))
+      if newFirstLineStyle != nil && oldFirstLineStyle != nil
+        && oldFirstLineStyle!.fontCascade() != newFirstLineStyle!.fontCascade()
+      {
+        return true
+      }
+
+      if (newFirstLineStyle != nil && newFirstLineStyle!.fontCascade() != oldStyle.fontCascade())
+        || (oldFirstLineStyle != nil && oldFirstLineStyle!.fontCascade() != newStyle.fontCascade())
+      {
+        return true
+      }
+
+      if oldStyle.direction() != newStyle.direction()
+        || oldStyle.unicodeBidi() != newStyle.unicodeBidi()
+        || oldStyle.tabSize() != newStyle.tabSize()
+        || oldStyle.textSecurity() != newStyle.textSecurity()
+      {
+        return true
+      }
+
+      return false
+    }
+
+    if inlineItemListNeedsUpdate() {
+      m_inlineDamage.setInlineItemListDirty()
+    }
+
+    return true
   }
 
   func styleWillChange(layoutBox: BoxWrapper, newStyle: RenderStyleWrapper, diff: StyleDifference)
