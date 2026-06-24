@@ -42,8 +42,7 @@ class FontCascadeWrapper: Equatable {
   }
 
   static func == (_ this: FontCascadeWrapper, _ other: FontCascadeWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FontCascade_eq(this.p!, other.p!)
   }
 
   func fontDescription() -> FontCascadeDescriptionWrapper {

@@ -92,6 +92,11 @@ extern "C" WEBCORE_EXPORT const void* FontCascade_fontDescription(const void* p)
     return &static_cast<const WebCore::FontCascade*>(p)->fontDescription();
 }
 
+extern "C" WEBCORE_EXPORT bool FontCascade_eq(const void* lhs, const void* rhs)
+{
+    return *static_cast<const WebCore::FontCascade*>(lhs) == *static_cast<const WebCore::FontCascade*>(rhs);
+}
+
 extern "C" WEBCORE_EXPORT float FontCascade_size(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->size();

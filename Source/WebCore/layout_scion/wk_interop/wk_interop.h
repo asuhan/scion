@@ -402,6 +402,7 @@ struct FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph);
 float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion);
 float Font_syntheticBoldOffset(const void*);
 const void* FontCascade_fontDescription(const void*);
+bool FontCascade_eq(const void*, const void*);
 float FontCascade_size(const void*);
 float FontCascade_letterSpacing(const void*);
 bool FontCascade_canTakeFixedPitchFastContentMeasuring(const void*);
