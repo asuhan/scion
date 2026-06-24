@@ -60,8 +60,7 @@ class AtomStringWrapper: Hashable, CustomStringConvertible {
   }
 
   static func == (lhs: AtomStringWrapper, rhs: AtomStringWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.AtomString_eq(lhs.p!, rhs.p!)
   }
 
   public var description: String {

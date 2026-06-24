@@ -864,6 +864,11 @@ extern "C" bool AtomString_isEmpty(const void* p)
     return static_cast<const AtomString*>(p)->isEmpty();
 }
 
+extern "C" bool AtomString_eq(const void* lhs, const void* rhs)
+{
+    return *static_cast<const AtomString*>(lhs) == *static_cast<const AtomString*>(rhs);
+}
+
 extern "C" uint32_t AtomString_length(const void* p)
 {
     return static_cast<const AtomString*>(p)->length();
