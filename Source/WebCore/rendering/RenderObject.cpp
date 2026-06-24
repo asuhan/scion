@@ -2319,6 +2319,12 @@ RenderElement* RenderObject::container(const RenderLayerModelObject* repaintCont
     return containerForElement(*this, repaintContainer, &repaintContainerSkipped);
 }
 
+bool RenderObject::isExcludedAndPlacedInBorder() const
+{
+    if (m_scion) { return m_scion->isExcludedAndPlacedInBorder(); }
+    return isExcludedFromNormalLayout() && isLegend();
+}
+
 bool RenderObject::hasLayer() const {
     if (m_scion) { return m_scion->hasLayer(); }
     return m_stateBitfields.hasFlag(StateFlag::HasLayer);

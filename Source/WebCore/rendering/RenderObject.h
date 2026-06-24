@@ -1012,11 +1012,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_stateBitfields.setFlag(StateFlag::IsExcludedFromNormalLayout, excluded);
     }
-    bool isExcludedAndPlacedInBorder() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isExcludedFromNormalLayout() && isLegend();
-    }
+    bool isExcludedAndPlacedInBorder() const;
 
     WEBCORE_EXPORT bool hasLayer() const;
 

@@ -1763,6 +1763,12 @@ func RenderObjectScion_hasOutlineAutoAncestor(_ objectRaw: UnsafeRawPointer) -> 
   return object.hasOutlineAutoAncestor()
 }
 
+@_cdecl("RenderObjectScion_isExcludedAndPlacedInBorder")
+func RenderObjectScion_isExcludedAndPlacedInBorder(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isExcludedAndPlacedInBorder()
+}
+
 @_cdecl("RenderObjectScion_hasLayer")
 func RenderObjectScion_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

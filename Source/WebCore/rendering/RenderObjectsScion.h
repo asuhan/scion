@@ -251,6 +251,8 @@ public:
 
     bool hasOutlineAutoAncestor() const;
 
+    bool isExcludedAndPlacedInBorder() const;
+
     bool hasLayer() const;
 
     bool needsLayout() const;
