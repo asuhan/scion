@@ -164,8 +164,7 @@ class FontCascadeWrapper: Equatable {
   }
 
   func emphasisMarkAscent(mark: AtomStringWrapper) -> Int {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return Int(wk_interop.FontCascade_emphasisMarkAscent(p!, mark.p!))
   }
 
   func emphasisMarkDescent(mark: AtomStringWrapper) -> Int {
