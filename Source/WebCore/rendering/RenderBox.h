@@ -260,11 +260,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return width();
     }
-    LayoutUnit offsetHeight() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return height();
-    }
+    LayoutUnit offsetHeight() const override;
 
     // More IE extensions.  clientWidth and clientHeight represent the interior of an object
     // excluding border and scrollbar.  clientLeft/Top are just the borderLeftWidth and borderTopWidth.

@@ -852,6 +852,12 @@ void RenderBox::layout()
     clearNeedsLayout();
 }
 
+LayoutUnit RenderBox::offsetHeight() const
+{
+    if (m_scion) { return m_scion->offsetHeight(); }
+    return height();
+}
+
 // More IE extensions.  clientWidth and clientHeight represent the interior of an object
 // excluding border and scrollbar.
 LayoutUnit RenderBox::clientWidth() const

@@ -561,6 +561,8 @@ extern "C" void RenderBoxScion_applyTransform(const void*, void*, const void*, F
 
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
 
+extern "C" int32_t RenderBoxScion_offsetHeight(const void*);
+
 extern "C" int32_t RenderBoxScion_clientWidth(const void*);
 
 extern "C" int32_t RenderBoxScion_clientHeight(const void*);
@@ -1739,6 +1741,11 @@ void RenderBoxScion::applyTransform(TransformationMatrix& t, const RenderStyle& 
 LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
 {
     return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
+}
+
+LayoutUnit RenderBoxScion::offsetHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_offsetHeight(m_handle));
 }
 
 LayoutUnit RenderBoxScion::clientWidth() const
