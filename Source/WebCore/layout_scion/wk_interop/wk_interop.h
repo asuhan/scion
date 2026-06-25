@@ -894,6 +894,7 @@ int32_t RenderBoxModelObject_borderAndPaddingBefore(const void*);
 int32_t RenderBoxModelObject_borderAndPaddingAfter(const void*);
 int32_t RenderBoxModelObject_baselinePosition(const void*, uint8_t, bool, uint8_t, uint8_t);
 void* RenderBoxModelObject_inlineContinuation(const void*);
+bool RenderFlexibleBox_avoidsFloats(const void*);
 bool RenderListMarker_isInside(const void*);
 void* RenderListMarker_listItem(void*);
 const void* RenderText_firstLineStyle(const void*);

@@ -352,7 +352,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   typealias Direction = FlowDirection
 
   override func avoidsFloats() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderFlexibleBox_avoidsFloats(id()) }
     return true
   }
 
