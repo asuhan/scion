@@ -699,6 +699,8 @@ public:
 
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
 
+    bool shouldResetChildLogicalHeightBeforeLayout() const;
+
     void paint(PaintInfo&, const LayoutPoint&);
 
     String debugDescription() const;

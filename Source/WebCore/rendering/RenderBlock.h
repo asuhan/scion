@@ -385,11 +385,7 @@ public:
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
     bool hasDefiniteLogicalHeight() const;
 
-    virtual bool shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return false;
-    }
+    virtual bool shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const;
 
     static String updateSecurityDiscCharacters(const RenderStyle&, String&&);
 

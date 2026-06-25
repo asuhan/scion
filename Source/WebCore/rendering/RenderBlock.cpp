@@ -3382,6 +3382,12 @@ bool RenderBlock::hasDefiniteLogicalHeight() const
     return (bool)availableLogicalHeightForPercentageComputation();
 }
 
+bool RenderBlock::shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const
+{
+    if (m_scion) { return m_scion->shouldResetChildLogicalHeightBeforeLayout(); }
+    return false;
+}
+
 std::optional<LayoutUnit> RenderBlock::availableLogicalHeightForPercentageComputation() const
 {
     if (m_scion) { return m_scion->availableLogicalHeightForPercentageComputation(); }

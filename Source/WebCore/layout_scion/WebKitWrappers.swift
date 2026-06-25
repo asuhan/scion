@@ -3274,6 +3274,14 @@ func RenderBlockScion_availableLogicalHeightForPercentageComputation(_ blockRaw:
   return OptionalLayoutUnitRaw(value: height.rawValue(), is_valid: true)
 }
 
+@_cdecl("RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout")
+func RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout(_ blockRaw: UnsafeRawPointer)
+  -> Bool
+{
+  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.shouldResetChildLogicalHeightBeforeLayout()
+}
+
 @_cdecl("RenderBlockScion_paint")
 func RenderBlockScion_paint(
   _ blockRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,

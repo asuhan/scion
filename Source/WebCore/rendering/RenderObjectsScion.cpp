@@ -660,6 +660,8 @@ extern "C" bool RenderBlockScion_canHaveChildren(const void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBlockScion_availableLogicalHeightForPercentageComputation(const void*);
 
+extern "C" bool RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout(const void*);
+
 extern "C" void RenderBlockScion_paint(void*, void*, LayoutPointRaw);
 
 extern "C" const void* RenderBlockScion_debugDescription(const void*);
@@ -1980,6 +1982,11 @@ std::optional<LayoutUnit> RenderBlockScion::availableLogicalHeightForPercentageC
         return std::nullopt;
     }
     return LayoutUnit::fromRawValue(height.value);
+}
+
+bool RenderBlockScion::shouldResetChildLogicalHeightBeforeLayout() const
+{
+    return RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout(m_handle);
 }
 
 void RenderBlockScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
