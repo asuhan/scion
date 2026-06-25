@@ -329,6 +329,12 @@ extern "C" WEBCORE_EXPORT void* RenderLayer_backing(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->backing();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_invalidateEventRegion(void* p, uint8_t reason_raw)
+{
+    const auto reason = static_cast<WebCore::RenderLayer::EventRegionInvalidationReason>(reason_raw);
+    return static_cast<WebCore::RenderLayer*>(p)->invalidateEventRegion(reason);
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden)
 {
     static_cast<WebCore::RenderLayer*>(p)->setIsHiddenByOverflowTruncation(is_hidden);

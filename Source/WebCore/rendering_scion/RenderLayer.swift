@@ -3547,7 +3547,7 @@ class RenderLayerWrapper {
     return renderer().fragmentedFlowState() != .NotInsideFlow
   }
 
-  enum EventRegionInvalidationReason {
+  enum EventRegionInvalidationReason: UInt8 {
     case Paint
     case SettingDidChange
     case Style
@@ -3556,8 +3556,7 @@ class RenderLayerWrapper {
 
   @discardableResult
   func invalidateEventRegion(reason: EventRegionInvalidationReason) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderLayer_invalidateEventRegion(layerId(), reason.rawValue)
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
