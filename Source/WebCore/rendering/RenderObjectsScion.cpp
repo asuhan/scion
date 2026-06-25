@@ -575,6 +575,10 @@ extern "C" int32_t RenderBoxScion_clientLogicalWidth(const void*);
 
 extern "C" int32_t RenderBoxScion_clientLogicalHeight(const void*);
 
+extern "C" void RenderBoxScion_setMarginLeft(void*, int32_t);
+
+extern "C" void RenderBoxScion_setMarginRight(void*, int32_t);
+
 extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
 struct OptionalRepaintRectsRaw {
@@ -1776,6 +1780,16 @@ LayoutUnit RenderBoxScion::clientLogicalWidth() const
 LayoutUnit RenderBoxScion::clientLogicalHeight() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_clientLogicalHeight(m_handle));
+}
+
+void RenderBoxScion::setMarginLeft(LayoutUnit margin)
+{
+    RenderBoxScion_setMarginLeft(m_handle, margin.rawValue());
+}
+
+void RenderBoxScion::setMarginRight(LayoutUnit margin)
+{
+    RenderBoxScion_setMarginRight(m_handle, margin.rawValue());
 }
 
 bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, const LayoutPoint& accumulatedOffset) const

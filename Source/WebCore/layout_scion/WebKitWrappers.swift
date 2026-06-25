@@ -2914,6 +2914,20 @@ func RenderBoxScion_clientLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.clientLogicalHeight().rawValue()
 }
 
+@_cdecl("RenderBoxScion_setMarginLeft")
+func RenderBoxScion_setMarginLeft(_ boxRaw: UnsafeMutableRawPointer, _ marginRaw: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let margin = LayoutUnit.fromRawValue(value: marginRaw)
+  box.setMarginLeft(margin: margin)
+}
+
+@_cdecl("RenderBoxScion_setMarginRight")
+func RenderBoxScion_setMarginRight(_ boxRaw: UnsafeMutableRawPointer, _ marginRaw: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let margin = LayoutUnit.fromRawValue(value: marginRaw)
+  box.setMarginRight(margin: margin)
+}
+
 func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
   return FloatPoint(x: p.x, y: p.y)
 }

@@ -978,6 +978,24 @@ void RenderBox::setScrollPosition(const ScrollPosition& position, const ScrollPo
     scrollableArea->setScrollPosition(position, options);
 }
 
+void RenderBox::setMarginLeft(LayoutUnit margin)
+{
+    if (m_scion) {
+        m_scion->setMarginLeft(margin);
+        return;
+    }
+    m_marginBox.setLeft(margin);
+}
+
+void RenderBox::setMarginRight(LayoutUnit margin)
+{
+    if (m_scion) {
+        m_scion->setMarginRight(margin);
+        return;
+    }
+    m_marginBox.setRight(margin);
+}
+
 void RenderBox::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

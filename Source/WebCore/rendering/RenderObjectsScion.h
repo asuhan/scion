@@ -618,6 +618,10 @@ public:
 
     LayoutUnit clientLogicalHeight() const;
 
+    void setMarginLeft(LayoutUnit);
+
+    void setMarginRight(LayoutUnit);
+
     bool hitTestClipPath(const HitTestLocation&, const LayoutPoint&) const;
 
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;

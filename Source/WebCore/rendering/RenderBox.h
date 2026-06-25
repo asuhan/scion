@@ -321,16 +321,8 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_marginBox.setBottom(margin);
     }
-    void setMarginLeft(LayoutUnit margin)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_marginBox.setLeft(margin);
-    }
-    void setMarginRight(LayoutUnit margin)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_marginBox.setRight(margin);
-    }
+    void setMarginLeft(LayoutUnit margin);
+    void setMarginRight(LayoutUnit margin);
 
     LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const
     {
