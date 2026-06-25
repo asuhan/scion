@@ -76,6 +76,41 @@ extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRe
     return { diff.toRaw(), requires_layout };
 }
 
+extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRequiresPositionedLayoutOnly(const void* p, const void* other)
+{
+    OptionSet<WebCore::StyleDifferenceContextSensitiveProperty> diff;
+    auto requires_layout = static_cast<const WebCore::RenderStyle*>(p)->changeRequiresPositionedLayoutOnly(*static_cast<const WebCore::RenderStyle*>(other), diff);
+    return { diff.toRaw(), requires_layout };
+}
+
+extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRequiresLayerRepaint(const void* p, const void* other)
+{
+    OptionSet<WebCore::StyleDifferenceContextSensitiveProperty> diff;
+    auto requires_layout = static_cast<const WebCore::RenderStyle*>(p)->changeRequiresLayerRepaint(*static_cast<const WebCore::RenderStyle*>(other), diff);
+    return { diff.toRaw(), requires_layout };
+}
+
+extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaint(const void* p, const void* other)
+{
+    OptionSet<WebCore::StyleDifferenceContextSensitiveProperty> diff;
+    auto requires_layout = static_cast<const WebCore::RenderStyle*>(p)->changeRequiresRepaint(*static_cast<const WebCore::RenderStyle*>(other), diff);
+    return { diff.toRaw(), requires_layout };
+}
+
+extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaintIfText(const void* p, const void* other)
+{
+    OptionSet<WebCore::StyleDifferenceContextSensitiveProperty> diff;
+    auto requires_layout = static_cast<const WebCore::RenderStyle*>(p)->changeRequiresRepaintIfText(*static_cast<const WebCore::RenderStyle*>(other), diff);
+    return { diff.toRaw(), requires_layout };
+}
+
+extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRequiresRecompositeLayer(const void* p, const void* other)
+{
+    OptionSet<WebCore::StyleDifferenceContextSensitiveProperty> diff;
+    auto requires_layout = static_cast<const WebCore::RenderStyle*>(p)->changeRequiresRecompositeLayer(*static_cast<const WebCore::RenderStyle*>(other), diff);
+    return { diff.toRaw(), requires_layout };
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_clone(const void* p)
 {
     auto cloned = WebCore::RenderStyle::clonePtr(*static_cast<const WebCore::RenderStyle*>(p));

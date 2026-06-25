@@ -3404,40 +3404,45 @@ class RenderStyleWrapper: Equatable {
     _ other: RenderStyleWrapper,
     _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.RenderStyle_changeRequiresPositionedLayoutOnly(p!, other.p!)
+    changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty(rawValue: r.diff)
+    return r.requires_layout
   }
 
   func changeRequiresLayerRepaint(
     _ other: RenderStyleWrapper,
     _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.RenderStyle_changeRequiresLayerRepaint(p!, other.p!)
+    changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty(rawValue: r.diff)
+    return r.requires_layout
   }
 
   func changeRequiresRepaint(
     _ other: RenderStyleWrapper,
     _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.RenderStyle_changeRequiresRepaint(p!, other.p!)
+    changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty(rawValue: r.diff)
+    return r.requires_layout
   }
 
   func changeRequiresRepaintIfText(
     _ other: RenderStyleWrapper,
     _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.RenderStyle_changeRequiresRepaintIfText(p!, other.p!)
+    changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty(rawValue: r.diff)
+    return r.requires_layout
   }
 
   func changeRequiresRecompositeLayer(
     _ other: RenderStyleWrapper,
     _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let r = wk_interop.RenderStyle_changeRequiresRecompositeLayer(p!, other.p!)
+    changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty(rawValue: r.diff)
+    return r.requires_layout
   }
 
   var nonInheritedData = StyleNonInheritedData()
