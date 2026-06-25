@@ -3928,6 +3928,12 @@ bool RenderObject::hasOutlineAutoAncestor() const
     return hasRareData() && rareData().hasOutlineAutoAncestor;
 }
 
+bool RenderObject::isExcludedFromNormalLayout() const
+{
+    if (m_scion) { return m_scion->isExcludedFromNormalLayout(); }
+    return m_stateBitfields.hasFlag(StateFlag::IsExcludedFromNormalLayout);
+}
+
 bool RenderObject::normalChildNeedsLayout() const
 {
     if (m_scion) { return m_scion->normalChildNeedsLayout(); }

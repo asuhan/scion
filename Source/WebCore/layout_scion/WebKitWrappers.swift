@@ -1763,6 +1763,12 @@ func RenderObjectScion_hasOutlineAutoAncestor(_ objectRaw: UnsafeRawPointer) -> 
   return object.hasOutlineAutoAncestor()
 }
 
+@_cdecl("RenderObjectScion_isExcludedFromNormalLayout")
+func RenderObjectScion_isExcludedFromNormalLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isExcludedFromNormalLayout()
+}
+
 @_cdecl("RenderObjectScion_isExcludedAndPlacedInBorder")
 func RenderObjectScion_isExcludedAndPlacedInBorder(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

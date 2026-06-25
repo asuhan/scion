@@ -1002,11 +1002,7 @@ public:
         return m_stateBitfields.hasFlag(StateFlag::HasSVGTransform);
     }
 
-    bool isExcludedFromNormalLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::IsExcludedFromNormalLayout);
-    }
+    bool isExcludedFromNormalLayout() const;
     void setIsExcludedFromNormalLayout(bool excluded)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

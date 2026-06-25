@@ -228,6 +228,8 @@ extern "C" bool RenderObjectScion_isRenderFragmentedFlow(const void*);
 
 extern "C" bool RenderObjectScion_hasOutlineAutoAncestor(const void*);
 
+extern "C" bool RenderObjectScion_isExcludedFromNormalLayout(const void*);
+
 extern "C" bool RenderObjectScion_isExcludedAndPlacedInBorder(const void*);
 
 extern "C" bool RenderObjectScion_hasLayer(const void*);
@@ -1046,6 +1048,8 @@ bool RenderObjectScion::hasReflection() const { return RenderObjectScion_hasRefl
 bool RenderObjectScion::isRenderFragmentedFlow() const { return RenderObjectScion_isRenderFragmentedFlow(m_handle); }
 
 bool RenderObjectScion::hasOutlineAutoAncestor() const { return RenderObjectScion_hasOutlineAutoAncestor(m_handle); }
+
+bool RenderObjectScion::isExcludedFromNormalLayout() const { return RenderObjectScion_isExcludedFromNormalLayout(m_handle); }
 
 bool RenderObjectScion::isExcludedAndPlacedInBorder() const { return RenderObjectScion_isExcludedAndPlacedInBorder(m_handle); }
 
