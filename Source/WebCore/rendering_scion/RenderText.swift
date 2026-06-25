@@ -388,8 +388,12 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func originalText() -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if m_originalTextDiffersFromRendered {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return m_text!
   }
 
   func text() -> StringWrapper {
@@ -1616,6 +1620,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
   private var useBackslashAsYenSymbol = false
+  private let m_originalTextDiffersFromRendered = false
   private var m_hasInlineWrapperForDisplayContents = false
 
   private var wk: UnsafeMutableRawPointer? = nil
