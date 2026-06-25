@@ -130,8 +130,7 @@ class StringWrapper: Hashable {
   func containsOnlyASCII() -> Bool { return wk_interop.String_containsOnlyASCII(p) }
 
   static func == (this: StringWrapper, other: StringWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.String_eq(this.p, other.p)
   }
 
   var p: UnsafeRawPointer

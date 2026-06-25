@@ -483,6 +483,7 @@ bool String_is8Bit(const void*);
 void String_convertTo16Bit(const void*);
 uint32_t String_hash(const void*);
 bool String_containsOnlyASCII(const void*);
+bool String_eq(const void*, const void*);
 bool StringView_is8Bit(const void*);
 const void* TextRun_span8(const void*);
 const void* TextRun_span16(const void*);

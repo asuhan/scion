@@ -302,6 +302,11 @@ extern "C" WEBCORE_EXPORT bool String_containsOnlyASCII(const void* p)
     return static_cast<String*>(const_cast<void*>(p))->impl()->containsOnlyASCII();
 }
 
+extern "C" WEBCORE_EXPORT bool String_eq(const void* lhs, const void* rhs)
+{
+    return *static_cast<const String*>(lhs) == *static_cast<const String*>(rhs);
+}
+
 extern "C" WEBCORE_EXPORT bool StringView_is8Bit(const void* p)
 {
     return static_cast<const StringView*>(p)->is8Bit();
