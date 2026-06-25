@@ -115,6 +115,10 @@ extension LayoutBoxExtent {
     }
   }
 
+  mutating func setRight(_ right: LayoutUnit) { self.right = right }
+
+  mutating func setLeft(_ left: LayoutUnit) { self.left = left }
+
   private mutating func setSide(_ side: BoxSide, _ value: LayoutUnit) {
     switch side {
     case .Top:
