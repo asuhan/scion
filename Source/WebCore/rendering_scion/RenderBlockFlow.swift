@@ -305,8 +305,7 @@ private func stripTrailingSpace(
 }
 
 private func preferredWidth(preferredWidth: LayoutUnit, result: Float32) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return max(preferredWidth, LayoutUnit.fromFloatCeil(value: result))
 }
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
