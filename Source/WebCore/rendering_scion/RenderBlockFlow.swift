@@ -1477,9 +1477,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func setStaticInlinePositionForChild(
     child: RenderBoxWrapper, blockOffset: LayoutUnit, inlinePosition: LayoutUnit
   ) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
-      id(), child.id(), blockOffset.rawValue(), inlinePosition.rawValue())
+    if !isNativeImpl() {
+      wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
+        id(), child.id(), blockOffset.rawValue(), inlinePosition.rawValue())
+      return
+    }
+    var inlinePosition = inlinePosition
+    if enclosingFragmentedFlow() != nil {
+      // Shift the inline position to exclude the fragment offset.
+      inlinePosition += startOffsetForContent() - startOffsetForContent(blockOffset: blockOffset)
+    }
+    child.layer()!.setStaticInlinePosition(position: inlinePosition)
   }
 
   private func updateStaticInlinePositionForChild(child: RenderBoxWrapper, logicalTop: LayoutUnit) {
