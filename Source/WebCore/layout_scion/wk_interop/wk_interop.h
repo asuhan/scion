@@ -838,7 +838,6 @@ bool RenderElement_checkForRepaintDuringLayout(const void*);
 bool RenderElement_hasContinuationChainNode(const void*);
 bool RenderElement_isContinuation(const void*);
 bool RenderElement_createsNewFormattingContext(const void*);
-void* RenderElement_firstChildSlow(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 bool RenderElement_areCursorsEqual(const void*, const void*);

@@ -2532,13 +2532,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     return lastChild()
   }
 
-  override final func firstChildSlow() -> RenderObjectWrapper? {
-    if !isNativeImpl() {
-      guard let child = wk_interop.RenderElement_firstChildSlow(id()) else { return nil }
-      return createRenderObjectWrapperOrNative(child)
-    }
-    return firstChild()
-  }
+  // TODO(asuhan): add firstChildSlow override
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
     assert(isNativeImpl())
