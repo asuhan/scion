@@ -194,6 +194,11 @@ extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalMargin(void* p, int32_t be
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setVerticalMargin(WebCore::Layout::BoxGeometry::VerticalEdges { WebCore::LayoutUnit::fromRawValue(before), WebCore::LayoutUnit::fromRawValue(after) });
 }
 
+extern "C" WEBCORE_EXPORT void BoxGeometry_setHorizontalBorder(void* p, BoxGeometryHorizontalEdgesRaw horizontalBorder)
+{
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setHorizontalBorder(WebCore::Layout::BoxGeometry::HorizontalEdges { WebCore::LayoutUnit::fromRawValue(horizontalBorder.start), WebCore::LayoutUnit::fromRawValue(horizontalBorder.end) });
+}
+
 struct BoxGeometryVerticalEdgesRaw {
     int32_t before;
     int32_t after;
@@ -219,6 +224,11 @@ WebCore::Layout::BoxGeometry::Edges toBoxGeometryEdges(const BoxGeometryEdgesRaw
 extern "C" WEBCORE_EXPORT void BoxGeometry_setBorder(void* p, BoxGeometryEdgesRaw border_raw)
 {
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setBorder(toBoxGeometryEdges(border_raw));
+}
+
+extern "C" WEBCORE_EXPORT void BoxGeometry_setHorizontalPadding(void* p, BoxGeometryHorizontalEdgesRaw horizontalPadding)
+{
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setHorizontalPadding(WebCore::Layout::BoxGeometry::HorizontalEdges { WebCore::LayoutUnit::fromRawValue(horizontalPadding.start), WebCore::LayoutUnit::fromRawValue(horizontalPadding.end) });
 }
 
 extern "C" WEBCORE_EXPORT void BoxGeometry_setPadding(void* p, BoxGeometryEdgesRaw padding_raw)

@@ -496,7 +496,14 @@ class BoxGeometry {
   }
 
   func setHorizontalBorder(horizontalBorder: HorizontalEdges) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setHorizontalBorder(
+        p,
+        BoxGeometryHorizontalEdgesRaw(
+          start: horizontalBorder.start.rawValue(), end: horizontalBorder.end.rawValue())
+      )
+      return
+    }
     #if ASSERT_ENABLED
       setHasValidBorder()
     #endif  // ASSERT_ENABLED
@@ -515,7 +522,13 @@ class BoxGeometry {
   }
 
   func setHorizontalPadding(horizontalPadding: HorizontalEdges) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setHorizontalPadding(
+        p,
+        BoxGeometryHorizontalEdgesRaw(
+          start: horizontalPadding.start.rawValue(), end: horizontalPadding.end.rawValue()))
+      return
+    }
     #if ASSERT_ENABLED
       setHasValidPadding()
     #endif  // ASSERT_ENABLED
