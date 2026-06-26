@@ -1607,6 +1607,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return marginBox.left
   }
 
+  override func marginRight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return marginBox.right
+  }
+
   func setMarginTop(margin: LayoutUnit) {
     assert(isNativeImpl())
     marginBox.setTop(margin)

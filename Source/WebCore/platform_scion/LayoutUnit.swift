@@ -163,6 +163,10 @@ struct LayoutUnit: Comparable {
     return a == LayoutUnit(value: b)
   }
 
+  static func == (a: Int32, b: LayoutUnit) -> Bool {
+    return LayoutUnit(value: a) == b
+  }
+
   static func == (a: LayoutUnit, b: Float32) -> Bool {
     return a.toFloat() == b
   }
@@ -567,3 +571,5 @@ func roundToDevicePixel(
     value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor,
     needsDirectionalRounding: needsDirectionalRounding)
 }
+
+func isIntegerValue(_ value: LayoutUnit) -> Bool { return value.toInt() == value }

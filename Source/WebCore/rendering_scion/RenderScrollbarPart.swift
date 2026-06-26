@@ -101,6 +101,12 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func marginRight() -> LayoutUnit {
+    assert(isNativeImpl())
+    assert(isIntegerValue(marginBox.right))
+    return marginBox.right
+  }
+
   func rendererOwningScrollbar() -> RenderBoxWrapper? {
     assert(isNativeImpl())
     return scrollbar?.owningRenderer()
