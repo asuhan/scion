@@ -43,6 +43,11 @@ class RenderMediaWrapper: RenderImageWrapper {
     return true
   }
 
+  override final func isImage() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {

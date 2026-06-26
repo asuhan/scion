@@ -62,6 +62,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     updateMargins()
   }
 
+  override final func isImage() -> Bool {
+    assert(isNativeImpl())
+    return image != nil && !image!.errorOccurred()
+  }
+
   func listItem() -> RenderListItemWrapper? {
     assert(!isNativeImpl())
     if let unwrapped = wk_interop.RenderListMarker_listItem(id()) {

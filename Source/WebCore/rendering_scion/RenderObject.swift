@@ -810,8 +810,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isImage() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderObject_isImage(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isImage(id())
+    }
+    return false
   }
 
   func isInlineBlockOrInlineTable() -> Bool { return false }

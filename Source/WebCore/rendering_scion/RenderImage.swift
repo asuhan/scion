@@ -256,6 +256,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     return hasShadowContent()
   }
 
+  override func isImage() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
