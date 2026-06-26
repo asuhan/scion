@@ -300,8 +300,20 @@ private func getBorderPaddingMargin(child: RenderBoxModelObjectWrapper, endOfInl
 private func stripTrailingSpace(
   inlineMax: inout Float32, inlineMin: inout Float32, trailingSpaceChild: RenderObjectWrapper?
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if trailingSpaceChild == nil {
+    return
+  }
+  if let renderText = trailingSpaceChild! as? RenderTextWrapper {
+    // Collapse away the trailing space at the end of a block.
+    let space = UChar(Character(" ").asciiValue!)
+    let font = renderText.style().fontCascade()  // FIXME: This ignores first-line.
+    let spaceWidth = font.width(
+      run: RenderBlockWrapper.constructTextRun(WTF.span(character: space), renderText.style()))
+    inlineMax -= spaceWidth + font.wordSpacing()
+    if inlineMin > inlineMax {
+      inlineMin = inlineMax
+    }
+  }
 }
 
 private func preferredWidth(preferredWidth: LayoutUnit, result: Float32) -> LayoutUnit {
