@@ -1457,7 +1457,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isLineBreakOpportunity() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isLineBreakOpportunity(id()) }
     return isRenderLineBreak() && isWBR()
   }
 

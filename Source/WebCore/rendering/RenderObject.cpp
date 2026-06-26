@@ -190,6 +190,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isBR(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isBR();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isLineBreakOpportunity(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isLineBreakOpportunity();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextOrLineBreak(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderTextOrLineBreak();

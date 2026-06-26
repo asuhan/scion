@@ -691,6 +691,7 @@ bool RenderObject_isRenderBox(const void*);
 bool RenderObject_isImage(const void*);
 bool RenderObject_isFieldset(const void*);
 bool RenderObject_isBR(const void*);
+bool RenderObject_isLineBreakOpportunity(const void*);
 bool RenderObject_isRenderTextOrLineBreak(const void*);
 bool RenderObject_isRenderView(const void*);
 bool RenderObject_isInline(const void*);
