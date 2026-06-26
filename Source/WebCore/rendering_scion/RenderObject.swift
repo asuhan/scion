@@ -427,7 +427,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return RenderObjectWrapper.createLayoutBoxWrapper(unwrapped)
   }
 
-  static func createLayoutBoxWrapper(_ unwrapped: UnsafeMutableRawPointer) -> BoxWrapper {
+  static func createLayoutBoxWrapper(_ unwrapped: UnsafeRawPointer) -> BoxWrapper {
     let styleUnwrapped = wk_interop.Box_style(unwrapped)!
     let style = convert_render_style(p: styleUnwrapped)
     if wk_interop.Box_isInlineTextBox(unwrapped) {

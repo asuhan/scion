@@ -595,8 +595,11 @@ class BoxWrapper: Hashable {
   }
 
   func nextInFlowSibling() -> BoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let unwrapped = wk_interop.Box_nextInFlowSibling(p!) else { return nil }
+    let child = RenderObjectWrapper.createLayoutBoxWrapper(unwrapped)
+    let styleUnwrapped = wk_interop.Box_style(unwrapped)
+    child.style = convert_render_style(p: styleUnwrapped!)
+    return child
   }
 
   func nextInFlowOrFloatingSibling() -> BoxWrapper? {
