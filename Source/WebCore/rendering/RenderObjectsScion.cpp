@@ -467,6 +467,8 @@ extern "C" void RenderElementScion_didAttachChild(void*, void*);
 
 extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
 
+extern "C" void RenderElementScion_setOutOfFlowChildNeedsStaticPositionLayout(void*);
+
 extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const void*);
 
 extern "C" void RenderElementScion_setNeedsSimplifiedNormalFlowLayout(void*);
@@ -1422,6 +1424,11 @@ void RenderElementScion::didAttachChild(RenderObject& child)
 void RenderElementScion::setChildNeedsLayout(MarkingBehavior markParents)
 {
     RenderElementScion_setChildNeedsLayout(m_handle, markParents == MarkContainingBlockChain);
+}
+
+void RenderElementScion::setOutOfFlowChildNeedsStaticPositionLayout()
+{
+    RenderElementScion_setOutOfFlowChildNeedsStaticPositionLayout(m_handle);
 }
 
 bool RenderElementScion::shouldApplyLayoutOrPaintContainment() const

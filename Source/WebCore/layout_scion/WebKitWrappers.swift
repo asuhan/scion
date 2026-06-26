@@ -2529,6 +2529,14 @@ func RenderElementScion_setChildNeedsLayout(
   element.setChildNeedsLayout(markParents: markParents ? .MarkContainingBlockChain : .MarkOnlyThis)
 }
 
+@_cdecl("RenderElementScion_setOutOfFlowChildNeedsStaticPositionLayout")
+func RenderElementScion_setOutOfFlowChildNeedsStaticPositionLayout(
+  _ elementRaw: UnsafeMutableRawPointer
+) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setOutOfFlowChildNeedsStaticPositionLayout()
+}
+
 @_cdecl("RenderElementScion_shouldApplyLayoutOrPaintContainment")
 func RenderElementScion_shouldApplyLayoutOrPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool
 {

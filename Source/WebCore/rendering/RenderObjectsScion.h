@@ -438,6 +438,8 @@ public:
 
     void setChildNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
 
+    void setOutOfFlowChildNeedsStaticPositionLayout();
+
     bool shouldApplyLayoutOrPaintContainment() const;
 
     void setNeedsSimplifiedNormalFlowLayout();

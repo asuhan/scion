@@ -1504,7 +1504,10 @@ void RenderElement::setChildNeedsLayout(MarkingBehavior markParents)
 
 void RenderElement::setOutOfFlowChildNeedsStaticPositionLayout()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOutOfFlowChildNeedsStaticPositionLayout();
+        return;
+    }
     // FIXME: Currently this dirty bit has a very limited useage but should be expanded to
     // optimize all kinds of out-of-flow cases.
     // It's also assumed that regular, positioned child related bits are already set.
