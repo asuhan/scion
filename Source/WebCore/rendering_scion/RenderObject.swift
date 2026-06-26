@@ -757,7 +757,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderInline() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderInline(id()) }
     return m_typeFlags.contains(.IsRenderInline)
   }
 
