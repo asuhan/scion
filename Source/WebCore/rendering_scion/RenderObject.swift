@@ -829,7 +829,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderListMarker() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderListMarker(id()) }
     return type() == .ListMarker
   }
 
