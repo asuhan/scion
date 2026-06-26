@@ -146,7 +146,9 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit(value: wk_interop.RenderInline_marginEnd(id(), otherStyle?.p))
+    }
     return computeMargin(self, style().marginEndUsing(otherStyle: otherStyle ?? style()))
   }
 
