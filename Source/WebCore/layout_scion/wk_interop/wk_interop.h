@@ -461,6 +461,7 @@ struct OptionalFloatRaw FontMetrics_underlineThickness(const void*);
 bool FontMetrics_hasIdenticalAscentDescentAndLineGap(const void*, const void*);
 const void* FontCascade_metricsOfPrimaryFont(const void*);
 int32_t FontCascade_emphasisMarkAscent(const void* font_cascade_ptr, const void* mark_ptr);
+int32_t FontCascade_emphasisMarkDescent(const void* font_cascade_ptr, const void* mark_ptr);
 float FontCascade_floatEmphasisMarkHeight(const void* font_cascade_ptr, const void* mark_ptr);
 bool FontCascade_isSmallCaps(const void*);
 const void* FontCascade_primaryFont(const void*);

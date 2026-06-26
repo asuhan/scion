@@ -169,6 +169,12 @@ extern "C" WEBCORE_EXPORT int32_t FontCascade_emphasisMarkAscent(const void* fon
     return static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->emphasisMarkAscent(mark);
 }
 
+extern "C" WEBCORE_EXPORT int32_t FontCascade_emphasisMarkDescent(const void* font_cascade_ptr, const void* mark_ptr)
+{
+    const auto& mark = *static_cast<const AtomString*>(mark_ptr);
+    return static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->emphasisMarkDescent(mark);
+}
+
 extern "C" WEBCORE_EXPORT float FontCascade_floatEmphasisMarkHeight(const void* font_cascade_ptr, const void* mark_ptr)
 {
     const auto& mark = *static_cast<const AtomString*>(mark_ptr);
