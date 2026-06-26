@@ -499,11 +499,13 @@ private:
     void isRenderText() const = delete;
     void isRenderElement() const = delete;
 
+public:
     RenderObject* firstChildSlow() const final
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return firstChild();
     }
+private:
     RenderObject* lastChildSlow() const final
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

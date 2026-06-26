@@ -2532,8 +2532,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return lastChild()
   }
 
-  override func firstChildSlow() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+  override final func firstChildSlow() -> RenderObjectWrapper? {
+    if !isNativeImpl() {
+      guard let child = wk_interop.RenderElement_firstChildSlow(id()) else { return nil }
+      return createRenderObjectWrapperOrNative(child)
+    }
     return firstChild()
   }
 

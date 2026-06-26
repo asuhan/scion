@@ -200,6 +200,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_createsNewFormattingContext(const v
     return static_cast<const WebCore::RenderElement*>(p)->createsNewFormattingContext();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderElement_firstChildSlow(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->firstChildSlow();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderElement_scion(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->scion();
