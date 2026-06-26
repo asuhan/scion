@@ -58,6 +58,12 @@
 #include <wtf/SetForScope.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT int32_t RenderInline_marginStart(const void* p, const void* otherStyleRaw)
+{
+    const auto otherStyle = static_cast<const WebCore::RenderStyle*>(otherStyleRaw);
+    return static_cast<const WebCore::RenderInline*>(p)->marginStart(otherStyle).rawValue();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderInline);

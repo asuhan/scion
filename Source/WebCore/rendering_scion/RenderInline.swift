@@ -139,7 +139,9 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit(value: wk_interop.RenderInline_marginStart(id(), otherStyle?.p))
+    }
     return computeMargin(self, style().marginStartUsing(otherStyle: otherStyle ?? style()))
   }
 

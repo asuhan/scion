@@ -908,6 +908,7 @@ bool RenderText_canUseSimpleFontCodePath(const void*);
 void RenderText_styleDidChange(void*, uint8_t, const void*);
 void RenderText_resetMinMaxWidth(void*);
 void* RenderText_scion(const void*);
+int32_t RenderInline_marginStart(const void*, const void*);
 uint8_t RenderHighlight_highlightStateForTextBox(void*, const void*, struct TextBoxSelectableRangeRaw);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);
