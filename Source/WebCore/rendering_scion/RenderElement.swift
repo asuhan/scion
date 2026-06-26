@@ -2532,6 +2532,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return lastChild()
   }
 
+  override func firstChildSlow() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    return firstChild()
+  }
+
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
     assert(isNativeImpl())
     guard let root = element()!.containingShadowRoot() else { return nil }
