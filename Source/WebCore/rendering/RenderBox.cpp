@@ -2950,7 +2950,10 @@ const RenderObject* RenderBox::pushMappingToContainer(const RenderLayerModelObje
 
 void RenderBox::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, TransformState& transformState) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->mapAbsoluteToLocalPoint(mode, transformState);
+        return;
+    }
     bool isFixedPos = isFixedPositioned();
     if (isFixedPos)
         mode.add(IsFixed);

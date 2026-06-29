@@ -1091,14 +1091,20 @@ func RenderViewScion_pushMappingToContainer(
   return pushMappingToContainerImpl(view, ancestorToStopAtRaw, geometryMapRaw)
 }
 
+private func mapAbsoluteToLocalPointImpl<T: RenderObjectWrapper>(
+  _ renderer: T, _ modeRaw: UInt8, _ transformStateRaw: UnsafeMutableRawPointer
+) {
+  let transformState = TransformState(transformStateRaw)
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  renderer.mapAbsoluteToLocalPoint(mode, transformState)
+}
+
 @_cdecl("RenderViewScion_mapAbsoluteToLocalPoint")
 func RenderViewScion_mapAbsoluteToLocalPoint(
   _ viewRaw: UnsafeRawPointer, _ modeRaw: UInt8, _ transformStateRaw: UnsafeMutableRawPointer
 ) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  let transformState = TransformState(transformStateRaw)
-  let mode = MapCoordinatesMode(rawValue: modeRaw)
-  view.mapAbsoluteToLocalPoint(mode, transformState)
+  mapAbsoluteToLocalPointImpl(view, modeRaw, transformStateRaw)
 }
 
 @_cdecl("RenderViewScion_requiresColumns")
@@ -3117,6 +3123,14 @@ func RenderBoxScion_mapLocalToContainer(
 ) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   mapLocalToContainerImpl(box, ancestorContainerRaw, transformStateRaw, modeRaw, wasFixed)
+}
+
+@_cdecl("RenderBoxScion_mapAbsoluteToLocalPoint")
+func RenderBoxScion_mapAbsoluteToLocalPoint(
+  _ boxRaw: UnsafeRawPointer, _ modeRaw: UInt8, _ transformStateRaw: UnsafeMutableRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  mapAbsoluteToLocalPointImpl(box, modeRaw, transformStateRaw)
 }
 
 @_cdecl("RenderBoxScion_pushMappingToContainer")
