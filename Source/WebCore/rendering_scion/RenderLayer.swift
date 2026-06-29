@@ -747,7 +747,10 @@ class RenderLayerWrapper {
   }
 
   func paintOrderParent() -> RenderLayerWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let parentRaw = wk_interop.RenderLayer_paintOrderParent(layerId()) else { return nil }
+      return RenderLayerWrapper(p: parentRaw)
+    }
     return isNormalFlowOnly ? m_parent : stackingContext()
   }
 

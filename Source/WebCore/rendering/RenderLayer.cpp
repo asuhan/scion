@@ -200,6 +200,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool tim
     static_cast<WebCore::RenderLayer*>(p)->insertOnlyThisLayer(timing);
 }
 
+extern "C" WEBCORE_EXPORT void* RenderLayer_paintOrderParent(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->paintOrderParent();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_setBackingNeedsRepaint(void* p, bool shouldClip)
 {
     static_cast<WebCore::RenderLayer*>(p)->setBackingNeedsRepaint(shouldClip ? WebCore::GraphicsLayer::ClipToLayer : WebCore::GraphicsLayer::DoNotClipToLayer);
