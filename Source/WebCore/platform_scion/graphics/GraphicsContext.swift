@@ -95,8 +95,8 @@ class GraphicsContextWrapper {
   }
 
   func strokeColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let c = wk_interop.GraphicsContext_strokeColor(p!)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func strokeGradient() -> GradientWrapper? {

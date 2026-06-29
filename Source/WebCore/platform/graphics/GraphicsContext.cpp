@@ -93,6 +93,13 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setFillRule(void* p, uint8_t fill
     static_cast<WebCore::GraphicsContext*>(p)->setFillRule(static_cast<WebCore::WindRule>(fillRule));
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw GraphicsContext_strokeColor(const void* p)
+{
+    const auto& color = static_cast<const WebCore::GraphicsContext*>(p)->strokeColor();
+    const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_strokeStyle(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->strokeStyle());
