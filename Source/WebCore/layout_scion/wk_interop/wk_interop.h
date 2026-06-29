@@ -1726,6 +1726,7 @@ struct SRGBARaw GraphicsContext_strokeColor(const void*);
 uint8_t GraphicsContext_strokeStyle(const void*);
 void GraphicsContext_setStrokeStyle(void*, uint8_t);
 void GraphicsContext_clearDropShadow(void*);
+void GraphicsContext_setStrokeColor(void*, struct SRGBARaw);
 float GraphicsContext_strokeThickness(const void*);
 void GraphicsContext_setStrokeThickness(void*, float);
 uint8_t GraphicsContext_compositeOperation(const void*);

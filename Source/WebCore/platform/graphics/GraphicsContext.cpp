@@ -115,6 +115,12 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clearDropShadow(void* p)
     static_cast<WebCore::GraphicsContext*>(p)->clearDropShadow();
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setStrokeColor(void* p, SRGBARaw color)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setStrokeColor(
+        WebCore::SRGBA<uint8_t> { color.red, color.green, color.blue, color.alpha });
+}
+
 extern "C" WEBCORE_EXPORT float GraphicsContext_strokeThickness(const void* p)
 {
     return static_cast<const WebCore::GraphicsContext*>(p)->strokeThickness();

@@ -115,8 +115,9 @@ class GraphicsContextWrapper {
   }
 
   func setStrokeColor(color: ColorWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = color.toSRGBA()
+    wk_interop.GraphicsContext_setStrokeColor(
+      p!, SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
   }
 
   func strokeThickness() -> Float32 { return wk_interop.GraphicsContext_strokeThickness(p!) }
