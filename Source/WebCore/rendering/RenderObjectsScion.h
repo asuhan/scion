@@ -243,6 +243,8 @@ public:
 
     bool isInline() const;
 
+    bool isReplacedOrInlineBlock() const;
+
     bool isHorizontalWritingMode() const;
 
     bool hasReflection() const;

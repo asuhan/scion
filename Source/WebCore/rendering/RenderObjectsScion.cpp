@@ -220,6 +220,8 @@ extern "C" bool RenderObjectScion_isRenderView(const void*);
 
 extern "C" bool RenderObjectScion_isInline(const void*);
 
+extern "C" bool RenderObjectScion_isReplacedOrInlineBlock(const void*);
+
 extern "C" bool RenderObjectScion_isHorizontalWritingMode(const void*);
 
 extern "C" bool RenderObjectScion_hasReflection(const void*);
@@ -1048,6 +1050,8 @@ bool RenderObjectScion::isRenderTableRow() const { return RenderObjectScion_isRe
 bool RenderObjectScion::isRenderView() const { return RenderObjectScion_isRenderView(m_handle); }
 
 bool RenderObjectScion::isInline() const { return RenderObjectScion_isInline(m_handle); }
+
+bool RenderObjectScion::isReplacedOrInlineBlock() const { return RenderObjectScion_isReplacedOrInlineBlock(m_handle); }
 
 bool RenderObjectScion::isHorizontalWritingMode() const { return RenderObjectScion_isHorizontalWritingMode(m_handle); }
 

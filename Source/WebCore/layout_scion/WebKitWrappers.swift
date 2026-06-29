@@ -1745,6 +1745,12 @@ func RenderObjectScion_isInline(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isInline()
 }
 
+@_cdecl("RenderObjectScion_isReplacedOrInlineBlock")
+func RenderObjectScion_isReplacedOrInlineBlock(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isReplacedOrInlineBlock()
+}
+
 @_cdecl("RenderObjectScion_isHorizontalWritingMode")
 func RenderObjectScion_isHorizontalWritingMode(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

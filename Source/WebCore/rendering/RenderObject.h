@@ -981,11 +981,7 @@ public:
     bool isRenderTableRow() const;
     bool isRenderView() const;
     bool isInline() const; // inline object
-    bool isReplacedOrInlineBlock() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::IsReplacedOrInlineBlock);
-    }
+    bool isReplacedOrInlineBlock() const;
     bool isHorizontalWritingMode() const;
 
     bool hasReflection() const;

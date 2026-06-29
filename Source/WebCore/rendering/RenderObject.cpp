@@ -3909,6 +3909,12 @@ bool RenderObject::isInline() const
     return !m_stateBitfields.hasFlag(StateFlag::IsBlock);
 }
 
+bool RenderObject::isReplacedOrInlineBlock() const
+{
+    if (m_scion) { return m_scion->isReplacedOrInlineBlock(); }
+    return m_stateBitfields.hasFlag(StateFlag::IsReplacedOrInlineBlock);
+}
+
 bool RenderObject::isHorizontalWritingMode() const
 {
     if (m_scion) { return m_scion->isHorizontalWritingMode(); }
