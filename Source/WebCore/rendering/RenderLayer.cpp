@@ -267,6 +267,11 @@ extern "C" WEBCORE_EXPORT EnclosingCompositingLayerStatusRaw RenderLayer_enclosi
     return { status.fullRepaintAlreadyScheduled, status.layer };
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_needsFullRepaint(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->needsFullRepaint();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_setIsSimplifiedLayoutRoot(void* p)
 {
     static_cast<WebCore::RenderLayer*>(p)->setIsSimplifiedLayoutRoot();

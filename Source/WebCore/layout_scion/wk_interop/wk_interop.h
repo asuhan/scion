@@ -1468,6 +1468,7 @@ bool RenderLayer_cannotBlitToWindow(const void*);
 void RenderLayer_updateTransform(void*);
 struct LayoutSizeRaw RenderLayer_offsetForInFlowPosition(const void*);
 struct EnclosingCompositingLayerStatusRaw RenderLayer_enclosingCompositingLayerForRepaint(const void*, bool);
+bool RenderLayer_needsFullRepaint(const void*);
 void RenderLayer_setIsSimplifiedLayoutRoot(void*);
 int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);

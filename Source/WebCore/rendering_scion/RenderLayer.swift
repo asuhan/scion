@@ -3019,7 +3019,7 @@ class RenderLayerWrapper {
   }
 
   func needsFullRepaint() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderLayer_needsFullRepaint(layerId()) }
     return repaintStatus == .NeedsFullRepaint
       || repaintStatus == .NeedsFullRepaintForPositionedMovementLayout
   }
