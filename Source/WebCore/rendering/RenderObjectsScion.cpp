@@ -140,6 +140,8 @@ extern "C" bool RenderObjectScion_isDocumentElementRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isBody(const void*);
 
+extern "C" bool RenderObjectScion_isLegend(const void*);
+
 extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
 
 extern "C" bool RenderObjectScion_isTablePart(const void*);
@@ -969,6 +971,8 @@ bool RenderObjectScion::isRenderScrollbarPart() const { return RenderObjectScion
 bool RenderObjectScion::isDocumentElementRenderer() const { return RenderObjectScion_isDocumentElementRenderer(m_handle); }
 
 bool RenderObjectScion::isBody() const { return RenderObjectScion_isBody(m_handle); }
+
+bool RenderObjectScion::isLegend() const { return RenderObjectScion_isLegend(m_handle); }
 
 bool RenderObjectScion::isHTMLMarquee() const { return RenderObjectScion_isHTMLMarquee(m_handle); }
 

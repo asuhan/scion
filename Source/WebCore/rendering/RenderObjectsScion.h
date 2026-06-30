@@ -163,6 +163,8 @@ public:
 
     bool isBody() const;
 
+    bool isLegend() const;
+
     bool isHTMLMarquee() const;
 
     bool isTablePart() const;

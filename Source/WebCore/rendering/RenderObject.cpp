@@ -536,7 +536,7 @@ RenderElement* RenderObject::firstNonAnonymousAncestor() const
 
 bool RenderObject::isLegend() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->isLegend(); }
     return node() && node()->hasTagName(legendTag);
 }
 

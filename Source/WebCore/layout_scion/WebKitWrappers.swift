@@ -1505,6 +1505,12 @@ func RenderObjectScion_isBody(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isBody()
 }
 
+@_cdecl("RenderObjectScion_isLegend")
+func RenderObjectScion_isLegend(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegend()
+}
+
 @_cdecl("RenderObjectScion_isHTMLMarquee")
 func RenderObjectScion_isHTMLMarquee(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
