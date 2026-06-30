@@ -2642,14 +2642,27 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_repaintDuringLayoutIfMoved(
-      id(),
-      LayoutRectRaw(
-        x: oldRect.x().rawValue(),
-        y: oldRect.y().rawValue(),
-        width: oldRect.width().rawValue(),
-        height: oldRect.height().rawValue()))
+    if !isNativeImpl() {
+      wk_interop.RenderBox_repaintDuringLayoutIfMoved(
+        id(),
+        LayoutRectRaw(
+          x: oldRect.x().rawValue(),
+          y: oldRect.y().rawValue(),
+          width: oldRect.width().rawValue(),
+          height: oldRect.height().rawValue()))
+      return
+    }
+    if oldRect.location() != m_frameRect.location() {
+      let newRect = m_frameRect
+      // The child moved.  Invalidate the object's old and new positions.  We have to do this
+      // since the object may not have gotten a layout.
+      m_frameRect = oldRect
+      repaint()
+      repaintOverhangingFloats(paintAllDescendants: true)
+      m_frameRect = newRect
+      repaint()
+      repaintOverhangingFloats(paintAllDescendants: true)
+    }
   }
 
   func repaintOverhangingFloats(paintAllDescendants: Bool) {}
