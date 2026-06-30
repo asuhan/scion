@@ -1673,7 +1673,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func paintRectToClipOutFromBorder(paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
-    assert(isNativeImpl())
+    // NB(asuhan): this returns an empty rectangle for both native and interop paths, we can skip the check
     return LayoutRectWrapper()
   }
 
