@@ -306,6 +306,23 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalBottom(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->logicalBottom();
 }
 
+struct LengthSizeRaw {
+    const void* width;
+    const void* height;
+};
+
+extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_borderBottomLeftRadius(const void* p)
+{
+    const auto& radius = static_cast<const WebCore::RenderStyle*>(p)->borderBottomLeftRadius();
+    return { &radius.width, &radius.height };
+}
+
+extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_borderBottomRightRadius(const void* p)
+{
+    const auto& radius = static_cast<const WebCore::RenderStyle*>(p)->borderBottomRightRadius();
+    return { &radius.width, &radius.height };
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_backgroundLayers(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->backgroundLayers();

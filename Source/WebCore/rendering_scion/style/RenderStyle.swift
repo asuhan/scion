@@ -1091,13 +1091,15 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderBottomLeftRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let radius = wk_interop.RenderStyle_borderBottomLeftRadius(p!)
+    return LengthSize(
+      width: LengthWrapper(p: radius.width), height: LengthWrapper(p: radius.height))
   }
 
   func borderBottomRightRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let radius = wk_interop.RenderStyle_borderBottomRightRadius(p!)
+    return LengthSize(
+      width: LengthWrapper(p: radius.width), height: LengthWrapper(p: radius.height))
   }
 
   func borderRadii() -> BorderDataRadii {

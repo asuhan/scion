@@ -387,6 +387,11 @@ struct TransformOperationDataRaw {
     bool isSVGRenderer;
 };
 
+struct LengthSizeRaw {
+    const void* width;
+    const void* height;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -992,6 +997,8 @@ const void* RenderStyle_logicalLeft(const void*);
 const void* RenderStyle_logicalRight(const void*);
 const void* RenderStyle_logicalTop(const void*);
 const void* RenderStyle_logicalBottom(const void*);
+struct LengthSizeRaw RenderStyle_borderBottomLeftRadius(const void*);
+struct LengthSizeRaw RenderStyle_borderBottomRightRadius(const void*);
 const void* RenderStyle_backgroundLayers(const void*);
 const void* RenderStyle_maskLayers(const void*);
 const void* RenderStyle_maskBorder(const void*);
