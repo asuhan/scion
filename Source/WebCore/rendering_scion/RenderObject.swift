@@ -843,6 +843,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .MenuList
   }
 
+  func isRenderMeter() -> Bool {
+    assert(isNativeImpl())
+    return type() == .Meter
+  }
+
   func isRenderButton() -> Bool {
     assert(isNativeImpl())
     return type() == .Button
