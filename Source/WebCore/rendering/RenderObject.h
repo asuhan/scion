@@ -461,11 +461,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::Counter;
     }
-    bool isRenderQuote() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::Quote;
-    }
+    bool isRenderQuote() const;
 
     bool isRenderDetailsMarker() const;
     WEBCORE_EXPORT bool isRenderEmbeddedObject() const;

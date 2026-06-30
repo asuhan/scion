@@ -1331,6 +1331,12 @@ func RenderObjectScion_isRenderLayerModelObject(_ objectRaw: UnsafeRawPointer) -
   return object.isRenderLayerModelObject()
 }
 
+@_cdecl("RenderObjectScion_isRenderQuote")
+func RenderObjectScion_isRenderQuote(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderQuote()
+}
+
 @_cdecl("RenderObjectScion_isRenderDetailsMarker")
 func RenderObjectScion_isRenderDetailsMarker(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

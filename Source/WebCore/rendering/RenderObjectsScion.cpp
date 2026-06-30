@@ -82,6 +82,8 @@ extern "C" bool RenderObjectScion_isRenderInline(const void*);
 
 extern "C" bool RenderObjectScion_isRenderLayerModelObject(const void*);
 
+extern "C" bool RenderObjectScion_isRenderQuote(const void*);
+
 extern "C" bool RenderObjectScion_isRenderDetailsMarker(const void*);
 
 extern "C" bool RenderObjectScion_isRenderEmbeddedObject(const void*);
@@ -913,6 +915,8 @@ bool RenderObjectScion::isRenderBlockFlow() const { return RenderObjectScion_isR
 bool RenderObjectScion::isRenderInline() const { return RenderObjectScion_isRenderInline(m_handle); }
 
 bool RenderObjectScion::isRenderLayerModelObject() const { return RenderObjectScion_isRenderLayerModelObject(m_handle); }
+
+bool RenderObjectScion::isRenderQuote() const { return RenderObjectScion_isRenderQuote(m_handle); }
 
 bool RenderObjectScion::isRenderDetailsMarker() const { return RenderObjectScion_isRenderDetailsMarker(m_handle); }
 

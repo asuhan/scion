@@ -3544,6 +3544,12 @@ bool RenderObject::isRenderLayerModelObject() const
     return m_typeFlags.contains(TypeFlag::IsLayerModelObject);
 }
 
+bool RenderObject::isRenderQuote() const
+{
+    if (m_scion) { return m_scion->isRenderQuote(); }
+    return type() == Type::Quote;
+}
+
 bool RenderObject::isRenderDetailsMarker() const
 {
     if (m_scion) { return m_scion->isRenderDetailsMarker(); }

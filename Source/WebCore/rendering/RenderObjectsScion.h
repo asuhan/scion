@@ -105,6 +105,8 @@ public:
 
     bool isRenderLayerModelObject() const;
 
+    bool isRenderQuote() const;
+
     bool isRenderDetailsMarker() const;
 
     bool isRenderEmbeddedObject() const;
