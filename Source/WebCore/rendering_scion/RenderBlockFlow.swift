@@ -2383,8 +2383,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func legacyRootBox() -> LegacyRootInlineBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return svgTextLayout()?.legacyRootBox()
   }
 
   override func setChildrenInline(b: Bool) {

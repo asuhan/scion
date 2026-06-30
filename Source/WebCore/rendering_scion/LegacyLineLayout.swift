@@ -28,7 +28,7 @@ class LegacyLineLayout {
     fatalError("Not implemented")
   }
 
-  private func legacyRootBox() -> LegacyRootInlineBox? {
+  func legacyRootBox() -> LegacyRootInlineBox? {
     return lineBoxes.firstLegacyLineBox() as! LegacyRootInlineBox?
   }
 
