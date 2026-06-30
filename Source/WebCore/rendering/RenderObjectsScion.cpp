@@ -536,6 +536,8 @@ extern "C" bool RenderElementScion_hasCachedSVGResource(const void*);
 
 extern "C" void RenderElementScion_insertedIntoTree(void*);
 
+extern "C" void RenderElementScion_willBeRemovedFromTree(void*);
+
 extern "C" bool RenderElementScion_renderBlockHasRareData(const void*);
 
 extern "C" bool RenderElementScion_didVisitSinceLayout(const void*, uint32_t);
@@ -1600,6 +1602,11 @@ bool RenderElementScion::hasCachedSVGResource() const
 void RenderElementScion::insertedIntoTree()
 {
     RenderElementScion_insertedIntoTree(m_handle);
+}
+
+void RenderElementScion::willBeRemovedFromTree()
+{
+    RenderElementScion_willBeRemovedFromTree(m_handle);
 }
 
 bool RenderElementScion::renderBlockHasRareData() const

@@ -500,6 +500,8 @@ public:
 
     void insertedIntoTree();
 
+    void willBeRemovedFromTree();
+
     bool renderBlockHasRareData() const;
 
     bool didVisitSinceLayout(RenderElement::LayoutIdentifier) const;

@@ -2804,6 +2804,12 @@ func RenderElementScion_insertedIntoTree(_ elementRaw: UnsafeMutableRawPointer) 
   element.insertedIntoTree()
 }
 
+@_cdecl("RenderElementScion_willBeRemovedFromTree")
+func RenderElementScion_willBeRemovedFromTree(_ elementRaw: UnsafeMutableRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.willBeRemovedFromTree()
+}
+
 @_cdecl("RenderElementScion_renderBlockHasRareData")
 func RenderElementScion_renderBlockHasRareData(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

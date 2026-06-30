@@ -1351,7 +1351,10 @@ void RenderElement::insertedIntoTree()
 
 void RenderElement::willBeRemovedFromTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willBeRemovedFromTree();
+        return;
+    }
     // If we remove a visible child from an invisible parent, we don't know the layer visibility any more.
     if (parent()->style().usedVisibility() != Visibility::Visible && style().usedVisibility() == Visibility::Visible && !hasLayer()) {
         // FIXME: should get parent layer. Necessary?
