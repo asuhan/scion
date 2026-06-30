@@ -373,6 +373,8 @@ public:
 
     void willBeRemovedFromTree();
 
+    void resetFragmentedFlowStateOnRemoval();
+
     void initializeFragmentedFlowStateOnInsertion();
 
     bool isSkippedContent() const;

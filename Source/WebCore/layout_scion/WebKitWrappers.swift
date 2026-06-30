@@ -2259,6 +2259,12 @@ func RenderObjectScion_willBeRemovedFromTree(_ objectRaw: UnsafeRawPointer) {
   object.willBeRemovedFromTree()
 }
 
+@_cdecl("RenderObjectScion_resetFragmentedFlowStateOnRemoval")
+func RenderObjectScion_resetFragmentedFlowStateOnRemoval(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.resetFragmentedFlowStateOnRemoval()
+}
+
 @_cdecl("RenderObjectScion_initializeFragmentedFlowStateOnInsertion")
 func RenderObjectScion_initializeFragmentedFlowStateOnInsertion(
   _ objectRaw: UnsafeMutableRawPointer

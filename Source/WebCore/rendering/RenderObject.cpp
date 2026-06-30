@@ -691,7 +691,10 @@ void RenderObject::initializeFragmentedFlowStateOnInsertion()
 
 void RenderObject::resetFragmentedFlowStateOnRemoval()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->resetFragmentedFlowStateOnRemoval();
+        return;
+    }
     ASSERT(!renderTreeBeingDestroyed());
 
     if (fragmentedFlowState() == FragmentedFlowState::NotInsideFlow)
