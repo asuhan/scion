@@ -2040,8 +2040,12 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxShadowInsetExtent() -> LayoutBoxExtent {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let extent = wk_interop.RenderStyle_boxShadowInsetExtent(p!)
+    return LayoutBoxExtent(
+      top: LayoutUnit.fromRawValue(value: extent.top),
+      right: LayoutUnit.fromRawValue(value: extent.right),
+      bottom: LayoutUnit.fromRawValue(value: extent.bottom),
+      left: LayoutUnit.fromRawValue(value: extent.left))
   }
 
   func boxDecorationBreak() -> BoxDecorationBreak {

@@ -356,6 +356,19 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_boxShadow(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->boxShadow();
 }
 
+struct LayoutBoxExtentRaw {
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+    int32_t left;
+};
+
+extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_boxShadowInsetExtent(const void* p)
+{
+    const auto extent = static_cast<const WebCore::RenderStyle*>(p)->boxShadowInsetExtent();
+    return { extent.top().rawValue(), extent.right().rawValue(), extent.bottom().rawValue(), extent.left().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_boxReflect(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->boxReflect();
