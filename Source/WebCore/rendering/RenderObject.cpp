@@ -3586,6 +3586,12 @@ bool RenderObject::isRenderMedia() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia);
 }
 
+bool RenderObject::isRenderMeter() const
+{
+    if (m_scion) { return m_scion->isRenderMeter(); }
+    return type() == Type::Meter;
+}
+
 bool RenderObject::isRenderButton() const
 {
     if (m_scion) { return m_scion->isRenderButton(); }

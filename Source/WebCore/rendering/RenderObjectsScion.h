@@ -125,6 +125,8 @@ public:
 
     bool isRenderMedia() const;
 
+    bool isRenderMeter() const;
+
     bool isRenderButton() const;
 
     bool isRenderIFrame() const;

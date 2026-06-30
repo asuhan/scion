@@ -102,6 +102,8 @@ extern "C" bool RenderObjectScion_isRenderListMarker(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
+extern "C" bool RenderObjectScion_isRenderMeter(const void*);
+
 extern "C" bool RenderObjectScion_isRenderButton(const void*);
 
 extern "C" bool RenderObjectScion_isRenderIFrame(const void*);
@@ -935,6 +937,8 @@ bool RenderObjectScion::isRenderListItem() const { return RenderObjectScion_isRe
 bool RenderObjectScion::isRenderListMarker() const { return RenderObjectScion_isRenderListMarker(m_handle); }
 
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
+
+bool RenderObjectScion::isRenderMeter() const { return RenderObjectScion_isRenderMeter(m_handle); }
 
 bool RenderObjectScion::isRenderButton() const { return RenderObjectScion_isRenderButton(m_handle); }
 

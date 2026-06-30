@@ -484,11 +484,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::MenuList;
     }
-    bool isRenderMeter() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::Meter;
-    }
+    bool isRenderMeter() const;
     bool isRenderProgress() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

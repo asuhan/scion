@@ -1391,6 +1391,12 @@ func RenderObjectScion_isRenderMedia(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderMedia()
 }
 
+@_cdecl("RenderObjectScion_isRenderMeter")
+func RenderObjectScion_isRenderMeter(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderMeter()
+}
+
 @_cdecl("RenderObjectScion_isRenderButton")
 func RenderObjectScion_isRenderButton(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
