@@ -3679,6 +3679,12 @@ bool RenderObject::isRenderGrid() const
     return type() == Type::Grid;
 }
 
+bool RenderObject::isRenderMultiColumnFlow() const
+{
+    if (m_scion) { return m_scion->isRenderMultiColumnFlow(); }
+    return type() == Type::MultiColumnFlow;
+}
+
 bool RenderObject::isRenderScrollbarPart() const
 {
     if (m_scion) { return m_scion->isRenderScrollbarPart(); }

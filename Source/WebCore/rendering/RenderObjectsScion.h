@@ -155,6 +155,8 @@ public:
 
     bool isRenderGrid() const;
 
+    bool isRenderMultiColumnFlow() const;
+
     bool isRenderScrollbarPart() const;
 
     bool isDocumentElementRenderer() const;

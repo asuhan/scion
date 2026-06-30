@@ -570,11 +570,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::MultiColumnSet;
     }
-    bool isRenderMultiColumnFlow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::MultiColumnFlow;
-    }
+    bool isRenderMultiColumnFlow() const;
     bool isRenderMultiColumnSpannerPlaceholder() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
