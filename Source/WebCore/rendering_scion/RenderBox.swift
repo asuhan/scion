@@ -1125,7 +1125,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func nextSiblingBox() -> RenderBoxWrapper? {
     if !isNativeImpl() {
       guard let nextSiblingBoxPtr = wk_interop.RenderBox_nextSiblingBox(id()) else { return nil }
-      return createRenderObjectWrapper(nextSiblingBoxPtr) as! RenderBoxWrapper?
+      return createRenderObjectWrapperOrNative(nextSiblingBoxPtr) as! RenderBoxWrapper?
     }
     return nextSibling() as? RenderBoxWrapper
   }
