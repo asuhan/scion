@@ -924,11 +924,7 @@ public:
     // rest of the rendering tree will move to a similar model.
     virtual bool nodeAtFloatPoint(const HitTestRequest&, HitTestResult&, const FloatPoint& pointInParent, HitTestAction);
 
-    virtual bool hasIntrinsicAspectRatio() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isReplacedOrInlineBlock() && (isImage() || isRenderVideo() || isRenderHTMLCanvas() || isRenderViewTransitionCapture());
-    }
+    virtual bool hasIntrinsicAspectRatio() const;
     bool isAnonymous() const;
     bool isAnonymousBlock() const;
     bool isAnonymousForPercentageResolution() const

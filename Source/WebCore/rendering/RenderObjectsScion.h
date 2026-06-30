@@ -211,6 +211,8 @@ public:
 
     void invalidateCachedBoundaries();
 
+    bool hasIntrinsicAspectRatio() const;
+
     bool isAnonymous() const;
 
     bool isAnonymousBlock() const;

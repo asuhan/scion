@@ -1649,6 +1649,12 @@ func RenderObjectScion_invalidateCachedBoundaries(_ objectRaw: UnsafeMutableRawP
   object.invalidateCachedBoundaries()
 }
 
+@_cdecl("RenderObjectScion_hasIntrinsicAspectRatio")
+func RenderObjectScion_hasIntrinsicAspectRatio(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.hasIntrinsicAspectRatio()
+}
+
 @_cdecl("RenderObjectScion_isAnonymous")
 func RenderObjectScion_isAnonymous(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

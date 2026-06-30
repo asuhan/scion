@@ -2765,6 +2765,12 @@ bool RenderObject::nodeAtFloatPoint(const HitTestRequest&, HitTestResult&, const
     return false;
 }
 
+bool RenderObject::hasIntrinsicAspectRatio() const
+{
+    if (m_scion) { return m_scion->hasIntrinsicAspectRatio(); }
+    return isReplacedOrInlineBlock() && (isImage() || isRenderVideo() || isRenderHTMLCanvas() || isRenderViewTransitionCapture());
+}
+
 RenderFragmentedFlow* RenderObject::locateEnclosingFragmentedFlow() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

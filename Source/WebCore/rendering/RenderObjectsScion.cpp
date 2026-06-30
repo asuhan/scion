@@ -188,6 +188,8 @@ extern "C" bool RenderObjectScion_isSVGRenderer(const void*);
 
 extern "C" void RenderObjectScion_invalidateCachedBoundaries(void*);
 
+extern "C" bool RenderObjectScion_hasIntrinsicAspectRatio(const void*);
+
 extern "C" bool RenderObjectScion_isAnonymous(const void*);
 
 extern "C" bool RenderObjectScion_isAnonymousBlock(const void*);
@@ -1020,6 +1022,8 @@ bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectSci
 bool RenderObjectScion::isSVGRenderer() const { return RenderObjectScion_isSVGRenderer(m_handle); }
 
 void RenderObjectScion::invalidateCachedBoundaries() { RenderObjectScion_invalidateCachedBoundaries(m_handle); }
+
+bool RenderObjectScion::hasIntrinsicAspectRatio() const { return RenderObjectScion_hasIntrinsicAspectRatio(m_handle); }
 
 bool RenderObjectScion::isAnonymous() const { return RenderObjectScion_isAnonymous(m_handle); }
 
