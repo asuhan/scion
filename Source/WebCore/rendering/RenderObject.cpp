@@ -2561,7 +2561,7 @@ void RenderObject::imageChanged(CachedImage* image, const IntRect* rect)
 
 RenderBoxModelObject* RenderObject::offsetParent() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->offsetParent(); }
     // If any of the following holds true return null and stop this algorithm:
     // A is the root element.
     // A is the HTML body element.

@@ -317,6 +317,8 @@ public:
 
     RenderElement* container() const;
 
+    RenderBoxModelObject* offsetParent() const;
+
     void setNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
 
     void clearNeedsLayout(RenderObject::HadSkippedLayout = RenderObject::HadSkippedLayout::No);

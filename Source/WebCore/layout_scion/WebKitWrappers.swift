@@ -1966,6 +1966,12 @@ func RenderObjectScion_container(_ objectRaw: UnsafeRawPointer) -> UnsafeMutable
   return wkRenderObject(object.container())
 }
 
+@_cdecl("RenderObjectScion_offsetParent")
+func RenderObjectScion_offsetParent(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.offsetParent())
+}
+
 @_cdecl("RenderObjectScion_setNeedsLayout")
 func RenderObjectScion_setNeedsLayout(_ objectRaw: UnsafeMutableRawPointer, _ markParents: Bool) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
