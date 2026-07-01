@@ -857,6 +857,7 @@ void RenderBox_setY(void*, int32_t);
 void* RenderBox_previousSiblingBox(const void*);
 void* RenderBox_nextSiblingBox(const void*);
 int32_t RenderBox_marginBefore(const void*, const void*);
+int32_t RenderBox_marginAfter(const void*, const void*);
 void RenderBox_setMarginBefore(void*, int32_t, const void*);
 void RenderBox_setMarginAfter(void*, int32_t, const void*);
 void RenderBox_clearOverridingContainingBlockContentSize(void*);

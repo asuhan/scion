@@ -152,6 +152,13 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_marginBefore(const void* box_raw_ptr
     return width.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_marginAfter(const void* box_raw_ptr, const void* override_style_raw_ptr)
+{
+    const auto override_style = static_cast<const WebCore::RenderStyle*>(override_style_raw_ptr);
+    const auto width = static_cast<const WebCore::RenderBox*>(box_raw_ptr)->marginAfter(override_style);
+    return width.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setMarginBefore(void* p, int32_t value_raw, const void* override_style_raw_ptr)
 {
     const auto value = WebCore::LayoutUnit::fromRawValue(value_raw);

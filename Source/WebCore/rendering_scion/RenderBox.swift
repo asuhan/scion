@@ -1645,7 +1645,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_marginAfter(id(), otherStyle?.p!))
+    }
     return marginBox.after((otherStyle ?? style()).writingMode())
   }
 
