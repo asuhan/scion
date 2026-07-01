@@ -488,8 +488,14 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstInlineBoxTopLeft() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
+      return lineLayout.firstInlineBoxRect(renderInline: self).location()
+    }
+    if let inlineBox = firstLegacyInlineBox() {
+      return flooredLayoutPoint(p: inlineBox.locationIncludingFlipping())
+    }
+    return LayoutPointWrapper()
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {

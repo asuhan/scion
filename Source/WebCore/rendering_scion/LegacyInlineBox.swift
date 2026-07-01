@@ -144,6 +144,17 @@ class LegacyInlineBox {
     return nil
   }
 
+  func locationIncludingFlipping() -> FloatPoint {
+    if !rendererObject().style().isFlippedBlocksWritingMode() {
+      return topLeft()
+    }
+    let block = root().blockFlow()
+    if block.style().isHorizontalWritingMode() {
+      return FloatPoint(x: x(), y: block.height() - height() - y())
+    }
+    return FloatPoint(x: block.width() - width() - x(), y: y())
+  }
+
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
     if !rendererObject().style().isFlippedBlocksWritingMode() {
       return
