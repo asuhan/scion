@@ -890,6 +890,7 @@ int32_t RenderBox_paddingBoxRectIncludingScrollbar_x(const void*);
 int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(const void*);
 int32_t RenderBox_marginStart(const void*, const void*);
 struct LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw);
+struct LayoutRectRaw RenderBox_visualOverflowRectForPropagation(const void* p, const void* parent_style_raw);
 struct LayoutRectRaw RenderBox_layoutOverflowRectForPropagation(const void* p, const void* style_raw);
 bool RenderBox_needsPreferredWidthsRecalculation(const void*);
 bool RenderBox_hasRelativeLogicalHeight(const void*);

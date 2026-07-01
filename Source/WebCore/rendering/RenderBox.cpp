@@ -360,6 +360,13 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_logicalVisualOverflowRectForPr
     return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
 }
 
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_visualOverflowRectForPropagation(const void* p, const void* parent_style_raw)
+{
+    const auto parent_style = static_cast<const WebCore::RenderStyle*>(parent_style_raw);
+    const auto& rect = static_cast<const WebCore::RenderBox*>(p)->visualOverflowRectForPropagation(parent_style);
+    return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_layoutOverflowRectForPropagation(const void* p, const void* style_raw)
 {
     const auto style = static_cast<const WebCore::RenderStyle*>(style_raw);

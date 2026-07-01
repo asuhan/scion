@@ -5106,7 +5106,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper)
     -> LayoutRectWrapper
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      let raw = wk_interop.RenderBox_visualOverflowRectForPropagation(id(), parentStyle.p!)
+      return LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: raw.x),
+        y: LayoutUnit.fromRawValue(value: raw.y),
+        width: LayoutUnit.fromRawValue(value: raw.width),
+        height: LayoutUnit.fromRawValue(value: raw.height))
+    }
     // If the writing modes of the child and parent match, then we don't have to
     // do anything fancy. Just return the result.
     var rect = visualOverflowRect()
