@@ -974,6 +974,83 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     super.willBeDestroyed()
   }
 
+  func adjustedPositionRelativeToOffsetParent(_ startPoint: LayoutPointWrapper)
+    -> LayoutPointWrapper
+  {
+    assert(isNativeImpl())
+    // If the element is the HTML body element or doesn't have a parent
+    // return 0 and stop this algorithm.
+    if isBody() || parent() == nil {
+      return LayoutPointWrapper()
+    }
+
+    var referencePoint = startPoint
+
+    // If the offsetParent of the element is null, or is the HTML body element,
+    // return the distance between the canvas origin and the left border edge
+    // of the element and stop this algorithm.
+    if let offsetParent = self.offsetParent() {
+      if let renderBox = offsetParent as? RenderBoxWrapper,
+        !offsetParent.isBody() && !(offsetParent is RenderTableWrapper)
+      {
+        referencePoint.move(dx: -renderBox.borderLeft(), dy: -renderBox.borderTop())
+      } else if let renderInline = offsetParent as? RenderInlineWrapper {
+        // Inside inline formatting context both inflow and statically positioned out-of-flow boxes are positioned relative to the root block container.
+        var topLeft = renderInline.firstInlineBoxTopLeft()
+        if isOutOfFlowPositioned() {
+          let outOfFlowStyle = style()
+          let isHorizontalWritingMode = containingBlock()!.style().isHorizontalWritingMode()
+          if !outOfFlowStyle.hasStaticInlinePosition(horizontal: isHorizontalWritingMode) {
+            topLeft.setX(x: LayoutUnit())
+          }
+          if !outOfFlowStyle.hasStaticBlockPosition(horizontal: isHorizontalWritingMode) {
+            topLeft.setY(y: LayoutUnit())
+          }
+        }
+        referencePoint.move(dx: -topLeft.x, dy: -topLeft.y)
+      }
+
+      if !isOutOfFlowPositioned() || enclosingFragmentedFlow() != nil {
+        if isRelativelyPositioned() {
+          referencePoint.move(s: relativePositionOffset())
+        } else if isStickilyPositioned() {
+          referencePoint.move(s: stickyPositionOffset())
+        }
+
+        // CSS regions specification says that region flows should return the body element as their offsetParent.
+        // Since we will bypass the body’s renderer anyway, just end the loop if we encounter a region flow (named flow thread).
+        // See http://dev.w3.org/csswg/css-regions/#cssomview-offset-attributes
+        var ancestor = parent()
+        while CPtrToInt(ancestor?.id()) != CPtrToInt(offsetParent.id()) {
+          // FIXME: What are we supposed to do inside SVG content?
+
+          if let renderMultiColumnFlow = ancestor as? RenderMultiColumnFlowWrapper {
+            // We need to apply a translation based off what region we are inside.
+            if let fragment = renderMultiColumnFlow.physicalTranslationFromFlowToFragment(
+              physicalPoint: referencePoint)
+            {
+              referencePoint.moveBy(offset: fragment.topLeftLocation())
+            }
+          } else if !isOutOfFlowPositioned() {
+            if let renderBox = ancestor as? RenderBoxWrapper, !(ancestor is RenderTableRowWrapper) {
+              referencePoint.moveBy(offset: renderBox.topLeftLocation())
+            }
+          }
+
+          ancestor = ancestor!.parent()
+        }
+
+        if let renderBox = offsetParent as? RenderBoxWrapper,
+          offsetParent.isBody() && !offsetParent.isPositioned()
+        {
+          referencePoint.moveBy(offset: renderBox.topLeftLocation())
+        }
+      }
+    }
+
+    return referencePoint
+  }
+
   func hasVisibleBoxDecorationStyle() -> Bool {
     assert(isNativeImpl())
     return hasBackground() || style().hasVisibleBorderDecoration() || style().hasUsedAppearance()

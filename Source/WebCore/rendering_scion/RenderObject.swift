@@ -1836,6 +1836,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return (element, repaintContainerSkipped!)
   }
 
+  func offsetParent() -> RenderBoxModelObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPreferredLogicalWidthsDirty(
     shouldBeDirty: Bool, markParents: MarkingBehavior = .MarkContainingBlockChain
   ) {

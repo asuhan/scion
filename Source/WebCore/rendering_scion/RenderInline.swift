@@ -487,6 +487,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
       || requiresRenderingConsolidationForViewTransition()
   }
 
+  func firstInlineBoxTopLeft() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     super.styleWillChange(diff: diff, newStyle: newStyle)
     // RenderInlines forward their absolute positioned descendants to their (non-anonymous) containing block.
