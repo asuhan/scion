@@ -598,6 +598,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func offsetTop() -> LayoutUnit {
+    assert(isNativeImpl())
+    return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).y
+  }
+
   override func offsetHeight() -> LayoutUnit {
     assert(isNativeImpl())
     return LayoutUnit(value: linesBoundingBox().height())

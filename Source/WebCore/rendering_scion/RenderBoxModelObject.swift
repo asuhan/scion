@@ -511,6 +511,15 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   // IE extensions. Used to calculate offsetWidth/Height.  Overridden by inlines (RenderFlow)
   // to return the remaining width on a given line (and the height of a single line).
+  func offsetTop() -> LayoutUnit {
+    assert(isNativeImpl())
+    // Note that RenderInline and RenderBox override this to pass a different
+    // startPoint to adjustedPositionRelativeToOffsetParent.
+    return adjustedPositionRelativeToOffsetParent(LayoutPointWrapper()).y
+  }
+
+  // IE extensions. Used to calculate offsetWidth/Height.  Overridden by inlines (RenderFlow)
+  // to return the remaining width on a given line (and the height of a single line).
   func offsetHeight() -> LayoutUnit { fatalError("Not reached") }
 
   override func updateFromStyle() {

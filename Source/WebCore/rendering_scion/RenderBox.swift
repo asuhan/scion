@@ -4992,6 +4992,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
+  override func offsetTop() -> LayoutUnit {
+    assert(isNativeImpl())
+    return adjustedPositionRelativeToOffsetParent(topLeftLocation()).y
+  }
+
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
