@@ -1260,6 +1260,15 @@ func RenderObjectScion_nextInPreOrderAfterChildren(_ objectRaw: UnsafeRawPointer
   return nil
 }
 
+@_cdecl("RenderObjectScion_firstNonAnonymousAncestor")
+func RenderObjectScion_firstNonAnonymousAncestor(_ objectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let ancestor = object.firstNonAnonymousAncestor() else { return nil }
+  return ancestor.isNativeImpl() ? ancestor.getWk() : ancestor.id()
+}
+
 @_cdecl("RenderObjectScion_enclosingLayer")
 func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

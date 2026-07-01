@@ -83,6 +83,8 @@ public:
 
     RenderObject* nextInPreOrderAfterChildren() const;
 
+    RenderElement* firstNonAnonymousAncestor() const;
+
     RenderLayer* enclosingLayer() const;
 
     RenderFragmentedFlow* enclosingFragmentedFlow() const;

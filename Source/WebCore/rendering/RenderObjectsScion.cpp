@@ -60,6 +60,8 @@ extern "C" void* RenderObjectScion_nextInPreOrder(const void*, void*);
 
 extern "C" void* RenderObjectScion_nextInPreOrderAfterChildren(const void*);
 
+extern "C" void* RenderObjectScion_firstNonAnonymousAncestor(const void*);
+
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" void* RenderObjectScion_enclosingFragmentedFlow(const void*);
@@ -899,6 +901,8 @@ RenderObject* RenderObjectScion::nextSibling() const { return static_cast<Render
 RenderObject* RenderObjectScion::nextInPreOrder(const RenderObject* stayWithin) const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrder(m_handle, const_cast<void*>(static_cast<const void*>(stayWithin)))); }
 
 RenderObject* RenderObjectScion::nextInPreOrderAfterChildren() const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrderAfterChildren(m_handle)); }
+
+RenderElement* RenderObjectScion::firstNonAnonymousAncestor() const { return static_cast<RenderElement*>(RenderObjectScion_firstNonAnonymousAncestor(m_handle)); }
 
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
 
