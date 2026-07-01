@@ -18,7 +18,9 @@ target_sources(layout_scion PRIVATE
     HTMLOptGroupElement.swift
     HTMLSelectElement.swift
     HTMLSlotElement.swift
+    HTMLTableCellElement.swift
     HTMLTableElement.swift
+    HTMLTablePartElement.swift
     HTMLTextAreaElement.swift
     HTMLTextFormControlElement.swift
 )

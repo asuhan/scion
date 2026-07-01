@@ -1837,8 +1837,51 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func offsetParent() -> RenderBoxModelObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // If any of the following holds true return null and stop this algorithm:
+    // A is the root element.
+    // A is the HTML body element.
+    // The computed value of the position property for element A is fixed.
+    if isDocumentElementRenderer() || isBody() || isFixedPositioned() {
+      return nil
+    }
+
+    // If A is an area HTML element which has a map HTML element somewhere in the ancestor
+    // chain return the nearest ancestor map HTML element and stop this algorithm.
+    // FIXME: Implement!
+
+    // Return the nearest ancestor element of A for which at least one of the following is
+    // true and stop this algorithm if such an ancestor is found:
+    //     * The element is a containing block of absolutely-positioned descendants (regardless
+    //       of whether there are any absolutely-positioned descendants).
+    //     * It is the HTML body element.
+    //     * The computed value of the position property of A is static and the ancestor
+    //       is one of the following HTML elements: td, th, or table.
+    //     * Our own extension: if there is a difference in the effective zoom
+
+    let skipTables = isPositioned()
+    var currZoom = style().usedZoom()
+    var current = parent()
+    while current != nil
+      && (current!.element() == nil
+        || (!current!.canContainAbsolutelyPositionedObjects() && !current!.isBody()))
+    {
+      let element = current!.element()
+      if !skipTables && element != nil
+        && ((element! is HTMLTableElementWrapper) || (element! is HTMLTableCellElementWrapper))
+      {
+        break
+      }
+
+      let newZoom = current!.style().usedZoom()
+      if currZoom != newZoom {
+        break
+      }
+      currZoom = newZoom
+      current = current!.parent()
+    }
+
+    return current as? RenderBoxModelObjectWrapper
   }
 
   func setPreferredLogicalWidthsDirty(
