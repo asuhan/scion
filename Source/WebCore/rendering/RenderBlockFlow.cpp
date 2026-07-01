@@ -2586,6 +2586,16 @@ void RenderBlockFlow::repaintOverhangingFloats(bool paintAllDescendants)
     }
 }
 
+void RenderBlockFlow::dirtyLineFromChangedChild()
+{
+    if (m_scion) {
+        m_scion->dirtyLineFromChangedChild();
+        return;
+    }
+    if (svgTextLayout())
+        svgTextLayout()->lineBoxes().dirtyLineFromChangedChild(*this);
+}
+
 void RenderBlockFlow::paintColumnRules(PaintInfo& paintInfo, const LayoutPoint& point)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

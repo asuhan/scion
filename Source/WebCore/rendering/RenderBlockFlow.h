@@ -164,12 +164,7 @@ protected:
         return maxPositiveMarginAfter() - maxNegativeMarginAfter();
     }
 
-    void dirtyLineFromChangedChild() final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        if (svgTextLayout())
-            svgTextLayout()->lineBoxes().dirtyLineFromChangedChild(*this);
-    }
+    void dirtyLineFromChangedChild() final;
 
     void paintColumnRules(PaintInfo&, const LayoutPoint&) override;
 

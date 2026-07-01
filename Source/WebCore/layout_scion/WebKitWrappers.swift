@@ -3174,6 +3174,12 @@ func RenderBoxScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
   box.willBeDestroyed()
 }
 
+@_cdecl("RenderBoxScion_dirtyLineFromChangedChild")
+func RenderBoxScion_dirtyLineFromChangedChild(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.dirtyLineFromChangedChild()
+}
+
 @_cdecl("RenderBoxScion_shouldTrimChildMargin")
 func RenderBoxScion_shouldTrimChildMargin(
   _ boxRaw: UnsafeRawPointer, _ typeRaw: UInt8, _ childRaw: UnsafeMutableRawPointer

@@ -655,6 +655,8 @@ extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
+extern "C" void RenderBoxScion_dirtyLineFromChangedChild(void*);
+
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
 extern "C" void RenderBoxScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
@@ -2097,6 +2099,11 @@ const RenderStyle& RenderBlockScion::outlineStyleForRepaint() const
 void RenderBlockFlowScion::willBeDestroyed()
 {
     RenderBlockFlowScion_willBeDestroyed(m_handle);
+}
+
+void RenderBlockFlowScion::dirtyLineFromChangedChild()
+{
+    RenderBoxScion_dirtyLineFromChangedChild(m_handle);
 }
 
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const

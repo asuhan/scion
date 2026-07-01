@@ -754,6 +754,8 @@ public:
 
     void willBeDestroyed();
 
+    void dirtyLineFromChangedChild();
+
     RenderMultiColumnFlow* multiColumnFlow() const;
 
     bool requiresColumns(int) const;
