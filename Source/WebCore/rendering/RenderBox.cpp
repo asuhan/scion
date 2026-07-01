@@ -6112,7 +6112,7 @@ LayoutUnit RenderBox::offsetLeft() const
 
 LayoutUnit RenderBox::offsetTop() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->offsetTop(); }
     return adjustedPositionRelativeToOffsetParent(topLeftLocation()).y();
 }
 

@@ -3103,6 +3103,12 @@ func RenderBoxScion_isUnsplittableForPagination(_ boxRaw: UnsafeRawPointer) -> B
   return box.isUnsplittableForPagination()
 }
 
+@_cdecl("RenderBoxScion_offsetTop")
+func RenderBoxScion_offsetTop(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.offsetTop().rawValue()
+}
+
 @_cdecl("RenderBoxScion_flipForWritingModeForChild")
 func RenderBoxScion_flipForWritingModeForChild(
   _ boxRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ point: LayoutPointRaw
