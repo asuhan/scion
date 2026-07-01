@@ -1012,8 +1012,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override final func dirtyLineFromChangedChild() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    svgTextLayout()?.lineBoxes.dirtyLineFromChangedChild(self)
   }
 
   override func paintColumnRules(_ paintInfo: PaintInfoWrapper, _ point: LayoutPointWrapper) {

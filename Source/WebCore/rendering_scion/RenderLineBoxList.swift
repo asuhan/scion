@@ -36,6 +36,11 @@ class RenderLineBoxList {
     fatalError("Not implemented")
   }
 
+  func dirtyLineFromChangedChild(_ parent: RenderBoxModelObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shiftLinesBy(shiftX: LayoutUnit, shiftY: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
