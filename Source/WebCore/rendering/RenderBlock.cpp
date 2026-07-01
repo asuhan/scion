@@ -40,6 +40,7 @@
 #include "HitTestResult.h"
 #include "ImageBuffer.h"
 #include "InlineIteratorInlineBox.h"
+#include "LayoutRectRaw.h"
 #include "LayoutRepainter.h"
 #include "LocalFrame.h"
 #include "LocalFrameView.h"
@@ -122,6 +123,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlock_intrinsicBorderForFieldset(const v
 extern "C" WEBCORE_EXPORT void RenderBlock_layout(void* p)
 {
     static_cast<WebCore::RenderBlock*>(p)->layout();
+}
+
+extern "C" WEBCORE_EXPORT void RenderBlock_paint(void* p, void* paint_info_raw, LayoutPointRaw paint_offset)
+{
+    static_cast<WebCore::RenderBlock*>(p)->paint(*static_cast<WebCore::PaintInfo*>(paint_info_raw), { WebCore::LayoutUnit::fromRawValue(paint_offset.x), WebCore::LayoutUnit::fromRawValue(paint_offset.y) });
 }
 
 extern "C" WEBCORE_EXPORT bool RenderBlock_isSelfCollapsingBlock(const void* p)

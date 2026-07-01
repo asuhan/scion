@@ -1730,7 +1730,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlock_paint(
+        id(), paintInfo.interop(),
+        LayoutPointRaw(x: paintOffset.x.rawValue(), y: paintOffset.y.rawValue()))
+      return
+    }
     let adjustedPaintOffset = paintOffset + location()
     let phase = paintInfo.phase
 
