@@ -123,6 +123,8 @@ class LegacyInlineBox {
 
   func bidiLevel() -> UInt8 { return m_bitfields.bidiEmbeddingLevel }
 
+  func markDirty(_ dirty: Bool = true) { m_bitfields.dirty = dirty }
+
   func dirtyLineBoxes() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -174,6 +176,7 @@ class LegacyInlineBox {
   private struct InlineBoxBitfields {
     let firstLine = false
     let bidiEmbeddingLevel: UInt8 = 0
+    var dirty = false
     let hasVirtualLogicalHeight = false
     var isHorizontal = true
     // for LegacyInlineTextBox

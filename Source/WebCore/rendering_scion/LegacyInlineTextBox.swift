@@ -45,6 +45,14 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
       truncation: nil)
   }
 
+  override func markDirty(_ dirty: Bool = true) {
+    if dirty {
+      m_len = 0
+      m_start = 0
+    }
+    super.markDirty(dirty)
+  }
+
   func logicalLeftVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -115,8 +123,8 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
 
   private let m_nextTextBox: LegacyInlineTextBox? = nil  // The next box that also uses our RenderObject
 
-  private let m_start: UInt32 = 0
-  private let m_len: UInt32 = 0
+  private var m_start: UInt32 = 0
+  private var m_len: UInt32 = 0
 
   private var wkHandle: UnsafeMutableRawPointer? = nil
 }

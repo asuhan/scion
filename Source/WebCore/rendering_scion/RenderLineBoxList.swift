@@ -36,9 +36,29 @@ class RenderLineBoxList {
     fatalError("Not implemented")
   }
 
-  func dirtyLineFromChangedChild(_ parent: RenderBoxModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func dirtyLineFromChangedChild(_ container: RenderBoxModelObjectWrapper) {
+    assert(container is RenderInlineWrapper || container is RenderBlockFlowWrapper)
+    if !container.isSVGRenderer() {
+      return
+    }
+
+    if container.parent() == nil
+      || (container is RenderBlockFlowWrapper && container.selfNeedsLayout())
+    {
+      return
+    }
+
+    let inlineContainer = container as? RenderSVGInlineWrapper
+    if let lineBox = inlineContainer?.firstLegacyInlineBox() ?? firstLegacyLineBox() {
+      lineBox.root().markDirty()
+      return
+    }
+    // For an empty inline, propagate the check up to our parent.
+    if inlineContainer?.everHadLayout() ?? false {
+      let parent = inlineContainer!.parent()!
+      parent.dirtyLineFromChangedChild()
+      parent.setNeedsLayout()
+    }
   }
 
   func shiftLinesBy(shiftX: LayoutUnit, shiftY: LayoutUnit) {
