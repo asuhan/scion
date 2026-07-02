@@ -4986,10 +4986,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   ) -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_baselinePosition(
-        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_baselinePosition(
+          id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    }
+    if isReplacedOrInlineBlock() {
+      let result = roundToInt(
+        value:
+          direction == .HorizontalLine
+          ? marginBox.top + height() + marginBox.bottom
+          : marginBox.right + width() + marginBox.left)
+      if baselineType == .AlphabeticBaseline {
+        return LayoutUnit(value: result)
+      }
+      return LayoutUnit(value: result - result / 2)
+    }
+    return LayoutUnit(value: 0)
   }
 
   override func offsetTop() -> LayoutUnit {
