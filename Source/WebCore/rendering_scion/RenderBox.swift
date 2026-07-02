@@ -2002,8 +2002,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func overridingContainingBlockContentHeight(writingMode: WritingMode)
     -> ContainingBlockOverrideValue?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if layout_scion.isHorizontalWritingMode(writingMode: writingMode) {
+      return overridingContainingBlockContentLogicalHeight()
+    }
+    return overridingContainingBlockContentLogicalWidth()
   }
 
   func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue? {
