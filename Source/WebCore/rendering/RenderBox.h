@@ -1110,16 +1110,6 @@ inline RenderBox* RenderBox::nextSiblingBox() const
     return nullptr;
 }
 
-inline RenderBox* RenderBox::nextInFlowSiblingBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    for (RenderBox* curr = nextSiblingBox(); curr; curr = curr->nextSiblingBox()) {
-        if (!curr->isFloatingOrOutOfFlowPositioned())
-            return curr;
-    }
-    return nullptr;
-}
-
 LayoutUnit synthesizedBaseline(const RenderBox&, const RenderStyle& parentStyle, LineDirectionMode, BaselineSynthesisEdge);
 
 } // namespace WebCore

@@ -624,6 +624,8 @@ public:
 
     LayoutRect frameRect() const;
 
+    RenderBox* nextInFlowSiblingBox() const;
+
     LayoutRect layoutOverflowRect() const;
 
     LayoutRect visualOverflowRect() const;

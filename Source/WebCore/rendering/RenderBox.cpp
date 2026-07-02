@@ -1314,6 +1314,16 @@ void RenderBox::addFocusRingRects(Vector<LayoutRect>& rects, const LayoutPoint& 
         rects.append(LayoutRect(additionalOffset, size()));
 }
 
+RenderBox* RenderBox::nextInFlowSiblingBox() const
+{
+    if (m_scion) { return m_scion->nextInFlowSiblingBox(); }
+    for (RenderBox* curr = nextSiblingBox(); curr; curr = curr->nextSiblingBox()) {
+        if (!curr->isFloatingOrOutOfFlowPositioned())
+            return curr;
+    }
+    return nullptr;
+}
+
 int RenderBox::reflectionOffset() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
