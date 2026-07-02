@@ -632,6 +632,8 @@ public:
 
     LayoutRect paddingBoxRectIncludingScrollbar() const;
 
+    LayoutUnit offsetWidth() const;
+
     LayoutUnit offsetHeight() const;
 
     LayoutUnit clientWidth() const;

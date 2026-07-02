@@ -866,6 +866,12 @@ void RenderBox::layout()
     clearNeedsLayout();
 }
 
+LayoutUnit RenderBox::offsetWidth() const
+{
+    if (m_scion) { return m_scion->offsetWidth(); }
+    return width();
+}
+
 LayoutUnit RenderBox::offsetHeight() const
 {
     if (m_scion) { return m_scion->offsetHeight(); }

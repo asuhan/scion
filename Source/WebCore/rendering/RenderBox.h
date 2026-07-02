@@ -255,11 +255,7 @@ public:
 
     // IE extensions. Used to calculate offsetWidth/Height.  Overridden by inlines (RenderFlow)
     // to return the remaining width on a given line (and the height of a single line).
-    LayoutUnit offsetWidth() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return width();
-    }
+    LayoutUnit offsetWidth() const override;
     LayoutUnit offsetHeight() const override;
 
     // More IE extensions.  clientWidth and clientHeight represent the interior of an object

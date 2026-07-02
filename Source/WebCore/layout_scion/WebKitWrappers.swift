@@ -2967,6 +2967,12 @@ func RenderBoxScion_paddingBoxRectIncludingScrollbar(_ boxRaw: UnsafeRawPointer)
   return convertLayoutRect(box.paddingBoxRectIncludingScrollbar())
 }
 
+@_cdecl("RenderBoxScion_offsetWidth")
+func RenderBoxScion_offsetWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.offsetWidth().rawValue()
+}
+
 @_cdecl("RenderBoxScion_offsetHeight")
 func RenderBoxScion_offsetHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
