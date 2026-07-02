@@ -120,6 +120,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableCell(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderTableCell();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderGrid(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderGrid();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMultiColumnSet(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderMultiColumnSet();

@@ -945,7 +945,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderGrid() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderGrid(id()) }
     return type() == .Grid
   }
 
