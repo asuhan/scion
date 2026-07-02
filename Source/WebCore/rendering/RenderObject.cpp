@@ -338,6 +338,16 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isInFlow(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isInFlow();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderDeprecatedFlexibleBox(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderDeprecatedFlexibleBox();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isFlexibleBoxIncludingDeprecated(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isFlexibleBoxIncludingDeprecated();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isSkippedContentForLayout(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isSkippedContentForLayout();

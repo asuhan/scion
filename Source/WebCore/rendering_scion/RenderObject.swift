@@ -2992,7 +2992,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Virtual function helpers for the deprecated Flexible Box Layout (display: -webkit-box).
   func isRenderDeprecatedFlexibleBox() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderDeprecatedFlexibleBox(id()) }
     return m_type == .DeprecatedFlexibleBox
   }
 
@@ -3003,7 +3003,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFlexibleBoxIncludingDeprecated() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isFlexibleBoxIncludingDeprecated(id()) }
     return isRenderFlexibleBox() || isRenderDeprecatedFlexibleBox()
   }
 
