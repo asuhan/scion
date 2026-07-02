@@ -1314,6 +1314,16 @@ void RenderBox::addFocusRingRects(Vector<LayoutRect>& rects, const LayoutPoint& 
         rects.append(LayoutRect(additionalOffset, size()));
 }
 
+RenderBox* RenderBox::nextSiblingBox() const
+{
+    if (m_scion) { return m_scion->nextSiblingBox(); }
+    if (auto* box = dynamicDowncast<RenderBox>(nextSibling()))
+        return box;
+
+    ASSERT(!nextSibling());
+    return nullptr;
+}
+
 RenderBox* RenderBox::nextInFlowSiblingBox() const
 {
     if (m_scion) { return m_scion->nextInFlowSiblingBox(); }

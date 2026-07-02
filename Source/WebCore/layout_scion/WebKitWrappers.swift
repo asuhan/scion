@@ -2935,6 +2935,12 @@ func RenderBoxScion_frameRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   return convertLayoutRect(box.frameRect())
 }
 
+@_cdecl("RenderBoxScion_nextSiblingBox")
+func RenderBoxScion_nextSiblingBox(_ boxRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return wkRenderObject(box.nextSiblingBox())
+}
+
 @_cdecl("RenderBoxScion_nextInFlowSiblingBox")
 func RenderBoxScion_nextInFlowSiblingBox(_ boxRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

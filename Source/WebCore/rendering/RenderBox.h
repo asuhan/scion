@@ -1100,16 +1100,6 @@ inline RenderBox* RenderBox::previousInFlowSiblingBox() const
     return nullptr;
 }
 
-inline RenderBox* RenderBox::nextSiblingBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (auto* box = dynamicDowncast<RenderBox>(nextSibling()))
-        return box;
-
-    ASSERT(!nextSibling());
-    return nullptr;
-}
-
 LayoutUnit synthesizedBaseline(const RenderBox&, const RenderStyle& parentStyle, LineDirectionMode, BaselineSynthesisEdge);
 
 } // namespace WebCore

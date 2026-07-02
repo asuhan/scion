@@ -583,6 +583,8 @@ extern "C" LayoutRectRaw RenderBoxScion_frameRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
+extern "C" void* RenderBoxScion_nextSiblingBox(const void*);
+
 extern "C" void* RenderBoxScion_nextInFlowSiblingBox(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
@@ -1807,6 +1809,11 @@ LayoutSize RenderBoxScion::size() const
 LayoutRect RenderBoxScion::frameRect() const
 {
     return convertLayoutRectRaw(RenderBoxScion_frameRect(m_handle));
+}
+
+RenderBox* RenderBoxScion::nextSiblingBox() const
+{
+    return static_cast<RenderBox*>(RenderBoxScion_nextSiblingBox(m_handle));
 }
 
 RenderBox* RenderBoxScion::nextInFlowSiblingBox() const
