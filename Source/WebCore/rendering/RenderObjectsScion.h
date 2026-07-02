@@ -672,6 +672,8 @@ public:
 
     bool isUnsplittableForPagination() const;
 
+    bool avoidsFloats() const;
+
     LayoutUnit offsetTop() const;
 
     LayoutPoint flipForWritingModeForChild(const RenderBox& child, const LayoutPoint&) const;

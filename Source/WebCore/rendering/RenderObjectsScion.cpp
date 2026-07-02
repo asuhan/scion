@@ -641,6 +641,8 @@ extern "C" LayoutBoxExtentRaw RenderBoxScion_scrollPaddingForViewportRect(void*,
 
 extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
 
+extern "C" bool RenderBoxScion_avoidsFloats(const void*);
+
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_flipForWritingModeForChild(const void*, void*, LayoutPointRaw);
@@ -1941,6 +1943,11 @@ LayoutBoxExtent RenderBoxScion::scrollPaddingForViewportRect(const LayoutRect& v
 bool RenderBoxScion::isUnsplittableForPagination() const
 {
     return RenderBoxScion_isUnsplittableForPagination(m_handle);
+}
+
+bool RenderBoxScion::avoidsFloats() const
+{
+    return RenderBoxScion_avoidsFloats(m_handle);
 }
 
 LayoutUnit RenderBoxScion::offsetTop() const

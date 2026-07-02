@@ -5705,7 +5705,7 @@ bool RenderBox::establishesIndependentFormattingContext() const
 
 bool RenderBox::avoidsFloats() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->avoidsFloats(); }
     return isReplacedOrInlineBlock() || isLegend() || isFieldset() || createsNewFormattingContext() || (element() && element()->isFormControlElement());
 }
 

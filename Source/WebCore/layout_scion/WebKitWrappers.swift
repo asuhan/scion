@@ -3121,6 +3121,12 @@ func RenderBoxScion_isUnsplittableForPagination(_ boxRaw: UnsafeRawPointer) -> B
   return box.isUnsplittableForPagination()
 }
 
+@_cdecl("RenderBoxScion_avoidsFloats")
+func RenderBoxScion_avoidsFloats(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.avoidsFloats()
+}
+
 @_cdecl("RenderBoxScion_offsetTop")
 func RenderBoxScion_offsetTop(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
