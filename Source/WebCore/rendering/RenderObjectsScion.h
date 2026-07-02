@@ -287,6 +287,8 @@ public:
 
     bool preferredLogicalWidthsDirty() const;
 
+    bool isSelectionBorder() const;
+
     bool hasNonVisibleOverflow() const;
 
     bool hasPotentiallyScrollableOverflow() const;

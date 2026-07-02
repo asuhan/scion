@@ -1880,6 +1880,12 @@ func RenderObjectScion_preferredLogicalWidthsDirty(_ objectRaw: UnsafeRawPointer
   return object.preferredLogicalWidthsDirty()
 }
 
+@_cdecl("RenderObjectScion_isSelectionBorder")
+func RenderObjectScion_isSelectionBorder(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isSelectionBorder()
+}
+
 @_cdecl("RenderObjectScion_hasNonVisibleOverflow")
 func RenderObjectScion_hasNonVisibleOverflow(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

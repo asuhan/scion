@@ -264,6 +264,8 @@ extern "C" bool RenderObjectScion_normalChildNeedsLayout(const void*);
 
 extern "C" bool RenderObjectScion_preferredLogicalWidthsDirty(const void*);
 
+extern "C" bool RenderObjectScion_isSelectionBorder(const void*);
+
 extern "C" bool RenderObjectScion_hasNonVisibleOverflow(const void*);
 
 extern "C" bool RenderObjectScion_hasPotentiallyScrollableOverflow(const void*);
@@ -1116,6 +1118,8 @@ bool RenderObjectScion::needsSimplifiedNormalFlowLayoutOnly() const { return Ren
 bool RenderObjectScion::normalChildNeedsLayout() const { return RenderObjectScion_normalChildNeedsLayout(m_handle); }
 
 bool RenderObjectScion::preferredLogicalWidthsDirty() const { return RenderObjectScion_preferredLogicalWidthsDirty(m_handle); }
+
+bool RenderObjectScion::isSelectionBorder() const { return RenderObjectScion_isSelectionBorder(m_handle); }
 
 bool RenderObjectScion::hasNonVisibleOverflow() const { return RenderObjectScion_hasNonVisibleOverflow(m_handle); }
 

@@ -2340,7 +2340,7 @@ bool RenderObject::hasLayer() const {
 
 bool RenderObject::isSelectionBorder() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->isSelectionBorder(); }
     HighlightState st = selectionState();
     return st == HighlightState::Start
         || st == HighlightState::End
