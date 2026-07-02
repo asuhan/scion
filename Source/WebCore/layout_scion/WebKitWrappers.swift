@@ -3038,6 +3038,18 @@ func RenderBoxScion_hitTestClipPath(
   return box.hitTestClipPath(hitTestLocation, accumulatedOffset)
 }
 
+@_cdecl("RenderBoxScion_minPreferredLogicalWidth")
+func RenderBoxScion_minPreferredLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.minPreferredLogicalWidth().rawValue()
+}
+
+@_cdecl("RenderBoxScion_maxPreferredLogicalWidth")
+func RenderBoxScion_maxPreferredLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.maxPreferredLogicalWidth().rawValue()
+}
+
 @_cdecl("RenderBoxScion_localRectsForRepaint")
 func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOutlineBounds: Bool)
   -> RepaintRectsRaw

@@ -607,6 +607,10 @@ extern "C" void RenderBoxScion_setMarginRight(void*, int32_t);
 
 extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
+extern "C" int32_t RenderBoxScion_minPreferredLogicalWidth(const void*);
+
+extern "C" int32_t RenderBoxScion_maxPreferredLogicalWidth(const void*);
+
 struct OptionalRepaintRectsRaw {
     RepaintRectsRaw rects;
     bool is_valid;
@@ -1864,6 +1868,16 @@ void RenderBoxScion::setMarginRight(LayoutUnit margin)
 bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, const LayoutPoint& accumulatedOffset) const
 {
     return RenderBoxScion_hitTestClipPath(m_handle, convertHitTestLocation(hitTestLocation), convertLayoutPoint(accumulatedOffset));
+}
+
+LayoutUnit RenderBoxScion::minPreferredLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_minPreferredLogicalWidth(m_handle));
+}
+
+LayoutUnit RenderBoxScion::maxPreferredLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_maxPreferredLogicalWidth(m_handle));
 }
 
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const
