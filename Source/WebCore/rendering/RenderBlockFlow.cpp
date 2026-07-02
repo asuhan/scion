@@ -3386,7 +3386,7 @@ void RenderBlockFlow::addOverflowFromInlineChildren()
 
 std::optional<LayoutUnit> RenderBlockFlow::firstLineBaseline() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->firstLineBaseline(); }
     if (isWritingModeRoot() && !isGridItem() && !isFlexItem())
         return { };
 

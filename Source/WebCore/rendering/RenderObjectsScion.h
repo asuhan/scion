@@ -784,6 +784,8 @@ public:
 
     void styleWillChange(StyleDifference, const RenderStyle&);
 
+    std::optional<LayoutUnit> firstLineBaseline() const;
+
     void setWk(void*);
 
     void* handle() const { return m_handle; }

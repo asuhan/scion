@@ -3317,6 +3317,17 @@ func RenderBlockFlowScion_styleWillChange(
   blockFlow.styleWillChange(diff: diff, newStyle: newStyle)
 }
 
+@_cdecl("RenderBlockFlowScion_firstLineBaseline")
+func RenderBlockFlowScion_firstLineBaseline(_ blockFlowRaw: UnsafeRawPointer)
+  -> OptionalLayoutUnitRaw
+{
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  guard let baseline = blockFlow.firstLineBaseline() else {
+    return OptionalLayoutUnitRaw(value: 0, is_valid: false)
+  }
+  return OptionalLayoutUnitRaw(value: baseline.rawValue(), is_valid: true)
+}
+
 @_cdecl("RenderBlockScion_insertPositionedObject")
 func RenderBlockScion_insertPositionedObject(
   _ blockRaw: UnsafeMutableRawPointer, _ positionedRaw: UnsafeMutableRawPointer

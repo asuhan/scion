@@ -732,6 +732,8 @@ extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
 
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
+extern "C" OptionalLayoutUnitRaw RenderBlockFlowScion_firstLineBaseline(const void*);
+
 extern "C" void RenderBlockFlowScion_setWk(void*, void*);
 
 struct ComputedMarginValuesRaw {
@@ -2181,6 +2183,15 @@ LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
 void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
     RenderBlockFlowScion_styleWillChange(m_handle, static_cast<uint8_t>(diff), &newStyle);
+}
+
+std::optional<LayoutUnit> RenderBlockFlowScion::firstLineBaseline() const
+{
+    const auto baseline = RenderBlockFlowScion_firstLineBaseline(m_handle);
+    if (!baseline.is_valid) {
+        return std::nullopt;
+    }
+    return LayoutUnit::fromRawValue(baseline.value);
 }
 
 void RenderBlockFlowScion::setWk(void* wk)
