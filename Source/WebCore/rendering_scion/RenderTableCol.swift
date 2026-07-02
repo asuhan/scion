@@ -130,7 +130,12 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  override func offsetHeight() -> LayoutUnit {
+  override final func offsetWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func offsetHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

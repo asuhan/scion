@@ -603,7 +603,12 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).y
   }
 
-  override func offsetHeight() -> LayoutUnit {
+  override final func offsetWidth() -> LayoutUnit {
+    assert(isNativeImpl())
+    return LayoutUnit(value: linesBoundingBox().width())
+  }
+
+  override final func offsetHeight() -> LayoutUnit {
     assert(isNativeImpl())
     return LayoutUnit(value: linesBoundingBox().height())
   }

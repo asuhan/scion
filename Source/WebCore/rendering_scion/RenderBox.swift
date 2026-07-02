@@ -1516,6 +1516,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: height() - borderWidths.top - borderWidths.bottom)
   }
 
+  override func offsetWidth() -> LayoutUnit {
+    assert(isNativeImpl())
+    return width()
+  }
+
   override func offsetHeight() -> LayoutUnit {
     assert(isNativeImpl())
     return height()
