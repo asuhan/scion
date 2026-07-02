@@ -2998,7 +2998,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Virtual function helper for the new FlexibleBox Layout (display: -webkit-flex).
   func isRenderFlexibleBox() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderFlexibleBox(id()) }
     return m_typeFlags.contains(.IsFlexibleBox)
   }
 
