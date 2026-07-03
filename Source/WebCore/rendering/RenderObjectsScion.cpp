@@ -611,6 +611,8 @@ extern "C" void RenderBoxScion_setMarginLeft(void*, int32_t);
 
 extern "C" void RenderBoxScion_setMarginRight(void*, int32_t);
 
+extern "C" void RenderBoxScion_setMarginBefore(void*, int32_t, const void*);
+
 extern "C" bool RenderBoxScion_hitTestClipPath(const void*, HitTestLocationRaw, LayoutPointRaw);
 
 extern "C" int32_t RenderBoxScion_minPreferredLogicalWidth(const void*);
@@ -1887,6 +1889,11 @@ void RenderBoxScion::setMarginLeft(LayoutUnit margin)
 void RenderBoxScion::setMarginRight(LayoutUnit margin)
 {
     RenderBoxScion_setMarginRight(m_handle, margin.rawValue());
+}
+
+void RenderBoxScion::setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle)
+{
+    RenderBoxScion_setMarginBefore(m_handle, value.rawValue(), overrideStyle);
 }
 
 bool RenderBoxScion::hitTestClipPath(const HitTestLocation& hitTestLocation, const LayoutPoint& accumulatedOffset) const

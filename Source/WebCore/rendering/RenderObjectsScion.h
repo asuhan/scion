@@ -654,6 +654,8 @@ public:
 
     void setMarginRight(LayoutUnit);
 
+    void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
+
     bool hitTestClipPath(const HitTestLocation&, const LayoutPoint&) const;
 
     LayoutUnit minPreferredLogicalWidth() const;
