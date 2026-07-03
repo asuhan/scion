@@ -387,6 +387,8 @@ public:
 
     bool isSkippedContentRoot() const;
 
+    bool isSkippedContentForLayout() const;
+
     PointerEvents usedPointerEvents() const;
 
     void setPreviousSibling(RenderObject*);

@@ -3441,7 +3441,7 @@ bool RenderObject::isSkippedContent() const
 
 bool RenderObject::isSkippedContentForLayout() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->isSkippedContentForLayout(); }
     return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout();
 }
 
