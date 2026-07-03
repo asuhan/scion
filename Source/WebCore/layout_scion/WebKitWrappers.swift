@@ -3068,6 +3068,15 @@ func RenderBoxScion_maxPreferredLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Int3
   return box.maxPreferredLogicalWidth().rawValue()
 }
 
+@_cdecl("RenderBoxScion_computeAndSetBlockDirectionMargins")
+func RenderBoxScion_computeAndSetBlockDirectionMargins(
+  _ boxRaw: UnsafeMutableRawPointer, _ containingBlockRaw: UnsafeMutableRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.computeAndSetBlockDirectionMargins(
+    containingBlock: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper)
+}
+
 @_cdecl("RenderBoxScion_localRectsForRepaint")
 func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOutlineBounds: Bool)
   -> RepaintRectsRaw

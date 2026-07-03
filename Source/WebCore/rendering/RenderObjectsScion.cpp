@@ -617,6 +617,8 @@ extern "C" int32_t RenderBoxScion_minPreferredLogicalWidth(const void*);
 
 extern "C" int32_t RenderBoxScion_maxPreferredLogicalWidth(const void*);
 
+extern "C" void RenderBoxScion_computeAndSetBlockDirectionMargins(void*, void*);
+
 struct OptionalRepaintRectsRaw {
     RepaintRectsRaw rects;
     bool is_valid;
@@ -1900,6 +1902,11 @@ LayoutUnit RenderBoxScion::minPreferredLogicalWidth() const
 LayoutUnit RenderBoxScion::maxPreferredLogicalWidth() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_maxPreferredLogicalWidth(m_handle));
+}
+
+void RenderBoxScion::computeAndSetBlockDirectionMargins(const RenderBlock& containingBlock)
+{
+    RenderBoxScion_computeAndSetBlockDirectionMargins(m_handle, const_cast<void*>(static_cast<const void*>(&containingBlock)));
 }
 
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const

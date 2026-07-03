@@ -4392,7 +4392,10 @@ void RenderBox::computeBlockDirectionMargins(const RenderBlock& containingBlock,
 
 void RenderBox::computeAndSetBlockDirectionMargins(const RenderBlock& containingBlock)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->computeAndSetBlockDirectionMargins(containingBlock);
+        return;
+    }
     LayoutUnit marginBefore;
     LayoutUnit marginAfter;
     computeBlockDirectionMargins(containingBlock, marginBefore, marginAfter);

@@ -660,6 +660,8 @@ public:
 
     LayoutUnit maxPreferredLogicalWidth() const;
 
+    void computeAndSetBlockDirectionMargins(const RenderBlock& containingBlock);
+
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
     std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
