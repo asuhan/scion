@@ -344,10 +344,7 @@ public:
     inline Overflow effectiveOverflowInlineDirection() const;
     inline Overflow effectiveOverflowBlockDirection() const;
 
-    bool isWritingModeRoot() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return !parent() || parent()->style().writingMode() != style().writingMode();
-    }
+    bool isWritingModeRoot() const;
 
     bool isDeprecatedFlexItem() const
     {

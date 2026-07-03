@@ -504,6 +504,8 @@ public:
 
     Overflow effectiveOverflowY() const;
 
+    bool isWritingModeRoot() const;
+
     bool hasCachedSVGResource() const;
 
     void insertedIntoTree();

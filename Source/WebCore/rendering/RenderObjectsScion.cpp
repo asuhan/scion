@@ -540,6 +540,8 @@ extern "C" uint8_t RenderElementScion_effectiveOverflowX(const void*);
 
 extern "C" uint8_t RenderElementScion_effectiveOverflowY(const void*);
 
+extern "C" bool RenderElementScion_isWritingModeRoot(const void*);
+
 extern "C" bool RenderElementScion_hasCachedSVGResource(const void*);
 
 extern "C" void RenderElementScion_insertedIntoTree(void*);
@@ -1634,6 +1636,11 @@ Overflow RenderElementScion::effectiveOverflowX() const
 Overflow RenderElementScion::effectiveOverflowY() const
 {
     return static_cast<Overflow>(RenderElementScion_effectiveOverflowY(m_handle));
+}
+
+bool RenderElementScion::isWritingModeRoot() const
+{
+    return RenderElementScion_isWritingModeRoot(m_handle);
 }
 
 bool RenderElementScion::hasCachedSVGResource() const

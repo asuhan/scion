@@ -2819,6 +2819,12 @@ func RenderElementScion_effectiveOverflowY(_ elementRaw: UnsafeRawPointer) -> UI
   return element.effectiveOverflowY().rawValue
 }
 
+@_cdecl("RenderElementScion_isWritingModeRoot")
+func RenderElementScion_isWritingModeRoot(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.isWritingModeRoot()
+}
+
 @_cdecl("RenderElementScion_hasCachedSVGResource")
 func RenderElementScion_hasCachedSVGResource(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

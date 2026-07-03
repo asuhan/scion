@@ -2839,6 +2839,11 @@ Overflow RenderElement::effectiveOverflowY() const
     return overflowY;
 }
 
+bool RenderElement::isWritingModeRoot() const {
+    if (m_scion) { return m_scion->isWritingModeRoot(); }
+    return !parent() || parent()->style().writingMode() != style().writingMode();
+}
+
 bool RenderElement::createsNewFormattingContext() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
