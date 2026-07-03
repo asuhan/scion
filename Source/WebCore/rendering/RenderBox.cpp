@@ -1030,6 +1030,15 @@ void RenderBox::setMarginBefore(LayoutUnit value, const RenderStyle* overrideSty
     m_marginBox.setBefore(value, (overrideStyle ? overrideStyle : &style())->writingMode());
 }
 
+void RenderBox::setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle)
+{
+    if (m_scion) {
+        m_scion->setMarginAfter(value, overrideStyle);
+        return;
+    }
+    m_marginBox.setAfter(value, (overrideStyle ? overrideStyle : &style())->writingMode());
+}
+
 void RenderBox::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

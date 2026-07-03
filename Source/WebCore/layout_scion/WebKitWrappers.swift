@@ -3045,6 +3045,16 @@ func RenderBoxScion_setMarginBefore(
     overrideStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
 }
 
+@_cdecl("RenderBoxScion_setMarginAfter")
+func RenderBoxScion_setMarginAfter(
+  _ boxRaw: UnsafeMutableRawPointer, _ valueRaw: Int32, _ overrideStyleRaw: UnsafeRawPointer?
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setMarginAfter(
+    value: LayoutUnit.fromRawValue(value: valueRaw),
+    overrideStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
+}
+
 func convertFloatPoint(_ p: FloatPointRaw) -> FloatPoint {
   return FloatPoint(x: p.x, y: p.y)
 }

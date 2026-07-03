@@ -365,11 +365,7 @@ public:
     }
 
     void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
-    void setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_marginBox.setAfter(value, (overrideStyle ? overrideStyle : &style())->writingMode());
-    }
+    void setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
     void setMarginStart(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
