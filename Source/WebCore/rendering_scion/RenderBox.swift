@@ -5835,7 +5835,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_shouldTrimChildMarginForBox(
+        id(), type.rawValue, wkRenderObject(child))
+    }
     return style().marginTrim().contains(type) && isChildEligibleForMarginTrim(type, child)
   }
 

@@ -899,6 +899,7 @@ bool RenderBox_needsPreferredWidthsRecalculation(const void*);
 bool RenderBox_hasRelativeLogicalHeight(const void*);
 bool RenderBox_isFlexItem(const void*);
 const void* RenderBox_shapeOutsideInfo(const void*);
+bool RenderBox_shouldTrimChildMarginForBox(const void*, uint8_t, const void*);
 int32_t RenderBoxModelObject_paddingStart(const void*);
 int32_t RenderBoxModelObject_paddingEnd(const void*);
 int32_t RenderBoxModelObject_borderStart(const void*);

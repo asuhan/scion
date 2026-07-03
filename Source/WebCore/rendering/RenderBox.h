@@ -871,7 +871,9 @@ protected:
 
     void willBeDestroyed() override;
 
+public:
     inline bool shouldTrimChildMargin(MarginTrimType, const RenderBox&) const;
+protected:
     virtual bool isChildEligibleForMarginTrim(MarginTrimType, const RenderBox&) const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

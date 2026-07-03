@@ -394,6 +394,11 @@ extern "C" WEBCORE_EXPORT const void* RenderBox_shapeOutsideInfo(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->shapeOutsideInfo();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_shouldTrimChildMarginForBox(const void* p, uint8_t type, const void* child)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->shouldTrimChildMargin(static_cast<WebCore::MarginTrimType>(type), *static_cast<const WebCore::RenderBox*>(child));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBox);
