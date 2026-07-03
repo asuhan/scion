@@ -1181,7 +1181,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func setMarginBeforeForChild(child: RenderBoxWrapper, value: LayoutUnit) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlock_setMarginBeforeForChild(id(), wkRenderObject(child), value.rawValue())
+      return
+    }
     child.setMarginBefore(value: value, overrideStyle: style())
   }
 
