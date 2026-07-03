@@ -695,6 +695,8 @@ extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
 
 extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
 
+extern "C" bool RenderBlockScion_hasMarginBeforeQuirk(const void*);
+
 extern "C" int32_t RenderBlockScion_borderTop(const void*);
 
 extern "C" int32_t RenderBlockScion_borderBottom(const void*);
@@ -2097,6 +2099,11 @@ void RenderBlockScion::addPercentHeightDescendant(RenderBox& descendant)
 {
     assert(!descendant.scion());
     RenderBlockScion_addPercentHeightDescendant(m_handle, &descendant);
+}
+
+bool RenderBlockScion::hasMarginBeforeQuirk() const
+{
+    return RenderBlockScion_hasMarginBeforeQuirk(m_handle);
 }
 
 LayoutUnit RenderBlockScion::borderTop() const

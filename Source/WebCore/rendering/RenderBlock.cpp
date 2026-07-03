@@ -3244,6 +3244,12 @@ LayoutUnit RenderBlock::collapsedMarginAfterForChild(const RenderBox& child) con
     return marginAfterForChild(child);
 }
 
+bool RenderBlock::hasMarginBeforeQuirk() const
+{
+    if (m_scion) { return m_scion->hasMarginBeforeQuirk(); }
+    return renderBlockHasMarginBeforeQuirk();
+}
+
 bool RenderBlock::hasMarginBeforeQuirk(const RenderBox& child) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

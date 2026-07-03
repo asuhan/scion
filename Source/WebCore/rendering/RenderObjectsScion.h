@@ -737,6 +737,8 @@ public:
 
     void addPercentHeightDescendant(RenderBox&);
 
+    bool hasMarginBeforeQuirk() const;
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;

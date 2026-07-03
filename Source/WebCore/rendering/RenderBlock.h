@@ -124,11 +124,7 @@ public:
         setRenderBlockShouldForceRelayoutChildren(b);
     }
 
-    bool hasMarginBeforeQuirk() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return renderBlockHasMarginBeforeQuirk();
-    }
+    bool hasMarginBeforeQuirk() const;
     bool hasMarginAfterQuirk() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
