@@ -1429,6 +1429,7 @@ void RenderBlock_markForPaginationRelayoutIfNeeded(void*);
 bool RenderBlock_containsFloats(const void*);
 int32_t RenderBlock_intrinsicBorderForFieldset(const void*);
 void RenderBlock_setMarginBeforeForChild(void*, void*, int32_t);
+void RenderBlock_setMarginAfterForChild(void*, void*, int32_t);
 void RenderBlock_layout(void*);
 bool RenderBlock_isSelfCollapsingBlock(const void*);
 void RenderBlock_paint(void*, void*, struct LayoutPointRaw);

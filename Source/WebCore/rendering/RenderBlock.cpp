@@ -127,6 +127,13 @@ extern "C" WEBCORE_EXPORT void RenderBlock_setMarginBeforeForChild(void* p, void
     static_cast<WebCore::RenderBlock*>(p)->setMarginBeforeForChild(child, value);
 }
 
+extern "C" WEBCORE_EXPORT void RenderBlock_setMarginAfterForChild(void* p, void* child_raw, int32_t value_raw)
+{
+    auto& child = *static_cast<WebCore::RenderBox*>(child_raw);
+    const auto value = WebCore::LayoutUnit::fromRawValue(value_raw);
+    static_cast<WebCore::RenderBlock*>(p)->setMarginAfterForChild(child, value);
+}
+
 extern "C" WEBCORE_EXPORT void RenderBlock_layout(void* p)
 {
     static_cast<WebCore::RenderBlock*>(p)->layout();
