@@ -3199,6 +3199,12 @@ func RenderBoxScion_hasVisualOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.hasVisualOverflow()
 }
 
+@_cdecl("RenderBoxScion_needsPreferredWidthsRecalculation")
+func RenderBoxScion_needsPreferredWidthsRecalculation(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.needsPreferredWidthsRecalculation()
+}
+
 @_cdecl("RenderBoxScion_scrollPosition")
 func RenderBoxScion_scrollPosition(_ boxRaw: UnsafeRawPointer) -> IntPointRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

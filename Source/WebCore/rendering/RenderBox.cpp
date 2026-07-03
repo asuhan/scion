@@ -1672,7 +1672,7 @@ bool RenderBox::scrollsOverflowY() const
 
 bool RenderBox::needsPreferredWidthsRecalculation() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->needsPreferredWidthsRecalculation(); }
     return style().paddingStart().isPercentOrCalculated() || style().paddingEnd().isPercentOrCalculated() || (style().hasAspectRatio() && (hasRelativeLogicalHeight() || (isFlexItem() && hasStretchedLogicalHeight())));
 }
 

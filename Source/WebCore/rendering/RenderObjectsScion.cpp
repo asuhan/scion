@@ -665,6 +665,8 @@ extern "C" bool RenderBoxScion_hasRenderOverflow(const void*);
 
 extern "C" bool RenderBoxScion_hasVisualOverflow(const void*);
 
+extern "C" bool RenderBoxScion_needsPreferredWidthsRecalculation(const void*);
+
 extern "C" IntPointRaw RenderBoxScion_scrollPosition(const void*);
 
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
@@ -2014,6 +2016,11 @@ bool RenderBoxScion::hasRenderOverflow() const
 bool RenderBoxScion::hasVisualOverflow() const
 {
     return RenderBoxScion_hasVisualOverflow(m_handle);
+}
+
+bool RenderBoxScion::needsPreferredWidthsRecalculation() const
+{
+    return RenderBoxScion_needsPreferredWidthsRecalculation(m_handle);
 }
 
 ScrollPosition RenderBoxScion::scrollPosition() const

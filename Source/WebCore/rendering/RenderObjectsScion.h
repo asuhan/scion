@@ -696,6 +696,8 @@ public:
 
     bool hasVisualOverflow() const;
 
+    bool needsPreferredWidthsRecalculation() const;
+
     ScrollPosition scrollPosition() const;
 
     void styleWillChange(StyleDifference, const RenderStyle&);
