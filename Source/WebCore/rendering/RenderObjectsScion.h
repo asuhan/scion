@@ -816,6 +816,14 @@ public:
 
     LayoutIntegration::LineLayout* inlineLayout();
 
+    LayoutUnit maxPositiveMarginBefore() const;
+
+    LayoutUnit maxNegativeMarginBefore() const;
+
+    LayoutUnit maxPositiveMarginAfter() const;
+
+    LayoutUnit maxNegativeMarginAfter() const;
+
     void styleWillChange(StyleDifference, const RenderStyle&);
 
     std::optional<LayoutUnit> firstLineBaseline() const;

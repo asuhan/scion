@@ -764,6 +764,14 @@ extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
 
 extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
 
+extern "C" int32_t RenderBlockFlowScion_maxPositiveMarginBefore(const void*);
+
+extern "C" int32_t RenderBlockFlowScion_maxNegativeMarginBefore(const void*);
+
+extern "C" int32_t RenderBlockFlowScion_maxPositiveMarginAfter(const void*);
+
+extern "C" int32_t RenderBlockFlowScion_maxNegativeMarginAfter(const void*);
+
 extern "C" void RenderBlockFlowScion_styleWillChange(void*, uint8_t, const void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBlockFlowScion_firstLineBaseline(const void*);
@@ -2294,6 +2302,26 @@ const LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout() const
 LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
 {
     return static_cast<LayoutIntegration::LineLayout*>(RenderBlockFlowScion_inlineLayout(m_handle));
+}
+
+LayoutUnit RenderBlockFlowScion::maxPositiveMarginBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockFlowScion_maxPositiveMarginBefore(m_handle));
+}
+
+LayoutUnit RenderBlockFlowScion::maxNegativeMarginBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockFlowScion_maxNegativeMarginBefore(m_handle));
+}
+
+LayoutUnit RenderBlockFlowScion::maxPositiveMarginAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockFlowScion_maxPositiveMarginAfter(m_handle));
+}
+
+LayoutUnit RenderBlockFlowScion::maxNegativeMarginAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockFlowScion_maxNegativeMarginAfter(m_handle));
 }
 
 void RenderBlockFlowScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)

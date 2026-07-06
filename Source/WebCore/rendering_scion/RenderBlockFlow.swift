@@ -3113,7 +3113,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return logicalOffset
   }
 
-  private func maxPositiveMarginBefore() -> LayoutUnit {
+  func maxPositiveMarginBefore() -> LayoutUnit {
     if !isNativeImpl() {
       return LayoutUnit.fromRawValue(
         value: wk_interop.RenderBlockFlow_maxPositiveMarginBefore(id()))
@@ -3123,7 +3123,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       : RenderBlockFlowRareData.positiveMarginBeforeDefault(self)
   }
 
-  private func maxNegativeMarginBefore() -> LayoutUnit {
+  func maxNegativeMarginBefore() -> LayoutUnit {
     if !isNativeImpl() {
       return LayoutUnit.fromRawValue(
         value: wk_interop.RenderBlockFlow_maxNegativeMarginBefore(id()))
@@ -3134,7 +3134,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       : RenderBlockFlowRareData.negativeMarginBeforeDefault(self)
   }
 
-  private func maxPositiveMarginAfter() -> LayoutUnit {
+  func maxPositiveMarginAfter() -> LayoutUnit {
     if !isNativeImpl() {
       return LayoutUnit.fromRawValue(
         value: wk_interop.RenderBlockFlow_maxPositiveMarginAfter(id()))
@@ -3144,7 +3144,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       : RenderBlockFlowRareData.positiveMarginAfterDefault(self)
   }
 
-  private func maxNegativeMarginAfter() -> LayoutUnit {
+  func maxNegativeMarginAfter() -> LayoutUnit {
     if !isNativeImpl() {
       return LayoutUnit.fromRawValue(
         value: wk_interop.RenderBlockFlow_maxNegativeMarginAfter(id()))

@@ -3397,6 +3397,30 @@ func RenderBlockFlowScion_inlineLayout(_ blockFlowRaw: UnsafeMutableRawPointer)
   return nil
 }
 
+@_cdecl("RenderBlockFlowScion_maxPositiveMarginBefore")
+func RenderBlockFlowScion_maxPositiveMarginBefore(_ blockFlowRaw: UnsafeRawPointer) -> Int32 {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.maxPositiveMarginBefore().rawValue()
+}
+
+@_cdecl("RenderBlockFlowScion_maxNegativeMarginBefore")
+func RenderBlockFlowScion_maxNegativeMarginBefore(_ blockFlowRaw: UnsafeRawPointer) -> Int32 {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.maxNegativeMarginBefore().rawValue()
+}
+
+@_cdecl("RenderBlockFlowScion_maxPositiveMarginAfter")
+func RenderBlockFlowScion_maxPositiveMarginAfter(_ blockFlowRaw: UnsafeRawPointer) -> Int32 {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.maxPositiveMarginAfter().rawValue()
+}
+
+@_cdecl("RenderBlockFlowScion_maxNegativeMarginAfter")
+func RenderBlockFlowScion_maxNegativeMarginAfter(_ blockFlowRaw: UnsafeRawPointer) -> Int32 {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.maxNegativeMarginAfter().rawValue()
+}
+
 @_cdecl("RenderBlockFlowScion_styleWillChange")
 func RenderBlockFlowScion_styleWillChange(
   _ blockFlowRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer

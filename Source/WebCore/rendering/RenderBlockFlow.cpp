@@ -1888,6 +1888,30 @@ LayoutUnit RenderBlockFlow::applyAfterBreak(RenderBox& child, LayoutUnit logical
     return logicalOffset;
 }
 
+LayoutUnit RenderBlockFlow::maxPositiveMarginBefore() const
+{
+    if (m_scion) { return m_scion->maxPositiveMarginBefore(); }
+    return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginBefore() : RenderBlockFlowRareData::positiveMarginBeforeDefault(*this);
+}
+
+LayoutUnit RenderBlockFlow::maxNegativeMarginBefore() const
+{
+    if (m_scion) { return m_scion->maxNegativeMarginBefore(); }
+    return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginBefore() : RenderBlockFlowRareData::negativeMarginBeforeDefault(*this);
+}
+
+LayoutUnit RenderBlockFlow::maxPositiveMarginAfter() const
+{
+    if (m_scion) { return m_scion->maxPositiveMarginAfter(); }
+    return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginAfter() : RenderBlockFlowRareData::positiveMarginAfterDefault(*this);
+}
+
+LayoutUnit RenderBlockFlow::maxNegativeMarginAfter() const
+{
+    if (m_scion) { return m_scion->maxNegativeMarginAfter(); }
+    return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginAfter() : RenderBlockFlowRareData::negativeMarginAfterDefault(*this);
+}
+
 LayoutUnit RenderBlockFlow::adjustBlockChildForPagination(LayoutUnit logicalTopAfterClear, LayoutUnit estimateWithoutPagination, RenderBox& child, bool atBeforeSideOfBlock)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -493,26 +493,10 @@ protected:
     LayoutUnit applyAfterBreak(RenderBox& child, LayoutUnit logicalOffset, MarginInfo&); // If the child has an after break, then return a new offset that shifts to the top of the next page/column.
 
 public:
-    LayoutUnit maxPositiveMarginBefore() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginBefore() : RenderBlockFlowRareData::positiveMarginBeforeDefault(*this);
-    }
-    LayoutUnit maxNegativeMarginBefore() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginBefore() : RenderBlockFlowRareData::negativeMarginBeforeDefault(*this);
-    }
-    LayoutUnit maxPositiveMarginAfter() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.positiveMarginAfter() : RenderBlockFlowRareData::positiveMarginAfterDefault(*this);
-    }
-    LayoutUnit maxNegativeMarginAfter() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasRareBlockFlowData() ? rareBlockFlowData()->m_margins.negativeMarginAfter() : RenderBlockFlowRareData::negativeMarginAfterDefault(*this);
-    }
+    LayoutUnit maxPositiveMarginBefore() const;
+    LayoutUnit maxNegativeMarginBefore() const;
+    LayoutUnit maxPositiveMarginAfter() const;
+    LayoutUnit maxNegativeMarginAfter() const;
 
 protected:
     void initMaxMarginValues()
