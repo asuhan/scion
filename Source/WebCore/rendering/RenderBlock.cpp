@@ -134,6 +134,12 @@ extern "C" WEBCORE_EXPORT void RenderBlock_setMarginAfterForChild(void* p, void*
     static_cast<WebCore::RenderBlock*>(p)->setMarginAfterForChild(child, value);
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBlock_logicalLeftOffsetForContent(const void* p)
+{
+    const auto offset = static_cast<const WebCore::RenderBlock*>(p)->logicalLeftOffsetForContent();
+    return offset.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBlock_layout(void* p)
 {
     static_cast<WebCore::RenderBlock*>(p)->layout();

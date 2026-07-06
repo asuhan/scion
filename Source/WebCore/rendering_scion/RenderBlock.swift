@@ -1358,7 +1358,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalLeftOffsetForContent() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBlock_logicalLeftOffsetForContent(id()))
+    }
     return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
   }
 
