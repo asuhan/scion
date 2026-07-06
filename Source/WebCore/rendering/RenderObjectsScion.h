@@ -777,6 +777,8 @@ public:
 
     bool isInlineBlockOrInlineTable() const;
 
+    bool isSelfCollapsingBlock() const;
+
     const RenderStyle& outlineStyleForRepaint() const;
 
 private:

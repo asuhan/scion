@@ -740,6 +740,8 @@ extern "C" const void* RenderBlockScion_debugDescription(const void*);
 
 extern "C" bool RenderBlockScion_isInlineBlockOrInlineTable(const void*);
 
+extern "C" bool RenderBlockScion_isSelfCollapsingBlock(const void*);
+
 extern "C" const void* RenderBlockScion_outlineStyleForRepaint(const void*);
 
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
@@ -2220,6 +2222,11 @@ String RenderBlockScion::debugDescription() const
 bool RenderBlockScion::isInlineBlockOrInlineTable() const
 {
     return RenderBlockScion_isInlineBlockOrInlineTable(m_handle);
+}
+
+bool RenderBlockScion::isSelfCollapsingBlock() const
+{
+    return RenderBlockScion_isSelfCollapsingBlock(m_handle);
 }
 
 const RenderStyle& RenderBlockScion::outlineStyleForRepaint() const

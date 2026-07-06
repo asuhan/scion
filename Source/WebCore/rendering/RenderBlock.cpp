@@ -488,7 +488,7 @@ bool RenderBlock::childrenPreventSelfCollapsing() const
 
 bool RenderBlock::isSelfCollapsingBlock() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->isSelfCollapsingBlock(); }
     // We are not self-collapsing if we
     // (a) have a non-zero height according to layout (an optimization to avoid wasting time)
     // (b) are a table,

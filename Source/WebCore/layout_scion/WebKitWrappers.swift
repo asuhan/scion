@@ -3570,6 +3570,12 @@ func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -
   return block.isInlineBlockOrInlineTable()
 }
 
+@_cdecl("RenderBlockScion_isSelfCollapsingBlock")
+func RenderBlockScion_isSelfCollapsingBlock(_ blockRaw: UnsafeRawPointer) -> Bool {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.isSelfCollapsingBlock()
+}
+
 @_cdecl("RenderBlockScion_outlineStyleForRepaint")
 func RenderBlockScion_outlineStyleForRepaint(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
