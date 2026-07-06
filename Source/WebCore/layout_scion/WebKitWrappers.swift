@@ -3542,6 +3542,12 @@ func RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout(_ blockRaw: Unsa
   return block.shouldResetChildLogicalHeightBeforeLayout()
 }
 
+@_cdecl("RenderBlockScion_layout")
+func RenderBlockScion_layout(_ blockRaw: UnsafeMutableRawPointer) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.layout()
+}
+
 @_cdecl("RenderBlockScion_paint")
 func RenderBlockScion_paint(
   _ blockRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,

@@ -769,6 +769,8 @@ public:
 
     bool shouldResetChildLogicalHeightBeforeLayout() const;
 
+    void layout();
+
     void paint(PaintInfo&, const LayoutPoint&);
 
     String debugDescription() const;
