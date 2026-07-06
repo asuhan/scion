@@ -125,11 +125,7 @@ public:
     }
 
     bool hasMarginBeforeQuirk() const;
-    bool hasMarginAfterQuirk() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return renderBlockHasMarginAfterQuirk();
-    }
+    bool hasMarginAfterQuirk() const;
     bool hasBorderOrPaddingLogicalWidthChanged() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

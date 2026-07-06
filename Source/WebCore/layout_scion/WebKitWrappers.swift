@@ -3442,6 +3442,12 @@ func RenderBlockScion_hasMarginBeforeQuirk(_ blockRaw: UnsafeRawPointer) -> Bool
   return block.hasMarginBeforeQuirk()
 }
 
+@_cdecl("RenderBlockScion_hasMarginAfterQuirk")
+func RenderBlockScion_hasMarginAfterQuirk(_ blockRaw: UnsafeRawPointer) -> Bool {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.hasMarginAfterQuirk()
+}
+
 @_cdecl("RenderBlockScion_markForPaginationRelayoutIfNeeded")
 func RenderBlockScion_markForPaginationRelayoutIfNeeded(_ blockRaw: UnsafeMutableRawPointer) {
   let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()

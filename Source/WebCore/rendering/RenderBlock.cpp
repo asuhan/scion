@@ -3263,6 +3263,12 @@ bool RenderBlock::hasMarginBeforeQuirk() const
     return renderBlockHasMarginBeforeQuirk();
 }
 
+bool RenderBlock::hasMarginAfterQuirk() const
+{
+    if (m_scion) { return m_scion->hasMarginAfterQuirk(); }
+    return renderBlockHasMarginAfterQuirk();
+}
+
 bool RenderBlock::hasMarginBeforeQuirk(const RenderBox& child) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
