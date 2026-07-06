@@ -612,6 +612,31 @@ func isSkippedContentRoot(style: RenderStyleWrapper, element: ElementWrapper?) -
   return element != nil && !element!.isRelevantToUser()
 }
 
+private func convertLengthSize(_ lengthSize: LengthSize) -> LengthSizeRaw {
+  return LengthSizeRaw(width: lengthSize.width.p, height: lengthSize.height.p)
+}
+
+private func convertLayoutSizeRaw(_ layoutSize: LayoutSizeRaw) -> LayoutSizeWrapper {
+  return LayoutSizeWrapper(
+    width: LayoutUnit.fromRawValue(value: layoutSize.width),
+    height: LayoutUnit.fromRawValue(value: layoutSize.height))
+}
+
+private func convertRoundedRectRadiiRaw(_ radii: RoundedRectRadiiRaw) -> RoundedRectRadii {
+  return RoundedRectRadii(
+    topLeft: convertLayoutSizeRaw(radii.topLeft),
+    topRight: convertLayoutSizeRaw(radii.topRight),
+    bottomLeft: convertLayoutSizeRaw(radii.bottomLeft),
+    bottomRight: convertLayoutSizeRaw(radii.bottomRight))
+}
+
+private func emptyBorderDataRadii() -> BorderDataRadiiRaw {
+  let emptyLayoutSizeRaw = LengthSizeRaw(width: nil, height: nil)
+  return BorderDataRadiiRaw(
+    topLeft: emptyLayoutSizeRaw, topRight: emptyLayoutSizeRaw, bottomLeft: emptyLayoutSizeRaw,
+    bottomRight: emptyLayoutSizeRaw)
+}
+
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
   var pOwner: Bool = false
@@ -1428,11 +1453,25 @@ class RenderStyleWrapper: Equatable {
 
   static func getRoundedInnerBorderFor(
     borderRect: LayoutRectWrapper, topWidth: LayoutUnit, bottomWidth: LayoutUnit,
-    leftWidth: LayoutUnit, rightWidth: LayoutUnit, radii: BorderData.Radii?,
+    leftWidth: LayoutUnit, rightWidth: LayoutUnit, radii: BorderDataRadii?,
     isHorizontalWritingMode: Bool, includeLogicalLeftEdge: Bool, includeLogicalRightEdge: Bool
   ) -> RoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let radiiRaw =
+      radii != nil
+      ? OptionalBorderDataRadiiRaw(
+        value: BorderDataRadiiRaw(
+          topLeft: convertLengthSize(radii!.topLeft),
+          topRight: convertLengthSize(radii!.topRight),
+          bottomLeft: convertLengthSize(radii!.bottomLeft),
+          bottomRight: convertLengthSize(radii!.bottomRight)), is_valid: true)
+      : OptionalBorderDataRadiiRaw(value: emptyBorderDataRadii(), is_valid: false)
+    let roundedRectRaw = wk_interop.RenderStyle_getRoundedInnerBorderFor(
+      convertLayoutRect(borderRect), topWidth.rawValue(), bottomWidth.rawValue(),
+      leftWidth.rawValue(), rightWidth.rawValue(), radiiRaw, isHorizontalWritingMode,
+      includeLogicalLeftEdge, includeLogicalRightEdge)
+    return RoundedRect(
+      rect: convertLayoutRect(roundedRectRaw.rect),
+      radii: convertRoundedRectRadiiRaw(roundedRectRaw.radii))
   }
 
   func tabSize() -> TabSizeWrapper {

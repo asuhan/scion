@@ -392,6 +392,30 @@ struct LengthSizeRaw {
     const void* height;
 };
 
+struct RoundedRectRadiiRaw {
+    struct LayoutSizeRaw topLeft;
+    struct LayoutSizeRaw topRight;
+    struct LayoutSizeRaw bottomLeft;
+    struct LayoutSizeRaw bottomRight;
+};
+
+struct RoundedRectRaw {
+    struct LayoutRectRaw rect;
+    struct RoundedRectRadiiRaw radii;
+};
+
+struct BorderDataRadiiRaw {
+    struct LengthSizeRaw topLeft;
+    struct LengthSizeRaw topRight;
+    struct LengthSizeRaw bottomLeft;
+    struct LengthSizeRaw bottomRight;
+};
+
+struct OptionalBorderDataRadiiRaw {
+    struct BorderDataRadiiRaw value;
+    bool is_valid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1077,6 +1101,16 @@ uint8_t RenderStyle_blendMode(const void*);
 bool RenderStyle_hasBlendMode(const void*);
 bool RenderStyle_isolation(const void*);
 bool RenderStyle_usesStandardScrollbarStyle(const void*);
+struct RoundedRectRaw RenderStyle_getRoundedInnerBorderFor(
+    struct LayoutRectRaw borderRectRaw,
+    int32_t topWidthRaw,
+    int32_t bottomWidthRaw,
+    int32_t leftWidthRaw,
+    int32_t rightWidthRaw,
+    struct OptionalBorderDataRadiiRaw radiiRaw,
+    bool isHorizontalWritingMode,
+    bool includeLogicalLeftEdge,
+    bool includeLogicalRightEdge);
 int32_t RenderStyle_usedZIndex(const void*);
 bool RenderStyle_hasAutoUsedZIndex(const void*);
 void RenderStyle_setUsedZIndex(const void*, int32_t);

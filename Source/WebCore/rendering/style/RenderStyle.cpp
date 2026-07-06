@@ -683,6 +683,100 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_usesStandardScrollbarStyle(const void
     return static_cast<const WebCore::RenderStyle*>(p)->usesStandardScrollbarStyle();
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+struct RoundedRectRadiiRaw {
+    LayoutSizeRaw topLeft;
+    LayoutSizeRaw topRight;
+    LayoutSizeRaw bottomLeft;
+    LayoutSizeRaw bottomRight;
+};
+
+struct RoundedRectRaw {
+    LayoutRectRaw rect;
+    RoundedRectRadiiRaw radii;
+};
+
+struct BorderDataRadiiRaw {
+    LengthSizeRaw topLeft;
+    LengthSizeRaw topRight;
+    LengthSizeRaw bottomLeft;
+    LengthSizeRaw bottomRight;
+};
+
+struct OptionalBorderDataRadiiRaw {
+    BorderDataRadiiRaw value;
+    bool is_valid;
+};
+
+namespace {
+
+LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height) };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT RoundedRectRaw RenderStyle_getRoundedInnerBorderFor(
+    LayoutRectRaw borderRectRaw,
+    int32_t topWidthRaw,
+    int32_t bottomWidthRaw,
+    int32_t leftWidthRaw,
+    int32_t rightWidthRaw,
+    OptionalBorderDataRadiiRaw radiiRaw,
+    bool isHorizontalWritingMode,
+    bool includeLogicalLeftEdge,
+    bool includeLogicalRightEdge)
+{
+    const auto borderRect = convertLayoutRectRaw(borderRectRaw);
+    const auto topWidth = WebCore::LayoutUnit::fromRawValue(topWidthRaw);
+    const auto bottomWidth = WebCore::LayoutUnit::fromRawValue(bottomWidthRaw);
+    const auto leftWidth = WebCore::LayoutUnit::fromRawValue(leftWidthRaw);
+    const auto rightWidth = WebCore::LayoutUnit::fromRawValue(rightWidthRaw);
+    std::optional<WebCore::BorderDataRadii> radii;
+    if (radiiRaw.is_valid) {
+        radii = WebCore::BorderDataRadii {
+            { *static_cast<const WebCore::Length*>(radiiRaw.value.topLeft.width), *static_cast<const WebCore::Length*>(radiiRaw.value.topLeft.height) },
+            { *static_cast<const WebCore::Length*>(radiiRaw.value.topRight.width), *static_cast<const WebCore::Length*>(radiiRaw.value.topRight.height) },
+            { *static_cast<const WebCore::Length*>(radiiRaw.value.bottomLeft.width), *static_cast<const WebCore::Length*>(radiiRaw.value.bottomLeft.height) },
+            { *static_cast<const WebCore::Length*>(radiiRaw.value.bottomRight.width), *static_cast<const WebCore::Length*>(radiiRaw.value.bottomRight.height) },
+        };
+    }
+    const auto rounded_rect = WebCore::RenderStyle::getRoundedInnerBorderFor(
+        borderRect,
+        topWidth,
+        bottomWidth,
+        leftWidth,
+        rightWidth,
+        radii,
+        isHorizontalWritingMode,
+        includeLogicalLeftEdge,
+        includeLogicalRightEdge);
+    RoundedRectRadiiRaw rounded_radii {
+        { rounded_rect.radii().topLeft().width().rawValue(), rounded_rect.radii().topLeft().height().rawValue() },
+        { rounded_rect.radii().topRight().width().rawValue(), rounded_rect.radii().topRight().height().rawValue() },
+        { rounded_rect.radii().bottomLeft().width().rawValue(), rounded_rect.radii().bottomLeft().height().rawValue() },
+        { rounded_rect.radii().bottomRight().width().rawValue(), rounded_rect.radii().bottomRight().height().rawValue() },
+    };
+    return { convertLayoutRect(rounded_rect.rect()), rounded_radii };
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_usedZIndex(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->usedZIndex();
