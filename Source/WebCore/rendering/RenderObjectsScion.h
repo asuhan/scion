@@ -745,6 +745,8 @@ public:
 
     bool hasMarginBeforeQuirk() const;
 
+    void markForPaginationRelayoutIfNeeded();
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;

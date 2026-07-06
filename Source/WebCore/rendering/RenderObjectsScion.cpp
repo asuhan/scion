@@ -703,6 +703,8 @@ extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
 
 extern "C" bool RenderBlockScion_hasMarginBeforeQuirk(const void*);
 
+extern "C" void RenderBlockScion_markForPaginationRelayoutIfNeeded(void*);
+
 extern "C" int32_t RenderBlockScion_borderTop(const void*);
 
 extern "C" int32_t RenderBlockScion_borderBottom(const void*);
@@ -2127,6 +2129,11 @@ void RenderBlockScion::addPercentHeightDescendant(RenderBox& descendant)
 bool RenderBlockScion::hasMarginBeforeQuirk() const
 {
     return RenderBlockScion_hasMarginBeforeQuirk(m_handle);
+}
+
+void RenderBlockScion::markForPaginationRelayoutIfNeeded()
+{
+    RenderBlockScion_markForPaginationRelayoutIfNeeded(m_handle);
 }
 
 LayoutUnit RenderBlockScion::borderTop() const

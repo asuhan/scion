@@ -1075,7 +1075,10 @@ void RenderBlock::markPositionedObjectsForLayout()
 
 void RenderBlock::markForPaginationRelayoutIfNeeded()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->markForPaginationRelayoutIfNeeded();
+        return;
+    }
     auto* layoutState = view().frameView().layoutContext().layoutState();
     if (needsLayout() || !layoutState || !layoutState->isPaginated())
         return;
