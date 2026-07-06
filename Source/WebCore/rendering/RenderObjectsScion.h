@@ -626,6 +626,8 @@ public:
 
     LayoutUnit width() const;
 
+    LayoutUnit height() const;
+
     void setXLayoutUnit(LayoutUnit x);
 
     void setYLayoutUnit(LayoutUnit y);

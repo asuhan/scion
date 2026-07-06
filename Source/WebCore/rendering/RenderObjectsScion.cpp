@@ -579,6 +579,8 @@ extern "C" bool RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(const void*, La
 
 extern "C" int32_t RenderBoxScion_width(const void*);
 
+extern "C" int32_t RenderBoxScion_height(const void*);
+
 extern "C" int32_t RenderBoxScion_x(const void*);
 
 extern "C" int32_t RenderBoxScion_y(const void*);
@@ -1852,6 +1854,11 @@ LayoutUnit RenderBoxScion::y() const
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+LayoutUnit RenderBoxScion::height() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_height(m_handle));
 }
 
 void RenderBoxScion::setXLayoutUnit(LayoutUnit x)
