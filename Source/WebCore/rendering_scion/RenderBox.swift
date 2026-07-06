@@ -5129,7 +5129,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return rect
   }
 
-  private func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper)
+  func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper)
     -> LayoutRectWrapper
   {
     if !isNativeImpl() {

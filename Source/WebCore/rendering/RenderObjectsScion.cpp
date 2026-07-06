@@ -691,6 +691,8 @@ extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_topLeftLocationOffset(const void*);
 
+extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRectForPropagation(const void*, const void*);
+
 extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRectForPropagation(const void*, const void*);
 
 extern "C" bool RenderBoxScion_hasRenderOverflow(const void*);
@@ -2131,6 +2133,12 @@ LayoutSize RenderBoxScion::topLeftLocationOffset() const
 {
     const auto topLeft = RenderBoxScion_topLeftLocationOffset(m_handle);
     return { LayoutUnit::fromRawValue(topLeft.width), LayoutUnit::fromRawValue(topLeft.height) };
+}
+
+LayoutRect RenderBoxScion::visualOverflowRectForPropagation(const RenderStyle* parentStyle) const
+{
+    const auto rect = RenderBoxScion_visualOverflowRectForPropagation(m_handle, parentStyle);
+    return convertLayoutRect(rect);
 }
 
 LayoutRect RenderBoxScion::layoutOverflowRectForPropagation(const RenderStyle* parentStyle) const

@@ -6082,7 +6082,7 @@ LayoutRect RenderBox::logicalVisualOverflowRectForPropagation(const RenderStyle*
 
 LayoutRect RenderBox::visualOverflowRectForPropagation(const RenderStyle* parentStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->visualOverflowRectForPropagation(parentStyle); }
     // If the writing modes of the child and parent match, then we don't have to 
     // do anything fancy. Just return the result.
     LayoutRect rect = visualOverflowRect();

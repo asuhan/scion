@@ -3300,6 +3300,16 @@ func RenderBoxScion_topLeftLocationOffset(_ boxRaw: UnsafeRawPointer) -> LayoutS
   return LayoutSizeRaw(width: topLeft.width().rawValue(), height: topLeft.height().rawValue())
 }
 
+@_cdecl("RenderBoxScion_visualOverflowRectForPropagation")
+func RenderBoxScion_visualOverflowRectForPropagation(
+  _ boxRaw: UnsafeRawPointer, _ parentStyleRaw: UnsafeRawPointer
+) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let rect = box.visualOverflowRectForPropagation(
+    parentStyle: convert_render_style(p: parentStyleRaw))
+  return convertLayoutRect(rect)
+}
+
 @_cdecl("RenderBoxScion_layoutOverflowRectForPropagation")
 func RenderBoxScion_layoutOverflowRectForPropagation(
   _ boxRaw: UnsafeRawPointer, _ parentStyleRaw: UnsafeRawPointer
