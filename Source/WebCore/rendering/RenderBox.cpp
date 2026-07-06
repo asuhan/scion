@@ -1021,6 +1021,12 @@ void RenderBox::setMarginRight(LayoutUnit margin)
     m_marginBox.setRight(margin);
 }
 
+LayoutUnit RenderBox::marginBefore(const RenderStyle* overrideStyle) const
+{
+    if (m_scion) { return m_scion->marginBefore(overrideStyle); }
+    return m_marginBox.before((overrideStyle ? overrideStyle : &style())->writingMode());
+}
+
 void RenderBox::setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle)
 {
     if (m_scion) {

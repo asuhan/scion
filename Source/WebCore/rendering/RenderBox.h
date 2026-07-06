@@ -331,11 +331,7 @@ public:
         return m_marginBox.end((overrideStyle ? overrideStyle : &style())->writingMode());
     }
 
-    LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marginBox.before((overrideStyle ? overrideStyle : &style())->writingMode());
-    }
+    LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const final;
     LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const final
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
