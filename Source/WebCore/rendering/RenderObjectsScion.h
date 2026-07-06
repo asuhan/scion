@@ -582,6 +582,8 @@ public:
     {
     }
 
+    bool hasSelfPaintingLayer() const;
+
     RenderLayer* layer() const;
 
     CheckedPtr<RenderLayer> checkedLayer() const;

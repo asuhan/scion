@@ -1177,6 +1177,15 @@ func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawP
   return layer.layerId()
 }
 
+@_cdecl("RenderLayerModelObjectScion_hasSelfPaintingLayer")
+func RenderLayerModelObjectScion_hasSelfPaintingLayer(
+  _ layerModelObjectRaw: UnsafeMutableRawPointer
+) -> Bool {
+  let layerModelObject = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(layerModelObjectRaw)
+    .takeUnretainedValue()
+  return layerModelObject.hasSelfPaintingLayer()
+}
+
 @_cdecl("RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft")
 func RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(
   _ layerModelObjectRaw: UnsafeMutableRawPointer

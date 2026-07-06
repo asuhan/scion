@@ -562,6 +562,8 @@ extern "C" void RenderElementScion_setLastChild(void*, void*);
 
 extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
 
+extern "C" bool RenderLayerModelObjectScion_hasSelfPaintingLayer(const void* p);
+
 extern "C" bool RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(const void* p);
 
 struct LayoutSizeRaw {
@@ -1819,6 +1821,11 @@ RenderLayer* RenderLayerModelObjectScion::layer() const
 CheckedPtr<RenderLayer> RenderLayerModelObjectScion::checkedLayer() const
 {
     return layer();
+}
+
+bool RenderLayerModelObjectScion::hasSelfPaintingLayer() const
+{
+    return RenderLayerModelObjectScion_hasSelfPaintingLayer(m_handle);
 }
 
 bool RenderLayerModelObjectScion::shouldPlaceVerticalScrollbarOnLeft() const
