@@ -3422,7 +3422,7 @@ func RenderBlockFlowScion_firstLineBaseline(_ blockFlowRaw: UnsafeRawPointer)
 func RenderBlockScion_insertPositionedObject(
   _ blockRaw: UnsafeMutableRawPointer, _ positionedRaw: UnsafeMutableRawPointer
 ) {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   let positioned = createRenderObjectWrapperOrNative(positionedRaw) as! RenderBoxWrapper
   block.insertPositionedObject(positioned: positioned)
 }
@@ -3431,50 +3431,50 @@ func RenderBlockScion_insertPositionedObject(
 func RenderBlockScion_addPercentHeightDescendant(
   _ blockRaw: UnsafeMutableRawPointer, _ descendantRaw: UnsafeMutableRawPointer
 ) {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   let descendant = createRenderObjectWrapperOrNative(descendantRaw) as! RenderBoxWrapper
   block.addPercentHeightDescendant(descendant: descendant)
 }
 
 @_cdecl("RenderBlockScion_hasMarginBeforeQuirk")
 func RenderBlockScion_hasMarginBeforeQuirk(_ blockRaw: UnsafeRawPointer) -> Bool {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.hasMarginBeforeQuirk()
 }
 
 @_cdecl("RenderBlockScion_markForPaginationRelayoutIfNeeded")
 func RenderBlockScion_markForPaginationRelayoutIfNeeded(_ blockRaw: UnsafeMutableRawPointer) {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   block.markForPaginationRelayoutIfNeeded()
 }
 
 @_cdecl("RenderBlockScion_borderTop")
 func RenderBlockScion_borderTop(_ blockRaw: UnsafeRawPointer) -> Int32 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.borderTop().rawValue()
 }
 
 @_cdecl("RenderBlockScion_borderBottom")
 func RenderBlockScion_borderBottom(_ blockRaw: UnsafeRawPointer) -> Int32 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.borderBottom().rawValue()
 }
 
 @_cdecl("RenderBlockScion_borderLeft")
 func RenderBlockScion_borderLeft(_ blockRaw: UnsafeRawPointer) -> Int32 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.borderLeft().rawValue()
 }
 
 @_cdecl("RenderBlockScion_borderRight")
 func RenderBlockScion_borderRight(_ blockRaw: UnsafeRawPointer) -> Int32 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.borderRight().rawValue()
 }
 
 @_cdecl("RenderBlockScion_borderBefore")
 func RenderBlockScion_borderBefore(_ blockRaw: UnsafeRawPointer) -> Int32 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.borderBefore().rawValue()
 }
 
@@ -3482,7 +3482,7 @@ func RenderBlockScion_borderBefore(_ blockRaw: UnsafeRawPointer) -> Int32 {
 func RenderBlockScion_setMarginBeforeForChild(
   _ blockRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ valueRaw: Int32
 ) {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   block.setMarginBeforeForChild(
     child: createRenderObjectWrapper(childRaw) as! RenderBoxWrapper,
     value: LayoutUnit.fromRawValue(value: valueRaw))
@@ -3492,7 +3492,7 @@ func RenderBlockScion_setMarginBeforeForChild(
 func RenderBlockScion_setMarginAfterForChild(
   _ blockRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ valueRaw: Int32
 ) {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   block.setMarginAfterForChild(
     child: createRenderObjectWrapper(childRaw) as! RenderBoxWrapper,
     value: LayoutUnit.fromRawValue(value: valueRaw))
@@ -3507,7 +3507,7 @@ func wkRenderObject(_ obj: RenderObjectWrapper?) -> UnsafeMutableRawPointer? {
 func RenderBlockScion_getFirstLetter(
   _ blockRaw: UnsafeRawPointer, _ skipObjectRaw: UnsafeMutableRawPointer?
 ) -> FirstLetterRenderObjectsRaw {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   let skipObject = skipObjectRaw != nil ? createRenderObjectWrapperOrNative(skipObjectRaw!) : nil
   let firstLetterRenderObjects = block.getFirstLetter(skipObject: skipObject)
   let firstLetter = firstLetterRenderObjects.firstLetter
@@ -3519,7 +3519,7 @@ func RenderBlockScion_getFirstLetter(
 
 @_cdecl("RenderBlockScion_canHaveChildren")
 func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.canHaveChildren()
 }
 
@@ -3527,7 +3527,7 @@ func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
 func RenderBlockScion_availableLogicalHeightForPercentageComputation(_ blockRaw: UnsafeRawPointer)
   -> OptionalLayoutUnitRaw
 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   guard let height = block.availableLogicalHeightForPercentageComputation() else {
     return OptionalLayoutUnitRaw(value: 0, is_valid: false)
   }
@@ -3538,7 +3538,7 @@ func RenderBlockScion_availableLogicalHeightForPercentageComputation(_ blockRaw:
 func RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout(_ blockRaw: UnsafeRawPointer)
   -> Bool
 {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.shouldResetChildLogicalHeightBeforeLayout()
 }
 
@@ -3554,25 +3554,25 @@ func RenderBlockScion_paint(
   _ paintOffset: LayoutPointRaw
 ) {
   var paintInfo = PaintInfoWrapper(p: paintInfoRaw)
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   block.paint(paintInfo: &paintInfo, paintOffset: convertLayoutPointRaw(paintOffset))
 }
 
 @_cdecl("RenderBlockScion_debugDescription")
 func RenderBlockScion_debugDescription(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.debugDescription().p
 }
 
 @_cdecl("RenderBlockScion_isInlineBlockOrInlineTable")
 func RenderBlockScion_isInlineBlockOrInlineTable(_ blockRaw: UnsafeRawPointer) -> Bool {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.isInlineBlockOrInlineTable()
 }
 
 @_cdecl("RenderBlockScion_outlineStyleForRepaint")
 func RenderBlockScion_outlineStyleForRepaint(_ blockRaw: UnsafeRawPointer) -> UnsafeRawPointer {
-  let block = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   return block.outlineStyleForRepaint().p!
 }
 
