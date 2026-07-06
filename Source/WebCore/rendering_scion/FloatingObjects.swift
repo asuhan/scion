@@ -41,12 +41,12 @@ class FloatingObjectWrapper: Hashable {
   }
 
   // Note that Type uses bits so you can use FloatLeftRight as a mask to query for both left and right.
-  struct `Type`: OptionSet {
+  struct Type_: OptionSet {
     let rawValue: UInt8
 
-    static let FloatLeft = `Type`(rawValue: 1 << 0)
-    static let FloatRight = `Type`(rawValue: 1 << 1)
-    static let FloatLeftRight: `Type` = [.FloatLeft, .FloatRight]
+    static let FloatLeft = Type_(rawValue: 1 << 0)
+    static let FloatRight = Type_(rawValue: 1 << 1)
+    static let FloatLeftRight: Type_ = [.FloatLeft, .FloatRight]
   }
 
   func copyToNewContainer(
@@ -179,7 +179,7 @@ class FloatingObjectWrapper: Hashable {
 
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
-  let type: `Type` = .FloatLeft  // Type (left or right aligned)
+  let type: Type_ = .FloatLeft  // Type (left or right aligned)
   let isPlaced = false
   #if ASSERT_ENABLED
     var isInPlacedTree = false

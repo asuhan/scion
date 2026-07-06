@@ -750,6 +750,8 @@ extern "C" bool RenderBlockFlowScion_containsFloat(const void*, void*);
 
 extern "C" void RenderBlockFlowScion_deleteLines(void*);
 
+extern "C" int32_t RenderBlockFlowScion_lowestFloatLogicalBottom(void*, uint8_t);
+
 extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
 
 extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
@@ -2244,6 +2246,11 @@ bool RenderBlockFlowScion::containsFloat(RenderBox& renderer) const
 void RenderBlockFlowScion::deleteLines()
 {
     RenderBlockFlowScion_deleteLines(m_handle);
+}
+
+LayoutUnit RenderBlockFlowScion::lowestFloatLogicalBottom(uint8_t floatType) const
+{
+    return LayoutUnit::fromRawValue(RenderBlockFlowScion_lowestFloatLogicalBottom(m_handle, floatType));
 }
 
 void RenderBlockFlowScion::setChildrenInline(bool value)

@@ -2185,7 +2185,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
+  func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.Type_ = .FloatLeftRight)
     -> LayoutUnit
   {
     if !isNativeImpl() {

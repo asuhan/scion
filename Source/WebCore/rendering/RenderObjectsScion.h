@@ -800,6 +800,8 @@ public:
 
     void deleteLines();
 
+    LayoutUnit lowestFloatLogicalBottom(uint8_t) const;
+
     void setChildrenInline(bool);
 
     const LayoutIntegration::LineLayout* inlineLayout() const;

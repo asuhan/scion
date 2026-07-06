@@ -3372,6 +3372,15 @@ func RenderBlockFlowScion_deleteLines(_ blockFlowRaw: UnsafeMutableRawPointer) {
   blockFlow.deleteLines()
 }
 
+@_cdecl("RenderBlockFlowScion_lowestFloatLogicalBottom")
+func RenderBlockFlowScion_lowestFloatLogicalBottom(
+  _ blockFlowRaw: UnsafeRawPointer, _ floatTypeRaw: UInt8
+) -> Int32 {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  let floatType = FloatingObjectWrapper.Type_(rawValue: floatTypeRaw)
+  return blockFlow.lowestFloatLogicalBottom(floatType: floatType).rawValue()
+}
+
 @_cdecl("RenderBlockFlowScion_setChildrenInline")
 func RenderBlockFlowScion_setChildrenInline(_ blockFlowRaw: UnsafeMutableRawPointer, _ value: Bool)
 {

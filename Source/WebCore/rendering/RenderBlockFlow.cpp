@@ -3047,7 +3047,7 @@ LayoutUnit RenderBlockFlow::nextFloatLogicalBottomBelowForBlock(LayoutUnit logic
 
 LayoutUnit RenderBlockFlow::lowestFloatLogicalBottom(FloatingObject::Type floatType) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->lowestFloatLogicalBottom(static_cast<uint8_t>(floatType)); }
     if (!m_floatingObjects)
         return 0;
     LayoutUnit lowestFloatBottom;
