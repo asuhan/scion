@@ -2927,6 +2927,12 @@ func RenderBoxScion_width(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.width().rawValue()
 }
 
+@_cdecl("RenderBoxScion_x")
+func RenderBoxScion_x(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.x().rawValue()
+}
+
 @_cdecl("RenderBoxScion_y")
 func RenderBoxScion_y(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

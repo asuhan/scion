@@ -60,11 +60,7 @@ public:
     bool requiresLayerWithScrollableArea() const;
     bool backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) const final;
 
-    LayoutUnit x() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_frameRect.x();
-    }
+    LayoutUnit x() const;
     LayoutUnit y() const;
     WEBCORE_EXPORT LayoutUnit width() const;
     WEBCORE_EXPORT LayoutUnit height() const;
