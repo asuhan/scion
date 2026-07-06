@@ -6110,7 +6110,7 @@ LayoutRect RenderBox::logicalLayoutOverflowRectForPropagation(const RenderStyle*
 
 LayoutRect RenderBox::layoutOverflowRectForPropagation(const RenderStyle* parentStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->layoutOverflowRectForPropagation(parentStyle); }
     // Only propagate interior layout overflow if we don't completely clip it.
     auto rect = borderBoxRect();
     if (isGridItem()) {

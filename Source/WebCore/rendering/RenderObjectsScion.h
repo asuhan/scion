@@ -720,6 +720,8 @@ public:
 
     LayoutSize topLeftLocationOffset() const;
 
+    LayoutRect layoutOverflowRectForPropagation(const RenderStyle*) const;
+
     bool hasRenderOverflow() const;
 
     bool hasVisualOverflow() const;
