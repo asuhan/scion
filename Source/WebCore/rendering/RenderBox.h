@@ -92,6 +92,10 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_frameRect.setY(y);
     }
+
+    // TODO(asuhan): used for interop only, remove once not needed anymore
+    void setYLayoutUnit(LayoutUnit y);
+
     template<typename T> void setWidth(T width)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

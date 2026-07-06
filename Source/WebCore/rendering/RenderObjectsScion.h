@@ -622,6 +622,8 @@ public:
 
     LayoutUnit width() const;
 
+    void setYLayoutUnit(LayoutUnit y);
+
     LayoutUnit logicalHeight() const;
 
     LayoutPoint location() const;

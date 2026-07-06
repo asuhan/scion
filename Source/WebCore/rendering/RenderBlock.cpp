@@ -787,7 +787,8 @@ void RenderBlock::setLogicalTopForChild(RenderBox& child, LayoutUnit logicalTop,
     if (isHorizontalWritingMode()) {
         if (applyDelta == ApplyLayoutDelta)
             view().frameView().layoutContext().addLayoutDelta(LayoutSize(0_lu, child.y() - logicalTop));
-        child.setY(logicalTop);
+        // TODO(asuhan): switch back to setY once the need for interop disappears
+        child.setYLayoutUnit(logicalTop);
     } else {
         if (applyDelta == ApplyLayoutDelta)
             view().frameView().layoutContext().addLayoutDelta(LayoutSize(child.x() - logicalTop, 0_lu));

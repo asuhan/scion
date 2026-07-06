@@ -2394,6 +2394,15 @@ LayoutUnit RenderBox::height() const
     return m_frameRect.height();
 }
 
+void RenderBox::setYLayoutUnit(LayoutUnit y)
+{
+    if (m_scion) {
+        m_scion->setYLayoutUnit(y);
+        return;
+    }
+    m_frameRect.setY(y);
+}
+
 static bool isCandidateForOpaquenessTest(const RenderBox& childBox)
 {
     const RenderStyle& childStyle = childBox.style();
