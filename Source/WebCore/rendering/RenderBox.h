@@ -124,11 +124,7 @@ public:
     inline void setLogicalSize(LayoutSize);
 
     LayoutPoint location() const;
-    LayoutSize locationOffset() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return LayoutSize(x(), y());
-    }
+    LayoutSize locationOffset() const;
     LayoutSize size() const;
     inline LayoutSize logicalSize() const;
 

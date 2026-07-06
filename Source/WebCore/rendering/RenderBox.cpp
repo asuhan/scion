@@ -1216,6 +1216,12 @@ LayoutPoint RenderBox::location() const
     return m_frameRect.location();
 }
 
+LayoutSize RenderBox::locationOffset() const
+{
+    if (m_scion) { return m_scion->locationOffset(); }
+    return LayoutSize(x(), y());
+}
+
 LayoutSize RenderBox::size() const
 {
     if (m_scion) { return m_scion->size(); }

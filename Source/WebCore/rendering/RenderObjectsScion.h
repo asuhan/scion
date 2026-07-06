@@ -638,6 +638,8 @@ public:
 
     LayoutPoint location() const;
 
+    LayoutSize locationOffset() const;
+
     LayoutSize size() const;
 
     LayoutRect frameRect() const;
