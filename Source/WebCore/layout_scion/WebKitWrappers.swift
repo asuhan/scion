@@ -2625,6 +2625,12 @@ func RenderElementScion_setNeedsSimplifiedNormalFlowLayout(_ elementRaw: UnsafeM
   element.setNeedsSimplifiedNormalFlowLayout()
 }
 
+@_cdecl("RenderElementScion_layoutIfNeeded")
+func RenderElementScion_layoutIfNeeded(_ objectRaw: UnsafeMutableRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  element.layoutIfNeeded()
+}
+
 @_cdecl("RenderElementScion_repaintAfterLayoutIfNeeded")
 func RenderElementScion_repaintAfterLayoutIfNeeded(
   _ elementRaw: UnsafeMutableRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,

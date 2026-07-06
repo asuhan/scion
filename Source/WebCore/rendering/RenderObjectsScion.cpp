@@ -495,6 +495,8 @@ extern "C" bool RenderElementScion_shouldApplyLayoutOrPaintContainment(const voi
 
 extern "C" void RenderElementScion_setNeedsSimplifiedNormalFlowLayout(void*);
 
+extern "C" void RenderElementScion_layoutIfNeeded(void*);
+
 extern "C" bool RenderElementScion_repaintAfterLayoutIfNeeded(void*, void*, bool, bool, RepaintRectsRaw, RepaintRectsRaw);
 
 extern "C" bool RenderElementScion_isTransparent(const void*);
@@ -1551,6 +1553,8 @@ RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
 }
 
 } // namespace
+
+void RenderElementScion::layoutIfNeeded() { RenderElementScion_layoutIfNeeded(m_handle); }
 
 bool RenderElementScion::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, RequiresFullRepaint requiresFullRepaint, const RenderObject::RepaintRects& oldRects, const RenderObject::RepaintRects& newRects)
 {

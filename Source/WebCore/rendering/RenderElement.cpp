@@ -2999,7 +2999,10 @@ bool RenderElement::hasCachedSVGResource() const
 
 void RenderElement::layoutIfNeeded()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->layoutIfNeeded();
+        return;
+    }
     if (!needsLayout())
         return;
     if (isSkippedContentForLayout()) {

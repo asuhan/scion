@@ -466,6 +466,8 @@ public:
 
     void setNeedsSimplifiedNormalFlowLayout();
 
+    void layoutIfNeeded();
+
     bool repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&&, RequiresFullRepaint, const RenderObject::RepaintRects&, const RenderObject::RepaintRects&);
 
     bool isTransparent() const;
