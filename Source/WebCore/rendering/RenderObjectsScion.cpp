@@ -577,6 +577,8 @@ extern "C" bool RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(const void*, La
 
 extern "C" int32_t RenderBoxScion_width(const void*);
 
+extern "C" int32_t RenderBoxScion_y(const void*);
+
 extern "C" int32_t RenderBoxScion_logicalHeight(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_location(const void*);
@@ -1810,6 +1812,11 @@ bool RenderBoxScion::backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRe
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+LayoutUnit RenderBoxScion::y() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_y(m_handle));
 }
 
 LayoutUnit RenderBoxScion::logicalHeight() const

@@ -65,11 +65,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_frameRect.x();
     }
-    LayoutUnit y() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_frameRect.y();
-    }
+    LayoutUnit y() const;
     WEBCORE_EXPORT LayoutUnit width() const;
     WEBCORE_EXPORT LayoutUnit height() const;
 

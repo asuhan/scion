@@ -618,6 +618,8 @@ public:
 
     bool backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) const;
 
+    LayoutUnit y() const;
+
     LayoutUnit width() const;
 
     LayoutUnit logicalHeight() const;

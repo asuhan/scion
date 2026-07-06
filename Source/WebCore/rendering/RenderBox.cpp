@@ -2376,6 +2376,12 @@ bool RenderBox::backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) c
     return backgroundRect.contains(localRect);
 }
 
+LayoutUnit RenderBox::y() const
+{
+    if (m_scion) { return m_scion->y(); }
+    return m_frameRect.y();
+}
+
 LayoutUnit RenderBox::width() const
 {
     if (m_scion) { return m_scion->width(); }
