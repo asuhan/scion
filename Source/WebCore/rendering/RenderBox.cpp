@@ -1027,6 +1027,13 @@ LayoutUnit RenderBox::marginBefore(const RenderStyle* overrideStyle) const
     return m_marginBox.before((overrideStyle ? overrideStyle : &style())->writingMode());
 }
 
+LayoutUnit RenderBox::marginStart(const RenderStyle* overrideStyle) const
+{
+    if (m_scion) { return m_scion->marginStart(overrideStyle); }
+    const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
+    return m_marginBox.start(styleToUse->writingMode(), styleToUse->direction());
+}
+
 void RenderBox::setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle)
 {
     if (m_scion) {

@@ -3069,6 +3069,16 @@ func RenderBoxScion_marginBefore(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: U
   return margin.rawValue()
 }
 
+@_cdecl("RenderBoxScion_marginStart")
+func RenderBoxScion_marginStart(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let margin = box.marginStart(
+    otherStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
+  return margin.rawValue()
+}
+
 @_cdecl("RenderBoxScion_setMarginBefore")
 func RenderBoxScion_setMarginBefore(
   _ boxRaw: UnsafeMutableRawPointer, _ valueRaw: Int32, _ overrideStyleRaw: UnsafeRawPointer?

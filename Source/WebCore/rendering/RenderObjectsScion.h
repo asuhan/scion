@@ -664,6 +664,8 @@ public:
 
     LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const;
 
+    LayoutUnit marginStart(const RenderStyle* overrideStyle = nullptr) const;
+
     void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
 
     void setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);

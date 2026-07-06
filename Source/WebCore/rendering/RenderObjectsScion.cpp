@@ -621,6 +621,8 @@ extern "C" void RenderBoxScion_setMarginRight(void*, int32_t);
 
 extern "C" int32_t RenderBoxScion_marginBefore(const void*, const void*);
 
+extern "C" int32_t RenderBoxScion_marginStart(const void*, const void*);
+
 extern "C" void RenderBoxScion_setMarginBefore(void*, int32_t, const void*);
 
 extern "C" void RenderBoxScion_setMarginAfter(void*, int32_t, const void*);
@@ -1943,6 +1945,11 @@ void RenderBoxScion::setMarginRight(LayoutUnit margin)
 LayoutUnit RenderBoxScion::marginBefore(const RenderStyle* overrideStyle) const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_marginBefore(m_handle, overrideStyle));
+}
+
+LayoutUnit RenderBoxScion::marginStart(const RenderStyle* overrideStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginStart(m_handle, overrideStyle));
 }
 
 void RenderBoxScion::setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle)
