@@ -140,6 +140,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isBody(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isBody();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isHTMLMarquee(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isHTMLMarquee();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_everHadLayout(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->everHadLayout();

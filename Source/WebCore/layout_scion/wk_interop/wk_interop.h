@@ -674,6 +674,7 @@ bool RenderObject_isRenderGrid(const void*);
 bool RenderObject_isRenderMultiColumnSet(const void*);
 bool RenderObject_isDocumentElementRenderer(const void*);
 bool RenderObject_isBody(const void*);
+bool RenderObject_isHTMLMarquee(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
 bool RenderObject_fragmentedFlowState(const void*);

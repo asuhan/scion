@@ -982,7 +982,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isHTMLMarquee() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isHTMLMarquee(id()) }
     return CPtrToInt(node()?.renderer()?.id()) == CPtrToInt(id())
       && (node()?.hasMarqueeTagName() ?? false)
   }
