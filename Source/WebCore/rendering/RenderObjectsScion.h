@@ -486,6 +486,8 @@ public:
 
     bool requiresRenderingConsolidationForViewTransition() const;
 
+    bool checkForRepaintDuringLayout() const;
+
     bool hasFilter() const;
 
     bool hasBackdropFilter() const;

@@ -2702,6 +2702,12 @@ func RenderElementScion_requiresRenderingConsolidationForViewTransition(
   return element.requiresRenderingConsolidationForViewTransition()
 }
 
+@_cdecl("RenderElementScion_checkForRepaintDuringLayout")
+func RenderElementScion_checkForRepaintDuringLayout(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.checkForRepaintDuringLayout()
+}
+
 @_cdecl("RenderElementScion_hasFilter")
 func RenderElementScion_hasFilter(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

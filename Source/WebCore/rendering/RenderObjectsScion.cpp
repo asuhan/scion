@@ -515,6 +515,8 @@ extern "C" bool RenderElementScion_isViewTransitionRoot(const void*);
 
 extern "C" bool RenderElementScion_requiresRenderingConsolidationForViewTransition(const void*);
 
+extern "C" bool RenderElementScion_checkForRepaintDuringLayout(const void*);
+
 extern "C" bool RenderElementScion_hasFilter(const void*);
 
 extern "C" bool RenderElementScion_hasBackdropFilter(const void*);
@@ -1624,6 +1626,11 @@ bool RenderElementScion::isViewTransitionRoot() const
 bool RenderElementScion::requiresRenderingConsolidationForViewTransition() const
 {
     return RenderElementScion_requiresRenderingConsolidationForViewTransition(m_handle);
+}
+
+bool RenderElementScion::checkForRepaintDuringLayout() const
+{
+    return RenderElementScion_checkForRepaintDuringLayout(m_handle);
 }
 
 bool RenderElementScion::hasFilter() const
