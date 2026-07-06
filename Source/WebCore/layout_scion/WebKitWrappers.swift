@@ -2939,6 +2939,12 @@ func RenderBoxScion_y(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.y().rawValue()
 }
 
+@_cdecl("RenderBoxScion_setXLayoutUnit")
+func RenderBoxScion_setXLayoutUnit(_ boxRaw: UnsafeMutableRawPointer, _ xRaw: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setX(x: LayoutUnit.fromRawValue(value: xRaw))
+}
+
 @_cdecl("RenderBoxScion_setYLayoutUnit")
 func RenderBoxScion_setYLayoutUnit(_ boxRaw: UnsafeMutableRawPointer, _ yRaw: Int32) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

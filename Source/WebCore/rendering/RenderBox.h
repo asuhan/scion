@@ -90,6 +90,7 @@ public:
     }
 
     // TODO(asuhan): used for interop only, remove once not needed anymore
+    void setXLayoutUnit(LayoutUnit x);
     void setYLayoutUnit(LayoutUnit y);
 
     template<typename T> void setWidth(T width)

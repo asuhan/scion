@@ -2407,6 +2407,15 @@ LayoutUnit RenderBox::height() const
     return m_frameRect.height();
 }
 
+void RenderBox::setXLayoutUnit(LayoutUnit x)
+{
+    if (m_scion) {
+        m_scion->setXLayoutUnit(x);
+        return;
+    }
+    m_frameRect.setX(x);
+}
+
 void RenderBox::setYLayoutUnit(LayoutUnit y)
 {
     if (m_scion) {

@@ -583,6 +583,8 @@ extern "C" int32_t RenderBoxScion_x(const void*);
 
 extern "C" int32_t RenderBoxScion_y(const void*);
 
+extern "C" void RenderBoxScion_setXLayoutUnit(void*, int32_t);
+
 extern "C" void RenderBoxScion_setYLayoutUnit(void*, int32_t);
 
 extern "C" int32_t RenderBoxScion_logicalHeight(const void*);
@@ -1850,6 +1852,11 @@ LayoutUnit RenderBoxScion::y() const
 LayoutUnit RenderBoxScion::width() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_width(m_handle));
+}
+
+void RenderBoxScion::setXLayoutUnit(LayoutUnit x)
+{
+    RenderBoxScion_setXLayoutUnit(m_handle, x.rawValue());
 }
 
 void RenderBoxScion::setYLayoutUnit(LayoutUnit y)

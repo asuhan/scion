@@ -782,7 +782,8 @@ void RenderBlock::setLogicalLeftForChild(RenderBox& child, LayoutUnit logicalLef
     if (isHorizontalWritingMode()) {
         if (applyDelta == ApplyLayoutDelta)
             view().frameView().layoutContext().addLayoutDelta(LayoutSize(child.x() - logicalLeft, 0_lu));
-        child.setX(logicalLeft);
+        // TODO(asuhan): switch back to setX once the need for interop disappears
+        child.setXLayoutUnit(logicalLeft);
     } else {
         if (applyDelta == ApplyLayoutDelta)
             view().frameView().layoutContext().addLayoutDelta(LayoutSize(0_lu, child.y() - logicalLeft));
