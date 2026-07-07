@@ -2211,8 +2211,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func columnGap() -> GapLength {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gapRaw = wk_interop.RenderStyle_columnGap(p!)
+    return gapRaw.isNormal
+      ? RenderStyleWrapper.normalGap
+      : GapLength(length: LengthWrapper(p: gapRaw.length, owner: false))
   }
 
   func rowGap() -> GapLength {
@@ -3498,6 +3500,9 @@ class RenderStyleWrapper: Equatable {
   var inheritedFlags = InheritedFlags()
 
   var m_svgStyle = SVGRenderStyle()
+
+  // NB(asuhan): cache normal gap to avoid re-allocating empty Length objects, until we use native render style
+  private static let normalGap = GapLength()
 }
 
 func collapsedBorderStyle(style: BorderStyle) -> BorderStyle {

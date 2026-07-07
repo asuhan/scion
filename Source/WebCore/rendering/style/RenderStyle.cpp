@@ -451,6 +451,21 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_columnFill(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->columnFill());
 }
 
+struct GapLengthRaw {
+    bool isNormal;
+    const void* length;
+};
+
+extern "C" WEBCORE_EXPORT GapLengthRaw RenderStyle_columnGap(const void* p)
+{
+    const auto& gap = static_cast<const WebCore::RenderStyle*>(p)->columnGap();
+    // TODO(asuhan): allow access to length for normal gap and unify the paths here
+    if (gap.isNormal()) {
+        return { true, nullptr };
+    }
+    return { false, &gap.length() };
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_transformOriginX(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->transformOriginX();
