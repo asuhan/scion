@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 final class RenderListItemWrapper: RenderBlockFlowWrapper {
   func value() -> Int32 {
     // TODO(asuhan): implement this
@@ -57,8 +59,14 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderListItem_layout(id())
+      return
+    }
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    super.layout()
   }
 
   override final func computePreferredLogicalWidths() {

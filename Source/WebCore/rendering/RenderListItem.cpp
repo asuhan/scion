@@ -43,6 +43,11 @@
 #include <wtf/StdLibExtras.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void RenderListItem_layout(void* p)
+{
+    static_cast<WebCore::RenderListItem*>(p)->layout();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
