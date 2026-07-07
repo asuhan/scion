@@ -257,7 +257,7 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func isImage() -> Bool {
-    assert(isNativeImpl())
+    // NB(asuhan): this returns true for both native and interop paths, we can skip the check
     return true
   }
 

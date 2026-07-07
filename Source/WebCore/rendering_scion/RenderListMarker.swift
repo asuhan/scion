@@ -63,7 +63,9 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   override final func isImage() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isImage(id())
+    }
     return image != nil && !image!.errorOccurred()
   }
 
