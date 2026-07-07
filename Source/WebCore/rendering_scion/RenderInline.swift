@@ -890,8 +890,8 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func dirtyLineFromChangedChild() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    legacyLineBoxes!.dirtyLineFromChangedChild(self)
   }
 
   override func lineHeight(
