@@ -648,6 +648,8 @@ public:
 
     LayoutRect frameRect() const;
 
+    LayoutRect computedCSSContentBoxRect() const;
+
     RenderBox* nextSiblingBox() const;
 
     RenderBox* nextInFlowSiblingBox() const;

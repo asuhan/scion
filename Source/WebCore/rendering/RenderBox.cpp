@@ -1320,6 +1320,12 @@ FloatQuad RenderBox::absoluteContentQuad() const
     return localToAbsoluteQuad(FloatRect(rect));
 }
 
+LayoutRect RenderBox::computedCSSContentBoxRect() const
+{
+    if (m_scion) { return m_scion->computedCSSContentBoxRect(); }
+    return LayoutRect(borderLeft() + computedCSSPaddingLeft(), borderTop() + computedCSSPaddingTop(), paddingBoxWidth() - computedCSSPaddingLeft() - computedCSSPaddingRight()  - (style().scrollbarGutter().bothEdges ? verticalScrollbarWidth() : 0), paddingBoxHeight() - computedCSSPaddingTop() - computedCSSPaddingBottom() - (style().scrollbarGutter().bothEdges ? horizontalScrollbarHeight() : 0));
+}
+
 LayoutRect RenderBox::localOutlineBoundsRepaintRect() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

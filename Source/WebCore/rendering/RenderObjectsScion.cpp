@@ -605,6 +605,8 @@ extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_frameRect(const void*);
 
+extern "C" LayoutRectRaw RenderBoxScion_computedCSSContentBoxRect(const void*);
+
 extern "C" LayoutRectRaw RenderBoxScion_layoutOverflowRect(const void*);
 
 extern "C" void* RenderBoxScion_nextSiblingBox(const void*);
@@ -1921,6 +1923,11 @@ LayoutSize RenderBoxScion::size() const
 LayoutRect RenderBoxScion::frameRect() const
 {
     return convertLayoutRectRaw(RenderBoxScion_frameRect(m_handle));
+}
+
+LayoutRect RenderBoxScion::computedCSSContentBoxRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_computedCSSContentBoxRect(m_handle));
 }
 
 RenderBox* RenderBoxScion::nextSiblingBox() const

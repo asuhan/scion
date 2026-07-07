@@ -65,11 +65,6 @@ inline LayoutUnit RenderBox::clientTop() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return borderTop();
 }
-inline LayoutRect RenderBox::computedCSSContentBoxRect() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutRect(borderLeft() + computedCSSPaddingLeft(), borderTop() + computedCSSPaddingTop(), paddingBoxWidth() - computedCSSPaddingLeft() - computedCSSPaddingRight()  - (style().scrollbarGutter().bothEdges ? verticalScrollbarWidth() : 0), paddingBoxHeight() - computedCSSPaddingTop() - computedCSSPaddingBottom() - (style().scrollbarGutter().bothEdges ? horizontalScrollbarHeight() : 0));
-}
 inline LayoutUnit RenderBox::contentHeight() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
