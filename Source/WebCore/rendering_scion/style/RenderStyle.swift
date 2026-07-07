@@ -2211,15 +2211,17 @@ class RenderStyleWrapper: Equatable {
   }
 
   func columnGap() -> GapLength {
-    let gapRaw = wk_interop.RenderStyle_columnGap(p!)
-    return gapRaw.isNormal
-      ? RenderStyleWrapper.normalGap
-      : GapLength(length: LengthWrapper(p: gapRaw.length, owner: false))
+    return RenderStyleWrapper.convertGapLength(wk_interop.RenderStyle_columnGap(p!))
   }
 
   func rowGap() -> GapLength {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderStyleWrapper.convertGapLength(wk_interop.RenderStyle_rowGap(p!))
+  }
+
+  private static func convertGapLength(_ gapRaw: GapLengthRaw) -> GapLength {
+    return gapRaw.isNormal
+      ? RenderStyleWrapper.normalGap
+      : GapLength(length: LengthWrapper(p: gapRaw.length, owner: false))
   }
 
   func transform() -> TransformOperations {

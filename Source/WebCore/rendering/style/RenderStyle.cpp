@@ -456,14 +456,26 @@ struct GapLengthRaw {
     const void* length;
 };
 
-extern "C" WEBCORE_EXPORT GapLengthRaw RenderStyle_columnGap(const void* p)
-{
-    const auto& gap = static_cast<const WebCore::RenderStyle*>(p)->columnGap();
+namespace {
+
+struct GapLengthRaw convertGapLength(const WebCore::GapLength& gap) {
     // TODO(asuhan): allow access to length for normal gap and unify the paths here
     if (gap.isNormal()) {
         return { true, nullptr };
     }
     return { false, &gap.length() };
+}
+
+}  // namespace
+
+extern "C" WEBCORE_EXPORT GapLengthRaw RenderStyle_columnGap(const void* p)
+{
+    return convertGapLength(static_cast<const WebCore::RenderStyle*>(p)->columnGap());
+}
+
+extern "C" WEBCORE_EXPORT GapLengthRaw RenderStyle_rowGap(const void* p)
+{
+    return convertGapLength(static_cast<const WebCore::RenderStyle*>(p)->rowGap());
 }
 
 extern "C" WEBCORE_EXPORT const void* RenderStyle_transformOriginX(const void* p)
