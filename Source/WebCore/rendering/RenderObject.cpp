@@ -3834,6 +3834,11 @@ bool RenderObject::isRenderOrLegacyRenderSVGRoot() const {
     return isRenderSVGRoot() || isLegacyRenderSVGRoot();
 }
 
+bool RenderObject::isRenderOrLegacyRenderSVGModelObject() const {
+    if (m_scion) { return m_scion->isRenderOrLegacyRenderSVGModelObject(); }
+    return isRenderSVGModelObject() || isLegacyRenderSVGModelObject();
+}
+
 bool RenderObject::isSVGLayerAwareRenderer() const
 {
     if (m_scion) { return m_scion->isSVGLayerAwareRenderer(); }

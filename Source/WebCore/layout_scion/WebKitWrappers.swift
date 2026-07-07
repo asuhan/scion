@@ -1667,6 +1667,12 @@ func RenderObjectScion_isRenderOrLegacyRenderSVGRoot(_ objectRaw: UnsafeRawPoint
   return object.isRenderOrLegacyRenderSVGRoot()
 }
 
+@_cdecl("RenderObjectScion_isRenderOrLegacyRenderSVGModelObject")
+func RenderObjectScion_isRenderOrLegacyRenderSVGModelObject(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderOrLegacyRenderSVGModelObject()
+}
+
 @_cdecl("RenderObjectScion_isSVGLayerAwareRenderer")
 func RenderObjectScion_isSVGLayerAwareRenderer(_ objectRaw: UnsafeMutableRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

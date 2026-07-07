@@ -213,6 +213,8 @@ public:
 
     bool isRenderOrLegacyRenderSVGRoot() const;
 
+    bool isRenderOrLegacyRenderSVGModelObject() const;
+
     bool isSVGLayerAwareRenderer() const;
 
     bool isSVGRenderer() const;

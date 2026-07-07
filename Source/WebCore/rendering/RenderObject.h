@@ -855,10 +855,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderSVGForeignObject() || isLegacyRenderSVGForeignObject();
     }
-    bool isRenderOrLegacyRenderSVGModelObject() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderSVGModelObject() || isLegacyRenderSVGModelObject();
-    }
+    bool isRenderOrLegacyRenderSVGModelObject() const;
     bool isRenderOrLegacyRenderSVGResourceFilterPrimitive() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderSVGResourceFilterPrimitive() || isLegacyRenderSVGResourceFilterPrimitive();

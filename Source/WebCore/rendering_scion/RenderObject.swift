@@ -1257,7 +1257,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderSVGForeignObject() || isLegacyRenderSVGForeignObject()
   }
 
-  private func isRenderOrLegacyRenderSVGModelObject() -> Bool {
+  func isRenderOrLegacyRenderSVGModelObject() -> Bool {
     assert(isNativeImpl())
     return isRenderSVGModelObject() || isLegacyRenderSVGModelObject()
   }

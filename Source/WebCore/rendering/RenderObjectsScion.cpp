@@ -190,6 +190,8 @@ extern "C" bool RenderObjectScion_isLegacyRenderSVGResourceContainer(const void*
 
 extern "C" bool RenderObjectScion_isRenderOrLegacyRenderSVGRoot(const void*);
 
+extern "C" bool RenderObjectScion_isRenderOrLegacyRenderSVGModelObject(const void*);
+
 extern "C" bool RenderObjectScion_isSVGLayerAwareRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isSVGRenderer(const void*);
@@ -1116,6 +1118,8 @@ bool RenderObjectScion::isLegacyRenderSVGImage() const { return RenderObjectScio
 bool RenderObjectScion::isLegacyRenderSVGResourceContainer() const { return RenderObjectScion_isLegacyRenderSVGResourceContainer(m_handle); }
 
 bool RenderObjectScion::isRenderOrLegacyRenderSVGRoot() const { return RenderObjectScion_isRenderOrLegacyRenderSVGRoot(m_handle); }
+
+bool RenderObjectScion::isRenderOrLegacyRenderSVGModelObject() const { return RenderObjectScion_isRenderOrLegacyRenderSVGModelObject(m_handle); }
 
 bool RenderObjectScion::isSVGLayerAwareRenderer() const { return RenderObjectScion_isSVGLayerAwareRenderer(m_handle); }
 
