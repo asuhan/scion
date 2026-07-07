@@ -553,6 +553,8 @@ public:
 
     IntRect linesBoundingBox() const;
 
+    void setTextWithOffset(const String&, unsigned offset, bool force = false);
+
     bool needsVisualReordering() const;
 
     bool canUseSimpleFontCodePath() const;

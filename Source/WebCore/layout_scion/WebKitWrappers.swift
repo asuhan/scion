@@ -2424,6 +2424,15 @@ func RenderTextScion_linesBoundingBox(_ renderTextRaw: UnsafeRawPointer) -> IntR
     size: IntSizeRaw(width: r.size.width, height: r.size.height))
 }
 
+@_cdecl("RenderTextScion_setTextWithOffset")
+func RenderTextScion_setTextWithOffset(
+  _ renderTextRaw: UnsafeRawPointer, _ newTextRaw: UnsafeRawPointer, _ offset: UInt32, _ force: Bool
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let newText = StringWrapper(p: newTextRaw, owner: false)
+  renderText.setTextWithOffset(newText: newText, offset: offset, force: force)
+}
+
 @_cdecl("RenderTextScion_needsVisualReordering")
 func RenderTextScion_needsVisualReordering(_ renderTextRaw: UnsafeRawPointer) -> Bool {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

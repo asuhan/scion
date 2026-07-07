@@ -432,6 +432,8 @@ extern "C" const void* RenderTextScion_text(const void*);
 
 extern "C" IntRectRaw RenderTextScion_linesBoundingBox(const void*);
 
+extern "C" void RenderTextScion_setTextWithOffset(const void*, const void*, uint32_t, bool);
+
 extern "C" bool RenderTextScion_needsVisualReordering(const void*);
 
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
@@ -1771,6 +1773,11 @@ IntRect RenderTextScion::linesBoundingBox() const
 {
     const auto r = RenderTextScion_linesBoundingBox(m_handle);
     return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
+}
+
+void RenderTextScion::setTextWithOffset(const String& newText, unsigned offset, bool force)
+{
+    RenderTextScion_setTextWithOffset(m_handle, &newText, offset, force);
 }
 
 bool RenderTextScion::needsVisualReordering() const

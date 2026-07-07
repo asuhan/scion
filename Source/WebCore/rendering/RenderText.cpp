@@ -1870,7 +1870,10 @@ void RenderText::setText(const String& newContent, bool force)
 
 void RenderText::setTextWithOffset(const String& newText, unsigned offset, unsigned, bool force)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setTextWithOffset(newText, offset, force);
+        return;
+    }
     if (!force && text() == newText)
         return;
 
