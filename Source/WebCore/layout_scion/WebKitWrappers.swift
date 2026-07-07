@@ -1265,8 +1265,7 @@ func RenderObjectScion_nextInPreOrderAfterChildren(_ objectRaw: UnsafeRawPointer
   -> UnsafeMutableRawPointer?
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  assert(object.nextInPreOrderAfterChildren() == nil)
-  return nil
+  return wkRenderObject(object.nextInPreOrderAfterChildren())
 }
 
 @_cdecl("RenderObjectScion_firstNonAnonymousAncestor")
