@@ -28,6 +28,28 @@ typealias FloatingObjectSet = ListHashSet<FloatingObjectWrapper>
 class FloatingObjectWrapper: Hashable {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
+    type = .FloatLeft
+    m_hasAncestorWithOverflowClip = false
+  }
+
+  static func create(_ renderer: RenderBoxWrapper) -> FloatingObjectWrapper {
+    let object = FloatingObjectWrapper(renderer)
+    object.setIsDescendant(true)
+    return object
+  }
+
+  init(_ renderer: RenderBoxWrapper) {
+    self.renderer = renderer
+    let type = RenderStyleWrapper.usedFloat(renderer: renderer)
+    assert(type != .None)
+    self.type = type == .Left ? .FloatLeft : .FloatRight
+    if let containingBlock = renderer.containingBlock() {
+      m_hasAncestorWithOverflowClip =
+        containingBlock.effectiveOverflowX() == .Clip
+        || containingBlock.effectiveOverflowY() == .Clip
+    } else {
+      m_hasAncestorWithOverflowClip = false
+    }
   }
 
   static func == (lhs: FloatingObjectWrapper, rhs: FloatingObjectWrapper) -> Bool {
@@ -63,7 +85,7 @@ class FloatingObjectWrapper: Hashable {
   }
 
   func setIsPlaced(placed: Bool) {
-    wk_interop.FloatingObject_setIsPlaced(p, placed)
+    wk_interop.FloatingObject_setIsPlaced(p!, placed)
   }
 
   func x() -> LayoutUnit {
@@ -120,12 +142,12 @@ class FloatingObjectWrapper: Hashable {
 
   func setMarginOffset(offset: LayoutSizeWrapper) {
     wk_interop.FloatingObject_setMarginOffset(
-      p, offset.width().rawValue(), offset.height().rawValue())
+      p!, offset.width().rawValue(), offset.height().rawValue())
   }
 
   func setFrameRect(frameRect: LayoutRectWrapper) {
     wk_interop.FloatingObject_setFrameRect(
-      p, frameRect.x().rawValue(), frameRect.y().rawValue(),
+      p!, frameRect.x().rawValue(), frameRect.y().rawValue(),
       frameRect.width().rawValue(),
       frameRect.height().rawValue())
   }
@@ -156,8 +178,13 @@ class FloatingObjectWrapper: Hashable {
   }
 
   func isDescendant() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_isDescendant
+  }
+
+  private func setIsDescendant(_ isDescendant: Bool) {
+    assert(isNativeImpl())
+    m_isDescendant = isDescendant
   }
 
   func locationOffsetOfBorderBox() -> LayoutSizeWrapper {
@@ -177,14 +204,18 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  private func isNativeImpl() -> Bool { return p == nil }
+
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
-  let type: Type_ = .FloatLeft  // Type (left or right aligned)
+  let type: Type_  // Type (left or right aligned)
+  private var m_isDescendant = false
   let isPlaced = false
+  private let m_hasAncestorWithOverflowClip: Bool
   #if ASSERT_ENABLED
     var isInPlacedTree = false
   #endif
-  private var p: UnsafeMutableRawPointer
+  private var p: UnsafeMutableRawPointer?
 }
 
 // FIXME: This is really the same thing as FloatingObjectSet.

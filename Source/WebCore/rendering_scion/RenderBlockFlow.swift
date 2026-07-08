@@ -2293,9 +2293,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func insertFloatingObjectForIFC(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper {
-    assert(!isNativeImpl())
-    return FloatingObjectWrapper(
-      p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(id(), floatBox.id()))
+    if !isNativeImpl() {
+      return FloatingObjectWrapper(
+        p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(id(), floatBox.id()))
+    }
+    assert(floatBox.isFloating())
+
+    if floatingObjects == nil {
+      createFloatingObjects()
+    }
+
+    let floatingObjectSet = floatingObjects!.set()
+    let it = floatingObjectSet.find(value: FloatingObjectWrapper(floatBox))
+    if it != floatingObjectSet.end() { return *it }
+
+    return floatingObjects!.add(floatingObject: FloatingObjectWrapper.create(floatBox))!
   }
 
   private func logicalTopForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
