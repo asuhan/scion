@@ -1013,8 +1013,7 @@ class RenderStyleWrapper: Equatable {
   func hasBorderImageOutsets() -> Bool { return wk_interop.RenderStyle_hasBorderImageOutsets(p!) }
 
   func borderImageOutsets() -> LayoutBoxExtent {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutBoxExtentRaw(wk_interop.RenderStyle_borderImageOutsets(p!))
   }
 
   func maskBorderOutsets() -> LayoutBoxExtent {

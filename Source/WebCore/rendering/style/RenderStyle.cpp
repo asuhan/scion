@@ -1045,6 +1045,12 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBorderImageOutsets(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBorderImageOutsets();
 }
 
+extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_borderImageOutsets(const void* p)
+{
+    const auto extent = static_cast<const WebCore::RenderStyle*>(p)->borderImageOutsets();
+    return { extent.top().rawValue(), extent.right().rawValue(), extent.bottom().rawValue(), extent.left().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasStaticInlinePosition(const void* p, bool horizontal)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasStaticInlinePosition(horizontal);
