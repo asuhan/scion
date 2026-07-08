@@ -221,6 +221,11 @@ class FloatingObjectWrapper: Hashable {
 // FIXME: This is really the same thing as FloatingObjectSet.
 // Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
 class FloatingObjects {
+  init(_ renderer: RenderBlockFlowWrapper) {
+    m_horizontalWritingMode = renderer.isHorizontalWritingMode()
+    m_renderer = renderer
+  }
+
   func clear() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -274,4 +279,6 @@ class FloatingObjects {
   }
 
   private let m_set = FloatingObjectSet()
+  private let m_horizontalWritingMode: Bool
+  private let m_renderer: RenderBlockFlowWrapper
 }

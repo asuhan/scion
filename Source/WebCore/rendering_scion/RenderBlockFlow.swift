@@ -3278,8 +3278,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func createFloatingObjects() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    floatingObjects = FloatingObjects(self)
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
@@ -5538,7 +5538,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.
   private var previousInlineLayoutContentBoxLogicalHeight: LayoutUnit?
 
-  private let floatingObjects: FloatingObjects? = nil
+  private var floatingObjects: FloatingObjects? = nil
   private var m_rareBlockFlowData: RenderBlockFlowRareData? = nil
 
   enum LineLayout {
