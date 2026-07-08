@@ -1046,6 +1046,7 @@ uint8_t RenderStyle_emptyCells(const void*);
 uint8_t RenderStyle_captionSide(const void*);
 bool RenderStyle_listStylePosition(const void*);
 const void* RenderStyle_boxShadow(const void*);
+struct LayoutBoxExtentRaw RenderStyle_boxShadowExtent(const void*);
 struct LayoutBoxExtentRaw RenderStyle_boxShadowInsetExtent(const void*);
 void* RenderStyle_boxReflect(const void*);
 uint8_t RenderStyle_boxDecorationBreak(const void*);

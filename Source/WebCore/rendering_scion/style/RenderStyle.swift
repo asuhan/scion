@@ -637,6 +637,14 @@ private func emptyBorderDataRadii() -> BorderDataRadiiRaw {
     bottomRight: emptyLayoutSizeRaw)
 }
 
+private func convertLayoutBoxExtentRaw(_ extent: LayoutBoxExtentRaw) -> LayoutBoxExtent {
+  return LayoutBoxExtent(
+    top: LayoutUnit.fromRawValue(value: extent.top),
+    right: LayoutUnit.fromRawValue(value: extent.right),
+    bottom: LayoutUnit.fromRawValue(value: extent.bottom),
+    left: LayoutUnit.fromRawValue(value: extent.left))
+}
+
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
   var pOwner: Bool = false
@@ -2081,17 +2089,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxShadowExtent() -> LayoutBoxExtent {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutBoxExtentRaw(wk_interop.RenderStyle_boxShadowExtent(p!))
   }
 
   func boxShadowInsetExtent() -> LayoutBoxExtent {
-    let extent = wk_interop.RenderStyle_boxShadowInsetExtent(p!)
-    return LayoutBoxExtent(
-      top: LayoutUnit.fromRawValue(value: extent.top),
-      right: LayoutUnit.fromRawValue(value: extent.right),
-      bottom: LayoutUnit.fromRawValue(value: extent.bottom),
-      left: LayoutUnit.fromRawValue(value: extent.left))
+    return convertLayoutBoxExtentRaw(wk_interop.RenderStyle_boxShadowInsetExtent(p!))
   }
 
   func boxDecorationBreak() -> BoxDecorationBreak {

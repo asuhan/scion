@@ -380,6 +380,12 @@ struct LayoutBoxExtentRaw {
     int32_t left;
 };
 
+extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_boxShadowExtent(const void* p)
+{
+    const auto extent = static_cast<const WebCore::RenderStyle*>(p)->boxShadowExtent();
+    return { extent.top().rawValue(), extent.right().rawValue(), extent.bottom().rawValue(), extent.left().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_boxShadowInsetExtent(const void* p)
 {
     const auto extent = static_cast<const WebCore::RenderStyle*>(p)->boxShadowInsetExtent();
