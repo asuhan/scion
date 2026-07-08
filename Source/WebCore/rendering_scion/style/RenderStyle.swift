@@ -1716,8 +1716,9 @@ class RenderStyleWrapper: Equatable {
   }
 
   func backgroundSizeLength() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let length = wk_interop.RenderStyle_backgroundSizeLength(p!)
+    return LengthSize(
+      width: LengthWrapper(p: length.width), height: LengthWrapper(p: length.height))
   }
 
   func backgroundLayers() -> FillLayerWrapper {

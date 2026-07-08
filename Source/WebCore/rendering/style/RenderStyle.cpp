@@ -1395,6 +1395,12 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_backgroundSizeType(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->backgroundSizeType());
 }
 
+extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_backgroundSizeLength(const void* p)
+{
+    const auto& length = static_cast<const WebCore::RenderStyle*>(p)->backgroundSizeLength();
+    return { &length.width, &length.height };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransformRelatedProperty(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransformRelatedProperty();

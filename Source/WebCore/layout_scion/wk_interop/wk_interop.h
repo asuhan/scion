@@ -1198,6 +1198,7 @@ float RenderStyle_usedZoom(const void*);
 uint8_t RenderStyle_textWrapStyle(const void*);
 uint8_t RenderStyle_backgroundClip(const void*);
 uint8_t RenderStyle_backgroundSizeType(const void*);
+struct LengthSizeRaw RenderStyle_backgroundSizeLength(const void*);
 bool RenderStyle_hasTransformRelatedProperty(const void*);
 void RenderStyle_applyTransform(const void*, void*, struct TransformOperationDataRaw, uint8_t);
 bool RenderStyle_hasPositionedMask(const void*);
