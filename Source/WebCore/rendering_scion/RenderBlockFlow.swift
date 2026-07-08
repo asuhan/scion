@@ -2372,6 +2372,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
+  private func setLogicalWidthForFloat(
+    _ floatingObject: FloatingObjectWrapper, _ logicalWidth: LayoutUnit
+  ) {
+    if isHorizontalWritingMode() {
+      floatingObject.setWidth(width: logicalWidth)
+    } else {
+      floatingObject.setHeight(height: logicalWidth)
+    }
+  }
+
   func flipFloatForWritingModeForChild(child: FloatingObjectWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
@@ -3941,8 +3951,51 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   @discardableResult
   private func insertFloatingObject(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(floatBox.isFloating())
+
+    // Create the list of special objects if we don't aleady have one
+    if floatingObjects == nil {
+      createFloatingObjects()
+    } else {
+      // Don't insert the floatingObject again if it's already in the list
+      let floatingObjectSet = floatingObjects!.set()
+      let it = floatingObjectSet.find(value: FloatingObjectWrapper(floatBox))
+      if it != floatingObjectSet.end() {
+        return *it
+      }
+    }
+
+    // Create the special floatingObject entry & append it to the list
+
+    let floatingObject = FloatingObjectWrapper.create(floatBox)
+
+    // Our location is irrelevant if we're unsplittable or no pagination is in effect. Just lay out the float.
+    let isChildRenderBlock = floatBox.isRenderBlock()
+    if isChildRenderBlock && !floatBox.needsLayout()
+      && view().frameView().layoutContext().layoutState()!.pageLogicalHeightChanged()
+    {
+      floatBox.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
+
+    let needsBlockDirectionLocationSetBeforeLayout =
+      isChildRenderBlock
+      && view().frameView().layoutContext().layoutState()!
+        .needsBlockDirectionLocationSetBeforeLayout()
+    if !needsBlockDirectionLocationSetBeforeLayout || isWritingModeRoot() {
+      // We are unsplittable if we're a block flow root.
+      floatBox.layoutIfNeeded()
+    } else {
+      floatBox.updateLogicalWidth()
+      floatBox.computeAndSetBlockDirectionMargins(containingBlock: self)
+    }
+
+    setLogicalWidthForFloat(
+      floatingObject,
+      logicalWidthForChild(child: floatBox) + marginStartForChild(child: floatBox)
+        + marginEndForChild(child: floatBox))
+
+    return floatingObjects!.add(floatingObject: floatingObject)
   }
 
   private func removeFloatingObject(floatBox: RenderBoxWrapper) {
