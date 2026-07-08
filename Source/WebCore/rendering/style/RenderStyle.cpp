@@ -760,6 +760,38 @@ WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 
 } // namespace
 
+extern "C" WEBCORE_EXPORT RoundedRectRaw RenderStyle_getRoundedInnerBorderFor_instance(
+    const void* p,
+    LayoutRectRaw borderRectRaw,
+    int32_t topWidthRaw,
+    int32_t bottomWidthRaw,
+    int32_t leftWidthRaw,
+    int32_t rightWidthRaw,
+    bool includeLogicalLeftEdge,
+    bool includeLogicalRightEdge)
+{
+    const auto borderRect = convertLayoutRectRaw(borderRectRaw);
+    const auto topWidth = WebCore::LayoutUnit::fromRawValue(topWidthRaw);
+    const auto bottomWidth = WebCore::LayoutUnit::fromRawValue(bottomWidthRaw);
+    const auto leftWidth = WebCore::LayoutUnit::fromRawValue(leftWidthRaw);
+    const auto rightWidth = WebCore::LayoutUnit::fromRawValue(rightWidthRaw);
+    const auto rounded_rect = static_cast<const WebCore::RenderStyle*>(p)->getRoundedInnerBorderFor(
+        borderRect,
+        topWidth,
+        bottomWidth,
+        leftWidth,
+        rightWidth,
+        includeLogicalLeftEdge,
+        includeLogicalRightEdge);
+    RoundedRectRadiiRaw rounded_radii {
+        { rounded_rect.radii().topLeft().width().rawValue(), rounded_rect.radii().topLeft().height().rawValue() },
+        { rounded_rect.radii().topRight().width().rawValue(), rounded_rect.radii().topRight().height().rawValue() },
+        { rounded_rect.radii().bottomLeft().width().rawValue(), rounded_rect.radii().bottomLeft().height().rawValue() },
+        { rounded_rect.radii().bottomRight().width().rawValue(), rounded_rect.radii().bottomRight().height().rawValue() },
+    };
+    return { convertLayoutRect(rounded_rect.rect()), rounded_radii };
+}
+
 extern "C" WEBCORE_EXPORT RoundedRectRaw RenderStyle_getRoundedInnerBorderFor(
     LayoutRectRaw borderRectRaw,
     int32_t topWidthRaw,

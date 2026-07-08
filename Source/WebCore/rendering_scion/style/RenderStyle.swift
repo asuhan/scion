@@ -1447,8 +1447,12 @@ class RenderStyleWrapper: Equatable {
     includeLogicalLeftEdge: Bool = true,
     includeLogicalRightEdge: Bool = true
   ) -> RoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let roundedRectRaw = wk_interop.RenderStyle_getRoundedInnerBorderFor_instance(
+      p!, convertLayoutRect(borderRect), topWidth.rawValue(), bottomWidth.rawValue(),
+      leftWidth.rawValue(), rightWidth.rawValue(), includeLogicalLeftEdge, includeLogicalRightEdge)
+    return RoundedRect(
+      rect: convertLayoutRect(roundedRectRaw.rect),
+      radii: convertRoundedRectRadiiRaw(roundedRectRaw.radii))
   }
 
   static func getRoundedInnerBorderFor(

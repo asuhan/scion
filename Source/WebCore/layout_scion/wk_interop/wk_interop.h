@@ -1109,6 +1109,15 @@ uint8_t RenderStyle_blendMode(const void*);
 bool RenderStyle_hasBlendMode(const void*);
 bool RenderStyle_isolation(const void*);
 bool RenderStyle_usesStandardScrollbarStyle(const void*);
+struct RoundedRectRaw RenderStyle_getRoundedInnerBorderFor_instance(
+    const void* p,
+    struct LayoutRectRaw borderRectRaw,
+    int32_t topWidthRaw,
+    int32_t bottomWidthRaw,
+    int32_t leftWidthRaw,
+    int32_t rightWidthRaw,
+    bool includeLogicalLeftEdge,
+    bool includeLogicalRightEdge);
 struct RoundedRectRaw RenderStyle_getRoundedInnerBorderFor(
     struct LayoutRectRaw borderRectRaw,
     int32_t topWidthRaw,
