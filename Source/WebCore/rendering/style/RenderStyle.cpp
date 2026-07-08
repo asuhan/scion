@@ -311,6 +311,18 @@ struct LengthSizeRaw {
     const void* height;
 };
 
+extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_borderTopLeftRadius(const void* p)
+{
+    const auto& radius = static_cast<const WebCore::RenderStyle*>(p)->borderTopLeftRadius();
+    return { &radius.width, &radius.height };
+}
+
+extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_borderTopRightRadius(const void* p)
+{
+    const auto& radius = static_cast<const WebCore::RenderStyle*>(p)->borderTopRightRadius();
+    return { &radius.width, &radius.height };
+}
+
 extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_borderBottomLeftRadius(const void* p)
 {
     const auto& radius = static_cast<const WebCore::RenderStyle*>(p)->borderBottomLeftRadius();

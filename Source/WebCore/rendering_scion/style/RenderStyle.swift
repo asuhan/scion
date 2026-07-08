@@ -645,6 +645,11 @@ private func convertLayoutBoxExtentRaw(_ extent: LayoutBoxExtentRaw) -> LayoutBo
     left: LayoutUnit.fromRawValue(value: extent.left))
 }
 
+private func convertLengthSizeRaw(_ lengthSize: LengthSizeRaw) -> LengthSize {
+  return LengthSize(
+    width: LengthWrapper(p: lengthSize.width), height: LengthWrapper(p: lengthSize.height))
+}
+
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
   var pOwner: Bool = false
@@ -1113,25 +1118,19 @@ class RenderStyleWrapper: Equatable {
   func borderEndWidth() -> Float32 { return wk_interop.RenderStyle_borderEndWidth(p!) }
 
   func borderTopLeftRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLengthSizeRaw(wk_interop.RenderStyle_borderTopLeftRadius(p!))
   }
 
   func borderTopRightRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLengthSizeRaw(wk_interop.RenderStyle_borderTopRightRadius(p!))
   }
 
   func borderBottomLeftRadius() -> LengthSize {
-    let radius = wk_interop.RenderStyle_borderBottomLeftRadius(p!)
-    return LengthSize(
-      width: LengthWrapper(p: radius.width), height: LengthWrapper(p: radius.height))
+    return convertLengthSizeRaw(wk_interop.RenderStyle_borderBottomLeftRadius(p!))
   }
 
   func borderBottomRightRadius() -> LengthSize {
-    let radius = wk_interop.RenderStyle_borderBottomRightRadius(p!)
-    return LengthSize(
-      width: LengthWrapper(p: radius.width), height: LengthWrapper(p: radius.height))
+    return convertLengthSizeRaw(wk_interop.RenderStyle_borderBottomRightRadius(p!))
   }
 
   func borderRadii() -> BorderDataRadii {

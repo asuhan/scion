@@ -1034,6 +1034,8 @@ const void* RenderStyle_logicalLeft(const void*);
 const void* RenderStyle_logicalRight(const void*);
 const void* RenderStyle_logicalTop(const void*);
 const void* RenderStyle_logicalBottom(const void*);
+struct LengthSizeRaw RenderStyle_borderTopLeftRadius(const void*);
+struct LengthSizeRaw RenderStyle_borderTopRightRadius(const void*);
 struct LengthSizeRaw RenderStyle_borderBottomLeftRadius(const void*);
 struct LengthSizeRaw RenderStyle_borderBottomRightRadius(const void*);
 const void* RenderStyle_backgroundLayers(const void*);
