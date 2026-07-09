@@ -4020,8 +4020,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func removeFloatingObject(floatBox: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if floatingObjects == nil {
+      return
+    }
+
+    markSiblingsWithFloatsForLayout()
+
+    floatingObjects!.clear()
   }
 
   private func computeLogicalLocationForFloat(
