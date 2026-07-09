@@ -2784,8 +2784,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       if floatingObjects == nil {
         return nil
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var lowestFloatBottom: LayoutUnit? = nil
+      let floatingObjectSet = floatingObjects!.set()
+      for floatingObject in floatingObjectSet {
+        if floatingObject.isPlaced
+          && floatingObject.renderer!.style().pseudoElementType() == .FirstLetter
+          && floatingObject.renderer!.style().initialLetterDrop() > 0
+        {
+          lowestFloatBottom = max(
+            lowestFloatBottom ?? LayoutUnit(value: UInt64(0)),
+            logicalBottomForFloat(floatingObject: floatingObject)
+          )
+        }
+      }
+      return lowestFloatBottom
     }
     let raw = wk_interop.RenderBlockFlow_lowestInitialLetterLogicalBottom(id())
     if !raw.is_valid {
