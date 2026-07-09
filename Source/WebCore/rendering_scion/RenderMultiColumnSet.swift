@@ -805,8 +805,10 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return multiColumnFlowForMultiColumnSet()!.positionForPoint(
+      translateFragmentPointToFragmentedFlow(point, .ClampHitTestTranslationToColumns),
+      source, self)
   }
 
   private func calculateMaxColumnHeight() -> LayoutUnit {
