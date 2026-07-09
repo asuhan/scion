@@ -24,4 +24,6 @@
  */
 
 struct OffsetRotation: Equatable {
+  let angle: Float32
+  let hasAuto: Bool
 }

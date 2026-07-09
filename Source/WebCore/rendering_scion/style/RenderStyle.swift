@@ -3408,8 +3408,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func offsetRotate() -> OffsetRotation {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offsetRotation = wk_interop.RenderStyle_offsetRotate(p!)
+    return OffsetRotation(angle: offsetRotation.angle, hasAuto: offsetRotation.hasAuto)
   }
 
   func blockStepSize() -> LengthWrapper? {

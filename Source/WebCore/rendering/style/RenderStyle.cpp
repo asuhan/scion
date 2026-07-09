@@ -2243,6 +2243,17 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_overflowContinue(const void* p)
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->overflowContinue());
 }
 
+struct OffsetRotationRaw {
+    float angle;
+    bool hasAuto;
+};
+
+extern "C" WEBCORE_EXPORT OffsetRotationRaw RenderStyle_offsetRotate(const void* p)
+{
+    const auto offset_rotation = static_cast<const WebCore::RenderStyle*>(p)->offsetRotate();
+    return { offset_rotation.angle(), offset_rotation.hasAuto() };
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_blockStepSize(const void* p)
 {
     const auto blockStepSize = static_cast<const WebCore::RenderStyle*>(p)->blockStepSize();

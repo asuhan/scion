@@ -421,6 +421,11 @@ struct GapLengthRaw {
     const void* length;
 };
 
+struct OffsetRotationRaw {
+    float angle;
+    bool hasAuto;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1354,6 +1359,7 @@ struct PathOperationRaw RenderStyle_clipPath(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 uint64_t RenderStyle_maxLines(const void*);
 bool RenderStyle_overflowContinue(const void*);
+struct OffsetRotationRaw RenderStyle_offsetRotate(const void*);
 bool RenderStyle_autoWrap(const void*);
 bool RenderStyle_preserveNewline(const void*);
 const void* RenderStyle_textShadow(const void*);
