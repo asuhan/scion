@@ -126,7 +126,7 @@ class RenderBlockFlowRareData {
   var lineBreakToAvoidWidow: Int32
   var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
 
-  let multiColumnFlow: RenderMultiColumnFlowWrapper? = nil
+  var multiColumnFlow: RenderMultiColumnFlowWrapper? = nil
 
   var didBreakAtLineToAvoidWidow = false
 }
@@ -2047,8 +2047,9 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func setMultiColumnFlow(fragmentedFlow: RenderMultiColumnFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!hasRareBlockFlowData() || rareBlockFlowData().multiColumnFlow == nil)
+    ensureRareBlockFlowData().multiColumnFlow = fragmentedFlow
   }
 
   func clearMultiColumnFlow() {
