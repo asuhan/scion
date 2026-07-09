@@ -2053,8 +2053,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func clearMultiColumnFlow() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasRareBlockFlowData())
+    assert(rareBlockFlowData().multiColumnFlow != nil)
+    rareBlockFlowData().multiColumnFlow = nil
   }
 
   func willCreateColumns(desiredColumnCount: UInt32? = nil) -> Bool {
