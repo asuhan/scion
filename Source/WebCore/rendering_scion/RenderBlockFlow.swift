@@ -3529,12 +3529,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func addOverflowFromFloats() {
+    assert(isNativeImpl())
     if floatingObjects == nil {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let floatingObjectSet = floatingObjects!.set()
+    for floatingObject in floatingObjectSet {
+      if floatingObject.isDescendant() {
+        addOverflowFromChild(
+          child: floatingObject.renderer!, delta: floatingObject.locationOffsetOfBorderBox())
+      }
+    }
   }
 
   private func recomputeLogicalWidthAndColumnWidth() -> Bool {
