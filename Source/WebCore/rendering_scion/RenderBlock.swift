@@ -816,7 +816,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       : logicalWidth() - logicalRightOffsetForLine(position: position, logicalHeight: logicalHeight)
   }
 
-  override func positionForPoint(
+  func blockPositionForPoint(
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
@@ -905,6 +905,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
     // We only get here if there are no hit test candidate children below the click.
     return super.positionForPoint(point, source, fragment)
+  }
+
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    assert(isNativeImpl())
+    return blockPositionForPoint(point, source, fragment)
   }
 
   private func isSelectionRoot() -> Bool {

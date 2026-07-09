@@ -305,8 +305,13 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !isValid || fragmentedFlow!.firstChild() == nil {  // checking for empty fragment blocks.
+      return blockPositionForPoint(point, source, fragment)
+    }
+
+    return fragmentedFlow!.positionForPoint(
+      mapFragmentPointIntoFragmentedFlowCoordinates(point), source, self)
   }
 
   private func ensureOverflowForBox(_ box: RenderBoxWrapper, _ forceCreation: Bool)
