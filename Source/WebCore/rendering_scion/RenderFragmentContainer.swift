@@ -483,6 +483,66 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
   func installFragmentedFlow() { fatalError("Not reached") }
 
+  private func mapFragmentPointIntoFragmentedFlowCoordinates(_ point: LayoutPointWrapper)
+    -> LayoutPointWrapper
+  {
+    assert(isNativeImpl())
+    // Assuming the point is relative to the fragment block, 3 cases will be considered:
+    // a) top margin, padding or border.
+    // b) bottom margin, padding or border.
+    // c) non-content fragment area.
+
+    let pointLogicalTop = isHorizontalWritingMode() ? point.y : point.x
+    let pointLogicalLeft = isHorizontalWritingMode() ? point.x : point.y
+    let fragmentedFlowLogicalTop =
+      isHorizontalWritingMode() ? m_fragmentedFlowPortionRect.y() : m_fragmentedFlowPortionRect.x()
+    let fragmentedFlowLogicalLeft =
+      isHorizontalWritingMode() ? m_fragmentedFlowPortionRect.x() : m_fragmentedFlowPortionRect.y()
+    let fragmentedFlowPortionTopBound =
+      isHorizontalWritingMode()
+      ? m_fragmentedFlowPortionRect.height() : m_fragmentedFlowPortionRect.width()
+    let fragmentedFlowPortionLeftBound =
+      isHorizontalWritingMode()
+      ? m_fragmentedFlowPortionRect.width() : m_fragmentedFlowPortionRect.height()
+    let fragmentedFlowPortionTopMax =
+      isHorizontalWritingMode()
+      ? m_fragmentedFlowPortionRect.maxY() : m_fragmentedFlowPortionRect.maxX()
+    let fragmentedFlowPortionLeftMax =
+      isHorizontalWritingMode()
+      ? m_fragmentedFlowPortionRect.maxX() : m_fragmentedFlowPortionRect.maxY()
+    let effectiveFixedPointDenominator = LayoutUnit.fromRawValue(value: 1)
+
+    if pointLogicalTop < Int32(0) {
+      let pointInThread = LayoutPointWrapper(
+        x: LayoutUnit(value: UInt64(0)), y: fragmentedFlowLogicalTop)
+      return isHorizontalWritingMode() ? pointInThread : pointInThread.transposedPoint()
+    }
+
+    if pointLogicalTop >= fragmentedFlowPortionTopBound {
+      let pointInThread = LayoutPointWrapper(
+        x: fragmentedFlowPortionLeftBound,
+        y: fragmentedFlowPortionTopMax - effectiveFixedPointDenominator)
+      return isHorizontalWritingMode() ? pointInThread : pointInThread.transposedPoint()
+    }
+
+    if pointLogicalLeft < Int32(0) {
+      let pointInThread = LayoutPointWrapper(
+        x: fragmentedFlowLogicalLeft, y: pointLogicalTop + fragmentedFlowLogicalTop)
+      return isHorizontalWritingMode() ? pointInThread : pointInThread.transposedPoint()
+    }
+
+    if pointLogicalLeft >= fragmentedFlowPortionLeftBound {
+      let pointInThread = LayoutPointWrapper(
+        x: fragmentedFlowPortionLeftMax - effectiveFixedPointDenominator,
+        y: pointLogicalTop + fragmentedFlowLogicalTop)
+      return isHorizontalWritingMode() ? pointInThread : pointInThread.transposedPoint()
+    }
+    let pointInThread = LayoutPointWrapper(
+      x: pointLogicalLeft + fragmentedFlowLogicalLeft, y: pointLogicalTop + fragmentedFlowLogicalTop
+    )
+    return isHorizontalWritingMode() ? pointInThread : pointInThread.transposedPoint()
+  }
+
   var fragmentedFlow: RenderFragmentedFlowWrapper? = nil
 
   private var m_fragmentedFlowPortionRect = LayoutRectWrapper()
