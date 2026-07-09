@@ -2243,6 +2243,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_overflowContinue(const void* p)
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->overflowContinue());
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_offsetDistance(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->offsetDistance();
+}
+
 struct LengthPointRaw {
     const void* x;
     const void* y;
