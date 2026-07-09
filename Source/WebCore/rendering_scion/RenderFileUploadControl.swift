@@ -44,7 +44,7 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return VisiblePosition()
   }
 }
