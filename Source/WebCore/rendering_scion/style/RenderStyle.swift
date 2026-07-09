@@ -3403,8 +3403,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func offsetAnchor() -> LengthPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let anchor = wk_interop.RenderStyle_offsetAnchor(p!)
+    return LengthPoint(x: LengthWrapper(p: anchor.x), y: LengthWrapper(p: anchor.y))
   }
 
   func offsetRotate() -> OffsetRotation {

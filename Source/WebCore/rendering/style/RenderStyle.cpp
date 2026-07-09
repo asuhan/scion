@@ -2243,6 +2243,17 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_overflowContinue(const void* p)
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->overflowContinue());
 }
 
+struct LengthPointRaw {
+    const void* x;
+    const void* y;
+};
+
+extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_offsetAnchor(const void* p)
+{
+    const auto& offset_anchor = static_cast<const WebCore::RenderStyle*>(p)->offsetAnchor();
+    return { &offset_anchor.x, &offset_anchor.y };
+}
+
 struct OffsetRotationRaw {
     float angle;
     bool hasAuto;

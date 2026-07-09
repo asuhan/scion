@@ -392,6 +392,11 @@ struct LengthSizeRaw {
     const void* height;
 };
 
+struct LengthPointRaw {
+    const void* x;
+    const void* y;
+};
+
 struct RoundedRectRadiiRaw {
     struct LayoutSizeRaw topLeft;
     struct LayoutSizeRaw topRight;
@@ -1359,6 +1364,7 @@ struct PathOperationRaw RenderStyle_clipPath(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 uint64_t RenderStyle_maxLines(const void*);
 bool RenderStyle_overflowContinue(const void*);
+struct LengthPointRaw RenderStyle_offsetAnchor(const void*);
 struct OffsetRotationRaw RenderStyle_offsetRotate(const void*);
 bool RenderStyle_autoWrap(const void*);
 bool RenderStyle_preserveNewline(const void*);
