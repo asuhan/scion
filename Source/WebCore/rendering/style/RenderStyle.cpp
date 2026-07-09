@@ -2248,6 +2248,12 @@ struct LengthPointRaw {
     const void* y;
 };
 
+extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_offsetPosition(const void* p)
+{
+    const auto& offset_position = static_cast<const WebCore::RenderStyle*>(p)->offsetPosition();
+    return { &offset_position.x, &offset_position.y };
+}
+
 extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_offsetAnchor(const void* p)
 {
     const auto& offset_anchor = static_cast<const WebCore::RenderStyle*>(p)->offsetAnchor();

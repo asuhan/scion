@@ -1364,6 +1364,7 @@ struct PathOperationRaw RenderStyle_clipPath(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 uint64_t RenderStyle_maxLines(const void*);
 bool RenderStyle_overflowContinue(const void*);
+struct LengthPointRaw RenderStyle_offsetPosition(const void*);
 struct LengthPointRaw RenderStyle_offsetAnchor(const void*);
 struct OffsetRotationRaw RenderStyle_offsetRotate(const void*);
 bool RenderStyle_autoWrap(const void*);
