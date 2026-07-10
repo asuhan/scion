@@ -191,8 +191,8 @@ class RenderLineBoxList {
         offset: accumulatedOffset)
       {
         let inside = curr!.nodeAtPoint(
-          request, &result, locationInContainer, accumulatedOffset, rootBox.lineTop,
-          rootBox.lineBottom, hitTestAction)
+          request, &result, locationInContainer, accumulatedOffset, lineTop: rootBox.lineTop,
+          lineBottom: rootBox.lineBottom, hitTestAction)
         if inside {
           renderer.updateHitTestResult(
             result: &result,

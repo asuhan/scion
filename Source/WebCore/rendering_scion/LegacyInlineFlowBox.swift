@@ -106,7 +106,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ lineTop: LayoutUnit, _ lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
+    lineTop: LayoutUnit, lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
   ) -> Bool {
     if hitTestAction != .HitTestForeground {
       return false
@@ -124,7 +124,8 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     while child != nil {
       if child!.renderer is RenderTextWrapper || !child!.boxModelObject()!.hasSelfPaintingLayer() {
         if child!.nodeAtPoint(
-          request, &result, locationInContainer, accumulatedOffset, lineTop, lineBottom,
+          request, &result, locationInContainer, accumulatedOffset, lineTop: lineTop,
+          lineBottom: lineBottom,
           hitTestAction)
         {
           renderer().updateHitTestResult(

@@ -38,7 +38,7 @@ class LegacyInlineBox {
   func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ lineTop: LayoutUnit, _ lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
+    lineTop: LayoutUnit, lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
   ) -> Bool {
     fatalError("Not reached")
   }
