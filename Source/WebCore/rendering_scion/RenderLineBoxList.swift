@@ -154,8 +154,56 @@ class RenderLineBoxList {
     _ result: inout HitTestResultWrapper, _ locationInContainer: HitTestLocationWrapper,
     _ accumulatedOffset: LayoutPointWrapper, _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(renderer.isRenderBlock() || (renderer.isRenderInline() && renderer.hasLayer()))  // The only way an inline could hit test like this is if it has a layer.
+
+    // If we have no lines then we have no work to do.
+    if firstLegacyLineBox() == nil {
+      return false
+    }
+
+    let point = locationInContainer.point()
+    let rect =
+      firstLegacyLineBox()!.isHorizontal()
+      ? LayoutRectWrapper(
+        rect: IntRect(
+          x: point.x.int(), y: point.y.int() - locationInContainer.topPadding(), width: 1,
+          height: locationInContainer.topPadding() + locationInContainer.bottomPadding() + 1))
+      : LayoutRectWrapper(
+        rect: IntRect(
+          x: point.x.int() - locationInContainer.leftPadding(), y: point.y.int(),
+          width: locationInContainer.rightPadding() + locationInContainer.leftPadding() + 1,
+          height: 1))
+
+    if !anyLineIntersectsRect(renderer: renderer, rect: rect, offset: accumulatedOffset) {
+      return false
+    }
+
+    // See if our root lines contain the point.  If so, then we hit test
+    // them further.  Note that boxes can easily overlap, so we can't make any assumptions
+    // based off positions of our first line box or our last line box.
+    var curr = lastLegacyLineBox()
+    while curr != nil {
+      let rootBox = curr!.root()
+      if rangeIntersectsRect(
+        renderer: renderer, logicalTop: curr!.logicalTopVisualOverflow(lineTop: rootBox.lineTop),
+        logicalBottom: curr!.logicalBottomVisualOverflow(lineBottom: rootBox.lineBottom),
+        rect: rect,
+        offset: accumulatedOffset)
+      {
+        let inside = curr!.nodeAtPoint(
+          request, &result, locationInContainer, accumulatedOffset, rootBox.lineTop,
+          rootBox.lineBottom, hitTestAction)
+        if inside {
+          renderer.updateHitTestResult(
+            result: &result,
+            point: locationInContainer.point() - toLayoutSize(point: accumulatedOffset))
+          return true
+        }
+      }
+      curr = curr!.prevLineBox()
+    }
+
+    return false
   }
 
   private func anyLineIntersectsRect(

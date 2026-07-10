@@ -35,6 +35,14 @@ class LegacyInlineBox {
     fatalError("Not reached")
   }
 
+  func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ lineTop: LayoutUnit, _ lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
+  ) -> Bool {
+    fatalError("Not reached")
+  }
+
   func isInlineFlowBox() -> Bool { return false }
 
   func isInlineTextBox() -> Bool { return false }

@@ -41,6 +41,14 @@ struct HitTestLocationWrapper {
 
   func boundingBox() -> LayoutRectWrapper { return m_boundingBox }
 
+  func topPadding() -> Int32 { return (roundedPoint().y - m_boundingBox.y()).int() }
+
+  func rightPadding() -> Int32 { return (m_boundingBox.maxX() - roundedPoint().x - 1).int() }
+
+  func bottomPadding() -> Int32 { return (m_boundingBox.maxY() - roundedPoint().y - 1).int() }
+
+  func leftPadding() -> Int32 { return (roundedPoint().x - m_boundingBox.x()).int() }
+
   func intersects(rect: LayoutRectWrapper) -> Bool { return intersectsRect(rect) }
 
   func intersects(_ rect: RoundedRect) -> Bool { return rect.intersectsQuad(m_transformedRect) }
