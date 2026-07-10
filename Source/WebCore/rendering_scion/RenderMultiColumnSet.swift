@@ -226,6 +226,23 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return true  // Need another pass.
   }
 
+  // Record space shortage (the amount of space that would have been enough to prevent some
+  // element from being moved to the next column) at a column break. The smallest amount of space
+  // shortage we find is the amount with which we will stretch the column height, if it turns out
+  // after layout that the columns weren't tall enough.
+  func recordSpaceShortage(_ spaceShortage: LayoutUnit) {
+    assert(isNativeImpl())
+    if spaceShortage >= minSpaceShortage {
+      return
+    }
+
+    // The space shortage is what we use as our stretch amount. We need a positive number here in
+    // order to get anywhere. Some lines actually have zero height. Ignore them.
+    if spaceShortage > 0 {
+      minSpaceShortage = spaceShortage
+    }
+  }
+
   override func updateLogicalWidth() {
     setComputedColumnWidthAndCount(
       multiColumnFlowForMultiColumnSet()!.columnWidth(),
