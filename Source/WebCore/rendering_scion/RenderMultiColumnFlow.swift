@@ -290,6 +290,19 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     multicolSet?.recordSpaceShortage(spaceShortage)
   }
 
+  override func updateMinimumPageHeight(
+    _ block: RenderBlockWrapper, offset: LayoutUnit, minHeight: LayoutUnit
+  ) {
+    assert(isNativeImpl())
+    if !hasValidFragmentInfo() {
+      return
+    }
+
+    let multicolSet =
+      fragmentAtBlockOffset(clampBox: block, offset: offset) as! RenderMultiColumnSetWrapper?
+    multicolSet?.updateMinimumColumnHeight(minHeight)
+  }
+
   override func updateSpaceShortageForSizeContainment(
     block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
   ) {

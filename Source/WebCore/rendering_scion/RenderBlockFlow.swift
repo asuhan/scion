@@ -2703,8 +2703,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // unbreakable content, between orphans and widows, etc.). This will be used as a hint to the
   // column balancer to help set a good minimum column height.
   func updateMinimumPageHeight(offset: LayoutUnit, minHeight: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let fragmentedFlow = enclosingFragmentedFlow()
+    fragmentedFlow?.updateMinimumPageHeight(
+      self, offset: offsetFromLogicalTopOfFirstPage() + offset, minHeight: minHeight)
   }
 
   func adjustSizeContainmentChildForPagination(child: RenderBoxWrapper, offset: LayoutUnit) {

@@ -175,6 +175,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return max(height, LayoutUnit(value: UInt64(1)))  // Let's avoid zero height, as that would probably cause an infinite amount of columns to be created.
   }
 
+  func updateMinimumColumnHeight(_ height: LayoutUnit) {
+    assert(isNativeImpl())
+    minimumColumnHeight = max(height, minimumColumnHeight)
+  }
+
   private func clearForcedBreaks() {
     contentRuns.removeAll()
   }

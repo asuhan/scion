@@ -246,6 +246,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
   func setPageBreak(_ block: RenderBlockWrapper, offset: LayoutUnit, spaceShortage: LayoutUnit) {}
 
+  func updateMinimumPageHeight(
+    _ block: RenderBlockWrapper, offset: LayoutUnit, minHeight: LayoutUnit
+  ) {}
+
   func updateSpaceShortageForSizeContainment(
     block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
   ) {}
