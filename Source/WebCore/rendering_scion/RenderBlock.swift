@@ -309,6 +309,8 @@ class RenderBlockRareData {
   var m_paginationStrut = LayoutUnit()
   var m_pageLogicalOffset = LayoutUnit()
   let m_intrinsicBorderForFieldset = LayoutUnit()
+
+  var m_enclosingFragmentedFlow: RenderFragmentedFlowWrapper? = nil
 }
 
 private let continuationOutlineTable = ContinuationOutlineTableMap()
@@ -1411,8 +1413,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func cachedEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return getBlockRareData()?.m_enclosingFragmentedFlow
   }
 
   func setCachedEnclosingFragmentedFlowNeedsUpdate() {
