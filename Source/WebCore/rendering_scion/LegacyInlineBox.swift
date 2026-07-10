@@ -64,6 +64,8 @@ class LegacyInlineBox {
 
   func nextOnLine() -> LegacyInlineBox? { return m_nextOnLine }
 
+  func previousOnLine() -> LegacyInlineBox? { return m_previousOnLine }
+
   // FIXME: Hide this once all callers are using tighter types.
   func rendererObject() -> RenderObjectWrapper { return renderer }
 
@@ -165,11 +167,25 @@ class LegacyInlineBox {
     return FloatPoint(x: block.width() - width() - x(), y: y())
   }
 
+  func flipForWritingMode(rect: inout FloatRectWrapper) {
+    if !rendererObject().style().isFlippedBlocksWritingMode() {
+      return
+    }
+    root().blockFlow().flipForWritingMode(rect: &rect)
+  }
+
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
     if !rendererObject().style().isFlippedBlocksWritingMode() {
       return
     }
     root().blockFlow().flipForWritingMode(rect: &rect)
+  }
+
+  func flipForWritingMode(_ point: LayoutPointWrapper) -> LayoutPointWrapper {
+    if !rendererObject().style().isFlippedBlocksWritingMode() {
+      return point
+    }
+    return root().blockFlow().flipForWritingMode(position: point)
   }
 
   func setIsInGlyphDisplayListCache() { setIsInGlyphDisplayListCache(true) }
@@ -192,6 +208,7 @@ class LegacyInlineBox {
   }
 
   private let m_nextOnLine: LegacyInlineBox? = nil  // The next element on the same line as us.
+  private let m_previousOnLine: LegacyInlineBox? = nil  // The previous element on the same line as us.
 
   private let m_parent: LegacyInlineFlowBox? = nil  // The box that contains us.
 

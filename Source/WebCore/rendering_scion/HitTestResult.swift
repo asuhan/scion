@@ -66,6 +66,13 @@ struct HitTestResultWrapper {
 
   func addNodeToListBasedTestResult(
     node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
+    rect: FloatRectWrapper
+  ) -> HitTestProgress {
+    return addNodeToListBasedTestResultCommon(node, request, locationInContainer, rect)
+  }
+
+  func addNodeToListBasedTestResult(
+    node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
     rect: LayoutRectWrapper = LayoutRectWrapper()
   ) -> HitTestProgress {
     return addNodeToListBasedTestResultCommon(node, request, locationInContainer, rect)
@@ -76,9 +83,9 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
-  private func addNodeToListBasedTestResultCommon(
+  private func addNodeToListBasedTestResultCommon<RectType>(
     _ node: NodeWrapper?, _ request: HitTestRequestWrapper,
-    _ locationInContainer: HitTestLocationWrapper, _ rect: LayoutRectWrapper
+    _ locationInContainer: HitTestLocationWrapper, _ rect: RectType
   ) -> HitTestProgress {
     // If it is not a list-based hit test, this method has to be no-op.
     if !request.resultIsElementList() {

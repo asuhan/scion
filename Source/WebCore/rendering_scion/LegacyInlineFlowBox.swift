@@ -35,6 +35,11 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  private func lastChild() -> LegacyInlineBox? {
+    // TODO(asuhan): add consistency check
+    return m_lastChild
+  }
+
   override func adjustPosition(_ dx: Float32, _ dy: Float32) {
     super.adjustPosition(dx, dy)
     var child = firstChild()
@@ -98,6 +103,65 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     }
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ lineTop: LayoutUnit, _ lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
+  ) -> Bool {
+    if hitTestAction != .HitTestForeground {
+      return false
+    }
+
+    var overflowRect: LayoutRectWrapper = visualOverflowRect(
+      lineTop: lineTop, lineBottom: lineBottom)
+    overflowRect.moveBy(offset: accumulatedOffset)
+    if !locationInContainer.intersects(rect: overflowRect) {
+      return false
+    }
+
+    // Check children first.
+    var child = lastChild()
+    while child != nil {
+      if child!.renderer is RenderTextWrapper || !child!.boxModelObject()!.hasSelfPaintingLayer() {
+        if child!.nodeAtPoint(
+          request, &result, locationInContainer, accumulatedOffset, lineTop, lineBottom,
+          hitTestAction)
+        {
+          renderer().updateHitTestResult(
+            result: &result,
+            point: locationInContainer.point() - toLayoutSize(point: accumulatedOffset))
+          return true
+        }
+      }
+      child = child!.previousOnLine()
+    }
+
+    // Now check ourselves. Pixel snap hit testing.
+    if !renderer().visibleToHitTesting(request: request) {
+      return false
+    }
+
+    // Move x/y to our coordinates.
+    var rect = frameRect()
+    flipForWritingMode(rect: &rect)
+    rect.moveBy(delta: accumulatedOffset.FloatPoint())
+
+    if locationInContainer.intersects(rect) {
+      renderer().updateHitTestResult(
+        result: &result,
+        point: flipForWritingMode(
+          locationInContainer.point() - toLayoutSize(point: accumulatedOffset)))  // Don't add in m_x or m_y here, we want coords in the containing block's space.
+      if result.addNodeToListBasedTestResult(
+        node: renderer().protectedNodeForHitTest(), request: request,
+        locationInContainer: locationInContainer, rect: rect) == .Stop
+      {
+        return true
+      }
+    }
+
+    return false
+  }
+
   override func selectionState() -> RenderObjectWrapper.HighlightState { return .None }
 
   func visualOverflowRect(lineTop: LayoutUnit, lineBottom: LayoutUnit) -> LayoutRectWrapper {
@@ -139,6 +203,8 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   let m_baselineType: FontBaseline = .AlphabeticBaseline
 
   private let overflow: RenderOverflow? = nil
+
+  private let m_lastChild: LegacyInlineBox? = nil
 
   let m_prevLineBox: LegacyInlineFlowBox? = nil  // The previous box that also uses our RenderObject
   let m_nextLineBox: LegacyInlineFlowBox? = nil  // The next box that also uses our RenderObject
