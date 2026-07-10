@@ -244,6 +244,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return remainingHeight
   }
 
+  func setPageBreak(_ block: RenderBlockWrapper, offset: LayoutUnit, spaceShortage: LayoutUnit) {}
+
   func updateSpaceShortageForSizeContainment(
     block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
   ) {}

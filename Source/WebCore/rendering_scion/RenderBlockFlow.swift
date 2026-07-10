@@ -2693,8 +2693,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   // A page break is required at some offset due to space shortage in the current fragmentainer.
   func setPageBreak(offset: LayoutUnit, spaceShortage: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let fragmentedFlow = enclosingFragmentedFlow()
+    fragmentedFlow?.setPageBreak(
+      self, offset: offsetFromLogicalTopOfFirstPage() + offset, spaceShortage: spaceShortage)
   }
 
   // Update minimum page height required to avoid fragmentation where it shouldn't occur (inside

@@ -274,6 +274,22 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func setPageBreak(
+    _ block: RenderBlockWrapper, offset: LayoutUnit, spaceShortage: LayoutUnit
+  ) {
+    // Only positive values are interesting (and allowed) here. Zero space shortage may be reported
+    // when we're at the top of a column and the element has zero height. Ignore this, and also
+    // ignore any negative values, which may occur when we set an early break in order to honor
+    // widows in the next column.
+    if spaceShortage <= Int32(0) {
+      return
+    }
+
+    let multicolSet =
+      fragmentAtBlockOffset(clampBox: block, offset: offset) as! RenderMultiColumnSetWrapper?
+    multicolSet?.recordSpaceShortage(spaceShortage)
+  }
+
   override func updateSpaceShortageForSizeContainment(
     block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
   ) {
