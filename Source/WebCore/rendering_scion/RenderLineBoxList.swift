@@ -149,6 +149,15 @@ class RenderLineBoxList {
     }
   }
 
+  func hitTest(
+    _ renderer: RenderBoxModelObjectWrapper, _ request: HitTestRequestWrapper,
+    _ result: inout HitTestResultWrapper, _ locationInContainer: HitTestLocationWrapper,
+    _ accumulatedOffset: LayoutPointWrapper, _ hitTestAction: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func anyLineIntersectsRect(
     renderer: RenderBoxModelObjectWrapper, rect: LayoutRectWrapper, offset: LayoutPointWrapper,
     usePrintRect: Bool = false

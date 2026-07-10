@@ -592,10 +592,16 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override final func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
+      return lineLayout.hitTest(
+        request: request, result: &result, locationInContainer: locationInContainer,
+        accumulatedOffset: accumulatedOffset, hitTestAction: hitTestAction, layerRenderer: self)
+    }
+    return legacyLineBoxes!.hitTest(
+      self, request, &result, locationInContainer, accumulatedOffset, hitTestAction)
   }
 
   override final func offsetTop() -> LayoutUnit {
