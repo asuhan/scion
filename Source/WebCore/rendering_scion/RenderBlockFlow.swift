@@ -4369,8 +4369,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func hasOverhangingFloat(_ renderer: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if floatingObjects == nil || parent() == nil {
+      return false
+    }
+
+    let floatingObjectSet = floatingObjects!.set()
+    let it = floatingObjectSet.find(value: FloatingObjectWrapper(renderer))
+    if it == floatingObjectSet.end() {
+      return false
+    }
+
+    return logicalBottomForFloat(floatingObject: *it) > logicalHeight()
   }
 
   private func addIntrudingFloats(
