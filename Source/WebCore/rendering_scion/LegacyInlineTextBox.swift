@@ -103,6 +103,37 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     textBoxPainter.paint()
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    lineTop: LayoutUnit, lineBottom: LayoutUnit, _ hitTestAction: HitTestAction
+  ) -> Bool {
+    if !renderer().parent()!.visibleToHitTesting(request: request) {
+      return false
+    }
+
+    if isLineBreak() {
+      return false
+    }
+
+    var rect = FloatRectWrapper(location: locationIncludingFlipping(), size: size())
+    rect.moveBy(delta: accumulatedOffset.FloatPoint())
+
+    if locationInContainer.intersects(rect) {
+      renderer().updateHitTestResult(
+        result: &result,
+        point: flipForWritingMode(
+          locationInContainer.point() - toLayoutSize(point: accumulatedOffset)))
+      if result.addNodeToListBasedTestResult(
+        node: renderer().protectedNodeForHitTest(), request: request,
+        locationInContainer: locationInContainer, rect: rect) == .Stop
+      {
+        return true
+      }
+    }
+    return false
+  }
+
   override final func selectionState() -> RenderObjectWrapper.HighlightState {
     return renderer().view().selection().highlightStateForTextBox(
       renderer: renderer(), textBoxRange: selectableRange())
