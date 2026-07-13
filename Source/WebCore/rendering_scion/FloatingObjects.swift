@@ -269,8 +269,8 @@ class FloatingObjectWrapper {
   }
 
   func hasAncestorWithOverflowClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_hasAncestorWithOverflowClip
   }
 
   func isDescendant() -> Bool {
@@ -312,7 +312,7 @@ class FloatingObjectWrapper {
   var m_frameRect = LayoutRectWrapper()
   private let m_marginOffset: LayoutSizeWrapper
   let type: Type_  // Type (left or right aligned)
-  private let m_paintsFloat: Bool
+  private var m_paintsFloat: Bool
   private var m_isDescendant = false
   let isPlaced: Bool
   private let m_hasAncestorWithOverflowClip: Bool
