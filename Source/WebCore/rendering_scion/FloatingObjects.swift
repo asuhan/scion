@@ -383,10 +383,7 @@ class FloatingObjects {
     fatalError("Not implemented")
   }
 
-  func setHorizontalWritingMode(b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setHorizontalWritingMode(b: Bool = true) { m_horizontalWritingMode = b }
 
   func hasLeftObjects() -> Bool { return m_leftObjectsCount > 0 }
 
@@ -429,6 +426,6 @@ class FloatingObjects {
   private let m_set = FloatingObjectSet()
   private var m_leftObjectsCount: UInt32 = 0
   private var m_rightObjectsCount: UInt32 = 0
-  private let m_horizontalWritingMode: Bool
+  private var m_horizontalWritingMode: Bool
   private let m_renderer: RenderBlockFlowWrapper
 }
