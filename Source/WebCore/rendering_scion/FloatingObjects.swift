@@ -248,10 +248,17 @@ class FloatingObjectWrapper {
   }
 
   func setFrameRect(frameRect: LayoutRectWrapper) {
-    wk_interop.FloatingObject_setFrameRect(
-      p!, m_frameRect.x().rawValue(), m_frameRect.y().rawValue(),
-      m_frameRect.width().rawValue(),
-      m_frameRect.height().rawValue())
+    if !isNativeImpl() {
+      wk_interop.FloatingObject_setFrameRect(
+        p!, m_frameRect.x().rawValue(), m_frameRect.y().rawValue(),
+        m_frameRect.width().rawValue(),
+        m_frameRect.height().rawValue())
+      return
+    }
+    #if ASSERT_ENABLED
+      assert(!isInPlacedTree)
+    #endif
+    m_frameRect = frameRect
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
