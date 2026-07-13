@@ -182,7 +182,11 @@ class FloatingObjectWrapper {
   }
 
   func setIsPlaced(placed: Bool) {
-    wk_interop.FloatingObject_setIsPlaced(p!, placed)
+    if !isNativeImpl() {
+      wk_interop.FloatingObject_setIsPlaced(p!, placed)
+      return
+    }
+    self.isPlaced = placed
   }
 
   func x() -> LayoutUnit {
