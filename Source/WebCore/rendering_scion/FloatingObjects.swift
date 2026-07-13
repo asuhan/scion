@@ -259,13 +259,13 @@ class FloatingObjectWrapper {
   }
 
   func paintsFloat() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_paintsFloat
   }
 
   func setPaintsFloat(paintsFloat: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_paintsFloat = paintsFloat
   }
 
   func hasAncestorWithOverflowClip() -> Bool {
