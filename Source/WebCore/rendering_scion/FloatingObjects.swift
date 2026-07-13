@@ -167,8 +167,13 @@ class FloatingObjectWrapper {
   }
 
   func cloneForNewParent() -> FloatingObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let cloneObject = FloatingObjectWrapper(
+      renderer!, type, m_frameRect, m_marginOffset, shouldPaint: m_paintsFloat,
+      isDescendant: m_isDescendant, overflowClipped: m_hasAncestorWithOverflowClip)
+    cloneObject.m_paginationStrut = m_paginationStrut
+    cloneObject.isPlaced = isPlaced
+    return cloneObject
   }
 
   func setIsPlaced(placed: Bool) {
@@ -245,8 +250,8 @@ class FloatingObjectWrapper {
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_paginationStrut = strut
   }
 
   func shouldPaint() -> Bool {
@@ -313,11 +318,12 @@ class FloatingObjectWrapper {
 
   var renderer: RenderBoxWrapper? = nil
   var m_frameRect = LayoutRectWrapper()
+  private var m_paginationStrut = LayoutUnit()
   private let m_marginOffset: LayoutSizeWrapper
   let type: Type_  // Type (left or right aligned)
   private var m_paintsFloat: Bool
   private var m_isDescendant = false
-  let isPlaced: Bool
+  var isPlaced: Bool
   private let m_hasAncestorWithOverflowClip: Bool
   #if ASSERT_ENABLED
     var isInPlacedTree = false
