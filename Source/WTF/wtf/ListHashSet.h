@@ -258,6 +258,8 @@ public:
 
     operator const_iterator() const { return m_iterator; }
 
+    bool atEnd() { return !node(); }
+
 private:
     Node* node() { return m_iterator.node(); }
 

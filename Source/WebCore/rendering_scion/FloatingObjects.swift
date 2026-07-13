@@ -29,6 +29,9 @@ class FloatingObjectSetIterator: IteratorProtocol, Equatable {
   deinit { wk_interop.FloatingObjectSetIterator_destroy(p) }
 
   func next() -> FloatingObjectWrapper? {
+    if wk_interop.FloatingObjectSetIterator_atEnd(p) {
+      return nil
+    }
     let value = *self
     ++self
     return value

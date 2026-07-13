@@ -136,6 +136,11 @@ extern "C" WEBCORE_EXPORT void FloatingObjectSet_add(void* p, void* floating_obj
     static_cast<ScionFloatingObjectSet*>(p)->add(floating_object);
 }
 
+extern "C" WEBCORE_EXPORT bool FloatingObjectSetIterator_atEnd(void* p)
+{
+    return static_cast<ScionFloatingObjectSet::iterator*>(p)->atEnd();
+}
+
 extern "C" WEBCORE_EXPORT void* FloatingObjectSetIterator_deref(void* p)
 {
     auto& it = *static_cast<ScionFloatingObjectSet::iterator*>(p);
