@@ -2126,8 +2126,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func containsFloat(renderer: RenderBoxWrapper) -> Bool {
     assert(isNativeImpl())
     assert(!renderer.isNativeImpl())
-    return floatingObjects != nil
-      && !floatingObjects!.set().contains(FloatingObjectWrapper(p: renderer.id()))
+    return floatingObjects != nil && !floatingObjects!.set().contains(renderer)
   }
 
   func subtreeContainsFloats() -> Bool {
@@ -2307,7 +2306,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     let floatingObjectSet = floatingObjects!.set()
-    let it = floatingObjectSet.find(value: FloatingObjectWrapper(floatBox))
+    let it = floatingObjectSet.find(floatBox)
     if it != floatingObjectSet.end() { return *it }
 
     return floatingObjects!.add(floatingObject: FloatingObjectWrapper.create(floatBox))!
@@ -3985,7 +3984,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     } else {
       // Don't insert the floatingObject again if it's already in the list
       let floatingObjectSet = floatingObjects!.set()
-      let it = floatingObjectSet.find(value: FloatingObjectWrapper(floatBox))
+      let it = floatingObjectSet.find(floatBox)
       if it != floatingObjectSet.end() {
         return *it
       }
@@ -4379,7 +4378,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     let floatingObjectSet = floatingObjects!.set()
-    let it = floatingObjectSet.find(value: FloatingObjectWrapper(renderer))
+    let it = floatingObjectSet.find(renderer)
     if it == floatingObjectSet.end() {
       return false
     }

@@ -3751,3 +3751,9 @@ func RenderTreeAsText_writeTextRuns(_ textRaw: UnsafeRawPointer, _ tsRaw: Unsafe
   let ts = TextStream(tsRaw)
   writeTextRuns(text, ts)
 }
+
+@_cdecl("FloatingObjectScion_renderer")
+func FloatingObjectScion_renderer(_ floatingRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let floating = Unmanaged<FloatingObjectWrapper>.fromOpaque(floatingRaw).takeUnretainedValue()
+  return floating.renderer!.id()
+}

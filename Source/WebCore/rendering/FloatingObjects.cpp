@@ -59,6 +59,106 @@ extern "C" WEBCORE_EXPORT void FloatingObject_setFrameRect(void* p, int32_t x, i
         WebCore::LayoutUnit::fromRawValue(height)));
 }
 
+extern "C" void* FloatingObjectScion_renderer(const void*);
+
+namespace {
+
+using ScionFloatingObject = void*;
+using ScionRenderBox = void*;
+
+struct ScionFloatingObjectHashFunctions {
+    static unsigned hash(const ScionFloatingObject key) { return PtrHash<ScionRenderBox>::hash(FloatingObjectScion_renderer(key)); }
+    static bool equal(const ScionFloatingObject a, const ScionFloatingObject b) { return FloatingObjectScion_renderer(a) == FloatingObjectScion_renderer(b); }
+    static const bool safeToCompareToEmptyOrDeleted = true;
+};
+
+struct ScionFloatingObjectHashTranslator {
+    static unsigned hash(const ScionRenderBox key) { return PtrHash<const ScionRenderBox>::hash(key); }
+    static bool equal(const ScionFloatingObject a, const ScionRenderBox b) { return FloatingObjectScion_renderer(a) == b; }
+};
+
+typedef ListHashSet<const ScionFloatingObject, ScionFloatingObjectHashFunctions> ScionFloatingObjectSet;
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void* FloatingObjectSet_create()
+{
+    return new ScionFloatingObjectSet();
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectSet_destroy(void* p)
+{
+    delete static_cast<ScionFloatingObjectSet*>(p);
+}
+
+extern "C" WEBCORE_EXPORT uint32_t FloatingObjectSet_size(const void* p)
+{
+    return static_cast<const ScionFloatingObjectSet*>(p)->size();
+}
+
+extern "C" WEBCORE_EXPORT bool FloatingObjectSet_isEmpty(const void* p)
+{
+    return static_cast<const ScionFloatingObjectSet*>(p)->isEmpty();
+}
+
+extern "C" WEBCORE_EXPORT void* FloatingObjectSet_begin(void* p)
+{
+    return new ScionFloatingObjectSet::iterator(static_cast<ScionFloatingObjectSet*>(p)->begin());
+}
+
+extern "C" WEBCORE_EXPORT void* FloatingObjectSet_end(void* p)
+{
+    return new ScionFloatingObjectSet::iterator(static_cast<ScionFloatingObjectSet*>(p)->end());
+}
+
+extern "C" WEBCORE_EXPORT void* FloatingObjectSet_last(void* p)
+{
+    return static_cast<ScionFloatingObjectSet*>(p)->last();
+}
+
+extern "C" WEBCORE_EXPORT void* FloatingObjectSet_find(void* p, void* float_box)
+{
+    return new ScionFloatingObjectSet::iterator(static_cast<ScionFloatingObjectSet*>(p)->find<ScionFloatingObjectHashTranslator>(float_box));
+}
+
+extern "C" WEBCORE_EXPORT bool FloatingObjectSet_contains(void* p, void* floating_object)
+{
+    return static_cast<ScionFloatingObjectSet*>(p)->contains(floating_object);
+}
+
+extern "C" WEBCORE_EXPORT bool FloatingObjectSet_containsBox(void* p, void* float_box)
+{
+    return static_cast<ScionFloatingObjectSet*>(p)->contains<ScionFloatingObjectHashTranslator>(float_box);
+}
+
+extern "C" WEBCORE_EXPORT void* FloatingObjectSetIterator_deref(void* p)
+{
+    auto& it = *static_cast<ScionFloatingObjectSet::iterator*>(p);
+    return *it;
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectSetIterator_inc(void* p)
+{
+    auto& it = *static_cast<ScionFloatingObjectSet::iterator*>(p);
+    ++it;
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectSetIterator_dec(void* p)
+{
+    auto& it = *static_cast<ScionFloatingObjectSet::iterator*>(p);
+    --it;
+}
+
+extern "C" WEBCORE_EXPORT bool FloatingObjectSetIterator_eq(const void* p1, const void* p2)
+{
+    return *static_cast<const ScionFloatingObjectSet::iterator*>(p1) == *static_cast<const ScionFloatingObjectSet::iterator*>(p2);
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectSetIterator_destroy(void* p)
+{
+    delete static_cast<ScionFloatingObjectSet::iterator*>(p);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL_TEMPLATE(FloatingObjectTree);

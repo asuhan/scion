@@ -23,9 +23,83 @@
 
 import wk_interop
 
-typealias FloatingObjectSet = ListHashSet<FloatingObjectWrapper>
+class FloatingObjectSetIterator: IteratorProtocol, Equatable {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
-class FloatingObjectWrapper: Hashable {
+  deinit { wk_interop.FloatingObjectSetIterator_destroy(p) }
+
+  func next() -> FloatingObjectWrapper? {
+    let value = *self
+    ++self
+    return value
+  }
+
+  static prefix func * (it: FloatingObjectSetIterator) -> FloatingObjectWrapper {
+    let raw = wk_interop.FloatingObjectSetIterator_deref(it.p)!
+    return Unmanaged<FloatingObjectWrapper>.fromOpaque(raw).takeUnretainedValue()
+  }
+
+  @discardableResult
+  static prefix func ++ (it: FloatingObjectSetIterator) -> FloatingObjectSetIterator {
+    wk_interop.FloatingObjectSetIterator_inc(it.p)
+    return it
+  }
+
+  @discardableResult
+  static prefix func -- (it: FloatingObjectSetIterator) -> FloatingObjectSetIterator {
+    wk_interop.FloatingObjectSetIterator_dec(it.p)
+    return it
+  }
+
+  // Comparison.
+  static func == (this: FloatingObjectSetIterator, other: FloatingObjectSetIterator) -> Bool {
+    return wk_interop.FloatingObjectSetIterator_eq(this.p, other.p)
+  }
+
+  private let p: UnsafeMutableRawPointer
+}
+
+class FloatingObjectSet: Sequence {
+  init() { p = wk_interop.FloatingObjectSet_create() }
+
+  deinit { wk_interop.FloatingObjectSet_destroy(p) }
+
+  func size() -> UInt32 { return wk_interop.FloatingObjectSet_size(p) }
+
+  func isEmpty() -> Bool { return wk_interop.FloatingObjectSet_isEmpty(p) }
+
+  func begin() -> FloatingObjectSetIterator {
+    return FloatingObjectSetIterator(wk_interop.FloatingObjectSet_begin(p))
+  }
+
+  func end() -> FloatingObjectSetIterator {
+    return FloatingObjectSetIterator(wk_interop.FloatingObjectSet_end(p))
+  }
+
+  func last() -> FloatingObjectWrapper {
+    let raw = wk_interop.FloatingObjectSet_last(p)!
+    return Unmanaged<FloatingObjectWrapper>.fromOpaque(raw).takeUnretainedValue()
+  }
+
+  func find(_ value: RenderBoxWrapper) -> FloatingObjectSetIterator {
+    return FloatingObjectSetIterator(wk_interop.FloatingObjectSet_find(p, value.id()))
+  }
+
+  func contains(_ floating: FloatingObjectWrapper) -> Bool {
+    let unmanaged = Unmanaged.passUnretained(floating)
+    return wk_interop.FloatingObjectSet_contains(p, unmanaged.toOpaque())
+  }
+
+  func contains(_ box: RenderBoxWrapper) -> Bool {
+    return wk_interop.FloatingObjectSet_containsBox(p, box.id())
+  }
+
+  func makeIterator() -> FloatingObjectSetIterator { return begin() }
+
+  private let p: UnsafeMutableRawPointer
+}
+
+class FloatingObjectWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
     type = .FloatLeft
@@ -50,16 +124,6 @@ class FloatingObjectWrapper: Hashable {
     } else {
       m_hasAncestorWithOverflowClip = false
     }
-  }
-
-  static func == (lhs: FloatingObjectWrapper, rhs: FloatingObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hash(into hasher: inout Hasher) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   // Note that Type uses bits so you can use FloatLeftRight as a mask to query for both left and right.
