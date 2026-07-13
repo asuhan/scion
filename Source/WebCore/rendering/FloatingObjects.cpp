@@ -131,6 +131,11 @@ extern "C" WEBCORE_EXPORT bool FloatingObjectSet_containsBox(void* p, void* floa
     return static_cast<ScionFloatingObjectSet*>(p)->contains<ScionFloatingObjectHashTranslator>(float_box);
 }
 
+extern "C" WEBCORE_EXPORT void FloatingObjectSet_add(void* p, void* floating_object)
+{
+    static_cast<ScionFloatingObjectSet*>(p)->add(floating_object);
+}
+
 extern "C" WEBCORE_EXPORT void* FloatingObjectSetIterator_deref(void* p)
 {
     auto& it = *static_cast<ScionFloatingObjectSet::iterator*>(p);

@@ -94,6 +94,11 @@ class FloatingObjectSet: Sequence {
     return wk_interop.FloatingObjectSet_containsBox(p, box.id())
   }
 
+  func add(_ floating: FloatingObjectWrapper) {
+    let unmanaged = Unmanaged.passUnretained(floating)
+    wk_interop.FloatingObjectSet_add(p, unmanaged.toOpaque())
+  }
+
   func makeIterator() -> FloatingObjectSetIterator { return begin() }
 
   private let p: UnsafeMutableRawPointer
@@ -346,8 +351,13 @@ class FloatingObjects {
 
   @discardableResult
   func add(floatingObject: FloatingObjectWrapper) -> FloatingObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    increaseObjectsCount(floatingObject.type)
+    if floatingObject.isPlaced {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    m_set.add(floatingObject)
+    return floatingObject
   }
 
   func addPlacedObject(_ floatingObject: FloatingObjectWrapper) {
@@ -390,9 +400,17 @@ class FloatingObjects {
     }
   }
 
+  private func increaseObjectsCount(_ type: FloatingObjectWrapper.Type_) {
+    if type == .FloatLeft {
+      m_leftObjectsCount += 1
+    } else {
+      m_rightObjectsCount += 1
+    }
+  }
+
   private let m_set = FloatingObjectSet()
-  private let m_leftObjectsCount: UInt32 = 0
-  private let m_rightObjectsCount: UInt32 = 0
+  private var m_leftObjectsCount: UInt32 = 0
+  private var m_rightObjectsCount: UInt32 = 0
   private let m_horizontalWritingMode: Bool
   private let m_renderer: RenderBlockFlowWrapper
 }
