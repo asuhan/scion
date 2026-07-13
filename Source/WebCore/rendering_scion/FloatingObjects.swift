@@ -104,6 +104,9 @@ class FloatingObjectWrapper {
     self.p = p
     type = .FloatLeft
     m_hasAncestorWithOverflowClip = false
+    m_marginOffset = LayoutSizeWrapper()
+    m_paintsFloat = false
+    isPlaced = false
   }
 
   static func create(_ renderer: RenderBoxWrapper) -> FloatingObjectWrapper {
@@ -124,6 +127,23 @@ class FloatingObjectWrapper {
     } else {
       m_hasAncestorWithOverflowClip = false
     }
+    m_marginOffset = LayoutSizeWrapper()
+    m_paintsFloat = false
+    isPlaced = false
+  }
+
+  init(
+    _ renderer: RenderBoxWrapper, _ type: Type_, _ frameRect: LayoutRectWrapper,
+    _ marginOffset: LayoutSizeWrapper, shouldPaint: Bool, isDescendant: Bool, overflowClipped: Bool
+  ) {
+    self.renderer = renderer
+    self.m_frameRect = frameRect
+    self.m_marginOffset = marginOffset
+    self.type = type
+    self.m_paintsFloat = shouldPaint
+    self.m_isDescendant = isDescendant
+    self.isPlaced = true
+    self.m_hasAncestorWithOverflowClip = overflowClipped
   }
 
   // Note that Type uses bits so you can use FloatLeftRight as a mask to query for both left and right.
@@ -139,8 +159,11 @@ class FloatingObjectWrapper {
     offset: LayoutSizeWrapper, shouldPaint: Bool = false, isDescendant: Bool = false,
     overflowClipped: Bool = false
   ) -> FloatingObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FloatingObjectWrapper(
+      renderer!, type,
+      LayoutRectWrapper(location: frameRect().location() - offset, size: frameRect().size()),
+      marginOffset(), shouldPaint: shouldPaint, isDescendant: isDescendant,
+      overflowClipped: overflowClipped)
   }
 
   func cloneForNewParent() -> FloatingObjectWrapper {
@@ -154,54 +177,54 @@ class FloatingObjectWrapper {
 
   func x() -> LayoutUnit {
     assert(isPlaced)
-    return frameRect.x()
+    return m_frameRect.x()
   }
 
   func maxX() -> LayoutUnit {
     assert(isPlaced)
-    return frameRect.maxX()
+    return m_frameRect.maxX()
   }
 
   func y() -> LayoutUnit {
     assert(isPlaced)
-    return frameRect.y()
+    return m_frameRect.y()
   }
 
   func maxY() -> LayoutUnit {
     assert(isPlaced)
-    return frameRect.maxY()
+    return m_frameRect.maxY()
   }
 
-  func width() -> LayoutUnit { return frameRect.width() }
+  func width() -> LayoutUnit { return m_frameRect.width() }
 
-  func height() -> LayoutUnit { return frameRect.height() }
+  func height() -> LayoutUnit { return m_frameRect.height() }
 
   func setX(x: LayoutUnit) {
     #if ASSERT_ENABLED
       assert(!isInPlacedTree)
     #endif
-    frameRect.setX(x: x)
+    m_frameRect.setX(x: x)
   }
 
   func setY(y: LayoutUnit) {
     #if ASSERT_ENABLED
       assert(!isInPlacedTree)
     #endif
-    frameRect.setY(y: y)
+    m_frameRect.setY(y: y)
   }
 
   func setWidth(width: LayoutUnit) {
     #if ASSERT_ENABLED
       assert(!isInPlacedTree)
     #endif
-    frameRect.setWidth(width: width)
+    m_frameRect.setWidth(width: width)
   }
 
   func setHeight(height: LayoutUnit) {
     #if ASSERT_ENABLED
       assert(!isInPlacedTree)
     #endif
-    frameRect.setHeight(height: height)
+    m_frameRect.setHeight(height: height)
   }
 
   func setMarginOffset(offset: LayoutSizeWrapper) {
@@ -209,11 +232,16 @@ class FloatingObjectWrapper {
       p!, offset.width().rawValue(), offset.height().rawValue())
   }
 
+  func frameRect() -> LayoutRectWrapper {
+    assert(isPlaced)
+    return m_frameRect
+  }
+
   func setFrameRect(frameRect: LayoutRectWrapper) {
     wk_interop.FloatingObject_setFrameRect(
-      p!, frameRect.x().rawValue(), frameRect.y().rawValue(),
-      frameRect.width().rawValue(),
-      frameRect.height().rawValue())
+      p!, m_frameRect.x().rawValue(), m_frameRect.y().rawValue(),
+      m_frameRect.width().rawValue(),
+      m_frameRect.height().rawValue())
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
@@ -268,13 +296,21 @@ class FloatingObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func marginOffset() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
+    assert(isPlaced)
+    return m_marginOffset
+  }
+
   private func isNativeImpl() -> Bool { return p == nil }
 
   var renderer: RenderBoxWrapper? = nil
-  var frameRect = LayoutRectWrapper()
+  var m_frameRect = LayoutRectWrapper()
+  private let m_marginOffset: LayoutSizeWrapper
   let type: Type_  // Type (left or right aligned)
+  private let m_paintsFloat: Bool
   private var m_isDescendant = false
-  let isPlaced = false
+  let isPlaced: Bool
   private let m_hasAncestorWithOverflowClip: Bool
   #if ASSERT_ENABLED
     var isInPlacedTree = false
