@@ -284,8 +284,11 @@ class FloatingObjectWrapper {
   }
 
   func locationOffsetOfBorderBox() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isPlaced)
+    return LayoutSizeWrapper(
+      width: m_frameRect.location().x + m_marginOffset.width(),
+      height: m_frameRect.location().y + m_marginOffset.height())
   }
 
   func translationOffsetToAncestor() -> LayoutSizeWrapper {
