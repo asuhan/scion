@@ -250,8 +250,12 @@ class FloatingObjectWrapper {
   }
 
   func shouldPaint() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if renderer == nil {
+      return false
+    }
+
+    return !renderer!.hasSelfPaintingLayer() && m_paintsFloat
   }
 
   func paintsFloat() -> Bool {
