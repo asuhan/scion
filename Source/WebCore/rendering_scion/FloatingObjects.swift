@@ -381,8 +381,13 @@ class FloatingObjects {
   }
 
   func shiftFloatsBy(blockShift: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shiftX = m_horizontalWritingMode ? LayoutUnit(value: UInt64(0)) : -blockShift
+    let shiftY = m_horizontalWritingMode ? blockShift : LayoutUnit(value: UInt64(0))
+
+    for floater in m_set {
+      floater.m_frameRect.move(dx: shiftX, dy: shiftY)
+      floater.renderer!.move(dx: shiftX, dy: shiftY)
+    }
   }
 
   private let m_set = FloatingObjectSet()
