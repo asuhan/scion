@@ -95,7 +95,7 @@ class FloatingObjectSet: Sequence {
   }
 
   func add(_ floating: FloatingObjectWrapper) {
-    let unmanaged = Unmanaged.passUnretained(floating)
+    let unmanaged = Unmanaged.passRetained(floating)
     wk_interop.FloatingObjectSet_add(p, unmanaged.toOpaque())
   }
 
