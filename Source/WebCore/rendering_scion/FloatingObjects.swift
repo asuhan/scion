@@ -360,15 +360,9 @@ class FloatingObjects {
     fatalError("Not implemented")
   }
 
-  func hasLeftObjects() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasLeftObjects() -> Bool { return m_leftObjectsCount > 0 }
 
-  func hasRightObjects() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasRightObjects() -> Bool { return m_rightObjectsCount > 0 }
 
   func set() -> FloatingObjectSet { return m_set }
 
@@ -392,6 +386,8 @@ class FloatingObjects {
   }
 
   private let m_set = FloatingObjectSet()
+  private let m_leftObjectsCount: UInt32 = 0
+  private let m_rightObjectsCount: UInt32 = 0
   private let m_horizontalWritingMode: Bool
   private let m_renderer: RenderBlockFlowWrapper
 }
