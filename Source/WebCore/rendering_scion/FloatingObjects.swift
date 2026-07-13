@@ -238,8 +238,15 @@ class FloatingObjectWrapper {
   }
 
   func setMarginOffset(offset: LayoutSizeWrapper) {
-    wk_interop.FloatingObject_setMarginOffset(
-      p!, offset.width().rawValue(), offset.height().rawValue())
+    if !isNativeImpl() {
+      wk_interop.FloatingObject_setMarginOffset(
+        p!, offset.width().rawValue(), offset.height().rawValue())
+      return
+    }
+    #if ASSERT_ENABLED
+      assert(!isInPlacedTree)
+    #endif
+    m_marginOffset = offset
   }
 
   func frameRect() -> LayoutRectWrapper {
@@ -331,7 +338,7 @@ class FloatingObjectWrapper {
   var renderer: RenderBoxWrapper? = nil
   var m_frameRect = LayoutRectWrapper()
   private var m_paginationStrut = LayoutUnit()
-  private let m_marginOffset: LayoutSizeWrapper
+  private var m_marginOffset: LayoutSizeWrapper
   let type: Type_  // Type (left or right aligned)
   private var m_paintsFloat: Bool
   private var m_isDescendant = false
