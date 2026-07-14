@@ -85,9 +85,9 @@ class LegacyInlineBox {
 
   func topLeft() -> FloatPoint { return m_topLeft }
 
-  private func width() -> Float32 { return isHorizontal() ? logicalWidth() : logicalHeight() }
+  func width() -> Float32 { return isHorizontal() ? logicalWidth() : logicalHeight() }
 
-  private func height() -> Float32 { return isHorizontal() ? logicalHeight() : logicalWidth() }
+  func height() -> Float32 { return isHorizontal() ? logicalHeight() : logicalWidth() }
 
   func size() -> FloatSize { return FloatSize(width: width(), height: height()) }
 

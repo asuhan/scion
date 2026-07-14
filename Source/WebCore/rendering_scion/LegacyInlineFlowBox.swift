@@ -166,8 +166,8 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   override func selectionState() -> RenderObjectWrapper.HighlightState { return .None }
 
   func visualOverflowRect(lineTop: LayoutUnit, lineBottom: LayoutUnit) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return overflow?.visualOverflowRect()
+      ?? enclosingLayoutRect(rect: frameRectIncludingLineHeight(lineTop, lineBottom))
   }
 
   func logicalLeftVisualOverflow() -> LayoutUnit {
@@ -196,6 +196,17 @@ class LegacyInlineFlowBox: LegacyInlineBox {
         ? overflow.visualOverflowRect().maxY() : overflow.visualOverflowRect().maxX()
     }
     return lineBottom
+  }
+
+  private func frameRectIncludingLineHeight(_ lineTop: LayoutUnit, _ lineBottom: LayoutUnit)
+    -> FloatRectWrapper
+  {
+    if isHorizontal() {
+      return FloatRectWrapper(
+        x: x(), y: lineTop.float(), width: width(), height: (lineBottom - lineTop).float())
+    }
+    return FloatRectWrapper(
+      x: lineTop.float(), y: y(), width: (lineBottom - lineTop).float(), height: height())
   }
 
   override final func isInlineFlowBox() -> Bool { return true }
