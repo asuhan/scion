@@ -2840,8 +2840,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func initialShapeMargin() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_initialShapeMargin(), owner: true)
   }
 
   func shapeImageThreshold() -> Float32 { return wk_interop.RenderStyle_shapeImageThreshold(p!) }
