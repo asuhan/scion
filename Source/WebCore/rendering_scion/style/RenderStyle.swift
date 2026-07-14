@@ -3226,13 +3226,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func initialMinSize() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_initialMinSize(), owner: true)
   }
 
   static func initialMaxSize() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_initialMaxSize(), owner: true)
   }
 
   private func borderLeftColor() -> StyleColorWrapper {

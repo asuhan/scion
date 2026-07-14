@@ -919,6 +919,16 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_willChange(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->willChange();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderStyle_initialMinSize()
+{
+    return new WebCore::Length(WebCore::RenderStyle::initialMinSize());
+}
+
+extern "C" WEBCORE_EXPORT void* RenderStyle_initialMaxSize()
+{
+    return new WebCore::Length(WebCore::RenderStyle::initialMaxSize());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_backgroundColor(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->backgroundColor();
