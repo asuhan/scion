@@ -167,7 +167,8 @@ class LegacyInlineFlowBox: LegacyInlineBox {
 
   func visualOverflowRect(lineTop: LayoutUnit, lineBottom: LayoutUnit) -> LayoutRectWrapper {
     return overflow?.visualOverflowRect()
-      ?? enclosingLayoutRect(rect: frameRectIncludingLineHeight(lineTop, lineBottom))
+      ?? enclosingLayoutRect(
+        rect: frameRectIncludingLineHeight(lineTop: lineTop, lineBottom: lineBottom))
   }
 
   func logicalLeftVisualOverflow() -> LayoutUnit {
@@ -198,7 +199,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     return lineBottom
   }
 
-  private func frameRectIncludingLineHeight(_ lineTop: LayoutUnit, _ lineBottom: LayoutUnit)
+  private func frameRectIncludingLineHeight(lineTop: LayoutUnit, lineBottom: LayoutUnit)
     -> FloatRectWrapper
   {
     if isHorizontal() {
