@@ -2296,8 +2296,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func objectPosition() -> LengthPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let position = wk_interop.RenderStyle_objectPosition(p!)
+    return LengthPoint(x: LengthWrapper(p: position.x), y: LengthWrapper(p: position.y))
   }
 
   // Return true if any transform related property (currently transform, translate, scale, rotate, transformStyle3D or perspective)

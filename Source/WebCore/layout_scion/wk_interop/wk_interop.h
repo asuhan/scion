@@ -1093,6 +1093,7 @@ uint8_t RenderStyle_rubyAlign(const void*);
 uint8_t RenderStyle_rubyOverhang(const void*);
 uint8_t RenderStyle_textOrientation(const void*);
 uint8_t RenderStyle_objectFit(const void*);
+struct LengthPointRaw RenderStyle_objectPosition(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 int32_t RenderStyle_initialLetterHeight(const void*);
 uint8_t RenderStyle_eventListenerRegionTypes(const void*);

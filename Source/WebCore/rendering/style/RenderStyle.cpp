@@ -561,6 +561,17 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_objectFit(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->objectFit());
 }
 
+struct LengthPointRaw {
+    const void* x;
+    const void* y;
+};
+
+extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_objectPosition(const void* p)
+{
+    const auto& object_position = static_cast<const WebCore::RenderStyle*>(p)->objectPosition();
+    return { &object_position.x, &object_position.y };
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterDrop(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterDrop();
@@ -918,11 +929,6 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_willChange(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->willChange();
 }
-
-struct LengthPointRaw {
-    const void* x;
-    const void* y;
-};
 
 extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_initialObjectPosition()
 {
