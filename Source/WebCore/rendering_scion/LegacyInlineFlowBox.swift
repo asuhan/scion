@@ -31,8 +31,8 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   func nextLineBox() -> LegacyInlineFlowBox? { return m_nextLineBox }
 
   func firstChild() -> LegacyInlineBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add consistency check
+    return m_firstChild
   }
 
   private func lastChild() -> LegacyInlineBox? {
@@ -216,6 +216,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
 
   private let overflow: RenderOverflow? = nil
 
+  private let m_firstChild: LegacyInlineBox? = nil
   private let m_lastChild: LegacyInlineBox? = nil
 
   let m_prevLineBox: LegacyInlineFlowBox? = nil  // The previous box that also uses our RenderObject
