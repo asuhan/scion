@@ -358,6 +358,13 @@ struct LayoutBoxExtentRaw {
     int32_t left;
 };
 
+struct IntOutsetsRaw {
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+    int32_t left;
+};
+
 struct ChangedContextSensitiveProperties {
     uint8_t diff;
     bool requires_layout;
@@ -1186,6 +1193,7 @@ bool RenderStyle_hasUsedAppearance(const void*);
 bool RenderStyle_hasBackground(const void*);
 bool RenderStyle_hasBorderImageOutsets(const void*);
 struct LayoutBoxExtentRaw RenderStyle_borderImageOutsets(const void*);
+struct IntOutsetsRaw RenderStyle_filterOutsets(const void*);
 bool RenderStyle_hasStaticInlinePosition(const void*, bool);
 bool RenderStyle_hasStaticBlockPosition(const void*, bool);
 bool RenderStyle_hasViewportConstrainedPosition(const void*);

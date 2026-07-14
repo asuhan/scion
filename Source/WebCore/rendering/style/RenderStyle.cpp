@@ -1090,6 +1090,19 @@ extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_borderImageOutsets(cons
     return { extent.top().rawValue(), extent.right().rawValue(), extent.bottom().rawValue(), extent.left().rawValue() };
 }
 
+struct IntOutsetsRaw {
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+    int32_t left;
+};
+
+extern "C" WEBCORE_EXPORT IntOutsetsRaw RenderStyle_filterOutsets(const void* p)
+{
+    const auto outsets = static_cast<const WebCore::RenderStyle*>(p)->filterOutsets();
+    return { outsets.top(), outsets.right(), outsets.bottom(), outsets.left() };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasStaticInlinePosition(const void* p, bool horizontal)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasStaticInlinePosition(horizontal);

@@ -1027,8 +1027,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func filterOutsets() -> IntOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_filterOutsets(p!)
+    return IntOutsets(top: raw.top, right: raw.right, bottom: raw.bottom, left: raw.left)
   }
 
   func rtlOrdering() -> Order {
