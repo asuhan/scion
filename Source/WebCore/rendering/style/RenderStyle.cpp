@@ -919,6 +919,17 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_willChange(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->willChange();
 }
 
+struct LengthPointRaw {
+    const void* x;
+    const void* y;
+};
+
+extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_initialObjectPosition()
+{
+    const auto length_point = WebCore::RenderStyle::initialObjectPosition();
+    return { new WebCore::Length(length_point.x), new WebCore::Length(length_point.y) };
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_initialMinSize()
 {
     return new WebCore::Length(WebCore::RenderStyle::initialMinSize());
@@ -2257,11 +2268,6 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_offsetDistance(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->offsetDistance();
 }
-
-struct LengthPointRaw {
-    const void* x;
-    const void* y;
-};
 
 extern "C" WEBCORE_EXPORT LengthPointRaw RenderStyle_offsetPosition(const void* p)
 {

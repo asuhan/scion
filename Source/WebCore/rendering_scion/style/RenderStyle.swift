@@ -3221,8 +3221,9 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func initialObjectPosition() -> LengthPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_initialObjectPosition()
+    return LengthPoint(
+      x: LengthWrapper(p: raw.x, owner: true), y: LengthWrapper(p: raw.y, owner: true))
   }
 
   static func initialMinSize() -> LengthWrapper {

@@ -1154,6 +1154,7 @@ void RenderStyle_setLineBoxContain(const void*, uint8_t);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 bool RenderStyle_hasExplicitlySetStrokeWidth(const void*);
 void* RenderStyle_willChange(const void*);
+struct LengthPointRaw RenderStyle_initialObjectPosition();
 void* RenderStyle_initialMinSize();
 void* RenderStyle_initialMaxSize();
 const void* RenderStyle_backgroundColor(const void*);
