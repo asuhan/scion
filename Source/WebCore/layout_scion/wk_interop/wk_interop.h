@@ -431,6 +431,11 @@ struct OffsetRotationRaw {
     bool hasAuto;
 };
 
+struct LineClampValueRaw {
+    bool isPercentage;
+    int32_t value;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1368,6 +1373,7 @@ void* RenderStyle_initialShapeMargin();
 float RenderStyle_shapeImageThreshold(const void*);
 void* RenderStyle_offsetPath(const void*);
 struct PathOperationRaw RenderStyle_clipPath(const void*);
+struct LineClampValueRaw RenderStyle_lineClamp(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 uint64_t RenderStyle_maxLines(const void*);
 bool RenderStyle_overflowContinue(const void*);

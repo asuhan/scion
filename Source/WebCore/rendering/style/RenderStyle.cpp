@@ -2264,6 +2264,17 @@ extern "C" WEBCORE_EXPORT PathOperationRaw RenderStyle_clipPath(const void* p) {
     };
 }
 
+struct LineClampValueRaw {
+    bool isPercentage;
+    int32_t value;
+};
+
+extern "C" WEBCORE_EXPORT LineClampValueRaw RenderStyle_lineClamp(const void* p)
+{
+    const auto lineClamp = static_cast<const WebCore::RenderStyle*>(p)->lineClamp();
+    return { lineClamp.isPercentage(), lineClamp.value() };
+}
+
 struct BlockEllipsisRaw {
     uint8_t type;
     const void* string;

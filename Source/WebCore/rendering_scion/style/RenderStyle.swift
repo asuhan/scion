@@ -2391,8 +2391,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func lineClamp() -> LineClampValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_lineClamp(p!)
+    return LineClampValue(value: raw.value, type: raw.isPercentage ? .Percentage : .LineCount)
   }
 
   func blockEllipsis() -> BlockEllipsis {

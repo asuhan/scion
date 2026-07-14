@@ -23,10 +23,15 @@
  */
 
 struct LineClampValue {
+  init(value: Int32 = -1, type: LineClamp = .LineCount) {
+    self.type = type
+    self.value = value
+  }
+
   func isPercentage() -> Bool { return type == .Percentage }
 
   func isNone() -> Bool { return value == -1 }
 
-  let type: LineClamp = .LineCount
-  let value: Int32 = -1
+  let type: LineClamp
+  let value: Int32
 }
