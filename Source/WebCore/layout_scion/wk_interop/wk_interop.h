@@ -1325,6 +1325,8 @@ bool RenderStyle_containIntrinsicWidthHasAuto(const void*);
 bool RenderStyle_containIntrinsicHeightHasAuto(const void*);
 bool RenderStyle_containIntrinsicLogicalWidthHasAuto(const void*);
 bool RenderStyle_containIntrinsicLogicalHeightHasAuto(const void*);
+void* RenderStyle_containIntrinsicWidth(const void*);
+void* RenderStyle_containIntrinsicHeight(const void*);
 bool RenderStyle_hasAutoLengthContainIntrinsicSize(const void*);
 int32_t RenderStyle_order(const void*);
 float RenderStyle_flexGrow(const void*);

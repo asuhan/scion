@@ -2024,6 +2024,18 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_containIntrinsicLogicalHeightHasAuto(
     return static_cast<const WebCore::RenderStyle*>(p)->containIntrinsicLogicalHeightHasAuto();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderStyle_containIntrinsicWidth(const void* p)
+{
+    const auto width = static_cast<const WebCore::RenderStyle*>(p)->containIntrinsicWidth();
+    return width ? new WebCore::Length(*width) : nullptr;
+}
+
+extern "C" WEBCORE_EXPORT void* RenderStyle_containIntrinsicHeight(const void* p)
+{
+    const auto height = static_cast<const WebCore::RenderStyle*>(p)->containIntrinsicHeight();
+    return height ? new WebCore::Length(*height) : nullptr;
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoLengthContainIntrinsicSize(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasAutoLengthContainIntrinsicSize();

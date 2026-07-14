@@ -1933,13 +1933,13 @@ class RenderStyleWrapper: Equatable {
   }
 
   func containIntrinsicWidth() -> LengthWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.RenderStyle_containIntrinsicWidth(p!) else { return nil }
+    return LengthWrapper(p: raw, owner: true)
   }
 
   func containIntrinsicHeight() -> LengthWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.RenderStyle_containIntrinsicHeight(p!) else { return nil }
+    return LengthWrapper(p: raw, owner: true)
   }
 
   func hasAutoLengthContainIntrinsicSize() -> Bool {
