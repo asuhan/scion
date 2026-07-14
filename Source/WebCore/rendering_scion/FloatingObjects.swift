@@ -138,7 +138,7 @@ class FloatingObjectWrapper {
       m_hasAncestorWithOverflowClip = false
     }
     m_marginOffset = LayoutSizeWrapper()
-    m_paintsFloat = false
+    m_paintsFloat = true
     isPlaced = false
   }
 
