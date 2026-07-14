@@ -102,6 +102,8 @@ class FloatingObjectSet: Sequence {
     wk_interop.FloatingObjectSet_add(p, unmanaged.toOpaque())
   }
 
+  func clear() { wk_interop.FloatingObjectSet_clear(p) }
+
   func makeIterator() -> FloatingObjectSetIterator { return begin() }
 
   private let p: UnsafeMutableRawPointer
@@ -357,6 +359,8 @@ class FloatingObjectWrapper {
   private var p: UnsafeMutableRawPointer?
 }
 
+class FloatingObjectTreeWrapper {}
+
 // FIXME: This is really the same thing as FloatingObjectSet.
 // Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
 class FloatingObjects {
@@ -366,8 +370,10 @@ class FloatingObjects {
   }
 
   func clear() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_set.clear()
+    m_placedFloatsTree = nil
+    m_leftObjectsCount = 0
+    m_rightObjectsCount = 0
   }
 
   @discardableResult
@@ -427,6 +433,7 @@ class FloatingObjects {
   }
 
   private let m_set = FloatingObjectSet()
+  private var m_placedFloatsTree: FloatingObjectTreeWrapper? = nil
   private var m_leftObjectsCount: UInt32 = 0
   private var m_rightObjectsCount: UInt32 = 0
   private var m_horizontalWritingMode: Bool

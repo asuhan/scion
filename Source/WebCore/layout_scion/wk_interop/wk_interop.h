@@ -1551,6 +1551,7 @@ void* FloatingObjectSet_find(void*, void*);
 bool FloatingObjectSet_contains(void*, void*);
 bool FloatingObjectSet_containsBox(void*, void*);
 void FloatingObjectSet_add(void*, void*);
+void FloatingObjectSet_clear(void*);
 bool FloatingObjectSetIterator_atEnd(void*);
 void* FloatingObjectSetIterator_deref(void*);
 void FloatingObjectSetIterator_inc(void*);
