@@ -2165,10 +2165,6 @@ class RenderStyleWrapper: Equatable {
   }
 
   func lineBreak() -> LineBreak {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return LineBreak(rawValue: wk_interop.RenderStyle_lineBreak(p!))!
   }
 
