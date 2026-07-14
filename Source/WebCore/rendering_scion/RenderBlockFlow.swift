@@ -3925,7 +3925,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     for floatingObject in floatingObjectSet {
       let renderer = floatingObject.renderer!
       if floatingObject.shouldPaint() {
-        var currentPaintInfo = paintInfo
+        var currentPaintInfo = paintInfo.deepCopy()
         currentPaintInfo.phase = preservePhase ? paintInfo.phase : .BlockBackground
         let childPoint = flipFloatForWritingModeForChild(
           child: floatingObject, point: paintOffset + floatingObject.translationOffsetToAncestor())
