@@ -375,11 +375,11 @@ class ComputeFloatOffsetAdapter {
 
   func offset() -> LayoutUnit { return m_offset }
 
-  private let m_renderer: RenderBlockFlowWrapper
-  private let m_lineTop: LayoutUnit
+  let m_renderer: RenderBlockFlowWrapper
+  let m_lineTop: LayoutUnit
   private let m_lineBottom: LayoutUnit
   private let m_offset: LayoutUnit
-  private let m_outermostFloat: FloatingObjectWrapper?
+  let m_outermostFloat: FloatingObjectWrapper?
 }
 
 final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
@@ -391,8 +391,9 @@ final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
   }
 
   func heightRemaining() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_outermostFloat != nil
+      ? m_renderer.logicalBottomForFloat(floatingObject: m_outermostFloat!) - m_lineTop
+      : LayoutUnit(value: UInt64(1))
   }
 }
 
