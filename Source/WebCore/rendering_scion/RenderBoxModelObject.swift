@@ -801,8 +801,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderAndPaddingLogicalLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
   }
 
   func borderLogicalLeft() -> LayoutUnit {
