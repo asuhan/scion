@@ -465,7 +465,7 @@ class FloatingObjects {
   ) -> LayoutUnit {
     let adapter = ComputeFloatOffsetForFloatLayoutAdapter(
       .FloatLeft, m_renderer, lineTop: logicalTop, lineBottom: logicalTop, offset: fixedOffset)
-    if self.placedFloatsTree() == nil {
+    if self.placedFloatsTree() != nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
