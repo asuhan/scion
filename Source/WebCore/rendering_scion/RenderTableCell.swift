@@ -691,6 +691,28 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     return m_intrinsicPaddingAfter
   }
 
+  override func paddingTop() -> LayoutUnit {
+    assert(isNativeImpl())
+    let result = computedCSSPaddingTop()
+    if !isHorizontalWritingMode() {
+      return result
+    }
+    return result
+      + (style().blockFlowDirection() == .TopToBottom
+        ? intrinsicPaddingBefore() : intrinsicPaddingAfter())
+  }
+
+  override func paddingLeft() -> LayoutUnit {
+    assert(isNativeImpl())
+    let result = computedCSSPaddingLeft()
+    if isHorizontalWritingMode() {
+      return result
+    }
+    return result
+      + (style().blockFlowDirection() == .LeftToRight
+        ? intrinsicPaddingBefore() : intrinsicPaddingAfter())
+  }
+
   // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll
   // create an extra anonymous RenderBlock to handle mixing directionality anyway, in which case we can lock
   // the block flow directionality of the cells to the table's directionality.
