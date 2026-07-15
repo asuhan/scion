@@ -174,6 +174,16 @@ extern "C" WEBCORE_EXPORT void FloatingObjectSetIterator_destroy(void* p)
     delete static_cast<ScionFloatingObjectSet::iterator*>(p);
 }
 
+extern "C" WEBCORE_EXPORT void* FloatingObjectTree_create()
+{
+    return new WebCore::FloatingObjectTree();
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectTree_destroy(void* p)
+{
+    delete static_cast<WebCore::FloatingObjectTree*>(p);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL_TEMPLATE(FloatingObjectTree);

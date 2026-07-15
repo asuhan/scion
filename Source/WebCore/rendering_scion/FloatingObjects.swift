@@ -359,7 +359,13 @@ class FloatingObjectWrapper {
   private var p: UnsafeMutableRawPointer?
 }
 
-class FloatingObjectTreeWrapper {}
+class FloatingObjectTreeWrapper {
+  init() { p = wk_interop.FloatingObjectTree_create() }
+
+  deinit { wk_interop.FloatingObjectTree_destroy(p) }
+
+  private let p: UnsafeMutableRawPointer
+}
 
 class ComputeFloatOffsetAdapter {
   init(
@@ -468,9 +474,26 @@ class FloatingObjects {
     }
   }
 
+  private func computePlacedFloatsTree() {
+    assert(m_placedFloatsTree == nil)
+    if m_set.isEmpty() {
+      return
+    }
+
+    m_placedFloatsTree = FloatingObjectTreeWrapper()
+    for floatingObject in m_set {
+      if floatingObject.isPlaced {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+  }
+
   private func placedFloatsTree() -> FloatingObjectTreeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_placedFloatsTree == nil {
+      computePlacedFloatsTree()
+    }
+    return m_placedFloatsTree
   }
 
   private func increaseObjectsCount(_ type: FloatingObjectWrapper.Type_) {
