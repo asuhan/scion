@@ -361,6 +361,41 @@ class FloatingObjectWrapper {
 
 class FloatingObjectTreeWrapper {}
 
+class ComputeFloatOffsetAdapter {
+  init(
+    _ type: FloatingObjectWrapper.Type_, _ renderer: RenderBlockFlowWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit, offset: LayoutUnit
+  ) {
+    m_renderer = renderer
+    m_lineTop = lineTop
+    m_lineBottom = lineBottom
+    m_offset = offset
+    m_outermostFloat = nil
+  }
+
+  func offset() -> LayoutUnit { return m_offset }
+
+  private let m_renderer: RenderBlockFlowWrapper
+  private let m_lineTop: LayoutUnit
+  private let m_lineBottom: LayoutUnit
+  private let m_offset: LayoutUnit
+  private let m_outermostFloat: FloatingObjectWrapper?
+}
+
+final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
+  override init(
+    _ type: FloatingObjectWrapper.Type_, _ renderer: RenderBlockFlowWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit, offset: LayoutUnit
+  ) {
+    super.init(type, renderer, lineTop: lineTop, lineBottom: lineBottom, offset: offset)
+  }
+
+  func heightRemaining() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 // FIXME: This is really the same thing as FloatingObjectSet.
 // Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
 class FloatingObjects {
@@ -403,8 +438,16 @@ class FloatingObjects {
   func logicalLeftOffsetForPositioningFloat(
     fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adapter = ComputeFloatOffsetForFloatLayoutAdapter(
+      .FloatLeft, m_renderer, lineTop: logicalTop, lineBottom: logicalTop, offset: fixedOffset)
+    if self.placedFloatsTree() == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    heightRemaining = adapter.heightRemaining()
+
+    return adapter.offset()
   }
 
   func logicalRightOffsetForPositioningFloat(
@@ -422,6 +465,11 @@ class FloatingObjects {
       floater.m_frameRect.move(dx: shiftX, dy: shiftY)
       floater.renderer!.move(dx: shiftX, dy: shiftY)
     }
+  }
+
+  private func placedFloatsTree() -> FloatingObjectTreeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func increaseObjectsCount(_ type: FloatingObjectWrapper.Type_) {
