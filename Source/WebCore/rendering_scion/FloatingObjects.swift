@@ -432,8 +432,7 @@ class FloatingObjects {
   func add(floatingObject: FloatingObjectWrapper) -> FloatingObjectWrapper? {
     increaseObjectsCount(floatingObject.type)
     if floatingObject.isPlaced {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      addPlacedObject(floatingObject)
     }
     m_set.add(floatingObject)
     return floatingObject
