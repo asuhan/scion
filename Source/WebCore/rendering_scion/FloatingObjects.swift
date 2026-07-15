@@ -501,8 +501,7 @@ class FloatingObjects {
     m_placedFloatsTree = FloatingObjectTreeWrapper()
     for floatingObject in m_set {
       if floatingObject.isPlaced {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        m_placedFloatsTree!.add(intervalForFloatingObject(floatingObject))
       }
     }
   }
