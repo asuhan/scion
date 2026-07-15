@@ -1581,6 +1581,7 @@ bool FloatingObjectSetIterator_eq(const void*, const void*);
 void FloatingObjectSetIterator_destroy(void*);
 void* FloatingObjectTree_create();
 void FloatingObjectTree_destroy(void*);
+void FloatingObjectTree_add(void*, int32_t, int32_t, void*);
 void* RenderLayerModelObject_layer(const void*);
 bool RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(const void*);
 void* RenderLayer_create(void*);

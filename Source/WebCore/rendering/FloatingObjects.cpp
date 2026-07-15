@@ -174,14 +174,26 @@ extern "C" WEBCORE_EXPORT void FloatingObjectSetIterator_destroy(void* p)
     delete static_cast<ScionFloatingObjectSet::iterator*>(p);
 }
 
+namespace {
+
+typedef WebCore::PODInterval<WebCore::LayoutUnit, void*> ScionFloatingObjectInterval;
+typedef WebCore::PODIntervalTree<WebCore::LayoutUnit, void*> ScionFloatingObjectTree;
+
+} // namespace
+
 extern "C" WEBCORE_EXPORT void* FloatingObjectTree_create()
 {
-    return new WebCore::FloatingObjectTree();
+    return new ScionFloatingObjectTree();
 }
 
 extern "C" WEBCORE_EXPORT void FloatingObjectTree_destroy(void* p)
 {
-    delete static_cast<WebCore::FloatingObjectTree*>(p);
+    delete static_cast<ScionFloatingObjectTree*>(p);
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectTree_add(void* p, int32_t low, int32_t high, void* object)
+{
+    static_cast<ScionFloatingObjectTree*>(p)->add(ScionFloatingObjectInterval(low, high, object));
 }
 
 namespace WebCore {

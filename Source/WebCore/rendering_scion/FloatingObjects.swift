@@ -359,10 +359,20 @@ class FloatingObjectWrapper {
   private var p: UnsafeMutableRawPointer?
 }
 
+struct FloatingObjectInterval {
+  let low: Int32
+  let high: Int32
+  let obj: UnsafeMutableRawPointer
+}
+
 class FloatingObjectTreeWrapper {
   init() { p = wk_interop.FloatingObjectTree_create() }
 
   deinit { wk_interop.FloatingObjectTree_destroy(p) }
+
+  func add(_ interval: FloatingObjectInterval) {
+    wk_interop.FloatingObjectTree_add(p, interval.low, interval.high, interval.obj)
+  }
 
   private let p: UnsafeMutableRawPointer
 }
@@ -430,8 +440,17 @@ class FloatingObjects {
   }
 
   func addPlacedObject(_ floatingObject: FloatingObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(!floatingObject.isInPlacedTree)
+    #endif
+
+    floatingObject.setIsPlaced(placed: true)
+    if m_placedFloatsTree != nil {
+      m_placedFloatsTree!.add(intervalForFloatingObject(floatingObject))
+      #if ASSERT_ENABLED
+        floatingObject.isInPlacedTree = true
+      #endif
+    }
   }
 
   func setHorizontalWritingMode(b: Bool = true) { m_horizontalWritingMode = b }
@@ -502,6 +521,22 @@ class FloatingObjects {
     } else {
       m_rightObjectsCount += 1
     }
+  }
+
+  private func intervalForFloatingObject(_ floatingObject: FloatingObjectWrapper)
+    -> FloatingObjectInterval
+  {
+    let unmanaged = Unmanaged.passUnretained(floatingObject)
+    // FIXME: The endpoints of the floating object interval shouldn't need to be
+    // floored. See <https://webkit.org/b/125831> for more details.
+    if m_horizontalWritingMode {
+      return FloatingObjectInterval(
+        low: floatingObject.frameRect().y().floor(),
+        high: floatingObject.frameRect().maxY().floor(), obj: unmanaged.toOpaque())
+    }
+    return FloatingObjectInterval(
+      low: floatingObject.frameRect().x().floor(), high: floatingObject.frameRect().maxX().floor(),
+      obj: unmanaged.toOpaque())
   }
 
   private let m_set = FloatingObjectSet()
