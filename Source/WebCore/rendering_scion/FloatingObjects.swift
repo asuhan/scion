@@ -23,6 +23,7 @@
 
 import wk_interop
 
+// TODO(asuhan): replace with native implementation
 class FloatingObjectSetIterator: IteratorProtocol, Equatable {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -62,6 +63,7 @@ class FloatingObjectSetIterator: IteratorProtocol, Equatable {
   private let p: UnsafeMutableRawPointer
 }
 
+// TODO(asuhan): replace with native implementation
 class FloatingObjectSet: Sequence {
   init() { p = wk_interop.FloatingObjectSet_create() }
 
@@ -365,6 +367,7 @@ struct FloatingObjectInterval {
   let obj: UnsafeMutableRawPointer
 }
 
+// TODO(asuhan): replace with native implementation using red-black trees.
 class FloatingObjectTreeWrapper {
   init() { p = wk_interop.FloatingObjectTree_create() }
 
