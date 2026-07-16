@@ -566,8 +566,15 @@ class FloatingObjects {
   func logicalRightOffsetForPositioningFloat(
     fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adapter = ComputeFloatOffsetForFloatLayoutAdapter(
+      .FloatRight, m_renderer, lineTop: logicalTop, lineBottom: logicalTop, offset: fixedOffset)
+    if let placedFloatsTree = self.placedFloatsTree() {
+      placedFloatsTree.allOverlapsWithAdapter(adapter)
+    }
+
+    heightRemaining = adapter.heightRemaining()
+
+    return min(fixedOffset, adapter.offset())
   }
 
   func shiftFloatsBy(blockShift: LayoutUnit) {
