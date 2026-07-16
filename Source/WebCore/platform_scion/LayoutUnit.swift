@@ -128,7 +128,7 @@ struct LayoutUnit: Comparable {
 
   static func / (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
     let rawVal = Int64(kFixedPointDenominator) * Int64(a.rawValue()) / Int64(b.rawValue())
-    return fromRawValue(value: clampTo<Int32>(value: rawVal))
+    return fromRawValue(value: clampTo(value: rawVal))
   }
 
   static func / (a: LayoutUnit, b: Int) -> LayoutUnit {
@@ -350,7 +350,7 @@ struct LayoutUnit: Comparable {
   init(value: UInt32) { setValue(value) }
 
   init(value: UInt64) {
-    self.value = clampTo<Int32>(value: value * UInt64(kFixedPointDenominator))
+    self.value = clampTo(value: value * UInt64(kFixedPointDenominator))
   }
 
   init(value: Float64) {

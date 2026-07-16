@@ -44,7 +44,7 @@ class RenderAncestorIteratorAdapter<T: RenderObjectWrapper>: Sequence {
     if IsRendererOfType<T>.f(first) {
       return RenderAncestorIteratorAdapter<T>(first as! T?)
     }
-    return ancestorsOfType<T>(descendant: first)
+    return ancestorsOfType(descendant: first)
   }
 
   private let m_first: T?
