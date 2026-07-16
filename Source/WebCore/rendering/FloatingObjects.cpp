@@ -202,6 +202,29 @@ private:
     void* m_handle;
 };
 
+extern "C" WEBCORE_EXPORT int32_t FindNextFloatLogicalBottomAdapter_lowValue(const void* p);
+
+extern "C" WEBCORE_EXPORT int32_t FindNextFloatLogicalBottomAdapter_highValue(const void* p);
+
+extern "C" WEBCORE_EXPORT void FindNextFloatLogicalBottomAdapter_collectIfNeeded(void*, int32_t, int32_t, void*);
+
+class ScionFindNextFloatLogicalBottomAdapter {
+public:
+    ScionFindNextFloatLogicalBottomAdapter(void* handle) : m_handle(handle) {}
+
+    WebCore::LayoutUnit lowValue() const {
+        return WebCore::LayoutUnit::fromRawValue(FindNextFloatLogicalBottomAdapter_lowValue(m_handle));
+    }
+
+    WebCore::LayoutUnit highValue() const { return WebCore::LayoutUnit::fromRawValue(FindNextFloatLogicalBottomAdapter_highValue(m_handle)); }
+
+    void collectIfNeeded(const ScionFloatingObjectInterval& interval) {
+        FindNextFloatLogicalBottomAdapter_collectIfNeeded(m_handle, interval.low(), interval.high(), interval.data());
+    }
+private:
+    void* m_handle;
+};
+
 } // namespace
 
 extern "C" WEBCORE_EXPORT void* FloatingObjectTree_create()
@@ -222,6 +245,12 @@ extern "C" WEBCORE_EXPORT void FloatingObjectTree_add(void* p, int32_t low, int3
 extern "C" WEBCORE_EXPORT void FloatingObjectTree_allOverlapsWithAdapter(const void* p, void* scion_handle)
 {
     ScionComputeFloatOffsetForFloatLayoutAdapter adapter(scion_handle);
+    static_cast<const ScionFloatingObjectTree*>(p)->allOverlapsWithAdapter(adapter);
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectTree_allOverlapsWithFindNextFloatLogicalBottomAdapter(const void* p, void* scion_handle)
+{
+    ScionFindNextFloatLogicalBottomAdapter adapter(scion_handle);
     static_cast<const ScionFloatingObjectTree*>(p)->allOverlapsWithAdapter(adapter);
 }
 

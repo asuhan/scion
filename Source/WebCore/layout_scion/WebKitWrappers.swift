@@ -3780,3 +3780,26 @@ func ComputeFloatOffsetForFloatLayoutAdapter_collectIfNeeded(
     .takeUnretainedValue()
   adapter.collectIfNeeded(FloatingObjectInterval(low: low, high: high, obj: obj))
 }
+
+@_cdecl("FindNextFloatLogicalBottomAdapter_lowValue")
+func FindNextFloatLogicalBottomAdapter_lowValue(_ raw: UnsafeRawPointer) -> Int32 {
+  let adapter = Unmanaged<FindNextFloatLogicalBottomAdapter>.fromOpaque(raw)
+    .takeUnretainedValue()
+  return adapter.lowValue().rawValue()
+}
+
+@_cdecl("FindNextFloatLogicalBottomAdapter_highValue")
+func FindNextFloatLogicalBottomAdapter_highValue(_ raw: UnsafeRawPointer) -> Int32 {
+  let adapter = Unmanaged<FindNextFloatLogicalBottomAdapter>.fromOpaque(raw)
+    .takeUnretainedValue()
+  return adapter.highValue().rawValue()
+}
+
+@_cdecl("FindNextFloatLogicalBottomAdapter_collectIfNeeded")
+func FindNextFloatLogicalBottomAdapter_collectIfNeeded(
+  _ raw: UnsafeMutableRawPointer, _ low: Int32, _ high: Int32, _ obj: UnsafeMutableRawPointer
+) {
+  let adapter = Unmanaged<FindNextFloatLogicalBottomAdapter>.fromOpaque(raw)
+    .takeUnretainedValue()
+  adapter.collectIfNeeded(FloatingObjectInterval(low: low, high: high, obj: obj))
+}

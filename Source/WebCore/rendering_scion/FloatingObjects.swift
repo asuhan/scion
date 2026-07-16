@@ -375,6 +375,12 @@ class FloatingObjectTreeWrapper {
     wk_interop.FloatingObjectTree_allOverlapsWithAdapter(p, unmanaged.toOpaque())
   }
 
+  func allOverlapsWithAdapter(_ adapter: FindNextFloatLogicalBottomAdapter) {
+    let unmanaged = Unmanaged.passUnretained(adapter)
+    wk_interop.FloatingObjectTree_allOverlapsWithFindNextFloatLogicalBottomAdapter(
+      p, unmanaged.toOpaque())
+  }
+
   private let p: UnsafeMutableRawPointer
 }
 
@@ -502,6 +508,28 @@ final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
   }
 }
 
+final class FindNextFloatLogicalBottomAdapter {
+  init(_ renderer: RenderBlockFlowWrapper, _ belowLogicalHeight: LayoutUnit) {
+    m_renderer = renderer
+    m_belowLogicalHeight = belowLogicalHeight
+  }
+
+  func lowValue() -> LayoutUnit { return m_belowLogicalHeight }
+
+  func highValue() -> LayoutUnit { return LayoutUnit.max() }
+
+  func collectIfNeeded(_ interval: FloatingObjectInterval) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nextLogicalBottom() -> LayoutUnit { return m_nextLogicalBottom ?? LayoutUnit(value: 0) }
+
+  private let m_renderer: RenderBlockFlowWrapper
+  private let m_belowLogicalHeight: LayoutUnit
+  private let m_nextLogicalBottom: LayoutUnit? = nil
+}
+
 // FIXME: This is really the same thing as FloatingObjectSet.
 // Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
 class FloatingObjects {
@@ -578,8 +606,12 @@ class FloatingObjects {
   }
 
   func findNextFloatLogicalBottomBelowForBlock(_ logicalHeight: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adapter = FindNextFloatLogicalBottomAdapter(m_renderer, logicalHeight)
+    if let placedFloatsTree = placedFloatsTree() {
+      placedFloatsTree.allOverlapsWithAdapter(adapter)
+    }
+
+    return adapter.nextLogicalBottom()
   }
 
   func shiftFloatsBy(blockShift: LayoutUnit) {
