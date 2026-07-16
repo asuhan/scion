@@ -377,6 +377,11 @@ class FloatingObjectTreeWrapper {
     wk_interop.FloatingObjectTree_add(p, interval.low, interval.high, interval.obj)
   }
 
+  func allOverlapsWithAdapter(_ adapter: ComputeFloatOffsetForFloatLayoutAdapter) {
+    let unmanaged = Unmanaged.passUnretained(adapter)
+    wk_interop.FloatingObjectTree_allOverlapsWithAdapter(p, unmanaged.toOpaque())
+  }
+
   private let p: UnsafeMutableRawPointer
 }
 
@@ -390,6 +395,15 @@ class ComputeFloatOffsetAdapter {
     m_lineBottom = lineBottom
     m_offset = offset
     m_outermostFloat = nil
+  }
+
+  func lowValue() -> LayoutUnit { return m_lineTop }
+
+  func highValue() -> LayoutUnit { return m_lineBottom }
+
+  func collectIfNeeded(_ interval: FloatingObjectInterval) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func offset() -> LayoutUnit { return m_offset }
@@ -468,9 +482,8 @@ class FloatingObjects {
   ) -> LayoutUnit {
     let adapter = ComputeFloatOffsetForFloatLayoutAdapter(
       .FloatLeft, m_renderer, lineTop: logicalTop, lineBottom: logicalTop, offset: fixedOffset)
-    if self.placedFloatsTree() != nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if let placedFloatsTree = self.placedFloatsTree() {
+      placedFloatsTree.allOverlapsWithAdapter(adapter)
     }
 
     heightRemaining = adapter.heightRemaining()

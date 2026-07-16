@@ -3757,3 +3757,26 @@ func FloatingObjectScion_renderer(_ floatingRaw: UnsafeRawPointer) -> UnsafeMuta
   let floating = Unmanaged<FloatingObjectWrapper>.fromOpaque(floatingRaw).takeUnretainedValue()
   return floating.renderer!.id()
 }
+
+@_cdecl("ComputeFloatOffsetForFloatLayoutAdapter_lowValue")
+func ComputeFloatOffsetForFloatLayoutAdapter_lowValue(_ raw: UnsafeRawPointer) -> Int32 {
+  let adapter = Unmanaged<ComputeFloatOffsetForFloatLayoutAdapter>.fromOpaque(raw)
+    .takeUnretainedValue()
+  return adapter.lowValue().rawValue()
+}
+
+@_cdecl("ComputeFloatOffsetForFloatLayoutAdapter_highValue")
+func ComputeFloatOffsetForFloatLayoutAdapter_highValue(_ raw: UnsafeRawPointer) -> Int32 {
+  let adapter = Unmanaged<ComputeFloatOffsetForFloatLayoutAdapter>.fromOpaque(raw)
+    .takeUnretainedValue()
+  return adapter.highValue().rawValue()
+}
+
+@_cdecl("ComputeFloatOffsetForFloatLayoutAdapter_collectIfNeeded")
+func ComputeFloatOffsetForFloatLayoutAdapter_collectIfNeeded(
+  _ raw: UnsafeMutableRawPointer, _ low: Int32, _ high: Int32, _ obj: UnsafeMutableRawPointer
+) {
+  let adapter = Unmanaged<ComputeFloatOffsetForFloatLayoutAdapter>.fromOpaque(raw)
+    .takeUnretainedValue()
+  adapter.collectIfNeeded(FloatingObjectInterval(low: low, high: high, obj: obj))
+}

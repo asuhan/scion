@@ -174,10 +174,33 @@ extern "C" WEBCORE_EXPORT void FloatingObjectSetIterator_destroy(void* p)
     delete static_cast<ScionFloatingObjectSet::iterator*>(p);
 }
 
+extern "C" WEBCORE_EXPORT int32_t ComputeFloatOffsetForFloatLayoutAdapter_lowValue(const void* p);
+
+extern "C" WEBCORE_EXPORT int32_t ComputeFloatOffsetForFloatLayoutAdapter_highValue(const void* p);
+
+extern "C" WEBCORE_EXPORT void ComputeFloatOffsetForFloatLayoutAdapter_collectIfNeeded(void*, int32_t, int32_t, void*);
+
 namespace {
 
 typedef WebCore::PODInterval<WebCore::LayoutUnit, void*> ScionFloatingObjectInterval;
 typedef WebCore::PODIntervalTree<WebCore::LayoutUnit, void*> ScionFloatingObjectTree;
+
+class ScionComputeFloatOffsetForFloatLayoutAdapter {
+public:
+    ScionComputeFloatOffsetForFloatLayoutAdapter(void* handle) : m_handle(handle) {}
+
+    WebCore::LayoutUnit lowValue() const {
+        return WebCore::LayoutUnit::fromRawValue(ComputeFloatOffsetForFloatLayoutAdapter_lowValue(m_handle));
+    }
+
+    WebCore::LayoutUnit highValue() const { return WebCore::LayoutUnit::fromRawValue(ComputeFloatOffsetForFloatLayoutAdapter_highValue(m_handle)); }
+
+    void collectIfNeeded(const ScionFloatingObjectInterval& interval) {
+        ComputeFloatOffsetForFloatLayoutAdapter_collectIfNeeded(m_handle, interval.low(), interval.high(), interval.data());
+    }
+private:
+    void* m_handle;
+};
 
 } // namespace
 
@@ -194,6 +217,12 @@ extern "C" WEBCORE_EXPORT void FloatingObjectTree_destroy(void* p)
 extern "C" WEBCORE_EXPORT void FloatingObjectTree_add(void* p, int32_t low, int32_t high, void* object)
 {
     static_cast<ScionFloatingObjectTree*>(p)->add(ScionFloatingObjectInterval(low, high, object));
+}
+
+extern "C" WEBCORE_EXPORT void FloatingObjectTree_allOverlapsWithAdapter(const void* p, void* scion_handle)
+{
+    ScionComputeFloatOffsetForFloatLayoutAdapter adapter(scion_handle);
+    static_cast<const ScionFloatingObjectTree*>(p)->allOverlapsWithAdapter(adapter);
 }
 
 namespace WebCore {
