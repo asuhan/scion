@@ -2322,6 +2322,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return isHorizontalWritingMode() ? floatingObject.maxY() : floatingObject.maxX()
   }
 
+  func logicalLeftForFloat(_ floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? floatingObject.x() : floatingObject.y()
+  }
+
+  func logicalRightForFloat(_ floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? floatingObject.maxX() : floatingObject.maxY()
+  }
+
   func logicalWidthForFloat(_ floatingObject: FloatingObjectWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     return isHorizontalWritingMode() ? floatingObject.width() : floatingObject.height()

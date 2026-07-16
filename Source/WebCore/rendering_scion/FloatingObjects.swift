@@ -459,14 +459,16 @@ class ComputeFloatOffsetAdapter {
 
   func offset() -> LayoutUnit { return m_offset }
 
-  func updateOffsetIfNeeded(_ obj: FloatingObjectWrapper) -> Bool { fatalError("Not reached") }
+  func updateOffsetIfNeeded(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    fatalError("Not reached")
+  }
 
   let m_renderer: RenderBlockFlowWrapper
   let m_lineTop: LayoutUnit
   private let m_lineBottom: LayoutUnit
-  private let m_offset: LayoutUnit
+  var m_offset: LayoutUnit
   var m_outermostFloat: FloatingObjectWrapper?
-  private let m_type: FloatingObjectWrapper.Type_
+  let m_type: FloatingObjectWrapper.Type_
 }
 
 final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
@@ -481,6 +483,29 @@ final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
     return m_outermostFloat != nil
       ? m_renderer.logicalBottomForFloat(floatingObject: m_outermostFloat!) - m_lineTop
       : LayoutUnit(value: UInt64(1))
+  }
+
+  override func updateOffsetIfNeeded(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    m_type == .FloatLeft
+      ? updateOffsetIfNeededLeft(floatingObject) : updateOffsetIfNeededRight(floatingObject)
+  }
+
+  private func updateOffsetIfNeededLeft(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    let logicalRight = m_renderer.logicalRightForFloat(floatingObject)
+    if logicalRight > m_offset {
+      m_offset = logicalRight
+      return true
+    }
+    return false
+  }
+
+  private func updateOffsetIfNeededRight(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    let logicalLeft = m_renderer.logicalLeftForFloat(floatingObject)
+    if logicalLeft < m_offset {
+      m_offset = logicalLeft
+      return true
+    }
+    return false
   }
 }
 
