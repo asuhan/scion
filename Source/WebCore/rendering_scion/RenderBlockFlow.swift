@@ -2312,7 +2312,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return floatingObjects!.add(floatingObject: FloatingObjectWrapper.create(floatBox))!
   }
 
-  private func logicalTopForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+  func logicalTopForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     return isHorizontalWritingMode() ? floatingObject.y() : floatingObject.x()
   }

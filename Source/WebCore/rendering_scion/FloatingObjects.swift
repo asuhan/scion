@@ -385,6 +385,31 @@ class FloatingObjectTreeWrapper {
   private let p: UnsafeMutableRawPointer
 }
 
+private func rangesIntersect(
+  floatTop: LayoutUnit, floatBottom: LayoutUnit, objectTop: LayoutUnit, objectBottom: LayoutUnit
+) -> Bool {
+  if objectTop >= floatBottom || objectBottom < floatTop {
+    return false
+  }
+
+  // The top of the object overlaps the float
+  if objectTop >= floatTop {
+    return true
+  }
+
+  // The object encloses the float
+  if objectTop < floatTop && objectBottom > floatBottom {
+    return true
+  }
+
+  // The bottom of the object overlaps the float
+  if objectBottom > objectTop && objectBottom > floatTop && objectBottom <= floatBottom {
+    return true
+  }
+
+  return false
+}
+
 class ComputeFloatOffsetAdapter {
   init(
     _ type: FloatingObjectWrapper.Type_, _ renderer: RenderBlockFlowWrapper, lineTop: LayoutUnit,
@@ -395,6 +420,7 @@ class ComputeFloatOffsetAdapter {
     m_lineBottom = lineBottom
     m_offset = offset
     m_outermostFloat = nil
+    m_type = type
   }
 
   func lowValue() -> LayoutUnit { return m_lineTop }
@@ -402,17 +428,45 @@ class ComputeFloatOffsetAdapter {
   func highValue() -> LayoutUnit { return m_lineBottom }
 
   func collectIfNeeded(_ interval: FloatingObjectInterval) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let floatingObject = Unmanaged<FloatingObjectWrapper>.fromOpaque(interval.obj)
+      .takeUnretainedValue()
+    if floatingObject.type != m_type || !floatingObject.height().bool()
+      || !rangesIntersect(
+        floatTop: LayoutUnit(value: interval.low), floatBottom: LayoutUnit(value: interval.high),
+        objectTop: m_lineTop,
+        objectBottom: m_lineBottom)
+    {
+      return
+    }
+
+    // All the objects returned from the tree should be already placed.
+    assert(floatingObject.isPlaced)
+    // FIXME: Remove floor(). See <https://webkit.org/b/125831>.
+    assert(
+      rangesIntersect(
+        floatTop: LayoutUnit(
+          value: m_renderer.logicalTopForFloat(floatingObject: floatingObject).floor()),
+        floatBottom: LayoutUnit(
+          value: m_renderer.logicalBottomForFloat(floatingObject: floatingObject).floor()),
+        objectTop: m_lineTop,
+        objectBottom: m_lineBottom))
+
+    let floatIsNewExtreme = updateOffsetIfNeeded(floatingObject)
+    if floatIsNewExtreme {
+      m_outermostFloat = floatingObject
+    }
   }
 
   func offset() -> LayoutUnit { return m_offset }
+
+  func updateOffsetIfNeeded(_ obj: FloatingObjectWrapper) -> Bool { fatalError("Not reached") }
 
   let m_renderer: RenderBlockFlowWrapper
   let m_lineTop: LayoutUnit
   private let m_lineBottom: LayoutUnit
   private let m_offset: LayoutUnit
-  let m_outermostFloat: FloatingObjectWrapper?
+  var m_outermostFloat: FloatingObjectWrapper?
+  private let m_type: FloatingObjectWrapper.Type_
 }
 
 final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
