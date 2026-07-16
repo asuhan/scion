@@ -372,7 +372,8 @@ class FloatingObjectTreeWrapper {
 
   func allOverlapsWithAdapter(_ adapter: ComputeFloatOffsetForFloatLayoutAdapter) {
     let unmanaged = Unmanaged.passUnretained(adapter)
-    wk_interop.FloatingObjectTree_allOverlapsWithAdapter(p, unmanaged.toOpaque())
+    wk_interop.FloatingObjectTree_allOverlapsWithComputeFloatOffsetForFloatLayoutAdapter(
+      p, unmanaged.toOpaque())
   }
 
   func allOverlapsWithAdapter(_ adapter: FindNextFloatLogicalBottomAdapter) {

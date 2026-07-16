@@ -242,7 +242,7 @@ extern "C" WEBCORE_EXPORT void FloatingObjectTree_add(void* p, int32_t low, int3
     static_cast<ScionFloatingObjectTree*>(p)->add(ScionFloatingObjectInterval(low, high, object));
 }
 
-extern "C" WEBCORE_EXPORT void FloatingObjectTree_allOverlapsWithAdapter(const void* p, void* scion_handle)
+extern "C" WEBCORE_EXPORT void FloatingObjectTree_allOverlapsWithComputeFloatOffsetForFloatLayoutAdapter(const void* p, void* scion_handle)
 {
     ScionComputeFloatOffsetForFloatLayoutAdapter adapter(scion_handle);
     static_cast<const ScionFloatingObjectTree*>(p)->allOverlapsWithAdapter(adapter);
