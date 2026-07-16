@@ -577,6 +577,11 @@ class FloatingObjects {
     return min(fixedOffset, adapter.offset())
   }
 
+  func findNextFloatLogicalBottomBelowForBlock(_ logicalHeight: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shiftFloatsBy(blockShift: LayoutUnit) {
     let shiftX = m_horizontalWritingMode ? LayoutUnit(value: UInt64(0)) : -blockShift
     let shiftY = m_horizontalWritingMode ? blockShift : LayoutUnit(value: UInt64(0))

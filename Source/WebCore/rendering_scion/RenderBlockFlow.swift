@@ -4297,8 +4297,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func nextFloatLogicalBottomBelowForBlock(logicalHeight: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return floatingObjects?.findNextFloatLogicalBottomBelowForBlock(logicalHeight) ?? logicalHeight
   }
 
   @discardableResult
