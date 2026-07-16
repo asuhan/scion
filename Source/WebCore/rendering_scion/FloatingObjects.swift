@@ -331,13 +331,6 @@ class FloatingObjectWrapper {
     return locationOffsetOfBorderBox() - renderer!.locationOffset()
   }
 
-  func logicalRightOffsetForPositioningFloat(
-    fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit
-  ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func marginOffset() -> LayoutSizeWrapper {
     assert(isNativeImpl())
     assert(isPlaced)
