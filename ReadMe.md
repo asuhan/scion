@@ -15,7 +15,7 @@ git clone https://github.com/asuhan/scion scion
 
 ## Building Scion
 
-Currently, development is done using Swift 6.0.3 from Ubuntu 26.04 APT repositories.
+Currently, development is done using Swift 6.1.3 from Ubuntu 26.04 APT repositories.
 Other Linux and Swift combinations might work, but haven't been tested.
 
 The build command used during development and known to work:
