@@ -1090,6 +1090,12 @@ extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_borderImageOutsets(cons
     return { extent.top().rawValue(), extent.right().rawValue(), extent.bottom().rawValue(), extent.left().rawValue() };
 }
 
+extern "C" WEBCORE_EXPORT LayoutBoxExtentRaw RenderStyle_maskBorderOutsets(const void* p)
+{
+    const auto extent = static_cast<const WebCore::RenderStyle*>(p)->maskBorderOutsets();
+    return { extent.top().rawValue(), extent.right().rawValue(), extent.bottom().rawValue(), extent.left().rawValue() };
+}
+
 struct IntOutsetsRaw {
     int32_t top;
     int32_t right;

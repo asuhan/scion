@@ -1022,8 +1022,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func maskBorderOutsets() -> LayoutBoxExtent {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutBoxExtentRaw(wk_interop.RenderStyle_maskBorderOutsets(p!))
   }
 
   func filterOutsets() -> IntOutsets {

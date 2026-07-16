@@ -1193,6 +1193,7 @@ bool RenderStyle_hasUsedAppearance(const void*);
 bool RenderStyle_hasBackground(const void*);
 bool RenderStyle_hasBorderImageOutsets(const void*);
 struct LayoutBoxExtentRaw RenderStyle_borderImageOutsets(const void*);
+struct LayoutBoxExtentRaw RenderStyle_maskBorderOutsets(const void*);
 struct IntOutsetsRaw RenderStyle_filterOutsets(const void*);
 bool RenderStyle_hasStaticInlinePosition(const void*, bool);
 bool RenderStyle_hasStaticBlockPosition(const void*, bool);
