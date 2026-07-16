@@ -42,6 +42,12 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT int32_t ShapeOutsideInfo_shapeLogicalBottom(const void* p)
+{
+    const auto logical_bottom = static_cast<const WebCore::ShapeOutsideInfo*>(p)->shapeLogicalBottom();
+    return logical_bottom.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT const void* ShapeOutsideInfo_computedShape(const void* p)
 {
     return &static_cast<const WebCore::ShapeOutsideInfo*>(p)->computedShape();

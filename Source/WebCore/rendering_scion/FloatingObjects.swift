@@ -546,9 +546,13 @@ final class FindNextFloatLogicalBottomAdapter {
       return
     }
 
-    if floatingObject.renderer!.shapeOutsideInfo() != nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if let shapeOutside = floatingObject.renderer!.shapeOutsideInfo() {
+      let shapeBottom =
+        m_renderer.logicalTopForFloat(floatingObject: floatingObject)
+        + m_renderer.marginBeforeForChild(child: floatingObject.renderer!)
+        + shapeOutside.shapeLogicalBottom()
+      // Use the shapeBottom unless it extends outside of the margin box, in which case it is clipped.
+      m_nextShapeLogicalBottom = min(shapeBottom, floatBottom)
     } else {
       m_nextShapeLogicalBottom = floatBottom
     }

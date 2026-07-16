@@ -234,6 +234,10 @@ class ShapeOutsideInfoWrapper {
     cachedShapeLogicalSize = newSize
   }
 
+  func shapeLogicalBottom() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.ShapeOutsideInfo_shapeLogicalBottom(p))
+  }
+
   func markShapeAsDirty() { shape = nil }
 
   func computedShape() -> ShapeWrapper {
