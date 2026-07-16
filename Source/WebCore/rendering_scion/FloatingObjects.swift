@@ -519,15 +519,47 @@ final class FindNextFloatLogicalBottomAdapter {
   func highValue() -> LayoutUnit { return LayoutUnit.max() }
 
   func collectIfNeeded(_ interval: FloatingObjectInterval) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let floatingObject = Unmanaged<FloatingObjectWrapper>.fromOpaque(interval.obj)
+      .takeUnretainedValue()
+    if !floatingObject.height().bool()
+      || !rangesIntersect(
+        floatTop: LayoutUnit(value: interval.low), floatBottom: LayoutUnit(value: interval.high),
+        objectTop: m_belowLogicalHeight, objectBottom: LayoutUnit.max())
+    {
+      return
+    }
+
+    // All the objects returned from the tree should be already placed.
+    assert(floatingObject.isPlaced)
+    // FIXME: Remove floor(). See <https://webkit.org/b/125831>.
+    assert(
+      rangesIntersect(
+        floatTop: LayoutUnit(
+          value: m_renderer.logicalTopForFloat(floatingObject: floatingObject).floor()),
+        floatBottom: LayoutUnit(
+          value: m_renderer.logicalBottomForFloat(floatingObject: floatingObject).floor()),
+        objectTop: m_belowLogicalHeight, objectBottom: LayoutUnit.max()))
+
+    let floatBottom = m_renderer.logicalBottomForFloat(floatingObject: floatingObject)
+    if m_nextLogicalBottom != nil && m_nextLogicalBottom! < floatBottom {
+      return
+    }
+
+    if floatingObject.renderer!.shapeOutsideInfo() != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      m_nextShapeLogicalBottom = floatBottom
+    }
+    m_nextLogicalBottom = floatBottom
   }
 
   func nextLogicalBottom() -> LayoutUnit { return m_nextLogicalBottom ?? LayoutUnit(value: 0) }
 
   private let m_renderer: RenderBlockFlowWrapper
   private let m_belowLogicalHeight: LayoutUnit
-  private let m_nextLogicalBottom: LayoutUnit? = nil
+  private var m_nextLogicalBottom: LayoutUnit? = nil
+  private var m_nextShapeLogicalBottom: LayoutUnit? = nil
 }
 
 // FIXME: This is really the same thing as FloatingObjectSet.
