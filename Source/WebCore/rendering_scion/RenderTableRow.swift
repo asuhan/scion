@@ -98,8 +98,8 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func rowIndexWasSet() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_rowIndex != unsetRowIndex
   }
 
   func rowIndex() -> UInt32 {
