@@ -23,6 +23,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import Foundation
+
+private let unsetRowIndex: UInt32 = 0x7FFF_FFFF
+private let maxRowIndex: UInt32 = 0x7FFF_FFFE
+
 private func borderWidthChanged(_ oldStyle: RenderStyleWrapper, _ newStyle: RenderStyleWrapper)
   -> Bool
 {
@@ -85,8 +90,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func setRowIndex(rowIndex: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if rowIndex > maxRowIndex {
+      abort()
+    }
+    m_rowIndex = rowIndex
   }
 
   func rowIndexWasSet() -> Bool {
@@ -330,4 +338,6 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
       }
     }
   }
+
+  private var m_rowIndex = unsetRowIndex
 }
