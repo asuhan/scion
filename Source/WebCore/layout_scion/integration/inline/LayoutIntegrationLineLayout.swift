@@ -1111,7 +1111,7 @@ class LayoutIntegration {
         ? flow().containingBlock()!.style().isLeftToRightDirection() : true
       placedFloats.setIsLeftToRightDirection(
         isLeftToRightDirection: placedFloatsIsLeftToRightInlineDirection)
-      for floatingObject in flow().floatingObjectSet! {
+      for floatingObject in flow().floatingObjectSet()! {
         let visualRect = floatingObject.frameRect()
 
         let boxGeometry = BoxGeometry()
