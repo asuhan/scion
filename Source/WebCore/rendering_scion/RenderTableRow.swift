@@ -44,13 +44,13 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func firstCell() -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.firstChild() as! RenderTableCellWrapper?
   }
 
   func lastCell() -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.lastChild() as! RenderTableCellWrapper?
   }
 
   func table() -> RenderTableWrapper? {
