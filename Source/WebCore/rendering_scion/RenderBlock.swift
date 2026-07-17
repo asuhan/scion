@@ -3817,8 +3817,6 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
-  var floatingObjectSet: FloatingObjectSet? = nil
-
   // Used to store state between styleWillChange and styleDidChange
   static var canPropagateFloatIntoSibling = false
 }
