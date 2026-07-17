@@ -2539,6 +2539,42 @@ func RenderElementScion_setStyle(
   element.setStyle(style: style, minimalStyleDifference: minimalStyleDifferenceRaw)
 }
 
+private func convertToStyleScrollbarState(_ s: StyleScrollbarStateRaw) -> StyleScrollbarState {
+  return StyleScrollbarState(
+    scrollbarPart: s.scrollbarPart == 0xffff_ffff
+      ? ScrollbarPart(rawValue: UInt16(s.scrollbarPart)) : .AllParts,
+    hoveredPart: s.hoveredPart == 0xffff_ffff
+      ? ScrollbarPart(rawValue: UInt16(s.hoveredPart)) : .AllParts,
+    pressedPart: s.pressedPart == 0xffff_ffff
+      ? ScrollbarPart(rawValue: UInt16(s.pressedPart)) : .AllParts,
+    orientation: s.isVertical ? .Vertical : .Horizontal,
+    buttonsPlacement: ScrollbarButtonsPlacement(rawValue: s.buttonsPlacement)!,
+    enabled: s.enabled,
+    scrollCornerIsVisible: s.scrollCornerIsVisible
+  )
+}
+
+@_cdecl("RenderElementScion_getUncachedPseudoStyle")
+func RenderElementScion_getUncachedPseudoStyle(
+  _ elementRaw: UnsafeMutableRawPointer, _ pseudoElementRequestRaw: PseudoElementRequestRaw,
+  _ parentStyleRaw: UnsafeRawPointer?, _ ownStyleRaw: UnsafeRawPointer?
+) -> UnsafeRawPointer? {
+  let pseudoId = PseudoId(rawValue: pseudoElementRequestRaw.identifier.pseudoId)!
+  let nameArgument = AtomStringWrapper(p: pseudoElementRequestRaw.identifier.nameArgument!)
+  let pseudoElementIdentifier = Style.PseudoElementIdentifier(
+    pseudoId: pseudoId, nameArgument: nameArgument)
+  let scrollbarState =
+    pseudoElementRequestRaw.scrollbarState.is_valid
+    ? convertToStyleScrollbarState(pseudoElementRequestRaw.scrollbarState.value) : nil
+  let pseudoElementRequest = Style.PseudoElementRequest(pseudoElementIdentifier, scrollbarState)
+  let parentStyle = parentStyleRaw != nil ? convert_render_style(p: parentStyleRaw!) : nil
+  let ownStyle = ownStyleRaw != nil ? convert_render_style(p: ownStyleRaw!) : nil
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let uncachedPseudoStyle = element.getUncachedPseudoStyle(
+    pseudoElementRequest: pseudoElementRequest, parentStyle: parentStyle, ownStyle: ownStyle)
+  return uncachedPseudoStyle?.release()
+}
+
 @_cdecl("RenderElementScion_element")
 func RenderElementScion_element(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let renderElement = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

@@ -85,7 +85,7 @@ struct ScrollbarPart: OptionSet {
   ]
 }
 
-enum ScrollbarButtonsPlacement {
+enum ScrollbarButtonsPlacement: UInt8 {
   case ScrollbarButtonsNone
   case ScrollbarButtonsSingle
   case ScrollbarButtonsDoubleStart

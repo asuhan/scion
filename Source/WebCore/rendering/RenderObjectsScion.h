@@ -62,6 +62,10 @@ namespace LayoutIntegration {
 class LineLayout;
 }
 
+namespace Style {
+class PseudoElementRequest;
+}
+
 class RenderObjectScion final {
 public:
     RenderObjectScion(void* handle)
@@ -431,6 +435,8 @@ public:
     void initializeStyle();
 
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
+
+    RenderStyle* getUncachedPseudoStyle(const Style::PseudoElementRequest&, const RenderStyle*, const RenderStyle*) const;
 
     Element* element() const;
 

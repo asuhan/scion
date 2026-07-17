@@ -443,6 +443,31 @@ struct LineClampValueRaw {
     int32_t value;
 };
 
+struct PseudoElementIdentifierRaw {
+    uint32_t pseudoId;
+    const void* nameArgument;
+};
+
+struct StyleScrollbarStateRaw {
+    uint32_t scrollbarPart;
+    uint32_t hoveredPart;
+    uint32_t pressedPart;
+    bool isVertical;
+    uint8_t buttonsPlacement;
+    bool enabled;
+    bool scrollCornerIsVisible;
+};
+
+struct OptionalStyleScrollbarStateRaw {
+    struct StyleScrollbarStateRaw value;
+    bool is_valid;
+};
+
+struct PseudoElementRequestRaw {
+    struct PseudoElementIdentifierRaw identifier;
+    struct OptionalStyleScrollbarStateRaw scrollbarState;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

@@ -32,6 +32,7 @@
 #include "LayoutIntegrationLineLayout.h"
 #include "LayoutRect.h"
 #include "LayoutRectRaw.h"
+#include "PseudoElementRequest.h"
 #include "RenderCounter.h"
 #include "RenderFragmentContainer.h"
 #include "RenderLayer.h"
@@ -466,6 +467,33 @@ extern "C" const void* RenderElementScion_mutableStyle(void*);
 extern "C" void RenderElementScion_initializeStyle(void*);
 
 extern "C" void RenderElementScion_setStyle(void*, const void*, uint8_t);
+
+struct PseudoElementIdentifierRaw {
+    uint32_t pseudoId;
+    const void* nameArgument;
+};
+
+struct StyleScrollbarStateRaw {
+    uint32_t scrollbarPart;
+    uint32_t hoveredPart;
+    uint32_t pressedPart;
+    bool isVertical;
+    uint8_t buttonsPlacement;
+    bool enabled;
+    bool scrollCornerIsVisible;
+};
+
+struct OptionalStyleScrollbarStateRaw {
+    struct StyleScrollbarStateRaw value;
+    bool is_valid;
+};
+
+struct PseudoElementRequestRaw {
+    struct PseudoElementIdentifierRaw identifier;
+    struct OptionalStyleScrollbarStateRaw scrollbarState;
+};
+
+extern "C" const void* RenderElementScion_getUncachedPseudoStyle(void*, struct PseudoElementRequestRaw, const void*, const void*);
 
 extern "C" void* RenderElementScion_element(const void*);
 
@@ -1479,6 +1507,39 @@ void RenderElementScion::initializeStyle()
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {
     RenderElementScion_setStyle(m_handle, &style, static_cast<uint8_t>(minimalStyleDifference));
+}
+
+namespace {
+
+StyleScrollbarStateRaw convertToStyleScrollbarStateRaw(const WebCore::StyleScrollbarState& s)
+{
+    return {
+        static_cast<uint32_t>(s.scrollbarPart),
+        static_cast<uint32_t>(s.hoveredPart),
+        static_cast<uint32_t>(s.pressedPart),
+        s.orientation == WebCore::ScrollbarOrientation::Vertical,
+        static_cast<uint8_t>(s.buttonsPlacement),
+        s.enabled,
+        s.scrollCornerIsVisible
+    };
+}
+
+PseudoElementRequestRaw convertToPseudoElementRequestRaw(const Style::PseudoElementRequest& s)
+{
+    return {
+        { static_cast<uint32_t>(s.identifier().pseudoId), &s.identifier().nameArgument },
+        s.scrollbarState()
+            ? OptionalStyleScrollbarStateRaw { convertToStyleScrollbarStateRaw(*s.scrollbarState()), true }
+            : OptionalStyleScrollbarStateRaw { {}, false }
+    };
+}
+
+} // namespace
+
+RenderStyle* RenderElementScion::getUncachedPseudoStyle(const Style::PseudoElementRequest& pseudoElementRequest, const RenderStyle* parentStyle, const RenderStyle* ownStyle) const
+{
+    const auto r = const_cast<void*>(RenderElementScion_getUncachedPseudoStyle(m_handle, convertToPseudoElementRequestRaw(pseudoElementRequest), parentStyle, ownStyle));
+    return static_cast<RenderStyle*>(r);
 }
 
 Element* RenderElementScion::element() const

@@ -2009,9 +2009,34 @@ const RenderStyle* RenderElement::getCachedPseudoStyle(const Style::PseudoElemen
     return nullptr;
 }
 
+struct PseudoElementIdentifierRaw {
+    uint32_t pseudoId;
+    const void* nameArgument;
+};
+
+struct StyleScrollbarStateRaw {
+    uint32_t scrollbarPart;
+    uint32_t hoveredPart;
+    uint32_t pressedPart;
+    bool isVertical;
+    uint8_t buttonsPlacement;
+    bool enabled;
+    bool scrollCornerIsVisible;
+};
+
+struct OptionalStyleScrollbarStateRaw {
+    StyleScrollbarStateRaw value;
+    bool is_valid;
+};
+
+struct PseudoElementRequestRaw {
+    PseudoElementIdentifierRaw identifier;
+    OptionalStyleScrollbarStateRaw scrollbarState;
+};
+
 std::unique_ptr<RenderStyle> RenderElement::getUncachedPseudoStyle(const Style::PseudoElementRequest& pseudoElementRequest, const RenderStyle* parentStyle, const RenderStyle* ownStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return std::unique_ptr<RenderStyle>(m_scion->getUncachedPseudoStyle(pseudoElementRequest, parentStyle, ownStyle)); }
     if (pseudoElementRequest.pseudoId() < PseudoId::FirstInternalPseudoId && !ownStyle && !style().hasPseudoStyle(pseudoElementRequest.pseudoId()))
         return nullptr;
 

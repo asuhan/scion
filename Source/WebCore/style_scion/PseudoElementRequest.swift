@@ -41,6 +41,12 @@ extension Style {
       fatalError("Not implemented")
     }
 
+    init(_ pseudoElementIdentifier: PseudoElementIdentifier, _ scrollbarState: StyleScrollbarState?)
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func pseudoId() -> PseudoId {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
