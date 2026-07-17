@@ -727,8 +727,9 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func setOverridingLogicalHeightFromRowHeight(rowHeight: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    clearIntrinsicPadding()
+    setOverridingLogicalHeight(height: rowHeight)
   }
 
   private func cellWidthChanged() -> Bool {
