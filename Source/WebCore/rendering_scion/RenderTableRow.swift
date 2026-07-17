@@ -34,13 +34,13 @@ private func borderWidthChanged(_ oldStyle: RenderStyleWrapper, _ newStyle: Rend
 
 final class RenderTableRowWrapper: RenderBoxWrapper {
   func nextRow() -> RenderTableRowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.nextSibling() as! RenderTableRowWrapper?
   }
 
   func previousRow() -> RenderTableRowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.previousSibling() as! RenderTableRowWrapper?
   }
 
   func firstCell() -> RenderTableCellWrapper? {
