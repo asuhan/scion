@@ -103,8 +103,9 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func rowIndex() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(rowIndexWasSet())
+    return m_rowIndex
   }
 
   func borderAdjoiningTableStart() -> BorderValue {
