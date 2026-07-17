@@ -918,8 +918,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func isSelectionRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if isPseudoElement() {
+      return false
+    }
+    assert(element() != nil || isAnonymous())
+
+    // FIXME: Eventually tables should have to learn how to fill gaps between cells, at least in simple non-spanning cases.
+    if isRenderTable() {
+      return false
+    }
+
+    if isBody() || isDocumentElementRenderer() || hasNonVisibleOverflow()
+      || isPositioned() || isFloating()
+      || isRenderTableCell() || isInlineBlockOrInlineTable()
+      || isTransformed() || hasReflection() || hasMask() || isWritingModeRoot()
+      || isRenderFragmentedFlow() || style().columnSpan() == .All
+      || isFlexItemIncludingDeprecated() || isGridItem()
+    {
+      return true
+    }
+
+    if let startElement = view().selection().start()?.node(),
+      CPtrToInt(startElement.p) == CPtrToInt(element()?.p)
+    {
+      return true
+    }
+
+    return false
   }
 
   func addContinuationWithOutline(flow: RenderInlineWrapper) {
