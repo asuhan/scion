@@ -48,10 +48,7 @@ extension Style {
       m_scrollbarState = scrollbarState
     }
 
-    func pseudoId() -> PseudoId {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func pseudoId() -> PseudoId { return m_identifier.pseudoId }
 
     private let m_identifier: PseudoElementIdentifier
     private let m_scrollbarState: StyleScrollbarState?
