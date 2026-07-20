@@ -255,6 +255,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_hasOverlayScrollbars(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->hasOverlayScrollbars();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_updateScrollInfoAfterLayout(void* p)
+{
+    static_cast<WebCore::RenderLayer*>(p)->updateScrollInfoAfterLayout();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
 {
     static_cast<WebCore::RenderLayer*>(p)->updateTransform();

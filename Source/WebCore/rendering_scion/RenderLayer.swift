@@ -1408,8 +1408,8 @@ class RenderLayerWrapper {
   }
 
   func updateScrollInfoAfterLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    wk_interop.RenderLayer_updateScrollInfoAfterLayout(pInterop!)
   }
 
   func updateScrollbarSteps() {
