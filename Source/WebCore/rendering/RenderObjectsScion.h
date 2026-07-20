@@ -668,6 +668,8 @@ public:
 
     void applyTransform(TransformationMatrix&, const RenderStyle&, const FloatRect&, OptionSet<RenderStyle::TransformOperationOption>) const;
 
+    LayoutRect paddingBoxRect() const;
+
     LayoutRect paddingBoxRectIncludingScrollbar() const;
 
     LayoutUnit offsetWidth() const;

@@ -647,6 +647,8 @@ extern "C" LayoutRectRaw RenderBoxScion_visualOverflowRect(const void*);
 
 extern "C" void RenderBoxScion_applyTransform(const void*, void*, const void*, FloatRectRaw, uint8_t);
 
+extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRect(const void*);
+
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetWidth(const void*);
@@ -2023,6 +2025,11 @@ LayoutRect RenderBoxScion::visualOverflowRect() const
 void RenderBoxScion::applyTransform(TransformationMatrix& t, const RenderStyle& style, const FloatRect& boundingBox, OptionSet<RenderStyle::TransformOperationOption> options) const
 {
     RenderBoxScion_applyTransform(m_handle, &t, &style, toFloatRectRaw(boundingBox), options.toRaw());
+}
+
+LayoutRect RenderBoxScion::paddingBoxRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_paddingBoxRect(m_handle));
 }
 
 LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const

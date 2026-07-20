@@ -1256,7 +1256,7 @@ RoundedRect::Radii RenderBox::borderRadii() const
 
 LayoutRect RenderBox::paddingBoxRect() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingBoxRect(); }
     auto offsetForScrollbar = 0_lu;
     auto verticalScrollbarWidth = 0_lu;
     auto horizontalScrollbarHeight = 0_lu;

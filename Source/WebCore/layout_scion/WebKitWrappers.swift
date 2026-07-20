@@ -3099,6 +3099,12 @@ func RenderBoxScion_applyTransform(
     transform: &transform, style: style, boundingBox: boundingBox, options: options)
 }
 
+@_cdecl("RenderBoxScion_paddingBoxRect")
+func RenderBoxScion_paddingBoxRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return convertLayoutRect(box.paddingBoxRect())
+}
+
 @_cdecl("RenderBoxScion_paddingBoxRectIncludingScrollbar")
 func RenderBoxScion_paddingBoxRectIncludingScrollbar(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
