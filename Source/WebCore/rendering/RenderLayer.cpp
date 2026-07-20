@@ -250,6 +250,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_cannotBlitToWindow(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->cannotBlitToWindow();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_hasOverlayScrollbars(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->hasOverlayScrollbars();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
 {
     static_cast<WebCore::RenderLayer*>(p)->updateTransform();

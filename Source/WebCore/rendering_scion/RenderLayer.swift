@@ -1403,8 +1403,8 @@ class RenderLayerWrapper {
   }
 
   func hasOverlayScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return wk_interop.RenderLayer_hasOverlayScrollbars(pInterop!)
   }
 
   func updateScrollInfoAfterLayout() {
