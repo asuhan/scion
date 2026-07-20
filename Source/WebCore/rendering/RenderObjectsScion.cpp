@@ -287,6 +287,8 @@ extern "C" void* RenderObjectScion_view(const void*);
 
 extern "C" void* RenderObjectScion_node(const void*);
 
+extern "C" void* RenderObjectScion_nonPseudoNode(const void*);
+
 extern "C" void* RenderObjectScion_document(const void*);
 
 extern "C" void* RenderObjectScion_frame(void*);
@@ -1257,6 +1259,8 @@ bool RenderObjectScion::effectiveCapturedInViewTransition() const { return Rende
 RenderView& RenderObjectScion::view() const { return *static_cast<RenderView*>(RenderObjectScion_view(m_handle)); }
 
 Node* RenderObjectScion::node() const { return static_cast<Node*>(RenderObjectScion_node(m_handle)); }
+
+Node* RenderObjectScion::nonPseudoNode() const { return static_cast<Node*>(RenderObjectScion_nonPseudoNode(m_handle)); }
 
 Document& RenderObjectScion::document() const { return *static_cast<Document*>(RenderObjectScion_document(m_handle)); }
 

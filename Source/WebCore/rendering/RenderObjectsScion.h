@@ -313,6 +313,8 @@ public:
 
     Node* node() const;
 
+    Node* nonPseudoNode() const;
+
     Document& document() const;
 
     Ref<Document> protectedDocument() const;

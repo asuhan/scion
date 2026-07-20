@@ -2278,6 +2278,12 @@ Node* RenderObject::node() const
     return m_node.ptr();
 }
 
+Node* RenderObject::nonPseudoNode() const
+{
+    if (m_scion) { return m_scion->nonPseudoNode(); }
+    return isPseudoElement() ? nullptr : node();
+}
+
 static inline RenderElement* containerForElement(const RenderObject& renderer, const RenderLayerModelObject* repaintContainer, bool* repaintContainerSkipped)
 {
     // This method is extremely similar to containingBlock(), but with a few notable
