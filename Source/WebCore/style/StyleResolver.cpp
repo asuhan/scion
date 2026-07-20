@@ -90,6 +90,56 @@
 #include <wtf/Vector.h>
 #include <wtf/text/AtomStringHash.h>
 
+struct PseudoElementIdentifierRaw {
+    uint32_t pseudoId;
+    const void* nameArgument;
+};
+
+struct StyleScrollbarStateRaw {
+    uint32_t scrollbarPart;
+    uint32_t hoveredPart;
+    uint32_t pressedPart;
+    bool isVertical;
+    uint8_t buttonsPlacement;
+    bool enabled;
+    bool scrollCornerIsVisible;
+};
+
+struct OptionalStyleScrollbarStateRaw {
+    struct StyleScrollbarStateRaw value;
+    bool is_valid;
+};
+
+struct PseudoElementRequestRaw {
+    struct PseudoElementIdentifierRaw identifier;
+    struct OptionalStyleScrollbarStateRaw scrollbarState;
+};
+
+namespace {
+
+WebCore::StyleScrollbarState convertToStyleScrollbarState(const StyleScrollbarStateRaw&)
+{
+    ASSERT_NOT_REACHED();
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void Resolver_styleForPseudoElement(void* p, void* elementRaw, PseudoElementRequestRaw pseudoElementRequestRaw, const void* parentStyleRaw)
+{
+    auto& element = *static_cast<WebCore::Element*>(elementRaw);
+    const auto pseudoId = static_cast<WebCore::PseudoId>(pseudoElementRequestRaw.identifier.pseudoId);
+    const auto& nameArgument = *static_cast<const AtomString*>(pseudoElementRequestRaw.identifier.nameArgument);
+    WebCore::Style::PseudoElementIdentifier pseudoElementIdentifier { pseudoId, nameArgument };
+    const auto scrollbarState = pseudoElementRequestRaw.scrollbarState.is_valid
+    ? std::make_optional(convertToStyleScrollbarState(pseudoElementRequestRaw.scrollbarState.value)) : std::nullopt;
+    WebCore::Style::PseudoElementRequest pseudoElementRequest { pseudoElementIdentifier, scrollbarState };
+    const auto parentStyle = static_cast<const WebCore::RenderStyle*>(parentStyleRaw);
+    const auto resolved = static_cast<WebCore::Style::Resolver*>(p)->styleForPseudoElement(element, pseudoElementRequest, { parentStyle });
+    if (resolved) {
+        ASSERT_NOT_REACHED();
+    }
+}
+
 namespace WebCore {
 namespace Style {
 

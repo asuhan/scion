@@ -48,7 +48,11 @@ extension Style {
       m_scrollbarState = scrollbarState
     }
 
+    func identifier() -> PseudoElementIdentifier { return m_identifier }
+
     func pseudoId() -> PseudoId { return m_identifier.pseudoId }
+
+    func scrollbarState() -> StyleScrollbarState? { return m_scrollbarState }
 
     private let m_identifier: PseudoElementIdentifier
     private let m_scrollbarState: StyleScrollbarState?

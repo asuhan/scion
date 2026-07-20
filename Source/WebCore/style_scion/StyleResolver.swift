@@ -27,6 +27,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
+private func convertToStyleScrollbarStateRaw(_ s: StyleScrollbarState) -> StyleScrollbarStateRaw {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension Style {
 
   class Resolver {
@@ -36,8 +43,19 @@ extension Style {
       _ element: ElementWrapper, _ pseudoElementRequest: PseudoElementRequest,
       _ context: ResolutionContext
     ) -> ResolvedStyle? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let pseudoElementIdentifierRaw = PseudoElementIdentifierRaw(
+        pseudoId: pseudoElementRequest.identifier().pseudoId.rawValue,
+        nameArgument: pseudoElementRequest.identifier().nameArgument.p!)
+      let pseudoElementRequestRaw = PseudoElementRequestRaw(
+        identifier: pseudoElementIdentifierRaw,
+        scrollbarState: pseudoElementRequest.scrollbarState() != nil
+          ? OptionalStyleScrollbarStateRaw(
+            value: convertToStyleScrollbarStateRaw(pseudoElementRequest.scrollbarState()!),
+            is_valid: true)
+          : OptionalStyleScrollbarStateRaw(value: StyleScrollbarStateRaw(), is_valid: false))
+      wk_interop.Resolver_styleForPseudoElement(
+        p, element.p, pseudoElementRequestRaw, context.parentStyle?.p)
+      return nil
     }
 
     private let p: UnsafeMutableRawPointer

@@ -53,6 +53,13 @@ public:
         ASSERT(pseudoElementIdentifier.pseudoId != PseudoId::None);
     }
 
+    // NB(asuhan): only used for interop
+    PseudoElementRequest(const PseudoElementIdentifier& pseudoElementIdentifier, std::optional<StyleScrollbarState> scrollbarState)
+    {
+        m_identifier = pseudoElementIdentifier;
+        m_scrollbarState = scrollbarState;
+    }
+
     const PseudoElementIdentifier& identifier() const { return m_identifier; }
     PseudoId pseudoId() const { return m_identifier.pseudoId; }
     const AtomString& nameArgument() const { return m_identifier.nameArgument; }
