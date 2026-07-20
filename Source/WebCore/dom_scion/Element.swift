@@ -130,8 +130,7 @@ class ElementWrapper: ContainerNodeWrapper {
   }
 
   func styleResolver() -> Style.Resolver {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return Style.Resolver(wk_interop.Element_styleResolver(p))
   }
 
   func hasDisplayContents() -> Bool { return wk_interop.Element_hasDisplayContents(p) }

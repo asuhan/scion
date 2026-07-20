@@ -1811,6 +1811,7 @@ void Element_didDetachRenderers(void*);
 void Element_clearBeforePseudoElement(void*);
 void Element_clearAfterPseudoElement(void*);
 void Element_clearHoverAndActiveStatusBeforeDetachingRenderer(void*);
+void* Element_styleResolver(void*);
 bool Element_hasDisplayContents(void*);
 void Element_clearDisplayContentsOrNoneStyle(void*);
 struct OptionalLayoutUnitRaw Element_lastRememberedLogicalWidth(void*);

@@ -30,6 +30,8 @@
 extension Style {
 
   class Resolver {
+    init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
     func styleForPseudoElement(
       _ element: ElementWrapper, _ pseudoElementRequest: PseudoElementRequest,
       _ context: ResolutionContext
@@ -37,6 +39,8 @@ extension Style {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let p: UnsafeMutableRawPointer
   }
 
   struct ResolutionContext {

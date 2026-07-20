@@ -234,6 +234,11 @@ extern "C" void Element_clearHoverAndActiveStatusBeforeDetachingRenderer(void* p
     return static_cast<WebCore::Element*>(p)->clearHoverAndActiveStatusBeforeDetachingRenderer();
 }
 
+extern "C" void* Element_styleResolver(void* p)
+{
+    return &static_cast<WebCore::Element*>(p)->styleResolver();
+}
+
 extern "C" bool Element_hasDisplayContents(void* p) {
     return static_cast<WebCore::Element*>(p)->hasDisplayContents();
 }
