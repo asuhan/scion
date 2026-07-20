@@ -482,6 +482,8 @@ public:
 
     float opacity() const;
 
+    bool visibleToHitTesting(const std::optional<HitTestRequest>& = std::nullopt) const;
+
     bool hasMask() const;
 
     bool hasClip() const;

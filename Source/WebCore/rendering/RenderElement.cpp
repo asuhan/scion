@@ -2475,6 +2475,15 @@ float RenderElement::opacity() const
     return style().opacity();
 }
 
+bool RenderElement::visibleToHitTesting(const std::optional<HitTestRequest>& request) const
+{
+    if (m_scion) { return m_scion->visibleToHitTesting(request); }
+    auto visibility = !request || request->userTriggered() ? style().usedVisibility() : style().visibility();
+    return visibility == Visibility::Visible
+        && !isSkippedContent()
+        && ((request && request->ignoreCSSPointerEventsProperty()) || usedPointerEvents() != PointerEvents::None);
+}
+
 bool RenderElement::hasMask() const
 {
     if (m_scion) { return m_scion->hasMask(); }

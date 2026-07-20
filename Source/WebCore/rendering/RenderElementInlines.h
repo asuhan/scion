@@ -102,15 +102,6 @@ inline bool RenderElement::shouldApplyStyleContainment() const
     return shouldApplySizeOrStyleContainment(style().containsStyle() || style().contentVisibility() != ContentVisibility::Visible);
 }
 
-inline bool RenderElement::visibleToHitTesting(const std::optional<HitTestRequest>& request) const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    auto visibility = !request || request->userTriggered() ? style().usedVisibility() : style().visibility();
-    return visibility == Visibility::Visible
-        && !isSkippedContent()
-        && ((request && request->ignoreCSSPointerEventsProperty()) || usedPointerEvents() != PointerEvents::None);
-}
-
 inline int adjustForAbsoluteZoom(int value, const RenderElement& renderer)
 {
     return adjustForAbsoluteZoom(value, renderer.style());

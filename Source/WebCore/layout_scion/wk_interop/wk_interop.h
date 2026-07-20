@@ -344,6 +344,11 @@ struct HitTestRequestRaw {
     bool source;
 };
 
+struct OptionalHitTestRequestRaw {
+    struct HitTestRequestRaw value;
+    bool is_valid;
+};
+
 struct HitTestResultRaw {
     struct HitTestLocationRaw hitTestLocation;
     void* innerNode;

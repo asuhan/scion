@@ -337,6 +337,11 @@ struct HitTestRequestRaw {
     bool source;
 };
 
+struct OptionalHitTestRequestRaw {
+    struct HitTestRequestRaw value;
+    bool is_valid;
+};
+
 struct HitTestResultRaw {
     HitTestLocationRaw hitTestLocation;
     void* innerNode;
@@ -534,6 +539,8 @@ extern "C" bool RenderElementScion_repaintAfterLayoutIfNeeded(void*, void*, bool
 extern "C" bool RenderElementScion_isTransparent(const void*);
 
 extern "C" float RenderElementScion_opacity(const void*);
+
+extern "C" bool RenderElementScion_visibleToHitTesting(const void*, const OptionalHitTestRequestRaw);
 
 extern "C" bool RenderElementScion_hasMask(const void*);
 
@@ -1677,6 +1684,15 @@ bool RenderElementScion::isTransparent() const
 float RenderElementScion::opacity() const
 {
     return RenderElementScion_opacity(m_handle);
+}
+
+bool RenderElementScion::visibleToHitTesting(const std::optional<HitTestRequest>& request) const
+{
+    return RenderElementScion_visibleToHitTesting(m_handle,
+        { request
+                ? HitTestRequestRaw { request->type().toRaw(), request->userTriggered() }
+                : HitTestRequestRaw {},
+            static_cast<bool>(request) });
 }
 
 bool RenderElementScion::hasMask() const

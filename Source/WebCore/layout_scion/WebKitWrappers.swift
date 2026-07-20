@@ -2723,6 +2723,15 @@ func RenderElementScion_opacity(_ elementRaw: UnsafeRawPointer) -> Float32 {
   return element.opacity()
 }
 
+@_cdecl("RenderElementScion_visibleToHitTesting")
+func RenderElementScion_visibleToHitTesting(
+  _ elementRaw: UnsafeRawPointer, _ requestRaw: OptionalHitTestRequestRaw
+) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let request = requestRaw.is_valid ? convertHitTestRequest(requestRaw.value) : nil
+  return element.visibleToHitTesting(request: request)
+}
+
 @_cdecl("RenderElementScion_hasMask")
 func RenderElementScion_hasMask(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
