@@ -730,6 +730,8 @@ public:
 
     LayoutPoint flipForWritingModeForChild(const RenderBox& child, const LayoutPoint&) const;
 
+    void flipForWritingMode(LayoutRect& rect) const;
+
     LayoutPoint topLeftLocation() const;
 
     LayoutSize topLeftLocationOffset() const;

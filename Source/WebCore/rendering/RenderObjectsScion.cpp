@@ -721,6 +721,8 @@ extern "C" int32_t RenderBoxScion_offsetTop(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_flipForWritingModeForChild(const void*, void*, LayoutPointRaw);
 
+extern "C" LayoutRectRaw RenderBoxScion_flipForWritingMode(const void*, LayoutRectRaw);
+
 extern "C" LayoutPointRaw RenderBoxScion_topLeftLocation(const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_topLeftLocationOffset(const void*);
@@ -2200,6 +2202,11 @@ LayoutUnit RenderBoxScion::offsetTop() const
 LayoutPoint RenderBoxScion::flipForWritingModeForChild(const RenderBox& child, const LayoutPoint& point) const
 {
     return convertLayoutPoint(RenderBoxScion_flipForWritingModeForChild(m_handle, const_cast<RenderBox*>(&child), convertLayoutPoint(point)));
+}
+
+void RenderBoxScion::flipForWritingMode(LayoutRect& rect) const
+{
+    rect = convertLayoutRectRaw(RenderBoxScion_flipForWritingMode(m_handle, convertLayoutRect(rect)));
 }
 
 LayoutPoint RenderBoxScion::topLeftLocation() const

@@ -6238,7 +6238,10 @@ LayoutPoint RenderBox::flipForWritingModeForChild(const RenderBox& child, const 
 
 void RenderBox::flipForWritingMode(LayoutRect& rect) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->flipForWritingMode(rect);
+        return;
+    }
     if (!style().isFlippedBlocksWritingMode())
         return;
 

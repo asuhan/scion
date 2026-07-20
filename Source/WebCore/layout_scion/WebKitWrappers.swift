@@ -3342,6 +3342,16 @@ func RenderBoxScion_flipForWritingModeForChild(
     box.flipForWritingModeForChild(child: child, point: convertLayoutPointRaw(point)))
 }
 
+@_cdecl("RenderBoxScion_flipForWritingMode")
+func RenderBoxScion_flipForWritingMode(_ boxRaw: UnsafeRawPointer, _ rectRaw: LayoutRectRaw)
+  -> LayoutRectRaw
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  var rect = convertLayoutRect(rectRaw)
+  box.flipForWritingMode(rect: &rect)
+  return convertLayoutRect(rect)
+}
+
 @_cdecl("RenderBoxScion_topLeftLocation")
 func RenderBoxScion_topLeftLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
