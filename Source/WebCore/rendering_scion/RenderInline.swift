@@ -119,8 +119,9 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   init(type: `Type`, document: Document, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(type, document, style, .IsRenderInline, RenderObjectWrapper.TypeSpecificFlags())
+    setChildrenInline(b: true)
+    assert(isRenderInline())
   }
 
   override func marginLeft() -> LayoutUnit {
