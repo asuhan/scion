@@ -1692,6 +1692,41 @@ class RenderTableWrapper: RenderBlockWrapper {
     }
   }
 
+  override func overflowClipRect(
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper? = nil,
+    relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
+    phase: PaintPhase = .BlockBackground
+  ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    var rect = LayoutRectWrapper()
+    // Don't clip out the table's side of the collapsed borders if we're in the paint phase that will ask the sections to paint them.
+    // Likewise, if we're self-painting we avoid clipping them out as the clip rect that will be passed down to child layers from RenderLayer will do that instead.
+    if phase == .ChildBlockBackgrounds || layer()!.isSelfPaintingLayer {
+      rect = borderBoxRectInFragment(fragment: fragment)
+      rect.setLocation(location: location + rect.location())
+    } else {
+      rect = super.overflowClipRect(location: location, fragment: fragment, relevancy: relevancy)
+    }
+
+    // If we have a caption, expand the clip to include the caption.
+    // FIXME: Technically this is wrong, but it's virtually impossible to fix this
+    // for real until captions have been re-written.
+    // FIXME: This code assumes (like all our other caption code) that only top/bottom are
+    // supported.  When we actually support left/right and stop mapping them to top/bottom,
+    // we might have to hack this code first (depending on what order we do these bug fixes in).
+    if !captions.isEmpty {
+      if style().isHorizontalWritingMode() {
+        rect.setHeight(height: height())
+        rect.setY(y: location.y)
+      } else {
+        rect.setWidth(width: width())
+        rect.setX(x: location.x)
+      }
+    }
+
+    return rect
+  }
+
   override func overflowClipRectForChildLayers(
     location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
     relevancy: OverlayScrollbarSizeRelevancy
