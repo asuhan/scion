@@ -1692,6 +1692,14 @@ class RenderTableWrapper: RenderBlockWrapper {
     }
   }
 
+  override func overflowClipRectForChildLayers(
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
+    relevancy: OverlayScrollbarSizeRelevancy
+  ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    return super.overflowClipRect(location: location, fragment: fragment, relevancy: relevancy)
+  }
+
   override func addOverflowFromChildren() {
     // Add overflow from borders.
     // Technically it's odd that we are incorporating the borders into layout overflow, which is only supposed to be about overflow from our
