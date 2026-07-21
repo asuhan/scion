@@ -44,6 +44,8 @@
  * version of this file under any of the LGPL, the MPL or the GPL.
  */
 
+import wk_interop
+
 private func rendererForScrollbar(_ renderer: RenderLayerModelObjectWrapper)
   -> RenderElementWrapper?
 {
@@ -214,7 +216,10 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
   ) -> Int32 {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerScrollableArea_verticalScrollbarWidth(
+        pInterop!, relevancy == .IncludeOverlayScrollbarSize, isHorizontalWritingMode)
+    }
     if vBar != nil && vBar!.isOverlayScrollbar()
       && (relevancy == .IgnoreOverlayScrollbarSize || !vBar!.shouldParticipateInHitTesting())
     {
@@ -238,7 +243,10 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
   ) -> Int32 {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerScrollableArea_horizontalScrollbarHeight(
+        pInterop!, relevancy == .IncludeOverlayScrollbarSize, isHorizontalWritingMode)
+    }
     if hBar != nil && hBar!.isOverlayScrollbar()
       && (relevancy == .IgnoreOverlayScrollbarSize || !hBar!.shouldParticipateInHitTesting())
     {
