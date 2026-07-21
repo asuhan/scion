@@ -113,8 +113,9 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(type, element, style, .IsRenderInline, RenderObjectWrapper.TypeSpecificFlags())
+    setChildrenInline(b: true)
+    assert(isRenderInline())
   }
 
   init(type: `Type`, document: Document, style: RenderStyleWrapper) {
