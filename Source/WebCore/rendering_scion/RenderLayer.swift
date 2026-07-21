@@ -1413,8 +1413,8 @@ class RenderLayerWrapper {
   }
 
   func updateScrollbarSteps() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    wk_interop.RenderLayer_updateScrollbarSteps(pInterop!)
   }
 
   func canResize() -> Bool {

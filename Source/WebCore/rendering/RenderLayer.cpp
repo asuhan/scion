@@ -260,6 +260,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_updateScrollInfoAfterLayout(void* p)
     static_cast<WebCore::RenderLayer*>(p)->updateScrollInfoAfterLayout();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_updateScrollbarSteps(void* p)
+{
+    static_cast<WebCore::RenderLayer*>(p)->updateScrollbarSteps();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
 {
     static_cast<WebCore::RenderLayer*>(p)->updateTransform();
