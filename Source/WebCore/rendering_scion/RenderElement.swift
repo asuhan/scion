@@ -1990,7 +1990,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
     if shouldRepaintBeforeStyleChange == .RendererOnly {
       if isOutOfFlowPositioned()
-        && (self as! RenderLayerModelObjectWrapper).checkedLayer()!.isSelfPaintingLayer
+        && (self as! RenderLayerModelObjectWrapper).checkedLayer()!.isSelfPaintingLayer()
       {
         if let cachedClippedOverflowRect = (self as! RenderLayerModelObjectWrapper).checkedLayer()!
           .cachedClippedOverflowRect()

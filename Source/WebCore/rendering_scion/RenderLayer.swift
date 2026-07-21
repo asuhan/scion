@@ -378,7 +378,7 @@ class RenderLayerWrapper {
     setIsCSSStackingContext(isCSSStackingContext: shouldBeCSSStackingContext())
     setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
 
-    isSelfPaintingLayer = shouldBeSelfPaintingLayer()
+    m_isSelfPaintingLayer = shouldBeSelfPaintingLayer()
 
     if isRenderViewLayer {
       contentsScrollingScope = nextScrollingScope()
@@ -563,7 +563,7 @@ class RenderLayerWrapper {
     dirtyAncestorChainVisibleDescendantStatus()
     child.updateDescendantDependentFlags()
 
-    if child.isSelfPaintingLayer || child.hasSelfPaintingLayerDescendant {
+    if child.isSelfPaintingLayer() || child.hasSelfPaintingLayerDescendant {
       setAncestorChainHasSelfPaintingLayerDescendant()
     }
 
@@ -623,7 +623,7 @@ class RenderLayerWrapper {
       dirtyAncestorChainVisibleDescendantStatus()
     }
 
-    if oldChild.isSelfPaintingLayer || oldChild.hasSelfPaintingLayerDescendant {
+    if oldChild.isSelfPaintingLayer() || oldChild.hasSelfPaintingLayerDescendant {
       dirtyAncestorChainHasSelfPaintingLayerDescendantStatus()
     }
 
@@ -1105,7 +1105,7 @@ class RenderLayerWrapper {
         hasVisibleDescendant =
           hasVisibleDescendant || child!.hasVisibleContent || child!.hasVisibleDescendant
         hasSelfPaintingLayerDescendant =
-          hasSelfPaintingLayerDescendant || child!.isSelfPaintingLayer
+          hasSelfPaintingLayerDescendant || child!.isSelfPaintingLayer()
           || child!.hasSelfPaintingLayerDescendant
         hasNotIsolatedBlendingDescendants =
           hasNotIsolatedBlendingDescendants || child!.hasBlendMode()
@@ -1309,6 +1309,11 @@ class RenderLayerWrapper {
     compositor().layerStyleChanged(diff: diff, layer: self, oldStyle: oldStyle)
 
     updateFilterPaintingStrategy()
+  }
+
+  func isSelfPaintingLayer() -> Bool {
+    if !isNativeImpl() { return wk_interop.RenderLayer_isSelfPaintingLayer(pInterop!) }
+    return m_isSelfPaintingLayer
   }
 
   func cannotBlitToWindow() -> Bool {
@@ -1971,7 +1976,7 @@ class RenderLayerWrapper {
   }
 
   private static func isEligibleForFullRepaintCheck(layer: RenderLayerWrapper) -> Bool {
-    return layer.isSelfPaintingLayer && !layer.renderer().hasPotentiallyScrollableOverflow()
+    return layer.isSelfPaintingLayer() && !layer.renderer().hasPotentiallyScrollableOverflow()
       && !(layer.renderer() is RenderViewWrapper)
   }
 
@@ -2270,7 +2275,7 @@ class RenderLayerWrapper {
     _ result: inout HitTestResultWrapper
   ) -> Bool {
     assert(isNativeImpl())
-    assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
+    assert(isSelfPaintingLayer() || hasSelfPaintingLayerDescendant)
     assert(!renderer().view().needsLayout())
 
     assert(!isRenderFragmentedFlow())
@@ -2905,7 +2910,7 @@ class RenderLayerWrapper {
     flags: CalculateLayerBoundsFlag = RenderLayerWrapper.defaultCalculateLayerBoundsFlags
   ) -> LayoutRectWrapper {
     assert(isNativeImpl())
-    if !isSelfPaintingLayer {
+    if !isSelfPaintingLayer() {
       return LayoutRectWrapper()
     }
 
@@ -3382,7 +3387,7 @@ class RenderLayerWrapper {
   // The query rect is given in local coordinates.
   func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
     assert(isNativeImpl())
-    if !isSelfPaintingLayer && !hasSelfPaintingLayerDescendant {
+    if !isSelfPaintingLayer() && !hasSelfPaintingLayerDescendant {
       return false
     }
 
@@ -4159,7 +4164,7 @@ class RenderLayerWrapper {
     assert(isNativeImpl())
     assert(!visibleContentStatusDirty)
 
-    if !isSelfPaintingLayer {
+    if !isSelfPaintingLayer() {
       clearRepaintRects()
     } else {
       setRepaintRects(renderer().rectsForRepaintingAfterLayout(repaintContainer, .Yes))
@@ -4280,11 +4285,11 @@ class RenderLayerWrapper {
   private func updateSelfPaintingLayer() {
     assert(isNativeImpl())
     let isSelfPaintingLayer = shouldBeSelfPaintingLayer()
-    if self.isSelfPaintingLayer == isSelfPaintingLayer {
+    if m_isSelfPaintingLayer == isSelfPaintingLayer {
       return
     }
 
-    self.isSelfPaintingLayer = isSelfPaintingLayer
+    m_isSelfPaintingLayer = isSelfPaintingLayer
     if parent() == nil {
       return
     }
@@ -4774,7 +4779,7 @@ class RenderLayerWrapper {
   ) {
     assert(isNativeImpl())
     // Non self-painting leaf layers don't need to be painted as their renderer() should properly paint itself.
-    if !isSelfPaintingLayer && !hasSelfPaintingLayerDescendant {
+    if !isSelfPaintingLayer() && !hasSelfPaintingLayerDescendant {
       return
     }
 
@@ -4884,7 +4889,7 @@ class RenderLayerWrapper {
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
     assert(isNativeImpl())
-    assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
+    assert(isSelfPaintingLayer() || hasSelfPaintingLayerDescendant)
 
     let localPaintFlags = paintFlags.subtracting(.AppliedTransform)
 
@@ -4971,7 +4976,7 @@ class RenderLayerWrapper {
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
     assert(isNativeImpl())
-    assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
+    assert(isSelfPaintingLayer() || hasSelfPaintingLayerDescendant)
 
     if context.detectingContentfulPaint() && context.contentfulPaintDetected() {
       return
@@ -4990,7 +4995,7 @@ class RenderLayerWrapper {
     let isCollectingEventRegion = localPaintFlags.contains(.CollectingEventRegion)
     let isCollectingAccessibilityRegion = paintingInfo.regionContext is AccessibilityRegionContext
 
-    let isSelfPaintingLayer = self.isSelfPaintingLayer
+    let isSelfPaintingLayer = self.isSelfPaintingLayer()
 
     // Outline always needs to be painted even if we have no visible content. Also,
     // the outline is painted in the background phase during composited scrolling.
@@ -6559,7 +6564,7 @@ class RenderLayerWrapper {
   // Keeps track of whether the layer is currently resizing, so events can cause resizing to start and stop.
   private var m_inResizeMode = false
 
-  var isSelfPaintingLayer = false
+  private var m_isSelfPaintingLayer = false
 
   // If have no self-painting descendants, we don't have to walk our children during painting. This can lead to
   // significant savings, especially if the tree has lots of non-self-painting layers grouped together (e.g. table cells).

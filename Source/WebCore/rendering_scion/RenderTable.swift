@@ -1701,7 +1701,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     var rect = LayoutRectWrapper()
     // Don't clip out the table's side of the collapsed borders if we're in the paint phase that will ask the sections to paint them.
     // Likewise, if we're self-painting we avoid clipping them out as the clip rect that will be passed down to child layers from RenderLayer will do that instead.
-    if phase == .ChildBlockBackgrounds || layer()!.isSelfPaintingLayer {
+    if phase == .ChildBlockBackgrounds || layer()!.isSelfPaintingLayer() {
       rect = borderBoxRectInFragment(fragment: fragment)
       rect.setLocation(location: location + rect.location())
     } else {

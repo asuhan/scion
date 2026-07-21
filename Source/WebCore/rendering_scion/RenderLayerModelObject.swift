@@ -55,7 +55,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
   func hasSelfPaintingLayerModelObject() -> Bool {
     assert(isNativeImpl())
-    return m_layer?.isSelfPaintingLayer ?? false
+    return m_layer?.isSelfPaintingLayer() ?? false
   }
 
   func layer() -> RenderLayerWrapper? {
@@ -79,7 +79,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     RenderLayerModelObjectWrapper.s_hadLayer = hasLayer()
     RenderLayerModelObjectWrapper.s_wasTransformed = isTransformed()
     if RenderLayerModelObjectWrapper.s_hadLayer {
-      RenderLayerModelObjectWrapper.s_layerWasSelfPainting = layer()!.isSelfPaintingLayer
+      RenderLayerModelObjectWrapper.s_layerWasSelfPainting = layer()!.isSelfPaintingLayer()
     }
 
     let oldStyle: RenderStyleWrapper? = hasInitializedStyle ? style() : nil
@@ -136,7 +136,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
       setHasReflection(false)
 
       // Repaint the about to be destroyed self-painting layer when style change also triggers repaint.
-      if layer()!.isSelfPaintingLayer && layer()!.repaintStatus == .NeedsFullRepaint
+      if layer()!.isSelfPaintingLayer() && layer()!.repaintStatus == .NeedsFullRepaint
         && layer()!.cachedClippedOverflowRect() != nil
       {
         repaintUsingContainer(containerForRepaint().renderer, layer()!.cachedClippedOverflowRect()!)
@@ -158,7 +158,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     if layer() != nil {
       layer()!.styleChanged(diff: diff, oldStyle: oldStyle)
       if RenderLayerModelObjectWrapper.s_hadLayer
-        && layer()!.isSelfPaintingLayer != RenderLayerModelObjectWrapper.s_layerWasSelfPainting
+        && layer()!.isSelfPaintingLayer() != RenderLayerModelObjectWrapper.s_layerWasSelfPainting
       {
         setChildNeedsLayout()
       }

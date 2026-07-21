@@ -4496,7 +4496,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     let isControlClip = paintInfo.phase != .EventRegion && hasControlClip()
-    let isOverflowClip = hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer
+    let isOverflowClip = hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer()
 
     if !isControlClip && !isOverflowClip {
       return false
@@ -4585,7 +4585,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     accumulatedOffset: LayoutPointWrapper
   ) {
     assert(isNativeImpl())
-    assert(hasControlClip() || (hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer))
+    assert(hasControlClip() || (hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer()))
 
     if paintInfo.phase == .EventRegion || paintInfo.phase == .Accessibility {
       paintInfo.regionContext!.popClip()
@@ -4931,7 +4931,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func enclosingFloatPaintingLayer() -> RenderLayerWrapper? {
     assert(isNativeImpl())
     for box in RenderAncestorIteratorAdapter<RenderBoxWrapper>.lineageOfType(first: self) {
-      if box.layer() != nil && box.layer()!.isSelfPaintingLayer {
+      if box.layer() != nil && box.layer()!.isSelfPaintingLayer() {
         return box.layer()
       }
     }
@@ -5513,7 +5513,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func updateFloatPainterAfterSelfPaintingLayerChange() {
     assert(isNativeImpl())
     assert(isFloating())
-    assert(!hasLayer() || !layer()!.isSelfPaintingLayer)
+    assert(!hasLayer() || !layer()!.isSelfPaintingLayer())
 
     if let floatingObject = floatingObjectForFloatPainting() {
       floatingObject.setPaintsFloat(paintsFloat: true)
@@ -5546,7 +5546,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         blockFlowContainsThisFloat = CPtrToInt(floatingObject.renderer?.id()) == CPtrToInt(id())
         if blockFlowContainsThisFloat {
           floatPainter = floatingObject
-          if blockFlow!.hasLayer() && blockFlow!.layer()!.isSelfPaintingLayer {
+          if blockFlow!.hasLayer() && blockFlow!.layer()!.isSelfPaintingLayer() {
             return floatPainter
           }
           break

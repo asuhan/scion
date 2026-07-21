@@ -1633,6 +1633,7 @@ void* RenderLayer_paintOrderParent(const void*);
 void RenderLayer_setBackingNeedsRepaint(void*, bool);
 void RenderLayer_setBackingNeedsRepaintInRect(void*, struct LayoutRectRaw, bool);
 void RenderLayer_styleChanged(void*, uint8_t, const void*);
+bool RenderLayer_isSelfPaintingLayer(const void*);
 bool RenderLayer_cannotBlitToWindow(const void*);
 bool RenderLayer_hasOverlayScrollbars(const void*);
 void RenderLayer_updateScrollInfoAfterLayout(void*);

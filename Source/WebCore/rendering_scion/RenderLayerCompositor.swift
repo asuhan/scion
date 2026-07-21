@@ -2120,7 +2120,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Whether the layer could ever be composited.
   private func canBeComposited(_ layer: RenderLayerWrapper) -> Bool {
     assert(isNativeImpl())
-    if m_hasAcceleratedCompositing && layer.isSelfPaintingLayer {
+    if m_hasAcceleratedCompositing && layer.isSelfPaintingLayer() {
       if layer.renderer().isSkippedContent() {
         return false
       }

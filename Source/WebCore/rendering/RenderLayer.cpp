@@ -245,6 +245,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_styleChanged(void* p, uint8_t diff_ra
     static_cast<WebCore::RenderLayer*>(p)->styleChanged(diff, old_style);
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_isSelfPaintingLayer(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->isSelfPaintingLayer();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_cannotBlitToWindow(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->cannotBlitToWindow();

@@ -50,7 +50,7 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
     objectBoundingBox: FloatRectWrapper, graphicsElement: SVGGraphicsElementWrapper
   ) {
     assert(hasLayer())
-    assert(layer()!.isSelfPaintingLayer)
+    assert(layer()!.isSelfPaintingLayer())
 
     assert(currentClippingMode == .NoClipping || currentClippingMode == .MaskClipping)
     let unused = SetForScope(
