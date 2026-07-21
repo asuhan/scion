@@ -149,9 +149,11 @@ extension LayoutIntegration {
           if box.isRootInlineBox() {
             continue
           }
-          let replacedValue = firstBoxIndexCache!.updateValue(
-            UInt64(i), forKey: CPtrToInt(box.layoutBox.p))
-          assert(replacedValue == nil)
+          let key = CPtrToInt(box.layoutBox.p)
+          if firstBoxIndexCache![key] != nil {
+            continue
+          }
+          firstBoxIndexCache![key] = UInt64(i)
         }
       }
 
