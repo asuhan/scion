@@ -4481,8 +4481,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
     relevancy: OverlayScrollbarSizeRelevancy
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return overflowClipRect(location: location, fragment: fragment, relevancy: relevancy)
   }
 
   func pushContentsClip(paintInfo: inout PaintInfoWrapper, accumulatedOffset: LayoutPointWrapper)
