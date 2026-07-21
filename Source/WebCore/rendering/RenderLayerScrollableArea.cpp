@@ -91,6 +91,29 @@ extern "C" WEBCORE_EXPORT int32_t RenderLayerScrollableArea_horizontalScrollbarH
     return static_cast<const WebCore::RenderLayerScrollableArea*>(p)->horizontalScrollbarHeight(relevancy ? WebCore::OverlayScrollbarSizeRelevancy::IncludeOverlayScrollbarSize : WebCore::OverlayScrollbarSizeRelevancy::IgnoreOverlayScrollbarSize, isHorizontalWritingMode);
 }
 
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct IntRectRaw {
+    struct IntPointRaw location;
+    struct IntSizeRaw size;
+};
+
+extern "C" WEBCORE_EXPORT void RenderLayerScrollableArea_paintOverflowControls(void* p, void* contextRaw, IntPointRaw paintOffsetRaw, IntRectRaw damageRectRaw, bool paintingOverlayControls)
+{
+    auto& context = *static_cast<WebCore::GraphicsContext*>(contextRaw);
+    WebCore::IntPoint paintOffset { paintOffsetRaw.x, paintOffsetRaw.y };
+    WebCore::IntRect damageRect { { damageRectRaw.location.x, damageRectRaw.location.y }, { damageRectRaw.size.width, damageRectRaw.size.height } };
+    static_cast<WebCore::RenderLayerScrollableArea*>(p)->paintOverflowControls(context, paintOffset, damageRect, paintingOverlayControls);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayerScrollableArea);

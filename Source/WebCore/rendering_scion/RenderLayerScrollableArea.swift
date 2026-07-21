@@ -58,6 +58,12 @@ private func rendererForScrollbar(_ renderer: RenderLayerModelObjectWrapper)
   return renderer
 }
 
+private func convertToIntRectRaw(_ rect: IntRect) -> IntRectRaw {
+  return IntRectRaw(
+    location: IntPointRaw(x: rect.location.x, y: rect.location.y),
+    size: IntSizeRaw(width: rect.size.width, height: rect.size.height))
+}
+
 final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   init(layer: RenderLayerWrapper) {
     self.m_layer = layer
@@ -275,7 +281,12 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect,
     paintingOverlayControls: Bool = false
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayerScrollableArea_paintOverflowControls(
+        pInterop!, context.p, IntPointRaw(x: paintOffset.x, y: paintOffset.y),
+        convertToIntRectRaw(damageRect), paintingOverlayControls)
+      return
+    }
     // Don't do anything if we have no overflow.
     let renderer = m_layer!.renderer()
     if !renderer.hasNonVisibleOverflow() {
