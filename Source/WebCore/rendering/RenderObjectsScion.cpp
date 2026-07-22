@@ -724,6 +724,8 @@ extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
 
 extern "C" bool RenderBoxScion_scrollsOverflow(const void*);
 
+extern "C" bool RenderBoxScion_scrollsOverflowY(const void*);
+
 extern "C" LayoutBoxExtentRaw RenderBoxScion_scrollPaddingForViewportRect(void*, LayoutRectRaw);
 
 extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
@@ -2202,6 +2204,11 @@ bool RenderBoxScion::hasAlwaysPresentScrollbar(ScrollbarOrientation orientation)
 bool RenderBoxScion::scrollsOverflow() const
 {
     return RenderBoxScion_scrollsOverflow(m_handle);
+}
+
+bool RenderBoxScion::scrollsOverflowY() const
+{
+    return RenderBoxScion_scrollsOverflowY(m_handle);
 }
 
 LayoutBoxExtent RenderBoxScion::scrollPaddingForViewportRect(const LayoutRect& viewportRect)

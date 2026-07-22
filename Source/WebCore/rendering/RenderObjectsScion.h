@@ -728,6 +728,8 @@ public:
 
     bool scrollsOverflow() const;
 
+    bool scrollsOverflowY() const;
+
     LayoutBoxExtent scrollPaddingForViewportRect(const LayoutRect&);
 
     bool isUnsplittableForPagination() const;

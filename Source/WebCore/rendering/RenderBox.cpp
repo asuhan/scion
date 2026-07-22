@@ -1714,7 +1714,7 @@ bool RenderBox::scrollsOverflowX() const
 
 bool RenderBox::scrollsOverflowY() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->scrollsOverflowY(); }
     return hasNonVisibleOverflow() && (style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Auto);
 }
 

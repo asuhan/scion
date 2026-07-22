@@ -3333,6 +3333,12 @@ func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.scrollsOverflow()
 }
 
+@_cdecl("RenderBoxScion_scrollsOverflowY")
+func RenderBoxScion_scrollsOverflowY(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.scrollsOverflowY()
+}
+
 @_cdecl("RenderBoxScion_scrollPaddingForViewportRect")
 func RenderBoxScion_scrollPaddingForViewportRect(
   _ boxRaw: UnsafeMutableRawPointer, _ viewportRectRaw: LayoutRectRaw
