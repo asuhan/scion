@@ -140,8 +140,8 @@ class PaintInfoWrapper {
   }
 
   func paintRootBackgroundOnly() -> Bool {
-    assert(n == nil)
-    return wk_interop.PaintInfo_paintRootBackgroundOnly(p!)
+    if n == nil { return wk_interop.PaintInfo_paintRootBackgroundOnly(p!) }
+    return n!.paintBehavior.contains(.RootBackgroundOnly)
   }
 
   func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
