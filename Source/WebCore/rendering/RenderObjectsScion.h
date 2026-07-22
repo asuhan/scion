@@ -311,6 +311,8 @@ public:
 
     RenderView& view() const;
 
+    bool isRooted() const;
+
     Node* node() const;
 
     Node* nonPseudoNode() const;

@@ -1949,6 +1949,12 @@ func RenderObjectScion_view(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPo
   return view.getWk()
 }
 
+@_cdecl("RenderObjectScion_isRooted")
+func RenderObjectScion_isRooted(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRooted()
+}
+
 @_cdecl("RenderObjectScion_node")
 func RenderObjectScion_node(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

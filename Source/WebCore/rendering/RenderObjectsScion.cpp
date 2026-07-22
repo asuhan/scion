@@ -285,6 +285,8 @@ extern "C" bool RenderObjectScion_effectiveCapturedInViewTransition(const void*)
 
 extern "C" void* RenderObjectScion_view(const void*);
 
+extern "C" bool RenderObjectScion_isRooted(const void*);
+
 extern "C" void* RenderObjectScion_node(const void*);
 
 extern "C" void* RenderObjectScion_nonPseudoNode(const void*);
@@ -1267,6 +1269,8 @@ bool RenderObjectScion::capturedInViewTransition() const { return RenderObjectSc
 bool RenderObjectScion::effectiveCapturedInViewTransition() const { return RenderObjectScion_effectiveCapturedInViewTransition(m_handle); }
 
 RenderView& RenderObjectScion::view() const { return *static_cast<RenderView*>(RenderObjectScion_view(m_handle)); }
+
+bool RenderObjectScion::isRooted() const { return RenderObjectScion_isRooted(m_handle); }
 
 Node* RenderObjectScion::node() const { return static_cast<Node*>(RenderObjectScion_node(m_handle)); }
 
