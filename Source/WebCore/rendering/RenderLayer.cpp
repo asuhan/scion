@@ -359,6 +359,11 @@ extern "C" WEBCORE_EXPORT void* RenderLayer_backing(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->backing();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_usesCompositedScrolling(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->usesCompositedScrolling();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_invalidateEventRegion(void* p, uint8_t reason_raw)
 {
     const auto reason = static_cast<WebCore::RenderLayer::EventRegionInvalidationReason>(reason_raw);

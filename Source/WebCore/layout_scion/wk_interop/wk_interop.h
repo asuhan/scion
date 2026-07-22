@@ -1658,6 +1658,7 @@ bool RenderLayer_isBackdropRoot(const void*);
 bool RenderLayer_isolatesBlending(const void*);
 bool RenderLayer_isComposited(const void*);
 void* RenderLayer_backing(const void*);
+bool RenderLayer_usesCompositedScrolling(const void*);
 bool RenderLayer_invalidateEventRegion(void*, uint8_t);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
 bool RenderLayerBacking_paintsIntoWindow(const void*);

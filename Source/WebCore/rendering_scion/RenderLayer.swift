@@ -3326,7 +3326,7 @@ class RenderLayerWrapper {
   }
 
   func usesCompositedScrolling() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderLayer_usesCompositedScrolling(pInterop!) }
     return m_scrollableArea?.usesCompositedScrolling() ?? false
   }
 
