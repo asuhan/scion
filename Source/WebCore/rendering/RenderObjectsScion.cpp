@@ -730,6 +730,8 @@ extern "C" LayoutBoxExtentRaw RenderBoxScion_scrollPaddingForViewportRect(void*,
 
 extern "C" bool RenderBoxScion_isUnsplittableForPagination(const void*);
 
+extern "C" LayoutRectRaw RenderBoxScion_overflowClipRect(const void*, LayoutPointRaw, void*, bool, uint16_t);
+
 extern "C" bool RenderBoxScion_avoidsFloats(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
@@ -2225,6 +2227,11 @@ LayoutBoxExtent RenderBoxScion::scrollPaddingForViewportRect(const LayoutRect& v
 bool RenderBoxScion::isUnsplittableForPagination() const
 {
     return RenderBoxScion_isUnsplittableForPagination(m_handle);
+}
+
+LayoutRect RenderBoxScion::overflowClipRect(const LayoutPoint& location, RenderFragmentContainer* fragment, WebCore::OverlayScrollbarSizeRelevancy relevancy, PaintPhase phase) const
+{
+    return convertLayoutRectRaw(RenderBoxScion_overflowClipRect(m_handle, convertLayoutPoint(location), fragment, relevancy == WebCore::OverlayScrollbarSizeRelevancy::IncludeOverlayScrollbarSize, static_cast<uint16_t>(phase)));
 }
 
 bool RenderBoxScion::avoidsFloats() const

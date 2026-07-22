@@ -734,6 +734,8 @@ public:
 
     bool isUnsplittableForPagination() const;
 
+    LayoutRect overflowClipRect(const LayoutPoint& location, RenderFragmentContainer* = nullptr, WebCore::OverlayScrollbarSizeRelevancy = WebCore::OverlayScrollbarSizeRelevancy::IgnoreOverlayScrollbarSize, WebCore::PaintPhase = WebCore::PaintPhase::BlockBackground) const;
+
     bool avoidsFloats() const;
 
     LayoutUnit offsetTop() const;

@@ -3359,6 +3359,24 @@ func RenderBoxScion_isUnsplittableForPagination(_ boxRaw: UnsafeRawPointer) -> B
   return box.isUnsplittableForPagination()
 }
 
+@_cdecl("RenderBoxScion_overflowClipRect")
+func RenderBoxScion_overflowClipRect(
+  _ boxRaw: UnsafeRawPointer, _ locationRaw: LayoutPointRaw,
+  _ fragmentRaw: UnsafeMutableRawPointer?, _ includeOverlayScrollbarSize: Bool, _ phaseRaw: UInt16
+) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let location = convertLayoutPointRaw(locationRaw)
+  let fragment =
+    fragmentRaw != nil
+    ? (createRenderObjectWrapperOrNative(fragmentRaw!) as! RenderFragmentContainerWrapper) : nil
+  let relevancy: OverlayScrollbarSizeRelevancy =
+    includeOverlayScrollbarSize ? .IncludeOverlayScrollbarSize : .IgnoreOverlayScrollbarSize
+  let phase = PaintPhase(rawValue: phaseRaw)
+  return convertLayoutRect(
+    box.overflowClipRect(location: location, fragment: fragment, relevancy: relevancy, phase: phase)
+  )
+}
+
 @_cdecl("RenderBoxScion_avoidsFloats")
 func RenderBoxScion_avoidsFloats(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
