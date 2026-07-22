@@ -1050,7 +1050,7 @@ static inline void setIsSimplifiedLayoutRootForLayerIfApplicable(RenderElement& 
 
 RenderElement* RenderObject::markContainingBlocksForLayout(RenderElement* layoutRoot)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->markContainingBlocksForLayout(layoutRoot); }
     ASSERT(!isSetNeedsLayoutForbidden());
     if (is<RenderView>(*this))
         return downcast<RenderElement>(this);

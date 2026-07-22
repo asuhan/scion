@@ -301,6 +301,8 @@ extern "C" void* RenderObjectScion_container(const void*);
 
 extern "C" void* RenderObjectScion_offsetParent(const void*);
 
+extern "C" void* RenderObjectScion_markContainingBlocksForLayout(void*, void*);
+
 extern "C" void RenderObjectScion_setNeedsLayout(void*, bool);
 
 extern "C" void RenderObjectScion_clearNeedsLayout(void*, bool);
@@ -1275,6 +1277,8 @@ Settings& RenderObjectScion::settings() const { return *const_cast<Settings*>(st
 RenderElement* RenderObjectScion::container() const { return static_cast<RenderElement*>(RenderObjectScion_container(m_handle)); }
 
 RenderBoxModelObject* RenderObjectScion::offsetParent() const { return static_cast<RenderBoxModelObject*>(RenderObjectScion_offsetParent(m_handle)); }
+
+RenderElement* RenderObjectScion::markContainingBlocksForLayout(RenderElement* layoutRoot) { return static_cast<RenderElement*>(RenderObjectScion_markContainingBlocksForLayout(m_handle, layoutRoot)); }
 
 void RenderObjectScion::setNeedsLayout(MarkingBehavior markParents) { RenderObjectScion_setNeedsLayout(m_handle, markParents == MarkContainingBlockChain); }
 

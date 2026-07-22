@@ -1999,6 +1999,17 @@ func RenderObjectScion_offsetParent(_ objectRaw: UnsafeRawPointer) -> UnsafeMuta
   return wkRenderObject(object.offsetParent())
 }
 
+@_cdecl("RenderObjectScion_markContainingBlocksForLayout")
+func RenderObjectScion_markContainingBlocksForLayout(
+  _ objectRaw: UnsafeMutableRawPointer, _ layoutRootRaw: UnsafeMutableRawPointer?
+) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let layoutRoot =
+    layoutRootRaw != nil
+    ? (createRenderObjectWrapperOrNative(layoutRootRaw!) as! RenderElementWrapper) : nil
+  return wkRenderObject(object.markContainingBlocksForLayout(layoutRoot: layoutRoot))
+}
+
 @_cdecl("RenderObjectScion_setNeedsLayout")
 func RenderObjectScion_setNeedsLayout(_ objectRaw: UnsafeMutableRawPointer, _ markParents: Bool) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

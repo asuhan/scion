@@ -329,6 +329,8 @@ public:
 
     RenderBoxModelObject* offsetParent() const;
 
+    RenderElement* markContainingBlocksForLayout(RenderElement* layoutRoot = nullptr);
+
     void setNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
 
     void clearNeedsLayout(RenderObject::HadSkippedLayout = RenderObject::HadSkippedLayout::No);
