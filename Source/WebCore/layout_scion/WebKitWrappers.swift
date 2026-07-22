@@ -3270,6 +3270,22 @@ func RenderBoxScion_computeAndSetBlockDirectionMargins(
     containingBlock: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper)
 }
 
+@_cdecl("RenderBoxScion_borderBoxRectInFragment")
+func RenderBoxScion_borderBoxRectInFragment(
+  _ boxRaw: UnsafeRawPointer, _ fragmentRaw: UnsafeMutableRawPointer?,
+  _ cacheRenderBoxFragmentInfo: Bool
+) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let fragment =
+    fragmentRaw != nil
+    ? (createRenderObjectWrapperOrNative(fragmentRaw!) as! RenderFragmentContainerWrapper) : nil
+  return convertLayoutRect(
+    box.borderBoxRectInFragment(
+      fragment: fragment,
+      flags: cacheRenderBoxFragmentInfo
+        ? .CacheRenderBoxFragmentInfo : .DoNotCacheRenderBoxFragmentInfo))
+}
+
 @_cdecl("RenderBoxScion_localRectsForRepaint")
 func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOutlineBounds: Bool)
   -> RepaintRectsRaw

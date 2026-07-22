@@ -710,6 +710,8 @@ public:
 
     void computeAndSetBlockDirectionMargins(const RenderBlock& containingBlock);
 
+    LayoutRect borderBoxRectInFragment(const RenderFragmentContainer*, WebCore::RenderBox::RenderBoxFragmentInfoFlags = WebCore::RenderBox::RenderBoxFragmentInfoFlags::CacheRenderBoxFragmentInfo) const;
+
     RenderObject::RepaintRects localRectsForRepaint(RepaintOutlineBounds) const;
 
     std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;

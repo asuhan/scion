@@ -694,6 +694,8 @@ extern "C" int32_t RenderBoxScion_maxPreferredLogicalWidth(const void*);
 
 extern "C" void RenderBoxScion_computeAndSetBlockDirectionMargins(void*, void*);
 
+extern "C" LayoutRectRaw RenderBoxScion_borderBoxRectInFragment(const void*, void*, bool);
+
 struct OptionalRepaintRectsRaw {
     RepaintRectsRaw rects;
     bool is_valid;
@@ -2143,6 +2145,11 @@ LayoutUnit RenderBoxScion::maxPreferredLogicalWidth() const
 void RenderBoxScion::computeAndSetBlockDirectionMargins(const RenderBlock& containingBlock)
 {
     RenderBoxScion_computeAndSetBlockDirectionMargins(m_handle, const_cast<void*>(static_cast<const void*>(&containingBlock)));
+}
+
+LayoutRect RenderBoxScion::borderBoxRectInFragment(const RenderFragmentContainer* fragment, WebCore::RenderBox::RenderBoxFragmentInfoFlags flags) const
+{
+    return convertLayoutRectRaw(RenderBoxScion_borderBoxRectInFragment(m_handle, const_cast<RenderFragmentContainer*>(fragment), flags == WebCore::RenderBox::RenderBoxFragmentInfoFlags::CacheRenderBoxFragmentInfo));
 }
 
 RenderObject::RepaintRects RenderBoxScion::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const

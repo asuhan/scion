@@ -525,9 +525,9 @@ LayoutRect RenderBox::clientBoxRectInFragment(const RenderFragmentContainer* fra
     return clientBox;
 }
 
-LayoutRect RenderBox::borderBoxRectInFragment(const RenderFragmentContainer*, RenderBoxFragmentInfoFlags) const
+LayoutRect RenderBox::borderBoxRectInFragment(const RenderFragmentContainer* fragment, RenderBoxFragmentInfoFlags flags) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderBoxRectInFragment(fragment, flags); }
     return borderBoxRect();
 }
 
