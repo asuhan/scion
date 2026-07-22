@@ -255,6 +255,17 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_cannotBlitToWindow(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->cannotBlitToWindow();
 }
 
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT IntSizeRaw RenderLayer_size(const void* p)
+{
+    const auto size = static_cast<const WebCore::RenderLayer*>(p)->size();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_hasOverlayScrollbars(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->hasOverlayScrollbars();

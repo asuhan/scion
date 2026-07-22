@@ -1361,7 +1361,10 @@ class RenderLayerWrapper {
   }
 
   func size() -> IntSize {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      let s = wk_interop.RenderLayer_size(pInterop!)
+      return IntSize(width: s.width, height: s.height)
+    }
     assert(!renderer().view().frameView().layerAccessPrevented())
     return layerSize
   }
