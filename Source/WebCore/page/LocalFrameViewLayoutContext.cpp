@@ -57,6 +57,12 @@ extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_scheduleLayout(void* 
     static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->scheduleLayout();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_scheduleSubtreeLayout(void* p, void* layoutRootRaw)
+{
+    auto& layoutRoot = *static_cast<WebCore::RenderElement*>(layoutRootRaw);
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->scheduleSubtreeLayout(layoutRoot);
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_isInLayout(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->isInLayout();

@@ -856,6 +856,7 @@ void* LocalFrame_eventHandler(void*);
 void* LocalFrame_selection(void*);
 void* LocalFrame_rootFrame(const void*);
 void LocalFrameViewLayoutContext_scheduleLayout(void*);
+void LocalFrameViewLayoutContext_scheduleSubtreeLayout(void*, void*);
 bool LocalFrameViewLayoutContext_isInLayout(const void*);
 bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void*);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);

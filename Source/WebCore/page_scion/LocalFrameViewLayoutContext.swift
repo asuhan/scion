@@ -38,8 +38,7 @@ class LocalFrameViewLayoutContextWrapper {
   func scheduleLayout() { wk_interop.LocalFrameViewLayoutContext_scheduleLayout(p) }
 
   func scheduleSubtreeLayout(_ layoutRoot: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameViewLayoutContext_scheduleSubtreeLayout(p, wkRenderObject(layoutRoot))
   }
 
   func isInLayout() -> Bool { return wk_interop.LocalFrameViewLayoutContext_isInLayout(p) }
