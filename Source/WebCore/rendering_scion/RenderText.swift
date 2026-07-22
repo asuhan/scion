@@ -406,6 +406,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func deleteLegacyLineBoxes() {
+    assert(isNativeImpl())
+    legacyLineBoxes!.deleteAll()
+  }
+
   func characterAt(_ i: UInt32) -> UChar {
     assert(isNativeImpl())
     return i >= length() ? 0 : text()[i]
@@ -802,8 +807,12 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func removeAndDestroyLegacyTextBoxes() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !renderTreeBeingDestroyed() {
+      legacyLineBoxes!.removeAllFromParent(self)
+    }
+    // TODO(asuhan): is an invalidateParentChildLists call needed?
+    deleteLegacyLineBoxes()
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -1593,7 +1602,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   override func getWk() -> UnsafeMutableRawPointer { return wk! }
 
-  private let legacyLineBoxes: RenderTextLineBoxes? = nil
+  private var legacyLineBoxes: RenderTextLineBoxes? = nil
 
   private var minWidth: Float32? = nil
   private var maxWidth: Float32? = nil

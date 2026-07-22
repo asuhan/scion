@@ -38,6 +38,14 @@ struct RenderTextLineBoxes {
     }
   }
 
+  mutating func deleteAll() {
+    if m_first == nil {
+      return
+    }
+    m_first = nil
+    m_last = nil
+  }
+
   private func dirtyAll() {
     var box = m_first
     while box != nil {
@@ -56,6 +64,6 @@ struct RenderTextLineBoxes {
     return m_first != nil
   }
 
-  private let m_first: LegacyInlineTextBox? = nil
-  private let m_last: LegacyInlineTextBox? = nil
+  private var m_first: LegacyInlineTextBox? = nil
+  private var m_last: LegacyInlineTextBox? = nil
 }
