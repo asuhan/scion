@@ -58,6 +58,16 @@ struct TextBoxSelectableRangeRaw {
     OptionalUIntRaw truncation;
 };
 
+extern "C" WEBCORE_EXPORT void* RenderHighlight_start(const void* p)
+{
+    return static_cast<const WebCore::RenderHighlight*>(p)->start();
+}
+
+extern "C" WEBCORE_EXPORT void* RenderHighlight_end(const void* p)
+{
+    return static_cast<const WebCore::RenderHighlight*>(p)->end();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderHighlight_highlightStateForTextBox(void* p, const void* rendererRaw, TextBoxSelectableRangeRaw textBoxRangeRaw)
 {
     WebCore::TextBoxSelectableRange textBoxRange {

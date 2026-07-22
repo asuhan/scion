@@ -113,13 +113,15 @@ class RenderHighlight {
   }
 
   func start() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    guard let raw = wk_interop.RenderHighlight_start(p!) else { return nil }
+    return createRenderObjectWrapperOrNative(raw)
   }
 
   func end() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    guard let raw = wk_interop.RenderHighlight_end(p!) else { return nil }
+    return createRenderObjectWrapperOrNative(raw)
   }
 
   func startOffset() -> UInt32 {
