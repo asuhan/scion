@@ -26,6 +26,18 @@
 struct RenderTextLineBoxes {
   func first() -> LegacyInlineTextBox? { return m_first }
 
+  func removeAllFromParent(_ renderer: RenderTextWrapper) {
+    if m_first == nil {
+      renderer.parent()?.dirtyLineFromChangedChild()
+      return
+    }
+    var box = m_first
+    while box != nil {
+      box!.removeFromParent()
+      box = box!.nextTextBox()
+    }
+  }
+
   private func dirtyAll() {
     var box = m_first
     while box != nil {
