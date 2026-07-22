@@ -1278,7 +1278,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Unfortunately we don't have such a class yet, because it's not possible for all renderers
   // to inherit from RenderSVGObject -> RenderObject (some need RenderBlock inheritance for instance)
   func invalidateCachedBoundaries() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_invalidateCachedBoundaries(id())
+      return
+    }
     var renderer: RenderObjectWrapper? = self
     while renderer != nil && renderer!.isSVGRenderer() {
       if renderer!.usesBoundaryCaching() {

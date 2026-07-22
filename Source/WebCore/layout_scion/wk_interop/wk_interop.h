@@ -761,6 +761,7 @@ bool RenderObject_childrenInline(const void*);
 bool RenderObject_fragmentedFlowState(const void*);
 bool RenderObject_isRenderOrLegacyRenderSVGRoot(const void*);
 bool RenderObject_isSVGRenderer(const void*);
+void RenderObject_invalidateCachedBoundaries(void*);
 bool RenderObject_hasIntrinsicAspectRatio(const void*);
 bool RenderObject_isAnonymous(const void*);
 bool RenderObject_isFloating(const void*);

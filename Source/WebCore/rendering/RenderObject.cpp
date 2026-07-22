@@ -170,6 +170,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isSVGRenderer(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isSVGRenderer();
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_invalidateCachedBoundaries(void* p)
+{
+    static_cast<WebCore::RenderObject*>(p)->invalidateCachedBoundaries();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_hasIntrinsicAspectRatio(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->hasIntrinsicAspectRatio();
