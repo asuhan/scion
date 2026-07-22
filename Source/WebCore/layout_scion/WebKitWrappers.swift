@@ -3393,6 +3393,23 @@ func RenderBoxScion_overflowClipRect(
   )
 }
 
+@_cdecl("RenderBoxScion_overflowClipRectForChildLayers")
+func RenderBoxScion_overflowClipRectForChildLayers(
+  _ boxRaw: UnsafeRawPointer, _ locationRaw: LayoutPointRaw,
+  _ fragmentRaw: UnsafeMutableRawPointer?, _ includeOverlayScrollbarSize: Bool
+) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let location = convertLayoutPointRaw(locationRaw)
+  let fragment =
+    fragmentRaw != nil
+    ? (createRenderObjectWrapperOrNative(fragmentRaw!) as! RenderFragmentContainerWrapper) : nil
+  let relevancy: OverlayScrollbarSizeRelevancy =
+    includeOverlayScrollbarSize ? .IncludeOverlayScrollbarSize : .IgnoreOverlayScrollbarSize
+  return convertLayoutRect(
+    box.overflowClipRectForChildLayers(location: location, fragment: fragment, relevancy: relevancy)
+  )
+}
+
 @_cdecl("RenderBoxScion_avoidsFloats")
 func RenderBoxScion_avoidsFloats(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

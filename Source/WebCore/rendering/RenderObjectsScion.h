@@ -738,6 +738,8 @@ public:
 
     LayoutRect overflowClipRect(const LayoutPoint& location, RenderFragmentContainer* = nullptr, WebCore::OverlayScrollbarSizeRelevancy = WebCore::OverlayScrollbarSizeRelevancy::IgnoreOverlayScrollbarSize, WebCore::PaintPhase = WebCore::PaintPhase::BlockBackground) const;
 
+    LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const;
+
     bool avoidsFloats() const;
 
     LayoutUnit offsetTop() const;

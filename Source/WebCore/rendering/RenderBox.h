@@ -629,11 +629,7 @@ public:
     bool shouldTreatChildAsReplacedInTableCells() const;
 
     virtual LayoutRect overflowClipRect(const LayoutPoint& location, RenderFragmentContainer* = nullptr, OverlayScrollbarSizeRelevancy = IgnoreOverlayScrollbarSize, PaintPhase = PaintPhase::BlockBackground) const;
-    virtual LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return overflowClipRect(location, fragment, relevancy);
-    }
+    virtual LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const;
     LayoutRect clipRect(const LayoutPoint& location, RenderFragmentContainer*) const;
     virtual bool hasControlClip() const
     {

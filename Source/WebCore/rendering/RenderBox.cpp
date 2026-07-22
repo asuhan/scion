@@ -2845,6 +2845,12 @@ LayoutRect RenderBox::overflowClipRect(const LayoutPoint& location, RenderFragme
     return clipRect;
 }
 
+LayoutRect RenderBox::overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const
+{
+    if (m_scion) { return m_scion->overflowClipRectForChildLayers(location, fragment, relevancy); }
+    return overflowClipRect(location, fragment, relevancy);
+}
+
 LayoutRect RenderBox::clipRect(const LayoutPoint& location, RenderFragmentContainer* fragment) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
