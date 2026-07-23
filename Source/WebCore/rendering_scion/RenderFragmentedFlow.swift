@@ -953,13 +953,15 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
   private class RenderFragmentContainerRange {
     init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      startFragment = nil
+      endFragment = nil
+      m_rangeInvalidated = false
     }
 
     init(_ start: RenderFragmentContainerWrapper, _ end: RenderFragmentContainerWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      startFragment = start
+      endFragment = end
+      m_rangeInvalidated = true
     }
 
     func rangeInvalidated() -> Bool { return m_rangeInvalidated }
