@@ -103,14 +103,7 @@ private class AbsoluteRectsIgnoringEmptyGeneratorContext: AbsoluteRectsGenerator
 }
 
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
-  override init(p: UnsafeMutableRawPointer?) {
-    if p != nil {
-      super.init(p: p!)
-    } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-  }
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
     super.init(type, element, style, .IsRenderInline, RenderObjectWrapper.TypeSpecificFlags())
