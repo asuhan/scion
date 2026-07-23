@@ -3367,6 +3367,12 @@ func RenderBoxScion_scrollsOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.scrollsOverflow()
 }
 
+@_cdecl("RenderBoxScion_scrollsOverflowX")
+func RenderBoxScion_scrollsOverflowX(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.scrollsOverflowX()
+}
+
 @_cdecl("RenderBoxScion_scrollsOverflowY")
 func RenderBoxScion_scrollsOverflowY(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

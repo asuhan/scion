@@ -737,6 +737,8 @@ public:
 
     bool scrollsOverflow() const;
 
+    bool scrollsOverflowX() const;
+
     bool scrollsOverflowY() const;
 
     LayoutBoxExtent scrollPaddingForViewportRect(const LayoutRect&);
