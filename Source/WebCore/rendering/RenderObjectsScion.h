@@ -215,6 +215,8 @@ public:
 
     bool isLegacyRenderSVGImage() const;
 
+    bool isLegacyRenderSVGForeignObject() const;
+
     bool isLegacyRenderSVGResourceContainer() const;
 
     bool isRenderOrLegacyRenderSVGRoot() const;

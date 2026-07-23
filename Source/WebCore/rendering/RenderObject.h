@@ -762,10 +762,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGImage;
     }
-    bool isLegacyRenderSVGForeignObject() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::LegacySVGForeignObject;
-    }
+    bool isLegacyRenderSVGForeignObject() const;
     bool isRenderSVGForeignObject() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGForeignObject;

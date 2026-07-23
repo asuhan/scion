@@ -3840,6 +3840,11 @@ bool RenderObject::isLegacyRenderSVGImage() const {
     return type() == Type::LegacySVGImage;
 }
 
+bool RenderObject::isLegacyRenderSVGForeignObject() const {
+    if (m_scion) { return m_scion->isLegacyRenderSVGForeignObject(); }
+    return type() == Type::LegacySVGForeignObject;
+}
+
 bool RenderObject::isLegacyRenderSVGResourceContainer() const {
     if (m_scion) { return m_scion->isLegacyRenderSVGResourceContainer(); }
     return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsResourceContainer);

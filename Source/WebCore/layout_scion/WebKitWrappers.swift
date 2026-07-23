@@ -1660,6 +1660,12 @@ func RenderObjectScion_isLegacyRenderSVGImage(_ objectRaw: UnsafeRawPointer) -> 
   return object.isLegacyRenderSVGImage()
 }
 
+@_cdecl("RenderObjectScion_isLegacyRenderSVGForeignObject")
+func RenderObjectScion_isLegacyRenderSVGForeignObject(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegacyRenderSVGForeignObject()
+}
+
 @_cdecl("RenderObjectScion_isLegacyRenderSVGResourceContainer")
 func RenderObjectScion_isLegacyRenderSVGResourceContainer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
