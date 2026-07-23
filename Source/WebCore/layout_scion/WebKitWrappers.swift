@@ -1612,6 +1612,12 @@ func RenderObjectScion_isLegacyRenderSVGContainer(_ objectRaw: UnsafeRawPointer)
   return object.isLegacyRenderSVGContainer()
 }
 
+@_cdecl("RenderObjectScion_isRenderSVGViewportContainer")
+func RenderObjectScion_isRenderSVGViewportContainer(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderSVGViewportContainer()
+}
+
 @_cdecl("RenderObjectScion_isRenderSVGGradientStop")
 func RenderObjectScion_isRenderSVGGradientStop(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

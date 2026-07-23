@@ -718,10 +718,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::LegacySVGTransformableContainer;
     }
-    bool isRenderSVGViewportContainer() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::SVGViewportContainer;
-    }
+    bool isRenderSVGViewportContainer() const;
     bool isLegacyRenderSVGViewportContainer() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::LegacySVGViewportContainer;

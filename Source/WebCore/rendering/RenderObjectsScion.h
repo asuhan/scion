@@ -199,6 +199,8 @@ public:
 
     bool isLegacyRenderSVGContainer() const;
 
+    bool isRenderSVGViewportContainer() const;
+
     bool isRenderSVGGradientStop() const;
 
     bool isLegacyRenderSVGHiddenContainer() const;

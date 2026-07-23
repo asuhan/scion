@@ -3797,6 +3797,11 @@ bool RenderObject::isLegacyRenderSVGContainer() const
     return isLegacyRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsContainer);
 }
 
+bool RenderObject::isRenderSVGViewportContainer() const {
+    if (m_scion) { return m_scion->isRenderSVGViewportContainer(); }
+    return type() == Type::SVGViewportContainer;
+}
+
 bool RenderObject::isRenderSVGGradientStop() const {
     if (m_scion) { return m_scion->isRenderSVGGradientStop(); }
     return type() == Type::SVGGradientStop;

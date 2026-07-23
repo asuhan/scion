@@ -173,6 +173,8 @@ extern "C" bool RenderObjectScion_isRenderSVGContainer(const void*);
 
 extern "C" bool RenderObjectScion_isLegacyRenderSVGContainer(const void*);
 
+extern "C" bool RenderObjectScion_isRenderSVGViewportContainer(const void*);
+
 extern "C" bool RenderObjectScion_isRenderSVGGradientStop(const void*);
 
 extern "C" bool RenderObjectScion_isLegacyRenderSVGHiddenContainer(const void*);
@@ -1157,6 +1159,8 @@ bool RenderObjectScion::isRenderSVGRoot() const { return RenderObjectScion_isRen
 bool RenderObjectScion::isRenderSVGContainer() const { return RenderObjectScion_isRenderSVGContainer(m_handle); }
 
 bool RenderObjectScion::isLegacyRenderSVGContainer() const { return RenderObjectScion_isLegacyRenderSVGContainer(m_handle); }
+
+bool RenderObjectScion::isRenderSVGViewportContainer() const { return RenderObjectScion_isRenderSVGViewportContainer(m_handle); }
 
 bool RenderObjectScion::isRenderSVGGradientStop() const { return RenderObjectScion_isRenderSVGGradientStop(m_handle); }
 
