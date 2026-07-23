@@ -34,8 +34,7 @@ typealias FragmentIntervalTree = IntervalTree<LayoutUnit, RenderFragmentContaine
 private func clamp(fragment: RenderFragmentContainerWrapper?, clampBox: RenderBoxWrapper?)
   -> RenderFragmentContainerWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return clampBox != nil ? clampBox!.clampToStartAndEndFragments(fragment: fragment) : fragment
 }
 
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
