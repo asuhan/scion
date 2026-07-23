@@ -526,7 +526,12 @@ class BlockFormattingContext: FormattingContext {
     let formattingGeometry = formattingGeometry()
     var ancestor = layoutBox
     while ancestor !== root {
-      let constraintsForAncestor = BlockFormattingContext.constraintsForAncestor()
+      let constraintsForAncestor = {
+        let containingBlock = BlockFormattingContext.containingBlock(layoutBox: ancestor)
+        return CPtrToInt(containingBlock.p!) == CPtrToInt(root.p!)
+          ? constraintsPair.formattingContextRoot
+          : formattingGeometry.constraintsForInFlowContent(elementBox: containingBlock)
+      }()
 
       let computedVerticalMargin = formattingGeometry.computedVerticalMargin(
         layoutBox: ancestor, horizontalConstraints: constraintsForAncestor.horizontal)
@@ -565,11 +570,6 @@ class BlockFormattingContext: FormattingContext {
       #endif  // ASSERT_ENABLED
       ancestor = FormattingContext.containingBlock(layoutBox: ancestor)
     }
-  }
-
-  static func constraintsForAncestor() -> ConstraintsForInFlowContent {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   override func computedIntrinsicWidthConstraints() -> IntrinsicWidthConstraints {
