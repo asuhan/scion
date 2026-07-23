@@ -595,6 +595,11 @@ extern "C" WEBCORE_EXPORT void* Document_highlightRegistryIfExists(void* raw)
     return static_cast<WebCore::Document*>(raw)->highlightRegistryIfExists();
 }
 
+extern "C" WEBCORE_EXPORT void* Document_fragmentHighlightRegistryIfExists(void* raw)
+{
+    return static_cast<WebCore::Document*>(raw)->fragmentHighlightRegistryIfExists();
+}
+
 extern "C" WEBCORE_EXPORT bool Document_activeDOMObjectsAreSuspended(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->activeDOMObjectsAreSuspended();

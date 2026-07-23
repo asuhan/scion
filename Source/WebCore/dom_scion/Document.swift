@@ -245,8 +245,8 @@ class Document: TreeScopeWrapper {
   }
 
   func fragmentHighlightRegistryIfExists() -> HighlightRegistryWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Document_fragmentHighlightRegistryIfExists(p) else { return nil }
+    return HighlightRegistryWrapper(raw)
   }
 
   func editor() -> EditorWrapper {
