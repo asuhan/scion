@@ -227,8 +227,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func visualOverflowRectForBox(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return ensureOverflowForBox(box, true)!.visualOverflowRect()
   }
 
   // FIXME: This doesn't work for writing modes.
