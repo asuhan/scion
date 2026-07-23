@@ -747,8 +747,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func layerNextSibling(_ parentLayer: RenderLayerWrapper) -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return layerNextSiblingRespectingTopLayer(self, parentLayer)
   }
 
   private func removeLayers() {
