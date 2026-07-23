@@ -2125,7 +2125,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   func containsFloat(renderer: RenderBoxWrapper) -> Bool {
     assert(isNativeImpl())
-    assert(!renderer.isNativeImpl())
     return floatingObjects != nil && !floatingObjects!.set().contains(renderer)
   }
 
