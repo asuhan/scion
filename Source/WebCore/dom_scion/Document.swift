@@ -240,8 +240,8 @@ class Document: TreeScopeWrapper {
   func hasHighlight() -> Bool { return wk_interop.Document_hasHighlight(p) }
 
   func highlightRegistryIfExists() -> HighlightRegistryWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Document_highlightRegistryIfExists(p) else { return nil }
+    return HighlightRegistryWrapper(raw)
   }
 
   func fragmentHighlightRegistryIfExists() -> HighlightRegistryWrapper? {

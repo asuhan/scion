@@ -1698,6 +1698,7 @@ bool Document_hasViewTransitionPseudoElementTree(const void*);
 bool Document_renderingIsSuppressedForViewTransition(const void*);
 bool Document_hasTopLayerElement(const void*);
 bool Document_hasHighlight(const void*);
+void* Document_highlightRegistryIfExists(void*);
 bool Document_activeDOMObjectsAreSuspended(const void*);
 bool Settings_acceleratedCompositingEnabled(const void*);
 bool Settings_acceleratedCompositingForFixedPositionEnabled(const void*);

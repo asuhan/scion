@@ -24,6 +24,8 @@
  */
 
 class HighlightRegistryWrapper {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   func get(name: AtomStringWrapper) -> HighlightWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -33,4 +35,6 @@ class HighlightRegistryWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
