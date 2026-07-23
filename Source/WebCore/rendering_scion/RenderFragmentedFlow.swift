@@ -439,8 +439,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func hasCachedFragmentRangeForBox(box: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return fragmentRangeMap.contains(box)
   }
 
   // Check if the object should be painted in this fragment and if the fragment is part of this flow thread.
