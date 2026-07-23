@@ -160,6 +160,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_fragmentedFlowState(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->fragmentedFlowState() == WebCore::RenderObject::FragmentedFlowState::InsideFlow;
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isLegacyRenderSVGHiddenContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isLegacyRenderSVGHiddenContainer();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderOrLegacyRenderSVGRoot(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderOrLegacyRenderSVGRoot();

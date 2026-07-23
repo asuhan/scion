@@ -759,6 +759,7 @@ bool RenderObject_isHTMLMarquee(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
 bool RenderObject_fragmentedFlowState(const void*);
+bool RenderObject_isLegacyRenderSVGHiddenContainer(const void*);
 bool RenderObject_isRenderOrLegacyRenderSVGRoot(const void*);
 bool RenderObject_isSVGRenderer(const void*);
 void RenderObject_invalidateCachedBoundaries(void*);

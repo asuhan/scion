@@ -1217,7 +1217,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isLegacyRenderSVGHiddenContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isLegacyRenderSVGHiddenContainer(id()) }
     return type() == .LegacySVGHiddenContainer || isLegacyRenderSVGResourceContainer()
   }
 
