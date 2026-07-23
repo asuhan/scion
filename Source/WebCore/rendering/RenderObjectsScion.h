@@ -26,6 +26,7 @@
 #pragma once
 
 #include "LayoutUnit.h"
+#include "RenderBlock.h"
 #include "RenderBox.h"
 #include "RenderObject.h"
 #include "RenderStyle.h"
@@ -796,6 +797,8 @@ public:
     }
 
     void insertPositionedObject(RenderBox&);
+
+    void removePositionedObjects(const RenderBlock*, WebCore::ContainingBlockState = WebCore::SameContainingBlock);
 
     void addPercentHeightDescendant(RenderBox&);
 

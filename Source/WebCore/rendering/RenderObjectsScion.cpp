@@ -782,6 +782,8 @@ extern "C" const void* RenderBoxScion_pushMappingToContainer(const void*, const 
 
 extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
 
+extern "C" void RenderBlockScion_removePositionedObjects(void*, void*, bool);
+
 extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
 
 extern "C" bool RenderBlockScion_hasMarginBeforeQuirk(const void*);
@@ -2359,6 +2361,11 @@ void RenderBlockScion::insertPositionedObject(RenderBox& positioned)
 {
     assert(!positioned.scion());
     RenderBlockScion_insertPositionedObject(m_handle, &positioned);
+}
+
+void RenderBlockScion::removePositionedObjects(const RenderBlock* newContainingBlockCandidate, WebCore::ContainingBlockState containingBlockState)
+{
+    RenderBlockScion_removePositionedObjects(m_handle, const_cast<RenderBlock*>(newContainingBlockCandidate), containingBlockState == WebCore::SameContainingBlock);
 }
 
 void RenderBlockScion::addPercentHeightDescendant(RenderBox& descendant)

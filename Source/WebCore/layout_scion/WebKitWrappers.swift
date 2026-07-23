@@ -3701,6 +3701,23 @@ func RenderBlockScion_insertPositionedObject(
   block.insertPositionedObject(positioned: positioned)
 }
 
+@_cdecl("RenderBlockScion_removePositionedObjects")
+func RenderBlockScion_removePositionedObjects(
+  _ blockRaw: UnsafeMutableRawPointer, _ newContainingBlockCandidateRaw: UnsafeMutableRawPointer?,
+  _ sameContainingBlock: Bool
+) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let newContainingBlockCandidate =
+    newContainingBlockCandidateRaw != nil
+    ? (createRenderObjectWrapperOrNative(newContainingBlockCandidateRaw!) as! RenderBlockWrapper)
+    : nil
+  let containingBlockState: ContainingBlockState =
+    sameContainingBlock ? .SameContainingBlock : .NewContainingBlock
+  block.removePositionedObjects(
+    newContainingBlockCandidate: newContainingBlockCandidate,
+    containingBlockState: containingBlockState)
+}
+
 @_cdecl("RenderBlockScion_addPercentHeightDescendant")
 func RenderBlockScion_addPercentHeightDescendant(
   _ blockRaw: UnsafeMutableRawPointer, _ descendantRaw: UnsafeMutableRawPointer

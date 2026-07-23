@@ -1875,7 +1875,10 @@ void RenderBlock::removePositionedObject(const RenderBox& rendererToRemove)
 
 void RenderBlock::removePositionedObjects(const RenderBlock* newContainingBlockCandidate, ContainingBlockState containingBlockState)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->removePositionedObjects(newContainingBlockCandidate, containingBlockState);
+        return;
+    }
     auto* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;
