@@ -61,6 +61,24 @@ class FormattingGeometry {
     self.formattingContext = formattingContext
   }
 
+  func outOfFlowVerticalGeometry(
+    _ layoutBox: BoxWrapper, _ horizontalConstraints: HorizontalConstraints,
+    _ verticalConstraints: VerticalConstraints, _ overriddenVerticalValues: OverriddenVerticalValues
+  ) -> VerticalGeometry {
+    assert(layoutBox.isOutOfFlowPositioned())
+
+    if !layoutBox.isReplacedBox() {
+      return outOfFlowNonReplacedVerticalGeometry(
+        layoutBox: layoutBox as! ElementBoxWrapper, horizontalConstraints: horizontalConstraints,
+        verticalConstraints: verticalConstraints,
+        overriddenVerticalValues: overriddenVerticalValues)
+    }
+    return outOfFlowReplacedVerticalGeometry(
+      replacedBox: layoutBox as! ElementBoxWrapper, horizontalConstraints: horizontalConstraints,
+      verticalConstraints: verticalConstraints,
+      overriddenVerticalValues: overriddenVerticalValues)
+  }
+
   func floatingContentHeightAndMargin(
     layoutBox: BoxWrapper, horizontalConstraints: HorizontalConstraints,
     overriddenVerticalValues: OverriddenVerticalValues

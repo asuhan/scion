@@ -825,13 +825,18 @@ class BlockFormattingContext: FormattingContext {
     layoutBox: BoxWrapper, constraints: ConstraintsForOutOfFlowContent
   ) {
     assert(layoutBox.isOutOfFlowPositioned())
+    let compute = { [self] usedHeight in
+      return formattingGeometry().outOfFlowVerticalGeometry(
+        layoutBox, constraints.horizontal, constraints.vertical,
+        OverriddenVerticalValues(height: usedHeight))
+    }
 
     let containingBlockHeight = constraints.vertical.logicalHeight
-    var verticalGeometry = computeOutOfFlowVerticalGeometryHelper(usedHeight: LayoutUnit())
+    var verticalGeometry = compute(LayoutUnit())
     if let maxHeight = formattingGeometry().computedMaxHeight(
       layoutBox: layoutBox, containingBlockHeight: containingBlockHeight)
     {
-      let maxVerticalGeometry = computeOutOfFlowVerticalGeometryHelper(usedHeight: maxHeight)
+      let maxVerticalGeometry = compute(maxHeight)
       if verticalGeometry.contentHeightAndMargin.contentHeight
         > maxVerticalGeometry.contentHeightAndMargin.contentHeight
       {
@@ -842,7 +847,7 @@ class BlockFormattingContext: FormattingContext {
     if let minHeight = formattingGeometry().computedMinHeight(
       layoutBox: layoutBox, containingBlockHeight: containingBlockHeight)
     {
-      let minVerticalGeometry = computeOutOfFlowVerticalGeometryHelper(usedHeight: minHeight)
+      let minVerticalGeometry = compute(minHeight)
       if verticalGeometry.contentHeightAndMargin.contentHeight
         < minVerticalGeometry.contentHeightAndMargin.contentHeight
       {
@@ -858,11 +863,6 @@ class BlockFormattingContext: FormattingContext {
     boxGeometry.setVerticalMargin(
       margin: BoxGeometry.VerticalEdges(
         before: nonCollapsedVerticalMargin.before, after: nonCollapsedVerticalMargin.after))
-  }
-
-  func computeOutOfFlowVerticalGeometryHelper(usedHeight: LayoutUnit?) -> VerticalGeometry {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   func computeOutOfFlowHorizontalGeometry(
