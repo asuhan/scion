@@ -3699,8 +3699,37 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if floatingObjects == nil {
+      return false
+    }
+
+    var adjustedLocation = accumulatedOffset
+    if let renderView = self as? RenderViewWrapper {
+      adjustedLocation += toLayoutSize(
+        point: LayoutPointWrapper(point: renderView.frameView().scrollPosition()))
+    }
+
+    let floatingObjectSet = floatingObjects!.set()
+    let begin = floatingObjectSet.begin()
+    let it = floatingObjectSet.end()
+    while it != begin {
+      --it
+      let floatingObject = *it
+      let renderer = floatingObject.renderer!
+      if floatingObject.shouldPaint() {
+        let childPoint = flipFloatForWritingModeForChild(
+          child: floatingObject,
+          point: adjustedLocation + floatingObject.translationOffsetToAncestor())
+        if renderer.hitTest(request, &result, locationInContainer, childPoint) {
+          updateHitTestResult(
+            result: &result, point: locationInContainer.point() - toLayoutSize(point: childPoint))
+          return true
+        }
+      }
+    }
+
+    return false
   }
 
   override func hitTestInlineChildren(
