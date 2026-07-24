@@ -1621,8 +1621,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setBackdropRenderer(renderer: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    ensureRareData().backdropRenderer = WeakPtr<RenderBlockFlowWrapper>(renderer)
   }
 
   func effectiveOverflowX() -> Overflow {
