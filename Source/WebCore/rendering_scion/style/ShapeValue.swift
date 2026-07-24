@@ -53,10 +53,8 @@ class ShapeValue {
     return CSSBoxType(rawValue: wk_interop.ShapeValue_effectiveCSSBox(p))!
   }
 
-  func image() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  // TODO(asuhan): remove this
+  func image() -> StyleImage? { return protectedImage() }
 
   func protectedImage() -> StyleImage? {
     assert(!isNativeImpl())
