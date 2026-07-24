@@ -44,10 +44,7 @@ class PathOperation: Equatable {
   let type: Type_
   let referenceBox: CSSBoxType
 
-  static func == (lhs: PathOperation, rhs: PathOperation) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func == (lhs: PathOperation, rhs: PathOperation) -> Bool { fatalError("Not reached") }
 }
 
 final class ReferencePathOperation: PathOperation {
