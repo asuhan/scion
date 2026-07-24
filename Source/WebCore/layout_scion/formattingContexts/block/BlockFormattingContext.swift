@@ -869,13 +869,18 @@ class BlockFormattingContext: FormattingContext {
     layoutBox: BoxWrapper, constraints: ConstraintsForOutOfFlowContent
   ) {
     assert(layoutBox.isOutOfFlowPositioned())
+    let compute = { [self] usedWidth in
+      return formattingGeometry().outOfFlowHorizontalGeometry(
+        layoutBox, constraints.horizontal, constraints.vertical,
+        OverriddenHorizontalValues(width: usedWidth, margin: nil))
+    }
 
     let containingBlockWidth = constraints.horizontal.logicalWidth
-    var horizontalGeometry = computeOutOfFlowHorizontalGeometryHelper(usedWidth: LayoutUnit())
+    var horizontalGeometry = compute(LayoutUnit())
     if let maxWidth = formattingGeometry().computedMaxWidth(
       layoutBox: layoutBox, containingBlockWidth: containingBlockWidth)
     {
-      let maxHorizontalGeometry = computeOutOfFlowHorizontalGeometryHelper(usedWidth: maxWidth)
+      let maxHorizontalGeometry = compute(maxWidth)
       if horizontalGeometry.contentWidthAndMargin.contentWidth
         > maxHorizontalGeometry.contentWidthAndMargin.contentWidth
       {
@@ -886,7 +891,7 @@ class BlockFormattingContext: FormattingContext {
     if let minWidth = formattingGeometry().computedMinWidth(
       layoutBox: layoutBox, containingBlockWidth: containingBlockWidth)
     {
-      let minHorizontalGeometry = computeOutOfFlowHorizontalGeometryHelper(usedWidth: minWidth)
+      let minHorizontalGeometry = compute(minWidth)
       if horizontalGeometry.contentWidthAndMargin.contentWidth
         < minHorizontalGeometry.contentWidthAndMargin.contentWidth
       {
@@ -902,11 +907,6 @@ class BlockFormattingContext: FormattingContext {
     boxGeometry.setHorizontalMargin(
       margin: BoxGeometry.HorizontalEdges(
         start: usedHorizontalMargin.start, end: usedHorizontalMargin.end))
-  }
-
-  func computeOutOfFlowHorizontalGeometryHelper(usedWidth: LayoutUnit?) -> HorizontalGeometry {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   func marginCollapse() -> BlockMarginCollapse {
