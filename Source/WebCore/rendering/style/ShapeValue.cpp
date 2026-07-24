@@ -35,6 +35,11 @@ extern "C" WEBCORE_EXPORT void* ShapeValue_image(const void* p)
     return static_cast<const WebCore::ShapeValue*>(p)->image();
 }
 
+extern "C" WEBCORE_EXPORT bool ShapeValue_isImageValid(const void* p)
+{
+    return static_cast<const WebCore::ShapeValue*>(p)->isImageValid();
+}
+
 namespace WebCore {
 
 bool ShapeValue::isImageValid() const

@@ -1786,6 +1786,7 @@ bool FillLayer_hasOpaqueImage(const void*, const void*);
 bool FillLayer_clipOccludesNextLayers(const void*, bool);
 void* NinePieceImage_image(const void*);
 void* ShapeValue_image(const void*);
+bool ShapeValue_isImageValid(const void*);
 void* Frame_page(const void*);
 void* Frame_settings(void*);
 bool Frame_isMainFrame(const void*);

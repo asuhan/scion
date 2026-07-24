@@ -68,8 +68,8 @@ class ShapeValue {
   }
 
   func isImageValid() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return wk_interop.ShapeValue_isImageValid(p)
   }
 
   private func isNativeImpl() -> Bool { return false }
