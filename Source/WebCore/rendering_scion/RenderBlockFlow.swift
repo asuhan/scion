@@ -3737,8 +3737,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(childrenInline())
+
+    if inlineLayout() != nil {
+      return inlineLayout()!.hitTest(
+        request: request, result: &result, locationInContainer: locationInContainer,
+        accumulatedOffset: accumulatedOffset, hitTestAction: hitTestAction, layerRenderer: nil)
+    }
+
+    return svgTextLayout()?.lineBoxes.hitTest(
+      self, request, &result, locationInContainer, accumulatedOffset, hitTestAction) ?? false
   }
 
   override func positionForPointWithInlineChildren(

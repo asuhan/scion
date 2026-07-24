@@ -720,7 +720,7 @@ class LayoutIntegration {
     func hitTest(
       request: HitTestRequestWrapper, result: inout HitTestResultWrapper,
       locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,
-      hitTestAction: HitTestAction, layerRenderer: RenderInlineWrapper
+      hitTestAction: HitTestAction, layerRenderer: RenderInlineWrapper? = nil
     ) -> Bool {
       if hitTestAction != .HitTestForeground {
         return false
