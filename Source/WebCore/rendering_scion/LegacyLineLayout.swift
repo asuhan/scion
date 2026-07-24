@@ -23,10 +23,7 @@
  */
 
 class LegacyLineLayout {
-  init(flow: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(flow: RenderBlockFlowWrapper) { m_flow = flow }
 
   func legacyRootBox() -> LegacyRootInlineBox? {
     return lineBoxes.firstLegacyLineBox() as! LegacyRootInlineBox?
@@ -46,5 +43,6 @@ class LegacyLineLayout {
     fatalError("Not implemented")
   }
 
-  let lineBoxes: RenderLineBoxList
+  private let m_flow: RenderBlockFlowWrapper
+  let lineBoxes = RenderLineBoxList()
 }
