@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class ScrollbarTheme {
   func scrollbarThickness(
     scrollbarWidth: ScrollbarWidth = .Auto, expansionState: ScrollbarExpansionState = .Expanded
@@ -55,8 +57,9 @@ class ScrollbarTheme {
     fatalError("Not implemented")
   }
 
-  static func theme() -> ScrollbarTheme {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func theme() -> ScrollbarTheme { return ScrollbarTheme(wk_interop.ScrollbarTheme_theme()) }
+
+  private init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
+  private let p: UnsafeMutableRawPointer
 }

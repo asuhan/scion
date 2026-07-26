@@ -32,6 +32,11 @@
 #include <wtf/NeverDestroyed.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* ScrollbarTheme_theme()
+{
+    return &WebCore::ScrollbarTheme::theme();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ScrollbarTheme);
