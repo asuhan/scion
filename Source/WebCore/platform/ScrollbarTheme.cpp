@@ -32,6 +32,11 @@
 #include <wtf/NeverDestroyed.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool ScrollbarTheme_usesOverlayScrollbars(const void* p)
+{
+    return static_cast<const WebCore::ScrollbarTheme*>(p)->usesOverlayScrollbars();
+}
+
 extern "C" WEBCORE_EXPORT void* ScrollbarTheme_theme()
 {
     return &WebCore::ScrollbarTheme::theme();

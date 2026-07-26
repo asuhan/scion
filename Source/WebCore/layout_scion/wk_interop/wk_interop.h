@@ -2121,6 +2121,7 @@ struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, str
 int32_t RenderTheme_baselinePosition(const void*, const void*);
 void* Path_create();
 void Path_destroy(const void*);
+bool ScrollbarTheme_usesOverlayScrollbars(const void*);
 void* ScrollbarTheme_theme();
 void TextStream_writeChars(void*, const char*);
 void TextStream_writeInt(void*, int32_t);

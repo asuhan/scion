@@ -40,10 +40,7 @@ class ScrollbarTheme {
     fatalError("Not implemented")
   }
 
-  func usesOverlayScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func usesOverlayScrollbars() -> Bool { return wk_interop.ScrollbarTheme_usesOverlayScrollbars(p) }
 
   func invalidatePart(_ scrollbar: Scrollbar, _ part: ScrollbarPart) {
     // TODO(asuhan): implement this
