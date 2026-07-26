@@ -2490,6 +2490,12 @@ bool RenderElement::visibleToHitTesting(const std::optional<HitTestRequest>& req
         && ((request && request->ignoreCSSPointerEventsProperty()) || usedPointerEvents() != PointerEvents::None);
 }
 
+bool RenderElement::hasBackground() const
+{
+    if (m_scion) { return m_scion->hasBackground(); }
+    return style().hasBackground();
+}
+
 bool RenderElement::hasMask() const
 {
     if (m_scion) { return m_scion->hasMask(); }

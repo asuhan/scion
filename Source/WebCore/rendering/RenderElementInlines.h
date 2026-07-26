@@ -34,11 +34,6 @@ inline Overflow RenderElement::effectiveOverflowInlineDirection() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY();
 }
-inline bool RenderElement::hasBackground() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().hasBackground();
-}
 inline bool RenderElement::hasHiddenBackface() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

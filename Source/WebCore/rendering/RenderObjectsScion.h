@@ -501,6 +501,8 @@ public:
 
     bool visibleToHitTesting(const std::optional<HitTestRequest>& = std::nullopt) const;
 
+    bool hasBackground() const;
+
     bool hasMask() const;
 
     bool hasClip() const;

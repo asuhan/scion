@@ -560,6 +560,8 @@ extern "C" float RenderElementScion_opacity(const void*);
 
 extern "C" bool RenderElementScion_visibleToHitTesting(const void*, const OptionalHitTestRequestRaw);
 
+extern "C" bool RenderElementScion_hasBackground(const void*);
+
 extern "C" bool RenderElementScion_hasMask(const void*);
 
 extern "C" bool RenderElementScion_hasClip(const void*);
@@ -1744,6 +1746,11 @@ bool RenderElementScion::visibleToHitTesting(const std::optional<HitTestRequest>
                 ? HitTestRequestRaw { request->type().toRaw(), request->userTriggered() }
                 : HitTestRequestRaw {},
             static_cast<bool>(request) });
+}
+
+bool RenderElementScion::hasBackground() const
+{
+    return RenderElementScion_hasBackground(m_handle);
 }
 
 bool RenderElementScion::hasMask() const

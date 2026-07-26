@@ -2790,6 +2790,12 @@ func RenderElementScion_visibleToHitTesting(
   return element.visibleToHitTesting(request: request)
 }
 
+@_cdecl("RenderElementScion_hasBackground")
+func RenderElementScion_hasBackground(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasBackground()
+}
+
 @_cdecl("RenderElementScion_hasMask")
 func RenderElementScion_hasMask(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
