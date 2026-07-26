@@ -2168,7 +2168,7 @@ bool RenderText::containsCaretOffset(unsigned offset) const
 
 bool RenderText::hasRenderedText() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hasRenderedText(); }
     for (auto& box : InlineIterator::textBoxesFor(*this)) {
         if (box.length())
             return true;

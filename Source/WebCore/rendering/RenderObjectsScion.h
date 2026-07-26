@@ -578,6 +578,8 @@ public:
 
     void setTextWithOffset(const String&, unsigned offset, bool force = false);
 
+    bool hasRenderedText() const;
+
     bool needsVisualReordering() const;
 
     bool canUseSimpleFontCodePath() const;

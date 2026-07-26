@@ -2472,6 +2472,12 @@ func RenderTextScion_setTextWithOffset(
   renderText.setTextWithOffset(newText: newText, offset: offset, force: force)
 }
 
+@_cdecl("RenderTextScion_hasRenderedText")
+func RenderTextScion_hasRenderedText(_ renderTextRaw: UnsafeRawPointer) -> Bool {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.hasRenderedText()
+}
+
 @_cdecl("RenderTextScion_needsVisualReordering")
 func RenderTextScion_needsVisualReordering(_ renderTextRaw: UnsafeRawPointer) -> Bool {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
