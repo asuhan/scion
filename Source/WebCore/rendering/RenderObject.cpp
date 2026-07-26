@@ -2374,6 +2374,12 @@ bool RenderObject::hasLayer() const {
     return m_stateBitfields.hasFlag(StateFlag::HasLayer);
 }
 
+bool RenderObject::hasVisibleBoxDecorations() const
+{
+    if (m_scion) { return m_scion->hasVisibleBoxDecorations(); }
+    return m_stateBitfields.boxDecorationState() != BoxDecorationState::None;
+}
+
 bool RenderObject::isSelectionBorder() const
 {
     if (m_scion) { return m_scion->isSelectionBorder(); }

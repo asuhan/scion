@@ -255,6 +255,8 @@ extern "C" bool RenderObjectScion_isExcludedAndPlacedInBorder(const void*);
 
 extern "C" bool RenderObjectScion_hasLayer(const void*);
 
+extern "C" bool RenderObjectScion_hasVisibleBoxDecorations(const void*);
+
 extern "C" bool RenderObjectScion_needsLayout(const void*);
 
 extern "C" bool RenderObjectScion_selfNeedsLayout(const void*);
@@ -1251,6 +1253,8 @@ bool RenderObjectScion::isExcludedFromNormalLayout() const { return RenderObject
 bool RenderObjectScion::isExcludedAndPlacedInBorder() const { return RenderObjectScion_isExcludedAndPlacedInBorder(m_handle); }
 
 bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
+
+bool RenderObjectScion::hasVisibleBoxDecorations() const { return RenderObjectScion_hasVisibleBoxDecorations(m_handle); }
 
 bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
 

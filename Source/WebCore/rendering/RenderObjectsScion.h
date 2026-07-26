@@ -282,6 +282,8 @@ public:
 
     bool hasLayer() const;
 
+    bool hasVisibleBoxDecorations() const;
+
     bool needsLayout() const;
 
     bool selfNeedsLayout() const;

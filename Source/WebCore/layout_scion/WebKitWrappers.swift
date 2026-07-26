@@ -1858,6 +1858,12 @@ func RenderObjectScion_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.hasLayer()
 }
 
+@_cdecl("RenderObjectScion_hasVisibleBoxDecorations")
+func RenderObjectScion_hasVisibleBoxDecorations(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.hasVisibleBoxDecorations()
+}
+
 @_cdecl("RenderObjectScion_needsLayout")
 func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

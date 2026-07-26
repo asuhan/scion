@@ -989,11 +989,7 @@ public:
         IsKnownToBeObscured,
         MayBeVisible,
     };
-    bool hasVisibleBoxDecorations() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.boxDecorationState() != BoxDecorationState::None;
-    }
+    bool hasVisibleBoxDecorations() const;
     bool backgroundIsKnownToBeObscured(const LayoutPoint& paintOffset);
 
     WEBCORE_EXPORT bool needsLayout() const;
