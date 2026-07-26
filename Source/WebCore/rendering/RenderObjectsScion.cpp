@@ -65,6 +65,8 @@ extern "C" void* RenderObjectScion_firstNonAnonymousAncestor(const void*);
 
 extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
+extern "C" bool RenderObjectScion_useDarkAppearance(const void*);
+
 extern "C" void* RenderObjectScion_enclosingFragmentedFlow(const void*);
 
 extern "C" bool RenderObjectScion_canHaveGeneratedChildren(const void*);
@@ -1060,6 +1062,8 @@ RenderObject* RenderObjectScion::nextInPreOrderAfterChildren() const { return st
 RenderElement* RenderObjectScion::firstNonAnonymousAncestor() const { return static_cast<RenderElement*>(RenderObjectScion_firstNonAnonymousAncestor(m_handle)); }
 
 RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
+
+bool RenderObjectScion::useDarkAppearance() const { return RenderObjectScion_useDarkAppearance(m_handle); }
 
 RenderFragmentedFlow* RenderObjectScion::enclosingFragmentedFlow() const { return static_cast<RenderFragmentedFlow*>(RenderObjectScion_enclosingFragmentedFlow(m_handle)); }
 

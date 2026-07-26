@@ -2714,7 +2714,7 @@ CursorDirective RenderObject::getCursor(const LayoutPoint&, Cursor&) const
 
 bool RenderObject::useDarkAppearance() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->useDarkAppearance(); }
     return document().useDarkAppearance(&style());
 }
 

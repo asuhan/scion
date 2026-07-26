@@ -1285,6 +1285,12 @@ func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMu
   return layer.layerId()
 }
 
+@_cdecl("RenderObjectScion_useDarkAppearance")
+func RenderObjectScion_useDarkAppearance(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.useDarkAppearance()
+}
+
 @_cdecl("RenderObjectScion_enclosingFragmentedFlow")
 func RenderObjectScion_enclosingFragmentedFlow(_ objectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

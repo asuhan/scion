@@ -92,6 +92,8 @@ public:
 
     RenderLayer* enclosingLayer() const;
 
+    bool useDarkAppearance() const;
+
     RenderFragmentedFlow* enclosingFragmentedFlow() const;
 
     bool canHaveGeneratedChildren() const;
