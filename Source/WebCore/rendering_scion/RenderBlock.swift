@@ -2263,10 +2263,49 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
-  override func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
-    assert(!isNativeImpl())
-    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
-    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+  override func inlineBlockBaseline(_ lineDirection: LineDirectionMode) -> LayoutUnit? {
+    if !isNativeImpl() {
+      let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), lineDirection == .VerticalLine)
+      return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+    }
+    if shouldApplyLayoutContainment() {
+      return synthesizedBaseline(
+        box: self, parentStyle: parentStyle()!, direction: lineDirection, edge: .BorderBox)
+        + (lineDirection == .HorizontalLine ? marginBottom() : marginLeft())
+    }
+
+    if isWritingModeRoot() {
+      return nil
+    }
+
+    var haveNormalFlowChild = false
+    var box = lastChildBox()
+    while box != nil {
+      if box!.isFloatingOrOutOfFlowPositioned() {
+        box = box!.previousSiblingBox()
+        continue
+      }
+      haveNormalFlowChild = true
+      if let result = box!.inlineBlockBaseline(lineDirection) {
+        return LayoutUnit(value: (box!.logicalTop() + result).toInt())  // Translate to our coordinate space.
+      }
+      box = box!.previousSiblingBox()
+    }
+
+    if !haveNormalFlowChild && hasLineIfEmpty() {
+      let fontMetrics = firstLineStyle().metricsOfPrimaryFont()
+      return LayoutUnit(
+        value: (Int32(fontMetrics.intAscent())
+          + (lineHeight(
+            firstLine: true, direction: lineDirection,
+            linePositionMode: .PositionOfInteriorLineBoxes)
+            - fontMetrics.intHeight()) / 2
+          + (lineDirection == .HorizontalLine
+            ? borderTop() + paddingTop() : borderRight() + paddingRight()))
+          .toInt())
+    }
+
+    return nil
   }
 
   // Delay updating scrollbars until endAndCommitUpdateScrollInfoAfterLayoutTransaction() is called. These functions are used
