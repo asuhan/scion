@@ -3104,6 +3104,12 @@ func RenderBoxScion_frameRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   return convertLayoutRect(box.frameRect())
 }
 
+@_cdecl("RenderBoxScion_borderBoxRect")
+func RenderBoxScion_borderBoxRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return convertLayoutRect(box.borderBoxRect())
+}
+
 @_cdecl("RenderBoxScion_computedCSSContentBoxRect")
 func RenderBoxScion_computedCSSContentBoxRect(_ boxRaw: UnsafeRawPointer) -> LayoutRectRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

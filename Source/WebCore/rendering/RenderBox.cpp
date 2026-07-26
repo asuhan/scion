@@ -1236,7 +1236,7 @@ LayoutRect RenderBox::frameRect() const
 
 LayoutRect RenderBox::borderBoxRect() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderBoxRect(); }
     return LayoutRect(LayoutPoint(), size());
 }
 
