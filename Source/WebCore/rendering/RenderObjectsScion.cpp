@@ -546,6 +546,8 @@ extern "C" void RenderElementScion_layoutIfNeeded(void*);
 
 extern "C" bool RenderElementScion_repaintAfterLayoutIfNeeded(void*, void*, bool, bool, RepaintRectsRaw, RepaintRectsRaw);
 
+extern "C" bool RenderElementScion_createsGroup(const void*);
+
 extern "C" bool RenderElementScion_isTransparent(const void*);
 
 extern "C" float RenderElementScion_opacity(const void*);
@@ -1706,6 +1708,11 @@ bool RenderElementScion::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const Re
         requiresFullRepaint == RequiresFullRepaint::Yes,
         convertRepaintRects(oldRects),
         convertRepaintRects(newRects));
+}
+
+bool RenderElementScion::createsGroup() const
+{
+    return RenderElementScion_createsGroup(m_handle);
 }
 
 bool RenderElementScion::isTransparent() const

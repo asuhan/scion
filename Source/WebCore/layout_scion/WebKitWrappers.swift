@@ -2745,6 +2745,12 @@ func RenderElementScion_repaintAfterLayoutIfNeeded(
     repaintContainer, requiresFullRepaint ? .Yes : .No, oldRects: oldRects, newRects: newRects)
 }
 
+@_cdecl("RenderElementScion_createsGroup")
+func RenderElementScion_createsGroup(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.createsGroup()
+}
+
 @_cdecl("RenderElementScion_isTransparent")
 func RenderElementScion_isTransparent(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

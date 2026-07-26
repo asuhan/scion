@@ -489,6 +489,8 @@ public:
 
     bool repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&&, RequiresFullRepaint, const RenderObject::RepaintRects&, const RenderObject::RepaintRects&);
 
+    bool createsGroup() const;
+
     bool isTransparent() const;
 
     float opacity() const;

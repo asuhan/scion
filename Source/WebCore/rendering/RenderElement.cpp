@@ -1872,6 +1872,12 @@ bool RenderElement::isInsideEntirelyHiddenLayer() const
     return style().usedVisibility() != Visibility::Visible && !enclosingLayer()->hasVisibleContent();
 }
 
+bool RenderElement::createsGroup() const
+{
+    if (m_scion) { return m_scion->createsGroup(); }
+    return createsGroupForStyle(style());
+}
+
 void RenderElement::registerForVisibleInViewportCallback()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

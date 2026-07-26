@@ -195,11 +195,7 @@ public:
 
     // Returns true if this renderer requires a new stacking context.
     static bool createsGroupForStyle(const RenderStyle&);
-    bool createsGroup() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return createsGroupForStyle(style());
-    }
+    bool createsGroup() const;
 
     bool isTransparent() const; // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
     float opacity() const;
