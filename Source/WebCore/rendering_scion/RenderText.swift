@@ -779,8 +779,13 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func hasRenderedText() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    for box in InlineIterator.textBoxesFor(self) {
+      if box.length() != 0 {
+        return true
+      }
+    }
+    return false
   }
 
   func needsVisualReordering() -> Bool {
