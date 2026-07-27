@@ -771,13 +771,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func marginAndBorderAndPaddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginBefore() + borderBefore() + paddingBefore()
   }
 
   func marginAndBorderAndPaddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginAfter() + borderAfter() + paddingAfter()
   }
 
   func verticalBorderAndPaddingExtent() -> LayoutUnit {
