@@ -30,6 +30,8 @@ namespace WebCore {
 class Position;
 class RenderFragmentContainer;
 
+class RenderInlineScion;
+
 class RenderInline : public RenderBoxModelObject {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderInline);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderInline);
@@ -37,6 +39,8 @@ public:
     RenderInline(Type, Element&, RenderStyle&&);
     RenderInline(Type, Document&, RenderStyle&&);
     virtual ~RenderInline();
+
+    void setScionHandle(void* handle);
 
     LayoutUnit marginLeft() const final;
     LayoutUnit marginRight() const final;
@@ -54,6 +58,7 @@ public:
 
     LayoutRect borderBoundingBox() const final
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return LayoutRect(LayoutPoint(), linesBoundingBox().size());
     }
 
@@ -65,12 +70,28 @@ public:
 
     LegacyInlineFlowBox* createAndAppendInlineFlowBox();
 
-    RenderLineBoxList& legacyLineBoxes() { return m_legacyLineBoxes; }
-    const RenderLineBoxList& legacyLineBoxes() const { return m_legacyLineBoxes; }
+    RenderLineBoxList& legacyLineBoxes()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyLineBoxes;
+    }
+    const RenderLineBoxList& legacyLineBoxes() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyLineBoxes;
+    }
     void dirtyLegacyLineBoxes(bool fullLayout);
     void deleteLegacyLines();
-    LegacyInlineFlowBox* firstLegacyInlineBox() const { return m_legacyLineBoxes.firstLegacyLineBox(); }
-    LegacyInlineFlowBox* lastLegacyInlineBox() const { return m_legacyLineBoxes.lastLegacyLineBox(); }
+    LegacyInlineFlowBox* firstLegacyInlineBox() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyLineBoxes.firstLegacyLineBox();
+    }
+    LegacyInlineFlowBox* lastLegacyInlineBox() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_legacyLineBoxes.lastLegacyLineBox();
+    }
 
 #if PLATFORM(IOS_FAMILY)
     void absoluteQuadsForSelection(Vector<FloatQuad>& quads) const override;
@@ -98,7 +119,11 @@ protected:
 private:
     ASCIILiteral renderName() const override;
 
-    bool canHaveChildren() const final { return true; }
+    bool canHaveChildren() const final
+    {
+        // NB(asuhan): this just returns true, we can skip the Scion check
+        return true;
+    }
 
     void absoluteQuadsIgnoringContinuation(const FloatRect&, Vector<FloatQuad>&, bool* wasFixed) const override;
 
@@ -113,8 +138,16 @@ private:
 
     LayoutUnit offsetLeft() const final;
     LayoutUnit offsetTop() const final;
-    LayoutUnit offsetWidth() const final { return linesBoundingBox().width(); }
-    LayoutUnit offsetHeight() const final { return linesBoundingBox().height(); }
+    LayoutUnit offsetWidth() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return linesBoundingBox().width();
+    }
+    LayoutUnit offsetHeight() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return linesBoundingBox().height();
+    }
 
 protected:
     LayoutRect clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext) const override;
@@ -130,11 +163,19 @@ protected:
 private:
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*) final;
 
-    LayoutRect frameRectForStickyPositioning() const final { return linesBoundingBox(); }
+    LayoutRect frameRectForStickyPositioning() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return linesBoundingBox();
+    }
 
     virtual std::unique_ptr<LegacyInlineFlowBox> createInlineFlowBox(); // Subclassed by RenderSVGInline
 
-    void dirtyLineFromChangedChild() final { m_legacyLineBoxes.dirtyLineFromChangedChild(*this); }
+    void dirtyLineFromChangedChild() final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_legacyLineBoxes.dirtyLineFromChangedChild(*this);
+    }
 
     LayoutUnit lineHeight(bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const final;
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const final;
@@ -147,6 +188,8 @@ private:
 
     // All of the line boxes created for this svg inline.
     RenderLineBoxList m_legacyLineBoxes;
+
+    std::unique_ptr<RenderInlineScion> m_scion;
 };
 
 bool isEmptyInline(const RenderInline&);

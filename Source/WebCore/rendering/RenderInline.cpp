@@ -90,8 +90,17 @@ RenderInline::RenderInline(Type type, Document& document, RenderStyle&& style)
 
 RenderInline::~RenderInline() = default;
 
+void RenderInline::setScionHandle(void* handle) {
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    m_scion = std::make_unique<RenderInlineScion>(handle);
+}
+
 void RenderInline::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #if ASSERT_ENABLED
     // Make sure we do not retain "this" in the continuation outline table map of our containing blocks.
     if (parent() && style().usedVisibility() == Visibility::Visible && hasOutline()) {
@@ -132,6 +141,7 @@ void RenderInline::willBeDestroyed()
 
 void RenderInline::updateFromStyle()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBoxModelObject::updateFromStyle();
 
     // FIXME: Support transforms and reflections on inline flows someday.
@@ -176,6 +186,7 @@ static void updateStyleOfAnonymousBlockContinuations(const RenderBlock& block, c
 
 void RenderInline::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBoxModelObject::styleWillChange(diff, newStyle);
     // RenderInlines forward their absolute positioned descendants to their (non-anonymous) containing block.
     // Check if this non-anonymous containing block can hold the absolute positioned elements when the inline is no longer positioned.
@@ -188,6 +199,7 @@ void RenderInline::styleWillChange(StyleDifference diff, const RenderStyle& newS
 
 void RenderInline::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBoxModelObject::styleDidChange(diff, oldStyle);
 
     // Ensure that all of the split inlines pick up the new style. We
@@ -213,6 +225,7 @@ void RenderInline::styleDidChange(StyleDifference diff, const RenderStyle* oldSt
 
 bool RenderInline::mayAffectLayout() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* parentStyle = &parent()->style();
     auto* parentRenderInline = dynamicDowncast<RenderInline>(*parent());
     auto hasHardLineBreakChildOnly = firstChild() && firstChild() == lastChild() && firstChild()->isBR();
@@ -238,6 +251,7 @@ bool RenderInline::mayAffectLayout() const
 
 void RenderInline::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* lineLayout = LayoutIntegration::LineLayout::containing(*this)) {
         lineLayout->paint(paintInfo, paintOffset, this);
         return;
@@ -248,6 +262,7 @@ void RenderInline::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 template<typename GeneratorContext>
 void RenderInline::generateLineBoxRects(GeneratorContext& context) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* lineLayout = LayoutIntegration::LineLayout::containing(*this)) {
         auto inlineBoxRects = lineLayout->collectInlineBoxRects(*this);
         if (inlineBoxRects.isEmpty()) {
@@ -284,6 +299,7 @@ private:
 
 void RenderInline::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     AbsoluteRectsGeneratorContext context(rects, accumulatedOffset);
     generateLineBoxRects(context);
 
@@ -319,6 +335,7 @@ private:
 
 void RenderInline::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     absoluteQuadsIgnoringContinuation({ }, quads, wasFixed);
     if (continuation())
         collectAbsoluteQuadsForContinuation(quads, wasFixed);
@@ -326,6 +343,7 @@ void RenderInline::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 
 void RenderInline::absoluteQuadsIgnoringContinuation(const FloatRect&, Vector<FloatQuad>& quads, bool*) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     AbsoluteQuadsGeneratorContext context(this, quads);
     generateLineBoxRects(context);
 }
@@ -333,6 +351,7 @@ void RenderInline::absoluteQuadsIgnoringContinuation(const FloatRect&, Vector<Fl
 #if PLATFORM(IOS_FAMILY)
 void RenderInline::absoluteQuadsForSelection(Vector<FloatQuad>& quads) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     AbsoluteQuadsGeneratorContext context(this, quads);
     generateLineBoxRects(context);
 }
@@ -340,16 +359,19 @@ void RenderInline::absoluteQuadsForSelection(Vector<FloatQuad>& quads) const
 
 LayoutUnit RenderInline::offsetLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).x();
 }
 
 LayoutUnit RenderInline::offsetTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).y();
 }
 
 LayoutPoint RenderInline::firstInlineBoxTopLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* lineLayout = LayoutIntegration::LineLayout::containing(*this))
         return lineLayout->firstInlineBoxRect(*this).location();
     if (auto* inlineBox = firstLegacyInlineBox())
@@ -370,46 +392,55 @@ static LayoutUnit computeMargin(const RenderInline* renderer, const Length& marg
 
 LayoutUnit RenderInline::marginLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginLeft());
 }
 
 LayoutUnit RenderInline::marginRight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginRight());
 }
 
 LayoutUnit RenderInline::marginTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginTop());
 }
 
 LayoutUnit RenderInline::marginBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginBottom());
 }
 
 LayoutUnit RenderInline::marginStart(const RenderStyle* otherStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginStartUsing(otherStyle ? otherStyle : &style()));
 }
 
 LayoutUnit RenderInline::marginEnd(const RenderStyle* otherStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginEndUsing(otherStyle ? otherStyle : &style()));
 }
 
 LayoutUnit RenderInline::marginBefore(const RenderStyle* otherStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginBeforeUsing(otherStyle ? otherStyle : &style()));
 }
 
 LayoutUnit RenderInline::marginAfter(const RenderStyle* otherStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computeMargin(this, style().marginAfterUsing(otherStyle ? otherStyle : &style()));
 }
 
 ASCIILiteral RenderInline::renderName() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isRelativelyPositioned())
         return "RenderInline (relative positioned)"_s;
     if (isStickilyPositioned())
@@ -425,6 +456,7 @@ ASCIILiteral RenderInline::renderName() const
 bool RenderInline::nodeAtPoint(const HitTestRequest& request, HitTestResult& result,
                                 const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(layer());
     if (auto* lineLayout = LayoutIntegration::LineLayout::containing(*this))
         return lineLayout->hitTest(request, result, locationInContainer, accumulatedOffset, hitTestAction, this);
@@ -433,6 +465,7 @@ bool RenderInline::nodeAtPoint(const HitTestRequest& request, HitTestResult& res
 
 VisiblePosition RenderInline::positionForPoint(const LayoutPoint& point, HitTestSource source, const RenderFragmentContainer* fragment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& containingBlock = *this->containingBlock();
 
     if (auto* continuation = this->continuation()) {
@@ -464,6 +497,7 @@ private:
 
 LayoutUnit RenderInline::innerPaddingBoxWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto firstInlineBoxPaddingBoxLeft = LayoutUnit { };
     auto lastInlineBoxPaddingBoxRight = LayoutUnit { };
 
@@ -502,6 +536,7 @@ LayoutUnit RenderInline::innerPaddingBoxWidth() const
 
 LayoutUnit RenderInline::innerPaddingBoxHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto innerPaddingBoxLogicalHeight = LayoutUnit { isHorizontalWritingMode() ? linesBoundingBox().height() : linesBoundingBox().width() };
     innerPaddingBoxLogicalHeight -= (borderBefore() + borderAfter());
     return innerPaddingBoxLogicalHeight;
@@ -509,6 +544,7 @@ LayoutUnit RenderInline::innerPaddingBoxHeight() const
 
 IntRect RenderInline::linesBoundingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* layout = LayoutIntegration::LineLayout::containing(*this)) {
         if (!layoutBox() || !layout->contains(*this)) {
             // Repaint may be issued on subtrees during content mutation with newly inserted renderers
@@ -549,6 +585,7 @@ IntRect RenderInline::linesBoundingBox() const
 
 LayoutRect RenderInline::linesVisualOverflowBoundingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* layout = LayoutIntegration::LineLayout::containing(*this)) {
         if (!layoutBox()) {
             // Repaint may be issued on subtrees during content mutation with newly inserted renderers. 
@@ -584,6 +621,7 @@ LayoutRect RenderInline::linesVisualOverflowBoundingBox() const
 
 LayoutRect RenderInline::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Only first-letter renderers are allowed in here during layout. They mutate the tree triggering repaints.
 #ifndef NDEBUG
     auto insideSelfPaintingInlineBox = [&] {
@@ -659,12 +697,14 @@ LayoutRect RenderInline::clippedOverflowRect(const RenderLayerModelObject* repai
 
 auto RenderInline::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // RepaintOutlineBounds is unused for inlines.
     return { clippedOverflowRect(repaintContainer, visibleRectContextForRepaint()) };
 }
 
 LayoutRect RenderInline::rectWithOutlineForRepaint(const RenderLayerModelObject* repaintContainer, LayoutUnit outlineWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect r(RenderBoxModelObject::rectWithOutlineForRepaint(repaintContainer, outlineWidth));
     for (auto& child : childrenOfType<RenderElement>(*this))
         r.unite(child.rectWithOutlineForRepaint(repaintContainer, outlineWidth));
@@ -673,6 +713,7 @@ LayoutRect RenderInline::rectWithOutlineForRepaint(const RenderLayerModelObject*
 
 auto RenderInline::computeVisibleRectsUsingPaintOffset(const RepaintRects& rects) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto adjustedRects = rects;
     auto* layoutState = view().frameView().layoutContext().layoutState();
     if (style().hasInFlowPosition() && layer())
@@ -685,6 +726,7 @@ auto RenderInline::computeVisibleRectsUsingPaintOffset(const RepaintRects& rects
 
 auto RenderInline::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Repaint offset cache is only valid for root-relative repainting
     if (view().frameView().layoutContext().isPaintOffsetCacheEnabled() && !container && !context.options.contains(VisibleRectContextOption::UseEdgeInclusiveIntersection))
         return computeVisibleRectsUsingPaintOffset(rects);
@@ -730,6 +772,7 @@ auto RenderInline::computeVisibleRectsInContainer(const RepaintRects& rects, con
 
 LayoutSize RenderInline::offsetFromContainer(RenderElement& container, const LayoutPoint&, bool* offsetDependsOnPoint) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(&container == this->container());
     
     LayoutSize offset;    
@@ -747,6 +790,7 @@ LayoutSize RenderInline::offsetFromContainer(RenderElement& container, const Lay
 
 void RenderInline::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (ancestorContainer == this)
         return;
 
@@ -785,6 +829,7 @@ void RenderInline::mapLocalToContainer(const RenderLayerModelObject* ancestorCon
 
 const RenderObject* RenderInline::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(ancestorToStopAt != this);
 
     bool ancestorSkipped;
@@ -799,6 +844,7 @@ const RenderObject* RenderInline::pushMappingToContainer(const RenderLayerModelO
 
 void RenderInline::updateHitTestResult(HitTestResult& result, const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (result.innerNode())
         return;
 
@@ -820,6 +866,7 @@ void RenderInline::updateHitTestResult(HitTestResult& result, const LayoutPoint&
 
 void RenderInline::dirtyLegacyLineBoxes(bool fullLayout)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (fullLayout) {
         m_legacyLineBoxes.deleteLineBoxes();
         return;
@@ -830,16 +877,19 @@ void RenderInline::dirtyLegacyLineBoxes(bool fullLayout)
 
 void RenderInline::deleteLegacyLines()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_legacyLineBoxes.deleteLineBoxTree();
 }
 
 std::unique_ptr<LegacyInlineFlowBox> RenderInline::createInlineFlowBox()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return makeUnique<LegacyInlineFlowBox>(*this);
 }
 
 LegacyInlineFlowBox* RenderInline::createAndAppendInlineFlowBox()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto newFlowBox = createInlineFlowBox();
     auto flowBox = newFlowBox.get();
     m_legacyLineBoxes.appendLineBox(WTFMove(newFlowBox));
@@ -848,12 +898,14 @@ LegacyInlineFlowBox* RenderInline::createAndAppendInlineFlowBox()
 
 LayoutUnit RenderInline::lineHeight(bool firstLine, LineDirectionMode /*direction*/, LinePositionMode /*linePositionMode*/) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& lineStyle = firstLine ? firstLineStyle() : style();
     return LayoutUnit::fromFloatCeil(lineStyle.computedLineHeight());
 }
 
 LayoutUnit RenderInline::baselinePosition(FontBaseline baselineType, bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& style = firstLine ? firstLineStyle() : this->style();
     auto& fontMetrics = style.metricsOfPrimaryFont();
     return LayoutUnit { fontMetrics.ascent(baselineType) + (lineHeight(firstLine, direction, linePositionMode) - fontMetrics.height()) / 2 };
@@ -861,6 +913,7 @@ LayoutUnit RenderInline::baselinePosition(FontBaseline baselineType, bool firstL
 
 LayoutSize RenderInline::offsetForInFlowPositionedInline(const RenderBox* child) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: This function isn't right with mixed writing modes.
 
     ASSERT(isInFlowPositioned());
@@ -901,6 +954,7 @@ LayoutSize RenderInline::offsetForInFlowPositionedInline(const RenderBox* child)
 
 void RenderInline::imageChanged(WrappedImagePtr, const IntRect*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!parent())
         return;
         
@@ -924,6 +978,7 @@ namespace {
 
 void RenderInline::addFocusRingRects(Vector<LayoutRect>& rects, const LayoutPoint& additionalOffset, const RenderLayerModelObject* paintContainer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     AbsoluteRectsIgnoringEmptyGeneratorContext context(rects, additionalOffset);
     generateLineBoxRects(context);
 
@@ -949,6 +1004,7 @@ void RenderInline::addFocusRingRects(Vector<LayoutRect>& rects, const LayoutPoin
 
 void RenderInline::paintOutline(PaintInfo& paintInfo, const LayoutPoint& paintOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasOutline())
         return;
 
@@ -1015,11 +1071,13 @@ bool isEmptyInline(const RenderInline& renderer)
 
 inline bool RenderInline::willChangeCreatesStackingContext() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().willChange() && style().willChange()->canCreateStackingContext();
 }
 
 bool RenderInline::requiresLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isInFlowPositioned() || createsGroup() || hasClipPath() || shouldApplyPaintContainment() || willChangeCreatesStackingContext() || hasRunningAcceleratedAnimations() || requiresRenderingConsolidationForViewTransition();
 }
 

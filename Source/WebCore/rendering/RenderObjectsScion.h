@@ -803,6 +803,17 @@ private:
     void* m_handle;
 };
 
+class RenderInlineScion final {
+public:
+    RenderInlineScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderBlockScion final {
 public:
     RenderBlockScion(void* handle)
