@@ -2212,6 +2212,12 @@ func RenderObjectScion_firstLineStyle(_ objectRaw: UnsafeRawPointer) -> UnsafeRa
   return object.firstLineStyle().p!
 }
 
+@_cdecl("RenderObjectScion_outlineStyleForRepaint")
+func RenderObjectScion_outlineStyleForRepaint(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.outlineStyleForRepaint().p!
+}
+
 @_cdecl("RenderObjectScion_containerForRepaint")
 func RenderObjectScion_containerForRepaint(_ objectRaw: UnsafeRawPointer)
   -> RepaintContainerStatusRaw

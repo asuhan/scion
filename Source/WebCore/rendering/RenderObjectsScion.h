@@ -374,6 +374,8 @@ public:
 
     const RenderStyle& firstLineStyle() const;
 
+    const RenderStyle& outlineStyleForRepaint() const;
+
     RenderObject::RepaintContainerStatus containerForRepaint() const;
 
     void repaintUsingContainer(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, const LayoutRect&, bool shouldClipToLayer = true) const;

@@ -1232,11 +1232,7 @@ public:
 
     // Anonymous blocks that are part of of a continuation chain will return their inline continuation's outline style instead.
     // This is typically only relevant when repainting.
-    virtual const RenderStyle& outlineStyleForRepaint() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return style();
-    }
+    virtual const RenderStyle& outlineStyleForRepaint() const;
     
     virtual CursorDirective getCursor(const LayoutPoint&, Cursor&) const;
 

@@ -1402,6 +1402,12 @@ LayoutRect RenderObject::paintingRootRect(LayoutRect& topLevelRect)
     return result;
 }
 
+const RenderStyle& RenderObject::outlineStyleForRepaint() const
+{
+    if (m_scion) { return m_scion->outlineStyleForRepaint(); }
+    return style();
+}
+
 static inline bool canRelyOnAncestorLayerFullRepaint(const RenderObject& rendererToRepaint, const RenderLayer& ancestorLayer)
 {
     auto* renderElement = dynamicDowncast<RenderElement>(rendererToRepaint);
