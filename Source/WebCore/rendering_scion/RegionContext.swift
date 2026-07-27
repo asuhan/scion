@@ -24,7 +24,10 @@
  */
 
 class RegionContext {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   func pushTransform(transform: AffineTransform) {
+    assert(isNativeImpl())
     if transformStack.isEmpty {
       transformStack.append(transform)
     } else {
@@ -33,6 +36,7 @@ class RegionContext {
   }
 
   func popTransform() {
+    assert(isNativeImpl())
     if transformStack.isEmpty {
       fatalError("Not reached")
     }
@@ -40,6 +44,7 @@ class RegionContext {
   }
 
   func pushClip(clipRect: IntRect) {
+    assert(isNativeImpl())
     let transformedClip =
       transformStack.isEmpty ? clipRect : transformStack.last!.mapRect(rect: clipRect)
 
@@ -51,20 +56,25 @@ class RegionContext {
   }
 
   func pushClip(path: PathWrapper) {
+    assert(isNativeImpl())
     // FIXME: Approximate paths better.
     let pathBounds = enclosingIntRect(rect: path.boundingRect())
     pushClip(clipRect: pathBounds)
   }
 
   func popClip() {
+    assert(isNativeImpl())
     if clipStack.isEmpty {
       fatalError("Not reached")
     }
     clipStack.removeLast()
   }
 
+  func isNativeImpl() -> Bool { return p == nil }
+
   private var transformStack: [AffineTransform] = []
   private var clipStack: [IntRect] = []
+  let p: UnsafeMutableRawPointer?
 }
 
 class RegionContextStateSaver {

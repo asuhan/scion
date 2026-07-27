@@ -24,6 +24,8 @@
  */
 
 final class EventRegionContext: RegionContext {
+  override init(_ p: UnsafeMutableRawPointer) { super.init(p) }
+
   func unite(
     roundedRect: FloatRoundedRect, renderer: RenderObjectWrapper, style: RenderStyleWrapper,
     overrideUserModifyIsEditable: Bool = false

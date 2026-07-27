@@ -162,8 +162,7 @@ class PaintInfoWrapper {
       if wk_interop.PaintInfo_eventRegionContext(p!) == nil {
         return nil
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return EventRegionContext(p!)
     }
     return n!.regionContext as? EventRegionContext
   }
