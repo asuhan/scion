@@ -40,6 +40,8 @@ extern "C" void* RenderBlockFlowScion_createFromDocument(uint8_t, void*, const v
 
 extern "C" void* RenderTextScion_create(uint8_t, void*, const void*);
 
+extern "C" void* RenderInlineScion_create(uint8_t, void*, const void*);
+
 namespace WebCore {
 
 class HitTestLocation;

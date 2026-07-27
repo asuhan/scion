@@ -3017,6 +3017,19 @@ func RenderElementScion_setLastChild(
   element.setLastChild(lastChildRaw != nil ? createRenderObjectWrapper(lastChildRaw!) : nil)
 }
 
+@_cdecl("RenderInlineScion_create")
+func RenderInlineScion_create(
+  _ typeRaw: UInt8, _ element: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  assert(typeRaw == 15)
+  let renderBlockFlow = RenderInlineWrapper(
+    type: .Inline, element: ElementWrapper(p: element), style: style)
+  let unmanaged = Unmanaged.passRetained(renderBlockFlow)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderBoxModelObjectScion_offsetForInFlowPosition")
 func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: UnsafeRawPointer)
   -> LayoutSizeRaw

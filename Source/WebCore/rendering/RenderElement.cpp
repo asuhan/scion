@@ -342,7 +342,12 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
     case DisplayType::Inline:
         if (rendererTypeOverride.contains(ConstructBlockLevelRendererFor::Inline))
             return createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
-        // TODO(asuhan): set Scion handle here
+        if (Document::s_useScionRendering >= 4) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderInline>(RenderObject::Type::Inline, element, WTFMove(style));
+            renderer->setScionHandle(RenderInlineScion_create(static_cast<uint8_t>(RenderObject::Type::Inline), &element, clonedStyle.release()));
+            return renderer;
+        }
         return createRenderer<RenderInline>(RenderObject::Type::Inline, element, WTFMove(style));
     case DisplayType::Block:
     case DisplayType::FlowRoot:
