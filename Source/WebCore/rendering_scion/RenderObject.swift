@@ -254,6 +254,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case Video
     case View
     case ViewTransitionCapture
+    case MathMLBlock
+    case MathMLFenced
+    case MathMLFencedOperator
+    case MathMLFraction
+    case MathMLMath
+    case MathMLMenclose
+    case MathMLOperator
+    case MathMLPadded
+    case MathMLRoot
+    case MathMLRow
+    case MathMLScripts
+    case MathMLSpace
+    case MathMLTable
+    case MathMLToken
+    case MathMLUnderOver
     case SVGEllipse
     case SVGForeignObject
     case SVGGradientStop
@@ -1116,6 +1131,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func setFragmentedFlowState(_ state: FragmentedFlowState) {
     assert(isNativeImpl())
     m_stateBitfields.setFragmentedFlowState(state)
+  }
+
+  func isRenderMathMLFenced() -> Bool {
+    assert(isNativeImpl())
+    return type() == .MathMLFenced
   }
 
   private func isLegacyRenderSVGModelObject() -> Bool {

@@ -167,6 +167,8 @@ extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
 extern "C" bool RenderObjectScion_fragmentedFlowState(const void*);
 
+extern "C" bool RenderObjectScion_isRenderMathMLFenced(const void*);
+
 extern "C" bool RenderObjectScion_isRenderSVGModelObject(const void*);
 
 extern "C" bool RenderObjectScion_isLegacyRenderSVGRoot(const void*);
@@ -1177,6 +1179,8 @@ RenderObject::FragmentedFlowState RenderObjectScion::fragmentedFlowState() const
         ? RenderObject::FragmentedFlowState::InsideFlow
         : RenderObject::FragmentedFlowState::NotInsideFlow;
 }
+
+bool RenderObjectScion::isRenderMathMLFenced() const { return RenderObjectScion_isRenderMathMLFenced(m_handle); }
 
 bool RenderObjectScion::isRenderSVGModelObject() const { return RenderObjectScion_isRenderSVGModelObject(m_handle); }
 

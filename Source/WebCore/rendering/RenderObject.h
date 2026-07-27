@@ -650,11 +650,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::MathMLMenclose;
     }
-    bool isRenderMathMLFenced() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::MathMLFenced;
-    }
+    bool isRenderMathMLFenced() const;
     bool isRenderMathMLFencedOperator() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -196,6 +196,8 @@ public:
 
     RenderObject::FragmentedFlowState fragmentedFlowState() const;
 
+    bool isRenderMathMLFenced() const;
+
     bool isRenderSVGModelObject() const;
 
     bool isLegacyRenderSVGRoot() const;

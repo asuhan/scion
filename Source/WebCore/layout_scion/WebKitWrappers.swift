@@ -1594,6 +1594,12 @@ func RenderObjectScion_fragmentedFlowState(_ objectRaw: UnsafeRawPointer) -> Boo
   return object.fragmentedFlowState() == .InsideFlow
 }
 
+@_cdecl("RenderObjectScion_isRenderMathMLFenced")
+func RenderObjectScion_isRenderMathMLFenced(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderMathMLFenced()
+}
+
 @_cdecl("RenderObjectScion_isRenderSVGModelObject")
 func RenderObjectScion_isRenderSVGModelObject(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

@@ -3784,6 +3784,12 @@ RenderObject::FragmentedFlowState RenderObject::fragmentedFlowState() const
     return m_stateBitfields.fragmentedFlowState();
 }
 
+bool RenderObject::isRenderMathMLFenced() const
+{
+    if (m_scion) { return m_scion->isRenderMathMLFenced(); }
+    return type() == Type::MathMLFenced;
+}
+
 bool RenderObject::isRenderSVGModelObject() const
 {
     if (m_scion) { return m_scion->isRenderSVGModelObject(); }
