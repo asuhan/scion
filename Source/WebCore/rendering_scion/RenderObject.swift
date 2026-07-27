@@ -3276,8 +3276,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     builder.append(
       literal: "\(renderName()) 0x\(String(UInt(bitPattern: ObjectIdentifier(self)), radix: 16))")
     if node() != nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.append(literal: " ")
+      builder.append(string: node()!.debugDescription())
     }
 
     return builder.toString(owner: false)

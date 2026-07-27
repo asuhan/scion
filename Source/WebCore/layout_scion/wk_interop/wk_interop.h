@@ -1772,6 +1772,7 @@ bool Node_isDescendantOf(const void*, const void*);
 void* Node_renderer(const void*);
 void Node_setRenderer(void*, void*);
 void* Node_renderBox(const void*);
+void* Node_debugDescription(const void*);
 const void* BoxTree_handleNullRootBox(void*);
 void BoxTree_buildTreeForInlineContent(void*);
 void* InlineWalker_new(const void*);

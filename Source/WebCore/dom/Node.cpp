@@ -229,6 +229,11 @@ extern "C" WEBCORE_EXPORT void* Node_renderBox(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->renderBox();
 }
 
+extern "C" WEBCORE_EXPORT void* Node_debugDescription(const void* raw)
+{
+    return new String(static_cast<const WebCore::Node*>(raw)->debugDescription());
+}
+
 namespace WebCore {
 
 WTF_MAKE_COMPACT_TZONE_OR_ISO_ALLOCATED_IMPL(Node);

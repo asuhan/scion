@@ -155,6 +155,11 @@ class NodeWrapper {
     return createRenderObjectWrapperOrNative(raw) as! RenderBoxWrapper?
   }
 
+  // NB(asuhan): When / if DOM goes native, this should be overridden in subclasses.
+  func debugDescription() -> StringWrapper {
+    return StringWrapper(p: wk_interop.Node_debugDescription(p), owner: true)
+  }
+
   func computedStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
