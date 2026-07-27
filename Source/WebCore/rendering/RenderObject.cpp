@@ -3631,6 +3631,12 @@ bool RenderObject::isRenderMedia() const
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::IsMedia);
 }
 
+bool RenderObject::isRenderMenuList() const
+{
+    if (m_scion) { return m_scion->isRenderMenuList(); }
+    return type() == Type::MenuList;
+}
+
 bool RenderObject::isRenderMeter() const
 {
     if (m_scion) { return m_scion->isRenderMeter(); }
@@ -3839,6 +3845,11 @@ bool RenderObject::isRenderSVGText() const
 {
     if (m_scion) { return m_scion->isRenderSVGText(); }
     return type() == Type::SVGText;
+}
+
+bool RenderObject::isRenderSVGInline() const {
+    if (m_scion) { return m_scion->isRenderSVGInline(); }
+    return type() == Type::SVGInline || type() == Type::SVGTSpan || type() == Type::SVGTextPath;
 }
 
 bool RenderObject::isRenderSVGInlineText() const {

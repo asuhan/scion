@@ -136,6 +136,8 @@ public:
 
     bool isRenderMedia() const;
 
+    bool isRenderMenuList() const;
+
     bool isRenderMeter() const;
 
     bool isRenderButton() const;
@@ -215,6 +217,8 @@ public:
     bool isLegacyRenderSVGShape() const;
 
     bool isRenderSVGText() const;
+
+    bool isRenderSVGInline() const;
 
     bool isRenderSVGInlineText() const;
 

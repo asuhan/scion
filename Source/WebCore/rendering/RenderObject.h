@@ -479,11 +479,7 @@ public:
     bool isRenderListItem() const;
     bool isRenderListMarker() const;
     bool isRenderMedia() const;
-    bool isRenderMenuList() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::MenuList;
-    }
+    WEBCORE_EXPORT bool isRenderMenuList() const;
     bool isRenderMeter() const;
     bool isRenderProgress() const
     {
@@ -752,10 +748,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGTSpan;
     }
-    bool isRenderSVGInline() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::SVGInline || type() == Type::SVGTSpan || type() == Type::SVGTextPath;
-    }
+    bool isRenderSVGInline() const;
     bool isRenderSVGInlineText() const;
     bool isLegacyRenderSVGImage() const;
     bool isRenderSVGImage() const {

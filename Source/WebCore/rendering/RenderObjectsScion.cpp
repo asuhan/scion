@@ -107,6 +107,8 @@ extern "C" bool RenderObjectScion_isRenderListMarker(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMedia(const void*);
 
+extern "C" bool RenderObjectScion_isRenderMenuList(const void*);
+
 extern "C" bool RenderObjectScion_isRenderMeter(const void*);
 
 extern "C" bool RenderObjectScion_isRenderButton(const void*);
@@ -186,6 +188,8 @@ extern "C" bool RenderObjectScion_isRenderSVGHiddenContainer(const void*);
 extern "C" bool RenderObjectScion_isLegacyRenderSVGShape(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGText(const void*);
+
+extern "C" bool RenderObjectScion_isRenderSVGInline(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGInlineText(const void*);
 
@@ -1109,6 +1113,8 @@ bool RenderObjectScion::isRenderListMarker() const { return RenderObjectScion_is
 
 bool RenderObjectScion::isRenderMedia() const { return RenderObjectScion_isRenderMedia(m_handle); }
 
+bool RenderObjectScion::isRenderMenuList() const { return RenderObjectScion_isRenderMenuList(m_handle); }
+
 bool RenderObjectScion::isRenderMeter() const { return RenderObjectScion_isRenderMeter(m_handle); }
 
 bool RenderObjectScion::isRenderButton() const { return RenderObjectScion_isRenderButton(m_handle); }
@@ -1193,6 +1199,8 @@ bool RenderObjectScion::isRenderSVGHiddenContainer() const { return RenderObject
 bool RenderObjectScion::isLegacyRenderSVGShape() const { return RenderObjectScion_isLegacyRenderSVGShape(m_handle); }
 
 bool RenderObjectScion::isRenderSVGText() const { return RenderObjectScion_isRenderSVGText(m_handle); }
+
+bool RenderObjectScion::isRenderSVGInline() const { return RenderObjectScion_isRenderSVGInline(m_handle); }
 
 bool RenderObjectScion::isRenderSVGInlineText() const { return RenderObjectScion_isRenderSVGInlineText(m_handle); }
 

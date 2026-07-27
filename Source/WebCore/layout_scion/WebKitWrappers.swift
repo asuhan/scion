@@ -1414,6 +1414,12 @@ func RenderObjectScion_isRenderMedia(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderMedia()
 }
 
+@_cdecl("RenderObjectScion_isRenderMenuList")
+func RenderObjectScion_isRenderMenuList(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderMenuList()
+}
+
 @_cdecl("RenderObjectScion_isRenderMeter")
 func RenderObjectScion_isRenderMeter(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -1652,6 +1658,12 @@ func RenderObjectScion_isLegacyRenderSVGShape(_ objectRaw: UnsafeRawPointer) -> 
 func RenderObjectScion_isRenderSVGText(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.isRenderSVGText()
+}
+
+@_cdecl("RenderObjectScion_isRenderSVGInline")
+func RenderObjectScion_isRenderSVGInline(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderSVGInline()
 }
 
 @_cdecl("RenderObjectScion_isRenderSVGInlineText")
