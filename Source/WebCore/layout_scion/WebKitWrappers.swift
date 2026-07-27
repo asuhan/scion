@@ -3030,6 +3030,12 @@ func RenderInlineScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderInlineScion_setWk")
+func RenderInlineScion_setWk(_ wk: UnsafeMutableRawPointer, _ inlineRaw: UnsafeMutableRawPointer) {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  inline.setWk(wk)
+}
+
 @_cdecl("RenderBoxModelObjectScion_offsetForInFlowPosition")
 func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: UnsafeRawPointer)
   -> LayoutSizeRaw

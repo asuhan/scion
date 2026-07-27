@@ -96,6 +96,7 @@ void RenderInline::setScionHandle(void* handle) {
     RenderLayerModelObject::setScionHandle(handle);
     RenderBoxModelObject::setScionHandle(handle);
     m_scion = std::make_unique<RenderInlineScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderInline::willBeDestroyed()

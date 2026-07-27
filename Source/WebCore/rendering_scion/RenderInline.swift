@@ -921,8 +921,15 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return style().willChange()?.canCreateStackingContext() ?? false
   }
 
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
   // All of the line boxes created for this svg inline.
   private let legacyLineBoxes: RenderLineBoxList? = nil
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }
 
 func isEmptyInline(_ renderer: RenderInlineWrapper) -> Bool {
