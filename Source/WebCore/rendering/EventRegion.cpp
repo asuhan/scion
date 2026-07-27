@@ -62,6 +62,21 @@ struct FloatRoundedRectRaw {
     FloatRadiiRaw radii;
 };
 
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct IntRectRaw {
+    IntPointRaw location;
+    IntSizeRaw size;
+};
+
 namespace {
 
 WebCore::FloatSize convertFloatSizeRaw(const FloatSizeRaw& size)
@@ -80,6 +95,15 @@ extern "C" WEBCORE_EXPORT void EventRegionContext_unite(void* p, FloatRoundedRec
     auto& renderer = *static_cast<WebCore::RenderObject*>(rendererRaw);
     const auto& style = *static_cast<const WebCore::RenderStyle*>(styleRaw);
     static_cast<WebCore::EventRegionContext*>(p)->unite(roundedRect, renderer, style, overrideUserModifyIsEditable);
+}
+
+extern "C" WEBCORE_EXPORT bool EventRegionContext_contains(void* p, IntRectRaw rectRaw)
+{
+    const WebCore::IntRect rect {
+        { rectRaw.location.x, rectRaw.location.y },
+        { rectRaw.size.width, rectRaw.size.height }
+    };
+    return static_cast<WebCore::EventRegionContext*>(p)->contains(rect);
 }
 
 namespace WebCore {

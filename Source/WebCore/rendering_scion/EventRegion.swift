@@ -56,7 +56,11 @@ final class EventRegionContext: RegionContext {
   }
 
   func contains(rect: IntRect) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return wk_interop.EventRegionContext_contains(
+      p!,
+      IntRectRaw(
+        location: IntPointRaw(x: rect.location.x, y: rect.location.y),
+        size: IntSizeRaw(width: rect.size.width, height: rect.size.height)))
   }
 }
