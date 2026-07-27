@@ -781,13 +781,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func verticalBorderAndPaddingExtent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderTop() + borderBottom() + paddingTop() + paddingBottom()
   }
 
   func horizontalBorderAndPaddingExtent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderLeft() + borderRight() + paddingLeft() + paddingRight()
   }
 
   func borderAndPaddingLogicalHeight() -> LayoutUnit {
