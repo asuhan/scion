@@ -1561,6 +1561,7 @@ void PaintInfo_destroy(const void*);
 uint16_t PaintInfo_phase(const void*);
 void PaintInfo_setPhase(void*, uint16_t);
 uint32_t PaintInfo_paintBehavior(const void*);
+void PaintInfo_setPaintBehavior(void*, uint32_t);
 void RenderBlock_setHasMarginBeforeQuirk(void*, bool);
 void RenderBlock_setHasMarginAfterQuirk(void*, bool);
 bool RenderBlock_hasMarginBeforeQuirk(const void*);

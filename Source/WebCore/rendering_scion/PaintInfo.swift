@@ -224,8 +224,11 @@ class PaintInfoWrapper {
       return n!.paintBehavior
     }
     set {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if n != nil {
+        n!.paintBehavior = newValue
+        return
+      }
+      wk_interop.PaintInfo_setPaintBehavior(p!, newValue.rawValue)
     }
   }
 
@@ -305,7 +308,7 @@ class PaintInfoWrapper {
   private struct native {
     var rect: LayoutRectWrapper
     var phase: PaintPhase
-    let paintBehavior: PaintBehavior
+    var paintBehavior: PaintBehavior
     let subtreePaintRoot: RenderObjectWrapper?  // used to draw just one element and its visual children
     var outlineObjects: WeakListHashSet<RenderInlineWrapper>?  // used to list outlines that should be painted by a block with inline children
     let overlapTestRequests: OverlapTestRequestMap?

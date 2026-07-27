@@ -160,6 +160,11 @@ extern "C" WEBCORE_EXPORT uint32_t PaintInfo_paintBehavior(const void* p)
     return o.toRaw();
 }
 
+extern "C" WEBCORE_EXPORT void PaintInfo_setPaintBehavior(void* p, uint32_t paintBehavior)
+{
+    static_cast<WebCore::PaintInfo*>(p)->paintBehavior = static_cast<WebCore::PaintBehavior>(paintBehavior);
+}
+
 extern "C" WEBCORE_EXPORT void* RenderBlockFlow_scion(const void* p)
 {
     return static_cast<const WebCore::RenderBlockFlow*>(p)->scion();
