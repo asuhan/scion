@@ -3268,8 +3268,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       state: computedState, skipDescendentFragmentedFlow: .No)
   }
 
-  // TODO(asuhan): override in all subclasses
-  func debugDescription() -> StringWrapper {
+  func objectDebugDescription() -> StringWrapper {
     assert(isNativeImpl())
     let builder = StringBuilderWrapper()
 
@@ -3281,6 +3280,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
 
     return builder.toString(owner: false)
+  }
+
+  // TODO(asuhan): override in all subclasses
+  func debugDescription() -> StringWrapper {
+    assert(isNativeImpl())
+    return objectDebugDescription()
   }
 
   func addPDFURLRect(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

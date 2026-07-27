@@ -467,6 +467,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     return nil
   }
 
+  override func debugDescription() -> StringWrapper {
+    assert(isNativeImpl())
+    return objectDebugDescription()
+  }
+
   final override func useDarkAppearance() -> Bool {
     assert(isNativeImpl())
     return super.useDarkAppearance()
