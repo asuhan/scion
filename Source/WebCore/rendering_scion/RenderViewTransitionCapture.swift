@@ -113,6 +113,21 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func debugDescription() -> StringWrapper {
+    assert(isNativeImpl())
+    let builder = StringBuilderWrapper()
+
+    builder.append(
+      literal: "\(renderName()) 0x\(String(UInt(bitPattern: ObjectIdentifier(self)), radix: 16))")
+    builder.append(
+      literal:
+        " ::view-transition-\(style().pseudoElementType() == .ViewTransitionNew ? "new(" : "old(" )"
+    )
+    builder.append(string: style().pseudoElementNameArgument())
+    builder.append(literal: ")")
+    return builder.toString()
+  }
+
   override func updateFromStyle() {
     super.updateFromStyle()
 

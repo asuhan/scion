@@ -3282,7 +3282,6 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return builder.toString(owner: false)
   }
 
-  // TODO(asuhan): override in all subclasses
   func debugDescription() -> StringWrapper {
     assert(isNativeImpl())
     return objectDebugDescription()
