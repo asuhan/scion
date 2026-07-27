@@ -766,8 +766,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func marginAndBorderAndPaddingEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginEnd() + borderEnd() + paddingEnd()
   }
 
   func marginAndBorderAndPaddingBefore() -> LayoutUnit {
