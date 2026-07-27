@@ -23,6 +23,24 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
+private func toFloatSizeRaw(_ size: FloatSize) -> FloatSizeRaw {
+  return FloatSizeRaw(width: size.width, height: size.height)
+}
+
+private func convertFloatRoundedRect(_ roundedRect: FloatRoundedRect) -> FloatRoundedRectRaw {
+  let rect = FloatRectRaw(
+    x: roundedRect.rect.x(), y: roundedRect.rect.y(), width: roundedRect.rect.width(),
+    height: roundedRect.rect.height())
+  let radii = FloatRadiiRaw(
+    topLeft: toFloatSizeRaw(roundedRect.radii.topLeft),
+    topRight: toFloatSizeRaw(roundedRect.radii.topRight),
+    bottomLeft: toFloatSizeRaw(roundedRect.radii.bottomLeft),
+    bottomRight: toFloatSizeRaw(roundedRect.radii.bottomRight))
+  return FloatRoundedRectRaw(rect: rect, radii: radii)
+}
+
 final class EventRegionContext: RegionContext {
   override init(_ p: UnsafeMutableRawPointer) { super.init(p) }
 
@@ -30,8 +48,11 @@ final class EventRegionContext: RegionContext {
     roundedRect: FloatRoundedRect, renderer: RenderObjectWrapper, style: RenderStyleWrapper,
     overrideUserModifyIsEditable: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    let roundedRectRaw = convertFloatRoundedRect(roundedRect)
+    let rendererRaw = renderer.getWk()
+    wk_interop.EventRegionContext_unite(
+      p!, roundedRectRaw, rendererRaw, style.p!, overrideUserModifyIsEditable)
   }
 
   func contains(rect: IntRect) -> Bool {

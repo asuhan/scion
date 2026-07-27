@@ -38,6 +38,50 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+struct FloatRadiiRaw {
+    FloatSizeRaw topLeft;
+    FloatSizeRaw topRight;
+    FloatSizeRaw bottomLeft;
+    FloatSizeRaw bottomRight;
+};
+
+struct FloatRoundedRectRaw {
+    FloatRectRaw rect;
+    FloatRadiiRaw radii;
+};
+
+namespace {
+
+WebCore::FloatSize convertFloatSizeRaw(const FloatSizeRaw& size)
+{
+    return { size.width, size.height };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void EventRegionContext_unite(void* p, FloatRoundedRectRaw roundedRectRaw, void* rendererRaw, const void* styleRaw, bool overrideUserModifyIsEditable)
+{
+    const WebCore::FloatRoundedRect roundedRect {
+        { roundedRectRaw.rect.x, roundedRectRaw.rect.y, roundedRectRaw.rect.width, roundedRectRaw.rect.height },
+        { convertFloatSizeRaw(roundedRectRaw.radii.topLeft), convertFloatSizeRaw(roundedRectRaw.radii.topRight), convertFloatSizeRaw(roundedRectRaw.radii.bottomLeft), convertFloatSizeRaw(roundedRectRaw.radii.bottomRight) }
+    };
+    auto& renderer = *static_cast<WebCore::RenderObject*>(rendererRaw);
+    const auto& style = *static_cast<const WebCore::RenderStyle*>(styleRaw);
+    static_cast<WebCore::EventRegionContext*>(p)->unite(roundedRect, renderer, style, overrideUserModifyIsEditable);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(EventRegionContext);

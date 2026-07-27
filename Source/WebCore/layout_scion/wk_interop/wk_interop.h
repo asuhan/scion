@@ -421,6 +421,18 @@ struct RoundedRectRaw {
     struct RoundedRectRadiiRaw radii;
 };
 
+struct FloatRadiiRaw {
+    struct FloatSizeRaw topLeft;
+    struct FloatSizeRaw topRight;
+    struct FloatSizeRaw bottomLeft;
+    struct FloatSizeRaw bottomRight;
+};
+
+struct FloatRoundedRectRaw {
+    struct FloatRectRaw rect;
+    struct FloatRadiiRaw radii;
+};
+
 struct BorderDataRadiiRaw {
     struct LengthSizeRaw topLeft;
     struct LengthSizeRaw topRight;
@@ -2130,3 +2142,4 @@ void TextStream_writeStringView(void*, const void*);
 void TextStream_indent(void*);
 void* Text_renderer(const void*);
 void Resolver_styleForPseudoElement(void*, void*, struct PseudoElementRequestRaw, const void*);
+void EventRegionContext_unite(void* p, struct FloatRoundedRectRaw, void*, const void*, bool);
