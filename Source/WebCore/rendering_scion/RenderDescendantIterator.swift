@@ -56,6 +56,5 @@ class RenderDescendantIteratorAdapter<T: RenderObjectWrapper>: Sequence {
 }
 
 func descendantsOfType<T>(root: RenderElementWrapper) -> RenderDescendantIteratorAdapter<T> {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return RenderDescendantIteratorAdapter<T>(root)
 }
