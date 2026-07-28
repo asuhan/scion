@@ -45,8 +45,8 @@ struct RasterShapeIntervals {
   }
 
   func intervalAt(_ y: Int32) -> IntShapeInterval {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(y + m_offset >= 0 && y + m_offset < m_intervals.count)
+    return m_intervals[Int(y + m_offset)]
   }
 
   private func minY() -> Int32 { return -m_offset }
