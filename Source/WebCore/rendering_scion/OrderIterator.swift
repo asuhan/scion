@@ -80,9 +80,9 @@ struct OrderIteratorPopulator: ~Copyable {
     iterator.reset()
   }
 
-  func collectChild(child: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func collectChild(child: RenderBoxWrapper) -> Bool {
+    iterator.orderValues.insert(child.style().order())
+    return !iterator.shouldSkipChild(child: child)
   }
 
   private var iterator: OrderIterator

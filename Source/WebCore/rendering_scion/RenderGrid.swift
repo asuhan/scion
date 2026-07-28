@@ -1526,7 +1526,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func populateExplicitGridAndOrderIterator() {
-    let populator = OrderIteratorPopulator(iterator: currentGrid().orderIterator)
+    var populator = OrderIteratorPopulator(iterator: currentGrid().orderIterator)
     var explicitRowStart = 0
     var explicitColumnStart = 0
     var maximumRowIndex = GridPositionsResolver.explicitGridRowCount(gridContainer: self)

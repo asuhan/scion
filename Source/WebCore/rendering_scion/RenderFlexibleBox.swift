@@ -2318,7 +2318,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func prepareOrderIteratorAndMargins() {
-    let populator = OrderIteratorPopulator(iterator: orderIterator!)
+    var populator = OrderIteratorPopulator(iterator: orderIterator!)
 
     var flexItem = firstChildBox()
     while flexItem != nil {
