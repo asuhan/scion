@@ -1444,7 +1444,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     var specifiedMajorAxisAutoGridItems: [RenderBoxWrapper] = []
     var gridItem = currentGrid().orderIterator.first()
     while gridItem != nil {
-      if currentGrid().orderIterator.shouldSkipChild(child: gridItem!) {
+      if OrderIterator.shouldSkipChild(child: gridItem!) {
         gridItem = currentGrid().orderIterator.next()
         continue
       }
@@ -1915,7 +1915,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
     var gridItem = firstChildBox()
     while gridItem != nil {
-      if currentGrid().orderIterator.shouldSkipChild(child: gridItem!) {
+      if OrderIterator.shouldSkipChild(child: gridItem!) {
         if gridItem!.isOutOfFlowPositioned() {
           prepareGridItemForPositionedLayout(gridItem: gridItem!)
         }
@@ -1972,7 +1972,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
     var gridItem = firstChildBox()
     while gridItem != nil {
-      if currentGrid().orderIterator.shouldSkipChild(child: gridItem!) {
+      if OrderIterator.shouldSkipChild(child: gridItem!) {
         if gridItem!.isOutOfFlowPositioned() {
           prepareGridItemForPositionedLayout(gridItem: gridItem!)
         }

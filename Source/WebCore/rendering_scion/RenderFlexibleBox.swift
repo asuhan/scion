@@ -1861,7 +1861,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     orderIterator!.first()
     var flexItem = orderIterator!.currentChild()
     while flexItem != nil {
-      if orderIterator!.shouldSkipChild(child: flexItem!) {
+      if OrderIterator.shouldSkipChild(child: flexItem!) {
         // Out-of-flow children are not flex items, so we skip them here.
         if flexItem!.isOutOfFlowPositioned() {
           prepareFlexItemForPositionedLayout(flexItem: flexItem!)
@@ -3335,7 +3335,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     var baselineFlexItem: RenderBoxWrapper? = nil
     var flexItem = flexItemIterator.first()
     while flexItem != nil {
-      if flexItemIterator.shouldSkipChild(child: flexItem!) {
+      if OrderIterator.shouldSkipChild(child: flexItem!) {
         flexItem = flexItemIterator.next()
         continue
       }
@@ -3367,7 +3367,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     var baselineFlexItem: RenderBoxWrapper? = nil
     var flexItem = flexItemIterator.first()
     while flexItem != nil {
-      if flexItemIterator.shouldSkipChild(child: flexItem!) {
+      if OrderIterator.shouldSkipChild(child: flexItem!) {
         flexItem = flexItemIterator.next()
         continue
       }

@@ -56,9 +56,8 @@ struct OrderIterator {
     fatalError("Not implemented")
   }
 
-  func shouldSkipChild(child: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  static func shouldSkipChild(child: RenderObjectWrapper) -> Bool {
+    return child.isOutOfFlowPositioned() || child.isExcludedFromNormalLayout()
   }
 
   func reset() {
@@ -82,7 +81,7 @@ struct OrderIteratorPopulator: ~Copyable {
 
   mutating func collectChild(child: RenderBoxWrapper) -> Bool {
     iterator.orderValues.insert(child.style().order())
-    return !iterator.shouldSkipChild(child: child)
+    return !OrderIterator.shouldSkipChild(child: child)
   }
 
   private var iterator: OrderIterator

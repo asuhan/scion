@@ -132,7 +132,7 @@ class GridMasonryLayout {
     let grid = renderGrid.currentGrid()
     var gridItem = grid.orderIterator.first()
     while gridItem != nil {
-      if grid.orderIterator.shouldSkipChild(child: gridItem!) {
+      if OrderIterator.shouldSkipChild(child: gridItem!) {
         gridItem = grid.orderIterator.next()
         continue
       }
