@@ -38,6 +38,8 @@ class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T>, Itera
 }
 
 class RenderDescendantIteratorAdapter<T: RenderObjectWrapper>: Sequence {
+  init(_ root: RenderElementWrapper) { m_root = root }
+
   func makeIterator() -> RenderDescendantIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -54,9 +56,10 @@ class RenderDescendantIteratorAdapter<T: RenderObjectWrapper>: Sequence {
   }
 
   func at(current: T) -> RenderDescendantIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderDescendantIterator<T>(root: m_root, current: current)
   }
+
+  private let m_root: RenderElementWrapper
 }
 
 func descendantsOfType<T>(root: RenderElementWrapper) -> RenderDescendantIteratorAdapter<T> {

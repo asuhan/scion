@@ -62,7 +62,7 @@ class RenderIterator<T: RenderObjectWrapper>: Equatable {
     return self
   }
 
-  private let m_root: RenderElementWrapper?
+  let m_root: RenderElementWrapper?
   private var m_current: T?
 }
 
