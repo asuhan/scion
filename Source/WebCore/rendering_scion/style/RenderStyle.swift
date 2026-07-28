@@ -3415,8 +3415,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollAnchoringSuppressionStyleDidChange(_ other: RenderStyleWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(other == nil || other!.p != nil)
+    return wk_interop.RenderStyle_scrollAnchoringSuppressionStyleDidChange(p!, other?.p)
   }
 
   func outOfFlowPositionStyleDidChange(_ other: RenderStyleWrapper?) -> Bool {

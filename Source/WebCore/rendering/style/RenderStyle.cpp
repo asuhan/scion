@@ -2352,6 +2352,12 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_blockStepSize(const void* p)
     return blockStepSize ? new WebCore::Length(*blockStepSize) : nullptr;
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_scrollAnchoringSuppressionStyleDidChange(const void* p, const void* other_raw)
+{
+    const auto other = static_cast<const WebCore::RenderStyle*>(other_raw);
+    return static_cast<const WebCore::RenderStyle*>(p)->scrollAnchoringSuppressionStyleDidChange(other);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_outOfFlowPositionStyleDidChange(const void* p, const void* other_raw)
 {
     const auto other = static_cast<const WebCore::RenderStyle*>(other_raw);

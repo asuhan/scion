@@ -1469,6 +1469,7 @@ uint8_t RenderStyle_textAlignLast(const void*);
 struct LengthBoxRaw RenderStyle_clip(const void*);
 bool RenderStyle_hasClip(const void*);
 void* RenderStyle_blockStepSize(const void*);
+bool RenderStyle_scrollAnchoringSuppressionStyleDidChange(const void*, const void*);
 bool RenderStyle_outOfFlowPositionStyleDidChange(const void*, const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
 uint16_t BreakLines_classify(uint16_t, uint8_t);
