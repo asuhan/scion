@@ -146,6 +146,14 @@ class RenderTraversal {
     return nil
   }
 
+  static func firstWithin<T, U: RenderObjectWrapper>(_ current: U) -> T? {
+    var descendant = RenderObjectTraversal.firstChild(current)
+    while descendant != nil && !IsRendererOfType<T>.f(descendant!) {
+      descendant = RenderObjectTraversal.next(descendant!, current)
+    }
+    return descendant as! T?
+  }
+
   static func next<T, U: RenderObjectWrapper>(_ current: U, _ stayWithin: RenderObjectWrapper?)
     -> T?
   {

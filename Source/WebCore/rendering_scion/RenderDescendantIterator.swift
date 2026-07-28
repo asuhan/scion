@@ -46,8 +46,7 @@ class RenderDescendantIteratorAdapter<T: RenderObjectWrapper>: Sequence {
   }
 
   func begin() -> RenderDescendantIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderDescendantIterator<T>(root: m_root, current: RenderTraversal.firstWithin(m_root))
   }
 
   func end() -> RenderDescendantIterator<T> {
