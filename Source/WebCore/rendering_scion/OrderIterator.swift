@@ -66,7 +66,7 @@ struct OrderIterator {
     fatalError("Not implemented")
   }
 
-  typealias OrderValues = Set<Int32>
+  typealias OrderValues = Set<Int32>  // TODO(asuhan): replace with SortedSet
   var orderValues: OrderValues
 }
 
