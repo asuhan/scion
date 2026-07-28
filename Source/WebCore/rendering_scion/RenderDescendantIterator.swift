@@ -26,8 +26,9 @@
 
 class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T>, IteratorProtocol {
   func next() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let value = *self
+    ++self
+    return value
   }
 
   @discardableResult
