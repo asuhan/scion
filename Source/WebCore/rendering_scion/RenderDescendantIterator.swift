@@ -40,19 +40,13 @@ class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T>, Itera
 class RenderDescendantIteratorAdapter<T: RenderObjectWrapper>: Sequence {
   init(_ root: RenderElementWrapper) { m_root = root }
 
-  func makeIterator() -> RenderDescendantIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func makeIterator() -> RenderDescendantIterator<T> { return begin() }
 
   func begin() -> RenderDescendantIterator<T> {
     return RenderDescendantIterator<T>(root: m_root, current: RenderTraversal.firstWithin(m_root))
   }
 
-  func end() -> RenderDescendantIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func end() -> RenderDescendantIterator<T> { return RenderDescendantIterator<T>(root: m_root) }
 
   func at(current: T) -> RenderDescendantIterator<T> {
     return RenderDescendantIterator<T>(root: m_root, current: current)
