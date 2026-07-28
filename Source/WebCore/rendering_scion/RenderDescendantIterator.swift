@@ -32,8 +32,7 @@ class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T>, Itera
 
   @discardableResult
   static prefix func ++ (this: RenderDescendantIterator<T>) -> RenderDescendantIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return this.traverseNext() as! RenderDescendantIterator<T>
   }
 }
 
