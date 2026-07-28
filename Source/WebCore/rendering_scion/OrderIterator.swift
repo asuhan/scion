@@ -31,8 +31,8 @@
 
 struct OrderIterator {
   init(containerBox: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_containerBox = containerBox
+    reset()
   }
 
   func currentChild() -> RenderBoxWrapper? {
@@ -65,8 +65,10 @@ struct OrderIterator {
     fatalError("Not implemented")
   }
 
+  private let m_containerBox: RenderBoxWrapper
+
   typealias OrderValues = Set<Int32>  // TODO(asuhan): replace with SortedSet
-  var orderValues: OrderValues
+  var orderValues = OrderValues()
 }
 
 struct OrderIteratorPopulator: ~Copyable {
