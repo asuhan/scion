@@ -3420,8 +3420,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func outOfFlowPositionStyleDidChange(_ other: RenderStyleWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(other == nil || other!.p != nil)
+    return wk_interop.RenderStyle_outOfFlowPositionStyleDidChange(p!, other?.p)
   }
 
   struct NonInheritedFlags {
