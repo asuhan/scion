@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct OrderIterator {
+class OrderIterator {
   init(containerBox: RenderBoxWrapper) {
     m_containerBox = containerBox
     reset()
@@ -61,14 +61,18 @@ struct OrderIterator {
   }
 
   func reset() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_currentChild = nil
+    m_orderValuesIterator = orderValues.startIndex
+    m_isReset = true
   }
 
   private let m_containerBox: RenderBoxWrapper
+  private var m_currentChild: RenderBoxWrapper? = nil
 
   typealias OrderValues = SortedSet<Int32>
   var orderValues = OrderValues()
+  private var m_orderValuesIterator: OrderValues.Index? = nil
+  private var m_isReset = false
 }
 
 struct OrderIteratorPopulator: ~Copyable {
