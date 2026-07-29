@@ -126,7 +126,7 @@ struct RoundedRectRadii: Equatable {
   var bottomRight = LayoutSizeWrapper()
 }
 
-struct RoundedRect {
+struct RoundedRect: Equatable {
   typealias Radii = RoundedRectRadii
 
   init(rect: LayoutRectWrapper, radii: Radii = Radii()) {

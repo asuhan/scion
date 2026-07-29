@@ -30,9 +30,9 @@ struct CompositedClipData: Equatable {
     isOverflowScroll = isOverflowScrollEntry
   }
 
-  static func == (_ a: Self, _b: Self) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  static func == (_ a: Self, _ b: Self) -> Bool {
+    return CPtrToInt(a.clippingLayer?.layerId()) == CPtrToInt(b.clippingLayer?.layerId())
+      && a.clipRect == b.clipRect && a.isOverflowScroll == b.isOverflowScroll
   }
 
   let clippingLayer: RenderLayerWrapper?  // For scroller entries, the scrolling layer. For other entries, the most-descendant layer that has a clip.
