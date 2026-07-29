@@ -126,13 +126,11 @@ class LayerAncestorClippingStack {
   }
 
   func firstLayer() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return stack.first!.childForSuperlayers()
   }
 
   func lastLayer() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return stack.last!.parentForSublayers()
   }
 
   struct ClippingStackEntry {
