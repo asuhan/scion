@@ -1,0 +1,54 @@
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Swift Collections open source project
+//
+// Copyright (c) 2021 - 2026 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See https://swift.org/LICENSE.txt for license information
+//
+// SPDX-License-Identifier: Apache-2.0 WITH Swift-exception
+//
+//===----------------------------------------------------------------------===//
+
+#if COLLECTIONS_SINGLE_MODULE
+import Collections
+#else
+import InternalCollectionsUtilities
+#endif
+
+extension RandomAccessCollection {
+  @inline(__always)
+  internal func _indexRange(at offsets: Range<Int>) -> Range<Index> {
+    _index(at: offsets.lowerBound) ..< _index(at: offsets.upperBound)
+  }
+
+  @inline(__always)
+  internal func _indexRange<R: RangeExpression>(at offsets: R) -> Range<Index>
+  where R.Bound == Int {
+    return _indexRange(at: offsets.relative(to: 0 ..< self.count))
+  }
+
+  @inline(__always)
+  internal func _offsetRange(of range: Range<Index>) -> Range<Int> {
+    _offset(of: range.lowerBound) ..< _offset(of: range.upperBound)
+  }
+
+  @inline(__always)
+  internal func _offsetRange<R: RangeExpression>(of range: R) -> Range<Int>
+  where R.Bound == Index {
+    return _offsetRange(of: range.relative(to: self))
+  }
+
+  @inline(__always)
+  internal subscript(_offsets range: Range<Int>) -> SubSequence {
+    self[_indexRange(at: range)]
+  }
+
+  @inline(__always)
+  internal subscript<R: RangeExpression>(_offsets range: R) -> SubSequence
+  where R.Bound == Int {
+    self[_offsets: range.relative(to: 0 ..< count)]
+  }
+}
+

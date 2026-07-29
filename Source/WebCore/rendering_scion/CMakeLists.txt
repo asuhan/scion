@@ -147,10 +147,12 @@ target_sources(layout_scion PRIVATE
     TextPaintStyle.swift
     TransformOperationData.swift
 )
+target_compile_definitions(layout_scion PRIVATE UnstableSortedCollections)
 add_subdirectory(algorithms)
 add_subdirectory(line)
 add_subdirectory(mathml)
 add_subdirectory(shapes)
 add_subdirectory(style)
 add_subdirectory(svg)
+add_subdirectory(swift-collections)
 add_subdirectory(updating)
