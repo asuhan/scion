@@ -112,8 +112,16 @@ class LayerAncestorClippingStack {
   }
 
   func clear(_ scrollingCoordinator: ScrollingCoordinatorWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for i in 0..<stack.count {
+      if stack[i].overflowScrollProxyNodeID.bool() {
+        scrollingCoordinator!.unparentChildrenAndDestroyNode(
+          nodeID: stack[i].overflowScrollProxyNodeID)
+        stack[i].overflowScrollProxyNodeID = ScrollingNodeIDWrapper()
+      }
+
+      GraphicsLayer.unparentAndClear(layer: stack[i].clippingLayer)
+      GraphicsLayer.unparentAndClear(layer: stack[i].scrollingLayer)
+    }
   }
 
   func detachFromScrollingCoordinator(scrollingCoordinator: ScrollingCoordinatorWrapper) {
