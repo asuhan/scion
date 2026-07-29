@@ -22,6 +22,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// TODO(asuhan): does this make sense, since we're not packing the fields yet?
+private let unsetColumnIndex: UInt32 = 0x1FFFFFF
+
 private struct CollapsedBorder {
   var borderValue = CollapsedBorderValue()
   var side: BoxSide = .Top
@@ -231,8 +234,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func col() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_column != unsetColumnIndex)
+    return m_column
   }
 
   func nextCell() -> RenderTableCellWrapper? {
@@ -1934,6 +1937,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     return super.hasLineIfEmpty()
   }
 
+  // TODO(asuhan): pack these better using bitwise operations
+  private var m_column = unsetColumnIndex
   private var m_cellWidthChanged = false
   private let hasEmptyCollapsedBeforeBorder = false
   private let hasEmptyCollapsedAfterBorder = false
