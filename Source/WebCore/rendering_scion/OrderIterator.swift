@@ -67,7 +67,7 @@ struct OrderIterator {
 
   private let m_containerBox: RenderBoxWrapper
 
-  typealias OrderValues = Set<Int32>  // TODO(asuhan): replace with SortedSet
+  typealias OrderValues = SortedSet<Int32>
   var orderValues = OrderValues()
 }
 
