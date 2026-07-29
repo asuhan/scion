@@ -24,9 +24,10 @@
  */
 
 struct CompositedClipData: Equatable {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(_ layer: RenderLayerWrapper, _ roundedRect: RoundedRect, _ isOverflowScrollEntry: Bool) {
+    clippingLayer = layer
+    clipRect = roundedRect
+    isOverflowScroll = isOverflowScrollEntry
   }
 
   static func == (_ a: Self, _b: Self) -> Bool {
@@ -34,9 +35,9 @@ struct CompositedClipData: Equatable {
     fatalError("Not implemented")
   }
 
-  let clippingLayer: RenderLayerWrapper? = nil  // For scroller entries, the scrolling layer. For other entries, the most-descendant layer that has a clip.
+  let clippingLayer: RenderLayerWrapper?  // For scroller entries, the scrolling layer. For other entries, the most-descendant layer that has a clip.
   let clipRect: RoundedRect  // In the coordinate system of the RenderLayer that owns the stack.
-  let isOverflowScroll = false
+  let isOverflowScroll: Bool
 }
 
 // This class encapsulates the set of layers and their scrolling tree nodes representing clipping in the layer's containing block ancestry,
