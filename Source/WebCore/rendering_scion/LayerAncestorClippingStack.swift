@@ -44,7 +44,7 @@ struct CompositedClipData: Equatable {
 // but not in its paint order ancestry.
 class LayerAncestorClippingStack {
   init(_ clipDataStack: [CompositedClipData]) {
-    stack = clipDataStack.map { ClippingStackEntry(clipData: $0) }
+    stack = clipDataStack.map { clipDataEntry in ClippingStackEntry(clipData: clipDataEntry) }
   }
 
   func hasAnyScrollingLayers() -> Bool {
@@ -108,8 +108,7 @@ class LayerAncestorClippingStack {
   }
 
   func compositedClipData() -> [CompositedClipData] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return stack.map { entry in return entry.clipData }
   }
 
   func clear(_ scrollingCoordinator: ScrollingCoordinatorWrapper?) {
