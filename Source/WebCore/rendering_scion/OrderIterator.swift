@@ -39,8 +39,8 @@ class OrderIterator {
 
   @discardableResult
   func first() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    reset()
+    return next()
   }
 
   func next() -> RenderBoxWrapper? {
