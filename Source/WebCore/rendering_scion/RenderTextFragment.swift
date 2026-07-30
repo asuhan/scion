@@ -41,8 +41,8 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   }
 
   override func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return textNode()?.hasEditableStyle() ?? false
   }
 
   func setFirstLetter(firstLetter: RenderBoxModelObjectWrapper) {
