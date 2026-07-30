@@ -317,13 +317,13 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstLegacyInlineBox() -> LegacyInlineFlowBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return legacyLineBoxes!.firstLegacyLineBox()
   }
 
   func lastLegacyInlineBox() -> LegacyInlineFlowBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return legacyLineBoxes!.lastLegacyLineBox()
   }
 
   func offsetForInFlowPositionedInline(_ child: RenderBoxWrapper?) -> LayoutSizeWrapper {
