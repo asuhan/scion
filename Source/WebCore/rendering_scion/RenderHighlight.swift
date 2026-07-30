@@ -79,8 +79,9 @@ class RenderHighlight {
   init(_: IsSelectionTag) { isSelection = true }
 
   func setRenderRange(_ renderRange: RenderRange) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(renderRange.start != nil && renderRange.end != nil)
+    self.renderRange = renderRange
   }
 
   func setRenderRange(highlightRange: HighlightRangeWrapper) -> Bool {  // Returns true if successful.
@@ -264,7 +265,7 @@ class RenderHighlight {
     }
   }
 
-  private let renderRange = RenderRange()
+  private var renderRange = RenderRange()
   private let isSelection: Bool
   private var p: UnsafeMutableRawPointer? = nil
 }
