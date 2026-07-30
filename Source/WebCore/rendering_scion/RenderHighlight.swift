@@ -125,13 +125,13 @@ class RenderHighlight {
   }
 
   func startOffset() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return renderRange.startOffset
   }
 
   func endOffset() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return renderRange.endOffset
   }
 
   private func highlightStateForRenderer(_ renderer: RenderObjectWrapper)
