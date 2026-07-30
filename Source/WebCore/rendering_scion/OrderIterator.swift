@@ -35,6 +35,18 @@ class OrderIterator {
     reset()
   }
 
+  private init(
+    _ containerBox: RenderBoxWrapper, _ currentChild: RenderBoxWrapper?, _ orderValues: OrderValues,
+    _ orderValuesIterator: OrderValues.Index?, isReset: Bool, reversedOrder: Bool
+  ) {
+    self.m_containerBox = containerBox
+    self.m_currentChild = currentChild
+    self.orderValues = orderValues
+    self.m_orderValuesIterator = orderValuesIterator
+    self.m_isReset = isReset
+    self.m_reversedOrder = reversedOrder
+  }
+
   func currentChild() -> RenderBoxWrapper? { return m_currentChild }
 
   @discardableResult
@@ -49,8 +61,16 @@ class OrderIterator {
   }
 
   func reverse() -> OrderIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let reversedItr = OrderIterator(
+      m_containerBox, m_currentChild, orderValues, m_orderValuesIterator, isReset: m_isReset,
+      reversedOrder: m_reversedOrder)
+    let reversedValues = OrderValues(orderValues)
+
+    reversedItr.orderValues = reversedValues
+    reversedItr.m_reversedOrder = !m_reversedOrder
+    reversedItr.reset()
+
+    return reversedItr
   }
 
   static func shouldSkipChild(child: RenderObjectWrapper) -> Bool {
@@ -70,6 +90,7 @@ class OrderIterator {
   var orderValues = OrderValues()
   private var m_orderValuesIterator: OrderValues.Index? = nil
   private var m_isReset = false
+  private var m_reversedOrder = false
 }
 
 struct OrderIteratorPopulator: ~Copyable {
