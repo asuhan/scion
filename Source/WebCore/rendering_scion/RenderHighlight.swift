@@ -63,9 +63,17 @@ struct RenderRangeIterator {
     checkForSpanner()
   }
 
-  func next() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func next() -> RenderObjectWrapper? {
+    let currentSpan = m_spannerStack.isEmpty ? nil : m_spannerStack.last!.spanner()
+    m_current = m_current!.nextInPreOrder(stayWithin: currentSpan)
+    checkForSpanner()
+    if m_current == nil && currentSpan != nil {
+      let placeholder = m_spannerStack.last!
+      m_spannerStack.removeLast()
+      m_current = placeholder.nextInPreOrder()
+      checkForSpanner()
+    }
+    return m_current
   }
 
   private mutating func checkForSpanner() {
@@ -168,7 +176,7 @@ class RenderHighlight {
 
     let highlightEnd = rendererAfterOffset(renderRange.end!, renderRange.endOffset)
 
-    let highlightIterator = RenderRangeIterator(renderRange.start)
+    var highlightIterator = RenderRangeIterator(renderRange.start)
     var currentRenderer = renderRange.start
     while currentRenderer != nil
       && CPtrToInt(currentRenderer!.id()) != CPtrToInt(highlightEnd?.id())
