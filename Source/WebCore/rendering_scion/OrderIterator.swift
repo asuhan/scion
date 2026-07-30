@@ -56,8 +56,30 @@ class OrderIterator {
   }
 
   func next() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    repeat {
+      if m_currentChild == nil {
+        if m_orderValuesIterator! == orderValues.endIndex {
+          return nil
+        }
+
+        if !m_isReset {
+          orderValues.formIndex(&m_orderValuesIterator!, offsetBy: 1)
+          if m_orderValuesIterator! == orderValues.endIndex {
+            return nil
+          }
+        } else {
+          m_isReset = false
+        }
+        m_currentChild =
+          m_reversedOrder ? m_containerBox.lastChildBox() : m_containerBox.firstChildBox()
+      } else {
+        m_currentChild =
+          m_reversedOrder ? m_currentChild!.previousSiblingBox() : m_currentChild!.nextSiblingBox()
+      }
+    } while m_currentChild == nil
+      || m_currentChild!.style().order() != orderValues[m_orderValuesIterator!]
+
+    return m_currentChild
   }
 
   func reverse() -> OrderIterator {
