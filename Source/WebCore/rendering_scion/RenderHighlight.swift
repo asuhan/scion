@@ -59,14 +59,23 @@ struct RenderRange {
 
 struct RenderRangeIterator {
   init(_ start: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_current = start
+    checkForSpanner()
   }
 
   func next() -> RenderObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private mutating func checkForSpanner() {
+    guard let placeholder = m_current as? RenderMultiColumnSpannerPlaceholderWrapper else { return }
+    m_spannerStack.append(placeholder)
+    m_current = placeholder.spanner()
+  }
+
+  private var m_current: RenderObjectWrapper?
+  private var m_spannerStack: [RenderMultiColumnSpannerPlaceholderWrapper] = []
 }
 
 class RenderHighlight {
