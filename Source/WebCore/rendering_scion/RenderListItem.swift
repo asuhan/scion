@@ -23,6 +23,14 @@
 import wk_interop
 
 final class RenderListItemWrapper: RenderBlockFlowWrapper {
+  init(_ element: ElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(type: .ListItem, element: element, style: style)
+    assert(isRenderListItem())
+    setInline(false)
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func value() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
