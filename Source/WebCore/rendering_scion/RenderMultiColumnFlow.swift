@@ -320,8 +320,10 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // We simply remain at our intrinsic height.
+    return LogicalExtentComputedValues(
+      extent: logicalHeight, position: logicalTop, margins: ComputedMarginValues())
   }
 
   override func initialLogicalWidth() -> LayoutUnit {
