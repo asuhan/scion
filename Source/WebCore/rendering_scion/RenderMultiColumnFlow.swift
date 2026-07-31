@@ -162,13 +162,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   func progressionIsReversed() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_progressionIsReversed
   }
 
   func setProgressionIsReversed(reversed: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_progressionIsReversed = reversed
   }
 
   override final func mapFromFlowToFragment(_ transformState: TransformState)
@@ -420,4 +420,5 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   private var m_needsHeightsRecalculation = false
 
   private var m_progressionIsInline = false
+  private var m_progressionIsReversed = false
 }
