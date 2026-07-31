@@ -363,8 +363,10 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   override func updateSpaceShortageForSizeContainment(
     block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let multicolSet =
+      fragmentAtBlockOffset(clampBox: block, offset: offset) as! RenderMultiColumnSetWrapper?
+    multicolSet?.updateSpaceShortageForSizeContainment(shortage)
   }
 
   override func fragmentAtBlockOffset(

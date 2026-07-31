@@ -191,6 +191,15 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     minimumColumnHeight = max(height, minimumColumnHeight)
   }
 
+  func updateSpaceShortageForSizeContainment(_ shortage: LayoutUnit) {
+    assert(isNativeImpl())
+    if spaceShortageForSizeContainment <= Int32(0) {
+      spaceShortageForSizeContainment = shortage
+      return
+    }
+    spaceShortageForSizeContainment = min(shortage, spaceShortageForSizeContainment)
+  }
+
   private func clearForcedBreaks() {
     contentRuns.removeAll()
   }
