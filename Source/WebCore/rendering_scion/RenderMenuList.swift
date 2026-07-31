@@ -43,10 +43,7 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     adjustInnerStyle()
   }
 
-  override func createsAnonymousWrapper() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func createsAnonymousWrapper() -> Bool { return true }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
     // Clip to the intersection of the content box and the content box for the inner box

@@ -27,10 +27,7 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     fatalError("Not implemented")
   }
 
-  override func createsAnonymousWrapper() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func createsAnonymousWrapper() -> Bool { return true }
 
   override func hasControlClip() -> Bool {
     // TODO(asuhan): implement this
