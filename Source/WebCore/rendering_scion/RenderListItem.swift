@@ -31,6 +31,11 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  deinit {
+    // Do not add any code here. Add it to willBeDestroyed() instead.
+    assert(m_marker == nil)
+  }
+
   func value() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -47,13 +52,13 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
   }
 
   func markerRenderer() -> RenderListMarkerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_marker
   }
 
   func setMarkerRenderer(marker: RenderListMarkerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_marker = marker
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -85,6 +90,8 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var m_marker: RenderListMarkerWrapper?
 }
 
 func isHTMLListElement(node: NodeWrapper) -> Bool {
