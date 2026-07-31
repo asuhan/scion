@@ -119,13 +119,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   func columnCount() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_columnCount
   }
 
   func columnWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_columnWidth
   }
 
   func setColumnHeightAvailable(available: LayoutUnit) { columnHeightAvailable = available }
@@ -146,8 +146,9 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   func setColumnCountAndWidth(count: UInt32, width: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_columnCount = count
+    m_columnWidth = width
   }
 
   func progressionIsInline() -> Bool {
@@ -406,6 +407,9 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   // "current set" is difficult, since layout may jump back and forth in the tree, due to wrong
   // top location estimates (due to e.g. margin collapsing), and possibly for other reasons.
   private var m_lastSetWorkedOn: RenderMultiColumnSetWrapper? = nil
+
+  private var m_columnCount: UInt32 = 1  // The default column count/width that are based off our containing block width. These values represent only the default.
+  private var m_columnWidth = LayoutUnit(value: 0)  // A multi-column block that is split across variable width pages or fragments will have different column counts and widths in each. These values will be cached (eventually) for multi-column blocks.
 
   var columnHeightAvailable = LayoutUnit()  // Total height available to columns, or 0 if auto.
   private var m_inLayout = false  // Set while we're laying out the flow thread, during which colum set heights are unknown.
