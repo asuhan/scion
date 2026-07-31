@@ -87,8 +87,13 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
   }
 
   override final func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // FIXME: RenderListMarker::updateMargins() mutates margin style which affects preferred widths.
+    if m_marker?.preferredLogicalWidthsDirty() ?? false {
+      m_marker!.updateMarginsAndContent()
+    }
+
+    super.computePreferredLogicalWidths()
   }
 
   private var m_marker: RenderListMarkerWrapper?
