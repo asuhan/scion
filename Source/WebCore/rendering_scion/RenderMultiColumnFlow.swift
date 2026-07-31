@@ -152,13 +152,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   func progressionIsInline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_progressionIsInline
   }
 
   func setProgressionIsInline(progressionIsInline: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_progressionIsInline = progressionIsInline
   }
 
   func progressionIsReversed() -> Bool {
@@ -415,4 +415,6 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   private var m_inLayout = false  // Set while we're laying out the flow thread, during which colum set heights are unknown.
   var inBalancingPass = false  // Guard to avoid re-entering column balancing.
   private var m_needsHeightsRecalculation = false
+
+  private var m_progressionIsInline = false
 }
