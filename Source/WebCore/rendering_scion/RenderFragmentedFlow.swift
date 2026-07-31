@@ -38,6 +38,16 @@ private func clamp(fragment: RenderFragmentContainerWrapper?, clampBox: RenderBo
 }
 
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
+  init(_ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper) {
+    super.init(type: type, document: document, style: style, flags: .IsFragmentedFlow)
+    currentFragmentMaintainer = nil
+    fragmentsInvalidated = false
+    fragmentsHaveUniformLogicalWidth = true
+    fragmentsHaveUniformLogicalHeight = true
+    pageLogicalSizeChanged = false
+    assert(isRenderFragmentedFlow())
+  }
+
   func removeFlowChildInfo(_ child: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
