@@ -49,8 +49,12 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !logicalHeight().bool() && hasNonVisibleOverflow() {
+      return
+    }
+
+    super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
