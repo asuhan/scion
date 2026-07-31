@@ -327,8 +327,8 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   override func initialLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return columnWidth()
   }
 
   override func setPageBreak(
