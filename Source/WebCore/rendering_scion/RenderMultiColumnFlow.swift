@@ -279,8 +279,11 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
 
   // FIXME: Eventually as column and fragment flow threads start nesting, this will end up changing.
   override func shouldCheckColumnBreaks() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !parent()!.isRenderView() {
+      return true
+    }
+    return view().frameView().pagination().behavesLikeColumns
   }
 
   func addFragmentToThread(_ fragmentContainer: RenderFragmentContainerWrapper) {
