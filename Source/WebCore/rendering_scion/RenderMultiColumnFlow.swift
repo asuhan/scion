@@ -67,8 +67,15 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   static func previousColumnSetOrSpannerSiblingOf(child: RenderBoxWrapper?) -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if child == nil {
+      return nil
+    }
+    if let sibling = child!.previousSiblingBox() {
+      if !(sibling is RenderFragmentedFlowWrapper) {
+        return sibling
+      }
+    }
+    return nil
   }
 
   func findColumnSpannerPlaceholder(spanner: RenderBoxWrapper?)
