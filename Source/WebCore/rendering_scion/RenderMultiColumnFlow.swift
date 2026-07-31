@@ -26,8 +26,9 @@
 
 class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   init(document: Document, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(.MultiColumnFlow, document, style)
+    setFragmentedFlowState(.InsideFlow)
+    assert(isRenderMultiColumnFlow())
   }
 
   func multiColumnBlockFlow() -> RenderBlockFlowWrapper? {
@@ -351,6 +352,6 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     }
   }
 
-  var columnHeightAvailable: LayoutUnit  // Total height available to columns, or 0 if auto.
+  var columnHeightAvailable = LayoutUnit()  // Total height available to columns, or 0 if auto.
   let inBalancingPass = false  // Guard to avoid re-entering column balancing.
 }
