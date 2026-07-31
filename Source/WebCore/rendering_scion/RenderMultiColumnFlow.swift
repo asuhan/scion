@@ -136,13 +136,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   func setNeedsHeightsRecalculation(recalculate: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_needsHeightsRecalculation = recalculate
   }
 
   func shouldRelayoutForPagination() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !inBalancingPass && m_needsHeightsRecalculation
   }
 
   func setColumnCountAndWidth(count: UInt32, width: LayoutUnit) {
@@ -414,4 +414,5 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   var columnHeightAvailable = LayoutUnit()  // Total height available to columns, or 0 if auto.
   private var m_inLayout = false  // Set while we're laying out the flow thread, during which colum set heights are unknown.
   var inBalancingPass = false  // Guard to avoid re-entering column balancing.
+  private var m_needsHeightsRecalculation = false
 }
