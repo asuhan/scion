@@ -134,6 +134,17 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       && precedesRenderer(renderer: renderer, boundary: lastRenderer)
   }
 
+  private func setLogicalTopInFragmentedFlow(_ logicalTop: LayoutUnit) {
+    assert(isNativeImpl())
+    var rect = fragmentedFlowPortionRect()
+    if isHorizontalWritingMode() {
+      rect.setY(y: logicalTop)
+    } else {
+      rect.setX(x: logicalTop)
+    }
+    setFragmentedFlowPortionRect(rect)
+  }
+
   private func logicalTopInFragmentedFlow() -> LayoutUnit {
     assert(isNativeImpl())
     return isHorizontalWritingMode()
@@ -296,6 +307,35 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     setLogicalBottomInFragmentedFlow(RenderFragmentedFlowWrapper.maxLogicalHeight())
 
     setNeedsLayout(markParents: .MarkOnlyThis)
+  }
+
+  // Begin laying out content for this column set. This happens at the beginning of flow thread
+  // layout, and when advancing from a previous column set or spanner to this one.
+  func beginFlow(_ container: RenderBlockWrapper) {
+    assert(isNativeImpl())
+    let fragmentedFlow = multiColumnFlowForMultiColumnSet()!
+
+    // At this point layout is exactly at the beginning of this set. Store block offset from flow
+    // thread start.
+    let logicalTopInFragmentedFlow =
+      fragmentedFlow.offsetFromLogicalTopOfFirstFragment(currentBlock: container)
+      + container.logicalHeight()
+    setLogicalTopInFragmentedFlow(logicalTopInFragmentedFlow)
+  }
+
+  func endFlow(_ container: RenderBlockWrapper, _ bottomInContainer: LayoutUnit) {
+    assert(isNativeImpl())
+    let fragmentedFlow = multiColumnFlowForMultiColumnSet()!
+
+    // At this point layout is exactly at the end of this set. Store block offset from flow thread
+    // start. Also note that a new column height may have affected the height used in the flow
+    // thread (because of struts), which may affect the number of columns. So we also need to update
+    // the flow thread portion height in order to be able to calculate actual column-count.
+    let logicalBottomInFragmentedFlow =
+      fragmentedFlow.offsetFromLogicalTopOfFirstFragment(currentBlock: container)
+      + bottomInContainer
+    setLogicalBottomInFragmentedFlow(logicalBottomInFragmentedFlow)
+    container.setLogicalHeight(size: bottomInContainer)
   }
 
   func requiresBalancing() -> Bool {

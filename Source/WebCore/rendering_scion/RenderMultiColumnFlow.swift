@@ -62,6 +62,17 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     return nil
   }
 
+  private func firstColumnSetOrSpanner() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
+    if let sibling = nextSibling() {
+      assert(
+        sibling is RenderMultiColumnSetWrapper
+          || findColumnSpannerPlaceholder(spanner: sibling as! RenderBoxWrapper?) != nil)
+      return sibling as! RenderBoxWrapper?
+    }
+    return nil
+  }
+
   static func nextColumnSetOrSpannerSiblingOf(child: RenderBoxWrapper?) -> RenderBoxWrapper? {
     return child?.nextSiblingBox()
   }
@@ -86,8 +97,25 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!m_inLayout)
+    m_inLayout = true
+    m_lastSetWorkedOn = nil
+    if let first = firstColumnSetOrSpanner(),
+      let multiColumnSet = first as? RenderMultiColumnSetWrapper
+    {
+      m_lastSetWorkedOn = multiColumnSet
+      multiColumnSet.beginFlow(self)
+    }
+    super.layout()
+    if let lastSet = lastMultiColumnSet() {
+      if RenderMultiColumnFlowWrapper.nextColumnSetOrSpannerSiblingOf(child: lastSet) == nil {
+        lastSet.endFlow(self, logicalHeight())
+      }
+      lastSet.expandToEncompassFragmentedFlowContentsIfNeeded()
+    }
+    m_inLayout = false
+    m_lastSetWorkedOn = nil
   }
 
   func columnCount() -> UInt32 {
@@ -374,6 +402,12 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     }
   }
 
+  // The last set we worked on. It's not to be used as the "current set". The concept of a
+  // "current set" is difficult, since layout may jump back and forth in the tree, due to wrong
+  // top location estimates (due to e.g. margin collapsing), and possibly for other reasons.
+  private var m_lastSetWorkedOn: RenderMultiColumnSetWrapper? = nil
+
   var columnHeightAvailable = LayoutUnit()  // Total height available to columns, or 0 if auto.
+  private var m_inLayout = false  // Set while we're laying out the flow thread, during which colum set heights are unknown.
   let inBalancingPass = false  // Guard to avoid re-entering column balancing.
 }

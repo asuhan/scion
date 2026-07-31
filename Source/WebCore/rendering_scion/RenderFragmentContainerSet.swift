@@ -35,6 +35,32 @@
 // FIXME: For now we derive from RenderFragmentContainer, but this may change at some point.
 
 class RenderFragmentContainerSetWrapper: RenderFragmentContainerWrapper {
+  func expandToEncompassFragmentedFlowContentsIfNeeded() {
+    assert(isNativeImpl())
+    // Whenever the last region is a set, it always expands its region rect to consume all
+    // of the flow thread content. This is because it is always capable of generating an
+    // infinite number of boxes in order to hold all of the remaining content.
+    let rect = fragmentedFlowPortionRect()
+
+    // Get the offset within the flow thread in its block progression direction. Then get the
+    // flow thread's remaining logical height including its overflow and expand our rect
+    // to encompass that remaining height and overflow. The idea is that we will generate
+    // additional columns and pages to hold that overflow, since people do write bad
+    // content like <body style="height:0px"> in multi-column layouts.
+    let isHorizontal = fragmentedFlow!.isHorizontalWritingMode()
+    let logicalTopOffset = isHorizontal ? rect.y() : rect.x()
+    let overflowHeight =
+      isHorizontal
+      ? fragmentedFlow!.layoutOverflowRect().maxY() : fragmentedFlow!.layoutOverflowRect().maxX()
+    let logicalHeightWithOverflow =
+      logicalTopOffset == RenderFragmentedFlowWrapper.maxLogicalHeight()
+      ? overflowHeight : overflowHeight - logicalTopOffset
+    setFragmentedFlowPortionRect(
+      LayoutRectWrapper(
+        x: rect.x(), y: rect.y(), width: isHorizontal ? rect.width() : logicalHeightWithOverflow,
+        height: isHorizontal ? logicalHeightWithOverflow : rect.height()))
+  }
+
   override final func installFragmentedFlow() {
     // We don't have to do anything, since we were able to connect the flow thread
     // in the constructor.
