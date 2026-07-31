@@ -49,8 +49,16 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   func lastMultiColumnSet() -> RenderMultiColumnSetWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(multiColumnBlockFlow() != nil)
+
+    var sibling = multiColumnBlockFlow()!.lastChild()
+    while sibling != nil {
+      if let multiColumnSet = sibling! as? RenderMultiColumnSetWrapper {
+        return multiColumnSet
+      }
+      sibling = sibling!.previousSibling()
+    }
+    return nil
   }
 
   static func nextColumnSetOrSpannerSiblingOf(child: RenderBoxWrapper?) -> RenderBoxWrapper? {
