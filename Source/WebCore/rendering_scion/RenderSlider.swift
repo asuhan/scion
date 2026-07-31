@@ -74,7 +74,7 @@ final class RenderSliderWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func isFlexibleBoxImpl() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 }
