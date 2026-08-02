@@ -535,6 +535,8 @@ public:
 
     bool hasContinuationChainNode() const;
 
+    bool isContinuation() const;
+
     void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);

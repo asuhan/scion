@@ -2889,6 +2889,12 @@ func RenderElementScion_hasContinuationChainNode(_ elementRaw: UnsafeRawPointer)
   return element.hasContinuationChainNode()
 }
 
+@_cdecl("RenderElementScion_isContinuation")
+func RenderElementScion_isContinuation(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.isContinuation()
+}
+
 func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   assert(!wk_interop.RenderObject_isRenderView(p))
   if wk_interop.RenderObject_isRenderListBox(p) {

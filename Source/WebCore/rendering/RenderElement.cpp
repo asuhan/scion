@@ -2692,6 +2692,12 @@ bool RenderElement::hasContinuationChainNode() const
     return m_hasContinuationChainNode;
 }
 
+bool RenderElement::isContinuation() const
+{
+    if (m_scion) { return m_scion->isContinuation(); }
+    return m_isContinuation;
+}
+
 ReferencedSVGResources& RenderElement::ensureReferencedSVGResources()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

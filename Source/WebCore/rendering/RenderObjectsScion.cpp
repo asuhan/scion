@@ -592,6 +592,8 @@ extern "C" bool RenderElementScion_hasBlendMode(const void*);
 
 extern "C" bool RenderElementScion_hasContinuationChainNode(const void*);
 
+extern "C" bool RenderElementScion_isContinuation(const void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
@@ -1826,6 +1828,11 @@ bool RenderElementScion::hasBlendMode() const
 bool RenderElementScion::hasContinuationChainNode() const
 {
     return RenderElementScion_hasContinuationChainNode(m_handle);
+}
+
+bool RenderElementScion::isContinuation() const
+{
+    return RenderElementScion_isContinuation(m_handle);
 }
 
 void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)
