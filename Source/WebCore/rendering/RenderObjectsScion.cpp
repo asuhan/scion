@@ -648,6 +648,8 @@ extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
 extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
 
+extern "C" void* RenderBoxModelObjectScion_inlineContinuation(const void* p);
+
 extern "C" void RenderInlineScion_setWk(void*, void*);
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
@@ -2038,6 +2040,11 @@ LayoutUnit RenderBoxModelObjectScion::borderLogicalLeft() const
 RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
 {
     return static_cast<RenderBoxModelObject*>(RenderBoxModelObjectScion_continuation(m_handle));
+}
+
+RenderInline* RenderBoxModelObjectScion::inlineContinuation() const
+{
+    return static_cast<RenderInline*>(RenderBoxModelObjectScion_inlineContinuation(m_handle));
 }
 
 void RenderInlineScion::setWk(void* wk)

@@ -3101,6 +3101,15 @@ func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointe
   return continuation.id()
 }
 
+@_cdecl("RenderBoxModelObjectScion_inlineContinuation")
+func RenderBoxModelObjectScion_inlineContinuation(_ boxModelObjectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return wkRenderObject(boxModelObject.inlineContinuation())
+}
+
 @_cdecl("RenderBoxScion_requiresLayerWithScrollableArea")
 func RenderBoxScion_requiresLayerWithScrollableArea(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

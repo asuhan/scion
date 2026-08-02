@@ -656,6 +656,8 @@ public:
 
     RenderBoxModelObject* continuation() const;
 
+    RenderInline* inlineContinuation() const;
+
 private:
     void* m_handle;
 };
