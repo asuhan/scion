@@ -2072,6 +2072,12 @@ std::unique_ptr<RenderStyle> RenderElement::getUncachedPseudoStyle(const Style::
     return WTFMove(resolvedStyle->style);
 }
 
+RenderObject* RenderElement::firstChildSlow() const
+{
+    if (m_scion) { return m_scion->firstChildSlow(); }
+    return firstChild();
+}
+
 RenderElement* RenderElement::rendererForPseudoStyleAcrossShadowBoundary() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

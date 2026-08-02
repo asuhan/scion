@@ -559,6 +559,8 @@ public:
 
     bool didVisitSinceLayout(RenderElement::LayoutIdentifier) const;
 
+    RenderObject* firstChildSlow() const;
+
     void setFirstChild(RenderObject*);
 
     void setLastChild(RenderObject*);

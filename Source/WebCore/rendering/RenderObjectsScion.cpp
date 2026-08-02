@@ -623,6 +623,8 @@ extern "C" bool RenderElementScion_renderBlockHasRareData(const void*);
 
 extern "C" bool RenderElementScion_didVisitSinceLayout(const void*, uint32_t);
 
+extern "C" void* RenderElementScion_firstChildSlow(const void*);
+
 extern "C" void RenderElementScion_setFirstChild(void*, void*);
 
 extern "C" void RenderElementScion_setLastChild(void*, void*);
@@ -1884,6 +1886,11 @@ bool RenderElementScion::renderBlockHasRareData() const
 bool RenderElementScion::didVisitSinceLayout(RenderElement::LayoutIdentifier identifier) const
 {
     return RenderElementScion_didVisitSinceLayout(m_handle, identifier);
+}
+
+RenderObject* RenderElementScion::firstChildSlow() const
+{
+    return static_cast<RenderObject*>(RenderElementScion_firstChildSlow(m_handle));
 }
 
 void RenderElementScion::setFirstChild(RenderObject* firstChild)

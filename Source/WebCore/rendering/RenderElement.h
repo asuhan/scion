@@ -492,11 +492,7 @@ private:
     void isRenderText() const = delete;
     void isRenderElement() const = delete;
 
-    RenderObject* firstChildSlow() const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return firstChild();
-    }
+    RenderObject* firstChildSlow() const final;
     RenderObject* lastChildSlow() const final
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

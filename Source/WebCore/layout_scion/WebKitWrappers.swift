@@ -3026,6 +3026,12 @@ func RenderElementScion_didVisitSinceLayout(_ elementRaw: UnsafeRawPointer, _ id
   return element.didVisitSinceLayout(identifier)
 }
 
+@_cdecl("RenderElementScion_firstChildSlow")
+func RenderElementScion_firstChildSlow(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return wkRenderObject(element.firstChildSlow())
+}
+
 @_cdecl("RenderElementScion_setFirstChild")
 func RenderElementScion_setFirstChild(
   _ elementRaw: UnsafeMutableRawPointer, _ firstChildRaw: UnsafeMutableRawPointer?
