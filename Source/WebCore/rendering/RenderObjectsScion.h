@@ -828,6 +828,10 @@ public:
     {
     }
 
+    LayoutUnit offsetWidth() const;
+
+    LayoutUnit offsetHeight() const;
+
     void setWk(void*);
 
 private:

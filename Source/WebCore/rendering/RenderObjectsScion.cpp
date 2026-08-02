@@ -652,6 +652,10 @@ extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
 
 extern "C" void* RenderBoxModelObjectScion_inlineContinuation(const void* p);
 
+extern "C" int32_t RenderInlineScion_offsetWidth(const void*);
+
+extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
+
 extern "C" void RenderInlineScion_setWk(void*, void*);
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
@@ -2052,6 +2056,16 @@ RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
 RenderInline* RenderBoxModelObjectScion::inlineContinuation() const
 {
     return static_cast<RenderInline*>(RenderBoxModelObjectScion_inlineContinuation(m_handle));
+}
+
+LayoutUnit RenderInlineScion::offsetWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_offsetWidth(m_handle));
+}
+
+LayoutUnit RenderInlineScion::offsetHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_offsetHeight(m_handle));
 }
 
 void RenderInlineScion::setWk(void* wk)

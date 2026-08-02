@@ -3073,6 +3073,18 @@ func RenderInlineScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderInlineScion_offsetWidth")
+func RenderInlineScion_offsetWidth(_ inlineRaw: UnsafeRawPointer) -> Int32 {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return inline.offsetWidth().rawValue()
+}
+
+@_cdecl("RenderInlineScion_offsetHeight")
+func RenderInlineScion_offsetHeight(_ inlineRaw: UnsafeRawPointer) -> Int32 {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return inline.offsetHeight().rawValue()
+}
+
 @_cdecl("RenderInlineScion_setWk")
 func RenderInlineScion_setWk(_ wk: UnsafeMutableRawPointer, _ inlineRaw: UnsafeMutableRawPointer) {
   let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()

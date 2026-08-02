@@ -138,16 +138,8 @@ private:
 
     LayoutUnit offsetLeft() const final;
     LayoutUnit offsetTop() const final;
-    LayoutUnit offsetWidth() const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return linesBoundingBox().width();
-    }
-    LayoutUnit offsetHeight() const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return linesBoundingBox().height();
-    }
+    LayoutUnit offsetWidth() const final;
+    LayoutUnit offsetHeight() const final;
 
 protected:
     LayoutRect clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext) const override;

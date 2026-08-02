@@ -370,6 +370,17 @@ LayoutUnit RenderInline::offsetTop() const
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).y();
 }
 
+LayoutUnit RenderInline::offsetWidth() const
+{
+    if (m_scion) { return m_scion->offsetWidth(); }
+    return linesBoundingBox().width();
+}
+LayoutUnit RenderInline::offsetHeight() const
+{
+    if (m_scion) { return m_scion->offsetHeight(); }
+    return linesBoundingBox().height();
+}
+
 LayoutPoint RenderInline::firstInlineBoxTopLeft() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
