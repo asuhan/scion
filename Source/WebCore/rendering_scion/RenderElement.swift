@@ -2532,7 +2532,10 @@ class RenderElementWrapper: RenderObjectWrapper {
     return lastChild()
   }
 
-  // TODO(asuhan): add firstChildSlow override
+  override func firstChildSlow() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    return firstChild()
+  }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
     assert(isNativeImpl())
