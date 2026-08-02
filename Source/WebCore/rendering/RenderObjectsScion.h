@@ -525,6 +525,8 @@ public:
 
     bool requiresRenderingConsolidationForViewTransition() const;
 
+    bool hasSelfPaintingLayer() const;
+
     bool checkForRepaintDuringLayout() const;
 
     bool hasFilter() const;
