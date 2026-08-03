@@ -1391,8 +1391,28 @@ class RenderElementWrapper: RenderObjectWrapper {
   // anchor. For inline renderers, this gets the logical top left of the first leaf child and the logical bottom
   // right of the last leaf child, converts them to absolute coordinates, and makes a box out of them.
   private func absoluteAnchorRect() -> (LayoutRectWrapper, Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var leadingInFixed: Bool? = false
+    var trailingInFixed: Bool? = false
+    let (leading, _) = getLeadingCorner(&leadingInFixed)
+    let (trailing, _) = getTrailingCorner(&trailingInFixed)
+
+    var upperLeft = leading
+    var lowerRight = trailing
+
+    // Vertical writing modes might mean the leading point is not in the top left
+    if !isInline() || isReplacedOrInlineBlock() {
+      upperLeft = FloatPoint(x: min(leading.x, trailing.x), y: min(leading.y, trailing.y))
+      lowerRight = FloatPoint(x: max(leading.x, trailing.x), y: max(leading.y, trailing.y))
+    }  // Otherwise, it's not obvious what to do.
+
+    // For now, just look at the leading corner. Handling one inside fixed and one not would be tricky.
+    return (
+      enclosingLayoutRect(
+        rect: FloatRectWrapper(
+          location: upperLeft, size: lowerRight.expandedTo(upperLeft) - upperLeft)),
+      leadingInFixed!
+    )
   }
 
   func absoluteAnchorRectWithScrollMargin() -> (MarginRect, Bool) {

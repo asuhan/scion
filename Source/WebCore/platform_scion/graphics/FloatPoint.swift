@@ -90,6 +90,10 @@ struct FloatPoint {
     return x * x + y * y
   }
 
+  func expandedTo(_ other: FloatPoint) -> FloatPoint {
+    return FloatPoint(x: max(x, other.x), y: max(y, other.y))
+  }
+
   func transposedPoint() -> FloatPoint {
     return FloatPoint(x: y, y: x)
   }
