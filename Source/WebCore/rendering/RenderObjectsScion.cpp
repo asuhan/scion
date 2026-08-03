@@ -548,6 +548,8 @@ extern "C" const void* RenderElementScion_grammarErrorPseudoStyle(const void*);
 
 extern "C" void RenderElementScion_didAttachChild(void*, void*);
 
+extern "C" void RenderElementScion_removeLayers(void*);
+
 extern "C" void RenderElementScion_setChildNeedsLayout(void*, bool);
 
 extern "C" void RenderElementScion_setOutOfFlowChildNeedsStaticPositionLayout(void*);
@@ -1701,6 +1703,11 @@ const RenderStyle* RenderElementScion::grammarErrorPseudoStyle() const
 void RenderElementScion::didAttachChild(RenderObject& child)
 {
     RenderElementScion_didAttachChild(m_handle, &child);
+}
+
+void RenderElementScion::removeLayers()
+{
+    RenderElementScion_removeLayers(m_handle);
 }
 
 void RenderElementScion::setChildNeedsLayout(MarkingBehavior markParents)

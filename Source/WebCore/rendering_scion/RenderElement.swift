@@ -751,7 +751,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     return layerNextSiblingRespectingTopLayer(self, parentLayer)
   }
 
-  private func removeLayers() {
+  func removeLayers() {
     if !isNativeImpl() {
       wk_interop.RenderElement_removeLayers(id())
       return

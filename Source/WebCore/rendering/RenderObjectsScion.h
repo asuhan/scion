@@ -491,6 +491,8 @@ public:
 
     void didAttachChild(RenderObject&);
 
+    void removeLayers();
+
     void setChildNeedsLayout(MarkingBehavior = MarkContainingBlockChain);
 
     void setOutOfFlowChildNeedsStaticPositionLayout();

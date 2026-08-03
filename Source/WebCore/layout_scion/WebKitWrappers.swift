@@ -2732,6 +2732,12 @@ func RenderElementScion_didAttachChild(
   element.didAttachChild(child: createRenderObjectWrapperOrNative(child))
 }
 
+@_cdecl("RenderElementScion_removeLayers")
+func RenderElementScion_removeLayers(_ elementRaw: UnsafeMutableRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.removeLayers()
+}
+
 @_cdecl("RenderElementScion_setChildNeedsLayout")
 func RenderElementScion_setChildNeedsLayout(
   _ elementRaw: UnsafeMutableRawPointer, _ markParents: Bool
