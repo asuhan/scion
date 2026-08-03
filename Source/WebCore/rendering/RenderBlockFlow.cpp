@@ -580,6 +580,12 @@ LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout()
     return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
 }
 
+bool RenderBlockFlow::inlineLayoutHasDetachedContent() const
+{
+    if (m_scion) { return m_scion->inlineLayoutHasDetachedContent(); }
+    return inlineLayout() && inlineLayout()->hasDetachedContent();
+}
+
 void RenderBlockFlow::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

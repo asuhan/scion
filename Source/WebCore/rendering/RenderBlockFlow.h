@@ -431,6 +431,7 @@ public:
     LegacyLineLayout* svgTextLayout();
     const LayoutIntegration::LineLayout* inlineLayout() const;
     LayoutIntegration::LineLayout* inlineLayout();
+    bool inlineLayoutHasDetachedContent() const;  // TODO(asuhan): remove, only required for interop
 
 #if ENABLE(TREE_DEBUGGING)
     void outputFloatingObjects(WTF::TextStream&, int depth) const;

@@ -885,6 +885,8 @@ extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
 
 extern "C" void* RenderBlockFlowScion_inlineLayout(void*);
 
+extern "C" bool RenderBlockFlowScion_inlineLayoutHasDetachedContent(const void*);
+
 extern "C" int32_t RenderBlockFlowScion_maxPositiveMarginBefore(const void*);
 
 extern "C" int32_t RenderBlockFlowScion_maxNegativeMarginBefore(const void*);
@@ -2644,6 +2646,11 @@ const LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout() const
 LayoutIntegration::LineLayout* RenderBlockFlowScion::inlineLayout()
 {
     return static_cast<LayoutIntegration::LineLayout*>(RenderBlockFlowScion_inlineLayout(m_handle));
+}
+
+bool RenderBlockFlowScion::inlineLayoutHasDetachedContent() const
+{
+    return RenderBlockFlowScion_inlineLayoutHasDetachedContent(m_handle);
 }
 
 LayoutUnit RenderBlockFlowScion::maxPositiveMarginBefore() const

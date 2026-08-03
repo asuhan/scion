@@ -2540,6 +2540,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
+  func inlineLayoutHasDetachedContent() -> Bool {
+    return inlineLayout()?.hasDetachedContent() ?? false
+  }
+
   enum PageBoundaryRule {
     case ExcludePageBoundary
     case IncludePageBoundary
