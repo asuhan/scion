@@ -752,7 +752,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func removeLayers() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderElement_removeLayers(id())
+      return
+    }
     guard let parentLayer = layerParent() else { return }
 
     if hasLayer() {

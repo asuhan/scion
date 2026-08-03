@@ -137,6 +137,11 @@ extern "C" WEBCORE_EXPORT const void* RenderElement_grammarErrorPseudoStyle(cons
     return static_cast<const WebCore::RenderElement*>(p)->grammarErrorPseudoStyle();
 }
 
+extern "C" WEBCORE_EXPORT void RenderElement_removeLayers(void* p)
+{
+    static_cast<WebCore::RenderElement*>(p)->removeLayers();
+}
+
 extern "C" WEBCORE_EXPORT void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents)
 {
     static_cast<WebCore::RenderElement*>(p)->setChildNeedsLayout(static_cast<WebCore::MarkingBehavior>(mark_parents));
