@@ -602,7 +602,7 @@ struct LengthBoxRaw {
 
 extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollMargin(const void* p)
 {
-    auto scrollMargin = static_cast<const WebCore::RenderStyle*>(p)->scrollMargin();
+    auto& scrollMargin = static_cast<const WebCore::RenderStyle*>(p)->scrollMargin();
     return { &scrollMargin.top(), &scrollMargin.right(), &scrollMargin.bottom(), &scrollMargin.left() };
 }
 
@@ -1408,7 +1408,7 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textAlignLast(const void* p)
 
 extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_clip(const void* p)
 {
-    auto clip = static_cast<const WebCore::RenderStyle*>(p)->clip();
+    auto& clip = static_cast<const WebCore::RenderStyle*>(p)->clip();
     return { &clip.top(), &clip.right(), &clip.bottom(), &clip.left() };
 }
 
