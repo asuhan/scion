@@ -2763,6 +2763,77 @@ class RenderElementWrapper: RenderObjectWrapper {
     return diff
   }
 
+  private func getLeadingCorner(_ insideFixed: inout Bool?) -> (FloatPoint, Bool) {
+    assert(isNativeImpl())
+    if isSVGRenderer() {
+      var wasFixed: Bool? = nil
+      return (
+        localToAbsoluteQuad(FloatQuad(inRect: strokeBoundingBox()), .UseTransforms, &wasFixed)
+          .boundingBox()
+          .minXMinYCorner(),
+        true
+      )
+    }
+
+    if !isInline() || isReplacedOrInlineBlock() {
+      return (localToAbsolute(FloatPoint(), .UseTransforms, &insideFixed), true)
+    }
+
+    // find the next text/image child, to get a position
+    var o: RenderObjectWrapper? = self
+    while o != nil {
+      let p = o
+      if let child = o!.firstChildSlow() {
+        o = child
+      } else if o!.nextSibling() != nil {
+        o = o!.nextSibling()
+      } else {
+        var next: RenderObjectWrapper? = nil
+        while next == nil && o!.parent() != nil {
+          o = o!.parent()
+          next = o!.nextSibling()
+        }
+        o = next
+
+        if o == nil {
+          break
+        }
+      }
+      assert(o != nil)
+
+      if !o!.isInline() || o!.isReplacedOrInlineBlock() {
+        return (o!.localToAbsolute(FloatPoint(), .UseTransforms, &insideFixed), true)
+      }
+
+      if p!.node() != nil && CPtrToInt(p!.node()!.p) == CPtrToInt(element()?.p)
+        && (o! is RenderTextWrapper)
+        && !InlineIterator.firstTextBoxFor(o! as! RenderTextWrapper).bool()
+      {
+        // do nothing - skip unrendered whitespace that is a child or next sibling of the anchor
+      } else if (o! is RenderTextWrapper) || o!.isReplacedOrInlineBlock() {
+        var point = FloatPoint()
+        if let textRenderer = o! as? RenderTextWrapper {
+          let run = InlineIterator.firstTextBoxFor(textRenderer)
+          if run.bool() {
+            point.move(
+              dx: Float32(textRenderer.linesBoundingBox().x()),
+              dy: Float32(run.get().lineBox().get().contentLogicalTop()))
+          }
+        } else if let box = o! as? RenderBoxWrapper {
+          point.moveBy(a: box.location().FloatPoint())
+        }
+        return (o!.container()!.localToAbsolute(point, .UseTransforms, &insideFixed), true)
+      }
+    }
+
+    // If the target doesn't have any children or siblings that could be used to calculate the scroll position, we must be
+    // at the end of the document. Scroll to the bottom. FIXME: who said anything about scrolling?
+    if o == nil && document().view() != nil {
+      return (FloatPoint(x: 0, y: Float32(document().view()!.contentsHeight())), true)
+    }
+    return (FloatPoint(), false)
+  }
+
   private func clearSubtreeLayoutRootIfNeeded() {
     assert(isNativeImpl())
     if renderTreeBeingDestroyed() {
