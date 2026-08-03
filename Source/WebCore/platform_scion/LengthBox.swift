@@ -39,6 +39,10 @@ class LengthBox: Equatable {
 
   static func == (lhs: LengthBox, rhs: LengthBox) -> Bool { return lhs.base == rhs.base }
 
+  func isZero() -> Bool {
+    return top().isZero() && right().isZero() && bottom().isZero() && left().isZero()
+  }
+
   private let base: RectEdges<LengthWrapper>
 }
 

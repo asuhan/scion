@@ -199,6 +199,11 @@ private func drawFocusRing(
   fatalError("Not implemented")
 }
 
+struct MarginRect {
+  let marginRect: LayoutRectWrapper
+  let anchorRect: LayoutRectWrapper
+}
+
 class RenderElementWrapper: RenderObjectWrapper {
   init(
     type: RenderObjectWrapper.`Type`, element: ElementWrapper,
@@ -1380,6 +1385,36 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
     return everHadLayout() && !hasSelfPaintingLayer()
       && !document().view()!.layoutContext().needsFullRepaint()
+  }
+
+  // absoluteAnchorRect() is conceptually similar to absoluteBoundingBoxRect(), but is intended for scrolling to an
+  // anchor. For inline renderers, this gets the logical top left of the first leaf child and the logical bottom
+  // right of the last leaf child, converts them to absolute coordinates, and makes a box out of them.
+  private func absoluteAnchorRect() -> (LayoutRectWrapper, Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func absoluteAnchorRectWithScrollMargin() -> (MarginRect, Bool) {
+    assert(isNativeImpl())
+    let (anchorRect, insideFixed) = absoluteAnchorRect()
+    let scrollMargin = style().scrollMargin()
+    if scrollMargin.isZero() {
+      return (MarginRect(marginRect: anchorRect, anchorRect: anchorRect), insideFixed)
+    }
+
+    // The scroll snap specification says that the scroll-margin should be applied in the
+    // coordinate system of the scroll container and applied to the rectangular bounding
+    // box of the transformed border box of the target element.
+    // See https://www.w3.org/TR/css-scroll-snap-1/#scroll-margin.
+    let margin = LayoutBoxExtent(
+      top: valueForLength(length: scrollMargin.top(), maximumValue: anchorRect.height()),
+      right: valueForLength(length: scrollMargin.right(), maximumValue: anchorRect.width()),
+      bottom: valueForLength(length: scrollMargin.bottom(), maximumValue: anchorRect.height()),
+      left: valueForLength(length: scrollMargin.left(), maximumValue: anchorRect.width()))
+    var marginRect = anchorRect
+    marginRect.expand(box: margin)
+    return (MarginRect(marginRect: marginRect, anchorRect: anchorRect), insideFixed)
   }
 
   func hasFilter() -> Bool {
