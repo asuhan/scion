@@ -155,7 +155,10 @@ class LayoutStateWrapper {
   }
 
   func hasBoxGeometry(layoutBox: BoxWrapper) -> Bool {
-    assert(isNativeImpl())
+    assert((p == nil) == (layoutBox.p == nil))
+    if !isNativeImpl() {
+      return wk_interop.LayoutState_hasBoxGeometry(p!, layoutBox.p!)
+    }
     if m_type == .Primary {
       return layoutBox.m_cachedGeometryForPrimaryLayoutState != nil
     }

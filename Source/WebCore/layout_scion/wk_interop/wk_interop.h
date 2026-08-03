@@ -1483,6 +1483,7 @@ int32_t ConstraintsForInlineContent_visualLeft(const void*);
 uint8_t ConstraintsForInlineContent_baseTypeFlags(const void*);
 void* LayoutState_ensureGeometryForBox(void*, const void*);
 void* LayoutState_geometryForBox(const void*, const void*);
+bool LayoutState_hasBoxGeometry(const void*, const void*);
 void* LayoutState_createForView(const void*, const void*);
 void LayoutState_destroy(const void*);
 void* PaintInfo_context(const void*);

@@ -110,6 +110,11 @@ extern "C" WEBCORE_EXPORT void* LayoutState_geometryForBox(const void* layout_st
     return const_cast<void*>(box);
 }
 
+extern "C" WEBCORE_EXPORT bool LayoutState_hasBoxGeometry(const void* layout_state, const void* layout_box)
+{
+    return static_cast<const WebCore::Layout::LayoutState*>(layout_state)->hasBoxGeometry(*static_cast<const WebCore::Layout::Box*>(layout_box));
+}
+
 extern "C" WEBCORE_EXPORT void* InlineDamage_create()
 {
     return new WebCore::Layout::InlineDamage();
