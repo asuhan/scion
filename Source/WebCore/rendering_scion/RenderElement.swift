@@ -2834,6 +2834,63 @@ class RenderElementWrapper: RenderObjectWrapper {
     return (FloatPoint(), false)
   }
 
+  private func getTrailingCorner(_ insideFixed: inout Bool?) -> (FloatPoint, Bool) {
+    assert(isNativeImpl())
+    if isSVGRenderer() {
+      var wasFixed: Bool? = nil
+      return (
+        localToAbsoluteQuad(FloatQuad(inRect: strokeBoundingBox()), .UseTransforms, &wasFixed)
+          .boundingBox()
+          .maxXMaxYCorner(),
+        true
+      )
+    }
+
+    if !isInline() || isReplacedOrInlineBlock() {
+      return (
+        localToAbsolute(
+          LayoutPointWrapper(size: (self as! RenderBoxWrapper).size()).FloatPoint(), .UseTransforms,
+          &insideFixed
+        ), true
+      )
+    }
+
+    // find the last text/image child, to get a position
+    var o: RenderObjectWrapper? = self
+    while o != nil {
+      if let child = o!.lastChildSlow() {
+        o = child
+      } else if o!.previousSibling() != nil {
+        o = o!.previousSibling()
+      } else {
+        var prev: RenderObjectWrapper? = nil
+        while prev == nil {
+          o = o!.parent()
+          if o == nil {
+            return (FloatPoint(), false)
+          }
+          prev = o!.previousSibling()
+        }
+        o = prev
+      }
+      assert(o != nil)
+      if (o! is RenderTextWrapper) || o!.isReplacedOrInlineBlock() {
+        var point = FloatPoint()
+        if let textRenderer = o! as? RenderTextWrapper {
+          let linesBox = LayoutRectWrapper(rect: textRenderer.linesBoundingBox())
+          if !linesBox.maxX().bool() && !linesBox.maxY().bool() {
+            continue
+          }
+          point.moveBy(a: linesBox.maxXMaxYCorner().FloatPoint())
+        } else {
+          point.moveBy(a: (o! as! RenderBoxWrapper).frameRect().maxXMaxYCorner().FloatPoint())
+        }
+        return (o!.container()!.localToAbsolute(point, .UseTransforms, &insideFixed), true)
+      }
+    }
+    return (FloatPoint(), true)
+  }
+
   private func clearSubtreeLayoutRootIfNeeded() {
     assert(isNativeImpl())
     if renderTreeBeingDestroyed() {
