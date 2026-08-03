@@ -28,6 +28,7 @@
 #include "LayoutUnit.h"
 #include "RenderBlock.h"
 #include "RenderBox.h"
+#include "RenderElement.h"
 #include "RenderObject.h"
 #include "RenderStyle.h"
 #include "ScrollTypes.h"
@@ -530,6 +531,8 @@ public:
     bool hasSelfPaintingLayer() const;
 
     bool checkForRepaintDuringLayout() const;
+
+    WebCore::MarginRect absoluteAnchorRectWithScrollMargin(bool* insideFixed) const;
 
     bool hasFilter() const;
 

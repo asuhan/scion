@@ -588,6 +588,13 @@ extern "C" bool RenderElementScion_hasSelfPaintingLayer(const void*);
 
 extern "C" bool RenderElementScion_checkForRepaintDuringLayout(const void*);
 
+struct MarginRectRaw {
+    LayoutRectRaw marginRect;
+    LayoutRectRaw anchorRect;
+};
+
+extern "C" MarginRectRaw RenderElementScion_absoluteAnchorRectWithScrollMargin(void*, bool*);
+
 extern "C" bool RenderElementScion_hasFilter(const void*);
 
 extern "C" bool RenderElementScion_hasBackdropFilter(const void*);
@@ -1830,6 +1837,12 @@ bool RenderElementScion::hasSelfPaintingLayer() const
 bool RenderElementScion::checkForRepaintDuringLayout() const
 {
     return RenderElementScion_checkForRepaintDuringLayout(m_handle);
+}
+
+WebCore::MarginRect RenderElementScion::absoluteAnchorRectWithScrollMargin(bool* insideFixed) const
+{
+    const auto margin = RenderElementScion_absoluteAnchorRectWithScrollMargin(m_handle, insideFixed);
+    return { convertLayoutRectRaw(margin.marginRect), convertLayoutRectRaw(margin.anchorRect) };
 }
 
 bool RenderElementScion::hasFilter() const

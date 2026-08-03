@@ -2877,6 +2877,20 @@ func RenderElementScion_checkForRepaintDuringLayout(_ elementRaw: UnsafeRawPoint
   return element.checkForRepaintDuringLayout()
 }
 
+@_cdecl("RenderElementScion_absoluteAnchorRectWithScrollMargin")
+func RenderElementScion_absoluteAnchorRectWithScrollMargin(
+  _ elementRaw: UnsafeRawPointer, _ insideFixed: UnsafeMutablePointer<Bool>?
+) -> MarginRectRaw {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let (marginRect, insideFixedRet) = element.absoluteAnchorRectWithScrollMargin()
+  if insideFixed != nil {
+    insideFixed!.pointee = insideFixedRet
+  }
+  return MarginRectRaw(
+    marginRect: convertLayoutRect(marginRect.marginRect),
+    anchorRect: convertLayoutRect(marginRect.anchorRect))
+}
+
 @_cdecl("RenderElementScion_hasFilter")
 func RenderElementScion_hasFilter(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

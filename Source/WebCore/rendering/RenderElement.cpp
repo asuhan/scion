@@ -2359,7 +2359,7 @@ LayoutRect RenderElement::absoluteAnchorRect(bool* insideFixed) const
 
 MarginRect RenderElement::absoluteAnchorRectWithScrollMargin(bool* insideFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->absoluteAnchorRectWithScrollMargin(insideFixed); }
     LayoutRect anchorRect = absoluteAnchorRect(insideFixed);
     const LengthBox& scrollMargin = style().scrollMargin();
     if (scrollMargin.isZero())
