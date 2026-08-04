@@ -2345,3 +2345,9 @@ extern "C" WEBCORE_EXPORT void originalTextMap_set(const void* render_text_raw, 
     const auto& original_text = *static_cast<const WTF::String*>(original_text_raw);
     WebCore::originalTextMap().set(render_text, original_text);
 }
+
+extern "C" WEBCORE_EXPORT bool originalTextMap_contains(const void* render_text_raw)
+{
+    const auto render_text = static_cast<const WebCore::RenderText*>(render_text_raw);
+    return WebCore::originalTextMap().contains(render_text);
+}

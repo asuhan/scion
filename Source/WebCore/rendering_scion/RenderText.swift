@@ -312,6 +312,11 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  deinit {
+    // Do not add any code here. Add it to willBeDestroyed() instead.
+    assert(!originalTextMap_contains(wkRenderObject(self)))
+  }
+
   override func layoutBox() -> InlineTextBoxWrapper? {
     assert(isNativeImpl())
     return super.layoutBox() as! InlineTextBoxWrapper?
