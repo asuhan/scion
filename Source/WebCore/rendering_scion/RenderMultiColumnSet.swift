@@ -173,6 +173,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width()
   }
 
+  func columnHeightComputed() -> Bool {
+    assert(isNativeImpl())
+    return m_columnHeightComputed
+  }
+
   private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
     computedColumnWidth = width
     computedColumnCount = count
@@ -294,7 +299,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       if initial {
         computedColumnHeight = LayoutUnit(value: 0)
         availableColumnHeight = LayoutUnit(value: 0)
-        columnHeightComputed = false
+        m_columnHeightComputed = false
       }
     } else {
       setAndConstrainColumnHeight(
@@ -1074,7 +1079,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       }
     }
 
-    columnHeightComputed = true
+    m_columnHeightComputed = true
 
     // FIXME: the height may also be affected by the enclosing pagination context, if any.
   }
@@ -1171,7 +1176,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   private var computedColumnWidth = LayoutUnit()  // Used column width (the resulting 'W' from the pseudo-algorithm in the multicol spec)
   var computedColumnHeight = LayoutUnit()
   private var availableColumnHeight = LayoutUnit()
-  private var columnHeightComputed = false
+  private var m_columnHeightComputed = false
 
   // The following variables are used when balancing the column set.
   private var maxColumnHeight = LayoutUnit()  // Maximum column height allowed.
