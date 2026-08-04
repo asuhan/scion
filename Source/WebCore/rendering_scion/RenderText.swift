@@ -292,6 +292,13 @@ private func invalidateLineLayoutPathOnContentChangeIfNeeded(
   }
 }
 
+private func isInlineFlowOrEmptyText(_ renderer: RenderObjectWrapper) -> Bool {
+  if renderer is RenderInlineWrapper {
+    return true
+  }
+  return (renderer as? RenderTextWrapper)?.text().isEmpty() ?? false
+}
+
 class RenderTextWrapper: RenderObjectWrapper {
   convenience init(type: `Type`, textNode: TextWrapper, text: StringWrapper) {
     self.init(type, textNode, text)
@@ -1087,8 +1094,22 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func previousCharacter() -> UChar {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var previousText = previousInPreOrder()
+    while previousText != nil {
+      if !previousText!.isInFlow() {
+        continue
+      }
+      if !isInlineFlowOrEmptyText(previousText!) {
+        break
+      }
+      previousText = previousText!.previousInPreOrder()
+    }
+    guard let renderText = previousText as? RenderTextWrapper else {
+      return UChar(Character(" ").asciiValue!)
+    }
+    let previousString = renderText.text()
+    return previousString[previousString.length() - 1]
   }
 
   func setTextInternal(_ text: StringWrapper, _ force: Bool) {
