@@ -1641,7 +1641,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsSimplifiedNormalFlowLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_needsSimplifiedNormalFlowLayout(id()) }
     return m_stateBitfields.hasFlag(.NeedsSimplifiedNormalFlowLayout)
   }
 

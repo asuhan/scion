@@ -285,6 +285,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_posChildNeedsLayout(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->posChildNeedsLayout();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_needsSimplifiedNormalFlowLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->needsSimplifiedNormalFlowLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_normalChildNeedsLayout(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->normalChildNeedsLayout();
