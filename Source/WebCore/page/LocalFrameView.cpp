@@ -350,6 +350,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_hasSlowRepaintObject(const void* p
     return static_cast<const WebCore::LocalFrameView*>(p)->hasSlowRepaintObject(*static_cast<const WebCore::RenderElement*>(rendererRaw));
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_addViewportConstrainedObject(void* p, void* objectRaw)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->addViewportConstrainedObject(*static_cast<WebCore::RenderLayerModelObject*>(objectRaw));
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_fixedElementsLayoutRelativeToFrame(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->fixedElementsLayoutRelativeToFrame();

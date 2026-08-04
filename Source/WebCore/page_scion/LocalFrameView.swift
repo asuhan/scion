@@ -125,8 +125,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
 
   // Includes fixed- and sticky-position objects.
   func addViewportConstrainedObject(_ object: RenderLayerModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_addViewportConstrainedObject(pInterop, wkRenderObject(object))
   }
 
   func removeViewportConstrainedObject(_ object: RenderLayerModelObjectWrapper) {
