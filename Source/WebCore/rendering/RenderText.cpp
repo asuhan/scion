@@ -2333,3 +2333,8 @@ void* RenderText::scion() const
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT void originalTextMap_remove(const void* p)
+{
+    WebCore::originalTextMap().remove(static_cast<const WebCore::RenderText*>(p));
+}

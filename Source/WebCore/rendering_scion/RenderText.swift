@@ -1044,8 +1044,21 @@ class RenderTextWrapper: RenderObjectWrapper {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_text = text
+    if m_originalTextDiffersFromRendered {
+      wk_interop.originalTextMap_remove(wkRenderObject(self))
+      m_originalTextDiffersFromRendered = false
+    }
+
+    setRenderedText(text)
+
+    setNeedsLayoutAndPrefWidthsRecalc()
+    knownToHaveNoOverflowAndNoFallbackFonts = false
+
+    if document().existingAXObjectCache() != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   override final func canHaveChildren() -> Bool {
@@ -1641,7 +1654,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   private var m_canUseSimpleFontCodePath = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
   private var useBackslashAsYenSymbol = false
-  private let m_originalTextDiffersFromRendered = false
+  private var m_originalTextDiffersFromRendered = false
   private var m_hasInlineWrapperForDisplayContents = false
 
   private var wk: UnsafeMutableRawPointer? = nil
