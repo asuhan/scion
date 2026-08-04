@@ -1037,6 +1037,13 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setTextInternal(_ text: StringWrapper, _ force: Bool) {
+    assert(isNativeImpl())
+    assert(!text.isNull())
+
+    if !force && text == originalText() {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
