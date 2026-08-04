@@ -877,6 +877,7 @@ void LocalFrameViewLayoutContext_scheduleLayout(void*);
 void LocalFrameViewLayoutContext_scheduleSubtreeLayout(void*, void*);
 bool LocalFrameViewLayoutContext_isInLayout(const void*);
 bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void*);
+void* LocalFrameViewLayoutContext_subtreeLayoutRoot(const void*);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 void* LocalFrameViewLayoutContext_layoutState(const void*);
 bool LocalFrameViewLayoutContext_isPaintOffsetCacheEnabled(const void*);

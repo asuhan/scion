@@ -73,6 +73,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_needsSkippedContentLa
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->needsSkippedContentLayout();
 }
 
+extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_subtreeLayoutRoot(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->subtreeLayoutRoot();
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_needsFullRepaint(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->needsFullRepaint();

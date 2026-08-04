@@ -48,8 +48,8 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func subtreeLayoutRoot() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.LocalFrameViewLayoutContext_subtreeLayoutRoot(p) else { return nil }
+    return createRenderObjectWrapperOrNative(raw) as! RenderElementWrapper?
   }
 
   func needsFullRepaint() -> Bool {
