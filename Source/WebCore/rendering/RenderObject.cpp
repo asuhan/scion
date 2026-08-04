@@ -398,6 +398,11 @@ extern "C" WEBCORE_EXPORT void RenderObject_setNormalChildNeedsLayoutBit(void* p
     static_cast<WebCore::RenderObject*>(p)->setNormalChildNeedsLayoutBit(b);
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setNeedsSimplifiedNormalFlowLayoutBit(void* p, bool b)
+{
+    static_cast<WebCore::RenderObject*>(p)->setNeedsSimplifiedNormalFlowLayoutBit(b);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isSetNeedsLayoutForbidden(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isSetNeedsLayoutForbidden();

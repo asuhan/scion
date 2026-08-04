@@ -1533,9 +1533,9 @@ protected:
     }
 public:
     void setNormalChildNeedsLayoutBit(bool b);
+    void setNeedsSimplifiedNormalFlowLayoutBit(bool b);
 protected:
     void setPosChildNeedsLayoutBit(bool b);
-    void setNeedsSimplifiedNormalFlowLayoutBit(bool b);
     void setOutOfFlowChildNeedsStaticPositionLayoutBit(bool b)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
