@@ -75,5 +75,10 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  override func previousCharacter() -> UChar {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let firstLetter: RenderBoxModelObjectWrapper? = nil
 }

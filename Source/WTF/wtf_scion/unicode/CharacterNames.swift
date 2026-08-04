@@ -25,9 +25,11 @@
 
 struct CharacterNames {
   struct Unicode {
-    static let enDash: UChar = 0x2013
+    static let blackSquare: UChar = 0x25A0
+    static let bullet: UChar = 0x2022
     static let firstStrongIsolate: UChar = 0x2068
     static let hyphen: UChar = 0x2010
+    static let enDash: UChar = 0x2013
     static let ideographicSpace: UChar = 0x3000
     static let leftToRightEmbed: UChar = 0x202A
     static let leftToRightIsolate: UChar = 0x2066
@@ -44,6 +46,8 @@ struct CharacterNames {
     static let softHyphen: UChar = 0x00AD
     static let space: UChar = 0x0020
     static let tabCharacter: UChar = 0x0009
+    static let whiteBullet: UChar = 0x25E6
+    static let yenSign: UChar = 0x00A5
     static let zeroWidthSpace: UChar = 0x200B
   }
 }

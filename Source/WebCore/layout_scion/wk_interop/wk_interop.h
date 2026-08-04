@@ -1029,6 +1029,7 @@ void RenderText_styleDidChange(void*, uint8_t, const void*);
 void RenderText_resetMinMaxWidth(void*);
 void* RenderText_scion(const void*);
 void originalTextMap_remove(const void*);
+void originalTextMap_set(const void*, const void*);
 int32_t RenderInline_marginStart(const void*, const void*);
 int32_t RenderInline_marginEnd(const void*, const void*);
 void* RenderHighlight_start(const void*);

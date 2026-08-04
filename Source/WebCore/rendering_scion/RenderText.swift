@@ -1032,6 +1032,56 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setRenderedText(_ newText: StringWrapper) {
+    assert(isNativeImpl())
+    assert(!newText.isNull())
+
+    let originalText = self.originalText()
+
+    m_text = newText
+
+    if useBackslashAsYenSymbol {
+      m_text = makeStringByReplacingAll(
+        m_text!, target: UChar(Character("\\").asciiValue!),
+        replacement: CharacterNames.Unicode.yenSign)
+    }
+
+    let style = self.style()
+    if !style.textTransform().isEmpty {
+      m_text = applyTextTransform(style, m_text!, previousCharacter())
+    }
+
+    // At rendering time, if certain fonts are used, these characters get swapped out with higher-quality PUA characters.
+    // See RenderBlock::updateSecurityDiscCharacters().
+    switch style.textSecurity() {
+    case .None:
+      break
+    // TODO(asuhan): add iOS support
+    // We use the same characters here as for list markers.
+    // See the listMarkerText function in RenderListMarker.cpp.
+    case .Circle:
+      secureText(CharacterNames.Unicode.whiteBullet)
+    case .Disc:
+      secureText(CharacterNames.Unicode.bullet)
+    case .Square:
+      secureText(CharacterNames.Unicode.blackSquare)
+    }
+
+    m_containsOnlyASCII = text().containsOnlyASCII()
+    m_canUseSimpleFontCodePath = computeCanUseSimpleFontCodePath()
+    m_canUseSimplifiedTextMeasuring = nil
+    m_hasPositionDependentContentWidth = nil
+    m_hasStrongDirectionalityContent = nil
+
+    if m_text != originalText {
+      originalTextMap_set(wkRenderObject(self), originalText.p)
+      m_originalTextDiffersFromRendered = true
+    } else if m_originalTextDiffersFromRendered {
+      originalTextMap_remove(wkRenderObject(self))
+      m_originalTextDiffersFromRendered = false
+    }
+  }
+
+  func previousCharacter() -> UChar {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1488,6 +1538,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     guard let encoding = document().decoder()?.encoding() else { return false }
     if encoding.backslashAsCurrencySymbol() != UChar(Character("\\").asciiValue!) { return true }
     return false
+  }
+
+  private func secureText(_ maskingCharacter: UChar) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func maxWordFragmentWidth(

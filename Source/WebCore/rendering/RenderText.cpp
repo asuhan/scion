@@ -2338,3 +2338,10 @@ extern "C" WEBCORE_EXPORT void originalTextMap_remove(const void* p)
 {
     WebCore::originalTextMap().remove(static_cast<const WebCore::RenderText*>(p));
 }
+
+extern "C" WEBCORE_EXPORT void originalTextMap_set(const void* render_text_raw, const void* original_text_raw)
+{
+    const auto& render_text = *static_cast<const WebCore::RenderText*>(render_text_raw);
+    const auto& original_text = *static_cast<const WTF::String*>(original_text_raw);
+    WebCore::originalTextMap().set(render_text, original_text);
+}
