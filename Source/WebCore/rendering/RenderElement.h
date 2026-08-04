@@ -212,7 +212,7 @@ public:
     bool isViewTransitionRoot() const;
     bool requiresRenderingConsolidationForViewTransition() const;
     bool hasOutlineAnnotation() const;
-    inline bool hasOutline() const;
+    bool hasOutline() const;
     bool hasSelfPaintingLayer() const;
 
     bool checkForRepaintDuringLayout() const;

@@ -2865,6 +2865,12 @@ func RenderElementScion_requiresRenderingConsolidationForViewTransition(
   return element.requiresRenderingConsolidationForViewTransition()
 }
 
+@_cdecl("RenderElementScion_hasOutline")
+func RenderElementScion_hasOutline(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasOutline()
+}
+
 @_cdecl("RenderElementScion_hasSelfPaintingLayer")
 func RenderElementScion_hasSelfPaintingLayer(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

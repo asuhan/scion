@@ -39,11 +39,6 @@ inline bool RenderElement::hasHiddenBackface() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().backfaceVisibility() == BackfaceVisibility::Hidden;
 }
-inline bool RenderElement::hasOutline() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().hasOutline() || hasOutlineAnnotation();
-}
 inline bool RenderElement::hasShapeOutside() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

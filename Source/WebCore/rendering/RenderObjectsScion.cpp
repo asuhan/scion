@@ -584,6 +584,8 @@ extern "C" bool RenderElementScion_isViewTransitionRoot(const void*);
 
 extern "C" bool RenderElementScion_requiresRenderingConsolidationForViewTransition(const void*);
 
+extern "C" bool RenderElementScion_hasOutline(const void*);
+
 extern "C" bool RenderElementScion_hasSelfPaintingLayer(const void*);
 
 extern "C" bool RenderElementScion_checkForRepaintDuringLayout(const void*);
@@ -1827,6 +1829,11 @@ bool RenderElementScion::isViewTransitionRoot() const
 bool RenderElementScion::requiresRenderingConsolidationForViewTransition() const
 {
     return RenderElementScion_requiresRenderingConsolidationForViewTransition(m_handle);
+}
+
+bool RenderElementScion::hasOutline() const
+{
+    return RenderElementScion_hasOutline(m_handle);
 }
 
 bool RenderElementScion::hasSelfPaintingLayer() const

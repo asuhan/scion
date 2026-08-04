@@ -2551,6 +2551,12 @@ bool RenderElement::hasOutlineAnnotation() const
     return element() && element()->isLink() && (document().printing() || (view().frameView().paintBehavior() & PaintBehavior::AnnotateLinks));
 }
 
+bool RenderElement::hasOutline() const
+{
+    if (m_scion) { return m_scion->hasOutline(); }
+    return style().hasOutline() || hasOutlineAnnotation();
+}
+
 bool RenderElement::hasSelfPaintingLayer() const
 {
     if (m_scion) { return m_scion->hasSelfPaintingLayer(); }

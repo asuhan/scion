@@ -528,6 +528,8 @@ public:
 
     bool requiresRenderingConsolidationForViewTransition() const;
 
+    bool hasOutline() const;
+
     bool hasSelfPaintingLayer() const;
 
     bool checkForRepaintDuringLayout() const;
