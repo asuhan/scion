@@ -62,8 +62,11 @@ class RenderLineBoxList {
   }
 
   func shiftLinesBy(shiftX: LayoutUnit, shiftY: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var box = firstLegacyLineBox()
+    while box != nil {
+      box!.adjustPosition(shiftX.float(), shiftY.float())
+      box = box!.nextLineBox()
+    }
   }
 
   func paint(
