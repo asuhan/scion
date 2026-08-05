@@ -35,6 +35,13 @@
 // FIXME: For now we derive from RenderFragmentContainer, but this may change at some point.
 
 class RenderFragmentContainerSetWrapper: RenderFragmentContainerWrapper {
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
+    _ fragmentedFlow: RenderFragmentedFlowWrapper
+  ) {
+    super.init(type, document, style, fragmentedFlow)
+  }
+
   func expandToEncompassFragmentedFlowContentsIfNeeded() {
     assert(isNativeImpl())
     // Whenever the last region is a set, it always expands its region rect to consume all
