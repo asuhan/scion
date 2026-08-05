@@ -313,8 +313,33 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   override func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard let placeholder = descendant as? RenderMultiColumnSpannerPlaceholderWrapper else {
+      return
+    }
+
+    let container = placeholder.containingBlock()
+
+    var prev = RenderMultiColumnFlowWrapper.previousColumnSetOrSpannerSiblingOf(
+      child: placeholder.spanner())
+    while prev != nil {
+      if let multiColumnSet = prev! as? RenderMultiColumnSetWrapper {
+        multiColumnSet.endFlow(container!, placeholder.logicalTop())
+        break
+      }
+      prev = RenderMultiColumnFlowWrapper.previousColumnSetOrSpannerSiblingOf(child: prev)
+    }
+
+    var next = RenderMultiColumnFlowWrapper.nextColumnSetOrSpannerSiblingOf(
+      child: placeholder.spanner())
+    while next != nil {
+      if let multiColumnSet = next! as? RenderMultiColumnSetWrapper {
+        m_lastSetWorkedOn = multiColumnSet
+        multiColumnSet.beginFlow(container!)
+        break
+      }
+      next = RenderMultiColumnFlowWrapper.nextColumnSetOrSpannerSiblingOf(child: next)
+    }
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
