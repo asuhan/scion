@@ -29,6 +29,14 @@
  */
 
 class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
+    _ fragmentedFlow: RenderFragmentedFlowWrapper
+  ) {
+    super.init(type: type, document: document, style: style, flags: .IsFragmentContainer)
+    self.fragmentedFlow = fragmentedFlow
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
 
