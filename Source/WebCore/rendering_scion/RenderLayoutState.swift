@@ -191,8 +191,7 @@ class RenderLayoutStateWrapper {
   }
 
   func pushBlockStartTrimming(blockStartTrimming: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderLayoutState_pushBlockStartTrimming(p, blockStartTrimming)
   }
 
   func blockStartTrimming() -> Bool? {
@@ -203,10 +202,7 @@ class RenderLayoutStateWrapper {
     return raw.value
   }
 
-  func popBlockStartTrimming() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func popBlockStartTrimming() { wk_interop.RenderLayoutState_popBlockStartTrimming(p) }
 
   private var p: UnsafeMutableRawPointer
 }
