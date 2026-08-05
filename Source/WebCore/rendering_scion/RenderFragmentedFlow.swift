@@ -411,8 +411,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   ) {
     assert(hasFragments())
     assert(
-      CPtrToInt(startFragment.fragmentedFlow?.id()) == CPtrToInt(id())
-        && CPtrToInt(endFragment.fragmentedFlow?.id()) == CPtrToInt(id()))
+      CPtrToInt(startFragment.fragmentedFlow()?.id()) == CPtrToInt(id())
+        && CPtrToInt(endFragment.fragmentedFlow()?.id()) == CPtrToInt(id()))
     let result = fragmentRangeMap.set(box, RenderFragmentContainerRange(startFragment, endFragment))
     if result.isNewEntry {
       return

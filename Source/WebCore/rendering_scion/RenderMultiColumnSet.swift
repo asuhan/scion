@@ -64,7 +64,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
 
   func multiColumnFlowForMultiColumnSet() -> RenderMultiColumnFlowWrapper? {
     assert(isNativeImpl())
-    return fragmentedFlow as! RenderMultiColumnFlowWrapper?
+    return fragmentedFlow() as! RenderMultiColumnFlowWrapper?
   }
 
   func nextSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
@@ -102,7 +102,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       }
       fatalError("Not reached")
     }
-    return fragmentedFlow!.firstChild()
+    return fragmentedFlow()!.firstChild()
   }
 
   // Return the last object in the flow thread that's rendered inside this set.
@@ -118,14 +118,14 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       }
       fatalError("Not reached")
     }
-    return fragmentedFlow!.lastLeafChild()
+    return fragmentedFlow()!.lastLeafChild()
   }
 
   // Return true if the specified renderer (descendant of the flow thread) is inside this column set.
   func containsRendererInFragmentedFlow(renderer: RenderObjectWrapper) -> Bool {
     if previousSiblingMultiColumnSet() == nil && nextSiblingMultiColumnSet() == nil {
       // There is only one set. This is easy, then.
-      return renderer.isDescendantOf(ancestor: fragmentedFlow)
+      return renderer.isDescendantOf(ancestor: m_fragmentedFlow)
     }
 
     let firstRenderer = firstRendererInFragmentedFlow()!
@@ -605,7 +605,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
 
     // Our portion rect determines our column count. We have as many columns as needed to fit all the content.
     let logicalHeightInColumns =
-      fragmentedFlow!.isHorizontalWritingMode()
+      fragmentedFlow()!.isHorizontalWritingMode()
       ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width()
     if logicalHeightInColumns <= Int32(0) {
       return 1
@@ -701,7 +701,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // Figure out the start and end columns and only check within that range so that we don't walk the
     // entire column set. Put the repaint rect into flow thread coordinates by flipping it first.
     var fragmentedFlowRepaintRect = repaintRect
-    fragmentedFlow!.flipForWritingMode(rect: &fragmentedFlowRepaintRect)
+    fragmentedFlow()!.flipForWritingMode(rect: &fragmentedFlowRepaintRect)
 
     // Now we can compare this rect with the flow thread portions owned by each column. First let's
     // just see if the repaint rect intersects our flow thread portion at all.
@@ -776,7 +776,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // Put the layer bounds into flow thread-local coordinates by flipping it first. Since we're in
     // a renderer, most rectangles are represented this way.
     var layerBoundsInFragmentedFlow = layerBoundingBox
-    fragmentedFlow!.flipForWritingMode(rect: &layerBoundsInFragmentedFlow)
+    fragmentedFlow()!.flipForWritingMode(rect: &layerBoundsInFragmentedFlow)
 
     // Now we can compare with the flow thread portions owned by each column. First let's
     // see if the rect intersects our flow thread portion at all.
@@ -840,7 +840,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       translationOffset.setWidth(width: inlineOffset)
 
       var blockOffset =
-        initialBlockOffset + logicalTop() - fragmentedFlow!.logicalTop()
+        initialBlockOffset + logicalTop() - fragmentedFlow()!.logicalTop()
         + (isHorizontalWritingMode() ? -fragmentedFlowPortion.y() : -fragmentedFlowPortion.x())
       if !progressionIsInline {
         if !progressionReversed {
@@ -875,7 +875,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
 
       var flippedFragmentedFlowOverflowPortion = fragmentedFlowOverflowPortion
       // Flip it into more a physical (RenderLayer-style) rectangle.
-      fragmentedFlow!.flipForWritingMode(rect: &flippedFragmentedFlowOverflowPortion)
+      fragmentedFlow()!.flipForWritingMode(rect: &flippedFragmentedFlowOverflowPortion)
       fragment.paginationClip = flippedFragmentedFlowOverflowPortion
       if fragments.count < RenderMultiColumnSetWrapper.maximumNumberOfFragments {
         fragments.append(fragment)

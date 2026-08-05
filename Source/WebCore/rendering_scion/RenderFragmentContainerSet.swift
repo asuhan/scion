@@ -54,11 +54,12 @@ class RenderFragmentContainerSetWrapper: RenderFragmentContainerWrapper {
     // to encompass that remaining height and overflow. The idea is that we will generate
     // additional columns and pages to hold that overflow, since people do write bad
     // content like <body style="height:0px"> in multi-column layouts.
-    let isHorizontal = fragmentedFlow!.isHorizontalWritingMode()
+    let isHorizontal = fragmentedFlow()!.isHorizontalWritingMode()
     let logicalTopOffset = isHorizontal ? rect.y() : rect.x()
     let overflowHeight =
       isHorizontal
-      ? fragmentedFlow!.layoutOverflowRect().maxY() : fragmentedFlow!.layoutOverflowRect().maxX()
+      ? fragmentedFlow()!.layoutOverflowRect().maxY()
+      : fragmentedFlow()!.layoutOverflowRect().maxX()
     let logicalHeightWithOverflow =
       logicalTopOffset == RenderFragmentedFlowWrapper.maxLogicalHeight()
       ? overflowHeight : overflowHeight - logicalTopOffset

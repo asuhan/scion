@@ -34,7 +34,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     _ fragmentedFlow: RenderFragmentedFlowWrapper?
   ) {
     super.init(type: type, document: document, style: style, flags: .IsFragmentContainer)
-    self.fragmentedFlow = fragmentedFlow
+    m_fragmentedFlow = fragmentedFlow
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -45,7 +45,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     }
 
     if oldStyle != nil && oldStyle!.writingMode() != style().writingMode() {
-      fragmentedFlow!.fragmentChangedWritingMode(self)
+      m_fragmentedFlow!.fragmentChangedWritingMode(self)
     }
   }
 
@@ -78,18 +78,23 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     // and we are attaching the fragment to the flow thread.
     installFragmentedFlow()
 
-    if fragmentedFlow == nil {
+    if m_fragmentedFlow == nil {
       return
     }
 
     // Only after adding the fragment to the thread, the fragment is marked to be valid.
-    (fragmentedFlow! as! RenderMultiColumnFlowWrapper).addFragmentToThread(self)
+    (m_fragmentedFlow! as! RenderMultiColumnFlowWrapper).addFragmentToThread(self)
+  }
+
+  func fragmentedFlow() -> RenderFragmentedFlowWrapper? {
+    assert(isNativeImpl())
+    return m_fragmentedFlow
   }
 
   func detachFragment() {
     assert(isNativeImpl())
-    fragmentedFlow?.removeFragmentFromThread(self)
-    fragmentedFlow = nil
+    m_fragmentedFlow?.removeFragmentFromThread(self)
+    m_fragmentedFlow = nil
   }
 
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
@@ -125,14 +130,14 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     assert(isNativeImpl())
     assert(isValid)
 
-    return fragmentedFlow!.firstFragment()?.id() == id()
+    return m_fragmentedFlow!.firstFragment()?.id() == id()
   }
 
   func isLastFragment() -> Bool {
     assert(isNativeImpl())
     assert(isValid)
 
-    return fragmentedFlow!.lastFragment()?.id() == id()
+    return m_fragmentedFlow!.lastFragment()?.id() == id()
   }
 
   func shouldClipFragmentedFlowContent() -> Bool {
@@ -146,25 +151,25 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   func pageLogicalWidth() -> LayoutUnit {
     assert(isNativeImpl())
     assert(isValid)
-    return fragmentedFlow!.isHorizontalWritingMode() ? contentWidth() : contentHeight()
+    return m_fragmentedFlow!.isHorizontalWritingMode() ? contentWidth() : contentHeight()
   }
 
   func pageLogicalHeight() -> LayoutUnit {
     assert(isNativeImpl())
     assert(isValid)
-    return fragmentedFlow!.isHorizontalWritingMode() ? contentHeight() : contentWidth()
+    return m_fragmentedFlow!.isHorizontalWritingMode() ? contentHeight() : contentWidth()
   }
 
   private func logicalTopOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     assert(isValid)
-    return fragmentedFlow!.isHorizontalWritingMode() ? rect.y() : rect.x()
+    return fragmentedFlow()!.isHorizontalWritingMode() ? rect.y() : rect.x()
   }
 
   private func logicalBottomOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     assert(isValid)
-    return fragmentedFlow!.isHorizontalWritingMode() ? rect.maxY() : rect.maxX()
+    return fragmentedFlow()!.isHorizontalWritingMode() ? rect.maxY() : rect.maxX()
   }
 
   func logicalTopForFragmentedFlowContent() -> LayoutUnit {
@@ -190,7 +195,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   // page.
   func pageLogicalTopForOffset(offset: LayoutUnit) -> LayoutUnit {
     assert(isNativeImpl())
-    return fragmentedFlow!.isHorizontalWritingMode()
+    return fragmentedFlow()!.isHorizontalWritingMode()
       ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x()
   }
 
@@ -230,7 +235,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     guard let fragmentOverflow = ensureOverflowForBox(box, false) else { return }
 
     var flippedRect = rect
-    fragmentedFlow!.flipForWritingModeLocalCoordinates(&flippedRect)
+    fragmentedFlow()!.flipForWritingModeLocalCoordinates(&flippedRect)
     fragmentOverflow.addVisualOverflow(rect: flippedRect)
   }
 
@@ -266,7 +271,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   func visualOverflowRectForBoxForPropagation(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
     assert(isNativeImpl())
     var rect = visualOverflowRectForBox(box)
-    fragmentedFlow!.flipForWritingModeLocalCoordinates(&rect)
+    fragmentedFlow()!.flipForWritingModeLocalCoordinates(&rect)
 
     return rect
   }
@@ -274,10 +279,10 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   func rectFlowPortionForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper)
     -> LayoutRectWrapper
   {
-    var mappedRect = fragmentedFlow!.mapFromLocalToFragmentedFlow(box, rect)
+    var mappedRect = m_fragmentedFlow!.mapFromLocalToFragmentedFlow(box, rect)
 
-    if let (startFragment, endFragment) = fragmentedFlow!.getFragmentRangeForBox(box: box) {
-      if fragmentedFlow!.isHorizontalWritingMode() {
+    if let (startFragment, endFragment) = m_fragmentedFlow!.getFragmentRangeForBox(box: box) {
+      if m_fragmentedFlow!.isHorizontalWritingMode() {
         if CPtrToInt(id()) != CPtrToInt(startFragment.id()) {
           mappedRect.shiftYEdgeTo(edge: max(logicalTopForFragmentedFlowContent(), mappedRect.y()))
         }
@@ -301,7 +306,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
       }
     }
 
-    return fragmentedFlow!.mapFromFragmentedFlowToLocal(box, mappedRect)
+    return m_fragmentedFlow!.mapFromFragmentedFlowToLocal(box, mappedRect)
   }
 
   override func canHaveChildren() -> Bool {
@@ -314,18 +319,18 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
     assert(isNativeImpl())
-    if !isValid || fragmentedFlow!.firstChild() == nil {  // checking for empty fragment blocks.
+    if !isValid || m_fragmentedFlow!.firstChild() == nil {  // checking for empty fragment blocks.
       return blockPositionForPoint(point, source, fragment)
     }
 
-    return fragmentedFlow!.positionForPoint(
+    return m_fragmentedFlow!.positionForPoint(
       mapFragmentPointIntoFragmentedFlowCoordinates(point), source, self)
   }
 
   private func ensureOverflowForBox(_ box: RenderBoxWrapper, _ forceCreation: Bool)
     -> RenderOverflow?
   {
-    assert(fragmentedFlow!.renderFragmentContainerList().contains(value: self))
+    assert(m_fragmentedFlow!.renderFragmentContainerList().contains(value: self))
     assert(isValid)
 
     let boxInfo = renderBoxFragmentInfo(box: box)
@@ -339,7 +344,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
     var borderBox = box.borderBoxRectInFragment(fragment: self)
     var clientBox = LayoutRectWrapper()
-    assert(fragmentedFlow!.objectShouldFragmentInFlowFragment(box, self))
+    assert(m_fragmentedFlow!.objectShouldFragmentInFlowFragment(box, self))
 
     if !borderBox.isEmpty() {
       borderBox = rectFlowPortionForBox(box, borderBox)
@@ -347,8 +352,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
       clientBox = box.clientBoxRectInFragment(self)
       clientBox = rectFlowPortionForBox(box, clientBox)
 
-      fragmentedFlow!.flipForWritingModeLocalCoordinates(&borderBox)
-      fragmentedFlow!.flipForWritingModeLocalCoordinates(&clientBox)
+      m_fragmentedFlow!.flipForWritingModeLocalCoordinates(&borderBox)
+      m_fragmentedFlow!.flipForWritingModeLocalCoordinates(&clientBox)
     }
 
     if boxInfo != nil {
@@ -408,9 +413,9 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
       return fragmentedFlowPortionRect
     }
 
-    let fragmentedFlowOverflow = visualOverflowRectForBox(fragmentedFlow!)
+    let fragmentedFlowOverflow = visualOverflowRectForBox(m_fragmentedFlow!)
     var clipRect = LayoutRectWrapper()
-    if fragmentedFlow!.isHorizontalWritingMode() {
+    if m_fragmentedFlow!.isHorizontalWritingMode() {
       let minY = isFirstPortion ? fragmentedFlowOverflow.y() : fragmentedFlowPortionRect.y()
       let maxY =
         isLastPortion
@@ -458,7 +463,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
     if fragmentedFlowPortionClipRect != nil {
       var flippedFragmentedFlowPortionClipRect = fragmentedFlowPortionClipRect!
-      fragmentedFlow!.flipForWritingMode(rect: &flippedFragmentedFlowPortionClipRect)
+      fragmentedFlow()!.flipForWritingMode(rect: &flippedFragmentedFlowPortionClipRect)
       clippedRect.intersect(other: flippedFragmentedFlowPortionClipRect)
     }
 
@@ -467,7 +472,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     }
 
     var flippedFragmentedFlowPortionRect = fragmentedFlowPortionRect
-    fragmentedFlow!.flipForWritingMode(rect: &flippedFragmentedFlowPortionRect)  // Put the fragment rects into physical coordinates.
+    fragmentedFlow()!.flipForWritingMode(rect: &flippedFragmentedFlowPortionRect)  // Put the fragment rects into physical coordinates.
 
     // Put the fragment rect into the fragment's physical coordinate space.
     clippedRect.setLocation(
@@ -556,7 +561,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return isHorizontalWritingMode() ? pointInThread : pointInThread.transposedPoint()
   }
 
-  var fragmentedFlow: RenderFragmentedFlowWrapper? = nil
+  var m_fragmentedFlow: RenderFragmentedFlowWrapper? = nil
 
   private var m_fragmentedFlowPortionRect = LayoutRectWrapper()
 
@@ -568,14 +573,14 @@ func use(_ x: CurrentRenderFragmentContainerMaintainer) {}
 class CurrentRenderFragmentContainerMaintainer {
   init(_ fragment: RenderFragmentContainerWrapper) {
     self.fragment = fragment
-    let fragmentedFlow = fragment.fragmentedFlow!
+    let fragmentedFlow = fragment.fragmentedFlow()!
     // A flow thread can have only one current fragment.
     assert(fragmentedFlow.currentFragment() == nil)
     fragmentedFlow.currentFragmentMaintainer = self
   }
 
   deinit {
-    let fragmentedFlow = fragment.fragmentedFlow!
+    let fragmentedFlow = fragment.fragmentedFlow()!
     fragmentedFlow.currentFragmentMaintainer = nil
   }
 

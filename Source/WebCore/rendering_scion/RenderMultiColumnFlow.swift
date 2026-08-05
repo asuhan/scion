@@ -407,7 +407,7 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     // information is not up-to-date.
 
     if m_lastSetWorkedOn != nil
-      && CPtrToInt(m_lastSetWorkedOn!.fragmentedFlow!.id()) != CPtrToInt(id())
+      && CPtrToInt(m_lastSetWorkedOn!.fragmentedFlow()!.id()) != CPtrToInt(id())
     {
       m_lastSetWorkedOn = nil
     }
