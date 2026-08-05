@@ -56,6 +56,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderLayoutState_pageLogicalHeight(const void
     return static_cast<const WebCore::RenderLayoutState*>(p)->pageLogicalHeight().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayoutState_pageLogicalHeightChanged(const void* p)
+{
+    return static_cast<const WebCore::RenderLayoutState*>(p)->pageLogicalHeightChanged();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderLayoutState_lineGrid(const void* p)
 {
     return static_cast<const WebCore::RenderLayoutState*>(p)->lineGrid();

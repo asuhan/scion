@@ -860,6 +860,7 @@ void RenderLayerCompositor_setIsInWindow(void*, bool);
 bool RenderLayoutState_isPaginated(const void*);
 int32_t RenderLayoutState_pageLogicalOffset(const void*, void*, int32_t);
 int32_t RenderLayoutState_pageLogicalHeight(const void*);
+bool RenderLayoutState_pageLogicalHeightChanged(const void*);
 void* RenderLayoutState_lineGrid(const void*);
 bool RenderLayoutState_needsBlockDirectionLocationSetBeforeLayout(const void*);
 void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineClamp);
