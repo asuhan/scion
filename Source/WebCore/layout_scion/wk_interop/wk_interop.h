@@ -868,6 +868,7 @@ struct LayoutSizeRaw RenderLayoutState_layoutOffset(const void*);
 struct LayoutSizeRaw RenderLayoutState_pageOffset(const void*);
 bool RenderLayoutState_needsBlockDirectionLocationSetBeforeLayout(const void*);
 struct LayoutRectRaw RenderLayoutState_clipRect(const void*);
+bool RenderLayoutState_isClipped(const void*);
 void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineClamp);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);

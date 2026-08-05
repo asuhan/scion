@@ -122,6 +122,11 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw RenderLayoutState_clipRect(const void* p
     return convertLayoutRect(rect);
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayoutState_isClipped(const void* p)
+{
+    return static_cast<const WebCore::RenderLayoutState*>(p)->isClipped();
+}
+
 struct OptionalLineClampRaw {
     uint64_t maximumLines;
     bool shouldDiscardOverflow;

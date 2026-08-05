@@ -116,10 +116,7 @@ class RenderLayoutStateWrapper {
     return convertLayoutRect(wk_interop.RenderLayoutState_clipRect(p))
   }
 
-  func isClipped() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isClipped() -> Bool { return wk_interop.RenderLayoutState_isClipped(p) }
 
   func setLineClamp(_ lineClamp: LineClamp?) {
     let lineClampRaw = OptionalLineClampRaw(
