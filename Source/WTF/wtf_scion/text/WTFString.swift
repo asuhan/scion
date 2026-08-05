@@ -91,8 +91,8 @@ class StringWrapper: Hashable {
   }
 
   func convertToLowercaseWithLocale(_ localeIdentifier: AtomStringWrapper) -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StringWrapper(
+      p: wk_interop.String_convertToLowercaseWithLocale(self.p, localeIdentifier.p), owner: true)
   }
 
   func convertToUppercaseWithLocale(_ localeIdentifier: AtomStringWrapper) -> StringWrapper {
@@ -101,7 +101,7 @@ class StringWrapper: Hashable {
   }
 
   func convertTo16Bit() {
-    return wk_interop.String_convertTo16Bit(self.p)
+    wk_interop.String_convertTo16Bit(self.p)
   }
 
   func hash(into hasher: inout Hasher) {

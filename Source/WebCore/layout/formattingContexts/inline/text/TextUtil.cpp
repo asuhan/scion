@@ -293,6 +293,12 @@ extern "C" WEBCORE_EXPORT bool String_is8Bit(const void* p)
     return static_cast<const String*>(p)->is8Bit();
 }
 
+extern "C" WEBCORE_EXPORT const void* String_convertToLowercaseWithLocale(const void* p, const void* locale_raw)
+{
+    const auto& locale = *static_cast<const AtomString*>(locale_raw);
+    return new String(static_cast<const String*>(p)->convertToLowercaseWithLocale(locale));
+}
+
 extern "C" WEBCORE_EXPORT void String_convertTo16Bit(const void* p)
 {
     static_cast<String*>(const_cast<void*>(p))->convertTo16Bit();
