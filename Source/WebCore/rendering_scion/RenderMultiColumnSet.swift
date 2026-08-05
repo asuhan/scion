@@ -51,8 +51,10 @@ private func precedesRenderer(renderer: RenderObjectWrapper?, boundary: RenderOb
 // come before and after the span.
 final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   init(fragmentedFlow: RenderFragmentedFlowWrapper, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(.MultiColumnSet, fragmentedFlow.document(), style, fragmentedFlow)
+    maxColumnHeight = RenderFragmentedFlowWrapper.maxLogicalHeight()
+    minSpaceShortage = RenderFragmentedFlowWrapper.maxLogicalHeight()
+    assert(isRenderMultiColumnSet())
   }
 
   private func multiColumnBlockFlow() -> RenderBlockFlowWrapper? {
