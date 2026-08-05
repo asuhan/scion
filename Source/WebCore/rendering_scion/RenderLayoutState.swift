@@ -76,23 +76,31 @@ class RenderLayoutStateWrapper {
   }
 
   func lineGridOffset() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offset = wk_interop.RenderLayoutState_lineGridOffset(p)
+    return LayoutSizeWrapper(
+      width: LayoutUnit.fromRawValue(value: offset.width),
+      height: LayoutUnit.fromRawValue(value: offset.height))
   }
 
   func paintOffset() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offset = wk_interop.RenderLayoutState_paintOffset(p)
+    return LayoutSizeWrapper(
+      width: LayoutUnit.fromRawValue(value: offset.width),
+      height: LayoutUnit.fromRawValue(value: offset.height))
   }
 
   func layoutOffset() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offset = wk_interop.RenderLayoutState_layoutOffset(p)
+    return LayoutSizeWrapper(
+      width: LayoutUnit.fromRawValue(value: offset.width),
+      height: LayoutUnit.fromRawValue(value: offset.height))
   }
 
   func pageOffset() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let offset = wk_interop.RenderLayoutState_pageOffset(p)
+    return LayoutSizeWrapper(
+      width: LayoutUnit.fromRawValue(value: offset.width),
+      height: LayoutUnit.fromRawValue(value: offset.height))
   }
 
   func needsBlockDirectionLocationSetBeforeLayout() -> Bool {

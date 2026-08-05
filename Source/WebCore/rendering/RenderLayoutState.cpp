@@ -66,6 +66,35 @@ extern "C" WEBCORE_EXPORT void* RenderLayoutState_lineGrid(const void* p)
     return static_cast<const WebCore::RenderLayoutState*>(p)->lineGrid();
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT LayoutSizeRaw RenderLayoutState_lineGridOffset(const void* p)
+{
+    const auto offset = static_cast<const WebCore::RenderLayoutState*>(p)->lineGridOffset();
+    return { offset.width().rawValue(), offset.height().rawValue() };
+}
+
+extern "C" WEBCORE_EXPORT LayoutSizeRaw RenderLayoutState_paintOffset(const void* p)
+{
+    const auto offset = static_cast<const WebCore::RenderLayoutState*>(p)->paintOffset();
+    return { offset.width().rawValue(), offset.height().rawValue() };
+}
+
+extern "C" WEBCORE_EXPORT LayoutSizeRaw RenderLayoutState_layoutOffset(const void* p)
+{
+    const auto offset = static_cast<const WebCore::RenderLayoutState*>(p)->layoutOffset();
+    return { offset.width().rawValue(), offset.height().rawValue() };
+}
+
+extern "C" WEBCORE_EXPORT LayoutSizeRaw RenderLayoutState_pageOffset(const void* p)
+{
+    const auto offset = static_cast<const WebCore::RenderLayoutState*>(p)->pageOffset();
+    return { offset.width().rawValue(), offset.height().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayoutState_needsBlockDirectionLocationSetBeforeLayout(const void* p)
 {
     return static_cast<const WebCore::RenderLayoutState*>(p)->needsBlockDirectionLocationSetBeforeLayout();
