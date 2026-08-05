@@ -113,8 +113,7 @@ class RenderLayoutStateWrapper {
   }
 
   func clipRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertLayoutRect(wk_interop.RenderLayoutState_clipRect(p))
   }
 
   func isClipped() -> Bool {

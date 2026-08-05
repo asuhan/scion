@@ -100,6 +100,28 @@ extern "C" WEBCORE_EXPORT bool RenderLayoutState_needsBlockDirectionLocationSetB
     return static_cast<const WebCore::RenderLayoutState*>(p)->needsBlockDirectionLocationSetBeforeLayout();
 }
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+namespace {
+
+LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderLayoutState_clipRect(const void* p)
+{
+    const auto rect = static_cast<const WebCore::RenderLayoutState*>(p)->clipRect();
+    return convertLayoutRect(rect);
+}
+
 struct OptionalLineClampRaw {
     uint64_t maximumLines;
     bool shouldDiscardOverflow;
