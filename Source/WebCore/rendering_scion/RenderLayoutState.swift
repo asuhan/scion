@@ -54,8 +54,10 @@ class RenderLayoutStateWrapper {
   // The page logical offset is the object's offset from the top of the page in the page progression
   // direction (so an x-offset in vertical text and a y-offset for horizontal text).
   func pageLogicalOffset(child: RenderBoxWrapper, childLogicalOffset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderLayoutState_pageLogicalOffset(
+        p, child.id(), childLogicalOffset.rawValue())
+    )
   }
 
   func pageLogicalHeight() -> LayoutUnit {

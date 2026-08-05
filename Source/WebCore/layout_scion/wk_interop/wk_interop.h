@@ -858,6 +858,7 @@ void RenderLayerCompositor_rootBackgroundColorOrTransparencyChanged(void*);
 void RenderLayerCompositor_repaintCompositedLayers(void*);
 void RenderLayerCompositor_setIsInWindow(void*, bool);
 bool RenderLayoutState_isPaginated(const void*);
+int32_t RenderLayoutState_pageLogicalOffset(const void*, void*, int32_t);
 int32_t RenderLayoutState_pageLogicalHeight(const void*);
 void* RenderLayoutState_lineGrid(const void*);
 bool RenderLayoutState_needsBlockDirectionLocationSetBeforeLayout(const void*);

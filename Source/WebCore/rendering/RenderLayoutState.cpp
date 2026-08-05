@@ -42,6 +42,15 @@ extern "C" WEBCORE_EXPORT bool RenderLayoutState_isPaginated(const void* p)
     return static_cast<const WebCore::RenderLayoutState*>(p)->isPaginated();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderLayoutState_pageLogicalOffset(const void* p, void* childRaw, int32_t childLogicalOffsetRaw)
+{
+    const auto layout_state = static_cast<const WebCore::RenderLayoutState*>(p);
+    auto child = static_cast<WebCore::RenderBox*>(childRaw);
+    const auto childLogicalOffset = WebCore::LayoutUnit::fromRawValue(childLogicalOffsetRaw);
+    const auto off = layout_state->pageLogicalOffset(child, childLogicalOffset);
+    return off.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayoutState_pageLogicalHeight(const void* p)
 {
     return static_cast<const WebCore::RenderLayoutState*>(p)->pageLogicalHeight().rawValue();
