@@ -78,7 +78,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return nil
   }
 
-  private func previousSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
+  func previousSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
     var sibling = previousSibling()
     while sibling != nil {
       if let multiColumnSet = sibling as? RenderMultiColumnSetWrapper {
@@ -147,7 +147,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     setFragmentedFlowPortionRect(rect)
   }
 
-  private func logicalTopInFragmentedFlow() -> LayoutUnit {
+  func logicalTopInFragmentedFlow() -> LayoutUnit {
     assert(isNativeImpl())
     return isHorizontalWritingMode()
       ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x()
@@ -163,7 +163,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     setFragmentedFlowPortionRect(rect)
   }
 
-  private func logicalBottomInFragmentedFlow() -> LayoutUnit {
+  func logicalBottomInFragmentedFlow() -> LayoutUnit {
     assert(isNativeImpl())
     return isHorizontalWritingMode()
       ? fragmentedFlowPortionRect().maxY() : fragmentedFlowPortionRect().maxX()
@@ -352,6 +352,12 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       + bottomInContainer
     setLogicalBottomInFragmentedFlow(logicalBottomInFragmentedFlow)
     container.setLogicalHeight(size: bottomInContainer)
+  }
+
+  // Has this set been flowed in this layout pass?
+  func hasBeenFlowed() -> Bool {
+    assert(isNativeImpl())
+    return logicalBottomInFragmentedFlow() != RenderFragmentedFlowWrapper.maxLogicalHeight()
   }
 
   func requiresBalancing() -> Bool {

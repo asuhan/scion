@@ -397,8 +397,46 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   override func fragmentAtBlockOffset(
     clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
   ) -> RenderFragmentContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !m_inLayout {
+      return super.fragmentAtBlockOffset(
+        clampBox: clampBox, offset: offset, extendLastFragment: extendLastFragment)
+    }
+
+    // Layout in progress. We are calculating the set heights as we speak, so the fragment range
+    // information is not up-to-date.
+
+    if m_lastSetWorkedOn != nil
+      && CPtrToInt(m_lastSetWorkedOn!.fragmentedFlow!.id()) != CPtrToInt(id())
+    {
+      m_lastSetWorkedOn = nil
+    }
+
+    guard var columnSet = m_lastSetWorkedOn ?? firstMultiColumnSet() else {
+      // If there's no set, bail. This multicol is empty or only consists of spanners. There
+      // are no fragments.
+      return nil
+    }
+    // The last set worked on is a good guess. But if we're not within the bounds, search for the
+    // right one.
+    if offset < columnSet.logicalTopInFragmentedFlow() {
+      repeat {
+        if let prev = columnSet.previousSiblingMultiColumnSet() {
+          columnSet = prev
+        } else {
+          break
+        }
+      } while offset < columnSet.logicalTopInFragmentedFlow()
+    } else {
+      while offset >= columnSet.logicalBottomInFragmentedFlow() {
+        let next = columnSet.nextSiblingMultiColumnSet()
+        if next == nil || !next!.hasBeenFlowed() {
+          break
+        }
+        columnSet = next!
+      }
+    }
+    return columnSet
   }
 
   override func setFragmentRangeForBox(
