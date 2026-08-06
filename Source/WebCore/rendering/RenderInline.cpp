@@ -70,6 +70,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderInline_marginEnd(const void* p, const vo
     return static_cast<const WebCore::RenderInline*>(p)->marginEnd(otherStyle).rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderInline_scion(const void* p)
+{
+    return static_cast<const WebCore::RenderInline*>(p)->scion();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderInline);
