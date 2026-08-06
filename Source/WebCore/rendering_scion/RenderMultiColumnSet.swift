@@ -380,6 +380,44 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return !multiColumnFlowForMultiColumnSet()!.columnHeightAvailable.bool()
   }
 
+  func columnTranslationForOffset(_ offset: LayoutUnit) -> LayoutPointWrapper {
+    assert(isNativeImpl())
+    let startColumn = columnIndexAtOffset(offset)
+
+    let colGap = columnGap()
+
+    let fragmentedFlowPortion = fragmentedFlowPortionRectAt(startColumn)
+    var translationOffset = LayoutPointWrapper()
+
+    let progressionReversed = multiColumnFlowForMultiColumnSet()!.progressionIsReversed()
+    let progressionIsInline = multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+
+    let initialBlockOffset = initialBlockOffsetForPainting()
+
+    translationOffset.setX(x: columnLogicalLeft(startColumn))
+
+    var blockOffset =
+      initialBlockOffset
+      - (isHorizontalWritingMode() ? fragmentedFlowPortion.y() : fragmentedFlowPortion.x())
+    if !progressionIsInline {
+      if !progressionReversed {
+        blockOffset = startColumn * colGap
+      } else {
+        blockOffset -= startColumn * (computedColumnHeight + colGap)
+      }
+    }
+    if isFlippedWritingMode(writingMode: style().writingMode()) {
+      blockOffset = -blockOffset
+    }
+    translationOffset.setY(y: blockOffset)
+
+    if !isHorizontalWritingMode() {
+      translationOffset = translationOffset.transposedPoint()
+    }
+
+    return translationOffset
+  }
+
   override func paintColumnRules(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
     if paintInfo.context().paintingDisabled() {
       return
