@@ -178,6 +178,42 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // This method takes a logical offset and returns a physical translation that can be applied to map
+  // a physical point (corresponding to the logical offset) into the fragment's physical coordinate space.
+  private func physicalTranslationOffsetFromFlowToFragment(
+    _ fragmentContainer: RenderFragmentContainerWrapper, _ logicalOffset: LayoutUnit
+  ) -> LayoutSizeWrapper {
+    assert(isNativeImpl())
+    // Now that we know which multicolumn set we hit, we need to get the appropriate translation offset for the column.
+    let columnSet = fragmentContainer as! RenderMultiColumnSetWrapper
+    var translationOffset = columnSet.columnTranslationForOffset(logicalOffset)
+
+    // Now we know how we want the rect to be translated into the fragment. At this point we're converting
+    // back to physical coordinates.
+    if style().isFlippedBlocksWritingMode() {
+      let portionRect = columnSet.fragmentedFlowPortionRect()
+      var columnRect = columnSet.columnRectAt(0)
+      let physicalDeltaFromPortionBottom: LayoutUnit =
+        logicalHeight() - columnSet.logicalBottomInFragmentedFlow()
+      if isHorizontalWritingMode() {
+        columnRect.setHeight(height: portionRect.height())
+      } else {
+        columnRect.setWidth(width: portionRect.width())
+      }
+      columnSet.flipForWritingMode(rect: &columnRect)
+      let zero = LayoutUnit(value: UInt64(0))
+      if isHorizontalWritingMode() {
+        translationOffset.move(
+          dx: zero, dy: columnRect.y() - portionRect.y() - physicalDeltaFromPortionBottom)
+      } else {
+        translationOffset.move(
+          dx: columnRect.x() - portionRect.x() - physicalDeltaFromPortionBottom, dy: zero)
+      }
+    }
+
+    return LayoutSizeWrapper(width: translationOffset.x, height: translationOffset.y)
+  }
+
   // The point is physical, and the result is a physical location within the fragment.
   func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?

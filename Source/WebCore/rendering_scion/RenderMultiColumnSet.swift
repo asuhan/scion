@@ -623,7 +623,8 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return logicalPoint
   }
 
-  private func columnRectAt(_ index: UInt32) -> LayoutRectWrapper {
+  func columnRectAt(_ index: UInt32) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if isHorizontalWritingMode() {
       return LayoutRectWrapper(
         x: columnLogicalLeft(index), y: columnLogicalTop(index), width: computedColumnWidth,
