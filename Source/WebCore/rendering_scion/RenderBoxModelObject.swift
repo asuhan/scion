@@ -1038,7 +1038,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
           if let renderMultiColumnFlow = ancestor as? RenderMultiColumnFlowWrapper {
             // We need to apply a translation based off what region we are inside.
             if let fragment = renderMultiColumnFlow.physicalTranslationFromFlowToFragment(
-              physicalPoint: referencePoint)
+              physicalPoint: &referencePoint)
             {
               referencePoint.moveBy(offset: fragment.topLeftLocation())
             }

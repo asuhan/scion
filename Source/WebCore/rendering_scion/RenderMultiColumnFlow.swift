@@ -186,8 +186,7 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     // FIXME: We need to refactor RenderObject::absoluteQuads to be able to split the quads across fragments,
     // for now we just take the center of the mapped enclosing box and map it to a column.
     let centerPoint = boxRect.center()
-    let centerLogicalOffset: LayoutUnit =
-      isHorizontalWritingMode() ? centerPoint.y : centerPoint.x
+    let centerLogicalOffset = isHorizontalWritingMode() ? centerPoint.y : centerPoint.x
     guard
       let fragmentContainer = fragmentAtBlockOffset(
         clampBox: self, offset: centerLogicalOffset, extendLastFragment: true)
@@ -236,11 +235,32 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   // The point is physical, and the result is a physical location within the fragment.
-  func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
+  func physicalTranslationFromFlowToFragment(physicalPoint: inout LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !hasValidFragmentInfo() {
+      return nil
+    }
+
+    // Put the physical point into the flow thread's coordinate space.
+    let logicalPoint = flipForWritingMode(position: physicalPoint)
+
+    // Now get the fragment that we are in.
+    let logicalOffset = isHorizontalWritingMode() ? logicalPoint.y : logicalPoint.x
+    guard
+      let fragmentContainer = fragmentAtBlockOffset(
+        clampBox: self, offset: logicalOffset, extendLastFragment: true)
+    else { return nil }
+
+    // Translate to the coordinate space of the fragment.
+    let translationOffset = physicalTranslationOffsetFromFlowToFragment(
+      fragmentContainer, logicalOffset)
+
+    // Now shift the physical point into the fragment's coordinate space.
+    physicalPoint += translationOffset
+
+    return fragmentContainer
   }
 
   // This method is the inverse of the previous method and goes from fragment to flow.
@@ -321,7 +341,7 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     }
 
     var translatedPhysicalPoint = physicalPoint
-    if let fragment = physicalTranslationFromFlowToFragment(physicalPoint: translatedPhysicalPoint)
+    if let fragment = physicalTranslationFromFlowToFragment(physicalPoint: &translatedPhysicalPoint)
     {
       translatedPhysicalPoint.moveBy(offset: fragment.topLeftLocation())
     }

@@ -2594,9 +2594,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       // will be set and we'll stop at the flow thread. This case is mainly hit by the check for whether
       // or not images should animate.
       // FIXME: Just as with offsetFromContainer, we aren't really handling objects that span multiple columns properly.
-      let physicalPoint = flipForWritingMode(position: adjustedRects.clippedOverflowRect.location())
+      var physicalPoint = flipForWritingMode(position: adjustedRects.clippedOverflowRect.location())
       if let fragment = columnFlow.physicalTranslationFromFlowToFragment(
-        physicalPoint: physicalPoint)
+        physicalPoint: &physicalPoint)
       {
         adjustedRects.clippedOverflowRect.setLocation(
           location: fragment.flipForWritingMode(position: physicalPoint))

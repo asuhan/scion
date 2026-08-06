@@ -2145,7 +2145,7 @@ class RenderLayerWrapper {
       {
         if let multiColumnFlow = parentLayer.renderer() as? RenderMultiColumnFlowWrapper {
           if let fragment = multiColumnFlow.physicalTranslationFromFlowToFragment(
-            physicalPoint: location)
+            physicalPoint: &location)
           {
             location.move(
               s: fragment.topLeftLocation() - parentLayer.renderBox()!.topLeftLocation())
