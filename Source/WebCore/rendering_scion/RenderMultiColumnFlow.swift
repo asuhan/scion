@@ -174,8 +174,29 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   override final func mapFromFlowToFragment(_ transformState: TransformState)
     -> RenderFragmentContainerWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !hasValidFragmentInfo() {
+      return nil
+    }
+
+    // Get back into our local flow thread space.
+    var boxRect = LayoutRectWrapper(rect: transformState.mappedQuad().enclosingBoundingBox())
+    flipForWritingMode(rect: &boxRect)
+
+    // FIXME: We need to refactor RenderObject::absoluteQuads to be able to split the quads across fragments,
+    // for now we just take the center of the mapped enclosing box and map it to a column.
+    let centerPoint = boxRect.center()
+    let centerLogicalOffset: LayoutUnit =
+      isHorizontalWritingMode() ? centerPoint.y : centerPoint.x
+    guard
+      let fragmentContainer = fragmentAtBlockOffset(
+        clampBox: self, offset: centerLogicalOffset, extendLastFragment: true)
+    else {
+      return nil
+    }
+    transformState.move(
+      physicalTranslationOffsetFromFlowToFragment(fragmentContainer, centerLogicalOffset))
+    return fragmentContainer
   }
 
   // This method takes a logical offset and returns a physical translation that can be applied to map
@@ -193,7 +214,7 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     if style().isFlippedBlocksWritingMode() {
       let portionRect = columnSet.fragmentedFlowPortionRect()
       var columnRect = columnSet.columnRectAt(0)
-      let physicalDeltaFromPortionBottom: LayoutUnit =
+      let physicalDeltaFromPortionBottom =
         logicalHeight() - columnSet.logicalBottomInFragmentedFlow()
       if isHorizontalWritingMode() {
         columnRect.setHeight(height: portionRect.height())
