@@ -109,8 +109,8 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   func captureOverflowRect() -> LayoutRectWrapper { return m_overflowRect }
 
   func canUseExistingLayers() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !hasNonVisibleOverflow()
   }
 
   override func debugDescription() -> StringWrapper {
