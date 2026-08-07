@@ -1025,8 +1025,16 @@ class RenderTextWrapper: RenderObjectWrapper {
   func computePreferredLogicalWidths(
     _ leadWidth: Float32, _ forcedMinMaxWidthComputation: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let fallbackFonts = WeakHashSet<FontWrapper>()
+    var glyphOverflow = GlyphOverflow()
+    computePreferredLogicalWidths(
+      leadWidth, fallbackFonts, &glyphOverflow, forcedMinMaxWidthComputation)
+    if fallbackFonts.isEmptyIgnoringNullReferences() && !glyphOverflow.left.bool()
+      && !glyphOverflow.right.bool() && !glyphOverflow.top.bool() && !glyphOverflow.bottom.bool()
+    {
+      knownToHaveNoOverflowAndNoFallbackFonts = true
+    }
   }
 
   func computeCanUseSimpleFontCodePath() -> Bool {
