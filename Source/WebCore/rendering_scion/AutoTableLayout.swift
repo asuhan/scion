@@ -20,7 +20,78 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func shouldScaleColumnsForParent(_ table: RenderTableWrapper) -> Bool {
+  var containingBlock = table.containingBlock()
+  while containingBlock != nil && !(containingBlock! is RenderViewWrapper) {
+    // It doesn't matter if our table is auto or fixed: auto means we don't
+    // scale. Fixed doesn't care if we do or not because it doesn't depend
+    // on the cell contents' preferred widths.
+    if containingBlock! is RenderTableCellWrapper {
+      return false
+    }
+    // The max logical width of a table may be "infinity" (or tableMaxWidth, to be more exact) if the sum if the
+    // columns' percentages is 100% or more, AND there is at least one column that has a non-percentage-based positive
+    // logical width. In such situations no table logical width will be large enough to satisfy the constraint
+    // set by the contents. So the idea is to use ~infinity to make sure we use all available size in the containing
+    // block. However, this just doesn't work if this is a flex or grid item, so disallow scaling in that case.
+    if containingBlock! is RenderFlexibleBoxWrapper || containingBlock! is RenderGridWrapper {
+      return false
+    }
+    containingBlock = containingBlock!.containingBlock()
+  }
+  return true
+}
+
 final class AutoTableLayout: TableLayout {
+  override func computeIntrinsicLogicalWidths(intrinsics: TableIntrinsics) -> (
+    LayoutUnit, LayoutUnit
+  ) {
+    fullRecalc()
+
+    let spanMaxLogicalWidth = calcEffectiveLogicalWidth()
+    var minWidth = LayoutUnit(value: 0)
+    var maxWidth = LayoutUnit(value: 0)
+    var maxPercent: Float32 = 0
+    var maxNonPercent: Float32 = 0
+    let scaleColumnsForSelf = intrinsics == .ForLayout
+
+    // We substitute 0 percent by (epsilon / percentScaleFactor) percent in two places below to avoid division by zero.
+    // FIXME: Handle the 0% cases properly.
+    let epsilon: Float32 = 1 / 128.0
+
+    var remainingPercent: Float32 = 100
+    for crtLayoutStruct in layoutStruct {
+      minWidth += crtLayoutStruct.effectiveMinLogicalWidth
+      maxWidth += crtLayoutStruct.effectiveMaxLogicalWidth
+      if scaleColumnsForSelf {
+        if crtLayoutStruct.effectiveLogicalWidth.isPercent() {
+          let percent = min(crtLayoutStruct.effectiveLogicalWidth.percent(), remainingPercent)
+          let logicalWidth = crtLayoutStruct.effectiveMaxLogicalWidth * 100 / max(percent, epsilon)
+          maxPercent = max(logicalWidth, maxPercent)
+          remainingPercent -= percent
+        } else {
+          maxNonPercent += crtLayoutStruct.effectiveMaxLogicalWidth
+        }
+      }
+    }
+
+    if scaleColumnsForSelf {
+      maxNonPercent = maxNonPercent * 100 / max(remainingPercent, epsilon)
+      m_scaledWidthFromPercentColumns = LayoutUnit(
+        value: min(maxNonPercent, Float32(TableLayout.tableMaxWidth)))
+      m_scaledWidthFromPercentColumns = max(
+        m_scaledWidthFromPercentColumns,
+        LayoutUnit(value: min(maxPercent, Float32(TableLayout.tableMaxWidth))))
+      if m_scaledWidthFromPercentColumns > maxWidth && shouldScaleColumnsForParent(table) {
+        maxWidth = m_scaledWidthFromPercentColumns
+      }
+    }
+
+    maxWidth = max(maxWidth, LayoutUnit(value: spanMaxLogicalWidth))
+
+    return (minWidth, maxWidth)
+  }
+
   override func applyPreferredLogicalWidthQuirks(
     minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit
   ) {
@@ -790,4 +861,5 @@ final class AutoTableLayout: TableLayout {
   private var spanCells: [RenderTableCellWrapper?] = []
   private var hasPercent = false
   private var effectiveLogicalWidthDirty = false
+  private var m_scaledWidthFromPercentColumns = LayoutUnit()
 }
