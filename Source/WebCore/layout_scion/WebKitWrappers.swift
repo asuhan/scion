@@ -2960,12 +2960,14 @@ func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrap
     return RenderLineBreakWrapper(p: p)
   }
   if wk_interop.RenderObject_isRenderInline(p) {
+    assert(wk_interop.RenderInline_scion(p) == nil)
     return RenderInlineWrapper(p: p)
   }
   if wk_interop.RenderObject_isRenderElement(p) {
     return RenderElementWrapper(p: p)
   }
   if wk_interop.RenderObject_isRenderText(p) {
+    assert(wk_interop.RenderText_scion(p) == nil)
     return RenderTextWrapper(p: p)
   }
   return RenderObjectWrapper(p: p)
