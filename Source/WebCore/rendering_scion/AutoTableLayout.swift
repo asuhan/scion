@@ -92,6 +92,10 @@ final class AutoTableLayout: TableLayout {
     return (minWidth, maxWidth)
   }
 
+  override func scaledWidthFromPercentColumns() -> LayoutUnit {
+    return m_scaledWidthFromPercentColumns
+  }
+
   override func applyPreferredLogicalWidthQuirks(
     minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit
   ) {

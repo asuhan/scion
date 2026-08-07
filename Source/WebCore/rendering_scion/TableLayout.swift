@@ -29,8 +29,7 @@ class TableLayout {
   }
 
   func scaledWidthFromPercentColumns() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutUnit(value: UInt64(0))
   }
 
   func applyPreferredLogicalWidthQuirks(minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit) {
