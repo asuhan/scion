@@ -671,9 +671,9 @@ class RenderTextWrapper: RenderObjectWrapper {
     return true
   }
 
-  private func width(
-    _ from: UInt32, _ length: UInt32, _ fontCascade: FontCascadeWrapper, _ xPos: Float32,
-    _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: inout GlyphOverflow?
+  func width(
+    from: UInt32, length: UInt32, fontCascade: FontCascadeWrapper, xPos: Float32,
+    fallbackFonts: WeakHashSet<FontWrapper>?, glyphOverflow: inout GlyphOverflow?
   ) -> Float32 {
     assert(isNativeImpl())
     assert(from + length <= text().length())
@@ -739,16 +739,9 @@ class RenderTextWrapper: RenderObjectWrapper {
 
     let lineStyle = firstLine ? textFirstLineStyle() : style()
     return width(
-      from, from + len > text().length() ? text().length() - from : len, lineStyle.fontCascade(),
-      xPos, fallbackFonts, &glyphOverflow)
-  }
-
-  func width(
-    from: UInt32, length: UInt32, fontCascade: FontCascadeWrapper, xPos: Float32,
-    fallbackFonts: WeakHashSet<FontWrapper>?, glyphOverflow: inout GlyphOverflow?
-  ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+      from: from, length: from + len > text().length() ? text().length() - from : len,
+      fontCascade: lineStyle.fontCascade(),
+      xPos: xPos, fallbackFonts: fallbackFonts, glyphOverflow: &glyphOverflow)
   }
 
   func firstLegacyTextBox() -> LegacyInlineTextBox? {
