@@ -169,7 +169,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       ? fragmentedFlowPortionRect().maxY() : fragmentedFlowPortionRect().maxX()
   }
 
-  private func logicalHeightInFragmentedFlow() -> LayoutUnit {
+  func logicalHeightInFragmentedFlow() -> LayoutUnit {
     assert(isNativeImpl())
     return isHorizontalWritingMode()
       ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width()

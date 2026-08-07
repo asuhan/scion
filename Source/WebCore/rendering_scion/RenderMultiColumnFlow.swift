@@ -520,8 +520,32 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper,
     endFragment: RenderFragmentContainerWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Some column sets may have zero height, which means that two or more sets may start at the
+    // exact same flow thread position, which means that some parts of the code may believe that a
+    // given box lives in sets that it doesn't really live in. Make some adjustments here and
+    // include such sets if they are adjacent to the start and/or end fragments.
+    var columnSet: RenderMultiColumnSetWrapper? = (startFragment as! RenderMultiColumnSetWrapper)
+      .previousSiblingMultiColumnSet()
+    var startFragment = startFragment
+    while columnSet != nil {
+      if columnSet!.logicalHeightInFragmentedFlow().bool() {
+        break
+      }
+      startFragment = columnSet!
+      columnSet = columnSet!.previousSiblingMultiColumnSet()
+    }
+    columnSet = (startFragment as! RenderMultiColumnSetWrapper).nextSiblingMultiColumnSet()
+    var endFragment = endFragment
+    while columnSet != nil {
+      if columnSet!.logicalHeightInFragmentedFlow().bool() {
+        break
+      }
+      endFragment = columnSet!
+      columnSet = columnSet!.nextSiblingMultiColumnSet()
+    }
+
+    super.setFragmentRangeForBox(box: box, startFragment: startFragment, endFragment: endFragment)
   }
 
   override func addForcedFragmentBreak(
