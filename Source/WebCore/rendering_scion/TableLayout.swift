@@ -25,8 +25,7 @@ class TableLayout {
   }
 
   func computeIntrinsicLogicalWidths(intrinsics: TableIntrinsics) -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func scaledWidthFromPercentColumns() -> LayoutUnit {

@@ -24,6 +24,13 @@ final class FixedTableLayout: TableLayout {
     super.init(table: table)
   }
 
+  override func computeIntrinsicLogicalWidths(intrinsics: TableIntrinsics) -> (
+    LayoutUnit, LayoutUnit
+  ) {
+    let width = LayoutUnit(value: calcWidthArray())
+    return (width, width)
+  }
+
   override func applyPreferredLogicalWidthQuirks(
     minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit
   ) {
