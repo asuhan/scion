@@ -552,8 +552,21 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     block: RenderBlockWrapper?, offset: LayoutUnit, breakChild: RenderBoxWrapper?, isBefore: Bool,
     offsetBreakAdjustment: inout LayoutUnit?
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let multicolSet = fragmentAtBlockOffset(clampBox: block, offset: offset)
+      as! RenderMultiColumnSetWrapper?
+    {
+      multicolSet.addForcedBreak(offset)
+      if offsetBreakAdjustment != nil {
+        offsetBreakAdjustment =
+          pageLogicalHeightForOffsetFromFragmentedFlow(offset: offset).bool()
+          ? pageRemainingLogicalHeightForOffsetFromFragmentedFlow(
+            offset: offset, pageBoundaryRule: .IncludePageBoundary)
+          : LayoutUnit(value: UInt64(0))
+      }
+      return true
+    }
+    return false
   }
 
   override func isPageLogicalHeightKnown() -> Bool {

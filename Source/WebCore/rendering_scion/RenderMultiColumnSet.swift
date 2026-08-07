@@ -213,7 +213,8 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
 
   private func forcedBreaksCount() -> UInt32 { return UInt32(contentRuns.count) }
 
-  private func addForcedBreak(_ offsetFromFirstPage: LayoutUnit) {
+  func addForcedBreak(_ offsetFromFirstPage: LayoutUnit) {
+    assert(isNativeImpl())
     if !requiresBalancing() {
       return
     }
