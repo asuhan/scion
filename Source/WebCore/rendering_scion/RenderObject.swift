@@ -3565,7 +3565,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       {
         let enclosingMultiColumnFlow = previousMultiColumnSet.multiColumnFlowForBlockFlow()!
         let renderMultiColumnPlaceholder = enclosingMultiColumnFlow.findColumnSpannerPlaceholder(
-          spanner: renderer as! RenderBoxWrapper?)!
+          spanner: renderer as! RenderBoxWrapper)!
         renderer = renderMultiColumnPlaceholder
       }
 

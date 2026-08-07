@@ -67,7 +67,7 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     if let sibling = nextSibling() {
       assert(
         sibling is RenderMultiColumnSetWrapper
-          || findColumnSpannerPlaceholder(spanner: sibling as! RenderBoxWrapper?) != nil)
+          || findColumnSpannerPlaceholder(spanner: sibling as! RenderBoxWrapper) != nil)
       return sibling as! RenderBoxWrapper?
     }
     return nil
@@ -89,11 +89,11 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     return nil
   }
 
-  func findColumnSpannerPlaceholder(spanner: RenderBoxWrapper?)
+  func findColumnSpannerPlaceholder(spanner: RenderBoxWrapper)
     -> RenderMultiColumnSpannerPlaceholderWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return spannerMap[CPtrToInt(spanner.id())]
   }
 
   override func layout() {

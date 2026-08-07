@@ -187,7 +187,7 @@ extension RenderTreeBuilder {
       // to map that spanner renderer to the spanner's placeholder, which is where the new inserted
       // renderer belongs.
       if let placeholder = renderMultiColumnFlow!.findColumnSpannerPlaceholder(
-        spanner: beforeChildRenderBox)
+        spanner: beforeChildRenderBox!)
       {
         return placeholder
       }
@@ -311,7 +311,7 @@ extension RenderTreeBuilder {
         return beforeChild
       }
 
-      return multiColumnFlow!.findColumnSpannerPlaceholder(spanner: beforeChildBox)!
+      return multiColumnFlow!.findColumnSpannerPlaceholder(spanner: beforeChildBox!)!
     }
 
     private func createFragmentedFlow(flow: RenderBlockFlowWrapper) {
