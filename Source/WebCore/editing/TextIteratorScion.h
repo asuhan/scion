@@ -37,35 +37,43 @@
 
 namespace WebCore {
 
+class TextBoxIteratorScion;
+
 class TextBoxScion {
 public:
-    unsigned start() const
+    TextBoxScion(const void* handle)
+        : m_handle(handle)
     {
-        ASSERT_NOT_REACHED();
     }
 
-    unsigned length() const
-    {
-        ASSERT_NOT_REACHED();
-    }
+    unsigned start() const;
+
+    unsigned length() const;
+
+    // This returns the next text box generated for the same RenderText/Layout::InlineTextBox.
+    TextBoxIteratorScion nextTextBox() const;
+
+private:
+    const void* m_handle;
 };
 
 class TextBoxIteratorScion {
 public:
-    explicit operator bool() const
+    TextBoxIteratorScion();
+
+    TextBoxIteratorScion(void* handle)
+        : m_handle(handle)
     {
-        ASSERT_NOT_REACHED();
     }
 
-    const TextBoxScion* operator->() const
-    {
-        ASSERT_NOT_REACHED();
-    }
+    explicit operator bool() const;
 
-    bool operator==(const TextBoxIteratorScion&) const
-    {
-        ASSERT_NOT_REACHED();
-    }
+    const TextBoxScion* operator->() const;
+
+    bool operator==(const TextBoxIteratorScion&) const;
+
+private:
+    void* m_handle;
 };
 
 class TextLogicalOrderCacheScion {};

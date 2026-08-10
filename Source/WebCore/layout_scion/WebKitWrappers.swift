@@ -4136,3 +4136,61 @@ func FindNextFloatLogicalBottomAdapter_collectIfNeeded(
     .takeUnretainedValue()
   adapter.collectIfNeeded(FloatingObjectInterval(low: low, high: high, obj: obj))
 }
+
+@_cdecl("TextBox_start")
+func TextBox_start(_ raw: UnsafeRawPointer) -> UInt32 {
+  let box = Unmanaged<InlineIterator.TextBox>.fromOpaque(raw).takeUnretainedValue()
+  return box.start()
+}
+
+@_cdecl("TextBox_length")
+func TextBox_length(_ raw: UnsafeRawPointer) -> UInt32 {
+  let box = Unmanaged<InlineIterator.TextBox>.fromOpaque(raw).takeUnretainedValue()
+  return box.length()
+}
+
+@_cdecl("TextBox_nextTextBox")
+func TextBox_nextTextBox(_ raw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let box = Unmanaged<InlineIterator.TextBox>.fromOpaque(raw).takeUnretainedValue()
+  let nextIt = box.nextTextBox()
+  let unmanaged = Unmanaged.passUnretained(nextIt)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("TextBoxIterator_create")
+func TextBoxIterator_create() -> UnsafeMutableRawPointer {
+  let it = InlineIterator.TextBoxIterator()
+  let unmanaged = Unmanaged.passRetained(it)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("TextBoxIterator_bool")
+func TextBoxIterator_bool(_ raw: UnsafeRawPointer) -> Bool {
+  let it = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(raw).takeUnretainedValue()
+  return it.bool()
+}
+
+@_cdecl("TextBoxIterator_get")
+func TextBoxIterator_get(_ raw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let it = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(raw).takeUnretainedValue()
+  let box = it.get()
+  let unmanaged = Unmanaged.passUnretained(box)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("TextBoxIterator_eq")
+func TextBoxIterator_eq(_ lhsRaw: UnsafeRawPointer, _ rhsRaw: UnsafeRawPointer) -> Bool {
+  let lhs = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(lhsRaw).takeUnretainedValue()
+  let rhs = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(rhsRaw).takeUnretainedValue()
+  return lhs == rhs
+}
+
+@_cdecl("InlineIterator_firstTextBoxInLogicalOrderFor")
+func InlineIterator_firstTextBoxInLogicalOrderFor(_ textRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(textRaw).takeUnretainedValue()
+  let (textBox, _) = InlineIterator.firstTextBoxInLogicalOrderFor(text)
+  let unmanaged = Unmanaged.passRetained(textBox)
+  return unmanaged.toOpaque()
+}

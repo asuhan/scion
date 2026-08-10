@@ -80,17 +80,72 @@
 #include <wtf/text/TextBreakIteratorInternalICU.h>
 #endif
 
-namespace WebCore {
-namespace InlineIterator {
+extern "C" uint32_t TextBox_start(const void*);
 
-std::pair<TextBoxIteratorScion, TextLogicalOrderCacheScion> firstTextBoxInLogicalOrderForScion(const RenderText&)
+extern "C" uint32_t TextBox_length(const void*);
+
+extern "C" void* TextBox_nextTextBox(const void*);
+
+extern "C" void* TextBoxIterator_create();
+
+extern "C" bool TextBoxIterator_bool(const void*);
+
+extern "C" void* TextBoxIterator_get(const void*);
+
+extern "C" bool TextBoxIterator_eq(const void*, const void*);
+
+extern "C" void* InlineIterator_firstTextBoxInLogicalOrderFor(const void*);
+
+namespace WebCore {
+
+unsigned TextBoxScion::start() const
 {
-    ASSERT_NOT_REACHED();
+    return TextBox_start(m_handle);
 }
 
-TextBoxIteratorScion nextTextBoxInLogicalOrderScion(const TextBoxIteratorScion&, TextLogicalOrderCacheScion&)
+unsigned TextBoxScion::length() const
 {
-    ASSERT_NOT_REACHED();
+    return TextBox_length(m_handle);
+}
+
+TextBoxIteratorScion TextBoxScion::nextTextBox() const
+{
+    return TextBoxIteratorScion(TextBox_nextTextBox(m_handle));
+}
+
+TextBoxIteratorScion::TextBoxIteratorScion()
+{
+    m_handle = TextBoxIterator_create();
+}
+
+TextBoxIteratorScion::operator bool() const
+{
+    return TextBoxIterator_bool(m_handle);
+}
+
+const TextBoxScion* TextBoxIteratorScion::operator->() const
+{
+    return static_cast<const TextBoxScion*>(TextBoxIterator_get(m_handle));
+}
+
+bool TextBoxIteratorScion::operator==(const TextBoxIteratorScion& rhs) const
+{
+    return TextBoxIterator_eq(m_handle, rhs.m_handle);
+}
+
+namespace InlineIterator {
+
+std::pair<TextBoxIteratorScion, TextLogicalOrderCacheScion> firstTextBoxInLogicalOrderForScion(const RenderText& text)
+{
+    assert(text.scion());
+    auto handle = InlineIterator_firstTextBoxInLogicalOrderFor(text.scion());
+    return { { handle }, {} };
+}
+
+TextBoxIteratorScion nextTextBoxInLogicalOrderScion(const TextBoxIteratorScion& textBox, TextLogicalOrderCacheScion&)
+{
+    // TODO(asuhan): call update text logical order cache if the text needs visual reordering.
+    return textBox->nextTextBox();
 }
 
 }
