@@ -80,8 +80,6 @@
 #include <wtf/text/TextBreakIteratorInternalICU.h>
 #endif
 
-extern "C" void* TextBox_nextTextBox(const void*);
-
 extern "C" void* TextBoxIterator_create();
 
 extern "C" bool TextBoxIterator_bool(const void*);
@@ -94,14 +92,11 @@ extern "C" uint32_t TextBoxIterator_start(const void*);
 
 extern "C" uint32_t TextBoxIterator_length(const void*);
 
+extern "C" void* TextBoxIterator_nextTextBox(const void*);
+
 extern "C" void* InlineIterator_firstTextBoxInLogicalOrderFor(const void*);
 
 namespace WebCore {
-
-TextBoxIteratorScion TextBoxScion::nextTextBox() const
-{
-    return TextBoxIteratorScion(TextBox_nextTextBox(m_handle));
-}
 
 TextBoxIteratorScion::TextBoxIteratorScion()
 {
@@ -111,11 +106,6 @@ TextBoxIteratorScion::TextBoxIteratorScion()
 TextBoxIteratorScion::operator bool() const
 {
     return TextBoxIterator_bool(m_handle);
-}
-
-const TextBoxScion* TextBoxIteratorScion::operator->() const
-{
-    return static_cast<const TextBoxScion*>(TextBoxIterator_get(m_handle));
 }
 
 bool TextBoxIteratorScion::operator==(const TextBoxIteratorScion& rhs) const
@@ -133,6 +123,11 @@ unsigned TextBoxIteratorScion::length() const
     return TextBoxIterator_length(m_handle);
 }
 
+TextBoxIteratorScion TextBoxIteratorScion::nextTextBox() const
+{
+    return TextBoxIteratorScion(TextBoxIterator_nextTextBox(m_handle));
+}
+
 namespace InlineIterator {
 
 std::pair<TextBoxIteratorScion, TextLogicalOrderCacheScion> firstTextBoxInLogicalOrderForScion(const RenderText& text)
@@ -145,7 +140,7 @@ std::pair<TextBoxIteratorScion, TextLogicalOrderCacheScion> firstTextBoxInLogica
 TextBoxIteratorScion nextTextBoxInLogicalOrderScion(const TextBoxIteratorScion& textBox, TextLogicalOrderCacheScion&)
 {
     // TODO(asuhan): call update text logical order cache if the text needs visual reordering.
-    return textBox->nextTextBox();
+    return textBox.nextTextBox();
 }
 
 }

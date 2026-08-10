@@ -37,22 +37,6 @@
 
 namespace WebCore {
 
-class TextBoxIteratorScion;
-
-class TextBoxScion {
-public:
-    TextBoxScion(const void* handle)
-        : m_handle(handle)
-    {
-    }
-
-    // This returns the next text box generated for the same RenderText/Layout::InlineTextBox.
-    TextBoxIteratorScion nextTextBox() const;
-
-private:
-    const void* m_handle;
-};
-
 class TextBoxIteratorScion {
 public:
     TextBoxIteratorScion();
@@ -64,13 +48,13 @@ public:
 
     explicit operator bool() const;
 
-    const TextBoxScion* operator->() const;
-
     bool operator==(const TextBoxIteratorScion&) const;
 
     unsigned start() const;
 
     unsigned length() const;
+
+    TextBoxIteratorScion nextTextBox() const;
 
 private:
     void* m_handle;

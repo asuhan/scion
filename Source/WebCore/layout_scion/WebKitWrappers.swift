@@ -4137,14 +4137,6 @@ func FindNextFloatLogicalBottomAdapter_collectIfNeeded(
   adapter.collectIfNeeded(FloatingObjectInterval(low: low, high: high, obj: obj))
 }
 
-@_cdecl("TextBox_nextTextBox")
-func TextBox_nextTextBox(_ raw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
-  let box = Unmanaged<InlineIterator.TextBox>.fromOpaque(raw).takeUnretainedValue()
-  let nextIt = box.nextTextBox()
-  let unmanaged = Unmanaged.passUnretained(nextIt)
-  return unmanaged.toOpaque()
-}
-
 @_cdecl("TextBoxIterator_create")
 func TextBoxIterator_create() -> UnsafeMutableRawPointer {
   let it = InlineIterator.TextBoxIterator()
@@ -4183,6 +4175,14 @@ func TextBoxIterator_start(_ raw: UnsafeRawPointer) -> UInt32 {
 func TextBoxIterator_length(_ raw: UnsafeRawPointer) -> UInt32 {
   let it = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(raw).takeUnretainedValue()
   return it.get().length()
+}
+
+@_cdecl("TextBoxIterator_nextTextBox")
+func TextBoxIterator_nextTextBox(_ raw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let it = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(raw).takeUnretainedValue()
+  let box = it.get().nextTextBox()
+  let unmanaged = Unmanaged.passRetained(box)
+  return unmanaged.toOpaque()
 }
 
 @_cdecl("InlineIterator_firstTextBoxInLogicalOrderFor")
