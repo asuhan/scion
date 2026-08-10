@@ -29,6 +29,25 @@ extension InlineIterator {
     enum PathVariant {
       case modern(BoxModernPath)
       case legacy(BoxLegacyPath)
+
+      static func == (this: PathVariant, other: PathVariant) -> Bool {
+        switch this {
+        case .modern(let thisPath):
+          switch other {
+          case .modern(let otherPath):
+            return thisPath == otherPath
+          case .legacy:
+            fatalError("Not reached")
+          }
+        case .legacy(let thisPath):
+          switch other {
+          case .modern:
+            fatalError("Not reached")
+          case .legacy(let otherPath):
+            return thisPath == otherPath
+          }
+        }
+      }
     }
 
     enum Kind {
@@ -246,9 +265,11 @@ extension InlineIterator {
 
     func bool() -> Bool { return !atEnd() }
 
-    static func == (self: BoxIterator, other: BoxIterator) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    static func == (this: BoxIterator, other: BoxIterator) -> Bool {
+      if this.atEnd() && other.atEnd() {
+        return true
+      }
+      return this.m_box.m_pathVariant == other.m_box.m_pathVariant
     }
 
     func get() -> Box { return m_box }

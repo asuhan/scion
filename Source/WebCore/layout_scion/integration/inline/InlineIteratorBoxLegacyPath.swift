@@ -85,6 +85,10 @@ extension InlineIterator {
 
     func deepCopy() -> BoxPath { return BoxLegacyPath(m_inlineBox) }
 
+    static func == (_ lhs: BoxLegacyPath, _ rhs: BoxLegacyPath) -> Bool {
+      return lhs.m_inlineBox === rhs.m_inlineBox
+    }
+
     func atEnd() -> Bool { return m_inlineBox == nil }
 
     func legacyInlineBox() -> LegacyInlineBox? { return m_inlineBox }

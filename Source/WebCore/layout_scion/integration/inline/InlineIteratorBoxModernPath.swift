@@ -159,6 +159,10 @@ extension InlineIterator {
 
     func isFirstLine() -> Bool { return box().lineIndex == 0 }
 
+    static func == (_ lhs: BoxModernPath, _ rhs: BoxModernPath) -> Bool {
+      return lhs.m_inlineContent === rhs.m_inlineContent && lhs.boxIndex == rhs.boxIndex
+    }
+
     func atEnd() -> Bool { return m_inlineContent == nil || boxIndex == boxes().count }
 
     func box() -> InlineDisplay.Box { return boxes()[Int(boxIndex)] }
