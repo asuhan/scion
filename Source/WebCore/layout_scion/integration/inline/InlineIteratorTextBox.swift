@@ -106,6 +106,11 @@ extension InlineIterator {
       return super.legacyInlineBox() as! LegacyInlineTextBox?
     }
 
+    // This returns the next text box generated for the same RenderText/Layout::InlineTextBox.
+    func nextTextBox() -> TextBoxIterator {
+      return TextBoxIterator(self).traverseNextTextBox() as! TextBoxIterator
+    }
+
     override func deepCopy() -> TextBox {
       switch m_pathVariant {
       case .modern(let path):
@@ -118,6 +123,8 @@ extension InlineIterator {
 
   class TextBoxIteratorImpl: LeafBoxIterator {
     override init() { super.init() }
+
+    override init(_ box: Box) { super.init(box) }
 
     init(pathVariant: BoxPath) {
       if let modernPath = pathVariant as? BoxModernPath {
