@@ -80,10 +80,6 @@
 #include <wtf/text/TextBreakIteratorInternalICU.h>
 #endif
 
-extern "C" uint32_t TextBox_start(const void*);
-
-extern "C" uint32_t TextBox_length(const void*);
-
 extern "C" void* TextBox_nextTextBox(const void*);
 
 extern "C" void* TextBoxIterator_create();
@@ -94,19 +90,13 @@ extern "C" void* TextBoxIterator_get(const void*);
 
 extern "C" bool TextBoxIterator_eq(const void*, const void*);
 
+extern "C" uint32_t TextBoxIterator_start(const void*);
+
+extern "C" uint32_t TextBoxIterator_length(const void*);
+
 extern "C" void* InlineIterator_firstTextBoxInLogicalOrderFor(const void*);
 
 namespace WebCore {
-
-unsigned TextBoxScion::start() const
-{
-    return TextBox_start(m_handle);
-}
-
-unsigned TextBoxScion::length() const
-{
-    return TextBox_length(m_handle);
-}
 
 TextBoxIteratorScion TextBoxScion::nextTextBox() const
 {
@@ -131,6 +121,16 @@ const TextBoxScion* TextBoxIteratorScion::operator->() const
 bool TextBoxIteratorScion::operator==(const TextBoxIteratorScion& rhs) const
 {
     return TextBoxIterator_eq(m_handle, rhs.m_handle);
+}
+
+unsigned TextBoxIteratorScion::start() const
+{
+    return TextBoxIterator_start(m_handle);
+}
+
+unsigned TextBoxIteratorScion::length() const
+{
+    return TextBoxIterator_length(m_handle);
 }
 
 namespace InlineIterator {
@@ -376,8 +376,8 @@ void TextIteratorScion::handleTextRun()
         rangeEnd = m_endOffset;
 
     while (m_textRun) {
-        auto textRunStart = m_textRun->start();
-        auto textRunEnd = textRunStart + m_textRun->length();
+        auto textRunStart = m_textRun.start();
+        auto textRunEnd = textRunStart + m_textRun.length();
 
         auto runStart = std::max(textRunStart, rangeStart);
         auto runEnd = std::min(textRunEnd, rangeEnd.value_or(textRunEnd));
@@ -430,7 +430,7 @@ void TextIteratorScion::handleTextRun()
                 return;
 
             // Advance and return
-            unsigned nextRunStart = nextTextRun ? nextTextRun->start() : rendererText.length();
+            unsigned nextRunStart = nextTextRun ? nextTextRun.start() : rendererText.length();
             if (nextRunStart > runEnd)
                 m_lastTextNodeEndedWithCollapsedSpace = true; // collapsed space between runs or at the end
             m_textRun = nextTextRun;

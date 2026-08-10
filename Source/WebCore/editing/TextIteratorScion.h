@@ -46,10 +46,6 @@ public:
     {
     }
 
-    unsigned start() const;
-
-    unsigned length() const;
-
     // This returns the next text box generated for the same RenderText/Layout::InlineTextBox.
     TextBoxIteratorScion nextTextBox() const;
 
@@ -71,6 +67,10 @@ public:
     const TextBoxScion* operator->() const;
 
     bool operator==(const TextBoxIteratorScion&) const;
+
+    unsigned start() const;
+
+    unsigned length() const;
 
 private:
     void* m_handle;
