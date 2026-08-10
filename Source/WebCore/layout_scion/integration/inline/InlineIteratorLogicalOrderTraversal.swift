@@ -24,6 +24,15 @@
  */
 
 extension InlineIterator {
+  struct TextLogicalOrderCacheData {
+    let boxes: [TextBoxIterator]
+    let index: UInt64
+  }
+
+  class TextLogicalOrderCache {
+    private let data: TextLogicalOrderCache? = nil
+  }
+
   struct LineLogicalOrderCacheData {
     let lineBox: LineBoxIterator
     let boxes: [LeafBoxIterator]
@@ -32,6 +41,13 @@ extension InlineIterator {
 
   class LineLogicalOrderCache {
     private let data: LineLogicalOrderCacheData? = nil
+  }
+
+  static func firstTextBoxInLogicalOrderFor(_ text: RenderTextWrapper) -> (
+    TextBoxIterator, TextLogicalOrderCache
+  ) {
+    assert(!text.needsVisualReordering())
+    return (firstTextBoxFor(text), TextLogicalOrderCache())
   }
 
   static func lastLeafOnLineInLogicalOrderWithNode(
