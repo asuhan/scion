@@ -231,7 +231,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return innerPaddingBoxLogicalHeight
   }
 
-  private func linesBoundingBox() -> IntRect {
+  func linesBoundingBox() -> IntRect {
     if let layout = LayoutIntegration.LineLayout.containing(renderer: self) {
       if layoutBox() == nil || !layout.contains(renderer: self) {
         // Repaint may be issued on subtrees during content mutation with newly inserted renderers

@@ -2491,7 +2491,9 @@ func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer
 }
 
 @_cdecl("RenderTextScion_textWithoutConvertingBackslashToYenSymbol")
-func RenderTextScion_textWithoutConvertingBackslashToYenSymbol(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+func RenderTextScion_textWithoutConvertingBackslashToYenSymbol(_ renderTextRaw: UnsafeRawPointer)
+  -> UnsafeRawPointer
+{
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
   let text = renderText.textWithoutConvertingBackslashToYenSymbol()
   return text.p
@@ -3111,6 +3113,15 @@ func RenderInlineScion_create(
     type: .Inline, element: ElementWrapper(p: element), style: style)
   let unmanaged = Unmanaged.passRetained(renderBlockFlow)
   return unmanaged.toOpaque()
+}
+
+@_cdecl("RenderInlineScion_linesBoundingBox")
+func RenderInlineScion_linesBoundingBox(_ inlineRaw: UnsafeRawPointer) -> IntRectRaw {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  let r = inline.linesBoundingBox()
+  return IntRectRaw(
+    location: IntPointRaw(x: r.location.x, y: r.location.y),
+    size: IntSizeRaw(width: r.size.width, height: r.size.height))
 }
 
 @_cdecl("RenderInlineScion_offsetWidth")

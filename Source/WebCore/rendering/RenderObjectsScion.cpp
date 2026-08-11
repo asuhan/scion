@@ -665,6 +665,8 @@ extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
 
 extern "C" void* RenderBoxModelObjectScion_inlineContinuation(const void* p);
 
+extern "C" IntRectRaw RenderInlineScion_linesBoundingBox(const void*);
+
 extern "C" int32_t RenderInlineScion_offsetWidth(const void*);
 
 extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
@@ -2092,6 +2094,12 @@ RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
 RenderInline* RenderBoxModelObjectScion::inlineContinuation() const
 {
     return static_cast<RenderInline*>(RenderBoxModelObjectScion_inlineContinuation(m_handle));
+}
+
+IntRect RenderInlineScion::linesBoundingBox() const
+{
+    const auto r = RenderInlineScion_linesBoundingBox(m_handle);
+    return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
 }
 
 LayoutUnit RenderInlineScion::offsetWidth() const

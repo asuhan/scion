@@ -837,6 +837,8 @@ public:
     {
     }
 
+    IntRect linesBoundingBox() const;
+
     LayoutUnit offsetWidth() const;
 
     LayoutUnit offsetHeight() const;

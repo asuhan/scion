@@ -561,7 +561,7 @@ LayoutUnit RenderInline::innerPaddingBoxHeight() const
 
 IntRect RenderInline::linesBoundingBox() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->linesBoundingBox(); }
     if (auto* layout = LayoutIntegration::LineLayout::containing(*this)) {
         if (!layoutBox() || !layout->contains(*this)) {
             // Repaint may be issued on subtrees during content mutation with newly inserted renderers
