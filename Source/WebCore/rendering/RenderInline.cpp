@@ -457,7 +457,7 @@ LayoutUnit RenderInline::marginAfter(const RenderStyle* otherStyle) const
 
 ASCIILiteral RenderInline::renderName() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // TODO(asuhan): don't route to Scion since it's correct as-is and all calls will be from Scion eventually.
     if (isRelativelyPositioned())
         return "RenderInline (relative positioned)"_s;
     if (isStickilyPositioned())
