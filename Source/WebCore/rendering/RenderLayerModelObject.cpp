@@ -797,8 +797,7 @@ void RenderLayerModelObject::paintSVGMask(PaintInfo& paintInfo, const LayoutPoin
 
 void* RenderLayerModelObject::scion() const
 {
-    ASSERT(m_scion);
-    return m_scion->handle();
+    return m_scion ? m_scion->handle() : nullptr;
 }
 
 bool rendererNeedsPixelSnapping(const RenderLayerModelObject& renderer)
