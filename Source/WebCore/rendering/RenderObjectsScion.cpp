@@ -659,6 +659,14 @@ struct LayoutSizeRaw {
 
 extern "C" LayoutSizeRaw RenderBoxModelObjectScion_offsetForInFlowPosition(const void* p);
 
+extern "C" int32_t RenderBoxModelObjectScion_borderTop(const void*);
+
+extern "C" int32_t RenderBoxModelObjectScion_borderBottom(const void*);
+
+extern "C" int32_t RenderBoxModelObjectScion_borderLeft(const void*);
+
+extern "C" int32_t RenderBoxModelObjectScion_borderRight(const void*);
+
 extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
 extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
@@ -2079,6 +2087,26 @@ LayoutSize RenderBoxModelObjectScion::offsetForInFlowPosition() const
 {
     const auto offset = RenderBoxModelObjectScion_offsetForInFlowPosition(m_handle);
     return { LayoutUnit::fromRawValue(offset.width), LayoutUnit::fromRawValue(offset.height) };
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderTop() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderTop(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderBottom(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderLeft(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderRight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderRight(m_handle));
 }
 
 LayoutUnit RenderBoxModelObjectScion::borderLogicalLeft() const

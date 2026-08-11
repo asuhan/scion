@@ -75,20 +75,10 @@ inline LayoutUnit RenderBoxModelObject::borderBefore() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return LayoutUnit(style().borderBeforeWidth());
 }
-inline LayoutUnit RenderBoxModelObject::borderBottom() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderBottomWidth());
-}
 inline LayoutUnit RenderBoxModelObject::borderEnd() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return LayoutUnit(style().borderEndWidth());
-}
-inline LayoutUnit RenderBoxModelObject::borderLeft() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderLeftWidth());
 }
 inline LayoutUnit RenderBoxModelObject::borderLogicalHeight() const
 {
@@ -105,20 +95,10 @@ inline LayoutUnit RenderBoxModelObject::borderLogicalWidth() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return borderStart() + borderEnd();
 }
-inline LayoutUnit RenderBoxModelObject::borderRight() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderRightWidth());
-}
 inline LayoutUnit RenderBoxModelObject::borderStart() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return LayoutUnit(style().borderStartWidth());
-}
-inline LayoutUnit RenderBoxModelObject::borderTop() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return LayoutUnit(style().borderTopWidth());
 }
 inline LayoutUnit RenderBoxModelObject::computedCSSPaddingAfter() const
 {

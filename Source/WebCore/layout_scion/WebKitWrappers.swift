@@ -3152,6 +3152,34 @@ func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: Unsa
   return LayoutSizeRaw(width: position.width().rawValue(), height: position.height().rawValue())
 }
 
+@_cdecl("RenderBoxModelObjectScion_borderTop")
+func RenderBoxModelObjectScion_borderTop(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.borderTop().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderBottom")
+func RenderBoxModelObjectScion_borderBottom(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.borderBottom().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderLeft")
+func RenderBoxModelObjectScion_borderLeft(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.borderLeft().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderRight")
+func RenderBoxModelObjectScion_borderRight(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.borderRight().rawValue()
+}
+
 @_cdecl("RenderBoxModelObjectScion_borderLogicalLeft")
 func RenderBoxModelObjectScion_borderLogicalLeft(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
   let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)

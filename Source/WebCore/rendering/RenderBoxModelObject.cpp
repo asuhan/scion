@@ -1105,6 +1105,30 @@ bool RenderBoxModelObject::requiresLayer() const
     return isDocumentElementRenderer() || isPositioned() || createsGroup() || hasTransformRelatedProperty() || hasHiddenBackface() || hasReflection() || requiresRenderingConsolidationForViewTransition() || isRenderViewTransitionCapture();
 }
 
+LayoutUnit RenderBoxModelObject::borderTop() const
+{
+    if (m_scion) { return m_scion->borderTop(); }
+    return LayoutUnit(style().borderTopWidth());
+}
+
+LayoutUnit RenderBoxModelObject::borderBottom() const
+{
+    if (m_scion) { return m_scion->borderBottom(); }
+    return LayoutUnit(style().borderBottomWidth());
+}
+
+LayoutUnit RenderBoxModelObject::borderLeft() const
+{
+    if (m_scion) { return m_scion->borderLeft(); }
+    return LayoutUnit(style().borderLeftWidth());
+}
+
+LayoutUnit RenderBoxModelObject::borderRight() const
+{
+    if (m_scion) { return m_scion->borderRight(); }
+    return LayoutUnit(style().borderRightWidth());
+}
+
 LayoutUnit RenderBoxModelObject::borderLogicalLeft() const
 {
     if (m_scion) { return m_scion->borderLogicalLeft(); }

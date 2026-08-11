@@ -133,10 +133,10 @@ public:
     virtual inline LayoutUnit paddingEnd() const;
 
     virtual inline RectEdges<LayoutUnit> borderWidths() const;
-    virtual inline LayoutUnit borderTop() const;
-    virtual inline LayoutUnit borderBottom() const;
-    virtual inline LayoutUnit borderLeft() const;
-    virtual inline LayoutUnit borderRight() const;
+    virtual LayoutUnit borderTop() const;
+    virtual LayoutUnit borderBottom() const;
+    virtual LayoutUnit borderLeft() const;
+    virtual LayoutUnit borderRight() const;
 
     virtual inline LayoutUnit horizontalBorderExtent() const;
     virtual inline LayoutUnit verticalBorderExtent() const;
