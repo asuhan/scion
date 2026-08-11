@@ -601,6 +601,8 @@ public:
 
     const String& text() const;
 
+    String textWithoutConvertingBackslashToYenSymbol() const;
+
     IntRect linesBoundingBox() const;
 
     void setTextWithOffset(const String&, unsigned offset, bool force = false);

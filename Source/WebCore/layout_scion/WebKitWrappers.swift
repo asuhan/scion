@@ -2490,6 +2490,13 @@ func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer
   return text.p
 }
 
+@_cdecl("RenderTextScion_textWithoutConvertingBackslashToYenSymbol")
+func RenderTextScion_textWithoutConvertingBackslashToYenSymbol(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let text = renderText.textWithoutConvertingBackslashToYenSymbol()
+  return text.p
+}
+
 @_cdecl("RenderTextScion_linesBoundingBox")
 func RenderTextScion_linesBoundingBox(_ renderTextRaw: UnsafeRawPointer) -> IntRectRaw {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

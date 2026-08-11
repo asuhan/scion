@@ -1893,7 +1893,7 @@ const String& RenderText::text() const
 
 String RenderText::textWithoutConvertingBackslashToYenSymbol() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->textWithoutConvertingBackslashToYenSymbol(); }
     if (!m_useBackslashAsYenSymbol || style().textSecurity() != TextSecurity::None)
         return text();
 
