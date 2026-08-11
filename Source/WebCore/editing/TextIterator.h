@@ -47,6 +47,7 @@ WEBCORE_EXPORT SimpleRange resolveCharacterRange(const SimpleRange& scope, Chara
 
 // Text from the text iterator.
 WEBCORE_EXPORT String plainText(const SimpleRange&, TextIteratorBehaviors = { }, bool isDisplayString = false);
+WEBCORE_EXPORT String plainTextScion(const SimpleRange&);
 WEBCORE_EXPORT bool hasAnyPlainText(const SimpleRange&, TextIteratorBehaviors = { });
 WEBCORE_EXPORT String plainTextReplacingNoBreakSpace(const SimpleRange&, TextIteratorBehaviors = { }, bool isDisplayString = false);
 

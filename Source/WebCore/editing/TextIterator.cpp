@@ -27,6 +27,7 @@
 
 #include "config.h"
 #include "TextIterator.h"
+#include "TextIteratorScion.h"
 
 #include "ComposedTreeIterator.h"
 #include "Document.h"
@@ -2552,7 +2553,7 @@ bool hasAnyPlainText(const SimpleRange& range, TextIteratorBehaviors behaviors)
     return false;
 }
 
-String plainText(const SimpleRange& range, TextIteratorBehaviors defaultBehavior, bool isDisplayString)
+static String plainTextImpl(const SimpleRange& range, TextIteratorBehaviors defaultBehavior, bool isDisplayString, bool isScion)
 {
     // The initial buffer size can be critical for performance: https://bugs.webkit.org/show_bug.cgi?id=81192
     constexpr unsigned initialCapacity = 1 << 15;
@@ -2566,9 +2567,16 @@ String plainText(const SimpleRange& range, TextIteratorBehaviors defaultBehavior
     if (!isDisplayString)
         behaviors.add(TextIteratorBehavior::EmitsTextsWithoutTranscoding);
 
-    for (TextIterator it(range, behaviors); !it.atEnd(); it.advance()) {
-        it.appendTextToStringBuilder(builder);
-        bufferLength += it.text().length();
+    if (isScion) {
+        for (TextIteratorScion it(range, behaviors); !it.atEnd(); it.advance()) {
+            it.appendTextToStringBuilder(builder);
+            bufferLength += it.text().length();
+        }
+    } else {
+        for (TextIterator it(range, behaviors); !it.atEnd(); it.advance()) {
+            it.appendTextToStringBuilder(builder);
+            bufferLength += it.text().length();
+        }
     }
 
     if (!bufferLength)
@@ -2580,6 +2588,16 @@ String plainText(const SimpleRange& range, TextIteratorBehaviors defaultBehavior
         document->displayStringModifiedByEncoding(result);
 
     return result;
+}
+
+String plainText(const SimpleRange& range, TextIteratorBehaviors defaultBehavior, bool isDisplayString)
+{
+    return plainTextImpl(range, defaultBehavior, isDisplayString, false);
+}
+
+String plainTextScion(const SimpleRange& range)
+{
+    return plainTextImpl(range, {}, false, true);
 }
 
 String plainTextReplacingNoBreakSpace(const SimpleRange& range, TextIteratorBehaviors defaultBehaviors, bool isDisplayString)

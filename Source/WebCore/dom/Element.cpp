@@ -4245,7 +4245,8 @@ String Element::innerText()
     if (renderer()->isSkippedContent())
         return String();
 
-    return plainText(makeRangeSelectingNodeContents(*this));
+    const auto range = makeRangeSelectingNodeContents(*this);
+    return renderer()->isScion() ? plainTextScion(range) : plainText(range);
 }
 
 String Element::outerText()
