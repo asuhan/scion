@@ -413,6 +413,19 @@ class RenderTextWrapper: RenderObjectWrapper {
     return m_text!
   }
 
+  func textWithoutConvertingBackslashToYenSymbol() -> StringWrapper {
+    assert(isNativeImpl())
+    if !useBackslashAsYenSymbol || style().textSecurity() != .None {
+      return text()
+    }
+
+    if style().textTransform().isEmpty {
+      return originalText()
+    }
+
+    return applyTextTransform(style(), originalText(), previousCharacter())
+  }
+
   func dirtyLegacyLineBoxes(fullLayout: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
