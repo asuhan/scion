@@ -22,6 +22,17 @@
 import wk_interop
 
 class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
+  init(_ element: HTMLElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(
+      .LineBreak, element, style, RenderObjectWrapper.TypeFlag(),
+      element is HTMLWBRElementWrapper
+        ? RenderObjectWrapper.TypeSpecificFlags(RenderObjectWrapper.LineBreakFlag.IsWBR)
+        : RenderObjectWrapper.TypeSpecificFlags())
+    assert(isRenderLineBreak())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   private func linesBoundingBox() -> IntRect {
     assert(isNativeImpl())
     let run = InlineIterator.boxFor(self)

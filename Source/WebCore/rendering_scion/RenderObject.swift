@@ -382,6 +382,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       self.flags = flags.rawValue
     }
 
+    init(_ flags: RenderObjectWrapper.LineBreakFlag) {
+      self.kind = .LineBreak
+      self.flags = flags.rawValue
+    }
+
     func blockFlowFlags() -> BlockFlowFlag {
       return BlockFlowFlag(rawValue: valueForKind(.BlockFlow))
     }
