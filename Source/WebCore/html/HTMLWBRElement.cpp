@@ -28,6 +28,7 @@
 
 #include "HTMLNames.h"
 #include "RenderLineBreak.h"
+#include "RenderObjectsScion.h"
 #include <wtf/TZoneMallocInlines.h>
 
 namespace WebCore {
@@ -49,6 +50,12 @@ HTMLWBRElement::HTMLWBRElement(const QualifiedName& tagName, Document& document)
 
 RenderPtr<RenderElement> HTMLWBRElement::createElementRenderer(RenderStyle&& style, const RenderTreePosition&)
 {
+    if (Document::s_useScionRendering >= 5) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderLineBreak>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderLineBreakScion_create(true, this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderLineBreak>(*this, WTFMove(style));
 }
 

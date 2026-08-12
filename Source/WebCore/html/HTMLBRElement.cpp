@@ -27,6 +27,7 @@
 #include "CSSValueKeywords.h"
 #include "HTMLNames.h"
 #include "RenderLineBreak.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include <wtf/TZoneMallocInlines.h>
 
@@ -79,6 +80,12 @@ RenderPtr<RenderElement> HTMLBRElement::createElementRenderer(RenderStyle&& styl
     if (style.hasContent() && RenderElement::isContentDataSupported(*style.contentData()))
         return RenderElement::createFor(*this, WTFMove(style));
 
+    if (Document::s_useScionRendering >= 5) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderLineBreak>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderLineBreakScion_create(false, this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderLineBreak>(*this, WTFMove(style));
 }
 
