@@ -60,11 +60,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return !hasWBRLineBreakFlag();
     }
-    bool isWBR() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return hasWBRLineBreakFlag();
-    }
+    bool isWBR() const;
     bool isLineBreakOpportunity() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

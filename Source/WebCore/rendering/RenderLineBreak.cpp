@@ -146,6 +146,12 @@ void RenderLineBreak::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) co
     quads.append(localToAbsoluteQuad(FloatRect(rect.location(), rect.size()), UseTransforms, wasFixed));
 }
 
+bool RenderLineBreak::isWBR() const
+{
+    if (m_scion) { return m_scion->isWBR(); }
+    return hasWBRLineBreakFlag();
+}
+
 void RenderLineBreak::updateFromStyle()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -681,6 +681,8 @@ extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
 
 extern "C" void RenderInlineScion_setWk(void*, void*);
 
+extern "C" bool RenderLineBreakScion_isWBR(const void*);
+
 extern "C" void RenderLineBreakScion_setWk(void*, void*);
 
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
@@ -2145,6 +2147,11 @@ LayoutUnit RenderInlineScion::offsetHeight() const
 void RenderInlineScion::setWk(void* wk)
 {
     RenderInlineScion_setWk(wk, m_handle);
+}
+
+bool RenderLineBreakScion::isWBR() const
+{
+    return RenderLineBreakScion_isWBR(m_handle);
 }
 
 void RenderLineBreakScion::setWk(void* wk)
