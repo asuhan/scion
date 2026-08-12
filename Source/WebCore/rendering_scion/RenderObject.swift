@@ -3529,7 +3529,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     repaintUsingContainer(repaintContainer.renderer, repaintRect, clipRepaintToLayer == .Yes)
   }
 
-  private func hasWBRLineBreakFlag() -> Bool {
+  func hasWBRLineBreakFlag() -> Bool {
     assert(isNativeImpl())
     return m_typeSpecificFlags.lineBreakFlags().contains(.IsWBR)
   }
