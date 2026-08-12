@@ -57,6 +57,16 @@ RenderLineBreak::~RenderLineBreak()
 {
 }
 
+void RenderLineBreak::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    m_scion = std::make_unique<RenderLineBreakScion>(handle);
+    m_scion->setWk(this);
+}
+
 LayoutUnit RenderLineBreak::lineHeight(bool firstLine, LineDirectionMode /*direction*/, LinePositionMode /*linePositionMode*/) const
 {
     if (firstLine) {

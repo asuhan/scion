@@ -22,11 +22,14 @@
 #pragma once
 
 #include "RenderBoxModelObject.h"
+#include "RenderObjectsScion.h"
 
 namespace WebCore {
 
 class HTMLElement;
 class Position;
+
+class RenderLineBreakScion;
 
 class RenderLineBreak final : public RenderBoxModelObject {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderLineBreak);
@@ -34,6 +37,8 @@ class RenderLineBreak final : public RenderBoxModelObject {
 public:
     RenderLineBreak(HTMLElement&, RenderStyle&&);
     virtual ~RenderLineBreak();
+
+    void setScionHandle(void* handle);
 
     // FIXME: The lies here keep render tree dump based test results unchanged.
     ASCIILiteral renderName() const final { return isWBR() ? "RenderWordBreak"_s : "RenderBR"_s; }
@@ -82,6 +87,8 @@ private:
     bool requiresLayer() const final { return false; }
 
     mutable std::optional<LayoutUnit> m_cachedLineHeight { };
+
+    std::unique_ptr<RenderLineBreakScion> m_scion;
 };
 
 } // namespace WebCore

@@ -866,6 +866,8 @@ public:
     {
     }
 
+    void setWk(void*);
+
 private:
     void* m_handle;
 };

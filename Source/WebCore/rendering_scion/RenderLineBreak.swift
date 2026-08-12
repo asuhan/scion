@@ -169,5 +169,12 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
   private var cachedLineHeight: LayoutUnit? = nil
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }

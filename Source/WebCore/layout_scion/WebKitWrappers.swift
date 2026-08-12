@@ -3154,6 +3154,14 @@ func RenderInlineScion_setWk(_ wk: UnsafeMutableRawPointer, _ inlineRaw: UnsafeM
   inline.setWk(wk)
 }
 
+@_cdecl("RenderLineBreakScion_setWk")
+func RenderLineBreakScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ lineBreakRaw: UnsafeMutableRawPointer
+) {
+  let lineBreak = Unmanaged<RenderLineBreakWrapper>.fromOpaque(lineBreakRaw).takeUnretainedValue()
+  lineBreak.setWk(wk)
+}
+
 @_cdecl("RenderBoxModelObjectScion_offsetForInFlowPosition")
 func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: UnsafeRawPointer)
   -> LayoutSizeRaw
