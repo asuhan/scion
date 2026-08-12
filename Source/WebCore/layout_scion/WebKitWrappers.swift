@@ -3115,6 +3115,18 @@ func RenderInlineScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderLineBreakScion_create")
+func RenderLineBreakScion_create(
+  _ isWBR: Bool, _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let element = isWBR ? HTMLWBRElementWrapper(p: elementRaw) : HTMLBRElementWrapper(p: elementRaw)
+  let lineBreak = RenderLineBreakWrapper(element, style)
+  let unmanaged = Unmanaged.passRetained(lineBreak)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderInlineScion_linesBoundingBox")
 func RenderInlineScion_linesBoundingBox(_ inlineRaw: UnsafeRawPointer) -> IntRectRaw {
   let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()

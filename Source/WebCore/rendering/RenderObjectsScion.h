@@ -43,6 +43,8 @@ extern "C" void* RenderTextScion_create(uint8_t, void*, const void*);
 
 extern "C" void* RenderInlineScion_create(uint8_t, void*, const void*);
 
+extern "C" void* RenderLineBreakScion_create(bool, void*, const void*);
+
 namespace WebCore {
 
 class HitTestLocation;
@@ -852,6 +854,17 @@ public:
     LayoutUnit offsetHeight() const;
 
     void setWk(void*);
+
+private:
+    void* m_handle;
+};
+
+class RenderLineBreakScion final {
+public:
+    RenderLineBreakScion(void* handle)
+        : m_handle(handle)
+    {
+    }
 
 private:
     void* m_handle;
