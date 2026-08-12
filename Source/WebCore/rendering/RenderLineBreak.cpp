@@ -69,6 +69,7 @@ void RenderLineBreak::setScionHandle(void* handle)
 
 LayoutUnit RenderLineBreak::lineHeight(bool firstLine, LineDirectionMode /*direction*/, LinePositionMode /*linePositionMode*/) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (firstLine) {
         auto& firstLineStyle = this->firstLineStyle();
         if (&firstLineStyle != &style())
@@ -82,6 +83,7 @@ LayoutUnit RenderLineBreak::lineHeight(bool firstLine, LineDirectionMode /*direc
 
 LayoutUnit RenderLineBreak::baselinePosition(FontBaseline baselineType, bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& style = firstLine ? firstLineStyle() : this->style();
     auto& fontMetrics = style.metricsOfPrimaryFont();
     return LayoutUnit { (fontMetrics.ascent(baselineType) + (lineHeight(firstLine, direction, linePositionMode) - fontMetrics.height()) / 2) };
@@ -89,26 +91,31 @@ LayoutUnit RenderLineBreak::baselinePosition(FontBaseline baselineType, bool fir
 
 int RenderLineBreak::caretMinOffset() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return 0;
 }
 
 int RenderLineBreak::caretMaxOffset() const
 { 
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return 1;
 }
 
 bool RenderLineBreak::canBeSelectionLeaf() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return true;
 }
 
 VisiblePosition RenderLineBreak::positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return createVisiblePosition(0, Affinity::Downstream);
 }
 
 IntRect RenderLineBreak::linesBoundingBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto run = InlineIterator::boxFor(*this);
     if (!run)
         return { };
@@ -118,6 +125,7 @@ IntRect RenderLineBreak::linesBoundingBox() const
 
 void RenderLineBreak::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& accumulatedOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto box = InlineIterator::boxFor(*this);
     if (!box)
         return;
@@ -129,6 +137,7 @@ void RenderLineBreak::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint
 
 void RenderLineBreak::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto box = InlineIterator::boxFor(*this);
     if (!box)
         return;
@@ -139,6 +148,7 @@ void RenderLineBreak::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) co
 
 void RenderLineBreak::updateFromStyle()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_cachedLineHeight = { };
     RELEASE_ASSERT_WITH_SECURITY_IMPLICATION(isInline());
 }

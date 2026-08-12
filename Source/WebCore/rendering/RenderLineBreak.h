@@ -41,7 +41,11 @@ public:
     void setScionHandle(void* handle);
 
     // FIXME: The lies here keep render tree dump based test results unchanged.
-    ASCIILiteral renderName() const final { return isWBR() ? "RenderWordBreak"_s : "RenderBR"_s; }
+    ASCIILiteral renderName() const final
+    {
+        // TODO(asuhan): don't route to Scion since it's correct as-is and all calls will be from Scion eventually.
+        return isWBR() ? "RenderWordBreak"_s : "RenderBR"_s;
+    }
 
     IntRect linesBoundingBox() const;
 
@@ -51,15 +55,34 @@ public:
     void collectSelectionGeometries(Vector<SelectionGeometry>&, unsigned startOffset = 0, unsigned endOffset = std::numeric_limits<unsigned>::max()) final;
 #endif
 
-    bool isBR() const { return !hasWBRLineBreakFlag(); }
-    bool isWBR() const { return hasWBRLineBreakFlag(); }
-    bool isLineBreakOpportunity() const { return isWBR(); }
+    bool isBR() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !hasWBRLineBreakFlag();
+    }
+    bool isWBR() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return hasWBRLineBreakFlag();
+    }
+    bool isLineBreakOpportunity() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isWBR();
+    }
 
 private:
     void node() const = delete;
 
-    bool canHaveChildren() const final { return false; }
-    void paint(PaintInfo&, const LayoutPoint&) final { }
+    bool canHaveChildren() const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return false;
+    }
+    void paint(PaintInfo&, const LayoutPoint&) final
+    {
+        // NB(asuhan): this is a no-op, we can skip the Scion check
+    }
 
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*) final;
     int caretMinOffset() const final;
@@ -69,22 +92,74 @@ private:
     LayoutUnit lineHeight(bool firstLine, LineDirectionMode, LinePositionMode) const final;
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode) const final;
 
-    LayoutUnit marginTop() const final { return 0; }
-    LayoutUnit marginBottom() const final { return 0; }
-    LayoutUnit marginLeft() const final { return 0; }
-    LayoutUnit marginRight() const final { return 0; }
-    LayoutUnit marginBefore(const RenderStyle*) const final { return 0; }
-    LayoutUnit marginAfter(const RenderStyle*) const final { return 0; }
-    LayoutUnit marginStart(const RenderStyle*) const final { return 0; }
-    LayoutUnit marginEnd(const RenderStyle*) const final { return 0; }
-    LayoutUnit offsetWidth() const final { return linesBoundingBox().width(); }
-    LayoutUnit offsetHeight() const final { return linesBoundingBox().height(); }
-    LayoutRect borderBoundingBox() const final { return LayoutRect(LayoutPoint(), linesBoundingBox().size()); }
+    LayoutUnit marginTop() const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginBottom() const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginLeft() const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginRight() const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginBefore(const RenderStyle*) const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginAfter(const RenderStyle*) const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginStart(const RenderStyle*) const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit marginEnd(const RenderStyle*) const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    LayoutUnit offsetWidth() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return linesBoundingBox().width();
+    }
+    LayoutUnit offsetHeight() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return linesBoundingBox().height();
+    }
+    LayoutRect borderBoundingBox() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return LayoutRect(LayoutPoint(), linesBoundingBox().size());
+    }
     LayoutRect frameRectForStickyPositioning() const final { ASSERT_NOT_REACHED(); return { }; }
-    RepaintRects localRectsForRepaint(RepaintOutlineBounds) const final { return { }; }
+    RepaintRects localRectsForRepaint(RepaintOutlineBounds) const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return { };
+    }
 
     void updateFromStyle() final;
-    bool requiresLayer() const final { return false; }
+    bool requiresLayer() const final
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return false;
+    }
 
     mutable std::optional<LayoutUnit> m_cachedLineHeight { };
 
