@@ -299,6 +299,17 @@ extension InlineIterator {
     }
 
     @discardableResult
+    private func traversePreviousOnLine() -> LeafBoxIterator {
+      switch m_box.m_pathVariant {
+      case .modern(let path):
+        path.traversePreviousOnLine()
+      case .legacy(let path):
+        path.traversePreviousOnLine()
+      }
+      return self
+    }
+
+    @discardableResult
     func traverseNextOnLineIgnoringLineBreak() -> LeafBoxIterator {
       repeat {
         traverseNextOnLine()
@@ -308,8 +319,10 @@ extension InlineIterator {
 
     @discardableResult
     func traversePreviousOnLineIgnoringLineBreak() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      repeat {
+        traversePreviousOnLine()
+      } while !atEnd() && m_box.isLineBreak()
+      return self
     }
   }
 
