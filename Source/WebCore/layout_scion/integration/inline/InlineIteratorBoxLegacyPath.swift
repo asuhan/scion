@@ -75,6 +75,8 @@ extension InlineIterator {
 
     func traverseNextTextBox() { m_inlineBox = inlineTextBox().nextTextBox() }
 
+    func traverseNextOnLine() { m_inlineBox = m_inlineBox!.nextLeafOnLine() }
+
     func traverseNextInlineBox() { m_inlineBox = inlineFlowBox().nextLineBox() }
 
     func traversePreviousInlineBox() { m_inlineBox = inlineFlowBox().prevLineBox() }

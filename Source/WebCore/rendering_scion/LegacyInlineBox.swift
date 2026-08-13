@@ -66,6 +66,21 @@ class LegacyInlineBox {
 
   func previousOnLine() -> LegacyInlineBox? { return m_previousOnLine }
 
+  func isLeaf() -> Bool { return true }
+
+  func nextLeafOnLine() -> LegacyInlineBox? {
+    var leaf: LegacyInlineBox? = nil
+    var box = nextOnLine()
+    while box != nil && leaf == nil {
+      leaf = box!.isLeaf() ? box : (box! as! LegacyInlineFlowBox).firstLeafDescendant()
+      box = box!.nextOnLine()
+    }
+    if leaf == nil && parent() != nil {
+      leaf = parent()!.nextLeafOnLine()
+    }
+    return leaf
+  }
+
   // FIXME: Hide this once all callers are using tighter types.
   func rendererObject() -> RenderObjectWrapper { return renderer }
 

@@ -40,6 +40,18 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     return m_lastChild
   }
 
+  override final func isLeaf() -> Bool { return false }
+
+  func firstLeafDescendant() -> LegacyInlineBox? {
+    var leaf: LegacyInlineBox? = nil
+    var child = firstChild()
+    while child != nil && leaf == nil {
+      leaf = child!.isLeaf() ? child : (child! as! LegacyInlineFlowBox).firstLeafDescendant()
+      child = child!.nextOnLine()
+    }
+    return leaf
+  }
+
   override func adjustPosition(_ dx: Float32, _ dy: Float32) {
     super.adjustPosition(dx, dy)
     var child = firstChild()
