@@ -3154,6 +3154,15 @@ func RenderInlineScion_setWk(_ wk: UnsafeMutableRawPointer, _ inlineRaw: UnsafeM
   inline.setWk(wk)
 }
 
+@_cdecl("RenderLineBreakScion_linesBoundingBox")
+func RenderLineBreakScion_linesBoundingBox(_ lineBreakRaw: UnsafeRawPointer) -> IntRectRaw {
+  let lineBreak = Unmanaged<RenderLineBreakWrapper>.fromOpaque(lineBreakRaw).takeUnretainedValue()
+  let r = lineBreak.linesBoundingBox()
+  return IntRectRaw(
+    location: IntPointRaw(x: r.location.x, y: r.location.y),
+    size: IntSizeRaw(width: r.size.width, height: r.size.height))
+}
+
 @_cdecl("RenderLineBreakScion_isBR")
 func RenderLineBreakScion_isBR(_ lineBreakRaw: UnsafeRawPointer) -> Bool {
   let lineBreak = Unmanaged<RenderLineBreakWrapper>.fromOpaque(lineBreakRaw).takeUnretainedValue()

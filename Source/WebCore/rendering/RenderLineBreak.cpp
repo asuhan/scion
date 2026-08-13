@@ -115,7 +115,7 @@ VisiblePosition RenderLineBreak::positionForPoint(const LayoutPoint&, HitTestSou
 
 IntRect RenderLineBreak::linesBoundingBox() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->linesBoundingBox(); }
     auto run = InlineIterator::boxFor(*this);
     if (!run)
         return { };

@@ -33,7 +33,7 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
-  private func linesBoundingBox() -> IntRect {
+  func linesBoundingBox() -> IntRect {
     assert(isNativeImpl())
     let run = InlineIterator.boxFor(self)
     if !run.bool() {

@@ -866,6 +866,8 @@ public:
     {
     }
 
+    IntRect linesBoundingBox() const;
+
     bool isBR() const;
 
     bool isWBR() const;

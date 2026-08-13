@@ -681,6 +681,8 @@ extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
 
 extern "C" void RenderInlineScion_setWk(void*, void*);
 
+extern "C" IntRectRaw RenderLineBreakScion_linesBoundingBox(const void*);
+
 extern "C" bool RenderLineBreakScion_isBR(const void*);
 
 extern "C" bool RenderLineBreakScion_isWBR(const void*);
@@ -2149,6 +2151,12 @@ LayoutUnit RenderInlineScion::offsetHeight() const
 void RenderInlineScion::setWk(void* wk)
 {
     RenderInlineScion_setWk(wk, m_handle);
+}
+
+IntRect RenderLineBreakScion::linesBoundingBox() const
+{
+    const auto r = RenderLineBreakScion_linesBoundingBox(m_handle);
+    return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
 }
 
 bool RenderLineBreakScion::isBR() const
