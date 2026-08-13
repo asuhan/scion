@@ -1054,6 +1054,19 @@ class LayoutIntegration {
       return InlineIterator.textBoxFor(inlineContent!, firstIndex)
     }
 
+    func boxFor(_ renderElement: RenderElementWrapper) -> InlineIterator.LeafBoxIterator {
+      if inlineContent == nil {
+        return InlineIterator.TextBoxIterator()
+      }
+
+      let layoutBox = renderElement.layoutBox()!
+      guard let firstIndex = inlineContent!.firstBoxIndexForLayoutBox(layoutBox: layoutBox) else {
+        return InlineIterator.TextBoxIterator()
+      }
+
+      return InlineIterator.boxFor(inlineContent!, firstIndex)
+    }
+
     func firstLineBox() -> InlineIterator.LineBoxIterator {
       if inlineContent == nil {
         return InlineIterator.LineBoxIterator()

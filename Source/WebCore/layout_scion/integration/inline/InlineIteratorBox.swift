@@ -327,13 +327,22 @@ extension InlineIterator {
   }
 
   static func boxFor(_ renderer: RenderLineBreakWrapper) -> LeafBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: renderer) {
+      return lineLayout.boxFor(renderer)
+    }
+    return LeafBoxIterator()
   }
 
   static func boxFor(_ renderer: RenderBoxWrapper) -> LeafBoxIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func boxFor(_ content: LayoutIntegration.InlineContent, _ boxIndex: UInt64)
+    -> LeafBoxIterator
+  {
+    return LeafBoxIterator(
+      .modern(BoxModernPath(inlineContent: content, startIndex: boxIndex)), kind: .Default)
   }
 
 }
