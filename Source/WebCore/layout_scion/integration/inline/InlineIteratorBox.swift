@@ -289,8 +289,13 @@ extension InlineIterator {
   class LeafBoxIterator: BoxIterator {
     @discardableResult
     func traverseNextOnLine() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_box.m_pathVariant {
+      case .modern(let path):
+        path.traverseNextOnLine()
+      case .legacy(let path):
+        path.traverseNextOnLine()
+      }
+      return self
     }
 
     @discardableResult
