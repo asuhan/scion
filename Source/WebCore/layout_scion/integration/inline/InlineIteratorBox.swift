@@ -334,8 +334,10 @@ extension InlineIterator {
   }
 
   static func boxFor(_ renderer: RenderBoxWrapper) -> LeafBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: renderer) {
+      return lineLayout.boxFor(renderer)
+    }
+    return LeafBoxIterator()
   }
 
   static func boxFor(_ content: LayoutIntegration.InlineContent, _ boxIndex: UInt64)
