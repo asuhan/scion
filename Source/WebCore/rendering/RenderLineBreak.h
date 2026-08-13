@@ -55,11 +55,7 @@ public:
     void collectSelectionGeometries(Vector<SelectionGeometry>&, unsigned startOffset = 0, unsigned endOffset = std::numeric_limits<unsigned>::max()) final;
 #endif
 
-    bool isBR() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return !hasWBRLineBreakFlag();
-    }
+    bool isBR() const;
     bool isWBR() const;
     bool isLineBreakOpportunity() const
     {

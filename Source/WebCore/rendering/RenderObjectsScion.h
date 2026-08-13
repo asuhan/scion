@@ -866,6 +866,8 @@ public:
     {
     }
 
+    bool isBR() const;
+
     bool isWBR() const;
 
     void setWk(void*);
