@@ -5064,7 +5064,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         }
         continue
       }
-      if !child!.isBR() {
+      if !child!.isBRForRenderObject() {
         // Step One: determine whether or not we need to terminate our current line.
         // Each discrete chunk can become the new min-width, if it is the widest chunk
         // seen so far, and it can also become the max-width.

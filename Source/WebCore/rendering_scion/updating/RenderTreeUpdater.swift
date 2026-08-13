@@ -588,7 +588,7 @@ class RenderTreeUpdater {
     }
 
     let previousRenderer = renderingParent.previousChildRenderer
-    if previousRenderer != nil && previousRenderer!.isBR() {  // <span><br/> <br/></span>
+    if previousRenderer != nil && previousRenderer!.isBRForRenderObject() {  // <span><br/> <br/></span>
       return false
     }
 

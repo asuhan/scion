@@ -43,6 +43,11 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return enclosingIntRect(rect: run.get().visualRectIgnoringBlockDirection())
   }
 
+  func isBR() -> Bool {
+    assert(isNativeImpl())
+    return !hasWBRLineBreakFlag()
+  }
+
   func isWBR() -> Bool {
     assert(isNativeImpl())
     return hasWBRLineBreakFlag()

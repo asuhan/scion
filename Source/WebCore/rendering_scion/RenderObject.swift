@@ -1479,7 +1479,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .LineBreak
   }
 
-  func isBR() -> Bool {
+  func isBRForRenderObject() -> Bool {
     if !isNativeImpl() { return wk_interop.RenderObject_isBR(id()) }
     return isRenderLineBreak() && !hasWBRLineBreakFlag()
   }
