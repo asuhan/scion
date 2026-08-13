@@ -127,6 +127,18 @@ extension InlineIterator {
       assert(box().isTextOrSoftLineBreak())
     }
 
+    func traverseNextOnLine() {
+      assert(!atEnd())
+
+      let oldLineIndex = box().lineIndex
+
+      traverseNextLeaf()
+
+      if !atEnd() && oldLineIndex != box().lineIndex {
+        setAtEnd()
+      }
+    }
+
     func traverseNextInlineBox() {
       assert(!atEnd())
       assert(box().isInlineBox())
@@ -177,6 +189,12 @@ extension InlineIterator {
     private func traversePreviousBox() {
       assert(!atEnd())
       boxIndex = boxIndex != 0 ? boxIndex - 1 : UInt64(boxes().count)
+    }
+
+    private func traverseNextLeaf() {
+      repeat {
+        traverseNextBox()
+      } while !atEnd() && box().isInlineBox()
     }
 
     private func traverseNextWithSameLayoutBox() {
