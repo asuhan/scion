@@ -300,8 +300,10 @@ extension InlineIterator {
 
     @discardableResult
     func traverseNextOnLineIgnoringLineBreak() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      repeat {
+        traverseNextOnLine()
+      } while !atEnd() && m_box.isLineBreak()
+      return self
     }
 
     @discardableResult
