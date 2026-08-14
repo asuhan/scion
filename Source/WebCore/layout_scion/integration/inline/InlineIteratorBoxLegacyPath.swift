@@ -45,6 +45,8 @@ extension InlineIterator {
 
     func minimumCaretOffset() -> UInt32 { return UInt32(m_inlineBox!.caretMinOffset()) }
 
+    func maximumCaretOffset() -> UInt32 { return UInt32(m_inlineBox!.caretMaxOffset()) }
+
     func bidiLevel() -> UInt8 { return m_inlineBox!.bidiLevel() }
 
     func hasHyphen() -> Bool { return false }

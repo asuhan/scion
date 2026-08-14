@@ -161,6 +161,8 @@ class LegacyInlineBox {
 
   func caretMinOffset() -> Int32 { return renderer.caretMinOffset() }
 
+  func caretMaxOffset() -> Int32 { return renderer.caretMaxOffset() }
+
   func bidiLevel() -> UInt8 { return m_bitfields.bidiEmbeddingLevel }
 
   func markDirty(_ dirty: Bool = true) { m_bitfields.dirty = dirty }
