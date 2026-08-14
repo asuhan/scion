@@ -138,8 +138,12 @@ extension InlineIterator {
     }
 
     func minimumCaretOffset() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.minimumCaretOffset()
+      case .legacy(let path):
+        return path.minimumCaretOffset()
+      }
     }
 
     func maximumCaretOffset() -> UInt32 {
