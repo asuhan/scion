@@ -45,6 +45,8 @@ extension InlineIterator {
 
     func minimumCaretOffset() -> UInt32 { return isText() ? start() : 0 }
 
+    func maximumCaretOffset() -> UInt32 { return isText() ? end() : 1 }
+
     func bidiLevel() -> UInt8 { return box().bidiLevel.rawValue }
 
     func hasHyphen() -> Bool { return box().text().hasHyphen }
