@@ -179,6 +179,27 @@ extension InlineIterator {
       assert(box().isInlineBox())
     }
 
+    func parentInlineBox() -> BoxModernPath {
+      assert(!atEnd())
+
+      var candidate = deepCopy() as! BoxModernPath
+
+      if isRootInlineBox() {
+        candidate.setAtEnd()
+        return candidate
+      }
+
+      let parentLayoutBox = box().layoutBox.parent()
+      repeat {
+        candidate.traversePreviousBox()
+      } while !candidate.atEnd()
+        && CPtrToInt(candidate.box().layoutBox.p) != CPtrToInt(parentLayoutBox.p)
+
+      assert(candidate.atEnd() || candidate.box().isInlineBox())
+
+      return candidate
+    }
+
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
 
     func isFirstLine() -> Bool { return box().lineIndex == 0 }
