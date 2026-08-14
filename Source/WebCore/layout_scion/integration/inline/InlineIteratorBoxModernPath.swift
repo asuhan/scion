@@ -182,7 +182,7 @@ extension InlineIterator {
     func parentInlineBox() -> BoxModernPath {
       assert(!atEnd())
 
-      var candidate = deepCopy() as! BoxModernPath
+      let candidate = deepCopy() as! BoxModernPath
 
       if isRootInlineBox() {
         candidate.setAtEnd()

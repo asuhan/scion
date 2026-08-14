@@ -220,8 +220,12 @@ extension InlineIterator {
     }
 
     func parentInlineBox() -> InlineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return InlineBoxIterator(pathVariant: .modern(path.parentInlineBox()))
+      case .legacy(let path):
+        return InlineBoxIterator(pathVariant: .legacy(path.parentInlineBox()))
+      }
     }
 
     func lineBox() -> LineBoxIterator {
