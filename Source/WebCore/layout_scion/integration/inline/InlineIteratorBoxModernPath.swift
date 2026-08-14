@@ -183,6 +183,38 @@ extension InlineIterator {
       assert(box().isInlineBox())
     }
 
+    private func firstLeafBoxForInlineBox() -> BoxModernPath {
+      assert(box().isInlineBox())
+
+      let inlineBox = box().layoutBox
+
+      // The next box is the first descendant of this box;
+      let first = deepCopy() as! BoxModernPath
+      first.traverseNextOnLine()
+
+      if !first.atEnd() && !first.isWithinInlineBox(inlineBox) {
+        first.setAtEnd()
+      }
+
+      return first
+    }
+
+    func lastLeafBoxForInlineBox() -> BoxModernPath {
+      assert(box().isInlineBox())
+
+      let inlineBox = box().layoutBox
+
+      // FIXME: Get the last box index directly from the display box.
+      var last = firstLeafBoxForInlineBox().deepCopy() as! BoxModernPath
+      let box = last.deepCopy() as! BoxModernPath
+      while !box.atEnd() && box.isWithinInlineBox(inlineBox) {
+        last = box.deepCopy() as! BoxModernPath
+        box.traverseNextOnLine()
+      }
+
+      return last
+    }
+
     func parentInlineBox() -> BoxModernPath {
       assert(!atEnd())
 
@@ -217,6 +249,17 @@ extension InlineIterator {
     func box() -> InlineDisplay.Box { return boxes()[Int(boxIndex)] }
 
     func inlineContent() -> LayoutIntegration.InlineContent { return m_inlineContent! }
+
+    private func isWithinInlineBox(_ inlineBox: BoxWrapper) -> Bool {
+      var layoutBox = box().layoutBox.parent()
+      while layoutBox.isInlineBox() {
+        if CPtrToInt(layoutBox.p) == CPtrToInt(inlineBox.p) {
+          return true
+        }
+        layoutBox = layoutBox.parent()
+      }
+      return false
+    }
 
     private func traverseNextBox() {
       assert(!atEnd())
