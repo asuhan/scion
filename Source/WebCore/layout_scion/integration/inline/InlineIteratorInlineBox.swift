@@ -56,9 +56,18 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func lastLeafBox() -> LeafBoxIterator {
+      switch m_pathVariant {
+      case .modern(let path):
+        return LeafBoxIterator(.modern(path.lastLeafBoxForInlineBox()), kind: .Default)
+      case .legacy(let path):
+        return LeafBoxIterator(.legacy(path.lastLeafBoxForInlineBox()), kind: .Default)
+      }
+    }
+
     func endLeafBox() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let last = lastLeafBox()
+      return last.bool() ? last.get().nextOnLine() : LeafBoxIterator()
     }
 
     override func deepCopy() -> InlineBox { return InlineBox(m_pathVariant) }
