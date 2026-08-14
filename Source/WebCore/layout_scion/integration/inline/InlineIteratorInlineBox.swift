@@ -52,8 +52,12 @@ extension InlineIterator {
     func iterator() -> InlineBoxIterator { return InlineBoxIterator(box: self) }
 
     func firstLeafBox() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return LeafBoxIterator(.modern(path.firstLeafBoxForInlineBox()), kind: .Default)
+      case .legacy(let path):
+        return LeafBoxIterator(.legacy(path.firstLeafBoxForInlineBox()), kind: .Default)
+      }
     }
 
     func lastLeafBox() -> LeafBoxIterator {

@@ -87,6 +87,10 @@ extension InlineIterator {
 
     func traversePreviousInlineBox() { m_inlineBox = inlineFlowBox().prevLineBox() }
 
+    func firstLeafBoxForInlineBox() -> BoxLegacyPath {
+      return BoxLegacyPath(inlineFlowBox().firstLeafDescendant())
+    }
+
     func lastLeafBoxForInlineBox() -> BoxLegacyPath {
       return BoxLegacyPath(inlineFlowBox().lastLeafDescendant())
     }

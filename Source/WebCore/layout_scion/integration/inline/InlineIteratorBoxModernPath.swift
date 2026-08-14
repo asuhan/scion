@@ -183,7 +183,7 @@ extension InlineIterator {
       assert(box().isInlineBox())
     }
 
-    private func firstLeafBoxForInlineBox() -> BoxModernPath {
+    func firstLeafBoxForInlineBox() -> BoxModernPath {
       assert(box().isInlineBox())
 
       let inlineBox = box().layoutBox
