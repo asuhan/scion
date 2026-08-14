@@ -159,6 +159,8 @@ class LegacyInlineBox {
     return FloatRectWrapper(location: topLeft(), size: size())
   }
 
+  func caretMinOffset() -> Int32 { return renderer.caretMinOffset() }
+
   func bidiLevel() -> UInt8 { return m_bitfields.bidiEmbeddingLevel }
 
   func markDirty(_ dirty: Bool = true) { m_bitfields.dirty = dirty }

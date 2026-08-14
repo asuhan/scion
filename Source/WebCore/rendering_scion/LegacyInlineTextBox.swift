@@ -141,6 +141,8 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
 
   override final func isInlineTextBox() -> Bool { return true }
 
+  override final func caretMinOffset() -> Int32 { return Int32(m_start) }
+
   // TODO(asuhan): remove when native GlyphDisplayListCache is available
   func getWkHandle() -> UnsafeMutableRawPointer {
     if self.wkHandle == nil {
