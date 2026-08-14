@@ -78,8 +78,11 @@ extension InlineIterator {
   }
 
   static func firstInlineBoxFor(renderInline: RenderInlineWrapper) -> InlineBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: renderInline) {
+      return lineLayout.firstInlineBoxFor(renderInline)
+    }
+    return InlineBoxIterator(
+      pathVariant: .legacy(BoxLegacyPath(renderInline.firstLegacyInlineBox())))
   }
 
   static func firstRootInlineBoxFor(_ block: RenderBlockFlowWrapper) -> InlineBoxIterator {
