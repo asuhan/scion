@@ -1081,6 +1081,15 @@ class LayoutIntegration {
       return InlineIterator.inlineBoxFor(content: inlineContent!, box: box)
     }
 
+    func firstRootInlineBox() -> InlineIterator.InlineBoxIterator {
+      if inlineContent == nil || !inlineContent!.hasContent() {
+        return InlineIterator.InlineBoxIterator()
+      }
+
+      return InlineIterator.inlineBoxFor(
+        content: inlineContent!, box: inlineContent!.displayContent.boxes[0])
+    }
+
     func firstLineBox() -> InlineIterator.LineBoxIterator {
       if inlineContent == nil {
         return InlineIterator.LineBoxIterator()
