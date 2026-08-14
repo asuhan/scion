@@ -87,6 +87,10 @@ extension InlineIterator {
 
     func traversePreviousInlineBox() { m_inlineBox = inlineFlowBox().prevLineBox() }
 
+    func lastLeafBoxForInlineBox() -> BoxLegacyPath {
+      return BoxLegacyPath(inlineFlowBox().lastLeafDescendant())
+    }
+
     func parentInlineBox() -> BoxLegacyPath { return BoxLegacyPath(m_inlineBox!.parent()) }
 
     func direction() -> TextDirection { return bidiLevel() % 2 != 0 ? .RTL : .LTR }
