@@ -62,5 +62,9 @@ class LineBoxIteratorLegacyPath {
     return InlineIterator.BoxLegacyPath(m_rootInlineBox!.firstLeafDescendant())
   }
 
+  func lastLeafBox() -> InlineIterator.BoxLegacyPath {
+    return InlineIterator.BoxLegacyPath(m_rootInlineBox!.lastLeafDescendant())
+  }
+
   private var m_rootInlineBox: LegacyRootInlineBox?
 }
