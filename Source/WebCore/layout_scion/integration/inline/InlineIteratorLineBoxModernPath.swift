@@ -92,6 +92,19 @@ extension InlineIterator {
       return runIterator
     }
 
+    func lastLeafBox() -> BoxModernPath {
+      let boxCount = line().boxCount()
+      if boxCount == 0 {
+        return BoxModernPath(inlineContent: m_inlineContent!)
+      }
+      let runIterator = BoxModernPath(
+        inlineContent: m_inlineContent!, startIndex: line().firstBoxIndex() + boxCount - 1)
+      if runIterator.box().isInlineBox() {
+        runIterator.traversePreviousOnLine()
+      }
+      return runIterator
+    }
+
     private func setAtEnd() { m_lineIndex = UInt64(lines().count) }
 
     private func lines() -> ArraySlice<InlineDisplay.Line> {
