@@ -251,8 +251,8 @@ class InlineIterator {
   static func lineBoxFor(inlineContent: LayoutIntegration.InlineContent, lineIndex: UInt64)
     -> LineBoxIterator
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LineBoxIterator(
+      .modern(LineBoxIteratorModernPath(inlineContent: inlineContent, lineIndex: lineIndex)))
   }
 
   static func closestBoxForHorizontalPosition(
