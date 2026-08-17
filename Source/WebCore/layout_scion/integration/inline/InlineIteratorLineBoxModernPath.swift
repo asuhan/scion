@@ -80,6 +80,18 @@ extension InlineIterator {
 
     func atEnd() -> Bool { return m_inlineContent == nil || m_lineIndex == lines().count }
 
+    func firstLeafBox() -> BoxModernPath {
+      if line().boxCount() == 0 {
+        return BoxModernPath(inlineContent: m_inlineContent!)
+      }
+      let runIterator = BoxModernPath(
+        inlineContent: m_inlineContent!, startIndex: line().firstBoxIndex())
+      if runIterator.box().isInlineBox() {
+        runIterator.traverseNextOnLine()
+      }
+      return runIterator
+    }
+
     private func setAtEnd() { m_lineIndex = UInt64(lines().count) }
 
     private func lines() -> ArraySlice<InlineDisplay.Line> {

@@ -26,6 +26,11 @@
 extension InlineIterator {
 
   class BoxModernPath: BoxPath {
+    init(inlineContent: LayoutIntegration.InlineContent) {
+      m_inlineContent = inlineContent
+      setAtEnd()
+    }
+
     init(inlineContent: LayoutIntegration.InlineContent, startIndex: UInt64) {
       self.m_inlineContent = inlineContent
       self.boxIndex = startIndex
@@ -312,7 +317,7 @@ extension InlineIterator {
     }
 
     private let m_inlineContent: LayoutIntegration.InlineContent?
-    private var boxIndex: UInt64
+    private var boxIndex: UInt64 = 0
   }
 
 }
