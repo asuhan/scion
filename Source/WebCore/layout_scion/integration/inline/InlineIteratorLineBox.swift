@@ -162,6 +162,11 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func lastLeafBox() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func next() -> LineBoxIterator {
       return LineBoxIterator(self).traverseNext()
     }
@@ -258,8 +263,50 @@ class InlineIterator {
   static func closestBoxForHorizontalPosition(
     _ lineBox: LineBox, _ horizontalPosition: Float32, _ editableOnly: Bool = false
   ) -> LeafBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isEditable = { (box: LeafBoxIterator) in
+      return box.bool() && (box.get().renderer().node()?.hasEditableStyle() ?? false)
+    }
+
+    var firstBox = lineBox.firstLeafBox()
+    var lastBox = lineBox.lastLeafBox()
+
+    if firstBox != lastBox {
+      if firstBox.get().isLineBreak() {
+        firstBox = firstBox.get().nextOnLineIgnoringLineBreak()
+      } else if lastBox.get().isLineBreak() {
+        lastBox = lastBox.get().previousOnLineIgnoringLineBreak()
+      }
+    }
+
+    if firstBox == lastBox && (!editableOnly || isEditable(firstBox)) {
+      return firstBox
+    }
+
+    if firstBox.bool() && horizontalPosition <= firstBox.get().logicalLeftIgnoringInlineDirection()
+      && !firstBox.get().renderer().isRenderListMarker() && (!editableOnly || isEditable(firstBox))
+    {
+      return firstBox
+    }
+
+    if lastBox.bool() && horizontalPosition >= lastBox.get().logicalRightIgnoringInlineDirection()
+      && !lastBox.get().renderer().isRenderListMarker() && (!editableOnly || isEditable(lastBox))
+    {
+      return lastBox
+    }
+
+    var closestBox = lastBox
+    var box = firstBox
+    while box.bool() {
+      if !box.get().renderer().isRenderListMarker() && (!editableOnly || isEditable(box)) {
+        if horizontalPosition < box.get().logicalRightIgnoringInlineDirection() {
+          return box
+        }
+        closestBox = box
+      }
+      box = box.traverseNextOnLineIgnoringLineBreak()
+    }
+
+    return closestBox
   }
 
   static func previousLineBoxContentBottomOrBorderAndPadding(_ lineBox: LineBox) -> Float32 {
