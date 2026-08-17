@@ -2621,6 +2621,11 @@ void RenderBlockFlow::repaintOverhangingFloats(bool paintAllDescendants)
     }
 }
 
+LayoutUnit RenderBlockFlow::collapsedMarginAfter() const {
+    if (m_scion) { return m_scion->collapsedMarginAfter(); }
+    return maxPositiveMarginAfter() - maxNegativeMarginAfter();
+}
+
 void RenderBlockFlow::dirtyLineFromChangedChild()
 {
     if (m_scion) {

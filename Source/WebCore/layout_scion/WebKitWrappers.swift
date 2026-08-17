@@ -3827,6 +3827,12 @@ func RenderBlockFlowScion_willBeDestroyed(_ blockFlowRaw: UnsafeMutableRawPointe
   box.willBeDestroyed()
 }
 
+@_cdecl("RenderBlockFlowScion_collapsedMarginAfter")
+func RenderBlockFlowScion_collapsedMarginAfter(_ blockFlowRaw: UnsafeRawPointer) -> Int32 {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.collapsedMarginAfter().rawValue()
+}
+
 @_cdecl("RenderBlockFlowScion_multiColumnFlow")
 func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

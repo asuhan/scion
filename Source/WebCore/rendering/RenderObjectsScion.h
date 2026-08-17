@@ -944,6 +944,8 @@ public:
 
     void willBeDestroyed();
 
+    LayoutUnit collapsedMarginAfter() const;
+
     void dirtyLineFromChangedChild();
 
     RenderMultiColumnFlow* multiColumnFlow() const;

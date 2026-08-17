@@ -159,10 +159,7 @@ protected:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return maxPositiveMarginBefore() - maxNegativeMarginBefore();
     }
-    LayoutUnit collapsedMarginAfter() const final {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return maxPositiveMarginAfter() - maxNegativeMarginAfter();
-    }
+    LayoutUnit collapsedMarginAfter() const final;
 
     void dirtyLineFromChangedChild() final;
 

@@ -900,6 +900,8 @@ extern "C" const void* RenderBlockScion_outlineStyleForRepaint(const void*);
 
 extern "C" void RenderBlockFlowScion_willBeDestroyed(void*);
 
+extern "C" int32_t RenderBlockFlowScion_collapsedMarginAfter(const void*);
+
 extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
 extern "C" bool RenderBlockFlowScion_requiresColumns(const void*, int32_t);
@@ -2695,6 +2697,11 @@ const RenderStyle& RenderBlockScion::outlineStyleForRepaint() const
 void RenderBlockFlowScion::willBeDestroyed()
 {
     RenderBlockFlowScion_willBeDestroyed(m_handle);
+}
+
+LayoutUnit RenderBlockFlowScion::collapsedMarginAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockFlowScion_collapsedMarginAfter(m_handle));
 }
 
 void RenderBlockFlowScion::dirtyLineFromChangedChild()
