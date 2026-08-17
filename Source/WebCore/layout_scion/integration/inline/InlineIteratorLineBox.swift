@@ -158,8 +158,12 @@ class InlineIterator {
     }
 
     func firstLeafBox() -> LeafBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      switch m_pathVariant {
+      case .modern(let path):
+        return LeafBoxIterator(.modern(path.firstLeafBox()), kind: .Default)
+      case .legacy(let path):
+        return LeafBoxIterator(.legacy(path.firstLeafBox()), kind: .Default)
+      }
     }
 
     func lastLeafBox() -> LeafBoxIterator {
