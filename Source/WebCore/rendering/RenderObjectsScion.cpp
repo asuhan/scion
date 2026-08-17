@@ -837,7 +837,7 @@ extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
-extern "C" void RenderBoxScion_dirtyLineFromChangedChild(void*);
+extern "C" void RenderBlockFlowScion_dirtyLineFromChangedChild(void*);
 
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
@@ -2706,7 +2706,7 @@ LayoutUnit RenderBlockFlowScion::collapsedMarginAfter() const
 
 void RenderBlockFlowScion::dirtyLineFromChangedChild()
 {
-    RenderBoxScion_dirtyLineFromChangedChild(m_handle);
+    RenderBlockFlowScion_dirtyLineFromChangedChild(m_handle);
 }
 
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const

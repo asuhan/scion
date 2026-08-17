@@ -3778,12 +3778,6 @@ func RenderBoxScion_willBeDestroyed(_ boxRaw: UnsafeMutableRawPointer) {
   box.willBeDestroyed()
 }
 
-@_cdecl("RenderBoxScion_dirtyLineFromChangedChild")
-func RenderBoxScion_dirtyLineFromChangedChild(_ boxRaw: UnsafeMutableRawPointer) {
-  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
-  box.dirtyLineFromChangedChild()
-}
-
 @_cdecl("RenderBoxScion_shouldTrimChildMargin")
 func RenderBoxScion_shouldTrimChildMargin(
   _ boxRaw: UnsafeRawPointer, _ typeRaw: UInt8, _ childRaw: UnsafeMutableRawPointer
@@ -3831,6 +3825,12 @@ func RenderBlockFlowScion_willBeDestroyed(_ blockFlowRaw: UnsafeMutableRawPointe
 func RenderBlockFlowScion_collapsedMarginAfter(_ blockFlowRaw: UnsafeRawPointer) -> Int32 {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
   return blockFlow.collapsedMarginAfter().rawValue()
+}
+
+@_cdecl("RenderBlockFlowScion_dirtyLineFromChangedChild")
+func RenderBlockFlowScion_dirtyLineFromChangedChild(_ blockFlowRaw: UnsafeMutableRawPointer) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  blockFlow.dirtyLineFromChangedChild()
 }
 
 @_cdecl("RenderBlockFlowScion_multiColumnFlow")
