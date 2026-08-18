@@ -327,8 +327,9 @@ class InlineIterator {
   }
 
   static func previousLineBoxContentBottomOrBorderAndPadding(_ lineBox: LineBox) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return lineBox.isFirst()
+      ? lineBox.formattingContextRoot().borderAndPaddingBefore().toFloat()
+      : lineBox.contentLogicalTopAdjustedForPrecedingLineBox()
   }
 
   static func contentStartInBlockDirection(_ lineBox: LineBox) -> Float32 {
