@@ -33,7 +33,8 @@ extension InlineIterator {
     var data = TextLogicalOrderCacheData()
   }
 
-  static func makeTextLogicalOrderCacheIfNeeded(_ text: RenderTextWrapper) -> TextLogicalOrderCache?
+  private static func makeTextLogicalOrderCacheIfNeeded(_ text: RenderTextWrapper)
+    -> TextLogicalOrderCache?
   {
     if !text.needsVisualReordering() {
       return TextLogicalOrderCache()
@@ -67,6 +68,9 @@ extension InlineIterator {
     TextBoxIterator, TextLogicalOrderCache
   ) {
     assert(!text.needsVisualReordering())
+    if let cache = makeTextLogicalOrderCacheIfNeeded(text) {
+      return (TextBoxIterator(cache.data.boxes.first!), cache)
+    }
     return (firstTextBoxFor(text), TextLogicalOrderCache())
   }
 
