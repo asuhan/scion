@@ -25,12 +25,32 @@
 
 extension InlineIterator {
   struct TextLogicalOrderCacheData {
-    let boxes: [TextBoxIterator]
-    let index: UInt64
+    var boxes: [TextBox] = []
+    var index: UInt64 = 0
   }
 
   class TextLogicalOrderCache {
-    private let data: TextLogicalOrderCacheData? = nil
+    var data = TextLogicalOrderCacheData()
+  }
+
+  static func makeTextLogicalOrderCacheIfNeeded(_ text: RenderTextWrapper) -> TextLogicalOrderCache?
+  {
+    if !text.needsVisualReordering() {
+      return TextLogicalOrderCache()
+    }
+
+    let cache = TextLogicalOrderCache()
+    for textBox in textBoxesFor(text) {
+      cache.data.boxes.append(textBox)
+    }
+
+    if cache.data.boxes.isEmpty {
+      return nil
+    }
+
+    cache.data.boxes.sort(by: { a, b in a.start() < b.start() })
+
+    return cache
   }
 
   struct LineLogicalOrderCacheData {
