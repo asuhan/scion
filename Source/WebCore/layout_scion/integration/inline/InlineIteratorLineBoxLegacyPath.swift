@@ -30,6 +30,10 @@ class LineBoxIteratorLegacyPath {
 
   func contentLogicalBottom() -> Float32 { return m_rootInlineBox!.lineBottom.toFloat() }
 
+  func contentLogicalTopAdjustedForPrecedingLineBox() -> Float32 {
+    return m_rootInlineBox!.selectionTop().toFloat()
+  }
+
   func logicalTop() -> Float32 { return m_rootInlineBox!.lineBoxTop.toFloat() }
 
   func logicalBottom() -> Float32 { return m_rootInlineBox!.lineBoxBottom.toFloat() }
