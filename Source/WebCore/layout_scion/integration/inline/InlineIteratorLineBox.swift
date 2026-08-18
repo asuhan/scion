@@ -90,6 +90,15 @@ class InlineIterator {
       }
     }
 
+    func contentLogicalBottomAdjustedForFollowingLineBox() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.contentLogicalBottomAdjustedForFollowingLineBox()
+      case .legacy(let path):
+        return path.contentLogicalBottomAdjustedForFollowingLineBox()
+      }
+    }
+
     func inkOverflowLogicalTop() -> Float32 {
       switch m_pathVariant {
       case .modern(let path):
