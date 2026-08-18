@@ -78,6 +78,10 @@ struct TextFlow {
   func isVertical() -> Bool {
     return blockDirection == .LeftToRight || blockDirection == .RightToLeft
   }
+
+  func isFlippedLines() -> Bool {
+    return isFlipped() != isVertical()
+  }
 }
 
 func makeTextFlow(writingMode: WritingMode, direction: TextDirection) -> TextFlow {
@@ -106,6 +110,11 @@ func isFlippedWritingMode(writingMode: WritingMode) -> Bool {
 // Lines have horizontal orientation; modes horizontal-tb or horizontal-bt.
 func isHorizontalWritingMode(writingMode: WritingMode) -> Bool {
   return !isVerticalWritingMode(writingMode: writingMode)
+}
+
+// Bottom of the line occurs earlier in the block; modes vertical-lr or horizontal-bt.
+func isFlippedLinesWritingMode(_ writingMode: WritingMode) -> Bool {
+  return makeTextFlow(writingMode: writingMode, direction: .LTR).isFlippedLines()
 }
 
 enum LogicalBoxSide {
