@@ -465,8 +465,7 @@ class LayoutIntegration {
     }
 
     func updateOverflow() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      InlineContentBuilder(blockFlow: flow(), boxTree: boxTree).updateLineOverflow(inlineContent!)
     }
 
     static func updateStyle(_ renderer: RenderObjectWrapper) {

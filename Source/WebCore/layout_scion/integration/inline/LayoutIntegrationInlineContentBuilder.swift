@@ -207,6 +207,10 @@ extension LayoutIntegration {
       return damagedRect
     }
 
+    func updateLineOverflow(_ inlineContent: InlineContent) {
+      adjustDisplayLines(inlineContent: inlineContent, startIndex: 0)
+    }
+
     private static func adjustCachedBoxIndexesIfNeeded(
       displayContent: InlineDisplay.Content, firstDamagedLineIndex: UInt64,
       numberOfNewBoxes: UInt64, numberOfDamagedBoxes: UInt64, numberOfDamagedLines: UInt64
