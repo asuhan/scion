@@ -342,7 +342,11 @@ class InlineIterator {
   }
 
   static func contentStartInBlockDirection(_ lineBox: LineBox) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !lineBox.formattingContextRoot().style().isFlippedBlocksWritingMode() {
+      return max(
+        lineBox.contentLogicalTop(), previousLineBoxContentBottomOrBorderAndPadding(lineBox))
+    }
+    return min(
+      lineBox.contentLogicalBottom(), lineBox.contentLogicalBottomAdjustedForFollowingLineBox())
   }
 }
