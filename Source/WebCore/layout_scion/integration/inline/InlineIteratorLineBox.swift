@@ -81,6 +81,15 @@ class InlineIterator {
 
     func contentLogicalHeight() -> Float32 { return contentLogicalBottom() - contentLogicalTop() }
 
+    func contentLogicalTopAdjustedForPrecedingLineBox() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.contentLogicalTopAdjustedForPrecedingLineBox()
+      case .legacy(let path):
+        return path.contentLogicalTopAdjustedForPrecedingLineBox()
+      }
+    }
+
     func inkOverflowLogicalTop() -> Float32 {
       switch m_pathVariant {
       case .modern(let path):
