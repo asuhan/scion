@@ -30,7 +30,7 @@ extension InlineIterator {
   }
 
   class TextLogicalOrderCache {
-    private let data: TextLogicalOrderCache? = nil
+    private let data: TextLogicalOrderCacheData? = nil
   }
 
   struct LineLogicalOrderCacheData {
