@@ -59,6 +59,16 @@ extension InlineIterator {
         .contentLogicalBottom()
     }
 
+    func contentLogicalBottomAdjustedForFollowingLineBox() -> Float32 {
+      if !isFlippedLinesWritingMode(formattingContextRoot().style().writingMode())
+        || m_lineIndex == lines().count - 1
+      {
+        return contentLogicalBottom()
+      }
+      return LineBoxIteratorModernPath(inlineContent: m_inlineContent!, lineIndex: m_lineIndex + 1)
+        .contentLogicalTop()
+    }
+
     func contentLogicalLeft() -> Float32 {
       return line().lineBoxLeft() + line().contentLogicalLeftIgnoringInlineDirection
     }
