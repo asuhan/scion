@@ -355,6 +355,11 @@ extern "C" WEBCORE_EXPORT void LocalFrameView_addViewportConstrainedObject(void*
     static_cast<WebCore::LocalFrameView*>(p)->addViewportConstrainedObject(*static_cast<WebCore::RenderLayerModelObject*>(objectRaw));
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_removeViewportConstrainedObject(void* p, void* objectRaw)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->removeViewportConstrainedObject(*static_cast<WebCore::RenderLayerModelObject*>(objectRaw));
+}
+
 extern "C" WEBCORE_EXPORT bool LocalFrameView_fixedElementsLayoutRelativeToFrame(const void* p)
 {
     return static_cast<const WebCore::LocalFrameView*>(p)->fixedElementsLayoutRelativeToFrame();

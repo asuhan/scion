@@ -129,8 +129,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func removeViewportConstrainedObject(_ object: RenderLayerModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameView_removeViewportConstrainedObject(pInterop, wkRenderObject(object))
   }
 
   func viewportConstrainedObjects() -> WeakHashSet<RenderLayerModelObjectWrapper>? {
