@@ -861,6 +861,10 @@ extern "C" void RenderBlockScion_removePositionedObjects(void*, void*, bool);
 
 extern "C" void RenderBlockScion_addPercentHeightDescendant(void*, void*);
 
+extern "C" void RenderBlockScion_setHasMarginBeforeQuirk(void*, bool);
+
+extern "C" void RenderBlockScion_setHasMarginAfterQuirk(void*, bool);
+
 extern "C" bool RenderBlockScion_hasMarginBeforeQuirk(const void*);
 
 extern "C" bool RenderBlockScion_hasMarginAfterQuirk(const void*);
@@ -2611,6 +2615,16 @@ void RenderBlockScion::addPercentHeightDescendant(RenderBox& descendant)
 {
     assert(!descendant.scion());
     RenderBlockScion_addPercentHeightDescendant(m_handle, &descendant);
+}
+
+void RenderBlockScion::setHasMarginBeforeQuirk(bool b)
+{
+    RenderBlockScion_setHasMarginBeforeQuirk(m_handle, b);
+}
+
+void RenderBlockScion::setHasMarginAfterQuirk(bool b)
+{
+    RenderBlockScion_setHasMarginAfterQuirk(m_handle, b);
 }
 
 bool RenderBlockScion::hasMarginBeforeQuirk() const

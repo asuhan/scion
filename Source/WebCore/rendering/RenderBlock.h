@@ -108,16 +108,8 @@ public:
 
     bool isContainingBlockAncestorFor(RenderObject&) const;
 
-    void setHasMarginBeforeQuirk(bool b)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        setRenderBlockHasMarginBeforeQuirk(b);
-    }
-    void setHasMarginAfterQuirk(bool b)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        setRenderBlockHasMarginAfterQuirk(b);
-    }
+    void setHasMarginBeforeQuirk(bool b);
+    void setHasMarginAfterQuirk(bool b);
     void setShouldForceRelayoutChildren(bool b)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

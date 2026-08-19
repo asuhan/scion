@@ -1990,6 +1990,24 @@ bool RenderBlock::isContainingBlockAncestorFor(RenderObject& renderer) const
     return false;
 }
 
+void RenderBlock::setHasMarginBeforeQuirk(bool b)
+{
+    if (m_scion) {
+        m_scion->setHasMarginBeforeQuirk(b);
+        return;
+    }
+    setRenderBlockHasMarginBeforeQuirk(b);
+}
+
+void RenderBlock::setHasMarginAfterQuirk(bool b)
+{
+    if (m_scion) {
+        m_scion->setHasMarginAfterQuirk(b);
+        return;
+    }
+    setRenderBlockHasMarginAfterQuirk(b);
+}
+
 LayoutUnit RenderBlock::textIndentOffset() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

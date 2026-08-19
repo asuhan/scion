@@ -899,6 +899,10 @@ public:
 
     void addPercentHeightDescendant(RenderBox&);
 
+    void setHasMarginBeforeQuirk(bool);
+
+    void setHasMarginAfterQuirk(bool);
+
     bool hasMarginBeforeQuirk() const;
 
     bool hasMarginAfterQuirk() const;

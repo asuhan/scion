@@ -4011,6 +4011,18 @@ func RenderBlockScion_addPercentHeightDescendant(
   block.addPercentHeightDescendant(descendant: descendant)
 }
 
+@_cdecl("RenderBlockScion_setHasMarginBeforeQuirk")
+func RenderBlockScion_setHasMarginBeforeQuirk(_ blockRaw: UnsafeMutableRawPointer, _ b: Bool) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.setHasMarginBeforeQuirk(b: b)
+}
+
+@_cdecl("RenderBlockScion_setHasMarginAfterQuirk")
+func RenderBlockScion_setHasMarginAfterQuirk(_ blockRaw: UnsafeMutableRawPointer, _ b: Bool) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.setHasMarginAfterQuirk(b: b)
+}
+
 @_cdecl("RenderBlockScion_hasMarginBeforeQuirk")
 func RenderBlockScion_hasMarginBeforeQuirk(_ blockRaw: UnsafeRawPointer) -> Bool {
   let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
