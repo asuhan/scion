@@ -1095,6 +1095,7 @@ void* Box_rendererForIntegration(const void*);
 void Box_setRendererForIntegration(const void*, void*);
 const void* RenderStyle_clone(const void*);
 const void* RenderStyle_replace(const void*, const void*);
+const void* RenderStyle_createAnonymousStyleWithDisplay(const void*, uint8_t);
 void RenderStyle_destroy(const void*);
 uint32_t RenderStyle_pseudoElementType(const void*);
 const void* RenderStyle_pseudoElementNameArgument(const void*);

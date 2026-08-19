@@ -716,8 +716,10 @@ class RenderStyleWrapper: Equatable {
   static func createAnonymousStyleWithDisplay(parentStyle: RenderStyleWrapper, display: DisplayType)
     -> RenderStyleWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = convert_render_style(
+      p: wk_interop.RenderStyle_createAnonymousStyleWithDisplay(parentStyle.p!, display.rawValue))
+    style.pOwner = true
+    return style
   }
 
   static func createStyleInheritingFromPseudoStyle(pseudoStyle: RenderStyleWrapper)

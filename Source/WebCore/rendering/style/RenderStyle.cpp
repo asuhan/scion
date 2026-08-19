@@ -124,6 +124,13 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_replace(const void* a, const v
         std::move(*static_cast<WebCore::RenderStyle*>(const_cast<void*>(b))));
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_createAnonymousStyleWithDisplay(const void* parent_style_raw, uint8_t display_raw)
+{
+    const auto& parentStyle = *static_cast<const WebCore::RenderStyle*>(parent_style_raw);
+    const auto display = static_cast<WebCore::DisplayType>(display_raw);
+    return new WebCore::RenderStyle(WebCore::RenderStyle::createAnonymousStyleWithDisplay(parentStyle, display));
+}
+
 extern "C" WEBCORE_EXPORT void RenderStyle_destroy(const void* p)
 {
     delete static_cast<const WebCore::RenderStyle*>(p);
