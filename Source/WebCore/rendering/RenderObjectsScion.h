@@ -562,6 +562,8 @@ public:
 
     bool isWritingModeRoot() const;
 
+    bool createsNewFormattingContext() const;
+
     bool hasCachedSVGResource() const;
 
     void insertedIntoTree();

@@ -3048,6 +3048,12 @@ func RenderElementScion_isWritingModeRoot(_ elementRaw: UnsafeRawPointer) -> Boo
   return element.isWritingModeRoot()
 }
 
+@_cdecl("RenderElementScion_createsNewFormattingContext")
+func RenderElementScion_createsNewFormattingContext(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.createsNewFormattingContext()
+}
+
 @_cdecl("RenderElementScion_hasCachedSVGResource")
 func RenderElementScion_hasCachedSVGResource(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

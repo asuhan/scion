@@ -2929,7 +2929,7 @@ bool RenderElement::isWritingModeRoot() const {
 
 bool RenderElement::createsNewFormattingContext() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->createsNewFormattingContext(); }
     // Writing-mode changes establish an independent block formatting context
     // if the box is a block-container.
     // https://drafts.csswg.org/css-writing-modes/#block-flow
