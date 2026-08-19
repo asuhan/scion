@@ -490,6 +490,11 @@ struct MarginRectRaw {
     struct LayoutRectRaw anchorRect;
 };
 
+struct PositiveAndNegativeMarginRaw {
+    int32_t positive;
+    int32_t negative;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

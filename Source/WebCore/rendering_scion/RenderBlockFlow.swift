@@ -1853,7 +1853,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       logicalTopEstimate: logicalTopEstimate, estimateWithoutPagination: estimateWithoutPagination)
   }
 
-  private func marginBeforeEstimateForChild(
+  func marginBeforeEstimateForChild(
     child: RenderBoxWrapper, positiveMarginBefore: inout LayoutUnit,
     negativeMarginBefore: inout LayoutUnit
   ) {

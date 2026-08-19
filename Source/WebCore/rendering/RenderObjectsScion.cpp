@@ -847,6 +847,13 @@ extern "C" void RenderBoxScion_willBeDestroyed(void*);
 
 extern "C" void RenderBlockFlowScion_dirtyLineFromChangedChild(void*);
 
+struct PositiveAndNegativeMarginRaw {
+    int32_t positive;
+    int32_t negative;
+};
+
+extern "C" PositiveAndNegativeMarginRaw RenderBlockFlowScion_marginBeforeEstimateForChild(const void*, void*, int32_t, int32_t);
+
 extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*);
 
 extern "C" void RenderBoxScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
@@ -2749,6 +2756,13 @@ LayoutUnit RenderBlockFlowScion::collapsedMarginAfter() const
 void RenderBlockFlowScion::dirtyLineFromChangedChild()
 {
     RenderBlockFlowScion_dirtyLineFromChangedChild(m_handle);
+}
+
+void RenderBlockFlowScion::marginBeforeEstimateForChild(RenderBox& child, LayoutUnit& positiveMarginBefore, LayoutUnit& negativeMarginBefore) const
+{
+    const auto posNegMargin = RenderBlockFlowScion_marginBeforeEstimateForChild(m_handle, &child, positiveMarginBefore.rawValue(), negativeMarginBefore.rawValue());
+    positiveMarginBefore = WebCore::LayoutUnit::fromRawValue(posNegMargin.positive);
+    negativeMarginBefore = WebCore::LayoutUnit::fromRawValue(posNegMargin.negative);
 }
 
 RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const

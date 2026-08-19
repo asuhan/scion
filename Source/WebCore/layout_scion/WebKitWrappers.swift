@@ -3862,6 +3862,22 @@ func RenderBlockFlowScion_dirtyLineFromChangedChild(_ blockFlowRaw: UnsafeMutabl
   blockFlow.dirtyLineFromChangedChild()
 }
 
+@_cdecl("RenderBlockFlowScion_marginBeforeEstimateForChild")
+func RenderBlockFlowScion_marginBeforeEstimateForChild(
+  _ blockFlowRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer,
+  _ positiveMarginBeforeRaw: Int32, _ negativeMarginBeforeRaw: Int32
+) -> PositiveAndNegativeMarginRaw {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  var positiveMarginBefore = LayoutUnit.fromRawValue(value: positiveMarginBeforeRaw)
+  var negativeMarginBefore = LayoutUnit.fromRawValue(value: negativeMarginBeforeRaw)
+  let child = createRenderObjectWrapperOrNative(childRaw) as! RenderBoxWrapper
+  blockFlow.marginBeforeEstimateForChild(
+    child: child, positiveMarginBefore: &positiveMarginBefore,
+    negativeMarginBefore: &negativeMarginBefore)
+  return PositiveAndNegativeMarginRaw(
+    positive: positiveMarginBefore.rawValue(), negative: negativeMarginBefore.rawValue())
+}
+
 @_cdecl("RenderBlockFlowScion_multiColumnFlow")
 func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?

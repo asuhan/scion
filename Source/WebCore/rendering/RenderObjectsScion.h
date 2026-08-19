@@ -960,6 +960,8 @@ public:
 
     void dirtyLineFromChangedChild();
 
+    void marginBeforeEstimateForChild(RenderBox& child, LayoutUnit& positiveMarginBefore, LayoutUnit& negativeMarginBefore) const;
+
     RenderMultiColumnFlow* multiColumnFlow() const;
 
     bool requiresColumns(int) const;
