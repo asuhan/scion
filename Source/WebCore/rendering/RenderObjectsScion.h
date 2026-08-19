@@ -712,6 +712,8 @@ public:
 
     void setYLayoutUnit(LayoutUnit y);
 
+    LayoutUnit logicalTop() const;
+
     LayoutUnit logicalHeight() const;
 
     LayoutPoint location() const;

@@ -2447,6 +2447,12 @@ void RenderBox::setYLayoutUnit(LayoutUnit y)
     m_frameRect.setY(y);
 }
 
+LayoutUnit RenderBox::logicalTop() const
+{
+    if (m_scion) { return m_scion->logicalTop(); }
+    return style().isHorizontalWritingMode() ? y() : x();
+}
+
 static bool isCandidateForOpaquenessTest(const RenderBox& childBox)
 {
     const RenderStyle& childStyle = childBox.style();

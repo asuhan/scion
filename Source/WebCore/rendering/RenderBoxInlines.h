@@ -170,11 +170,6 @@ inline LayoutSize RenderBox::logicalSize() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isHorizontalWritingMode() ? m_frameRect.size() : m_frameRect.size().transposedSize();
 }
-inline LayoutUnit RenderBox::logicalTop() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? y() : x();
-}
 inline LayoutUnit RenderBox::logicalWidth() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

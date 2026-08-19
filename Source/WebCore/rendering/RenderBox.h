@@ -106,7 +106,7 @@ public:
 
     inline LayoutUnit logicalLeft() const;
     inline LayoutUnit logicalRight() const;
-    inline LayoutUnit logicalTop() const;
+    LayoutUnit logicalTop() const;
     inline LayoutUnit logicalBottom() const;
     inline LayoutUnit logicalWidth() const;
     LayoutUnit logicalHeight() const;
