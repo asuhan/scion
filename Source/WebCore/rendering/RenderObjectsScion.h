@@ -832,6 +832,8 @@ public:
 
     ScrollPosition scrollPosition() const;
 
+    bool hasRelativeLogicalHeight() const;
+
     void styleWillChange(StyleDifference, const RenderStyle&);
 
     void willBeDestroyed();

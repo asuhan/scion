@@ -6523,7 +6523,7 @@ bool RenderBox::hasRelativeDimensions() const
 
 bool RenderBox::hasRelativeLogicalHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hasRelativeLogicalHeight(); }
     return style().logicalHeight().isPercentOrCalculated()
         || style().logicalMinHeight().isPercentOrCalculated()
         || style().logicalMaxHeight().isPercentOrCalculated();

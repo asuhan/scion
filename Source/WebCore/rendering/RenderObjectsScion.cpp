@@ -843,6 +843,8 @@ extern "C" bool RenderBoxScion_needsPreferredWidthsRecalculation(const void*);
 
 extern "C" IntPointRaw RenderBoxScion_scrollPosition(const void*);
 
+extern "C" bool RenderBoxScion_hasRelativeLogicalHeight(const void*);
+
 extern "C" void RenderBoxScion_styleWillChange(void*, uint8_t, const void*);
 
 extern "C" void RenderBoxScion_willBeDestroyed(void*);
@@ -2582,6 +2584,11 @@ ScrollPosition RenderBoxScion::scrollPosition() const
 {
     const auto position = RenderBoxScion_scrollPosition(m_handle);
     return { position.x, position.y };
+}
+
+bool RenderBoxScion::hasRelativeLogicalHeight() const
+{
+    return RenderBoxScion_hasRelativeLogicalHeight(m_handle);
 }
 
 void RenderBoxScion::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)

@@ -3797,6 +3797,12 @@ func RenderBoxScion_scrollPosition(_ boxRaw: UnsafeRawPointer) -> IntPointRaw {
   return IntPointRaw(x: position.x, y: position.y)
 }
 
+@_cdecl("RenderBoxScion_hasRelativeLogicalHeight")
+func RenderBoxScion_hasRelativeLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.hasRelativeLogicalHeight()
+}
+
 @_cdecl("RenderBoxScion_styleWillChange")
 func RenderBoxScion_styleWillChange(
   _ boxRaw: UnsafeRawPointer, _ diffRaw: UInt8, _ newStyleRaw: UnsafeRawPointer
