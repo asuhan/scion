@@ -148,8 +148,8 @@ public:
 
     inline LayoutUnit borderAndPaddingStart() const;
     inline LayoutUnit borderAndPaddingEnd() const;
-    inline LayoutUnit borderAndPaddingBefore() const;
-    inline LayoutUnit borderAndPaddingAfter() const;
+    LayoutUnit borderAndPaddingBefore() const;
+    LayoutUnit borderAndPaddingAfter() const;
 
     inline LayoutUnit marginAndBorderAndPaddingStart() const;
     inline LayoutUnit marginAndBorderAndPaddingEnd() const;

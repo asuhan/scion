@@ -1129,6 +1129,18 @@ LayoutUnit RenderBoxModelObject::borderRight() const
     return LayoutUnit(style().borderRightWidth());
 }
 
+LayoutUnit RenderBoxModelObject::borderAndPaddingBefore() const
+{
+    if (m_scion) { return m_scion->borderAndPaddingBefore(); }
+    return borderBefore() + paddingBefore();
+}
+
+LayoutUnit RenderBoxModelObject::borderAndPaddingAfter() const
+{
+    if (m_scion) { return m_scion->borderAndPaddingAfter(); }
+    return borderAfter() + paddingAfter();
+}
+
 LayoutUnit RenderBoxModelObject::borderLogicalLeft() const
 {
     if (m_scion) { return m_scion->borderLogicalLeft(); }

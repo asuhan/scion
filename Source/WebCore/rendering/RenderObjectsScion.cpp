@@ -667,6 +667,10 @@ extern "C" int32_t RenderBoxModelObjectScion_borderLeft(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_borderRight(const void*);
 
+extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingBefore(const void*);
+
+extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingAfter(const void*);
+
 extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
 extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
@@ -2117,6 +2121,16 @@ LayoutUnit RenderBoxModelObjectScion::borderLeft() const
 LayoutUnit RenderBoxModelObjectScion::borderRight() const
 {
     return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderRight(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderAndPaddingBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderAndPaddingBefore(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderAndPaddingAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderAndPaddingAfter(m_handle));
 }
 
 LayoutUnit RenderBoxModelObjectScion::borderLogicalLeft() const

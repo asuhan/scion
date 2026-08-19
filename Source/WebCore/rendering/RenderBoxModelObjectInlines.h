@@ -30,16 +30,6 @@ inline LayoutUnit RenderBoxModelObject::borderAfter() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return LayoutUnit(style().borderAfterWidth());
 }
-inline LayoutUnit RenderBoxModelObject::borderAndPaddingAfter() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return borderAfter() + paddingAfter();
-}
-inline LayoutUnit RenderBoxModelObject::borderAndPaddingBefore() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return borderBefore() + paddingBefore();
-}
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalHeight() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

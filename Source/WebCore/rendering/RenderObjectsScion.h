@@ -673,6 +673,10 @@ public:
 
     LayoutUnit borderRight() const;
 
+    LayoutUnit borderAndPaddingBefore() const;
+
+    LayoutUnit borderAndPaddingAfter() const;
+
     LayoutUnit borderLogicalLeft() const;
 
     RenderBoxModelObject* continuation() const;
