@@ -1022,16 +1022,6 @@ inline RenderBox* RenderBox::parentBox() const
     return nullptr;
 }
 
-inline RenderBox* RenderBox::firstChildBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (auto* box = dynamicDowncast<RenderBox>(firstChild()))
-        return box;
-
-    ASSERT(!firstChild());
-    return nullptr;
-}
-
 inline RenderBox* RenderBox::firstInFlowChildBox() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

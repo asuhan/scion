@@ -726,6 +726,8 @@ public:
 
     LayoutRect computedCSSContentBoxRect() const;
 
+    RenderBox* firstChildBox() const;
+
     RenderBox* nextSiblingBox() const;
 
     RenderBox* nextInFlowSiblingBox() const;
