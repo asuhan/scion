@@ -54,6 +54,16 @@ extern "C" WEBCORE_EXPORT void Path_destroy(const void* p)
     delete static_cast<const WebCore::Path*>(p);
 }
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+extern "C" WEBCORE_EXPORT void Path_moveTo(void* p, FloatPointRaw point)
+{
+    static_cast<WebCore::Path*>(p)->moveTo({ point.x, point.y });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);

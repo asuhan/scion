@@ -47,8 +47,7 @@ class PathWrapper {
   deinit { wk_interop.Path_destroy(p) }
 
   func moveTo(point: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_moveTo(p, FloatPointRaw(x: point.x, y: point.y))
   }
 
   func addLineTo(point: FloatPoint) {
