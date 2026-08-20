@@ -51,8 +51,7 @@ class PathWrapper {
   }
 
   func addLineTo(point: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_addLineTo(p, FloatPointRaw(x: point.x, y: point.y))
   }
 
   func addBezierCurveTo(controlPoint1: FloatPoint, controlPoint2: FloatPoint, endPoint: FloatPoint)

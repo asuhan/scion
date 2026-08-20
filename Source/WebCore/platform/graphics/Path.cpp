@@ -64,6 +64,11 @@ extern "C" WEBCORE_EXPORT void Path_moveTo(void* p, FloatPointRaw point)
     static_cast<WebCore::Path*>(p)->moveTo({ point.x, point.y });
 }
 
+extern "C" WEBCORE_EXPORT void Path_addLineTo(void* p, FloatPointRaw point)
+{
+    static_cast<WebCore::Path*>(p)->addLineTo({ point.x, point.y });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);
