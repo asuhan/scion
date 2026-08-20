@@ -198,10 +198,13 @@ class GraphicsContextWrapper {
   }
 
   func adjustLineToPixelBoundaries(
-    p1: FloatPoint, p2: FloatPoint, strokeWidth: Float32, penStyle: StrokeStyle
+    p1: inout FloatPoint, p2: inout FloatPoint, strokeWidth: Float32, penStyle: StrokeStyle
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let pair = wk_interop.GraphicsContext_adjustLineToPixelBoundaries(
+      p!, FloatPointRaw(x: p1.x, y: p1.y), FloatPointRaw(x: p2.x, y: p2.y), strokeWidth,
+      penStyle.rawValue)
+    p1 = FloatPoint(x: pair.p1.x, y: pair.p1.y)
+    p2 = FloatPoint(x: pair.p2.x, y: pair.p2.y)
   }
 
   // These draw methods will do both stroking and filling.

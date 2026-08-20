@@ -72,7 +72,7 @@ private func strokeWavyTextDecoration(
   context.clip(rect: bounds)
 
   context.adjustLineToPixelBoundaries(
-    p1: p1, p2: p2, strokeWidth: rect.height(), penStyle: context.strokeStyle())
+    p1: &p1, p2: &p2, strokeWidth: rect.height(), penStyle: context.strokeStyle())
 
   let path = PathWrapper()
   path.moveTo(point: p1)

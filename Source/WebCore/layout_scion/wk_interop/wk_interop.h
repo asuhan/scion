@@ -330,6 +330,11 @@ struct FloatQuadRaw {
     struct FloatPointRaw p4;
 };
 
+struct FloatPairRaw {
+    struct FloatPointRaw p1;
+    struct FloatPointRaw p2;
+};
+
 struct HitTestLocationRaw {
     struct LayoutPointRaw point;
     struct LayoutRectRaw boundingBox;
@@ -1979,6 +1984,8 @@ void GraphicsContext_setShouldSubpixelQuantizeFonts(void*, bool);
 void GraphicsContext_setDrawLuminanceMask(void*, bool);
 void GraphicsContext_save(void*, uint8_t);
 void GraphicsContext_restore(void*, uint8_t);
+struct FloatPairRaw GraphicsContext_adjustLineToPixelBoundaries(
+    void*, struct FloatPointRaw, struct FloatPointRaw, float, uint8_t);
 void GraphicsContext_drawRect(void*, struct FloatRectRaw, float);
 void GraphicsContext_drawLine(void*, struct FloatPointRaw, struct FloatPointRaw);
 void GraphicsContext_fillPath(void*, const void*);

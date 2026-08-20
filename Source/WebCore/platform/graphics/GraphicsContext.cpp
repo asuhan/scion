@@ -207,6 +207,24 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_restore(void* p, uint8_t purpose)
     static_cast<WebCore::GraphicsContext*>(p)->restore(static_cast<WebCore::GraphicsContextState::Purpose>(purpose));
 }
 
+struct FloatPointRaw {
+    float x;
+    float y;
+};
+
+struct FloatPairRaw {
+    struct FloatPointRaw p1;
+    struct FloatPointRaw p2;
+};
+
+extern "C" WEBCORE_EXPORT FloatPairRaw GraphicsContext_adjustLineToPixelBoundaries(void* p, FloatPointRaw p1_raw, FloatPointRaw p2_raw, float strokeWidth, uint8_t penStyle)
+{
+    auto p1 = WebCore::FloatPoint { p1_raw.x, p1_raw.y };
+    auto p2 = WebCore::FloatPoint { p2_raw.x, p2_raw.y };
+    static_cast<WebCore::GraphicsContext*>(p)->adjustLineToPixelBoundaries(p1, p2, strokeWidth, static_cast<WebCore::StrokeStyle>(penStyle));
+    return { { p1.x(), p1.y() }, { p2.x(), p2.y() } };
+}
+
 struct FloatRectRaw {
     float x;
     float y;
@@ -218,11 +236,6 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawRect(void* p, FloatRectRaw re
 {
     static_cast<WebCore::GraphicsContext*>(p)->drawRect({ rect.x, rect.y, rect.width, rect.height }, borderThickness);
 }
-
-struct FloatPointRaw {
-    float x;
-    float y;
-};
 
 extern "C" WEBCORE_EXPORT void GraphicsContext_drawLine(void* p, FloatPointRaw point1, FloatPointRaw point2)
 {
