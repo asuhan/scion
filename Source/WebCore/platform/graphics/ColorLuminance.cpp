@@ -41,6 +41,14 @@ extern "C" WEBCORE_EXPORT double SRGBA_relativeLuminance(SRGBARaw srgba)
     return WebCore::relativeLuminance(color);
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw SRGBA_lightened(SRGBARaw srgba)
+{
+    WebCore::Color color({ srgba.red, srgba.green, srgba.blue, srgba.alpha });
+    const auto lightened = color.lightened();
+    auto [r, g, b, a] = lightened.asInline().resolved();
+    return { r, g, b, a };
+}
+
 extern "C" WEBCORE_EXPORT SRGBARaw SRGBA_darkened(SRGBARaw srgba)
 {
     WebCore::Color color({ srgba.red, srgba.green, srgba.blue, srgba.alpha });
