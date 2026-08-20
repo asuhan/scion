@@ -90,6 +90,16 @@ extern "C" WEBCORE_EXPORT void Path_addRect(void* p, FloatRectRaw rect)
     static_cast<WebCore::Path*>(p)->addRect({ rect.x, rect.y, rect.width, rect.height });
 }
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT void Path_translate(void* p, FloatSizeRaw delta)
+{
+    static_cast<WebCore::Path*>(p)->translate({ delta.width, delta.height });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);

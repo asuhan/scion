@@ -93,8 +93,7 @@ class PathWrapper {
   }
 
   func translate(_ delta: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_translate(p, FloatSizeRaw(width: delta.width, height: delta.height))
   }
 
   func transform(_ transform: AffineTransform) {
