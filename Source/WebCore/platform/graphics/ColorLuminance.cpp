@@ -37,8 +37,16 @@ struct SRGBARaw {
 
 extern "C" WEBCORE_EXPORT double SRGBA_relativeLuminance(SRGBARaw srgba)
 {
-    WebCore::Color color({srgba.red, srgba.green, srgba.blue, srgba.alpha});
+    WebCore::Color color({ srgba.red, srgba.green, srgba.blue, srgba.alpha });
     return WebCore::relativeLuminance(color);
+}
+
+extern "C" WEBCORE_EXPORT SRGBARaw SRGBA_darkened(SRGBARaw srgba)
+{
+    WebCore::Color color({ srgba.red, srgba.green, srgba.blue, srgba.alpha });
+    const auto darkened = color.darkened();
+    auto [r, g, b, a] = darkened.asInline().resolved();
+    return { r, g, b, a };
 }
 
 namespace WebCore {

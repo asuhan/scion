@@ -65,8 +65,10 @@ struct ColorWrapper: Equatable {
   }
 
   func darkened() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = toSRGBA()
+    let d = wk_interop.SRGBA_darkened(
+      SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
+    return ColorWrapper(SRGBA(red: d.red, green: d.green, blue: d.blue, alpha: d.alpha))
   }
 
   func invertedColorWithAlpha(alpha: Float32) -> ColorWrapper {

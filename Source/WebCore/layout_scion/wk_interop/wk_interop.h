@@ -2184,3 +2184,4 @@ void Resolver_styleForPseudoElement(void*, void*, struct PseudoElementRequestRaw
 void EventRegionContext_unite(void*, struct FloatRoundedRectRaw, void*, const void*, bool);
 bool EventRegionContext_contains(void*, struct IntRectRaw);
 double SRGBA_relativeLuminance(struct SRGBARaw);
+struct SRGBARaw SRGBA_darkened(struct SRGBARaw);

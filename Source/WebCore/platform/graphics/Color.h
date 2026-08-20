@@ -256,7 +256,9 @@ private:
     void setColor(SRGBA<uint8_t>, OptionSet<FlagsIncludingPrivate> = { });
     void setOutOfLineComponents(Ref<OutOfLineComponents>&&, ColorSpace, OptionSet<FlagsIncludingPrivate> = { });
 
+public:
     SRGBA<uint8_t> asInline() const;
+private:
     PackedColor::RGBA asPackedInline() const;
 
     const OutOfLineComponents& asOutOfLine() const;
