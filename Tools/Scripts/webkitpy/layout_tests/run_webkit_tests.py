@@ -91,6 +91,9 @@ def main(argv, stdout, stderr):
         options.additional_env_var.append('__XPC_JSC_useSharedArrayBuffer=1')
         options.additional_env_var.append('JSC_useRecursiveJSONParse=0')
         options.additional_env_var.append('__XPC_JSC_useRecursiveJSONParse=0')
+        scion_use_rendering = os.getenv("SCION_USE_RENDERING")
+        if scion_use_rendering is not None:
+            options.additional_env_var.append(f"SCION_USE_RENDERING={scion_use_rendering}")
         run_details = run(port, options, args, stderr)
         if run_details.exit_code != -1 and run_details.skipped_all_tests:
             return run_details.exit_code
