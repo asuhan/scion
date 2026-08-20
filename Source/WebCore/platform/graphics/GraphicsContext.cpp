@@ -229,6 +229,11 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawLine(void* p, FloatPointRaw p
     static_cast<WebCore::GraphicsContext*>(p)->drawLine({ point1.x, point1.y }, { point2.x, point2.y });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_fillPath(void* p, const void* path)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->fillPath(*static_cast<const WebCore::Path*>(path));
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_fillEllipse(void* p, FloatRectRaw ellipse)
 {
     static_cast<WebCore::GraphicsContext*>(p)->fillEllipse({ ellipse.x, ellipse.y, ellipse.width, ellipse.height });

@@ -132,5 +132,7 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func interop() -> UnsafeMutableRawPointer { return p }
+
   private let p: UnsafeMutableRawPointer
 }

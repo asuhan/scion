@@ -219,8 +219,7 @@ class GraphicsContextWrapper {
   }
 
   func fillPath(path: PathWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_fillPath(p!, path.interop())
   }
 
   func strokePath(path: PathWrapper) {
