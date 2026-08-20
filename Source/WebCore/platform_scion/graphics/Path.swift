@@ -101,15 +101,9 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return wk_interop.Path_isEmpty(p) }
 
-  func definitelySingleLine() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func definitelySingleLine() -> Bool { return wk_interop.Path_definitelySingleLine(p) }
 
   func length() -> Float32 {
     // TODO(asuhan): implement this

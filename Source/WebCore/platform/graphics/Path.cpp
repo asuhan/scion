@@ -100,6 +100,16 @@ extern "C" WEBCORE_EXPORT void Path_translate(void* p, FloatSizeRaw delta)
     static_cast<WebCore::Path*>(p)->translate({ delta.width, delta.height });
 }
 
+extern "C" WEBCORE_EXPORT bool Path_isEmpty(const void* p)
+{
+    return static_cast<const WebCore::Path*>(p)->isEmpty();
+}
+
+extern "C" WEBCORE_EXPORT bool Path_definitelySingleLine(const void* p)
+{
+    return static_cast<const WebCore::Path*>(p)->definitelySingleLine();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);
