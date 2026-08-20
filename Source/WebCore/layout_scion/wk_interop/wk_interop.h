@@ -2171,6 +2171,7 @@ void* RenderTheme_singleton();
 struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);
 int32_t RenderTheme_baselinePosition(const void*, const void*);
 void* Path_create();
+void* Path_create_from_points(uint32_t n, const float* x, const float* y);
 void Path_destroy(const void*);
 bool ScrollbarTheme_usesOverlayScrollbars(const void*);
 void* ScrollbarTheme_theme();

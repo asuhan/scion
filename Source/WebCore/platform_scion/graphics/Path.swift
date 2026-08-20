@@ -28,13 +28,21 @@
 
 import wk_interop
 
+private func createFromPoints(_ points: [FloatPoint]) -> UnsafeMutableRawPointer {
+  let x = points.map { $0.x }
+  let y = points.map { $0.y }
+  return x.withUnsafeBufferPointer { xPtr in
+    y.withUnsafeBufferPointer { yPtr in
+      return wk_interop.Path_create_from_points(
+        UInt32(points.count), xPtr.baseAddress!, yPtr.baseAddress!)
+    }
+  }
+}
+
 class PathWrapper {
   init() { p = wk_interop.Path_create() }
 
-  init(points: [FloatPoint]) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(points: [FloatPoint]) { p = createFromPoints(points) }
 
   deinit { wk_interop.Path_destroy(p) }
 

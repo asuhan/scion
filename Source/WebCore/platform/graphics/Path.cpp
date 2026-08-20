@@ -40,6 +40,15 @@ extern "C" WEBCORE_EXPORT void* Path_create()
     return new WebCore::Path();
 }
 
+extern "C" WEBCORE_EXPORT void* Path_create_from_points(uint32_t n, const float* x, const float* y)
+{
+    Vector<WebCore::FloatPoint> points;
+    for (uint32_t i = 0; i < n; ++i) {
+        points.append({ x[i], y[i] });
+    }
+    return new WebCore::Path(points);
+}
+
 extern "C" WEBCORE_EXPORT void Path_destroy(const void* p)
 {
     delete static_cast<const WebCore::Path*>(p);
