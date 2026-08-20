@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 // TODO(asuhan): Support more color types, not just sRGB.
 struct ColorWrapper: Equatable {
   struct Flags: OptionSet {
@@ -52,8 +54,9 @@ struct ColorWrapper: Equatable {
   func alphaAsFloat() -> Float32 { return convertByteAlphaToFloat(srgba.alpha) }
 
   func luminance() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = toSRGBA()
+    return wk_interop.SRGBA_relativeLuminance(
+      SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
   }
 
   func lightened() -> ColorWrapper {

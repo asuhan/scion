@@ -28,6 +28,19 @@
 
 #include "Color.h"
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+extern "C" WEBCORE_EXPORT double SRGBA_relativeLuminance(SRGBARaw srgba)
+{
+    WebCore::Color color({srgba.red, srgba.green, srgba.blue, srgba.alpha});
+    return WebCore::relativeLuminance(color);
+}
+
 namespace WebCore {
 
 double relativeLuminance(const Color& color)
