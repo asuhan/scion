@@ -223,8 +223,7 @@ class GraphicsContextWrapper {
   }
 
   func strokePath(path: PathWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_strokePath(p!, path.interop())
   }
 
   func fillEllipse(_ ellipse: FloatRectWrapper) {

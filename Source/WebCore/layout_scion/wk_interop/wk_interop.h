@@ -1982,6 +1982,7 @@ void GraphicsContext_restore(void*, uint8_t);
 void GraphicsContext_drawRect(void*, struct FloatRectRaw, float);
 void GraphicsContext_drawLine(void*, struct FloatPointRaw, struct FloatPointRaw);
 void GraphicsContext_fillPath(void*, const void*);
+void GraphicsContext_strokePath(void* p, const void*);
 void GraphicsContext_fillEllipse(void*, struct FloatRectRaw);
 void GraphicsContext_strokeEllipse(void*, struct FloatRectRaw);
 void GraphicsContext_fillRectWithClipping(void*, struct FloatRectRaw, bool);
