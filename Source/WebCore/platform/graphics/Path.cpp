@@ -69,6 +69,15 @@ extern "C" WEBCORE_EXPORT void Path_addLineTo(void* p, FloatPointRaw point)
     static_cast<WebCore::Path*>(p)->addLineTo({ point.x, point.y });
 }
 
+extern "C" WEBCORE_EXPORT void Path_addBezierCurveTo(
+    void* p, FloatPointRaw controlPoint1, FloatPointRaw controlPoint2, FloatPointRaw endPoint)
+{
+    static_cast<WebCore::Path*>(p)->addBezierCurveTo(
+        { controlPoint1.x, controlPoint1.y },
+        { controlPoint2.x, controlPoint2.y },
+        { endPoint.x, endPoint.y });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);
