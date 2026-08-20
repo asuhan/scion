@@ -63,8 +63,8 @@ class PathWrapper {
   }
 
   func addRect(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_addRect(
+      p, FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height()))
   }
 
   func addRoundedRect(

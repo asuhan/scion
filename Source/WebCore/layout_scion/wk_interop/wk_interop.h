@@ -2178,6 +2178,7 @@ void Path_destroy(const void*);
 void Path_moveTo(void*, struct FloatPointRaw);
 void Path_addLineTo(void*, struct FloatPointRaw);
 void Path_addBezierCurveTo(void*, struct FloatPointRaw, struct FloatPointRaw, struct FloatPointRaw);
+void Path_addRect(void*, struct FloatRectRaw);
 bool ScrollbarTheme_usesOverlayScrollbars(const void*);
 void* ScrollbarTheme_theme();
 void TextStream_writeChars(void*, const char*);

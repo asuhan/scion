@@ -78,6 +78,18 @@ extern "C" WEBCORE_EXPORT void Path_addBezierCurveTo(
         { endPoint.x, endPoint.y });
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT void Path_addRect(void* p, FloatRectRaw rect)
+{
+    static_cast<WebCore::Path*>(p)->addRect({ rect.x, rect.y, rect.width, rect.height });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);
