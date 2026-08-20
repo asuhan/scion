@@ -110,6 +110,11 @@ extern "C" WEBCORE_EXPORT bool Path_definitelySingleLine(const void* p)
     return static_cast<const WebCore::Path*>(p)->definitelySingleLine();
 }
 
+extern "C" WEBCORE_EXPORT float Path_length(const void* p)
+{
+    return static_cast<const WebCore::Path*>(p)->length();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);

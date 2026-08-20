@@ -2182,6 +2182,7 @@ void Path_addRect(void*, struct FloatRectRaw);
 void Path_translate(void* p, struct FloatSizeRaw);
 bool Path_isEmpty(const void*);
 bool Path_definitelySingleLine(const void*);
+float Path_length(const void*);
 bool ScrollbarTheme_usesOverlayScrollbars(const void*);
 void* ScrollbarTheme_theme();
 void TextStream_writeChars(void*, const char*);

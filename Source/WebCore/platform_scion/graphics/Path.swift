@@ -105,10 +105,7 @@ class PathWrapper {
 
   func definitelySingleLine() -> Bool { return wk_interop.Path_definitelySingleLine(p) }
 
-  func length() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func length() -> Float32 { return wk_interop.Path_length(p) }
 
   func traversalStateAtLength(_ length: Float32) -> PathTraversalState {
     // TODO(asuhan): implement this
