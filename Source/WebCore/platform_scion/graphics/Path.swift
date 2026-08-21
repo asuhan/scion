@@ -39,6 +39,18 @@ private func createFromPoints(_ points: [FloatPoint]) -> UnsafeMutableRawPointer
   }
 }
 
+private func convertLayoutSize(_ layoutSize: LayoutSizeWrapper) -> LayoutSizeRaw {
+  return LayoutSizeRaw(width: layoutSize.width().rawValue(), height: layoutSize.height().rawValue())
+}
+
+private func convertRoundedRectRadii(_ radii: RoundedRectRadii) -> RoundedRectRadiiRaw {
+  return RoundedRectRadiiRaw(
+    topLeft: convertLayoutSize(radii.topLeft),
+    topRight: convertLayoutSize(radii.topRight),
+    bottomLeft: convertLayoutSize(radii.bottomLeft),
+    bottomRight: convertLayoutSize(radii.bottomRight))
+}
+
 class PathWrapper {
   init() { p = wk_interop.Path_create() }
 
@@ -83,8 +95,10 @@ class PathWrapper {
   }
 
   func addRoundedRect(rect: RoundedRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_addLayoutRoundedRect(
+      p,
+      RoundedRectRaw(
+        rect: convertLayoutRect(rect.rect()), radii: convertRoundedRectRadii(rect.radii)))
   }
 
   func applyElements(_ applier: (PathElement) -> Void) {

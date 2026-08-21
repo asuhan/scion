@@ -612,7 +612,7 @@ func isSkippedContentRoot(style: RenderStyleWrapper, element: ElementWrapper?) -
   return element != nil && !element!.isRelevantToUser()
 }
 
-private func convertLengthSize(_ lengthSize: LengthSize) -> LengthSizeRaw {
+func convertLengthSize(_ lengthSize: LengthSize) -> LengthSizeRaw {
   return LengthSizeRaw(width: lengthSize.width.p, height: lengthSize.height.p)
 }
 

@@ -139,6 +139,63 @@ extern "C" WEBCORE_EXPORT void Path_addRoundedRectSameRadii(void* p, FloatRectRa
             : WebCore::PathRoundedRect::Strategy::PreferNative);
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+struct RoundedRectRadiiRaw {
+    LayoutSizeRaw topLeft;
+    LayoutSizeRaw topRight;
+    LayoutSizeRaw bottomLeft;
+    LayoutSizeRaw bottomRight;
+};
+
+struct RoundedRectRaw {
+    LayoutRectRaw rect;
+    RoundedRectRadiiRaw radii;
+};
+
+namespace {
+
+WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height) };
+}
+
+WebCore::LayoutSize convertLayoutSizeRaw(const LayoutSizeRaw size)
+{
+    return { WebCore::LayoutUnit::fromRawValue(size.width), WebCore::LayoutUnit::fromRawValue(size.height) };
+}
+
+WebCore::RoundedRect::Radii convertRoundedRectRadiiRaw(const RoundedRectRadiiRaw radii)
+{
+    return {
+        convertLayoutSizeRaw(radii.topLeft),
+        convertLayoutSizeRaw(radii.topRight),
+        convertLayoutSizeRaw(radii.bottomLeft),
+        convertLayoutSizeRaw(radii.bottomRight)
+    };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void Path_addLayoutRoundedRect(void* p, RoundedRectRaw rectRaw)
+{
+    const auto rect = WebCore::RoundedRect {
+        convertLayoutRectRaw(rectRaw.rect),
+        convertRoundedRectRadiiRaw(rectRaw.radii)
+    };
+    static_cast<WebCore::Path*>(p)->addRoundedRect(rect);
+}
+
 extern "C" WEBCORE_EXPORT void Path_translate(void* p, FloatSizeRaw delta)
 {
     static_cast<WebCore::Path*>(p)->translate({ delta.width, delta.height });
