@@ -285,8 +285,10 @@ class GraphicsContextWrapper {
   func fillRectWithRoundedHole(
     rect: FloatRectWrapper, roundedHoleRect: FloatRoundedRect, color: ColorWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = color.toSRGBA()
+    wk_interop.GraphicsContext_fillRectWithRoundedHole(
+      p!, toFloatRectRaw(rect), convertFloatRoundedRect(roundedHoleRect),
+      SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
   }
 
   func clearRect(rect: FloatRectWrapper) {

@@ -320,15 +320,27 @@ WebCore::FloatRoundedRect::Radii toFloatRadii(FloatRadiiRaw radii)
     };
 }
 
+WebCore::FloatRoundedRect toFloatRoundedRect(FloatRoundedRectRaw rect)
+{
+    return WebCore::FloatRoundedRect { toFloatRect(rect.rect), toFloatRadii(rect.radii) };
+}
+
 } // namespace
 
 extern "C" WEBCORE_EXPORT void GraphicsContext_fillRoundedRect(void* p, FloatRoundedRectRaw rectRaw, SRGBARaw srgba, uint8_t blendMode)
 {
-    const auto rect = WebCore::FloatRoundedRect { toFloatRect(rectRaw.rect), toFloatRadii(rectRaw.radii) };
     static_cast<WebCore::GraphicsContext*>(p)->fillRoundedRect(
-        rect,
+        toFloatRoundedRect(rectRaw),
         WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha },
         static_cast<WebCore::BlendMode>(blendMode));
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_fillRectWithRoundedHole(void* p, FloatRectRaw rectRaw, FloatRoundedRectRaw roundedHoleRectRaw, SRGBARaw srgba)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->fillRectWithRoundedHole(
+        toFloatRect(rectRaw),
+        toFloatRoundedRect(roundedHoleRectRaw),
+        WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha });
 }
 
 extern "C" WEBCORE_EXPORT void GraphicsContext_clearRect(void* p, FloatRectRaw rect_raw)
