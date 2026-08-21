@@ -113,14 +113,10 @@ class PathWrapper {
   }
 
   func fastBoundingRect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return toFloatRect(wk_interop.Path_fastBoundingRect(p))
   }
 
-  func boundingRect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func boundingRect() -> FloatRectWrapper { return toFloatRect(wk_interop.Path_boundingRect(p)) }
 
   func interop() -> UnsafeMutableRawPointer { return p }
 

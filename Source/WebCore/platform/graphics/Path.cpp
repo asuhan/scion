@@ -159,6 +159,25 @@ extern "C" WEBCORE_EXPORT float Path_length(const void* p)
     return static_cast<const WebCore::Path*>(p)->length();
 }
 
+namespace {
+
+FloatRectRaw toFloatRectRaw(const WebCore::FloatRect& r)
+{
+    return { r.x(), r.y(), r.width(), r.height() };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT FloatRectRaw Path_fastBoundingRect(const void* p)
+{
+    return toFloatRectRaw(static_cast<const WebCore::Path*>(p)->fastBoundingRect());
+}
+
+extern "C" WEBCORE_EXPORT FloatRectRaw Path_boundingRect(const void* p)
+{
+    return toFloatRectRaw(static_cast<const WebCore::Path*>(p)->boundingRect());
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Path);
