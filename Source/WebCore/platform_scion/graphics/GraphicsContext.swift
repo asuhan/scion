@@ -387,8 +387,7 @@ class GraphicsContextWrapper {
   }
 
   func clipPath(path: PathWrapper, clipRule: WindRule = .EvenOdd) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_clipPath(p!, path.interop(), clipRule == .EvenOdd)
   }
 
   func clipToImageBuffer(_ imageBuffer: ImageBufferWrapper, _ destRect: FloatRectWrapper) {

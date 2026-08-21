@@ -2006,6 +2006,7 @@ void GraphicsContext_clip(void*, struct FloatRectRaw);
 void GraphicsContext_clipRoundedRect(void*, struct FloatRoundedRectRaw);
 void GraphicsContext_clipOut(void*, struct FloatRectRaw);
 void GraphicsContext_clipOutRoundedRect(void*, struct FloatRoundedRectRaw);
+void GraphicsContext_clipPath(void*, const void*, bool);
 struct FloatSizeRaw GraphicsContext_drawText(void*, const void*, const void*, struct FloatPointRaw, uint32_t, struct OptionalUIntRaw);
 void GraphicsContext_drawEmphasisMarks(void*, const void*, const void*, const void*, struct FloatPointRaw, uint32_t, struct OptionalUIntRaw);
 struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct FloatRectRaw, bool);

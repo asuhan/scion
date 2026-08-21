@@ -388,6 +388,13 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clipOutRoundedRect(void* p, Float
     static_cast<WebCore::GraphicsContext*>(p)->clipOutRoundedRect(toFloatRoundedRect(rect));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_clipPath(void* p, const void* path_raw, bool is_even_odd)
+{
+    const auto& path = *static_cast<const WebCore::Path*>(path_raw);
+    const auto clipRule = is_even_odd ? WebCore::WindRule::EvenOdd : WebCore::WindRule::NonZero;
+    static_cast<WebCore::GraphicsContext*>(p)->clipPath(path, clipRule);
+}
+
 struct OptionalUIntRaw {
     uint32_t value;
     bool is_valid;
