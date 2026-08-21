@@ -128,6 +128,17 @@ extern "C" WEBCORE_EXPORT void Path_addRoundedRect(void* p, FloatRoundedRectRaw 
             : WebCore::PathRoundedRect::Strategy::PreferNative);
 }
 
+extern "C" WEBCORE_EXPORT void Path_addRoundedRectSameRadii(void* p, FloatRectRaw rectRaw, FloatSizeRaw roundingRadiiRaw, bool preferBezier)
+{
+    const auto rect = WebCore::FloatRect { rectRaw.x, rectRaw.y, rectRaw.width, rectRaw.height };
+    static_cast<WebCore::Path*>(p)->addRoundedRect(
+        rect,
+        { roundingRadiiRaw.width, roundingRadiiRaw.height },
+        preferBezier
+            ? WebCore::PathRoundedRect::Strategy::PreferBezier
+            : WebCore::PathRoundedRect::Strategy::PreferNative);
+}
+
 extern "C" WEBCORE_EXPORT void Path_translate(void* p, FloatSizeRaw delta)
 {
     static_cast<WebCore::Path*>(p)->translate({ delta.width, delta.height });

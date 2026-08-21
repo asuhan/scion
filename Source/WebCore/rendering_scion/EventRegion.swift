@@ -25,7 +25,7 @@
 
 import wk_interop
 
-private func toFloatSizeRaw(_ size: FloatSize) -> FloatSizeRaw {
+func toFloatSizeRaw(_ size: FloatSize) -> FloatSizeRaw {
   return FloatSizeRaw(width: size.width, height: size.height)
 }
 

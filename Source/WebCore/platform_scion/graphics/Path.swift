@@ -78,8 +78,8 @@ class PathWrapper {
     _ rect: FloatRectWrapper, _ roundingRadii: FloatSize,
     _ strategy: PathRoundedRect.Strategy = .PreferNative
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_addRoundedRectSameRadii(
+      p, toFloatRectRaw(rect), toFloatSizeRaw(roundingRadii), strategy == .PreferBezier)
   }
 
   func addRoundedRect(rect: RoundedRect) {
