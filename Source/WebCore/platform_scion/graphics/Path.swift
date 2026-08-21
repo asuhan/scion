@@ -70,8 +70,8 @@ class PathWrapper {
   func addRoundedRect(
     roundedRect: FloatRoundedRect, strategy: PathRoundedRect.Strategy = .PreferNative
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Path_addRoundedRect(
+      p, convertFloatRoundedRect(roundedRect), strategy == .PreferBezier)
   }
 
   func addRoundedRect(

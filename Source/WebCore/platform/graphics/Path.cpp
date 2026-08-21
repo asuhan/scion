@@ -95,6 +95,39 @@ struct FloatSizeRaw {
     float height;
 };
 
+struct FloatRadiiRaw {
+    struct FloatSizeRaw topLeft;
+    struct FloatSizeRaw topRight;
+    struct FloatSizeRaw bottomLeft;
+    struct FloatSizeRaw bottomRight;
+};
+
+struct FloatRoundedRectRaw {
+    struct FloatRectRaw rect;
+    struct FloatRadiiRaw radii;
+};
+
+extern "C" WEBCORE_EXPORT void Path_addRoundedRect(void* p, FloatRoundedRectRaw roundedRectRaw, bool preferBezier)
+{
+    const auto& rect_raw = roundedRectRaw.rect;
+    const auto& radii_raw = roundedRectRaw.radii;
+    const auto radii = WebCore::FloatRoundedRect::Radii {
+        { radii_raw.topLeft.width, radii_raw.topLeft.height },
+        { radii_raw.topRight.width, radii_raw.topRight.height },
+        { radii_raw.bottomLeft.width, radii_raw.bottomLeft.height },
+        { radii_raw.bottomRight.width, radii_raw.bottomRight.height }
+    };
+    const auto roundedRect = WebCore::FloatRoundedRect {
+        { rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height },
+        radii
+    };
+    static_cast<WebCore::Path*>(p)->addRoundedRect(
+        roundedRect,
+        preferBezier
+            ? WebCore::PathRoundedRect::Strategy::PreferBezier
+            : WebCore::PathRoundedRect::Strategy::PreferNative);
+}
+
 extern "C" WEBCORE_EXPORT void Path_translate(void* p, FloatSizeRaw delta)
 {
     static_cast<WebCore::Path*>(p)->translate({ delta.width, delta.height });

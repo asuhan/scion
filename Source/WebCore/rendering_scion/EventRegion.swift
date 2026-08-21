@@ -29,7 +29,7 @@ private func toFloatSizeRaw(_ size: FloatSize) -> FloatSizeRaw {
   return FloatSizeRaw(width: size.width, height: size.height)
 }
 
-private func convertFloatRoundedRect(_ roundedRect: FloatRoundedRect) -> FloatRoundedRectRaw {
+func convertFloatRoundedRect(_ roundedRect: FloatRoundedRect) -> FloatRoundedRectRaw {
   let rect = FloatRectRaw(
     x: roundedRect.rect.x(), y: roundedRect.rect.y(), width: roundedRect.rect.width(),
     height: roundedRect.rect.height())

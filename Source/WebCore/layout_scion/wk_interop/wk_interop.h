@@ -2186,6 +2186,7 @@ void Path_moveTo(void*, struct FloatPointRaw);
 void Path_addLineTo(void*, struct FloatPointRaw);
 void Path_addBezierCurveTo(void*, struct FloatPointRaw, struct FloatPointRaw, struct FloatPointRaw);
 void Path_addRect(void*, struct FloatRectRaw);
+void Path_addRoundedRect(void*, struct FloatRoundedRectRaw, bool);
 void Path_translate(void* p, struct FloatSizeRaw);
 bool Path_isEmpty(const void*);
 bool Path_definitelySingleLine(const void*);
