@@ -96,15 +96,15 @@ struct FloatSizeRaw {
 };
 
 struct FloatRadiiRaw {
-    struct FloatSizeRaw topLeft;
-    struct FloatSizeRaw topRight;
-    struct FloatSizeRaw bottomLeft;
-    struct FloatSizeRaw bottomRight;
+    FloatSizeRaw topLeft;
+    FloatSizeRaw topRight;
+    FloatSizeRaw bottomLeft;
+    FloatSizeRaw bottomRight;
 };
 
 struct FloatRoundedRectRaw {
-    struct FloatRectRaw rect;
-    struct FloatRadiiRaw radii;
+    FloatRectRaw rect;
+    FloatRadiiRaw radii;
 };
 
 extern "C" WEBCORE_EXPORT void Path_addRoundedRect(void* p, FloatRoundedRectRaw roundedRectRaw, bool preferBezier)
