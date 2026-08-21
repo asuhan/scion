@@ -375,8 +375,7 @@ class GraphicsContextWrapper {
   func clip(rect: FloatRectWrapper) { wk_interop.GraphicsContext_clip(p!, toFloatRectRaw(rect)) }
 
   func clipRoundedRect(rect: FloatRoundedRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_clipRoundedRect(p!, convertFloatRoundedRect(rect))
   }
 
   func clipOut(rect: FloatRectWrapper) {
@@ -384,8 +383,7 @@ class GraphicsContextWrapper {
   }
 
   func clipOutRoundedRect(rect: FloatRoundedRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_clipOutRoundedRect(p!, convertFloatRoundedRect(rect))
   }
 
   func clipPath(path: PathWrapper, clipRule: WindRule = .EvenOdd) {

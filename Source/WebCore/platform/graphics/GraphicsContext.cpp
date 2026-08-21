@@ -373,9 +373,19 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clip(void* p, FloatRectRaw rect_r
     static_cast<WebCore::GraphicsContext*>(p)->clip({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_clipRoundedRect(void* p, FloatRoundedRectRaw rect)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->clipRoundedRect(toFloatRoundedRect(rect));
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_clipOut(void* p, FloatRectRaw rect_raw)
 {
     static_cast<WebCore::GraphicsContext*>(p)->clipOut({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
+}
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_clipOutRoundedRect(void* p, FloatRoundedRectRaw rect)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->clipOutRoundedRect(toFloatRoundedRect(rect));
 }
 
 struct OptionalUIntRaw {
