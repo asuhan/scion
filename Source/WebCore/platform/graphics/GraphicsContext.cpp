@@ -281,6 +281,56 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_fillRectComposite(void* p, FloatR
     static_cast<WebCore::GraphicsContext*>(p)->fillRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha }, static_cast<WebCore::CompositeOperator>(op), static_cast<WebCore::BlendMode>(blendMode));
 }
 
+struct FloatSizeRaw {
+    float width;
+    float height;
+};
+
+struct FloatRadiiRaw {
+    FloatSizeRaw topLeft;
+    FloatSizeRaw topRight;
+    FloatSizeRaw bottomLeft;
+    FloatSizeRaw bottomRight;
+};
+
+struct FloatRoundedRectRaw {
+    FloatRectRaw rect;
+    FloatRadiiRaw radii;
+};
+
+namespace {
+
+WebCore::FloatRect toFloatRect(const FloatRectRaw& r)
+{
+    return { r.x, r.y, r.width, r.height };
+}
+
+WebCore::FloatSize convertFloatSizeRaw(const FloatSizeRaw& size)
+{
+    return { size.width, size.height };
+}
+
+WebCore::FloatRoundedRect::Radii toFloatRadii(FloatRadiiRaw radii)
+{
+    return {
+        convertFloatSizeRaw(radii.topLeft),
+        convertFloatSizeRaw(radii.topRight),
+        convertFloatSizeRaw(radii.bottomLeft),
+        convertFloatSizeRaw(radii.bottomRight)
+    };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_fillRoundedRect(void* p, FloatRoundedRectRaw rectRaw, SRGBARaw srgba, uint8_t blendMode)
+{
+    const auto rect = WebCore::FloatRoundedRect { toFloatRect(rectRaw.rect), toFloatRadii(rectRaw.radii) };
+    static_cast<WebCore::GraphicsContext*>(p)->fillRoundedRect(
+        rect,
+        WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha },
+        static_cast<WebCore::BlendMode>(blendMode));
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_clearRect(void* p, FloatRectRaw rect_raw)
 {
     static_cast<WebCore::GraphicsContext*>(p)->clearRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
@@ -315,11 +365,6 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_clipOut(void* p, FloatRectRaw rec
 {
     static_cast<WebCore::GraphicsContext*>(p)->clipOut({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height });
 }
-
-struct FloatSizeRaw {
-    float width;
-    float height;
-};
 
 struct OptionalUIntRaw {
     uint32_t value;

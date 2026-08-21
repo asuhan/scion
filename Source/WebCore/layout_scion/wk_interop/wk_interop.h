@@ -1995,6 +1995,7 @@ void GraphicsContext_strokeEllipse(void*, struct FloatRectRaw);
 void GraphicsContext_fillRectWithClipping(void*, struct FloatRectRaw, bool);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void GraphicsContext_fillRectComposite(void* p, struct FloatRectRaw, struct SRGBARaw, uint8_t, uint8_t);
+void GraphicsContext_fillRoundedRect(void*, struct FloatRoundedRectRaw, struct SRGBARaw, uint8_t);
 void GraphicsContext_clearRect(void*, struct FloatRectRaw);
 void GraphicsContext_strokeRect(void*, struct FloatRectRaw, float);
 void GraphicsContext_setLineCap(void*, uint8_t);
