@@ -3313,7 +3313,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       }
     }
 
-    if multiColumnFlowForBlockFlow() == nil {
+    if multiColumnFlowForBlockFlow() != nil {
       updateStylesForColumnChildren(oldStyle)
     }
   }
