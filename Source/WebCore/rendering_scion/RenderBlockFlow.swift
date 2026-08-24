@@ -179,13 +179,13 @@ private func setFullRepaintOnParentInlineBoxLayerIfNeeded(renderer: RenderTextWr
   if !renderer.needsLayout() {
     return
   }
-  if let parent = renderer.parent() {
-    if !parent.isInline() || !parent.hasLayer() {
-      return
-    }
-    (parent as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus = .NeedsFullRepaint
+  guard let parent = renderer.parent() else {
+    fatalError("Not reached")
   }
-  fatalError("Not reached")
+  if !parent.isInline() || !parent.hasLayer() {
+    return
+  }
+  (parent as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus = .NeedsFullRepaint
 }
 
 private struct InlineMinMaxIterator {
