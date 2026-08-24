@@ -176,7 +176,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     let top = style.top()
     let bottom = style.bottom()
 
-    let offset = accumulateInFlowPositionOffsets(child: self)
+    var offset = accumulateInFlowPositionOffsets(child: self)
     if top.isFixed() && bottom.isAuto() && left.isFixed() && right.isAuto()
       && containingBlock!.style().isLeftToRightDirection()
     {
@@ -1351,7 +1351,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     assert(!intrinsicWidth.isPercentOrCalculated())
     assert(!intrinsicHeight.isPercentOrCalculated())
 
-    let resolvedSize = LayoutSizeWrapper(
+    var resolvedSize = LayoutSizeWrapper(
       width: intrinsicWidth.value(), height: intrinsicHeight.value())
     let minimumSize = LayoutSizeWrapper(
       width: Int32(resolvedSize.width() > 0 ? 1 : 0),

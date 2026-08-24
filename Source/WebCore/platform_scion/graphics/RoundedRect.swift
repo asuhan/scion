@@ -57,7 +57,7 @@ struct RoundedRectRadii: Equatable {
     scale(factor: widthRatio < heightRatio ? widthRatio : heightRatio)
   }
 
-  func expand(
+  mutating func expand(
     topWidth: LayoutUnit, bottomWidth: LayoutUnit, leftWidth: LayoutUnit, rightWidth: LayoutUnit
   ) {
     if topLeft.width() > 0 && topLeft.height() > 0 {
@@ -78,7 +78,7 @@ struct RoundedRectRadii: Equatable {
     }
   }
 
-  func expand(size: LayoutUnit) {
+  mutating func expand(size: LayoutUnit) {
     expand(topWidth: size, bottomWidth: size, leftWidth: size, rightWidth: size)
   }
 
@@ -106,7 +106,7 @@ struct RoundedRectRadii: Equatable {
     }
   }
 
-  func shrink(
+  mutating func shrink(
     topWidth: LayoutUnit, bottomWidth: LayoutUnit, leftWidth: LayoutUnit, rightWidth: LayoutUnit
   ) {
     expand(

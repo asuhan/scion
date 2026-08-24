@@ -33,7 +33,7 @@ private func computeLogicalBoxSize(_ renderer: RenderBoxWrapper, _ isHorizontalW
   -> LayoutSizeWrapper
 {
   let shapeValue = renderer.style().shapeOutside()!
-  let size = isHorizontalWritingMode ? renderer.size() : renderer.size().transposedSize()
+  var size = isHorizontalWritingMode ? renderer.size() : renderer.size().transposedSize()
   switch shapeValue.effectiveCSSBox() {
   case .MarginBox:
     if isHorizontalWritingMode {
@@ -72,7 +72,7 @@ private func getShapeImageMarginRect(
   let marginBoxSizeDelta = LayoutSizeWrapper(
     width: renderBox.marginLogicalWidth() + renderBox.borderAndPaddingLogicalWidth(),
     height: renderBox.marginLogicalHeight() + renderBox.borderAndPaddingLogicalHeight())
-  let marginRectSize = referenceBoxLogicalSize + marginBoxSizeDelta
+  var marginRectSize = referenceBoxLogicalSize + marginBoxSizeDelta
   marginRectSize.clampNegativeToZero()
   return LayoutRectWrapper(location: marginBoxOrigin, size: marginRectSize)
 }

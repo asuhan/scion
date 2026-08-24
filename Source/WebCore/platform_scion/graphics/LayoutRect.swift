@@ -65,10 +65,6 @@ struct LayoutRectWrapper: Equatable {
     self.m_size = LayoutSizeWrapper(size: r.size())
   }
 
-  func deepCopy() -> LayoutRectWrapper {
-    return LayoutRectWrapper(location: location(), size: size().deepCopy())
-  }
-
   func location() -> LayoutPointWrapper { return m_location }
 
   func size() -> LayoutSizeWrapper { return m_size }
@@ -93,17 +89,17 @@ struct LayoutRectWrapper: Equatable {
 
   mutating func setY(y: LayoutUnit) { m_location.setY(y: y) }
 
-  func setWidth(width: LayoutUnit) { m_size.setWidth(width: width) }
+  mutating func setWidth(width: LayoutUnit) { m_size.setWidth(width: width) }
 
-  func setWidth(width: Float32) { m_size.setWidth(width: width) }
+  mutating func setWidth(width: Float32) { m_size.setWidth(width: width) }
 
-  func setWidth(width: Int32) { m_size.setWidth(width: width) }
+  mutating func setWidth(width: Int32) { m_size.setWidth(width: width) }
 
-  func setHeight(height: LayoutUnit) { m_size.setHeight(height: height) }
+  mutating func setHeight(height: LayoutUnit) { m_size.setHeight(height: height) }
 
-  func setHeight(height: Float32) { m_size.setHeight(height: height) }
+  mutating func setHeight(height: Float32) { m_size.setHeight(height: height) }
 
-  func setHeight(height: Int32) { m_size.setHeight(height: height) }
+  mutating func setHeight(height: Int32) { m_size.setHeight(height: height) }
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
@@ -163,9 +159,9 @@ struct LayoutRectWrapper: Equatable {
     m_size.shrink(box.left + box.right, box.top + box.bottom)
   }
 
-  func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
+  mutating func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
 
-  func contract(dw: Int32, dh: Int32) { m_size.expand(width: -dw, height: -dh) }
+  mutating func contract(dw: Int32, dh: Int32) { m_size.expand(width: -dw, height: -dh) }
 
   mutating func shiftXEdgeTo(edge: Float32) {
     shiftXEdgeTo(edge: LayoutUnit(value: edge))

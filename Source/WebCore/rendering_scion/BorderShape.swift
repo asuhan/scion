@@ -251,7 +251,7 @@ struct BorderShape {
   private func innerEdgeRoundedRect() -> RoundedRect {
     var roundedRect = RoundedRect(rect: innerEdgeRect())
     if m_borderRect.isRounded() {
-      let innerRadii = m_borderRect.radii
+      var innerRadii = m_borderRect.radii
       innerRadii.shrink(
         topWidth: borderWidths.top, bottomWidth: borderWidths.bottom,
         leftWidth: borderWidths.left, rightWidth: borderWidths.right)

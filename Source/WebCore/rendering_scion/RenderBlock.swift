@@ -2587,7 +2587,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return
     }
 
-    let layoutOverflowRect = layoutOverflowRect()
+    var layoutOverflowRect = layoutOverflowRect()
 
     if isHorizontalWritingMode() {
       layoutOverflowRect.setWidth(
@@ -2631,7 +2631,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     // When we have overflow clip, propagate the original spillout since it will include collapsed bottom margins and bottom padding.
     let clientRect = flippedClientBoxRect()
     let zero = LayoutUnit(value: UInt64(0))
-    let rectToApply = clientRect
+    var rectToApply = clientRect
     // Set the axis we don't care about to be 1, since we want this overflow to always be considered reachable.
     if isHorizontalWritingMode() {
       rectToApply.setWidth(width: LayoutUnit(value: 1))

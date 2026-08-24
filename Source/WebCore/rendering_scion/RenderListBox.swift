@@ -53,7 +53,7 @@ private func itemOffsetForAlignment(
 
   let itemBoundingBoxLogicalWidth =
     isHorizontalWritingMode ? itemBoundingBox.width() : itemBoundingBox.height()
-  let offset = LayoutSizeWrapper(
+  var offset = LayoutSizeWrapper(
     width: Int32(0), height: Int32(itemFont.metricsOfPrimaryFont().intAscent()))
   if actualAlignment == .Right || actualAlignment == .WebKitRight {
     let textWidth = itemFont.width(run: textRun)

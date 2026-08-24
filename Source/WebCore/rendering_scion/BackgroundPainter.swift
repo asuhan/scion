@@ -120,7 +120,7 @@ struct BackgroundImageGeometry {
   }
 
   func relativePhase() -> LayoutSizeWrapper {
-    var relativePhase = phase.deepCopy()
+    var relativePhase = phase
     relativePhase += destinationRect.location() - destinationOrigin
     return relativePhase
   }
@@ -770,7 +770,7 @@ class BackgroundPainter {
 
         if hasBorderRadius {
           var influenceShape = BorderShape.shapeForBorderRect(style: style, borderRect: shadowRect)
-          let influenceRadii = influenceShape.radii()
+          var influenceRadii = influenceShape.radii()
           influenceRadii.expand(size: 2 * shadowPaintingExtent + shadowSpread)
           influenceShape.setRadii(radii: influenceRadii)
 
@@ -1177,7 +1177,7 @@ class BackgroundPainter {
 
     destinationRect.intersect(other: borderBoxRect)
 
-    let tileSizeWithoutPixelSnapping = tileSize.deepCopy()
+    let tileSizeWithoutPixelSnapping = tileSize
     pixelSnapBackgroundImageGeometryForPainting(
       destinationRect: &destinationRect, tileSize: &tileSize, phase: &phase, space: &spaceSize,
       scaleFactor: deviceScaleFactor)
@@ -1327,7 +1327,7 @@ class BackgroundPainter {
 
     switch type {
     case .Size:
-      var tileSize = positioningAreaSize.deepCopy()
+      var tileSize = positioningAreaSize
 
       let layerWidth = fillLayer.size().size.width
       let layerHeight = fillLayer.size().size.height

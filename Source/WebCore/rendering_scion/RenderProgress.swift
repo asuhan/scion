@@ -24,7 +24,7 @@ final class RenderProgressWrapper: RenderBlockFlowWrapper {
   {
     var computedValues = boxComputeLogicalHeight(
       logicalHeight: logicalHeight, logicalTop: logicalTop)
-    let frame = frameRect()
+    var frame = frameRect()
     if isHorizontalWritingMode() {
       frame.setHeight(height: computedValues.extent)
     } else {

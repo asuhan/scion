@@ -358,7 +358,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
 
     // Per http://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width an absolute positioned box with a static position
     // should locate itself as though it is a normal flow box in relation to its containing block.
-    let logicalOffset = LayoutSizeWrapper()
+    var logicalOffset = LayoutSizeWrapper()
     if !child!.style().hasStaticInlinePosition(horizontal: style().isHorizontalWritingMode()) {
       logicalOffset.setWidth(width: inlinePosition)
     }

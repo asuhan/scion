@@ -309,7 +309,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   override final func intrinsicSize() -> LayoutSizeWrapper {
-    let size = m_intrinsicSize.deepCopy()
+    var size = m_intrinsicSize
     if isHorizontalWritingMode()
       ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment()
     {

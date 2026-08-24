@@ -33,7 +33,7 @@ enum AspectRatioFit {
   case AspectRatioFitGrow
 }
 
-class LayoutSizeWrapper: Equatable {
+struct LayoutSizeWrapper: Equatable {
   init() {}
 
   init(size: IntSize) {
@@ -70,48 +70,48 @@ class LayoutSizeWrapper: Equatable {
 
   func height() -> LayoutUnit { return height_ }
 
-  func setWidth(width: LayoutUnit) { width_ = width }
+  mutating func setWidth(width: LayoutUnit) { width_ = width }
 
-  func setWidth(width: Float32) { width_ = LayoutUnit(value: width) }
+  mutating func setWidth(width: Float32) { width_ = LayoutUnit(value: width) }
 
-  func setWidth(width: Int32) { width_ = LayoutUnit(value: width) }
+  mutating func setWidth(width: Int32) { width_ = LayoutUnit(value: width) }
 
-  func setHeight(height: LayoutUnit) { height_ = height }
+  mutating func setHeight(height: LayoutUnit) { height_ = height }
 
-  func setHeight(height: Float32) { height_ = LayoutUnit(value: height) }
+  mutating func setHeight(height: Float32) { height_ = LayoutUnit(value: height) }
 
-  func setHeight(height: Int32) { height_ = LayoutUnit(value: height) }
+  mutating func setHeight(height: Int32) { height_ = LayoutUnit(value: height) }
 
   func isEmpty() -> Bool { return width_.rawValue() <= 0 || height_.rawValue() <= 0 }
 
   func isZero() -> Bool { return !width_.bool() && !height_.bool() }
 
-  func expand(width: LayoutUnit, height: LayoutUnit) {
+  mutating func expand(width: LayoutUnit, height: LayoutUnit) {
     width_ += width
     height_ += height
   }
 
-  func expand(width: Float32, height: Float32) {
+  mutating func expand(width: Float32, height: Float32) {
     width_ += width
     height_ += height
   }
 
-  func expand(width: Int32, height: Int32) {
+  mutating func expand(width: Int32, height: Int32) {
     width_ += width
     height_ += height
   }
 
-  func shrink(_ width: LayoutUnit, _ height: LayoutUnit) {
+  mutating func shrink(_ width: LayoutUnit, _ height: LayoutUnit) {
     width_ -= width
     height_ -= height
   }
 
-  func scale(scale: Float32) {
+  mutating func scale(scale: Float32) {
     width_ *= scale
     height_ *= scale
   }
 
-  func scale(widthScale: Float32, heightScale: Float32) {
+  mutating func scale(widthScale: Float32, heightScale: Float32) {
     width_ *= widthScale
     height_ *= heightScale
   }
@@ -122,13 +122,13 @@ class LayoutSizeWrapper: Equatable {
       height: height_ > other.height_ ? height_ : other.height_)
   }
 
-  func clampNegativeToZero() {
+  mutating func clampNegativeToZero() {
     let clamped = expandedTo(other: LayoutSizeWrapper())
     self.width_ = clamped.width_
     self.height_ = clamped.height_
   }
 
-  func clampToMinimumSize(minimumSize: LayoutSizeWrapper) {
+  mutating func clampToMinimumSize(minimumSize: LayoutSizeWrapper) {
     if width_ < minimumSize.width() {
       width_ = minimumSize.width()
     }
@@ -184,10 +184,6 @@ class LayoutSizeWrapper: Equatable {
 
     return LayoutSizeWrapper(
       width: width(), height: width() * aspectRatio.height() / aspectRatio.width())
-  }
-
-  func deepCopy() -> LayoutSizeWrapper {
-    return LayoutSizeWrapper(width: width_, height: height_)
   }
 
   func mightBeSaturated() -> Bool {
