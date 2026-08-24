@@ -340,6 +340,16 @@ extern "C" WEBCORE_EXPORT bool RenderLayer_isTransformed(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->isTransformed();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_isTransparent(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->isTransparent();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderLayer_hasFilter(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->hasFilter();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderLayer_currentTransform(const void* p)
 {
     return new WebCore::TransformationMatrix(static_cast<const WebCore::RenderLayer*>(p)->currentTransform());

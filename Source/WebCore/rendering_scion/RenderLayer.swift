@@ -1328,7 +1328,7 @@ class RenderLayerWrapper {
 
   // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
   func isTransparent() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderLayer_isTransparent(layerId()) }
     return renderer().isTransparent() || renderer().hasMask()
   }
 
@@ -3208,7 +3208,7 @@ class RenderLayerWrapper {
   }
 
   func hasFilter() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderLayer_hasFilter(layerId()) }
     return renderer().hasFilter()
   }
 
