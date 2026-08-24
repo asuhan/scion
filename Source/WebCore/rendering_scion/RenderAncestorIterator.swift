@@ -27,7 +27,10 @@ class RenderAncestorIterator<T>: RenderIterator<T>, IteratorProtocol where T: Re
   init(_ current: T?) { super.init(root: nil, current: current) }
 
   func next() -> T? {
-    let result = bool() ? *self : nil
+    if !bool() {
+      return nil
+    }
+    let result = *self
     super.traverseAncestor()
     return result
   }
