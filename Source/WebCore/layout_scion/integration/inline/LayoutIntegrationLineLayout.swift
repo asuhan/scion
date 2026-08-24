@@ -469,8 +469,7 @@ class LayoutIntegration {
     }
 
     static func updateStyle(_ renderer: RenderObjectWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      BoxTree.updateStyle(renderer)
     }
 
     // Partial invalidation.

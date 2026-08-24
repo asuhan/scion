@@ -52,6 +52,12 @@ extension LayoutIntegration {
       }
     }
 
+    // TODO(asuhan): provide native implementation
+    static func updateStyle(_ renderer: RenderObjectWrapper) {
+      wk_interop.BoxTree_updateStyle(
+        renderer.isNativeImpl() ? renderer.getWk() : renderer.id())
+    }
+
     func updateContent(textRenderer: RenderTextWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

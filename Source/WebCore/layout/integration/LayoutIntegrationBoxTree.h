@@ -33,6 +33,7 @@
 
 extern "C" WEBCORE_EXPORT const void* BoxTree_handleNullRootBox(void*);
 extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void*);
+extern "C" WEBCORE_EXPORT void BoxTree_updateStyle(void*);
 
 namespace WebCore {
 namespace LayoutIntegration {

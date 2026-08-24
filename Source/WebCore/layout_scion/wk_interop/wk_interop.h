@@ -1820,6 +1820,7 @@ void* Node_renderBox(const void*);
 void* Node_debugDescription(const void*);
 const void* BoxTree_handleNullRootBox(void*);
 void BoxTree_buildTreeForInlineContent(void*);
+void BoxTree_updateStyle(void*);
 void* InlineWalker_new(const void*);
 void InlineWalker_destroy(const void*);
 void* InlineWalker_current(void*);
