@@ -596,6 +596,7 @@ const void* String_substring(const void* p, uint32_t position, uint32_t length);
 bool String_is8Bit(const void*);
 const void* String_convertToLowercaseWithLocale(const void*, const void*);
 const void* String_convertToUppercaseWithLocale(const void*, const void*);
+const void* String_makeStringByReplacingAll(const void*, uint16_t target, uint16_t replacement);
 void String_convertTo16Bit(const void*);
 uint32_t String_hash(const void*);
 bool String_containsOnlyASCII(const void*);

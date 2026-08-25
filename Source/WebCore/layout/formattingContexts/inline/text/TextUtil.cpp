@@ -306,6 +306,11 @@ extern "C" WEBCORE_EXPORT const void* String_convertToUppercaseWithLocale(const 
 }
 
 
+extern "C" WEBCORE_EXPORT const void* String_makeStringByReplacingAll(const void* p, uint16_t target, uint16_t replacement)
+{
+    return new String(makeStringByReplacingAll(*static_cast<const String*>(p), target, replacement));
+}
+
 extern "C" WEBCORE_EXPORT void String_convertTo16Bit(const void* p)
 {
     static_cast<String*>(const_cast<void*>(p))->convertTo16Bit();

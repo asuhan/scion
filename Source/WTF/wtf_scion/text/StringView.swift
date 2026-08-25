@@ -181,8 +181,8 @@ class StringWrapperView {
 func makeStringByReplacingAll(_ string: StringWrapper, target: UChar, replacement: UChar)
   -> StringWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return StringWrapper(
+    p: wk_interop.String_makeStringByReplacingAll(string.p, target, replacement), owner: true)
 }
 
 func makeStringByReplacingAll(_ string: StringWrapper, target: UChar, literal: ASCIILiteral)
