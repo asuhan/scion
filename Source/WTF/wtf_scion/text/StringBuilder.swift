@@ -37,6 +37,10 @@ class StringBuilderWrapper {
     wk_interop.StringBuilder_append_UChar(self.p, character)
   }
 
+  func append(codePoint: Int32) {
+    wk_interop.StringBuilder_append_UChar32(self.p, codePoint)
+  }
+
   func append(string: AtomStringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

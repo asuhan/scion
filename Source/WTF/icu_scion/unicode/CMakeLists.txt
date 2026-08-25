@@ -1,5 +1,6 @@
 target_sources(layout_scion PRIVATE
     ubidi.swift
+    ubrk.swift
     uchar.swift
     urename.swift
     utf16.swift

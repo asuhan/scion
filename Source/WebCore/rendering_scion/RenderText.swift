@@ -23,9 +23,51 @@
 
 import wk_interop
 
+private func convertNoBreakSpaceToSpace(_ character: UChar) -> UChar {
+  return character == CharacterNames.Unicode.noBreakSpace
+    ? UChar(Character(" ").asciiValue!) : character
+}
+
 private func capitalize(_ string: StringWrapper, _ previousCharacter: UChar) -> StringWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // FIXME: Change this to use u_strToTitle instead of u_totitle and to consider locale.
+
+  let length = string.length()
+
+  // Replace NO BREAK SPACE with a normal spaces since ICU does not treat it as a word separator.
+  var stringWithPrevious = [UChar](repeating: 0, count: Int(length) + 1)
+  stringWithPrevious[0] = convertNoBreakSpaceToSpace(previousCharacter)
+  for i in 1..<(length + 1) {
+    stringWithPrevious[Int(i)] = convertNoBreakSpaceToSpace(string[i - 1])
+  }
+
+  let result = StringBuilderWrapper()
+  let didBreak = stringWithPrevious.withUnsafeBufferPointer { characters -> Bool in
+    guard let breakIterator = wordBreakIterator(characters: characters) else {
+      return false
+    }
+
+    var startOfWord = ubrk_first(iterator: breakIterator)
+    var endOfWord = ubrk_next(iterator: breakIterator)
+    while endOfWord != UBRK_DONE {
+      // Do not append the first character, since it's the previous character, not from this string.
+      if startOfWord != 0 {
+        result.append(codePoint: u_totitle(c: Int32(string[UInt32(startOfWord) - 1])))
+      }
+      for i in (startOfWord + 1)..<endOfWord {
+        result.append(character: string[UInt32(i) - 1])
+      }
+      startOfWord = endOfWord
+      endOfWord = ubrk_next(iterator: breakIterator)
+    }
+    return true
+  }
+
+  if !didBreak {
+    return string
+  }
+
+  let capitalized = result.toString()
+  return capitalized == string ? string : capitalized
 }
 
 private func offsetForPositionInRun(_ textBox: InlineIterator.TextBox, _ x: Float32) -> UInt32 {

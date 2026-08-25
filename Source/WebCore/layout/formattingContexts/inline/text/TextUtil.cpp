@@ -558,6 +558,11 @@ extern "C" WEBCORE_EXPORT void StringBuilder_append_UChar(void* builder, uint16_
     static_cast<StringBuilder*>(builder)->append(static_cast<UChar>(ch));
 }
 
+extern "C" WEBCORE_EXPORT void StringBuilder_append_UChar32(void* builder, int32_t ch)
+{
+    static_cast<StringBuilder*>(builder)->append(static_cast<char32_t>(ch));
+}
+
 extern "C" WEBCORE_EXPORT void StringBuilder_append_String(void* builder, const void* s)
 {
     static_cast<StringBuilder*>(builder)->append(*static_cast<const String*>(s));

@@ -126,6 +126,26 @@ extern "C" WEBCORE_EXPORT void* RenderText_scion(const void* p)
     return static_cast<const WebCore::RenderText*>(p)->scion();
 }
 
+extern "C" WEBCORE_EXPORT int32_t u_totitle_scion(int32_t c)
+{
+    return u_totitle(c);
+}
+
+extern "C" WEBCORE_EXPORT void* wordBreakIterator_scion(const uint16_t* characters, uint32_t length)
+{
+    return WTF::wordBreakIterator(std::span<const UChar> { reinterpret_cast<const char16_t*>(characters), length });
+}
+
+extern "C" WEBCORE_EXPORT int32_t ubrk_first_scion(void* p)
+{
+    return ubrk_first(static_cast<UBreakIterator*>(p));
+}
+
+extern "C" WEBCORE_EXPORT int32_t ubrk_next_scion(void* p)
+{
+    return ubrk_next(static_cast<UBreakIterator*>(p));
+}
+
 namespace WebCore {
 
 using namespace WTF::Unicode;

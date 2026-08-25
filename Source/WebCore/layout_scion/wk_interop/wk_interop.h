@@ -645,6 +645,7 @@ void CharSpanWrapper16_destroy(const void*);
 void* StringBuilder_new();
 void StringBuilder_destroy(const void*);
 void StringBuilder_append_UChar(void*, uint16_t);
+void StringBuilder_append_UChar32(void*, int32_t);
 void StringBuilder_append_String(void*, const void*);
 void StringBuilder_append_StringView(void*, const void*);
 void StringBuilder_append_literal(void*, const char*);
@@ -1625,6 +1626,10 @@ void RenderLayerScrollableArea_paintOverflowControls(void*, void*, struct IntPoi
 bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);
 uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);
 int32_t u_toupper_scion(int32_t);
+int32_t u_totitle_scion(int32_t);
+void* wordBreakIterator_scion(const uint16_t* characters, uint32_t length);
+int32_t ubrk_first_scion(void*);
+int32_t ubrk_next_scion(void*);
 void ubidi_close_scion(void*);
 struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position);
 void* ubidi_open_scion();

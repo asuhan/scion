@@ -42,6 +42,18 @@ func u_toupper(c: Int32) -> Int32 {
   return wk_interop.u_toupper_scion(c)
 }
 
+func u_totitle(c: Int32) -> Int32 {
+  return wk_interop.u_totitle_scion(c)
+}
+
+internal func ubrk_first(iterator: UnsafeMutableRawPointer) -> Int32 {
+  return wk_interop.ubrk_first_scion(iterator)
+}
+
+internal func ubrk_next(iterator: UnsafeMutableRawPointer) -> Int32 {
+  return wk_interop.ubrk_next_scion(iterator)
+}
+
 internal func ubidi_close(ubidi: UBiDiWrapper) {
   wk_interop.ubidi_close_scion(ubidi.p)
 }

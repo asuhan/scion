@@ -112,6 +112,11 @@ struct CachedLineBreakIteratorFactoryWrapper: ~Copyable {
   private var p: UnsafeMutableRawPointer
 }
 
+// FIXME: Delete this in favor of CachedTextBreakIteratorWrapper.
+func wordBreakIterator(characters: UnsafeBufferPointer<UChar>) -> UnsafeMutableRawPointer? {
+  return wk_interop.wordBreakIterator_scion(characters.baseAddress, UInt32(characters.count))
+}
+
 // Returns the number of code units that create the specified number of
 // grapheme clusters. If there are fewer clusters in the string than specified,
 // the length of the string is returned.
