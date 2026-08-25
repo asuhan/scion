@@ -5332,7 +5332,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRelativeDimensions() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_hasRelativeDimensions(id())
+    }
     return style().height().isPercentOrCalculated() || style().width().isPercentOrCalculated()
       || style().maxHeight().isPercentOrCalculated() || style().maxWidth().isPercentOrCalculated()
       || style().minHeight().isPercentOrCalculated() || style().minWidth().isPercentOrCalculated()

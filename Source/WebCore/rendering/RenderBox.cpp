@@ -379,6 +379,11 @@ extern "C" WEBCORE_EXPORT bool RenderBox_needsPreferredWidthsRecalculation(const
     return static_cast<const WebCore::RenderBox*>(p)->needsPreferredWidthsRecalculation();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_hasRelativeDimensions(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->hasRelativeDimensions();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBox_hasRelativeLogicalHeight(const void* p)
 {
     return static_cast<const WebCore::RenderBox*>(p)->hasRelativeLogicalHeight();

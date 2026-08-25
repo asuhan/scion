@@ -1027,6 +1027,7 @@ struct LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const voi
 struct LayoutRectRaw RenderBox_visualOverflowRectForPropagation(const void* p, const void* parent_style_raw);
 struct LayoutRectRaw RenderBox_layoutOverflowRectForPropagation(const void* p, const void* style_raw);
 bool RenderBox_needsPreferredWidthsRecalculation(const void*);
+bool RenderBox_hasRelativeDimensions(const void*);
 bool RenderBox_hasRelativeLogicalHeight(const void*);
 bool RenderBox_isFlexItem(const void*);
 const void* RenderBox_shapeOutsideInfo(const void*);
