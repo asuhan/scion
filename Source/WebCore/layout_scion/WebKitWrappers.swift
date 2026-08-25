@@ -2559,6 +2559,14 @@ func RenderTextScion_resetMinMaxWidth(_ renderTextRaw: UnsafeMutableRawPointer) 
   renderText.resetMinMaxWidth()
 }
 
+@_cdecl("RenderTextScion_setCanUseSimplifiedTextMeasuring")
+func RenderTextScion_setCanUseSimplifiedTextMeasuring(
+  _ renderTextRaw: UnsafeMutableRawPointer, _ canUseSimplifiedTextMeasuring: Bool
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  renderText.setCanUseSimplifiedTextMeasuring(canUseSimplifiedTextMeasuring)
+}
+
 @_cdecl("RenderTextScion_canUseSimplifiedTextMeasuring")
 func RenderTextScion_canUseSimplifiedTextMeasuring(_ renderTextRaw: UnsafeRawPointer)
   -> OptionalBool
@@ -2568,6 +2576,14 @@ func RenderTextScion_canUseSimplifiedTextMeasuring(_ renderTextRaw: UnsafeRawPoi
   return OptionalBool(value: b ?? false, is_valid: b != nil)
 }
 
+@_cdecl("RenderTextScion_setHasPositionDependentContentWidth")
+func RenderTextScion_setHasPositionDependentContentWidth(
+  _ renderTextRaw: UnsafeMutableRawPointer, _ hasPositionDependentContentWidth: Bool
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  renderText.setHasPositionDependentContentWidth(hasPositionDependentContentWidth)
+}
+
 @_cdecl("RenderTextScion_hasPositionDependentContentWidth")
 func RenderTextScion_hasPositionDependentContentWidth(_ renderTextRaw: UnsafeRawPointer)
   -> OptionalBool
@@ -2575,6 +2591,15 @@ func RenderTextScion_hasPositionDependentContentWidth(_ renderTextRaw: UnsafeRaw
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
   let b = renderText.hasPositionDependentContentWidth()
   return OptionalBool(value: b ?? false, is_valid: b != nil)
+}
+
+@_cdecl("RenderTextScion_setHasStrongDirectionalityContent")
+func RenderTextScion_setHasStrongDirectionalityContent(
+  _ renderTextRaw: UnsafeMutableRawPointer, _ hasStrongDirectionalityContent: Bool
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  renderText.setHasStrongDirectionalityContent(
+    hasStrongDirectionalityContent: hasStrongDirectionalityContent)
 }
 
 @_cdecl("RenderTextScion_hasStrongDirectionalityContent")

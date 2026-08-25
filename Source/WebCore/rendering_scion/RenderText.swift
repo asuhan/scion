@@ -1020,6 +1020,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     return m_canUseSimplifiedTextMeasuring
   }
 
+  func setHasPositionDependentContentWidth(_ hasPositionDependentContentWidth: Bool) {
+    assert(isNativeImpl())
+    m_hasPositionDependentContentWidth = hasPositionDependentContentWidth
+  }
+
   func hasPositionDependentContentWidth() -> Bool? {
     assert(isNativeImpl())
     return m_hasPositionDependentContentWidth

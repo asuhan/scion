@@ -2309,16 +2309,34 @@ void RenderText::resetMinMaxWidth()
     m_maxWidth = { };
 }
 
+void RenderText::setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring)
+{
+    if (m_scion) { m_scion->setCanUseSimplifiedTextMeasuring(canUseSimplifiedTextMeasuring); return; }
+    m_canUseSimplifiedTextMeasuring = canUseSimplifiedTextMeasuring;
+}
+
 std::optional<bool> RenderText::canUseSimplifiedTextMeasuring() const
 {
     if (m_scion) { return m_scion->canUseSimplifiedTextMeasuring(); }
     return m_canUseSimplifiedTextMeasuring;
 }
 
+void RenderText::setHasPositionDependentContentWidth(bool hasPositionDependentContentWidth)
+{
+    if (m_scion) { m_scion->setHasPositionDependentContentWidth(hasPositionDependentContentWidth); return; }
+    m_hasPositionDependentContentWidth = hasPositionDependentContentWidth;
+}
+
 std::optional<bool> RenderText::hasPositionDependentContentWidth() const
 {
     if (m_scion) { return m_scion->hasPositionDependentContentWidth(); }
     return m_hasPositionDependentContentWidth;
+}
+
+void RenderText::setHasStrongDirectionalityContent(bool hasStrongDirectionalityContent)
+{
+    if (m_scion) { m_scion->setHasStrongDirectionalityContent(hasStrongDirectionalityContent); return; }
+    m_hasStrongDirectionalityContent = hasStrongDirectionalityContent;
 }
 
 std::optional<bool> RenderText::hasStrongDirectionalityContent() const

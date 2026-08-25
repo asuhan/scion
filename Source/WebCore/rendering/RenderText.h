@@ -238,23 +238,11 @@ public:
 
     void resetMinMaxWidth();
 
-    void setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_canUseSimplifiedTextMeasuring = canUseSimplifiedTextMeasuring;
-    }
+    void setCanUseSimplifiedTextMeasuring(bool);
     std::optional<bool> canUseSimplifiedTextMeasuring() const;
-    void setHasPositionDependentContentWidth(bool hasPositionDependentContentWidth)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_hasPositionDependentContentWidth = hasPositionDependentContentWidth;
-    }
+    void setHasPositionDependentContentWidth(bool);
     std::optional<bool> hasPositionDependentContentWidth() const;
-    void setHasStrongDirectionalityContent(bool hasStrongDirectionalityContent)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_hasStrongDirectionalityContent = hasStrongDirectionalityContent;
-    }
+    void setHasStrongDirectionalityContent(bool);
     std::optional<bool> hasStrongDirectionalityContent() const;
 
     void* scion() const;

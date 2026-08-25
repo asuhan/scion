@@ -481,9 +481,15 @@ struct OptionalBool {
     bool is_valid;
 };
 
+extern "C" void RenderTextScion_setCanUseSimplifiedTextMeasuring(void*, bool);
+
 extern "C" OptionalBool RenderTextScion_canUseSimplifiedTextMeasuring(const void*);
 
+extern "C" void RenderTextScion_setHasPositionDependentContentWidth(void*, bool);
+
 extern "C" OptionalBool RenderTextScion_hasPositionDependentContentWidth(const void*);
+
+extern "C" void RenderTextScion_setHasStrongDirectionalityContent(void*, bool);
 
 extern "C" OptionalBool RenderTextScion_hasStrongDirectionalityContent(const void*);
 
@@ -2078,16 +2084,31 @@ void RenderTextScion::resetMinMaxWidth()
     RenderTextScion_resetMinMaxWidth(m_handle);
 }
 
+void RenderTextScion::setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring)
+{
+    RenderTextScion_setCanUseSimplifiedTextMeasuring(m_handle, canUseSimplifiedTextMeasuring);
+}
+
 std::optional<bool> RenderTextScion::canUseSimplifiedTextMeasuring() const
 {
     const auto b = RenderTextScion_canUseSimplifiedTextMeasuring(m_handle);
     return b.is_valid ? std::make_optional(b.value) : std::nullopt;
 }
 
+void RenderTextScion::setHasPositionDependentContentWidth(bool hasPositionDependentContentWidth)
+{
+    RenderTextScion_setHasPositionDependentContentWidth(m_handle, hasPositionDependentContentWidth);
+}
+
 std::optional<bool> RenderTextScion::hasPositionDependentContentWidth() const
 {
     const auto b = RenderTextScion_hasPositionDependentContentWidth(m_handle);
     return b.is_valid ? std::make_optional(b.value) : std::nullopt;
+}
+
+void RenderTextScion::setHasStrongDirectionalityContent(bool hasStrongDirectionalityContent)
+{
+    RenderTextScion_setHasStrongDirectionalityContent(m_handle, hasStrongDirectionalityContent);
 }
 
 std::optional<bool> RenderTextScion::hasStrongDirectionalityContent() const

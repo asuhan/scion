@@ -623,9 +623,15 @@ public:
 
     void resetMinMaxWidth();
 
+    void setCanUseSimplifiedTextMeasuring(bool);
+
     std::optional<bool> canUseSimplifiedTextMeasuring() const;
 
+    void setHasPositionDependentContentWidth(bool);
+
     std::optional<bool> hasPositionDependentContentWidth() const;
+
+    void setHasStrongDirectionalityContent(bool);
 
     std::optional<bool> hasStrongDirectionalityContent() const;
 
