@@ -75,6 +75,10 @@ class Document: TreeScopeWrapper {
     return wk_interop.Document_useDarkAppearance(p, style?.p!)
   }
 
+  func styleColorOptions(style: RenderStyleWrapper?) -> StyleColorOptions {
+    return StyleColorOptions(rawValue: Int(wk_interop.Document_styleColorOptions(p, style?.p!)))
+  }
+
   func compositeOperatorForBackgroundColor(color: ColorWrapper, renderer: RenderObjectWrapper)
     -> CompositeOperator
   {

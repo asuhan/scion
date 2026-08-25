@@ -709,8 +709,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func styleColorOptions() -> StyleColorOptions {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return document().styleColorOptions(style: style())
   }
 
   // Return our enclosing flow thread if we are contained inside one. Follows the containing block chain.

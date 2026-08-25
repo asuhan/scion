@@ -445,6 +445,11 @@ extern "C" WEBCORE_EXPORT bool Document_useDarkAppearance(const void* raw, const
     return static_cast<const WebCore::Document*>(raw)->useDarkAppearance(static_cast<const WebCore::RenderStyle*>(style_raw));
 }
 
+extern "C" WEBCORE_EXPORT uint32_t Document_styleColorOptions(const void* raw, const void* style_raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->styleColorOptions(static_cast<const WebCore::RenderStyle*>(style_raw)).toRaw();
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;
