@@ -1700,6 +1700,7 @@ bool RenderLayer_hasOverlayScrollbars(const void*);
 void RenderLayer_updateScrollInfoAfterLayout(void*);
 void RenderLayer_updateScrollbarSteps(void*);
 void RenderLayer_updateTransform(void*);
+void RenderLayer_dirtyVisibleContentStatus(void*);
 struct LayoutSizeRaw RenderLayer_offsetForInFlowPosition(const void*);
 struct EnclosingCompositingLayerStatusRaw RenderLayer_enclosingCompositingLayerForRepaint(const void*, bool);
 bool RenderLayer_needsFullRepaint(const void*);

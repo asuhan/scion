@@ -286,6 +286,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
     static_cast<WebCore::RenderLayer*>(p)->updateTransform();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_dirtyVisibleContentStatus(void* p)
+{
+    static_cast<WebCore::RenderLayer*>(p)->dirtyVisibleContentStatus();
+}
+
 extern "C" WEBCORE_EXPORT LayoutSizeRaw RenderLayer_offsetForInFlowPosition(const void* p)
 {
     const auto offset = static_cast<const WebCore::RenderLayer*>(p)->offsetForInFlowPosition();

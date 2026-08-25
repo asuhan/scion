@@ -1631,8 +1631,8 @@ class RenderLayerWrapper {
   }
 
   func dirtyVisibleContentStatus() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    wk_interop.RenderLayer_dirtyVisibleContentStatus(pInterop!)
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
