@@ -218,6 +218,12 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     return false
   }
 
+  // Returns true when there is actually scrollable overflow (requires layout to be up-to-date).
+  func hasCompositedScrollableOverflow() -> Bool {
+    assert(isNativeImpl())
+    return m_hasCompositedScrollableOverflow
+  }
+
   func verticalScrollbarWidth(
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
@@ -472,8 +478,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func usesCompositedScrolling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasCompositedScrollableOverflow() && m_layer!.isComposited()
   }
 
   override final func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
