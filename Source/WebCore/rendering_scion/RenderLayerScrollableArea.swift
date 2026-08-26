@@ -156,8 +156,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func hasScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return horizontalScrollbar() != nil || verticalScrollbar() != nil
   }
 
   func hasHorizontalScrollbar() -> Bool {
