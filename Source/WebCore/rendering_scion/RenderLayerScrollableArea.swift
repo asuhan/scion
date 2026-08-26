@@ -151,8 +151,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func hasScrollableVerticalOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasVerticalOverflow() && m_layer!.renderBox()!.scrollsOverflowY()
   }
 
   func hasScrollbars() -> Bool {
@@ -737,6 +737,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     assert(!scrollDimensionsDirty)
 
     return scrollWidth() > roundToInt(value: m_layer!.renderBox()!.clientWidth())
+  }
+
+  private func hasVerticalOverflow() -> Bool {
+    assert(isNativeImpl())
+    assert(!scrollDimensionsDirty)
+
+    return scrollHeight() > roundToInt(value: m_layer!.renderBox()!.clientHeight())
   }
 
   private func showsOverflowControls() -> Bool {
