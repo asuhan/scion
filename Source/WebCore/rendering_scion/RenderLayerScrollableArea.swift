@@ -464,8 +464,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   override final func useDarkAppearance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_layer!.renderer().useDarkAppearance()
   }
 
   override func layerForHorizontalScrollbar() -> GraphicsLayer? {
