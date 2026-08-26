@@ -214,8 +214,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func setRequiresScrollPositionReconciliation(_ requiresReconciliation: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_requiresScrollPositionReconciliation = requiresReconciliation
   }
 
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
@@ -947,6 +947,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private var registeredScrollableArea = false
   private var m_hasCompositedScrollableOverflow = false
 
+  private var m_requiresScrollPositionReconciliation = false
   private var containsDirtyOverlayScrollbars = false
 
   // The width/height of our scrolled area.
