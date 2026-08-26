@@ -570,8 +570,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func overflowLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let box = m_layer!.renderBox()!
+    var overflowRect = box.layoutOverflowRect()
+    box.flipForWritingMode(rect: &overflowRect)
+    return overflowRect.x()
   }
 
   func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
