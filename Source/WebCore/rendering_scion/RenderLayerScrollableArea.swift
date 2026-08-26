@@ -750,8 +750,9 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func showsOverflowControls() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // TODO(asuhan): add iOS support
+    return true
   }
 
   private func computeScrollOrigin() {
