@@ -130,13 +130,23 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func scrollWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(m_layer!.renderBox() != nil)
+    if scrollDimensionsDirty {
+      computeScrollDimensions()
+    }
+    // FIXME: This should use snappedIntSize() instead with absolute coordinates.
+    return m_scrollWidth
   }
 
   func scrollHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(m_layer!.renderBox() != nil)
+    if scrollDimensionsDirty {
+      computeScrollDimensions()
+    }
+    // FIXME: This should use snappedIntSize() instead with absolute coordinates.
+    return m_scrollHeight
   }
 
   private func scrollsOverflow() -> Bool {
@@ -755,6 +765,21 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     return true
   }
 
+  private func computeScrollDimensions() {
+    assert(isNativeImpl())
+    scrollDimensionsDirty = false
+
+    let box = m_layer!.renderBox()!
+
+    let overflowRect = box.layoutOverflowRect()
+
+    m_scrollWidth = Int32(roundToInt(value: overflowRect.width()))
+    m_scrollHeight = Int32(roundToInt(value: overflowRect.height()))
+
+    computeScrollOrigin()
+    computeHasCompositedScrollableOverflow(layoutUpToDate: .Yes)
+  }
+
   private func computeScrollOrigin() {
     assert(isNativeImpl())
     let box = m_layer!.renderBox()!
@@ -918,11 +943,15 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     }
   }
 
-  private let scrollDimensionsDirty = true
+  private var scrollDimensionsDirty = true
   private var registeredScrollableArea = false
   private var m_hasCompositedScrollableOverflow = false
 
   private var containsDirtyOverlayScrollbars = false
+
+  // The width/height of our scrolled area.
+  private var m_scrollWidth: Int32 = 0
+  private var m_scrollHeight: Int32 = 0
 
   private let m_layer: RenderLayerWrapper?
   private var m_scrollPosition = ScrollPosition()

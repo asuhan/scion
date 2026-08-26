@@ -519,6 +519,7 @@ func ceilToDevicePixel(value: LayoutUnit, pixelSnappingFactor: Float32) -> Float
     / pixelSnappingFactor
 }
 
+// TODO(asuhan): return Int32
 internal func roundToInt(value: Float32) -> Int {
   return roundToInt(value: LayoutUnit(value: value))
 }
@@ -556,6 +557,7 @@ func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 
     value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor)
 }
 
+// TODO(asuhan): return Int32
 internal func roundToInt(value: LayoutUnit) -> Int {
   return Int(value.round())
 }
