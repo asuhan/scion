@@ -279,8 +279,9 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func hasOverflowControls() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hBar != nil || vBar != nil || scrollCorner != nil
+      || m_layer!.renderer().style().resize() != .None
   }
 
   func paintOverflowControls(
