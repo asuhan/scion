@@ -196,8 +196,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   override func scrollbarWidthStyle() -> ScrollbarWidth {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if m_layer!.renderBox() != nil {
+      return m_layer!.renderer().style().scrollbarWidth()
+    }
+    return .Auto
   }
 
   func setRequiresScrollPositionReconciliation(_ requiresReconciliation: Bool = true) {
