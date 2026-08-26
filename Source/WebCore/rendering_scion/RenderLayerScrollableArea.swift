@@ -487,8 +487,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   override final func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_layer!.renderer().shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
   }
 
   func updateScrollbarsAfterStyleChange(oldStyle: RenderStyleWrapper?) {
