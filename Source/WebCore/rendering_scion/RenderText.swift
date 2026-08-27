@@ -306,8 +306,9 @@ private func mapWordBreakToContentAnalysis(_ wordBreak: WordBreak)
 }
 
 private func hyphenWidth(_ renderer: RenderTextWrapper, _ font: FontCascadeWrapper) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let style = renderer.style()
+  let textRun = RenderBlockWrapper.constructTextRun(style.hyphenString().string(), style)
+  return font.width(run: textRun)
 }
 
 private func convertToFullSizeKana(_ string: StringWrapper) -> StringWrapper {
