@@ -44,8 +44,7 @@ struct ImageOrientation: Equatable {
     }
   }
 
-  init(orientation: Orientation) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(orientation: Orientation) { m_orientation = orientation }
+
+  private let m_orientation: Orientation
 }
