@@ -2000,8 +2000,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overridingContentLogicalHeight(overridingLogicalHeight: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let contentHeight = overridingLogicalHeight - borderAndPaddingLogicalHeight()
+    return max(
+      LayoutUnit(value: UInt64(0)),
+      contentHeight - scrollbarLogicalHeight()
+        - (style().scrollbarGutter().bothEdges ? scrollbarLogicalHeight() : 0))
   }
 
   typealias ContainingBlockOverrideValue = LayoutUnit?
