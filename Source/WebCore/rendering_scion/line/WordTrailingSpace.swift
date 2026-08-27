@@ -24,7 +24,16 @@
 
 struct WordTrailingSpace {
   init(_ style: RenderStyleWrapper, _ measuringWithTrailingWhitespaceEnabled: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_style = style
+    if !measuringWithTrailingWhitespaceEnabled || !m_style.fontCascade().enableKerning() {
+      m_state = .Initialized
+    }
   }
+
+  private enum WordTrailingSpaceState {
+    case Uninitialized
+    case Initialized
+  }
+  private let m_style: RenderStyleWrapper
+  private var m_state: WordTrailingSpaceState = .Uninitialized
 }
