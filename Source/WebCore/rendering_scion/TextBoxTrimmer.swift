@@ -41,8 +41,10 @@ class TextBoxTrimmer {
   }
 
   init(blockContainer: RenderBlockFlowWrapper, lastFormattedLineRoot: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_blockContainer = blockContainer
+    if m_blockContainer.view().frameView().layoutContext().layoutState() != nil {
+      adjustTextBoxTrimStatusBeforeLayout(lastFormattedLineRoot)
+    }
   }
 
   deinit {
