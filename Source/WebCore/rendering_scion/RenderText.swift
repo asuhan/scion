@@ -1000,6 +1000,21 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private static func measureTextConsideringPossibleTrailingSpace(
+    _ currentCharacterIsSpace: Bool, _ startIndex: UInt32, _ wordLength: UInt32,
+    _ wordTrailingSpace: inout WordTrailingSpace,
+    _ fallbackFonts: WeakHashSet<FontWrapper>, _ callback: (UInt32, UInt32) -> Float32
+  ) -> Float32 {
+    var wordTrailingSpaceWidth: Float32? = nil
+    if currentCharacterIsSpace {
+      wordTrailingSpaceWidth = wordTrailingSpace.width(fallbackFonts)
+    }
+    if wordTrailingSpaceWidth != nil {
+      return callback(startIndex, wordLength + 1) - wordTrailingSpaceWidth!
+    }
+    return callback(startIndex, wordLength)
+  }
+
   static func emphasisMarkExistsAndIsAbove(renderer: RenderTextWrapper, style: RenderStyleWrapper)
     -> Bool?
   {
@@ -1711,8 +1726,13 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ xPos: Float32, _ currentCharacterIsSpace: Bool, _ wordTrailingSpace: inout WordTrailingSpace,
     _ fallbackFonts: WeakHashSet<FontWrapper>, _ glyphOverflow: inout GlyphOverflow
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RenderTextWrapper.measureTextConsideringPossibleTrailingSpace(
+      currentCharacterIsSpace, startIndex, wordLen, &wordTrailingSpace, fallbackFonts,
+      { (from: UInt32, len: UInt32) in
+        return widthFromCache(
+          fontCascade: font, start: from, length: len, xPos, fallbackFonts, glyphOverflow, style)
+      })
   }
 
   private func initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifiedTextMeasuring(

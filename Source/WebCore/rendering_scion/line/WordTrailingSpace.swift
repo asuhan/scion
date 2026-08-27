@@ -30,10 +30,25 @@ struct WordTrailingSpace {
     }
   }
 
+  mutating func width(_ fallbackFonts: WeakHashSet<FontWrapper>) -> Float32? {
+    if m_state == .Initialized {
+      return m_width
+    }
+
+    let font = m_style.fontCascade()
+    m_width =
+      font.width(
+        run: RenderBlockWrapper.constructTextRun(
+          WTF.span(character: CharacterNames.Unicode.space), m_style)) + font.wordSpacing()
+    m_state = .Initialized
+    return m_width
+  }
+
   private enum WordTrailingSpaceState {
     case Uninitialized
     case Initialized
   }
   private let m_style: RenderStyleWrapper
   private var m_state: WordTrailingSpaceState = .Uninitialized
+  private var m_width: Float32? = nil
 }
