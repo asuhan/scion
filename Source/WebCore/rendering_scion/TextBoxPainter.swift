@@ -1342,8 +1342,9 @@ class TextBoxPainter {
 
 class LegacyTextBoxPainter: TextBoxPainter {
   init(textBox: LegacyInlineTextBox, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(
+      textBox: InlineIterator.BoxLegacyPath(textBox), paintInfo: paintInfo, paintOffset: paintOffset
+    )
   }
 }
 
