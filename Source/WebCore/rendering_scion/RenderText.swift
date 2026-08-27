@@ -311,6 +311,28 @@ private func hyphenWidth(_ renderer: RenderTextWrapper, _ font: FontCascadeWrapp
   return font.width(run: textRun)
 }
 
+private func containsOnlyCollapsibleWhitespace(
+  _ characters: CharSpanWrapper<LChar>, _ style: RenderStyleWrapper
+) -> Bool {
+  for character in characters.data() {
+    if !style.isCollapsibleWhiteSpace(UChar(character)) {
+      return false
+    }
+  }
+  return true
+}
+
+private func containsOnlyCollapsibleWhitespace(
+  _ characters: CharSpanWrapper<UChar>, _ style: RenderStyleWrapper
+) -> Bool {
+  for character in characters.data() {
+    if !style.isCollapsibleWhiteSpace(character) {
+      return false
+    }
+  }
+  return true
+}
+
 private func convertToFullSizeKana(_ string: StringWrapper) -> StringWrapper {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -863,8 +885,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func containsOnlyCollapsibleWhitespace() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if text().is8Bit() {
+      return layout_scion.containsOnlyCollapsibleWhitespace(text().span8(), style())
+    }
+    return layout_scion.containsOnlyCollapsibleWhitespace(text().span16(), style())
   }
 
   func canUseSimpleFontCodePath() -> Bool {
