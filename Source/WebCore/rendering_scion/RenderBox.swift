@@ -1991,8 +1991,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overridingContentLogicalWidth(_ overridingLogicalWidth: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let contentWidth = overridingLogicalWidth - borderAndPaddingLogicalWidth()
+    return max(
+      LayoutUnit(),
+      contentWidth - scrollbarLogicalWidth()
+        - (style().scrollbarGutter().bothEdges ? scrollbarLogicalWidth() : 0))
   }
 
   func overridingContentLogicalHeight(overridingLogicalHeight: LayoutUnit) -> LayoutUnit {
