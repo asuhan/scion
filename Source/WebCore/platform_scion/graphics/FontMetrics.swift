@@ -28,6 +28,7 @@ class FontMetricsWrapper {
     return ascent(baselineType: baselineType) + descent(baselineType)
   }
 
+  // TODO(asuhan): make it return Int32
   func intHeight(baselineType: FontBaseline = .AlphabeticBaseline) -> Int {
     return Int(wk_interop.FontMetrics_intHeight(p!, baselineType.rawValue))
   }

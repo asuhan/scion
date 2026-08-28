@@ -169,7 +169,7 @@ struct InlineQuirks {
 
     let gridFontMetrics = lineGrid.primaryFont!.fontMetrics()
     let lineGridFontAscent = gridFontMetrics.intAscent(baselineType: lineBox.baselineType)
-    let lineGridFontHeight = gridFontMetrics.intHeight()
+    let lineGridFontHeight = Int32(gridFontMetrics.intHeight())
     let lineGridHalfLeading = (gridLineHeight - lineGridFontHeight) / 2
 
     var firstLineTop = lineGrid.topRowOffset + lineGrid.gridOffset.height()

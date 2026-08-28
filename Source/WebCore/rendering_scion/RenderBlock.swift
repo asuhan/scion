@@ -2299,7 +2299,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
           + (lineHeight(
             firstLine: true, direction: lineDirection,
             linePositionMode: .PositionOfInteriorLineBoxes)
-            - fontMetrics.intHeight()) / 2
+            - Int32(fontMetrics.intHeight())) / 2
           + (lineDirection == .HorizontalLine
             ? borderTop() + paddingTop() : borderRight() + paddingRight()))
           .toInt())

@@ -757,7 +757,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       isHorizontalWritingMode() ? fragmentedFlowRepaintRect.y() : fragmentedFlowRepaintRect.x()
     let repaintLogicalBottom =
       (isHorizontalWritingMode()
-        ? fragmentedFlowRepaintRect.maxY() : fragmentedFlowRepaintRect.maxX()) - 1
+        ? fragmentedFlowRepaintRect.maxY() : fragmentedFlowRepaintRect.maxX()) - Int32(1)
 
     // FIXME: this should use firstAndLastColumnsFromOffsets.
     let startColumn = columnIndexAtOffset(repaintLogicalTop)
@@ -832,7 +832,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       isHorizontalWritingMode() ? layerBoundsInFragmentedFlow.y() : layerBoundsInFragmentedFlow.x()
     let layerLogicalBottom =
       (isHorizontalWritingMode()
-        ? layerBoundsInFragmentedFlow.maxY() : layerBoundsInFragmentedFlow.maxX()) - 1
+        ? layerBoundsInFragmentedFlow.maxY() : layerBoundsInFragmentedFlow.maxX()) - Int32(1)
 
     // Figure out the start and end columns and only check within that range so that we don't walk the
     // entire column set.
