@@ -519,10 +519,7 @@ func ceilToDevicePixel(value: LayoutUnit, pixelSnappingFactor: Float32) -> Float
     / pixelSnappingFactor
 }
 
-// TODO(asuhan): return Int32
-internal func roundToInt(value: Float32) -> Int {
-  return roundToInt(value: LayoutUnit(value: value))
-}
+func roundToInt(value: Float32) -> Int32 { return roundToInt(value: LayoutUnit(value: value)) }
 
 func roundToDevicePixel(
   value: LayoutUnit, pixelSnappingFactor: Float32, needsDirectionalRounding: Bool = false
@@ -557,10 +554,7 @@ func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 
     value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor)
 }
 
-// TODO(asuhan): return Int32
-internal func roundToInt(value: LayoutUnit) -> Int {
-  return Int(value.round())
-}
+func roundToInt(value: LayoutUnit) -> Int32 { return value.round() }
 
 func floorToInt(value: LayoutUnit) -> Int32 {
   return value.floor()

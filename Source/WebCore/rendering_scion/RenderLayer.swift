@@ -1378,7 +1378,7 @@ class RenderLayerWrapper {
     let box = renderBox()!
     var overflowRect = box.layoutOverflowRect()
     box.flipForWritingMode(rect: &overflowRect)
-    return Int32(roundToInt(value: overflowRect.maxX() - overflowRect.x()))
+    return roundToInt(value: overflowRect.maxX() - overflowRect.x())
   }
 
   func scrollHeight() -> Int32 {
@@ -1390,7 +1390,7 @@ class RenderLayerWrapper {
     let box = renderBox()!
     var overflowRect = box.layoutOverflowRect()
     box.flipForWritingMode(rect: &overflowRect)
-    return Int32(roundToInt(value: overflowRect.maxY() - overflowRect.y()))
+    return roundToInt(value: overflowRect.maxY() - overflowRect.y())
   }
 
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.

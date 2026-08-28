@@ -773,8 +773,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
 
     let overflowRect = box.layoutOverflowRect()
 
-    m_scrollWidth = Int32(roundToInt(value: overflowRect.width()))
-    m_scrollHeight = Int32(roundToInt(value: overflowRect.height()))
+    m_scrollWidth = roundToInt(value: overflowRect.width())
+    m_scrollHeight = roundToInt(value: overflowRect.height())
 
     computeScrollOrigin()
     computeHasCompositedScrollableOverflow(layoutUpToDate: .Yes)
@@ -784,13 +784,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     assert(isNativeImpl())
     let box = m_layer!.renderBox()!
 
-    var scrollableLeftOverflow = Int32(roundToInt(value: overflowLeft() - box.borderLeft()))
+    var scrollableLeftOverflow = roundToInt(value: overflowLeft() - box.borderLeft())
     if shouldPlaceVerticalScrollbarOnLeft() {
       scrollableLeftOverflow -= verticalScrollbarWidth(
         relevancy: .IgnoreOverlayScrollbarSize,
         isHorizontalWritingMode: box.style().isHorizontalWritingMode())
     }
-    let scrollableTopOverflow = Int32(roundToInt(value: overflowTop() - box.borderTop()))
+    let scrollableTopOverflow = roundToInt(value: overflowTop() - box.borderTop())
     setScrollOrigin(IntPoint(x: -scrollableLeftOverflow, y: -scrollableTopOverflow))
 
     // Horizontal scrollbar offsets depend on the scroll origin when vertical

@@ -405,19 +405,19 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   override final func scrollWidth() -> Int32 {
     assert(isNativeImpl())
     if style().isHorizontalWritingMode() {
-      return Int32(roundToInt(value: clientWidth()))
+      return roundToInt(value: clientWidth())
     }
 
-    return Int32(roundToInt(value: max(clientWidth(), listLogicalHeight())))
+    return roundToInt(value: max(clientWidth(), listLogicalHeight()))
   }
 
   override final func scrollHeight() -> Int32 {
     assert(isNativeImpl())
     if style().isHorizontalWritingMode() {
-      return Int32(roundToInt(value: max(clientHeight(), listLogicalHeight())))
+      return roundToInt(value: max(clientHeight(), listLogicalHeight()))
     }
 
-    return Int32(roundToInt(value: clientHeight()))
+    return roundToInt(value: clientHeight())
   }
 
   override func nodeAtPoint(

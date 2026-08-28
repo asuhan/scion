@@ -1081,7 +1081,7 @@ class BackgroundPainter {
           height: tileSize.height() * positioningAreaSize.width() / (numTiles * tileSize.width()))
       }
 
-      tileSize.setWidth(width: positioningAreaSize.width() / numTiles)
+      tileSize.setWidth(width: positioningAreaSize.width() / Int(numTiles))
       phase.setWidth(
         width: tileSize.width().bool()
           ? tileSize.width() - fmodf((computedXPosition + left).float(), tileSize.width().float())
@@ -1099,7 +1099,7 @@ class BackgroundPainter {
           width: tileSize.width() * positioningAreaSize.height() / (numTiles * tileSize.height()))
       }
 
-      tileSize.setHeight(height: positioningAreaSize.height() / numTiles)
+      tileSize.setHeight(height: positioningAreaSize.height() / Int(numTiles))
       phase.setHeight(
         height: tileSize.height().bool()
           ? tileSize.height() - fmodf((computedYPosition + top).float(), tileSize.height().float())

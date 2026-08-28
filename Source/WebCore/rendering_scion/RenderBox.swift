@@ -1595,7 +1595,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // For objects with visible overflow, this matches IE.
     // FIXME: Need to work right with writing modes.
     // FIXME: This should use snappedIntSize() instead with absolute coordinates.
-    return Int32(roundToInt(value: max(clientHeight(), layoutOverflowRect().maxY() - borderTop())))
+    return roundToInt(value: max(clientHeight(), layoutOverflowRect().maxY() - borderTop()))
   }
 
   override func marginTop() -> LayoutUnit {
