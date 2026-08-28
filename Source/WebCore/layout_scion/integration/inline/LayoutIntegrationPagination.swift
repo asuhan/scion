@@ -31,7 +31,7 @@ extension LayoutIntegration {
 
     let gridFontMetrics = lineGrid.primaryFont!.fontMetrics()
     let lineGridFontAscent = gridFontMetrics.intAscent(baselineType: line.baselineType)
-    let lineGridFontHeight = Int32(gridFontMetrics.intHeight())
+    let lineGridFontHeight = gridFontMetrics.intHeight()
     let lineGridHalfLeading = (gridLineHeight - lineGridFontHeight) / 2
     let firstLineTop = lineGrid.topRowOffset
     let firstTextTop = firstLineTop + lineGridHalfLeading

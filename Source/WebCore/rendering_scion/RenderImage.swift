@@ -78,7 +78,7 @@ class RenderImageWrapper: RenderReplacedWrapper {
               ceilf(font.width(run: RenderBlockWrapper.constructTextRun(altText, style()))),
               maxAltTextWidth)),
         height: Int32(paddingHeight)
-          + min(Int32(font.metricsOfPrimaryFont().intHeight()), maxAltTextHeight)
+          + min(font.metricsOfPrimaryFont().intHeight(), maxAltTextHeight)
       )
       imageSize = imageSize.expandedTo(paddedTextSize)
     }
@@ -375,7 +375,7 @@ class RenderImageWrapper: RenderReplacedWrapper {
               isHorizontal
               ? (errorPictureDrawn ? imageOffset.height() : usableSize.height())
               : usableSize.width()
-            return availableLogicalHeight >= Int32(fontMetrics.intHeight())
+            return availableLogicalHeight >= fontMetrics.intHeight()
           }
           if hasRoomForAltText() {
             context.setFillColor(
@@ -397,7 +397,7 @@ class RenderImageWrapper: RenderReplacedWrapper {
                 font: fontCascade, run: textRun, point: altTextLocation().FloatPoint())
             } else {
               // FIXME: TextBoxPainter has this logic already, maybe we should transition to some painter class.
-              let contentLogicalHeight = Int32(fontMetrics.intHeight())
+              let contentLogicalHeight = fontMetrics.intHeight()
               let adjustedPaintOffset = LayoutPointWrapper(
                 x: paintOffset.x, y: paintOffset.y - contentLogicalHeight)
 

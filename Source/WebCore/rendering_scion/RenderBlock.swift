@@ -436,7 +436,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       value: (Int32(fontMetrics.intAscent(baselineType: baselineType))
         + (lineHeight(
           firstLine: firstLine, direction: direction, linePositionMode: linePositionMode)
-          - Int32(fontMetrics.intHeight())) / 2)
+          - fontMetrics.intHeight()) / 2)
         .toInt())
   }
 
@@ -2299,7 +2299,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
           + (lineHeight(
             firstLine: true, direction: lineDirection,
             linePositionMode: .PositionOfInteriorLineBoxes)
-            - Int32(fontMetrics.intHeight())) / 2
+            - fontMetrics.intHeight()) / 2
           + (lineDirection == .HorizontalLine
             ? borderTop() + paddingTop() : borderRight() + paddingRight()))
           .toInt())

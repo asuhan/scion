@@ -556,7 +556,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
 
   private func itemLogicalHeight() -> LayoutUnit {
     assert(isNativeImpl())
-    return LayoutUnit(value: Int32(style().metricsOfPrimaryFont().intHeight()) + itemBlockSpacing)
+    return LayoutUnit(value: style().metricsOfPrimaryFont().intHeight() + itemBlockSpacing)
   }
 
   private enum ConsiderPadding {

@@ -3411,7 +3411,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
           value: (fontMetrics.intAscent()
             + (lineHeight(
               firstLine: true, direction: lineDirection,
-              linePositionMode: .PositionOfInteriorLineBoxes) - Int32(fontMetrics.intHeight())) / 2
+              linePositionMode: .PositionOfInteriorLineBoxes) - fontMetrics.intHeight()) / 2
             + (lineDirection == .HorizontalLine
               ? borderTop() + paddingTop() : borderRight() + paddingRight()))
             .toInt())
@@ -5434,7 +5434,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     // Make an adjustment to align with the cap height of a theoretical block line.
     let adjustment =
-      fontMetrics.intAscent() + (heightOfLine - Int32(fontMetrics.intHeight())) / 2
+      fontMetrics.intAscent() + (heightOfLine - fontMetrics.intHeight()) / 2
       - Int32(fontMetrics.intCapHeight()) - beforeMarginBorderPadding
     logicalTopOffset += adjustment
 
