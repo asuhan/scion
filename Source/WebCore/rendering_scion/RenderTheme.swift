@@ -354,13 +354,15 @@ struct RenderTheme {
   }
 
   func inactiveListBoxSelectionBackgroundColor(_ options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_inactiveListBoxSelectionBackgroundColor(p!, UInt32(options.rawValue)))
   }
 
   func inactiveListBoxSelectionForegroundColor(_ options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_inactiveListBoxSelectionForegroundColor(p!, UInt32(options.rawValue)))
   }
 
   // Highlighting color for search matches.
