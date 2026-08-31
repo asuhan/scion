@@ -374,8 +374,9 @@ struct RenderTheme {
 
   // Default highlighting color for app highlights.
   func annotationHighlightColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_annotationHighlightColor(p!, UInt32(options.rawValue)))
   }
 
   func defaultButtonTextColor(options: StyleColorOptions) -> ColorWrapper {

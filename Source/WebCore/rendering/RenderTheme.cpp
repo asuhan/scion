@@ -202,6 +202,11 @@ extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_textSearchHighlightColor(const vo
     return convertColor(static_cast<const WebCore::RenderTheme*>(p)->textSearchHighlightColor(convertStyleColorOptions(optionsRaw)));
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_annotationHighlightColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->annotationHighlightColor(convertStyleColorOptions(optionsRaw)));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
