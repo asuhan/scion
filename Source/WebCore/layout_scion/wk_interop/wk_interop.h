@@ -2196,6 +2196,11 @@ void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, voi
 void* RenderTheme_singleton();
 struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);
 int32_t RenderTheme_baselinePosition(const void*, const void*);
+struct SRGBARaw RenderTheme_activeSelectionBackgroundColor(const void*, uint32_t);
+struct SRGBARaw RenderTheme_inactiveSelectionBackgroundColor(const void*, uint32_t);
+struct SRGBARaw RenderTheme_transformSelectionBackgroundColor(const void*, struct SRGBARaw, uint32_t);
+struct SRGBARaw RenderTheme_activeSelectionForegroundColor(const void*, uint32_t);
+struct SRGBARaw RenderTheme_inactiveSelectionForegroundColor(const void*, uint32_t);
 void* Path_create();
 void* Path_create_from_points(uint32_t n, const float* x, const float* y);
 void Path_destroy(const void*);

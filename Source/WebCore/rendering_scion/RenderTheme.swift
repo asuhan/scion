@@ -37,6 +37,10 @@ private func effectiveRendererForAppearance(renderObject: RenderObjectWrapper)
   return renderer
 }
 
+private func convertColor(_ c: SRGBARaw) -> ColorWrapper {
+  return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
+}
+
 struct RenderTheme {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -302,30 +306,38 @@ struct RenderTheme {
 
   // Text selection colors.
   func activeSelectionBackgroundColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_activeSelectionBackgroundColor(p!, UInt32(options.rawValue)))
   }
 
   func inactiveSelectionBackgroundColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_inactiveSelectionBackgroundColor(p!, UInt32(options.rawValue)))
   }
 
   func transformSelectionBackgroundColor(color: ColorWrapper, options: StyleColorOptions)
     -> ColorWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    let srgba = color.toSRGBA()
+    return convertColor(
+      wk_interop.RenderTheme_transformSelectionBackgroundColor(
+        p!, SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha),
+        UInt32(options.rawValue)))
   }
 
   func activeSelectionForegroundColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_activeSelectionForegroundColor(p!, UInt32(options.rawValue)))
   }
 
   func inactiveSelectionForegroundColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_inactiveSelectionForegroundColor(p!, UInt32(options.rawValue)))
   }
 
   // List box selection colors

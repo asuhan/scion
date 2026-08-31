@@ -128,6 +128,54 @@ extern "C" WEBCORE_EXPORT int32_t RenderTheme_baselinePosition(const void* p, co
     return static_cast<const WebCore::RenderTheme*>(p)->baselinePosition(box);
 }
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+namespace {
+
+SRGBARaw convertColor(const WebCore::Color& color)
+{
+    const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
+WTF::OptionSet<WebCore::StyleColorOptions> convertStyleColorOptions(uint32_t optionsRaw)
+{
+    return WTF::OptionSet<WebCore::StyleColorOptions>::fromRaw(optionsRaw);
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_activeSelectionBackgroundColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->activeSelectionBackgroundColor(convertStyleColorOptions(optionsRaw)));
+}
+
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_inactiveSelectionBackgroundColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->inactiveSelectionBackgroundColor(convertStyleColorOptions(optionsRaw)));
+}
+
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_transformSelectionBackgroundColor(const void* p, SRGBARaw colorRaw, uint32_t optionsRaw)
+{
+    const WebCore::Color color { WebCore::SRGBA { colorRaw.red, colorRaw.green, colorRaw.blue, colorRaw.alpha } };
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->transformSelectionBackgroundColor(color, convertStyleColorOptions(optionsRaw)));
+}
+
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_activeSelectionForegroundColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->activeSelectionForegroundColor(convertStyleColorOptions(optionsRaw)));
+}
+
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_inactiveSelectionForegroundColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->inactiveSelectionForegroundColor(convertStyleColorOptions(optionsRaw)));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
