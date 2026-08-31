@@ -207,6 +207,11 @@ extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_annotationHighlightColor(const vo
     return convertColor(static_cast<const WebCore::RenderTheme*>(p)->annotationHighlightColor(convertStyleColorOptions(optionsRaw)));
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_defaultButtonTextColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->defaultButtonTextColor(convertStyleColorOptions(optionsRaw)));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

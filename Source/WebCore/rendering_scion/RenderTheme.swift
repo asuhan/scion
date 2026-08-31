@@ -380,8 +380,8 @@ struct RenderTheme {
   }
 
   func defaultButtonTextColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(wk_interop.RenderTheme_defaultButtonTextColor(p!, UInt32(options.rawValue)))
   }
 
   func documentMarkerLineColor(renderer: RenderTextWrapper, mode: DocumentMarkerLineStyleMode)
