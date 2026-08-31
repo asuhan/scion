@@ -2590,9 +2590,16 @@ static String plainTextImpl(const SimpleRange& range, TextIteratorBehaviors defa
     return result;
 }
 
+// TODO(asuhan): this won't work for a mix of native and interop in the range, ensure that mix (eventually) never happens.
+static bool usesScionRendering(const SimpleRange& range)
+{
+    const auto renderer = range.start.container->renderer();
+    return renderer && renderer->isScion();
+}
+
 String plainText(const SimpleRange& range, TextIteratorBehaviors defaultBehavior, bool isDisplayString)
 {
-    return plainTextImpl(range, defaultBehavior, isDisplayString, false);
+    return plainTextImpl(range, defaultBehavior, isDisplayString, usesScionRendering(range));
 }
 
 String plainTextScion(const SimpleRange& range)
