@@ -52,7 +52,11 @@ public:
 
     unsigned start() const;
 
+    unsigned end() const;
+
     unsigned length() const;
+
+    bool isOnSameLineAs(const TextBoxIteratorScion&) const;
 
     TextBoxIteratorScion nextTextBox() const;
 
@@ -159,5 +163,12 @@ private:
     // Used when deciding text fragment created by :first-letter should be looked into.
     bool m_handledFirstLetter { false };
 };
+
+namespace InlineIterator {
+
+std::pair<TextBoxIteratorScion, TextLogicalOrderCacheScion> firstTextBoxInLogicalOrderForScion(const RenderText&);
+TextBoxIteratorScion nextTextBoxInLogicalOrderScion(const TextBoxIteratorScion&, TextLogicalOrderCacheScion&);
+
+} // namespace InlineIterator
 
 } // namespace WebCore

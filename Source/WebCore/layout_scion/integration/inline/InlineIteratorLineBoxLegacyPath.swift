@@ -74,5 +74,9 @@ class LineBoxIteratorLegacyPath {
     return InlineIterator.BoxLegacyPath(m_rootInlineBox!.lastLeafDescendant())
   }
 
+  static func == (this: LineBoxIteratorLegacyPath, other: LineBoxIteratorLegacyPath) -> Bool {
+    return this.m_rootInlineBox === other.m_rootInlineBox
+  }
+
   private var m_rootInlineBox: LegacyRootInlineBox?
 }

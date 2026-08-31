@@ -28,6 +28,25 @@ class InlineIterator {
     enum PathVariant {
       case modern(LineBoxIteratorModernPath)
       case legacy(LineBoxIteratorLegacyPath)
+
+      static func == (this: PathVariant, other: PathVariant) -> Bool {
+        switch this {
+        case .modern(let thisPath):
+          switch other {
+          case .modern(let otherPath):
+            return thisPath == otherPath
+          case .legacy:
+            fatalError("Not reached")
+          }
+        case .legacy(let thisPath):
+          switch other {
+          case .modern:
+            fatalError("Not reached")
+          case .legacy(let otherPath):
+            return thisPath == otherPath
+          }
+        }
+      }
     }
 
     init(path: PathVariant) { m_pathVariant = path }
@@ -213,7 +232,11 @@ class InlineIterator {
     let m_pathVariant: PathVariant
   }
 
-  class LineBoxIterator: IteratorProtocol {
+  class LineBoxIterator: IteratorProtocol, Equatable {
+    static func == (this: LineBoxIterator, other: LineBoxIterator) -> Bool {
+      return this.m_lineBox.m_pathVariant == other.m_lineBox.m_pathVariant
+    }
+
     init() { m_lineBox = LineBox(path: .legacy(LineBoxIteratorLegacyPath(nil))) }
 
     init(_ pathVariant: LineBox.PathVariant) { m_lineBox = LineBox(path: pathVariant) }

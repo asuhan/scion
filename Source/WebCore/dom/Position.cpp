@@ -56,6 +56,7 @@
 #include "SVGTextElement.h"
 #include "Text.h"
 #include "TextIterator.h"
+#include "TextIteratorScion.h"
 #include "VisiblePosition.h"
 #include "VisibleUnits.h"
 #include <stdio.h>
@@ -68,12 +69,30 @@
 #include <wtf/text/StringBuilder.h>
 #endif
 
+extern "C" bool InlineIterator_hasInlineRunForText(const void*);
+extern "C" bool InlineIterator_hasInlineRunForBox(const void*);
+extern "C" bool InlineIterator_hasInlineRunForLineBreak(const void*);
+
 namespace WebCore {
 
 using namespace HTMLNames;
 
+static bool hasInlineRunScion(RenderObject& renderer)
+{
+    if (auto* renderBox = dynamicDowncast<RenderBox>(renderer))
+        return InlineIterator_hasInlineRunForBox(renderBox->scion());
+    if (auto* renderText = dynamicDowncast<RenderText>(renderer))
+        return InlineIterator_hasInlineRunForText(renderText->scion());
+    if (auto* renderLineBreak = dynamicDowncast<RenderLineBreak>(renderer))
+        return InlineIterator_hasInlineRunForLineBreak(renderLineBreak->scion());
+    return false;
+}
+
 static bool hasInlineRun(RenderObject& renderer)
 {
+    if (renderer.isScion())
+        return hasInlineRunScion(renderer);
+
     if (auto* renderBox = dynamicDowncast<RenderBox>(renderer); renderBox && InlineIterator::boxFor(*renderBox))
         return true;
     if (auto* renderText = dynamicDowncast<RenderText>(renderer); renderText && InlineIterator::firstTextBoxFor(*renderText))
@@ -731,6 +750,35 @@ Position Position::upstream(EditingBoundaryCrossingRule rule) const
         }
 
         // return current position if it is in rendered text
+        if (auto* textRenderer = dynamicDowncast<RenderText>(*renderer); textRenderer && textRenderer->isScion()) {
+            auto [firstTextBox, orderCache] = InlineIterator::firstTextBoxInLogicalOrderForScion(*textRenderer);
+            if (!firstTextBox)
+                continue;
+
+            if (currentNode.ptr() != startNode) {
+                // This assertion fires in layout tests in the case-transform.html test because
+                // of a mix-up between offsets in the text in the DOM tree with text in the
+                // render tree which can have a different length due to case transformation.
+                // Until we resolve that, disable this so we can run the layout tests!
+                //ASSERT(currentOffset >= renderer->caretMaxOffset());
+                return makeDeprecatedLegacyPosition(currentNode.ptr(), renderer->caretMaxOffset());
+            }
+
+            unsigned textOffset = currentPosition.offsetInLeafNode();
+            for (auto box = firstTextBox; box;) {
+                if (textOffset > box.start() && textOffset <= box.end())
+                    return currentPosition;
+
+                auto nextBox = InlineIterator::nextTextBoxInLogicalOrderScion(box, orderCache);
+                if (textOffset == box.end() + 1 && nextBox && !box.isOnSameLineAs(nextBox))
+                    return currentPosition;
+
+                box = nextBox;
+            }
+            continue;
+        }
+
+        // return current position if it is in rendered text
         if (auto* textRenderer = dynamicDowncast<RenderText>(*renderer)) {
             auto [firstTextBox, orderCache] = InlineIterator::firstTextBoxInLogicalOrderFor(*textRenderer);
             if (!firstTextBox)
@@ -837,6 +885,34 @@ Position Position::downstream(EditingBoundaryCrossingRule rule) const
         if (editingIgnoresContent(currentNode) || isRenderedTable(currentNode.ptr())) {
             if (currentPosition.atStartOfNode())
                 return positionBeforeNode(currentNode.ptr());
+            continue;
+        }
+
+        // return current position if it is in rendered text
+        if (auto* textRenderer = dynamicDowncast<RenderText>(*renderer); textRenderer && textRenderer->isScion()) {
+            auto [firstTextBox, orderCache] = InlineIterator::firstTextBoxInLogicalOrderForScion(*textRenderer);
+            if (!firstTextBox)
+                continue;
+
+            if (currentNode.ptr() != startNode) {
+                ASSERT(currentPosition.atStartOfNode());
+                return makeContainerOffsetPosition(currentNode.ptr(), textRenderer->caretMinOffset());
+            }
+
+            unsigned textOffset = currentPosition.offsetInLeafNode();
+            for (auto box = firstTextBox; box;) {
+                if (!box.length() && textOffset == box.start())
+                    return currentPosition;
+
+                if (textOffset >= box.start() && textOffset < box.end())
+                    return currentPosition;
+
+                auto nextBox = InlineIterator::nextTextBoxInLogicalOrderScion(box, orderCache);
+                if (textOffset == box.end() && nextBox && !box.isOnSameLineAs(nextBox))
+                    return currentPosition;
+
+                box = nextBox;
+            }
             continue;
         }
 

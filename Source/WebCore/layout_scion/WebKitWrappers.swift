@@ -2450,6 +2450,18 @@ func RenderObjectScion_setNeedsLayoutIsForbidden(_ objectRaw: UnsafeRawPointer, 
   object.setNeedsLayoutIsForbidden(flag)
 }
 
+@_cdecl("RenderTextScion_caretMinOffset")
+func RenderTextScion_caretMinOffset(_ raw: UnsafeRawPointer) -> Int32 {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(raw).takeUnretainedValue()
+  return text.caretMinOffset()
+}
+
+@_cdecl("RenderTextScion_caretMaxOffset")
+func RenderTextScion_caretMaxOffset(_ raw: UnsafeRawPointer) -> Int32 {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(raw).takeUnretainedValue()
+  return text.caretMaxOffset()
+}
+
 @_cdecl("RenderTextScion_textNode")
 func RenderTextScion_textNode(_ renderTextRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let text = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
@@ -4364,12 +4376,44 @@ func TextBoxIterator_length(_ raw: UnsafeRawPointer) -> UInt32 {
   return it.get().length()
 }
 
+@_cdecl("TextBoxIterator_end")
+func TextBoxIterator_end(_ raw: UnsafeRawPointer) -> UInt32 {
+  let it = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(raw).takeUnretainedValue()
+  return it.get().end()
+}
+
+@_cdecl("TextBoxIterator_isOnSameLineAs")
+func TextBoxIterator_isOnSameLineAs(_ lhsRaw: UnsafeRawPointer, _ rhsRaw: UnsafeRawPointer) -> Bool
+{
+  let lhs = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(lhsRaw).takeUnretainedValue()
+  let rhs = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(rhsRaw).takeUnretainedValue()
+  return lhs.get().lineBox() == rhs.get().lineBox()
+}
+
 @_cdecl("TextBoxIterator_nextTextBox")
 func TextBoxIterator_nextTextBox(_ raw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let it = Unmanaged<InlineIterator.TextBoxIterator>.fromOpaque(raw).takeUnretainedValue()
   let box = it.get().nextTextBox()
   let unmanaged = Unmanaged.passRetained(box)
   return unmanaged.toOpaque()
+}
+
+@_cdecl("InlineIterator_hasInlineRunForText")
+func InlineIterator_hasInlineRunForText(_ textRaw: UnsafeRawPointer) -> Bool {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(textRaw).takeUnretainedValue()
+  return InlineIterator.firstTextBoxFor(text).bool()
+}
+
+@_cdecl("InlineIterator_hasInlineRunForBox")
+func InlineIterator_hasInlineRunForBox(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return InlineIterator.boxFor(box).bool()
+}
+
+@_cdecl("InlineIterator_hasInlineRunForLineBreak")
+func InlineIterator_hasInlineRunForLineBreak(_ lineBreakRaw: UnsafeRawPointer) -> Bool {
+  let lineBreak = Unmanaged<RenderLineBreakWrapper>.fromOpaque(lineBreakRaw).takeUnretainedValue()
+  return InlineIterator.boxFor(lineBreak).bool()
 }
 
 @_cdecl("InlineIterator_firstTextBoxInLogicalOrderFor")

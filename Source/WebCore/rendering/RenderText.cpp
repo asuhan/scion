@@ -146,6 +146,10 @@ extern "C" WEBCORE_EXPORT int32_t ubrk_next_scion(void* p)
     return ubrk_next(static_cast<UBreakIterator*>(p));
 }
 
+extern "C" int32_t RenderTextScion_caretMinOffset(const void*);
+
+extern "C" int32_t RenderTextScion_caretMaxOffset(const void*);
+
 namespace WebCore {
 
 using namespace WTF::Unicode;
@@ -2110,7 +2114,7 @@ LayoutRect RenderText::selectionRectForRepaint(const RenderLayerModelObject* rep
 
 int RenderText::caretMinOffset() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return RenderTextScion_caretMinOffset(scion()); }
     auto first = InlineIterator::firstTextBoxFor(*this);
     if (!first)
         return 0;
@@ -2124,7 +2128,7 @@ int RenderText::caretMinOffset() const
 
 int RenderText::caretMaxOffset() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return RenderTextScion_caretMaxOffset(scion()); }
     auto first = InlineIterator::firstTextBoxFor(*this);
     if (!first)
         return text().length();

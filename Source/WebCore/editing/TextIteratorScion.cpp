@@ -90,6 +90,10 @@ extern "C" bool TextBoxIterator_eq(const void*, const void*);
 
 extern "C" uint32_t TextBoxIterator_start(const void*);
 
+extern "C" uint32_t TextBoxIterator_end(const void*);
+
+extern "C" bool TextBoxIterator_isOnSameLineAs(const void*, const void*);
+
 extern "C" uint32_t TextBoxIterator_length(const void*);
 
 extern "C" void* TextBoxIterator_nextTextBox(const void*);
@@ -116,6 +120,16 @@ bool TextBoxIteratorScion::operator==(const TextBoxIteratorScion& rhs) const
 unsigned TextBoxIteratorScion::start() const
 {
     return TextBoxIterator_start(m_handle);
+}
+
+unsigned TextBoxIteratorScion::end() const
+{
+    return TextBoxIterator_end(m_handle);
+}
+
+bool TextBoxIteratorScion::isOnSameLineAs(const TextBoxIteratorScion& other) const
+{
+    return TextBoxIterator_isOnSameLineAs(m_handle, other.m_handle);
 }
 
 unsigned TextBoxIteratorScion::length() const

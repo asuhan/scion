@@ -133,6 +133,10 @@ extension InlineIterator {
 
     private func line() -> InlineDisplay.Line { return lines()[Int(m_lineIndex)] }
 
+    static func == (this: LineBoxIteratorModernPath, other: LineBoxIteratorModernPath) -> Bool {
+      return this.m_inlineContent === other.m_inlineContent && this.m_lineIndex == other.m_lineIndex
+    }
+
     private let m_inlineContent: LayoutIntegration.InlineContent?
     private var m_lineIndex: UInt64
   }
