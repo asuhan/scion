@@ -2201,6 +2201,8 @@ struct SRGBARaw RenderTheme_inactiveSelectionBackgroundColor(const void*, uint32
 struct SRGBARaw RenderTheme_transformSelectionBackgroundColor(const void*, struct SRGBARaw, uint32_t);
 struct SRGBARaw RenderTheme_activeSelectionForegroundColor(const void*, uint32_t);
 struct SRGBARaw RenderTheme_inactiveSelectionForegroundColor(const void*, uint32_t);
+struct SRGBARaw RenderTheme_activeListBoxSelectionBackgroundColor(const void*, uint32_t);
+struct SRGBARaw RenderTheme_activeListBoxSelectionForegroundColor(const void*, uint32_t);
 void* Path_create();
 void* Path_create_from_points(uint32_t n, const float* x, const float* y);
 void Path_destroy(const void*);

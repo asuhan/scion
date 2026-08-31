@@ -342,13 +342,15 @@ struct RenderTheme {
 
   // List box selection colors
   func activeListBoxSelectionBackgroundColor(_ options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_activeListBoxSelectionBackgroundColor(p!, UInt32(options.rawValue)))
   }
 
   func activeListBoxSelectionForegroundColor(_ options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_activeListBoxSelectionForegroundColor(p!, UInt32(options.rawValue)))
   }
 
   func inactiveListBoxSelectionBackgroundColor(_ options: StyleColorOptions) -> ColorWrapper {
