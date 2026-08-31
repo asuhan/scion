@@ -403,8 +403,8 @@ struct RenderTheme {
   }
 
   func focusRingColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(wk_interop.RenderTheme_focusRingColor(p!, UInt32(options.rawValue)))
   }
 
   func minimumMenuListSize(_ style: RenderStyleWrapper) -> Int32 {

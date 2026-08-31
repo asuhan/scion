@@ -2208,6 +2208,7 @@ struct SRGBARaw RenderTheme_inactiveListBoxSelectionForegroundColor(const void*,
 struct SRGBARaw RenderTheme_textSearchHighlightColor(const void*, uint32_t);
 struct SRGBARaw RenderTheme_annotationHighlightColor(const void*, uint32_t);
 struct SRGBARaw RenderTheme_defaultButtonTextColor(const void*, uint32_t);
+struct SRGBARaw RenderTheme_focusRingColor(const void*, uint32_t);
 void* Path_create();
 void* Path_create_from_points(uint32_t n, const float* x, const float* y);
 void Path_destroy(const void*);

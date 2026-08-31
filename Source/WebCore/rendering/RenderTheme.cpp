@@ -212,6 +212,11 @@ extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_defaultButtonTextColor(const void
     return convertColor(static_cast<const WebCore::RenderTheme*>(p)->defaultButtonTextColor(convertStyleColorOptions(optionsRaw)));
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_focusRingColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->focusRingColor(convertStyleColorOptions(optionsRaw)));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
