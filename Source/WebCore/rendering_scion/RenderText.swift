@@ -434,13 +434,13 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func selectionEmphasisMarkColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return firstNonAnonymousAncestor()?.selectionEmphasisMarkColor() ?? ColorWrapper()
   }
 
   func selectionPseudoStyle() -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return firstNonAnonymousAncestor()?.selectionPseudoStyle()
   }
 
   func spellingErrorPseudoStyle() -> RenderStyleWrapper? {

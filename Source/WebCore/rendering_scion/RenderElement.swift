@@ -625,6 +625,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return theme().inactiveSelectionForegroundColor(options: styleColorOptions())
   }
 
+  func selectionEmphasisMarkColor() -> ColorWrapper {
+    assert(isNativeImpl())
+    return selectionColor(colorProperty: .CSSPropertyTextEmphasisColor)
+  }
+
   func selectionPseudoStyle() -> RenderStyleWrapper? {
     assert(isNativeImpl())
     if isAnonymous() {
