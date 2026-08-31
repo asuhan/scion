@@ -3039,6 +3039,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .CombineText
   }
 
+  func previousOffset(_ current: Int32) -> Int32 {
+    assert(isNativeImpl())
+    return current - 1
+  }
+
+  func nextOffset(_ current: Int32) -> Int32 {
+    assert(isNativeImpl())
+    return current + 1
+  }
+
   func caretMinOffset() -> Int32 { return 0 }
 
   func caretMaxOffset() -> Int32 {

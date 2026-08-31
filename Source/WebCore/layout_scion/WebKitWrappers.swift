@@ -2450,6 +2450,20 @@ func RenderObjectScion_setNeedsLayoutIsForbidden(_ objectRaw: UnsafeRawPointer, 
   object.setNeedsLayoutIsForbidden(flag)
 }
 
+@_cdecl("RenderTextScion_containsCaretOffset")
+func RenderTextScion_containsCaretOffset(_ raw: UnsafeRawPointer, _ offset: UInt32) -> Bool {
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(raw).takeUnretainedValue()
+  return text.containsCaretOffset(offset)
+}
+
+@_cdecl("RenderTextScion_containsRenderedCharacterOffset")
+func RenderTextScion_containsRenderedCharacterOffset(_ raw: UnsafeRawPointer, _ offset: UInt32)
+  -> Bool
+{
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(raw).takeUnretainedValue()
+  return text.containsRenderedCharacterOffset(offset)
+}
+
 @_cdecl("RenderTextScion_caretMinOffset")
 func RenderTextScion_caretMinOffset(_ raw: UnsafeRawPointer) -> Int32 {
   let text = Unmanaged<RenderTextWrapper>.fromOpaque(raw).takeUnretainedValue()

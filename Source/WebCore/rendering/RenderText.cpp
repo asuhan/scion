@@ -146,6 +146,10 @@ extern "C" WEBCORE_EXPORT int32_t ubrk_next_scion(void* p)
     return ubrk_next(static_cast<UBreakIterator*>(p));
 }
 
+extern "C" bool RenderTextScion_containsCaretOffset(const void*, uint32_t);
+
+extern "C" bool RenderTextScion_containsRenderedCharacterOffset(const void*, uint32_t);
+
 extern "C" int32_t RenderTextScion_caretMinOffset(const void*);
 
 extern "C" int32_t RenderTextScion_caretMaxOffset(const void*);
@@ -2180,13 +2184,13 @@ static bool containsOffset(const RenderText& text, unsigned offset, OffsetType t
 
 bool RenderText::containsRenderedCharacterOffset(unsigned offset) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return RenderTextScion_containsRenderedCharacterOffset(scion(), offset); }
     return containsOffset(*this, offset, OffsetType::Character);
 }
 
 bool RenderText::containsCaretOffset(unsigned offset) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return RenderTextScion_containsCaretOffset(scion(), offset); }
     return containsOffset(*this, offset, OffsetType::Caret);
 }
 

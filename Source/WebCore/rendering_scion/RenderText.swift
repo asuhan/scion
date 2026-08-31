@@ -827,6 +827,45 @@ class RenderTextWrapper: RenderObjectWrapper {
     return legacyLineBoxes!.first()
   }
 
+  private enum OffsetType {
+    case Character
+    case Caret
+  }
+
+  private func containsOffset(_ offset: UInt32, _ type: OffsetType) -> Bool {
+    var (box, orderCache) = InlineIterator.firstTextBoxInLogicalOrderFor(self)
+    while box.bool() {
+      let start = box.get().start()
+      if offset < start {
+        return false
+      }
+      let end = box.get().end()
+      if offset >= start && offset <= end {
+        if offset == end && (type == .Character || box.get().isLineBreak()) {
+          box = InlineIterator.nextTextBoxInLogicalOrder(box, orderCache)
+          continue
+        }
+        if type == .Character {
+          return true
+        }
+        // Return false for offsets inside composed characters.
+        return offset == 0 || offset == UInt32(nextOffset(previousOffset(Int32(offset))))
+      }
+      box = InlineIterator.nextTextBoxInLogicalOrder(box, orderCache)
+    }
+    return false
+  }
+
+  func containsRenderedCharacterOffset(_ offset: UInt32) -> Bool {
+    assert(isNativeImpl())
+    return containsOffset(offset, .Character)
+  }
+
+  func containsCaretOffset(_ offset: UInt32) -> Bool {
+    assert(isNativeImpl())
+    return containsOffset(offset, .Caret)
+  }
+
   override final func caretMinOffset() -> Int32 {
     assert(isNativeImpl())
     let first = InlineIterator.firstTextBoxFor(self)
@@ -869,6 +908,27 @@ class RenderTextWrapper: RenderObjectWrapper {
       }
     }
     return false
+  }
+
+  // FIXME: These should return unsigneds.
+  override final func previousOffset(_ current: Int32) -> Int32 {
+    assert(isNativeImpl())
+    if m_containsOnlyASCII || text().is8Bit() {
+      return current - 1
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func nextOffset(_ current: Int32) -> Int32 {
+    assert(isNativeImpl())
+    if m_containsOnlyASCII || text().is8Bit() {
+      return current + 1
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func needsVisualReordering() -> Bool {

@@ -74,6 +74,14 @@ extension InlineIterator {
     return (firstTextBoxFor(text), TextLogicalOrderCache())
   }
 
+  static func nextTextBoxInLogicalOrder(
+    _ textBox: TextBoxIterator, _ cache: TextLogicalOrderCache
+  ) -> TextBoxIterator {
+    // TODO(asuhan): update the logical order cache once visual reordering is
+    // handled by firstTextBoxInLogicalOrderFor above.
+    return textBox.get().nextTextBox()
+  }
+
   static func lastLeafOnLineInLogicalOrderWithNode(
     _ lineBox: LineBoxIterator, _ cache: LineLogicalOrderCache
   ) -> LeafBoxIterator {
