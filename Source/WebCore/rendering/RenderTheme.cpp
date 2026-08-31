@@ -197,6 +197,11 @@ extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_inactiveListBoxSelectionForegroun
     return convertColor(static_cast<const WebCore::RenderTheme*>(p)->inactiveListBoxSelectionForegroundColor(convertStyleColorOptions(optionsRaw)));
 }
 
+extern "C" WEBCORE_EXPORT SRGBARaw RenderTheme_textSearchHighlightColor(const void* p, uint32_t optionsRaw)
+{
+    return convertColor(static_cast<const WebCore::RenderTheme*>(p)->textSearchHighlightColor(convertStyleColorOptions(optionsRaw)));
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

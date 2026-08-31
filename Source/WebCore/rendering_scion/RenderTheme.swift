@@ -367,8 +367,9 @@ struct RenderTheme {
 
   // Highlighting color for search matches.
   func textSearchHighlightColor(options: StyleColorOptions) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return convertColor(
+      wk_interop.RenderTheme_textSearchHighlightColor(p!, UInt32(options.rawValue)))
   }
 
   // Default highlighting color for app highlights.
