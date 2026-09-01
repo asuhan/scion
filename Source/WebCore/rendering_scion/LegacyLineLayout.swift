@@ -39,8 +39,11 @@ class LegacyLineLayout {
   }
 
   func addOverflowFromInlineChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let rootBox = legacyRootBox() {
+      let childVisualOverflowRect = rootBox.visualOverflowRect(
+        lineTop: rootBox.lineTop, lineBottom: rootBox.lineBottom)
+      m_flow.addVisualOverflow(rect: childVisualOverflowRect)
+    }
   }
 
   private let m_flow: RenderBlockFlowWrapper
