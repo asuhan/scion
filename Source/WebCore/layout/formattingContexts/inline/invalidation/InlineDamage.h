@@ -77,9 +77,9 @@ private:
 
 public:
     void setDamageReason(Reason reason) { m_damageReasons.add(reason); }
+    void setLayoutStartPosition(LayoutPosition position) { m_layoutStartPosition = position; }
     void resetLayoutPosition();
 private:
-    void setLayoutStartPosition(LayoutPosition position) { m_layoutStartPosition = position; }
     void setTrailingDisplayBoxes(TrailingDisplayBoxList&& trailingDisplayBoxes) { m_trailingDisplayBoxes = WTFMove(trailingDisplayBoxes); }
 public:
     void setInlineItemListDirty() { m_isInlineItemListDirty = true; }

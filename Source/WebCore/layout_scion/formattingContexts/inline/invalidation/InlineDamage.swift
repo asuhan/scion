@@ -99,8 +99,12 @@ class InlineDamageWrapper {
   func resetLayoutPosition() { wk_interop.InlineDamage_resetLayoutPosition(p) }
 
   func setLayoutStartPosition(_ position: LayoutPosition) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let positionRaw = LayoutPositionRaw(
+      line_index: position.lineIndex,
+      inline_item_position: InlineItemPositionRaw(
+        index: position.inlineItemPosition.index, offset: position.inlineItemPosition.offset),
+      partial_content_top: position.partialContentTop.rawValue(), is_valid: true)
+    wk_interop.InlineDamage_setLayoutStartPosition(p, positionRaw)
   }
 
   func setTrailingDisplayBoxes(_ trailingDisplayBoxes: TrailingDisplayBoxList) {

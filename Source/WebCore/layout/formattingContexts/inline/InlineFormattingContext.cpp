@@ -173,6 +173,19 @@ extern "C" WEBCORE_EXPORT void InlineDamage_resetLayoutPosition(void* p)
     static_cast<WebCore::Layout::InlineDamage*>(p)->resetLayoutPosition();
 }
 
+extern "C" WEBCORE_EXPORT void InlineDamage_setLayoutStartPosition(void* p, LayoutPositionRaw position_raw)
+{
+    WebCore::Layout::InlineDamage::LayoutPosition position {
+        position_raw.line_index,
+        WebCore::Layout::InlineItemPosition {
+            position_raw.inline_item_position.index,
+            position_raw.inline_item_position.offset
+        },
+        WebCore::LayoutUnit::fromRawValue(position_raw.partial_content_top)
+    };
+    static_cast<WebCore::Layout::InlineDamage*>(p)->setLayoutStartPosition(position);
+}
+
 extern "C" WEBCORE_EXPORT bool InlineDamage_hasDetachedContent(const void* p)
 {
     return static_cast<const WebCore::Layout::InlineDamage*>(p)->hasDetachedContent();
