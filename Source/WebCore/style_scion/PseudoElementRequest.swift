@@ -27,18 +27,24 @@ extension Style {
 
   struct PseudoElementRequest {
     init(pseudoId: PseudoId, scrollbarState: StyleScrollbarState? = nil) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      m_identifier = PseudoElementIdentifier(pseudoId: pseudoId)
+      m_scrollbarState = scrollbarState
+      assert(pseudoId != .None)
     }
 
     init(pseudoId: PseudoId, nameArgument: AtomStringWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      m_identifier = PseudoElementIdentifier(pseudoId: pseudoId, nameArgument: nameArgument)
+      m_scrollbarState = nil
+      assert(
+        pseudoId == .Highlight || pseudoId == .ViewTransitionGroup
+          || pseudoId == .ViewTransitionImagePair || pseudoId == .ViewTransitionOld
+          || pseudoId == .ViewTransitionNew)
     }
 
     init(pseudoElementIdentifier: PseudoElementIdentifier) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      m_identifier = pseudoElementIdentifier
+      m_scrollbarState = nil
+      assert(pseudoElementIdentifier.pseudoId != .None)
     }
 
     // NB(asuhan): only used for interop
