@@ -242,8 +242,8 @@ struct InlineInvalidation {
   }
 
   static func resetInlineDamage(inlineDamage: InlineDamageWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    inlineDamage.setInlineItemListDirty()
+    inlineDamage.resetLayoutPosition()
   }
 
   private enum ShouldApplyRangeLayout {
