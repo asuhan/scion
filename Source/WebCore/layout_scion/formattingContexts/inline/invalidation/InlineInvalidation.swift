@@ -92,8 +92,57 @@ struct InlineInvalidation {
   func styleWillChange(layoutBox: BoxWrapper, newStyle: RenderStyleWrapper, diff: StyleDifference)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if diff == .Layout {
+      m_inlineDamage.resetLayoutPosition()
+      m_inlineDamage.setDamageReason(.StyleChange)
+    }
+
+    if m_inlineDamage.isInlineItemListDirty() {
+      return true
+    }
+
+    if layoutBox.isInlineTextBox() {
+      // Either the root or parent inline box takes care of this style change.
+      return true
+    }
+
+    let inlineItemListNeedsUpdate = { () in
+      let oldStyle = layoutBox.style
+
+      let hasInlineItemTypeChanged =
+        oldStyle.hasOutOfFlowPosition() != newStyle.hasOutOfFlowPosition()
+        || oldStyle.isFloating() != newStyle.isFloating()
+        || oldStyle.display() != newStyle.display()
+      if hasInlineItemTypeChanged {
+        return true
+      }
+
+      if !layoutBox.isInlineBox() {
+        return false
+      }
+
+      let contentMayNeedNewBreakingPositionsAndMeasuring =
+        TextBreakingPositionContext(style: oldStyle) != TextBreakingPositionContext(style: newStyle)
+        || oldStyle.fontCascade() != newStyle.fontCascade()
+      if contentMayNeedNewBreakingPositionsAndMeasuring {
+        return true
+      }
+
+      let bidiContextChanged =
+        oldStyle.unicodeBidi() != newStyle.unicodeBidi()
+        || oldStyle.direction() != newStyle.direction()
+      if bidiContextChanged {
+        return true
+      }
+
+      return false
+    }
+
+    if inlineItemListNeedsUpdate() {
+      m_inlineDamage.setInlineItemListDirty()
+    }
+
+    return true
   }
 
   func textInserted(newOrDamagedInlineTextBox: InlineTextBoxWrapper, offset: UInt64? = nil) -> Bool

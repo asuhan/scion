@@ -163,6 +163,16 @@ extern "C" WEBCORE_EXPORT void InlineDamage_setInlineItemListClean(void* p)
     static_cast<WebCore::Layout::InlineDamage*>(p)->setInlineItemListClean();
 }
 
+extern "C" WEBCORE_EXPORT void InlineDamage_setDamageReason(void* p, uint8_t reason_raw)
+{
+    static_cast<WebCore::Layout::InlineDamage*>(p)->setDamageReason(static_cast<WebCore::Layout::InlineDamage::Reason>(reason_raw));
+}
+
+extern "C" WEBCORE_EXPORT void InlineDamage_resetLayoutPosition(void* p)
+{
+    static_cast<WebCore::Layout::InlineDamage*>(p)->resetLayoutPosition();
+}
+
 extern "C" WEBCORE_EXPORT bool InlineDamage_hasDetachedContent(const void* p)
 {
     return static_cast<const WebCore::Layout::InlineDamage*>(p)->hasDetachedContent();

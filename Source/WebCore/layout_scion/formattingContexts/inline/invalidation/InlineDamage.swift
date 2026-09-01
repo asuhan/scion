@@ -39,7 +39,7 @@ class InlineDamageWrapper {
   deinit { if pOwner { wk_interop.InlineDamage_destroy(p) } }
 
   struct Reason: OptionSet {
-    let rawValue: UInt32
+    let rawValue: UInt8
     static let Append = Reason(rawValue: 1 << 0)
     static let Insert = Reason(rawValue: 1 << 1)
     static let Remove = Reason(rawValue: 1 << 2)
@@ -89,6 +89,12 @@ class InlineDamageWrapper {
   func setInlineItemListClean() {
     wk_interop.InlineDamage_setInlineItemListClean(p)
   }
+
+  func setDamageReason(_ reason: Reason) {
+    wk_interop.InlineDamage_setDamageReason(p, reason.rawValue)
+  }
+
+  func resetLayoutPosition() { wk_interop.InlineDamage_resetLayoutPosition(p) }
 
   func hasDetachedContent() -> Bool {
     return wk_interop.InlineDamage_hasDetachedContent(p)

@@ -1543,6 +1543,8 @@ void InlineDamage_destroy(const void*);
 struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);
 bool InlineDamage_isInlineItemListDirty(const void*);
 void InlineDamage_setInlineItemListClean(void*);
+void InlineDamage_setDamageReason(void*, uint8_t);
+void InlineDamage_resetLayoutPosition(void*);
 bool InlineDamage_hasDetachedContent(const void*);
 void InlineDamage_setInlineItemListDirty(void*);
 const void* CPtrArrElement(const void* const*, uint64_t);
