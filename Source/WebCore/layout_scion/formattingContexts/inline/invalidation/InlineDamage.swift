@@ -72,6 +72,8 @@ class InlineDamageWrapper {
     )
   }
 
+  typealias TrailingDisplayBoxList = [InlineDisplay.Box]
+
   func trailingContentForLine(lineIndex: UInt64) -> InlineDisplay.Box? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -95,6 +97,16 @@ class InlineDamageWrapper {
   }
 
   func resetLayoutPosition() { wk_interop.InlineDamage_resetLayoutPosition(p) }
+
+  func setLayoutStartPosition(_ position: LayoutPosition) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTrailingDisplayBoxes(_ trailingDisplayBoxes: TrailingDisplayBoxList) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func hasDetachedContent() -> Bool {
     return wk_interop.InlineDamage_hasDetachedContent(p)

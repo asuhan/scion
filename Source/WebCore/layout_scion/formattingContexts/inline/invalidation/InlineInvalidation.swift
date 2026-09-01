@@ -48,6 +48,23 @@ private func invalidatedLineByDamagedBox(
   fatalError("Not implemented")
 }
 
+private func trailingDisplayBoxesAfterDamagedLine(
+  _ damagedLineIndex: UInt64, _ displayContent: InlineDisplay.Content
+) -> InlineDamageWrapper.TrailingDisplayBoxList {
+  var trailingDisplayBoxes: InlineDamageWrapper.TrailingDisplayBoxList = []
+  let lines = displayContent.lines[...]
+  let boxes = displayContent.boxes[...]
+  for lineIndex in Int(damagedLineIndex + 1)..<lines.count {
+    let lastDisplayBoxIndexForLine = Int(
+      lines[lineIndex].firstBoxIndex() + lines[lineIndex].boxCount() - 1)
+    if lastDisplayBoxIndexForLine >= boxes.count {
+      fatalError("Not reached")
+    }
+    trailingDisplayBoxes.append(boxes[lastDisplayBoxIndexForLine])
+  }
+  return trailingDisplayBoxes
+}
+
 private func isSupportedContent(_ layoutBox: BoxWrapper) -> Bool {
   return layoutBox is InlineTextBoxWrapper || layoutBox.isLineBreakBox()
     || layoutBox.isReplacedBox() || layoutBox.isInlineBox()
@@ -256,8 +273,37 @@ struct InlineInvalidation {
     _ shouldApplyRangeLayout: ShouldApplyRangeLayout = .No,
     _ pageTopAdjustment: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isValidDamage = { () in
+      // Check for consistency.
+      if !invalidatedLine.leadingInlineItemPosition.bool() {
+        // We have to start at the first line if damage points to the leading inline item.
+        return invalidatedLine.index == 0
+      }
+      return true
+    }
+    if !isValidDamage() {
+      fatalError("Not reached")
+    }
+
+    let partialContentTop =
+      LayoutUnit(
+        value: invalidatedLine.index != 0
+          ? m_displayContent.lines[Int(invalidatedLine.index - 1)].lineBoxLogicalRect.maxY() : 0)
+      + pageTopAdjustment
+
+    let layoutStartPosition = InlineDamageWrapper.LayoutPosition(
+      lineIndex: invalidatedLine.index,
+      inlineItemPosition: invalidatedLine.leadingInlineItemPosition,
+      partialContentTop: partialContentTop)
+
+    m_inlineDamage.setDamageReason(reason)
+    m_inlineDamage.setLayoutStartPosition(layoutStartPosition)
+
+    if shouldApplyRangeLayout == .Yes {
+      m_inlineDamage.setTrailingDisplayBoxes(
+        trailingDisplayBoxesAfterDamagedLine(invalidatedLine.index, m_displayContent))
+    }
+    return true
   }
 
   private func setFullLayoutIfNeeded(_ layoutBox: BoxWrapper) -> Bool {
