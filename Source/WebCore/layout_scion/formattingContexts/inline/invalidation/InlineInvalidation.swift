@@ -23,6 +23,31 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct DamagedContent {
+  let layoutBox: BoxWrapper
+  // Only text type of boxes may have offset. No offset also simply points to the end of the layout box.
+  let offset: UInt64?
+  enum `Type` {
+    case Insertion
+    case Removal
+  }
+  let type: `Type`
+}
+
+struct InvalidatedLine {
+  let index: UInt64
+  let leadingInlineItemPosition: InlineItemPosition
+  let damagedLineIndex: UInt64
+}
+
+private func invalidatedLineByDamagedBox(
+  _ damagedContent: DamagedContent, _ inlineItemList: InlineItemList,
+  _ displayBoxes: InlineDisplay.Boxes
+) -> InvalidatedLine? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func isSupportedContent(_ layoutBox: BoxWrapper) -> Bool {
   return layoutBox is InlineTextBoxWrapper || layoutBox.isLineBreakBox()
     || layoutBox.isReplacedBox() || layoutBox.isInlineBox()
@@ -158,8 +183,21 @@ struct InlineInvalidation {
 
   func textWillBeRemoved(damagedInlineTextBox: InlineTextBoxWrapper, offset: UInt64? = nil) -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_inlineDamage.setInlineItemListDirty()
+
+    if setFullLayoutIfNeeded(damagedInlineTextBox) {
+      return false
+    }
+
+    if let invalidatedLine = invalidatedLineByDamagedBox(
+      DamagedContent(layoutBox: damagedInlineTextBox, offset: offset ?? 0, type: .Removal),
+      m_inlineItemList, displayBoxes())
+    {
+      return updateInlineDamage(invalidatedLine, .Remove, .No)
+    }
+
+    m_inlineDamage.resetLayoutPosition()
+    return false
   }
 
   func inlineLevelBoxInserted(layoutBox: BoxWrapper) -> Bool {
@@ -168,8 +206,21 @@ struct InlineInvalidation {
   }
 
   func inlineLevelBoxWillBeRemoved(layoutBox: BoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_inlineDamage.setInlineItemListDirty()
+
+    if setFullLayoutIfNeeded(layoutBox) {
+      return false
+    }
+
+    if let invalidatedLine = invalidatedLineByDamagedBox(
+      DamagedContent(layoutBox: layoutBox, offset: nil, type: .Removal), m_inlineItemList,
+      displayBoxes())
+    {
+      return updateInlineDamage(invalidatedLine, .Remove, .Yes)
+    }
+
+    m_inlineDamage.resetLayoutPosition()
+    return false
   }
 
   func inlineLevelBoxContentWillChange(layoutBox: BoxWrapper) -> Bool {
@@ -191,6 +242,20 @@ struct InlineInvalidation {
   }
 
   static func resetInlineDamage(inlineDamage: InlineDamageWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private enum ShouldApplyRangeLayout {
+    case No
+    case Yes
+  }
+
+  private func updateInlineDamage(
+    _ invalidatedLine: InvalidatedLine, _ reason: InlineDamageWrapper.Reason,
+    _ shouldApplyRangeLayout: ShouldApplyRangeLayout = .No,
+    _ pageTopAdjustment: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
