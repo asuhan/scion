@@ -23,6 +23,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func isSupportedContent(_ layoutBox: BoxWrapper) -> Bool {
+  return layoutBox is InlineTextBoxWrapper || layoutBox.isLineBreakBox()
+    || layoutBox.isReplacedBox() || layoutBox.isInlineBox()
+}
+
 struct InlineInvalidation {
   init(
     inlineDamage: InlineDamageWrapper, inlineItemList: InlineItemList,
@@ -188,6 +193,31 @@ struct InlineInvalidation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func setFullLayoutIfNeeded(_ layoutBox: BoxWrapper) -> Bool {
+    if !isSupportedContent(layoutBox) {
+      fatalError("Not reached")
+    }
+
+    if displayBoxes().isEmpty {
+      fatalError("Not reached")
+    }
+
+    if m_inlineItemList.isEmpty {
+      // We must be under memory pressure.
+      m_inlineDamage.resetLayoutPosition()
+      return true
+    }
+
+    if m_inlineDamage.reasons().contains(.StyleChange) {
+      m_inlineDamage.resetLayoutPosition()
+      return true
+    }
+
+    return false
+  }
+
+  private func displayBoxes() -> InlineDisplay.Boxes { return m_displayContent.boxes }
 
   private let m_inlineDamage: InlineDamageWrapper
   private let m_inlineItemList: InlineItemList
