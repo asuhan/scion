@@ -173,8 +173,9 @@ struct InlineInvalidation {
   }
 
   func inlineLevelBoxContentWillChange(layoutBox: BoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Add support for partial layout when inline box content change may trigger size change.
+    m_inlineDamage.resetLayoutPosition()
+    return true
   }
 
   func restartForPagination(lineIndex: UInt64, pageTopAdjustment: LayoutUnit) -> Bool {
