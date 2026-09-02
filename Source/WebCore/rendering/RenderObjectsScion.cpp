@@ -165,6 +165,10 @@ extern "C" bool RenderObjectScion_childrenInline(const void*);
 
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
+extern "C" void RenderObjectScion_setFragmentedFlowState(void*, bool);
+
+extern "C" void RenderObjectScion_setHasOutlineAutoAncestor(void*, bool);
+
 extern "C" bool RenderObjectScion_fragmentedFlowState(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMathMLFenced(const void*);
@@ -615,6 +619,8 @@ extern "C" bool RenderElementScion_hasContinuationChainNode(const void*);
 
 extern "C" bool RenderElementScion_isContinuation(const void*);
 
+extern "C" void RenderElementScion_setIsContinuation(void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
@@ -941,6 +947,8 @@ extern "C" bool RenderBlockFlowScion_containsFloat(const void*, void*);
 
 extern "C" void RenderBlockFlowScion_deleteLines(void*);
 
+extern "C" void RenderBlockFlowScion_removeFloatingObjects(void*);
+
 extern "C" int32_t RenderBlockFlowScion_lowestFloatLogicalBottom(void*, uint8_t);
 
 extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
@@ -1250,6 +1258,16 @@ bool RenderObjectScion::everHadLayout() const { return RenderObjectScion_everHad
 bool RenderObjectScion::childrenInline() const { return RenderObjectScion_childrenInline(m_handle); }
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
+
+void RenderObjectScion::setFragmentedFlowState(RenderObject::FragmentedFlowState state)
+{
+    RenderObjectScion_setFragmentedFlowState(m_handle, state == RenderObject::FragmentedFlowState::InsideFlow);
+}
+
+void RenderObjectScion::setHasOutlineAutoAncestor(bool hasOutlineAutoAncestor)
+{
+    RenderObjectScion_setHasOutlineAutoAncestor(m_handle, hasOutlineAutoAncestor);
+}
 
 RenderObject::FragmentedFlowState RenderObjectScion::fragmentedFlowState() const
 {
@@ -1916,6 +1934,11 @@ bool RenderElementScion::hasBackdropFilter() const
 bool RenderElementScion::hasBlendMode() const
 {
     return RenderElementScion_hasBlendMode(m_handle);
+}
+
+void RenderElementScion::setIsContinuation()
+{
+    RenderElementScion_setIsContinuation(m_handle);
 }
 
 bool RenderElementScion::hasContinuationChainNode() const
@@ -2823,6 +2846,11 @@ bool RenderBlockFlowScion::containsFloat(RenderBox& renderer) const
 void RenderBlockFlowScion::deleteLines()
 {
     RenderBlockFlowScion_deleteLines(m_handle);
+}
+
+void RenderBlockFlowScion::removeFloatingObjects()
+{
+    RenderBlockFlowScion_removeFloatingObjects(m_handle);
 }
 
 LayoutUnit RenderBlockFlowScion::lowestFloatLogicalBottom(uint8_t floatType) const

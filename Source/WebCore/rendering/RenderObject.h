@@ -625,11 +625,7 @@ public:
     void setFragmentedFlowStateIncludingDescendants(FragmentedFlowState, SkipDescendentFragmentedFlow = SkipDescendentFragmentedFlow::Yes);
 
     FragmentedFlowState fragmentedFlowState() const;
-    void setFragmentedFlowState(FragmentedFlowState state)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_stateBitfields.setFragmentedFlowState(state);
-    }
+    void setFragmentedFlowState(FragmentedFlowState);
 
 #if ENABLE(MATHML)
     virtual bool isRenderMathMLBlock() const { return false; }

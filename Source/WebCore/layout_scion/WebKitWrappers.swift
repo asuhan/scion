@@ -1588,6 +1588,20 @@ func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _
   object.setChildrenInline(b: b)
 }
 
+@_cdecl("RenderObjectScion_setFragmentedFlowState")
+func RenderObjectScion_setFragmentedFlowState(_ objectRaw: UnsafeRawPointer, _ insideFlow: Bool) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setFragmentedFlowState(insideFlow ? .InsideFlow : .NotInsideFlow)
+}
+
+@_cdecl("RenderObjectScion_setHasOutlineAutoAncestor")
+func RenderObjectScion_setHasOutlineAutoAncestor(
+  _ objectRaw: UnsafeRawPointer, _ hasOutlineAutoAncestor: Bool
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setHasOutlineAutoAncestor(hasOutlineAutoAncestor: hasOutlineAutoAncestor)
+}
+
 @_cdecl("RenderObjectScion_fragmentedFlowState")
 func RenderObjectScion_fragmentedFlowState(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -2980,6 +2994,12 @@ func RenderElementScion_hasBlendMode(_ elementRaw: UnsafeRawPointer) -> Bool {
   return element.hasBlendMode()
 }
 
+@_cdecl("RenderElementScion_setIsContinuation")
+func RenderElementScion_setIsContinuation(_ elementRaw: UnsafeRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setIsContinuation()
+}
+
 @_cdecl("RenderElementScion_hasContinuationChainNode")
 func RenderElementScion_hasContinuationChainNode(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
@@ -4011,6 +4031,12 @@ func RenderBlockFlowScion_setChildrenInline(_ blockFlowRaw: UnsafeMutableRawPoin
 {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
   blockFlow.setChildrenInline(b: value)
+}
+
+@_cdecl("RenderBlockFlowScion_removeFloatingObjects")
+func RenderBlockFlowScion_removeFloatingObjects(_ blockFlowRaw: UnsafeMutableRawPointer) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  blockFlow.removeFloatingObjects()
 }
 
 @_cdecl("RenderBlockFlowScion_inlineLayout")

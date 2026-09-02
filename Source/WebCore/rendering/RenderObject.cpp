@@ -2846,9 +2846,21 @@ void RenderObject::setHasReflection(bool hasReflection)
         ensureRareData().hasReflection = hasReflection;
 }
 
+void RenderObject::setFragmentedFlowState(FragmentedFlowState state)
+{
+    if (m_scion) {
+        m_scion->setFragmentedFlowState(state);
+        return;
+    }
+    m_stateBitfields.setFragmentedFlowState(state);
+}
+
 void RenderObject::setHasOutlineAutoAncestor(bool hasOutlineAutoAncestor)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setHasOutlineAutoAncestor(hasOutlineAutoAncestor);
+        return;
+    }
     if (hasOutlineAutoAncestor || hasRareData())
         ensureRareData().hasOutlineAutoAncestor = hasOutlineAutoAncestor;
 }

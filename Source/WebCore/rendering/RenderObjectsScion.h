@@ -199,6 +199,10 @@ public:
 
     RenderObject::FragmentedFlowState fragmentedFlowState() const;
 
+    void setFragmentedFlowState(RenderObject::FragmentedFlowState);
+
+    void setHasOutlineAutoAncestor(bool);
+
     bool isRenderMathMLFenced() const;
 
     bool isRenderSVGModelObject() const;
@@ -453,6 +457,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setIsContinuation();
 
     const RenderStyle& style() const;
 
@@ -981,6 +987,8 @@ public:
     bool containsFloat(RenderBox&) const;
 
     void deleteLines();
+
+    void removeFloatingObjects();
 
     LayoutUnit lowestFloatLogicalBottom(uint8_t) const;
 

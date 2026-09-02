@@ -292,11 +292,7 @@ public:
 
     bool hasContinuationChainNode() const;
     bool isContinuation() const;
-    void setIsContinuation()
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_isContinuation = true;
-    }
+    void setIsContinuation();
     bool isFirstLetter() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

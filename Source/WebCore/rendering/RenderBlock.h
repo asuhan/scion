@@ -617,7 +617,8 @@ inline RenderPtr<RenderBlock> RenderBlock::createAnonymousWithParentRendererAndD
 
 inline RenderPtr<RenderBox> RenderBlock::createAnonymousBoxWithSameTypeAs(const RenderBox& renderer) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // TODO(asuhan): in theory, this should be routed to Scion, but it works correctly
+    //               as-is and all callers will be migrated to Scion anyway.
     return createAnonymousBlockWithStyleAndDisplay(document(), renderer.style(), style().display());
 }
 

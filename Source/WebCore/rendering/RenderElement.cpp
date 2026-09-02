@@ -2716,6 +2716,15 @@ bool RenderElement::hasContinuationChainNode() const
     return m_hasContinuationChainNode;
 }
 
+void RenderElement::setIsContinuation()
+{
+    if (m_scion) {
+        m_scion->setIsContinuation();
+        return;
+    }
+    m_isContinuation = true;
+}
+
 bool RenderElement::isContinuation() const
 {
     if (m_scion) { return m_scion->isContinuation(); }

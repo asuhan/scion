@@ -26,9 +26,11 @@
 #include "config.h"
 #include "RenderTreeBuilderInline.h"
 
+#include "Document.h"
 #include "RenderBlockFlow.h"
 #include "RenderChildIterator.h"
 #include "RenderInline.h"
+#include "RenderObjectsScion.h"
 #include "RenderTable.h"
 #include "RenderTreeBuilderMultiColumn.h"
 #include "RenderTreeBuilderTable.h"
@@ -86,7 +88,10 @@ static RenderPtr<RenderInline> cloneAsContinuation(RenderInline& renderer)
 {
     auto continuationStyle = RenderStyle::clone(renderer.style());
     continuationStyle.setDisplay(DisplayType::Inline);
+    auto clonedContinuationStyle = Document::s_useScionRendering >= 4 ? RenderStyle::clonePtr(continuationStyle) : nullptr;
     RenderPtr<RenderInline> cloneInline = createRenderer<RenderInline>(RenderObject::Type::Inline, *renderer.element(), WTFMove(continuationStyle));
+    if (clonedContinuationStyle)
+        cloneInline->setScionHandle(RenderInlineScion_create(static_cast<uint8_t>(RenderObject::Type::Inline), renderer.element(), clonedContinuationStyle.release()));
     cloneInline->initializeStyle();
     cloneInline->setFragmentedFlowState(renderer.fragmentedFlowState());
     cloneInline->setHasOutlineAutoAncestor(renderer.hasOutlineAutoAncestor());
@@ -183,7 +188,10 @@ void RenderTreeBuilder::Inline::attachIgnoringContinuation(RenderInline& parent,
         if (auto positionedAncestor = inFlowPositionedInlineAncestor(parent))
             newStyle.setPosition(positionedAncestor->style().position());
 
+        auto clonedNewStyle = Document::s_useScionRendering >= 2 ? RenderStyle::clonePtr(newStyle) : nullptr;
         auto newBox = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, parent.document(), WTFMove(newStyle));
+        if (clonedNewStyle)
+            newBox->setScionHandle(RenderBlockFlowScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &parent.document(), clonedNewStyle.release(), 0));
         newBox->initializeStyle();
         newBox->setIsContinuation();
         RenderBoxModelObject* oldContinuation = parent.continuation();
