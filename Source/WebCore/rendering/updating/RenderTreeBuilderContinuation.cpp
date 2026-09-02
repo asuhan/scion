@@ -26,6 +26,7 @@
 #include "config.h"
 #include "RenderTreeBuilderContinuation.h"
 
+#include "Document.h"
 #include "RenderBoxModelObject.h"
 #include <wtf/TZoneMallocInlines.h>
 
@@ -47,6 +48,12 @@ void RenderTreeBuilder::Continuation::cleanupOnDestroy(RenderBoxModelObject& ren
     }
 
     ASSERT(renderer.hasContinuationChainNode());
+    if (Document::s_useScionRendering >= 2) {
+        while (auto* next = renderer.continuation())
+            m_builder.destroy(*next);
+        renderer.removeFromContinuationChain();
+        return;
+    }
     ASSERT(renderer.continuationChainNode());
     auto& continuationChainNode = *renderer.continuationChainNode();
     while (continuationChainNode.next)
