@@ -932,35 +932,65 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func continuation() -> RenderBoxModelObjectWrapper? {
+    assert(isNativeImpl())
     if !hasContinuationChainNode() {
       return nil
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+
+    let continuationChainNode = RenderBoxModelObjectWrapper.continuationChainNodeMap[id()]!
+    guard let next = continuationChainNode.next else { return nil }
+    return next.renderer
   }
 
   func inlineContinuation() -> RenderInlineWrapper? {
-    if !isNativeImpl() {
-      if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(id()) {
-        return RenderInlineWrapper(p: raw)
-      }
-      return nil
-    }
+    assert(isNativeImpl())
     if !hasContinuationChainNode() {
       return nil
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+
+    var next = RenderBoxModelObjectWrapper.continuationChainNodeMap[id()]!.next
+    while next != nil {
+      if let renderInline = next!.renderer as? RenderInlineWrapper {
+        return renderInline
+      }
+      next = next!.next
+    }
+    return nil
+  }
+
+  static func forRendererAndContinuations(
+    _ renderer: RenderBoxModelObjectWrapper,
+    _ function: (RenderBoxModelObjectWrapper) -> Void
+  ) {
+    function(renderer)
+    if !renderer.hasContinuationChainNode() {
+      return
+    }
+
+    var next = RenderBoxModelObjectWrapper.continuationChainNodeMap[renderer.id()]!.next
+    while next != nil {
+      if let nextRenderer = next!.renderer {
+        function(nextRenderer)
+      }
+      next = next!.next
+    }
   }
 
   func insertIntoContinuationChainAfter(afterRenderer: RenderBoxModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isContinuation())
+    assert(RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] == nil)
+
+    let after = afterRenderer.ensureContinuationChainNode()
+    ensureContinuationChainNode().insertAfter(after)
   }
 
   func removeFromContinuationChain() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasContinuationChainNode())
+    assert(RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] != nil)
+    setHasContinuationChainNode(false)
+    RenderBoxModelObjectWrapper.continuationChainNodeMap.removeValue(forKey: id())
   }
 
   func hasRunningAcceleratedAnimations() -> Bool {
@@ -1454,15 +1484,42 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       }
     }
 
+    func insertAfter(_ after: ContinuationChainNode) {
+      assert(previous == nil)
+      assert(next == nil)
+      next = after.next
+      if next != nil {
+        assert(ObjectIdentifier(next!.previous!) == ObjectIdentifier(after))
+        next!.previous = self
+      }
+      previous = after
+      after.next = self
+    }
+
     let renderer: RenderBoxModelObjectWrapper?
     var previous: ContinuationChainNode? = nil
     var next: ContinuationChainNode? = nil
   }
 
   func continuationChainNode() -> ContinuationChainNode? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RenderBoxModelObjectWrapper.continuationChainNodeMap[id()]
   }
+
+  func ensureContinuationChainNode() -> ContinuationChainNode {
+    assert(isNativeImpl())
+    setHasContinuationChainNode(true)
+    if let node = RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] {
+      return node
+    }
+    let node = ContinuationChainNode(renderer: self)
+    RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] = node
+    return node
+  }
+
+  typealias ContinuationChainNodeMap = [UnsafeMutableRawPointer: ContinuationChainNode]
+
+  fileprivate static var continuationChainNodeMap = ContinuationChainNodeMap()
 
   func resolveLengthPercentageUsingContainerLogicalWidth(_ value: LengthWrapper) -> LayoutUnit {
     assert(isNativeImpl())

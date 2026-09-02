@@ -195,6 +195,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_hasContinuationChainNode(const void
     return static_cast<const WebCore::RenderElement*>(p)->hasContinuationChainNode();
 }
 
+extern "C" WEBCORE_EXPORT void RenderElement_setHasContinuationChainNode(void* p, bool b)
+{
+    static_cast<WebCore::RenderElement*>(p)->setHasContinuationChainNode(b);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderElement_isContinuation(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->isContinuation();

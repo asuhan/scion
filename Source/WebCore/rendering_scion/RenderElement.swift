@@ -1528,6 +1528,14 @@ class RenderElementWrapper: RenderObjectWrapper {
     return m_hasContinuationChainNode
   }
 
+  func setHasContinuationChainNode(_ b: Bool) {
+    if !isNativeImpl() {
+      wk_interop.RenderElement_setHasContinuationChainNode(id(), b)
+      return
+    }
+    m_hasContinuationChainNode = b
+  }
+
   func isContinuation() -> Bool {
     if !isNativeImpl() {
       return wk_interop.RenderElement_isContinuation(id())
@@ -2994,7 +3002,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   private let m_hasPausedImageAnimations: Bool
   private let m_hasCounterNodeMap: Bool
-  private let m_hasContinuationChainNode: Bool
+  private var m_hasContinuationChainNode: Bool
 
   private var m_isContinuation: Bool
   private var m_isFirstLetter: Bool

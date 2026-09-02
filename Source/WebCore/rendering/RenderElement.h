@@ -415,12 +415,14 @@ protected:
     void willBeDestroyed() override;
     void notifyFinished(CachedResource&, const NetworkLoadMetrics&, LoadWillContinueInAnotherProcess) override;
 
+public:
     void setHasContinuationChainNode(bool b)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         m_hasContinuationChainNode = b;
     }
 
+protected:
     void setRenderBlockHasMarginBeforeQuirk(bool b)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
