@@ -122,6 +122,9 @@ extern "C" WEBCORE_EXPORT void* RenderBoxModelObject_inlineContinuation(const vo
     return static_cast<const WebCore::RenderBoxModelObject*>(p)->inlineContinuation();
 }
 
+// TODO(asuhan): this should be encapsulated in RenderBoxModelObjectScion.
+extern "C" void* RenderBoxModelObjectScion_continuation(void*);
+extern "C" void* RenderBoxModelObjectScion_inlineContinuation(void*);
 extern "C" void RenderBoxModelObjectScion_insertIntoContinuationChainAfter(void*, void*);
 extern "C" void RenderBoxModelObjectScion_removeFromContinuationChain(void*);
 
@@ -963,7 +966,8 @@ LayoutUnit RenderBoxModelObject::containingBlockLogicalWidthForContent() const
 
 RenderBoxModelObject* RenderBoxModelObject::continuation() const
 {
-    if (Document::s_useScionRendering >= 2) { return m_scion->continuation(); }
+    if (Document::s_useScionRendering >= 2)
+        return static_cast<RenderBoxModelObject*>(RenderBoxModelObjectScion_continuation(const_cast<RenderBoxModelObject*>(this)));
     if (!hasContinuationChainNode())
         return nullptr;
 
@@ -975,7 +979,8 @@ RenderBoxModelObject* RenderBoxModelObject::continuation() const
 
 RenderInline* RenderBoxModelObject::inlineContinuation() const
 {
-    if (Document::s_useScionRendering >= 2) { return m_scion->inlineContinuation(); }
+    if (Document::s_useScionRendering >= 2)
+        return static_cast<RenderInline*>(RenderBoxModelObjectScion_inlineContinuation(const_cast<RenderBoxModelObject*>(this)));
     if (!hasContinuationChainNode())
         return nullptr;
 
