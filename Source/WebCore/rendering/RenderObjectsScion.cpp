@@ -687,10 +687,6 @@ extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingAfter(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
-extern "C" void* RenderBoxModelObjectScion_continuation(void* p);
-
-extern "C" void* RenderBoxModelObjectScion_inlineContinuation(void* p);
-
 extern "C" IntRectRaw RenderInlineScion_linesBoundingBox(const void*);
 
 extern "C" int32_t RenderInlineScion_offsetWidth(const void*);
@@ -2204,16 +2200,6 @@ LayoutUnit RenderBoxModelObjectScion::borderAndPaddingAfter() const
 LayoutUnit RenderBoxModelObjectScion::borderLogicalLeft() const
 {
     return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderLogicalLeft(m_handle));
-}
-
-RenderBoxModelObject* RenderBoxModelObjectScion::continuation() const
-{
-    return static_cast<RenderBoxModelObject*>(RenderBoxModelObjectScion_continuation(m_handle));
-}
-
-RenderInline* RenderBoxModelObjectScion::inlineContinuation() const
-{
-    return static_cast<RenderInline*>(RenderBoxModelObjectScion_inlineContinuation(m_handle));
 }
 
 IntRect RenderInlineScion::linesBoundingBox() const

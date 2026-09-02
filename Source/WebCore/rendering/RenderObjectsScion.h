@@ -693,10 +693,6 @@ public:
 
     LayoutUnit borderLogicalLeft() const;
 
-    RenderBoxModelObject* continuation() const;
-
-    RenderInline* inlineContinuation() const;
-
 private:
     void* m_handle;
 };
