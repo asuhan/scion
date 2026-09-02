@@ -3303,23 +3303,41 @@ func RenderBoxModelObjectScion_borderLogicalLeft(_ boxModelObjectRaw: UnsafeRawP
 }
 
 @_cdecl("RenderBoxModelObjectScion_continuation")
-func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeRawPointer)
+func RenderBoxModelObjectScion_continuation(_ boxModelObjectRaw: UnsafeMutableRawPointer)
   -> UnsafeMutableRawPointer?
 {
-  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
-    .takeUnretainedValue()
-  guard let continuation = boxModelObject.continuation() else { return nil }
-  assert(!continuation.isNativeImpl())
-  return continuation.id()
+  let boxModelObject =
+    createRenderObjectWrapperOrNative(boxModelObjectRaw) as! RenderBoxModelObjectWrapper
+  return wkRenderObject(boxModelObject.continuation())
 }
 
 @_cdecl("RenderBoxModelObjectScion_inlineContinuation")
-func RenderBoxModelObjectScion_inlineContinuation(_ boxModelObjectRaw: UnsafeRawPointer)
+func RenderBoxModelObjectScion_inlineContinuation(_ boxModelObjectRaw: UnsafeMutableRawPointer)
   -> UnsafeMutableRawPointer?
 {
-  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
-    .takeUnretainedValue()
+  let boxModelObject =
+    createRenderObjectWrapperOrNative(boxModelObjectRaw) as! RenderBoxModelObjectWrapper
   return wkRenderObject(boxModelObject.inlineContinuation())
+}
+
+@_cdecl("RenderBoxModelObjectScion_insertIntoContinuationChainAfter")
+func RenderBoxModelObjectScion_insertIntoContinuationChainAfter(
+  _ boxModelObjectRaw: UnsafeMutableRawPointer, _ afterRendererRaw: UnsafeMutableRawPointer
+) {
+  let boxModelObject =
+    createRenderObjectWrapperOrNative(boxModelObjectRaw) as! RenderBoxModelObjectWrapper
+  let afterRenderer =
+    createRenderObjectWrapperOrNative(afterRendererRaw) as! RenderBoxModelObjectWrapper
+  boxModelObject.insertIntoContinuationChainAfter(afterRenderer: afterRenderer)
+}
+
+@_cdecl("RenderBoxModelObjectScion_removeFromContinuationChain")
+func RenderBoxModelObjectScion_removeFromContinuationChain(
+  _ boxModelObjectRaw: UnsafeMutableRawPointer
+) {
+  let boxModelObject =
+    createRenderObjectWrapperOrNative(boxModelObjectRaw) as! RenderBoxModelObjectWrapper
+  boxModelObject.removeFromContinuationChain()
 }
 
 @_cdecl("RenderBoxScion_requiresLayerWithScrollableArea")

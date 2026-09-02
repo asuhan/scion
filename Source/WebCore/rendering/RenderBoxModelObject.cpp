@@ -122,6 +122,9 @@ extern "C" WEBCORE_EXPORT void* RenderBoxModelObject_inlineContinuation(const vo
     return static_cast<const WebCore::RenderBoxModelObject*>(p)->inlineContinuation();
 }
 
+extern "C" void RenderBoxModelObjectScion_insertIntoContinuationChainAfter(void*, void*);
+extern "C" void RenderBoxModelObjectScion_removeFromContinuationChain(void*);
+
 namespace WebCore {
 
 using namespace HTMLNames;
@@ -960,7 +963,7 @@ LayoutUnit RenderBoxModelObject::containingBlockLogicalWidthForContent() const
 
 RenderBoxModelObject* RenderBoxModelObject::continuation() const
 {
-    if (m_scion) { return m_scion->continuation(); }
+    if (Document::s_useScionRendering >= 2) { return m_scion->continuation(); }
     if (!hasContinuationChainNode())
         return nullptr;
 
@@ -972,7 +975,7 @@ RenderBoxModelObject* RenderBoxModelObject::continuation() const
 
 RenderInline* RenderBoxModelObject::inlineContinuation() const
 {
-    if (m_scion) { return m_scion->inlineContinuation(); }
+    if (Document::s_useScionRendering >= 2) { return m_scion->inlineContinuation(); }
     if (!hasContinuationChainNode())
         return nullptr;
 
@@ -989,6 +992,12 @@ void RenderBoxModelObject::forRendererAndContinuations(RenderBoxModelObject& ren
     if (!renderer.hasContinuationChainNode())
         return;
 
+    if (Document::s_useScionRendering >= 2) {
+        for (auto* next = renderer.continuation(); next; next = next->continuation())
+            function(*next);
+        return;
+    }
+
     for (auto* next = continuationChainNodeMap().get(renderer)->next; next; next = next->next) {
         if (!next->renderer)
             continue;
@@ -1004,7 +1013,10 @@ RenderBoxModelObject::ContinuationChainNode* RenderBoxModelObject::continuationC
 
 void RenderBoxModelObject::insertIntoContinuationChainAfter(RenderBoxModelObject& afterRenderer)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (Document::s_useScionRendering >= 2) {
+        RenderBoxModelObjectScion_insertIntoContinuationChainAfter(this, &afterRenderer);
+        return;
+    }
     ASSERT(isContinuation());
     ASSERT(!continuationChainNodeMap().contains(*this));
 
@@ -1014,7 +1026,10 @@ void RenderBoxModelObject::insertIntoContinuationChainAfter(RenderBoxModelObject
 
 void RenderBoxModelObject::removeFromContinuationChain()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (Document::s_useScionRendering >= 2) {
+        RenderBoxModelObjectScion_removeFromContinuationChain(this);
+        return;
+    }
     ASSERT(hasContinuationChainNode());
     ASSERT(continuationChainNodeMap().contains(*this));
     setHasContinuationChainNode(false);

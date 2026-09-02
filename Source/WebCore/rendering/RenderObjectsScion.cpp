@@ -681,9 +681,9 @@ extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingAfter(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
-extern "C" void* RenderBoxModelObjectScion_continuation(const void* p);
+extern "C" void* RenderBoxModelObjectScion_continuation(void* p);
 
-extern "C" void* RenderBoxModelObjectScion_inlineContinuation(const void* p);
+extern "C" void* RenderBoxModelObjectScion_inlineContinuation(void* p);
 
 extern "C" IntRectRaw RenderInlineScion_linesBoundingBox(const void*);
 
