@@ -932,6 +932,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func continuation() -> RenderBoxModelObjectWrapper? {
+    // TODO(asuhan): assert(isNativeImpl())
     if !hasContinuationChainNode() {
       return nil
     }
@@ -942,6 +943,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func inlineContinuation() -> RenderInlineWrapper? {
+    // TODO(asuhan): assert(isNativeImpl())
     if !hasContinuationChainNode() {
       return nil
     }
@@ -975,6 +977,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func insertIntoContinuationChainAfter(afterRenderer: RenderBoxModelObjectWrapper) {
+    // TODO(asuhan): assert(isNativeImpl())
     assert(isContinuation())
     assert(RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] == nil)
 
@@ -983,6 +986,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func removeFromContinuationChain() {
+    // TODO(asuhan): assert(isNativeImpl())
     assert(hasContinuationChainNode())
     assert(RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] != nil)
     setHasContinuationChainNode(false)
@@ -1498,10 +1502,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func continuationChainNode() -> ContinuationChainNode? {
+    // TODO(asuhan): assert(isNativeImpl())
     return RenderBoxModelObjectWrapper.continuationChainNodeMap[id()]
   }
 
   func ensureContinuationChainNode() -> ContinuationChainNode {
+    // TODO(asuhan): assert(isNativeImpl())
     setHasContinuationChainNode(true)
     if let node = RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] {
       return node
