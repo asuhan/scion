@@ -160,8 +160,14 @@ class InlineIterator {
     }
 
     func ellipsisText() -> TextRunWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(hasEllipsis())
+
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.ellipsisText()
+      case .legacy(let path):
+        return path.ellipsisText()
+      }
     }
 
     func ellipsisSelectionState() -> RenderObjectWrapper.HighlightState {

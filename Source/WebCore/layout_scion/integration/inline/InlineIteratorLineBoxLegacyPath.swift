@@ -54,6 +54,8 @@ class LineBoxIteratorLegacyPath {
 
   func ellipsisVisualRectIgnoringBlockDirection() -> FloatRectWrapper { fatalError("Not reached") }
 
+  func ellipsisText() -> TextRunWrapper { fatalError("Not reached") }
+
   func contentLogicalLeft() -> Float32 { return m_rootInlineBox!.logicalLeft() }
 
   func formattingContextRoot() -> RenderBlockFlowWrapper { m_rootInlineBox!.blockFlow() }

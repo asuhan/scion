@@ -53,6 +53,10 @@ extension InlineIterator {
       return line().ellipsis!.visualRect
     }
 
+    func ellipsisText() -> TextRunWrapper {
+      return TextRunWrapper(text: line().ellipsis!.text.string())
+    }
+
     func contentLogicalTopAdjustedForPrecedingLineBox() -> Float32 {
       if isFlippedLinesWritingMode(formattingContextRoot().style().writingMode())
         || m_lineIndex == 0
