@@ -49,6 +49,10 @@ extension InlineIterator {
 
     func hasEllipsis() -> Bool { return line().hasEllipsis() }
 
+    func ellipsisVisualRectIgnoringBlockDirection() -> FloatRectWrapper {
+      return line().ellipsis!.visualRect
+    }
+
     func contentLogicalTopAdjustedForPrecedingLineBox() -> Float32 {
       if isFlippedLinesWritingMode(formattingContextRoot().style().writingMode())
         || m_lineIndex == 0
