@@ -967,7 +967,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   private static func constructTextRun(
     _ stringView: StringWrapperView, _ style: RenderStyleWrapper,
-    _ expansion: ExpansionBehaviorWrapper, _ flags: TextRunFlags
+    _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior(),
+    _ flags: TextRunFlags = .DefaultTextRunFlags
   ) -> TextRunWrapper {
     var textDirection: TextDirection = .LTR
     var directionalOverride = style.rtlOrdering() == .Visual
@@ -999,8 +1000,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
     text: RenderTextWrapper, offset: UInt32, length: UInt32, _ style: RenderStyleWrapper,
     _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior()
   ) -> TextRunWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let stop = offset + length
+    assert(stop <= text.text().length())
+    return constructTextRun(text.stringView(offset, stop), style, expansion)
   }
 
   static func constructTextRun(

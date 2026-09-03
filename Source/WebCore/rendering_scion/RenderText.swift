@@ -1037,6 +1037,15 @@ class RenderTextWrapper: RenderObjectWrapper {
     return true
   }
 
+  func stringView(_ start: UInt32 = 0, _ stop: UInt32? = nil) -> StringWrapperView {
+    assert(isNativeImpl())
+    let destination = stop ?? text().length()
+    assert(start <= length())
+    assert(destination <= length())
+    assert(start <= destination)
+    return StringWrapperView(s: text()).substring(start: start, length: destination - start)
+  }
+
   private func containsOnlyCSSWhitespace(from: UInt32, length: UInt32) -> Bool {
     assert(isNativeImpl())
     assert(from <= text().length())
