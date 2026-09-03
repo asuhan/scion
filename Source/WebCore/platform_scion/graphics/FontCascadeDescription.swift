@@ -26,13 +26,16 @@ import wk_interop
 
 class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
   override init(p: UnsafeRawPointer) {
+    owner = false
     super.init(p: p)
   }
 
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    owner = true
+    super.init(p: wk_interop.FontCascadeDescription_create())
   }
+
+  deinit { if owner { wk_interop.FontCascadeDescription_destroy(p) } }
 
   func specifiedSize() -> Float32 { return wk_interop.FontCascadeDescription_specifiedSize(p) }
 
@@ -56,4 +59,6 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let owner: Bool
 }
