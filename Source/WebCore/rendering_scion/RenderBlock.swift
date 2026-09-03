@@ -965,13 +965,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
       document: document(), style: renderer.style(), display: style().display())
   }
 
+  private static func constructTextRun(
+    _ stringView: StringWrapperView, _ style: RenderStyleWrapper,
+    _ expansion: ExpansionBehaviorWrapper, _ flags: TextRunFlags
+  ) -> TextRunWrapper {
+    var textDirection: TextDirection = .LTR
+    var directionalOverride = style.rtlOrdering() == .Visual
+    if flags != .DefaultTextRunFlags {
+      if flags.contains(.RespectDirection) {
+        textDirection = style.direction()
+      }
+      if flags.contains(.RespectDirectionOverride) {
+        directionalOverride = directionalOverride || isOverride(style.unicodeBidi())
+      }
+    }
+
+    // TODO(asuhan): support text security on Cocoa platforms.
+    let updatedString = stringView.toStringWithoutCopying()
+    return TextRunWrapper(
+      text: updatedString, xpos: 0, expansion: 0, expansionBehavior: expansion,
+      direction: textDirection, directionalOverride: directionalOverride)
+  }
+
   static func constructTextRun(
     _ string: StringWrapper, _ style: RenderStyleWrapper,
     _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior(),
     _ flags: TextRunFlags = .DefaultTextRunFlags
   ) -> TextRunWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return constructTextRun(StringWrapperView(s: string), style, expansion, flags)
   }
 
   static func constructTextRun(

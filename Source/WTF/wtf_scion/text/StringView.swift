@@ -82,6 +82,10 @@ class StringWrapperView {
     return CharSpanWrapper<UChar>(p: wk_interop.StringView_span16(p))
   }
 
+  func toStringWithoutCopying() -> StringWrapper {
+    return StringWrapper(p: wk_interop.StringView_toStringWithoutCopying(p), owner: true)
+  }
+
   func substring(start: UInt32, length: UInt32 = UInt32.max) -> StringWrapperView {
     return string_view_substring(s: self, start: start, length: length)
   }

@@ -457,6 +457,11 @@ extern "C" WEBCORE_EXPORT const void* StringView_span16(const void* p)
     return new std::span<const UChar>(static_cast<const StringView*>(p)->span16());
 }
 
+extern "C" WEBCORE_EXPORT void* StringView_toStringWithoutCopying(const void* p)
+{
+    return new String(static_cast<const StringView*>(p)->toStringWithoutCopying());
+}
+
 extern "C" WEBCORE_EXPORT const void* StringView_fromString(const void* p)
 {
     return new StringView(*static_cast<const String*>(p));
