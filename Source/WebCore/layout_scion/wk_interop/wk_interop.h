@@ -636,6 +636,7 @@ void UpconvertedCharactersWithSize_destroy(const void*);
 void* TextRun_fromString(const void*, float, float, bool, bool);
 void* TextRun_fromStringView(const void*, float, float, bool, bool);
 void* TextRun_isolatedCopy(const void*);
+void* TextRun_subRun(const void*, uint32_t, uint32_t);
 void TextRun_destroy(const void*);
 uint16_t TextRun_subscript(const void*, uint32_t);
 const void* String_new();

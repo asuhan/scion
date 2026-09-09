@@ -52,8 +52,7 @@ class TextRunWrapper {
   deinit { wk_interop.TextRun_destroy(p!) }
 
   func subRun(startOffset: UInt32, length: UInt32) -> TextRunWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextRunWrapper(wk_interop.TextRun_subRun(p!, startOffset, length))
   }
 
   subscript(_ i: UInt32) -> UChar { return wk_interop.TextRun_subscript(p!, i) }

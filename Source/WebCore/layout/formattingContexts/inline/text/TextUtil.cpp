@@ -503,6 +503,11 @@ extern "C" WEBCORE_EXPORT void* TextRun_isolatedCopy(const void* p)
     return new WebCore::TextRun(static_cast<const WebCore::TextRun*>(p)->isolatedCopy());
 }
 
+extern "C" WEBCORE_EXPORT void* TextRun_subRun(const void* p, uint32_t startOffset, uint32_t length)
+{
+    return new WebCore::TextRun(static_cast<const WebCore::TextRun*>(p)->subRun(startOffset, length));
+}
+
 extern "C" WEBCORE_EXPORT void TextRun_destroy(const void* p)
 {
     delete static_cast<const WebCore::TextRun*>(p);
