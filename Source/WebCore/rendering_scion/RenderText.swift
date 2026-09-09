@@ -498,7 +498,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   func deleteLegacyLineBoxes() {
     assert(isNativeImpl())
-    legacyLineBoxes!.deleteAll()
+    legacyLineBoxes.deleteAll()
   }
 
   func characterAt(_ i: UInt32) -> UChar {
@@ -738,7 +738,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
     let delta = Int32(newText.length() - text().length())
 
-    linesDirty = legacyLineBoxes!.dirtyForTextChange(self)
+    linesDirty = legacyLineBoxes.dirtyForTextChange(self)
 
     setTextInternal(newText, force || linesDirty)
     invalidateLineLayoutPathOnContentChangeIfNeeded(self, offset: UInt64(offset), delta: delta)
@@ -824,7 +824,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   func firstLegacyTextBox() -> LegacyInlineTextBox? {
     assert(isNativeImpl())
-    return legacyLineBoxes!.first()
+    return legacyLineBoxes.first()
   }
 
   private enum OffsetType {
@@ -960,7 +960,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   func removeAndDestroyLegacyTextBoxes() {
     assert(isNativeImpl())
     if !renderTreeBeingDestroyed() {
-      legacyLineBoxes!.removeAllFromParent(self)
+      legacyLineBoxes.removeAllFromParent(self)
     }
     // TODO(asuhan): is an invalidateParentChildLists call needed?
     deleteLegacyLineBoxes()
@@ -1884,7 +1884,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   override func getWk() -> UnsafeMutableRawPointer { return wk! }
 
-  private var legacyLineBoxes: RenderTextLineBoxes? = nil
+  private var legacyLineBoxes = RenderTextLineBoxes()
 
   private var minWidth: Float32? = nil
   private var maxWidth: Float32? = nil

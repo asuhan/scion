@@ -318,12 +318,12 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
 
   func firstLegacyInlineBox() -> LegacyInlineFlowBox? {
     assert(isNativeImpl())
-    return legacyLineBoxes!.firstLegacyLineBox()
+    return legacyLineBoxes.firstLegacyLineBox()
   }
 
   func lastLegacyInlineBox() -> LegacyInlineFlowBox? {
     assert(isNativeImpl())
-    return legacyLineBoxes!.lastLegacyLineBox()
+    return legacyLineBoxes.lastLegacyLineBox()
   }
 
   func offsetForInFlowPositionedInline(_ child: RenderBoxWrapper?) -> LayoutSizeWrapper {
@@ -581,7 +581,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
       lineLayout.paint(paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: self)
       return
     }
-    legacyLineBoxes!.paint(renderer: self, paintInfo: paintInfo, paintOffset: paintOffset)
+    legacyLineBoxes.paint(renderer: self, paintInfo: paintInfo, paintOffset: paintOffset)
   }
 
   override final func nodeAtPoint(
@@ -595,7 +595,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
         request: request, result: &result, locationInContainer: locationInContainer,
         accumulatedOffset: accumulatedOffset, hitTestAction: hitTestAction, layerRenderer: self)
     }
-    return legacyLineBoxes!.hitTest(
+    return legacyLineBoxes.hitTest(
       self, request, &result, locationInContainer, accumulatedOffset, hitTestAction)
   }
 
@@ -892,7 +892,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
 
   override final func dirtyLineFromChangedChild() {
     assert(isNativeImpl())
-    legacyLineBoxes!.dirtyLineFromChangedChild(self)
+    legacyLineBoxes.dirtyLineFromChangedChild(self)
   }
 
   override func lineHeight(
@@ -927,7 +927,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override func getWk() -> UnsafeMutableRawPointer { return wk! }
 
   // All of the line boxes created for this svg inline.
-  private let legacyLineBoxes: RenderLineBoxList? = nil
+  private let legacyLineBoxes = RenderLineBoxList()
 
   private var wk: UnsafeMutableRawPointer? = nil
 }
