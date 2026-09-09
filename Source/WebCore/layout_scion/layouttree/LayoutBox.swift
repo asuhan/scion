@@ -748,7 +748,7 @@ class BoxWrapper: Hashable {
     return renderer
   }
 
-  func setRendererForIntegration(_ renderer: RenderObjectWrapper) {
+  func setRendererForIntegration(_ renderer: RenderObjectWrapper?) {
     assert(p != nil)
     wk_interop.Box_setRendererForIntegration(p!, wkRenderObject(renderer))
   }

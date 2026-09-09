@@ -47,6 +47,8 @@ extern "C" const void* RenderObjectScion_layoutBox(void*);
 
 extern "C" void RenderObjectScion_setLayoutBox(void*, void*);
 
+extern "C" void RenderObjectScion_clearLayoutBox(void*);
+
 extern "C" void* RenderObjectScion_parent(const void*);
 
 extern "C" void* RenderObjectScion_previousSibling(const void*);
@@ -1140,6 +1142,8 @@ namespace WebCore {
 Layout::Box* RenderObjectScion::layoutBox() { return static_cast<Layout::Box*>(const_cast<void*>(RenderObjectScion_layoutBox(m_handle))); }
 
 void RenderObjectScion::setLayoutBox(Layout::Box& box) { RenderObjectScion_setLayoutBox(m_handle, &box); }
+
+void RenderObjectScion::clearLayoutBox() { RenderObjectScion_clearLayoutBox(m_handle); }
 
 RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElement*>(RenderObjectScion_parent(m_handle)); }
 

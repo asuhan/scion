@@ -527,7 +527,10 @@ void RenderObject::setLayoutBox(Layout::Box& box)
 
 void RenderObject::clearLayoutBox()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearLayoutBox();
+        return;
+    }
     if (!m_layoutBox)
         return;
 

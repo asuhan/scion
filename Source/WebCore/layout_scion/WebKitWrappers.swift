@@ -1216,6 +1216,12 @@ func RenderObjectScion_setLayoutBox(
   object.setLayoutBox(RenderObjectWrapper.createLayoutBoxWrapper(boxRaw))
 }
 
+@_cdecl("RenderObjectScion_clearLayoutBox")
+func RenderObjectScion_clearLayoutBox(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.clearLayoutBox()
+}
+
 @_cdecl("RenderObjectScion_previousSibling")
 func RenderObjectScion_previousSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

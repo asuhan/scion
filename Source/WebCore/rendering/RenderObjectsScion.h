@@ -83,6 +83,8 @@ public:
 
     void setLayoutBox(Layout::Box&);
 
+    void clearLayoutBox();
+
     RenderElement* parent() const;
 
     RenderObject* previousSibling() const;

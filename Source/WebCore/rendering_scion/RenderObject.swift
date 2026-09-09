@@ -475,6 +475,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_layoutBox!.setRendererForIntegration(self)
   }
 
+  func clearLayoutBox() {
+    assert(isNativeImpl())
+    guard let layoutBox = m_layoutBox else { return }
+    assert(CPtrToInt(m_layoutBox!.rendererForIntegration()!.id()) == CPtrToInt(id()))
+    layoutBox.setRendererForIntegration(nil)
+    m_layoutBox = nil
+  }
+
   func theme() -> RenderTheme {
     assert(isNativeImpl())
     return RenderTheme.singleton()
