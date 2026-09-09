@@ -52,8 +52,7 @@ class AtomStringWrapper: Hashable, CustomStringConvertible {
   func isEmpty() -> Bool { return wk_interop.AtomString_isEmpty(p!) }
 
   func hash(into hasher: inout Hasher) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    hasher.combine(p == nil ? 0 : wk_interop.AtomString_hash(p!))
   }
 
   static func == (lhs: AtomStringWrapper, rhs: AtomStringWrapper) -> Bool {

@@ -924,6 +924,14 @@ extern "C" uint32_t AtomString_length(const void* p)
     return static_cast<const AtomString*>(p)->length();
 }
 
+extern "C" uint32_t AtomString_hash(const void* p)
+{
+    auto* impl = static_cast<const AtomString*>(p)->impl();
+    if (!impl)
+        return 0;
+    return impl->hash();
+}
+
 extern "C" void AtomString_destroy(const void* p)
 {
     delete static_cast<const AtomString*>(p);

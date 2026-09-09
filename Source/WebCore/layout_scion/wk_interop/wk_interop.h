@@ -744,6 +744,7 @@ bool AtomString_isNull(const void*);
 bool AtomString_isEmpty(const void*);
 bool AtomString_eq(const void*, const void*);
 uint32_t AtomString_length(const void*);
+uint32_t AtomString_hash(const void*);
 void AtomString_destroy(const void*);
 const void* AtomString_nullAtom();
 const void* AtomString_string(const void*);
