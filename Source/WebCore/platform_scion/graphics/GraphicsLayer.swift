@@ -266,8 +266,7 @@ class GraphicsLayer {
   }
 
   func setContentsClippingRect(_ roundedRect: FloatRoundedRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsLayer_setContentsClippingRect(p, convertFloatRoundedRect(roundedRect))
   }
 
   func setContentsRectClipsDescendants(_ b: Bool) {

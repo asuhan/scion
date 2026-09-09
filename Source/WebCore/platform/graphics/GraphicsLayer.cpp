@@ -282,6 +282,47 @@ extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsRect(void* p, FloatRectR
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsRect(toFloatRect(r));
 }
 
+struct FloatRadiiRaw {
+    FloatSizeRaw topLeft;
+    FloatSizeRaw topRight;
+    FloatSizeRaw bottomLeft;
+    FloatSizeRaw bottomRight;
+};
+
+struct FloatRoundedRectRaw {
+    FloatRectRaw rect;
+    FloatRadiiRaw radii;
+};
+
+namespace {
+
+WebCore::FloatSize convertFloatSizeRaw(const FloatSizeRaw& size)
+{
+    return { size.width, size.height };
+}
+
+WebCore::FloatRoundedRect::Radii toFloatRadii(FloatRadiiRaw radii)
+{
+    return {
+        convertFloatSizeRaw(radii.topLeft),
+        convertFloatSizeRaw(radii.topRight),
+        convertFloatSizeRaw(radii.bottomLeft),
+        convertFloatSizeRaw(radii.bottomRight)
+    };
+}
+
+WebCore::FloatRoundedRect toFloatRoundedRect(FloatRoundedRectRaw rect)
+{
+    return WebCore::FloatRoundedRect { toFloatRect(rect.rect), toFloatRadii(rect.radii) };
+}
+
+} // namespace
+
+extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsClippingRect(void* p, FloatRoundedRectRaw roundedRect)
+{
+    static_cast<WebCore::GraphicsLayer*>(p)->setContentsClippingRect(toFloatRoundedRect(roundedRect));
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsLayer_setContentsRectClipsDescendants(void* p, bool b)
 {
     static_cast<WebCore::GraphicsLayer*>(p)->setContentsRectClipsDescendants(b);
