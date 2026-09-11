@@ -612,7 +612,7 @@ inline RenderObject* RenderElement::lastInFlowChild() const
 
 inline CheckedPtr<RenderElement> RenderObject::checkedParent() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return parent(); }
     return m_parent.get();
 }
 

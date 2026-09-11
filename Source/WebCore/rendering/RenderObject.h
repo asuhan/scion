@@ -359,16 +359,8 @@ public:
     RenderObject* nextInFlowSibling() const;
 
     // Use RenderElement versions instead.
-    virtual RenderObject* firstChildSlow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return nullptr;
-    }
-    virtual RenderObject* lastChildSlow() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return nullptr;
-    }
+    virtual RenderObject* firstChildSlow() const;
+    virtual RenderObject* lastChildSlow() const;
 
     RenderObject* nextInPreOrder() const;
     RenderObject* nextInPreOrder(const RenderObject* stayWithin) const;

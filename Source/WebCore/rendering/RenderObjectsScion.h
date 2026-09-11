@@ -91,6 +91,16 @@ public:
 
     RenderObject* nextSibling() const;
 
+    RenderObject* firstChildSlow() const;
+
+    RenderObject* lastChildSlow() const;
+
+    RenderObject* previousInPreOrder() const;
+
+    RenderObject* previousInPreOrder(const RenderObject* stayWithin) const;
+
+    RenderObject* nextInPreOrder() const;
+
     RenderObject* nextInPreOrder(const RenderObject*) const;
 
     RenderObject* nextInPreOrderAfterChildren() const;

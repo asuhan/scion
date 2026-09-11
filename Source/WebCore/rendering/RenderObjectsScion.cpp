@@ -55,11 +55,21 @@ extern "C" void* RenderObjectScion_previousSibling(const void*);
 
 extern "C" void* RenderObjectScion_nextSibling(const void*);
 
+extern "C" void* RenderObjectScion_firstChildSlow(const void*);
+
+extern "C" void* RenderObjectScion_lastChildSlow(const void*);
+
 extern "C" void RenderObjectScion_setPreviousSibling(void*, void*);
 
 extern "C" void RenderObjectScion_setNextSibling(void*, void*);
 
-extern "C" void* RenderObjectScion_nextInPreOrder(const void*, void*);
+extern "C" void* RenderObjectScion_previousInPreOrder(const void*);
+
+extern "C" void* RenderObjectScion_previousInPreOrderStayWithin(const void*, void*);
+
+extern "C" void* RenderObjectScion_nextInPreOrder(const void*);
+
+extern "C" void* RenderObjectScion_nextInPreOrderStayWithin(const void*, void*);
 
 extern "C" void* RenderObjectScion_nextInPreOrderAfterChildren(const void*);
 
@@ -1151,7 +1161,17 @@ RenderObject* RenderObjectScion::previousSibling() const { return static_cast<Re
 
 RenderObject* RenderObjectScion::nextSibling() const { return static_cast<RenderObject*>(RenderObjectScion_nextSibling(m_handle)); }
 
-RenderObject* RenderObjectScion::nextInPreOrder(const RenderObject* stayWithin) const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrder(m_handle, const_cast<void*>(static_cast<const void*>(stayWithin)))); }
+RenderObject* RenderObjectScion::firstChildSlow() const { return static_cast<RenderObject*>(RenderObjectScion_firstChildSlow(m_handle)); }
+
+RenderObject* RenderObjectScion::lastChildSlow() const { return static_cast<RenderObject*>(RenderObjectScion_lastChildSlow(m_handle)); }
+
+RenderObject* RenderObjectScion::previousInPreOrder() const { return static_cast<RenderObject*>(RenderObjectScion_previousInPreOrder(m_handle)); }
+
+RenderObject* RenderObjectScion::previousInPreOrder(const RenderObject* stayWithin) const { return static_cast<RenderObject*>(RenderObjectScion_previousInPreOrderStayWithin(m_handle, const_cast<void*>(static_cast<const void*>(stayWithin)))); }
+
+RenderObject* RenderObjectScion::nextInPreOrder() const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrder(m_handle)); }
+
+RenderObject* RenderObjectScion::nextInPreOrder(const RenderObject* stayWithin) const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrderStayWithin(m_handle, const_cast<void*>(static_cast<const void*>(stayWithin)))); }
 
 RenderObject* RenderObjectScion::nextInPreOrderAfterChildren() const { return static_cast<RenderObject*>(RenderObjectScion_nextInPreOrderAfterChildren(m_handle)); }
 

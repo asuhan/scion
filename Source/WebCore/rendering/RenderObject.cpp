@@ -568,6 +568,18 @@ RenderObject* RenderObject::nextSibling() const
     return m_next.get();
 }
 
+RenderObject* RenderObject::firstChildSlow() const
+{
+    if (m_scion) { return m_scion->firstChildSlow(); }
+    return nullptr;
+}
+
+RenderObject* RenderObject::lastChildSlow() const
+{
+    if (m_scion) { return m_scion->lastChildSlow(); }
+    return nullptr;
+}
+
 RenderElement* RenderObject::firstNonAnonymousAncestor() const
 {
     if (m_scion) { return m_scion->firstNonAnonymousAncestor(); }
@@ -784,7 +796,7 @@ void RenderObject::setParent(RenderElement* parent)
 
 RenderObject* RenderObject::nextInPreOrder() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->nextInPreOrder(); }
     if (RenderObject* o = firstChildSlow())
         return o;
 
@@ -833,7 +845,7 @@ RenderObject* RenderObject::nextInPreOrderAfterChildren(const RenderObject* stay
 
 RenderObject* RenderObject::previousInPreOrder() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->previousInPreOrder(); }
     if (RenderObject* o = previousSibling()) {
         while (RenderObject* last = o->lastChildSlow())
             o = last;
@@ -845,7 +857,7 @@ RenderObject* RenderObject::previousInPreOrder() const
 
 RenderObject* RenderObject::previousInPreOrder(const RenderObject* stayWithin) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->previousInPreOrder(stayWithin); }
     if (this == stayWithin)
         return nullptr;
 

@@ -1234,6 +1234,18 @@ func RenderObjectScion_nextSibling(_ objectRaw: UnsafeRawPointer) -> UnsafeMutab
   return wkRenderObject(object.nextSibling())
 }
 
+@_cdecl("RenderObjectScion_firstChildSlow")
+func RenderObjectScion_firstChildSlow(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.firstChildSlow())
+}
+
+@_cdecl("RenderObjectScion_lastChildSlow")
+func RenderObjectScion_lastChildSlow(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.lastChildSlow())
+}
+
 @_cdecl("RenderObjectScion_setPreviousSibling")
 func RenderObjectScion_setPreviousSibling(
   _ objectRaw: UnsafeMutableRawPointer, _ previousRaw: UnsafeMutableRawPointer?
@@ -1253,13 +1265,44 @@ func RenderObjectScion_setNextSibling(
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrder")
-func RenderObjectScion_nextInPreOrder(
+func RenderObjectScion_nextInPreOrder(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let next = object.nextInPreOrder()
+  else {
+    return nil
+  }
+  return next.isNativeImpl() ? next.getWk() : next.id()
+}
+
+@_cdecl("RenderObjectScion_nextInPreOrderStayWithin")
+func RenderObjectScion_nextInPreOrderStayWithin(
   _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
 )
   -> UnsafeMutableRawPointer?
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   guard let next = object.nextInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin))
+  else {
+    return nil
+  }
+  return next.isNativeImpl() ? next.getWk() : next.id()
+}
+
+@_cdecl("RenderObjectScion_previousInPreOrder")
+func RenderObjectScion_previousInPreOrder(_ objectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.previousInPreOrder())
+}
+
+@_cdecl("RenderObjectScion_previousInPreOrderStayWithin")
+func RenderObjectScion_previousInPreOrderStayWithin(
+  _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
+) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard
+    let next = object.previousInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin))
   else {
     return nil
   }
