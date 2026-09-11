@@ -197,11 +197,7 @@ public:
     int nextOffset(int current) const final;
 
     bool needsVisualReordering() const;
-    void setNeedsVisualReordering()
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_needsVisualReordering = true;
-    }
+    void setNeedsVisualReordering();
 
     void momentarilyRevealLastTypedCharacter(unsigned offsetAfterLastTypedCharacter);
 

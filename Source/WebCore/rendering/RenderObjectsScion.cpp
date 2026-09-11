@@ -484,6 +484,8 @@ extern "C" bool RenderTextScion_hasRenderedText(const void*);
 
 extern "C" bool RenderTextScion_needsVisualReordering(const void*);
 
+extern "C" void RenderTextScion_setNeedsVisualReordering(void*);
+
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
 extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
@@ -491,6 +493,8 @@ extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
 
 extern "C" void RenderTextScion_resetMinMaxWidth(void*);
+
+extern "C" void RenderTextScion_removeAndDestroyLegacyTextBoxes(void*);
 
 struct OptionalBool {
     bool value;
@@ -2107,6 +2111,11 @@ bool RenderTextScion::needsVisualReordering() const
     return RenderTextScion_needsVisualReordering(m_handle);
 }
 
+void RenderTextScion::setNeedsVisualReordering()
+{
+    RenderTextScion_setNeedsVisualReordering(m_handle);
+}
+
 bool RenderTextScion::canUseSimpleFontCodePath() const
 {
     return RenderTextScion_canUseSimpleFontCodePath(m_handle);
@@ -2125,6 +2134,11 @@ RenderInline* RenderTextScion::inlineWrapperForDisplayContents()
 void RenderTextScion::resetMinMaxWidth()
 {
     RenderTextScion_resetMinMaxWidth(m_handle);
+}
+
+void RenderTextScion::removeAndDestroyLegacyTextBoxes()
+{
+    RenderTextScion_removeAndDestroyLegacyTextBoxes(m_handle);
 }
 
 void RenderTextScion::setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring)

@@ -2604,6 +2604,18 @@ func RenderTextScion_needsVisualReordering(_ renderTextRaw: UnsafeRawPointer) ->
   return renderText.needsVisualReordering()
 }
 
+@_cdecl("RenderTextScion_removeAndDestroyLegacyTextBoxes")
+func RenderTextScion_removeAndDestroyLegacyTextBoxes(_ renderTextRaw: UnsafeRawPointer) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  renderText.removeAndDestroyLegacyTextBoxes()
+}
+
+@_cdecl("RenderTextScion_setNeedsVisualReordering")
+func RenderTextScion_setNeedsVisualReordering(_ renderTextRaw: UnsafeRawPointer) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  renderText.setNeedsVisualReordering()
+}
+
 @_cdecl("RenderTextScion_canUseSimpleFontCodePath")
 func RenderTextScion_canUseSimpleFontCodePath(_ renderTextRaw: UnsafeRawPointer) -> Bool {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

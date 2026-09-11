@@ -633,6 +633,8 @@ public:
 
     bool needsVisualReordering() const;
 
+    void setNeedsVisualReordering();
+
     bool canUseSimpleFontCodePath() const;
 
     void styleDidChange(StyleDifference, const RenderStyle*);
@@ -640,6 +642,8 @@ public:
     RenderInline* inlineWrapperForDisplayContents();
 
     void resetMinMaxWidth();
+
+    void removeAndDestroyLegacyTextBoxes();
 
     void setCanUseSimplifiedTextMeasuring(bool);
 

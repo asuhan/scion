@@ -495,7 +495,10 @@ void RenderText::styleDidChange(StyleDifference diff, const RenderStyle* oldStyl
 
 void RenderText::removeAndDestroyLegacyTextBoxes()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->removeAndDestroyLegacyTextBoxes();
+        return;
+    }
     if (!renderTreeBeingDestroyed())
         m_legacyLineBoxes.removeAllFromParent(*this);
 #if !ASSERT_WITH_SECURITY_IMPLICATION_DISABLED
@@ -2235,6 +2238,15 @@ bool RenderText::needsVisualReordering() const
 {
     if (m_scion) { return m_scion->needsVisualReordering(); }
     return m_needsVisualReordering;
+}
+
+void RenderText::setNeedsVisualReordering()
+{
+    if (m_scion) {
+        m_scion->setNeedsVisualReordering();
+        return;
+    }
+    m_needsVisualReordering = true;
 }
 
 bool RenderText::computeCanUseSimpleFontCodePath() const
