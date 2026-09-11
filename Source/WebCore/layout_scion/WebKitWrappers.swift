@@ -832,8 +832,7 @@ func RenderViewScion_rendererForRootBackground(_ viewRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?
 {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  guard let element = view.rendererForRootBackground() else { return nil }
-  return element.isNativeImpl() ? element.getWk() : element.id()
+  return wkRenderObject(view.rendererForRootBackground())
 }
 
 @_cdecl("RenderViewScion_printRect")
@@ -1198,8 +1197,7 @@ func RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(
 @_cdecl("RenderObjectScion_parent")
 func RenderObjectScion_parent(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  guard let parent = object.parent() else { return nil }
-  return parent.isNativeImpl() ? parent.getWk() : parent.id()
+  return wkRenderObject(object.parent())
 }
 
 @_cdecl("RenderObjectScion_layoutBox")
@@ -1267,11 +1265,7 @@ func RenderObjectScion_setNextSibling(
 @_cdecl("RenderObjectScion_nextInPreOrder")
 func RenderObjectScion_nextInPreOrder(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  guard let next = object.nextInPreOrder()
-  else {
-    return nil
-  }
-  return next.isNativeImpl() ? next.getWk() : next.id()
+  return wkRenderObject(object.nextInPreOrder())
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrderStayWithin")
@@ -1281,11 +1275,8 @@ func RenderObjectScion_nextInPreOrderStayWithin(
   -> UnsafeMutableRawPointer?
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  guard let next = object.nextInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin))
-  else {
-    return nil
-  }
-  return next.isNativeImpl() ? next.getWk() : next.id()
+  return wkRenderObject(
+    object.nextInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin)))
 }
 
 @_cdecl("RenderObjectScion_previousInPreOrder")
@@ -1301,12 +1292,8 @@ func RenderObjectScion_previousInPreOrderStayWithin(
   _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
 ) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  guard
-    let next = object.previousInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin))
-  else {
-    return nil
-  }
-  return next.isNativeImpl() ? next.getWk() : next.id()
+  return wkRenderObject(
+    object.previousInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin)))
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrderAfterChildren")
@@ -1322,8 +1309,7 @@ func RenderObjectScion_firstNonAnonymousAncestor(_ objectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  guard let ancestor = object.firstNonAnonymousAncestor() else { return nil }
-  return ancestor.isNativeImpl() ? ancestor.getWk() : ancestor.id()
+  return wkRenderObject(object.firstNonAnonymousAncestor())
 }
 
 @_cdecl("RenderObjectScion_enclosingLayer")
@@ -2789,8 +2775,7 @@ func RenderElementScion_element(_ elementRaw: UnsafeRawPointer) -> UnsafeMutable
 @_cdecl("RenderElementScion_firstChild")
 func RenderElementScion_firstChild(_ elementRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  guard let firstChild = element.firstChild() else { return nil }
-  return firstChild.isNativeImpl() ? firstChild.getWk() : firstChild.id()
+  return wkRenderObject(element.firstChild())
 }
 
 @_cdecl("RenderElementScion_lastChild")
@@ -3129,8 +3114,7 @@ func RenderElementScion_detachRendererInternal(
 {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
   let renderer = createRenderObjectWrapperOrNative(rendererRaw)
-  guard let detached = element.detachRendererInternal(renderer: renderer) else { return nil }
-  return detached.isNativeImpl() ? detached.getWk() : detached.id()
+  return wkRenderObject(element.detachRendererInternal(renderer: renderer))
 }
 
 @_cdecl("RenderElementScion_transformReferenceBoxRect")
