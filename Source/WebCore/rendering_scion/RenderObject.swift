@@ -634,6 +634,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return parent()
   }
 
+  func previousInPreOrder(stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    if CPtrToInt(id()) == CPtrToInt(stayWithin?.id()) {
+      return nil
+    }
+    return previousInPreOrder()
+  }
+
   func childAt(_ index: UInt32) -> RenderObjectWrapper? {
     assert(isNativeImpl())
     var child = firstChildSlow()
