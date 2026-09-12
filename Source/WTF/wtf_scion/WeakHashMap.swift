@@ -48,6 +48,11 @@ final class WeakHashMap<KeyType: AnyObject, ValueType> {
     return m_impl[ObjectIdentifier(key)] ?? defaultValue
   }
 
+  @discardableResult
+  func remove(_ key: KeyType) -> Bool {
+    return m_impl.removeValue(forKey: ObjectIdentifier(key)) != nil
+  }
+
   func contains(_ key: KeyType) -> Bool {
     increaseOperationCountSinceLastCleanup()
     return m_impl[ObjectIdentifier(key)] != nil

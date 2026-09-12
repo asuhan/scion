@@ -2059,8 +2059,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverridingContainingBlockContentSize() {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_clearOverridingContainingBlockContentSize(id())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_clearOverridingContainingBlockContentSize(id())
+      return
+    }
+    if gOverridingContainingBlockContentLogicalWidthMap != nil {
+      gOverridingContainingBlockContentLogicalWidthMap!.remove(self)
+    }
+    clearOverridingContainingBlockContentLogicalHeight()
+  }
+
+  func clearOverridingContainingBlockContentLogicalHeight() {
+    assert(isNativeImpl())
+    if gOverridingContainingBlockContentLogicalHeightMap != nil {
+      gOverridingContainingBlockContentLogicalHeightMap!.remove(self)
+    }
   }
 
   // These are currently only used by Flexbox code. In some cases we must layout flex items with a different main size
