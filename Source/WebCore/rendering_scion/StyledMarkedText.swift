@@ -202,27 +202,26 @@ private func coalesceAdjacentWithSameRanges(styledTexts: [StyledMarkedText]) -> 
   return frontmostMarkedTexts
 }
 
+// TODO(asuhan): change markedTextsNames back to ListHashSet<AtomStringWrapper>
 private func orderHighlights(
-  markedTextsNames: ListHashSet<AtomStringWrapper>, markedTexts: inout [MarkedText]
+  markedTextsNames: [AtomStringWrapper], markedTexts: inout [MarkedText]
 ) {
   if markedTexts.isEmpty {
     return
   }
 
-  var markedTextsNamesPriority: [AtomStringWrapper: Int] = [:]
-  var index: Int = 0
-  for highlightName in markedTextsNames {
-    markedTextsNamesPriority.updateValue(index, forKey: highlightName)
-    index += 1
+  // The priority of a highlight is its position in the insertion-ordered list of names.
+  let priority = { (_ highlightName: AtomStringWrapper) in
+    return markedTextsNames.firstIndex(where: { $0 == highlightName })
   }
 
-  index = 0
+  var index: Int = 0
   while index < markedTexts.count - 1 {
     // If two adjacent highlights with same ranges are not in correct priority order, swap them and move on.
     if !markedTexts[index].highlightName.isNull()
       && !markedTexts[index + 1].highlightName.isNull()
-      && markedTextsNamesPriority[markedTexts[index].highlightName]!
-        > markedTextsNamesPriority[markedTexts[index + 1].highlightName]!
+      && priority(markedTexts[index].highlightName)!
+        > priority(markedTexts[index + 1].highlightName)!
       && markedTexts[index].startOffset == markedTexts[index + 1].startOffset
       && markedTexts[index].endOffset == markedTexts[index + 1].endOffset
     {
@@ -288,10 +287,13 @@ final class StyledMarkedText: MarkedText {
     }
 
     // Keep track of original order of highlights.
-    let markedTextsNames = ListHashSet<AtomStringWrapper>()
+    // TODO(asuhan): change it back to ListHashSet<AtomStringWrapper>
+    var markedTextsNames: [AtomStringWrapper] = []
     for markedText in textsToSubdivide {
-      if !markedText.highlightName.isNull() {
-        markedTextsNames.add(value: markedText.highlightName)
+      if !markedText.highlightName.isNull()
+        && !markedTextsNames.contains(where: { $0 == markedText.highlightName })
+      {
+        markedTextsNames.append(markedText.highlightName)
       }
     }
 
