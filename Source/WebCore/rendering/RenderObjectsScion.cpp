@@ -496,6 +496,10 @@ extern "C" void RenderTextScion_resetMinMaxWidth(void*);
 
 extern "C" void RenderTextScion_removeAndDestroyLegacyTextBoxes(void*);
 
+extern "C" int32_t RenderTextScion_previousOffset(const void*, int32_t);
+
+extern "C" int32_t RenderTextScion_nextOffset(const void*, int32_t);
+
 struct OptionalBool {
     bool value;
     bool is_valid;
@@ -2139,6 +2143,16 @@ void RenderTextScion::resetMinMaxWidth()
 void RenderTextScion::removeAndDestroyLegacyTextBoxes()
 {
     RenderTextScion_removeAndDestroyLegacyTextBoxes(m_handle);
+}
+
+int RenderTextScion::previousOffset(int current) const
+{
+    return RenderTextScion_previousOffset(m_handle, current);
+}
+
+int RenderTextScion::nextOffset(int current) const
+{
+    return RenderTextScion_nextOffset(m_handle, current);
 }
 
 void RenderTextScion::setCanUseSimplifiedTextMeasuring(bool canUseSimplifiedTextMeasuring)

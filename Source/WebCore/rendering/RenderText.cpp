@@ -104,6 +104,20 @@ extern "C" WEBCORE_EXPORT void RenderText_setNeedsVisualReordering(void* p)
     static_cast<WebCore::RenderText*>(p)->setNeedsVisualReordering();
 }
 
+extern "C" WEBCORE_EXPORT int32_t String_previousOffsetForCaret(const void* p, int32_t current)
+{
+    const auto& string = *static_cast<const WTF::String*>(p);
+    WTF::CachedTextBreakIterator iterator(string, { }, WTF::TextBreakIterator::CaretMode { }, WTF::nullAtom());
+    return iterator.preceding(current).value_or(current - 1);
+}
+
+extern "C" WEBCORE_EXPORT int32_t String_nextOffsetForCaret(const void* p, int32_t current)
+{
+    const auto& string = *static_cast<const WTF::String*>(p);
+    WTF::CachedTextBreakIterator iterator(string, { }, WTF::TextBreakIterator::CaretMode { }, WTF::nullAtom());
+    return iterator.following(current).value_or(current + 1);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderText_canUseSimpleFontCodePath(const void* p)
 {
     return static_cast<const WebCore::RenderText*>(p)->canUseSimpleFontCodePath();
@@ -2209,7 +2223,7 @@ bool RenderText::hasRenderedText() const
 
 int RenderText::previousOffset(int current) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->previousOffset(current); }
     if (m_containsOnlyASCII || text().is8Bit())
         return current - 1;
 
@@ -2226,7 +2240,7 @@ int RenderText::previousOffsetForBackwardDeletion(int current) const
 
 int RenderText::nextOffset(int current) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->nextOffset(current); }
     if (m_containsOnlyASCII || text().is8Bit())
         return current + 1;
 

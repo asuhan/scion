@@ -645,6 +645,10 @@ public:
 
     void removeAndDestroyLegacyTextBoxes();
 
+    int previousOffset(int) const;
+
+    int nextOffset(int) const;
+
     void setCanUseSimplifiedTextMeasuring(bool);
 
     std::optional<bool> canUseSimplifiedTextMeasuring() const;

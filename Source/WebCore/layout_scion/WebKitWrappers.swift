@@ -2604,6 +2604,18 @@ func RenderTextScion_needsVisualReordering(_ renderTextRaw: UnsafeRawPointer) ->
   return renderText.needsVisualReordering()
 }
 
+@_cdecl("RenderTextScion_previousOffset")
+func RenderTextScion_previousOffset(_ renderTextRaw: UnsafeRawPointer, _ current: Int32) -> Int32 {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.previousOffset(current)
+}
+
+@_cdecl("RenderTextScion_nextOffset")
+func RenderTextScion_nextOffset(_ renderTextRaw: UnsafeRawPointer, _ current: Int32) -> Int32 {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.nextOffset(current)
+}
+
 @_cdecl("RenderTextScion_removeAndDestroyLegacyTextBoxes")
 func RenderTextScion_removeAndDestroyLegacyTextBoxes(_ renderTextRaw: UnsafeRawPointer) {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

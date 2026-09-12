@@ -917,8 +917,7 @@ class RenderTextWrapper: RenderObjectWrapper {
       return current - 1
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.String_previousOffsetForCaret(text().p, current)
   }
 
   override final func nextOffset(_ current: Int32) -> Int32 {
@@ -927,8 +926,7 @@ class RenderTextWrapper: RenderObjectWrapper {
       return current + 1
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.String_nextOffsetForCaret(text().p, current)
   }
 
   func needsVisualReordering() -> Bool {
