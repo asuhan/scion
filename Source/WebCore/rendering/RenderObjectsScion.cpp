@@ -877,6 +877,8 @@ extern "C" bool RenderBoxScion_avoidsFloats(const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_contentSize(const void*);
 
+extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalWidth(const void*);
+
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
@@ -2683,6 +2685,15 @@ LayoutSize RenderBoxScion::contentSize() const
 {
     const auto sizeRaw = RenderBoxScion_contentSize(m_handle);
     return { LayoutUnit::fromRawValue(sizeRaw.width), LayoutUnit::fromRawValue(sizeRaw.height) };
+}
+
+std::optional<LayoutUnit> RenderBoxScion::overridingLogicalWidth() const
+{
+    const auto width = RenderBoxScion_overridingLogicalWidth(m_handle);
+    if (!width.is_valid) {
+        return std::nullopt;
+    }
+    return LayoutUnit::fromRawValue(width.value);
 }
 
 LayoutUnit RenderBoxScion::offsetLeft() const

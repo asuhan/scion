@@ -862,6 +862,8 @@ public:
 
     LayoutSize contentSize() const;
 
+    std::optional<LayoutUnit> overridingLogicalWidth() const;
+
     LayoutUnit offsetLeft() const;
 
     LayoutUnit offsetTop() const;
