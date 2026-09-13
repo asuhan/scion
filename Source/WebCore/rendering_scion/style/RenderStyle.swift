@@ -701,7 +701,7 @@ class RenderStyleWrapper: Equatable {
 
   static func clone(style: RenderStyleWrapper) -> RenderStyleWrapper {
     if style.p != nil {
-      let cloned = convert_render_style(p: style.p!)
+      let cloned = convert_render_style(p: wk_interop.RenderStyle_clone(style.p!))
       cloned.pOwner = true
       return cloned
     }
