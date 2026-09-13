@@ -3060,6 +3060,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return current - 1
   }
 
+  func previousOffsetForBackwardDeletion(_ current: Int32) -> Int32 {
+    assert(isNativeImpl())
+    return current - 1
+  }
+
   func nextOffset(_ current: Int32) -> Int32 {
     assert(isNativeImpl())
     return current + 1

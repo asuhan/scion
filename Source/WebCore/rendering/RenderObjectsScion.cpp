@@ -55,6 +55,12 @@ extern "C" void* RenderObjectScion_previousSibling(const void*);
 
 extern "C" void* RenderObjectScion_nextSibling(const void*);
 
+extern "C" int32_t RenderObjectScion_previousOffset(const void*, int32_t);
+
+extern "C" int32_t RenderObjectScion_previousOffsetForBackwardDeletion(const void*, int32_t);
+
+extern "C" int32_t RenderObjectScion_nextOffset(const void*, int32_t);
+
 extern "C" void* RenderObjectScion_firstChildSlow(const void*);
 
 extern "C" void* RenderObjectScion_lastChildSlow(const void*);
@@ -499,6 +505,8 @@ extern "C" void RenderTextScion_resetMinMaxWidth(void*);
 extern "C" void RenderTextScion_removeAndDestroyLegacyTextBoxes(void*);
 
 extern "C" int32_t RenderTextScion_previousOffset(const void*, int32_t);
+
+extern "C" int32_t RenderTextScion_previousOffsetForBackwardDeletion(const void*, int32_t);
 
 extern "C" int32_t RenderTextScion_nextOffset(const void*, int32_t);
 
@@ -1170,6 +1178,12 @@ RenderElement* RenderObjectScion::parent() const { return static_cast<RenderElem
 RenderObject* RenderObjectScion::previousSibling() const { return static_cast<RenderObject*>(RenderObjectScion_previousSibling(m_handle)); }
 
 RenderObject* RenderObjectScion::nextSibling() const { return static_cast<RenderObject*>(RenderObjectScion_nextSibling(m_handle)); }
+
+int RenderObjectScion::previousOffset(int current) const { return RenderObjectScion_previousOffset(m_handle, current); }
+
+int RenderObjectScion::previousOffsetForBackwardDeletion(int current) const { return RenderObjectScion_previousOffsetForBackwardDeletion(m_handle, current); }
+
+int RenderObjectScion::nextOffset(int current) const { return RenderObjectScion_nextOffset(m_handle, current); }
 
 RenderObject* RenderObjectScion::firstChildSlow() const { return static_cast<RenderObject*>(RenderObjectScion_firstChildSlow(m_handle)); }
 
@@ -2155,6 +2169,11 @@ void RenderTextScion::removeAndDestroyLegacyTextBoxes()
 int RenderTextScion::previousOffset(int current) const
 {
     return RenderTextScion_previousOffset(m_handle, current);
+}
+
+int RenderTextScion::previousOffsetForBackwardDeletion(int current) const
+{
+    return RenderTextScion_previousOffsetForBackwardDeletion(m_handle, current);
 }
 
 int RenderTextScion::nextOffset(int current) const

@@ -920,6 +920,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     return wk_interop.String_previousOffsetForCaret(text().p, current)
   }
 
+  override final func previousOffsetForBackwardDeletion(_ current: Int32) -> Int32 {
+    assert(isNativeImpl())
+    return wk_interop.String_previousOffsetForBackwardDeletion(text().p, current)
+  }
+
   override final func nextOffset(_ current: Int32) -> Int32 {
     assert(isNativeImpl())
     if m_containsOnlyASCII || text().is8Bit() {

@@ -2610,6 +2610,14 @@ func RenderTextScion_previousOffset(_ renderTextRaw: UnsafeRawPointer, _ current
   return renderText.previousOffset(current)
 }
 
+@_cdecl("RenderTextScion_previousOffsetForBackwardDeletion")
+func RenderTextScion_previousOffsetForBackwardDeletion(
+  _ renderTextRaw: UnsafeRawPointer, _ current: Int32
+) -> Int32 {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.previousOffsetForBackwardDeletion(current)
+}
+
 @_cdecl("RenderTextScion_nextOffset")
 func RenderTextScion_nextOffset(_ renderTextRaw: UnsafeRawPointer, _ current: Int32) -> Int32 {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
@@ -4549,4 +4557,24 @@ func InlineIterator_firstTextBoxInLogicalOrderFor(_ textRaw: UnsafeRawPointer)
   let (textBox, _) = InlineIterator.firstTextBoxInLogicalOrderFor(text)
   let unmanaged = Unmanaged.passRetained(textBox)
   return unmanaged.toOpaque()
+}
+
+@_cdecl("RenderObjectScion_previousOffset")
+func RenderObjectScion_previousOffset(_ objectRaw: UnsafeRawPointer, _ current: Int32) -> Int32 {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.previousOffset(current)
+}
+
+@_cdecl("RenderObjectScion_previousOffsetForBackwardDeletion")
+func RenderObjectScion_previousOffsetForBackwardDeletion(
+  _ objectRaw: UnsafeRawPointer, _ current: Int32
+) -> Int32 {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.previousOffsetForBackwardDeletion(current)
+}
+
+@_cdecl("RenderObjectScion_nextOffset")
+func RenderObjectScion_nextOffset(_ objectRaw: UnsafeRawPointer, _ current: Int32) -> Int32 {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.nextOffset(current)
 }

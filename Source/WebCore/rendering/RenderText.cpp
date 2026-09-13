@@ -111,6 +111,13 @@ extern "C" WEBCORE_EXPORT int32_t String_previousOffsetForCaret(const void* p, i
     return iterator.preceding(current).value_or(current - 1);
 }
 
+extern "C" WEBCORE_EXPORT int32_t String_previousOffsetForBackwardDeletion(const void* p, int32_t current)
+{
+    const auto& string = *static_cast<const WTF::String*>(p);
+    WTF::CachedTextBreakIterator iterator(string, { }, WTF::TextBreakIterator::DeleteMode { }, WTF::nullAtom());
+    return iterator.preceding(current).value_or(0);
+}
+
 extern "C" WEBCORE_EXPORT int32_t String_nextOffsetForCaret(const void* p, int32_t current)
 {
     const auto& string = *static_cast<const WTF::String*>(p);
@@ -2233,7 +2240,7 @@ int RenderText::previousOffset(int current) const
 
 int RenderText::previousOffsetForBackwardDeletion(int current) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->previousOffsetForBackwardDeletion(current); }
     CachedTextBreakIterator iterator(text(), { }, TextBreakIterator::DeleteMode { }, nullAtom());
     return iterator.preceding(current).value_or(0);
 }

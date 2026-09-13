@@ -95,6 +95,12 @@ public:
 
     RenderObject* lastChildSlow() const;
 
+    int previousOffset(int) const;
+
+    int previousOffsetForBackwardDeletion(int) const;
+
+    int nextOffset(int) const;
+
     RenderObject* previousInPreOrder() const;
 
     RenderObject* previousInPreOrder(const RenderObject* stayWithin) const;
@@ -648,6 +654,8 @@ public:
     void removeAndDestroyLegacyTextBoxes();
 
     int previousOffset(int) const;
+
+    int previousOffsetForBackwardDeletion(int) const;
 
     int nextOffset(int) const;
 

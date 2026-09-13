@@ -2610,19 +2610,19 @@ int RenderObject::caretMaxOffset() const
 
 int RenderObject::previousOffset(int current) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->previousOffset(current); }
     return current - 1;
 }
 
 int RenderObject::previousOffsetForBackwardDeletion(int current) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->previousOffsetForBackwardDeletion(current); }
     return current - 1;
 }
 
 int RenderObject::nextOffset(int current) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->nextOffset(current); }
     return current + 1;
 }
 

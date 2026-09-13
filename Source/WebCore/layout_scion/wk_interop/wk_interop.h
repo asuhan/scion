@@ -752,6 +752,7 @@ bool AtomString_eq(const void*, const void*);
 uint32_t AtomString_length(const void*);
 uint32_t AtomString_hash(const void*);
 int32_t String_previousOffsetForCaret(const void*, int32_t);
+int32_t String_previousOffsetForBackwardDeletion(const void*, int32_t);
 int32_t String_nextOffsetForCaret(const void*, int32_t);
 void AtomString_destroy(const void*);
 const void* AtomString_nullAtom();
