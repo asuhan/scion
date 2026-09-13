@@ -4381,6 +4381,12 @@ func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
   return block.canHaveChildren()
 }
 
+@_cdecl("RenderBlockScion_logicalLeftOffsetForContent")
+func RenderBlockScion_logicalLeftOffsetForContent(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.logicalLeftOffsetForContent().rawValue()
+}
+
 @_cdecl("RenderBlockScion_availableLogicalHeightForPercentageComputation")
 func RenderBlockScion_availableLogicalHeightForPercentageComputation(_ blockRaw: UnsafeRawPointer)
   -> OptionalLayoutUnitRaw

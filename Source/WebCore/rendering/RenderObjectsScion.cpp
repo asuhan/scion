@@ -967,6 +967,8 @@ extern "C" bool RenderBlockScion_canHaveChildren(const void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBlockScion_availableLogicalHeightForPercentageComputation(const void*);
 
+extern "C" int32_t RenderBlockScion_logicalLeftOffsetForContent(const void*);
+
 extern "C" bool RenderBlockScion_shouldResetChildLogicalHeightBeforeLayout(const void*);
 
 extern "C" void RenderBlockScion_layout(void*);
@@ -2883,6 +2885,11 @@ void RenderBlockScion::getFirstLetter(RenderObject*& firstLetter, RenderElement*
 bool RenderBlockScion::canHaveChildren() const
 {
     return RenderBlockScion_canHaveChildren(m_handle);
+}
+
+LayoutUnit RenderBlockScion::logicalLeftOffsetForContent() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_logicalLeftOffsetForContent(m_handle));
 }
 
 std::optional<LayoutUnit> RenderBlockScion::availableLogicalHeightForPercentageComputation() const

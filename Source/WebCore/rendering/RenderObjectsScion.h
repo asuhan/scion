@@ -993,6 +993,8 @@ public:
 
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
 
+    LayoutUnit logicalLeftOffsetForContent() const;
+
     bool shouldResetChildLogicalHeightBeforeLayout() const;
 
     void layout();

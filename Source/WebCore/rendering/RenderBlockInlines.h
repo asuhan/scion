@@ -20,6 +20,7 @@
 #pragma once
 
 #include "RenderBlock.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 
 namespace WebCore {
@@ -36,7 +37,7 @@ inline LayoutUnit RenderBlock::endOffsetForContent(LayoutUnit blockOffset) const
 }
 inline LayoutUnit RenderBlock::logicalLeftOffsetForContent() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->logicalLeftOffsetForContent(); }
     return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop();
 }
 inline LayoutUnit RenderBlock::logicalMarginBoxHeightForChild(const RenderBox& child) const
