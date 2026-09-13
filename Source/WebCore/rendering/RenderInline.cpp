@@ -365,13 +365,13 @@ void RenderInline::absoluteQuadsForSelection(Vector<FloatQuad>& quads) const
 
 LayoutUnit RenderInline::offsetLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->offsetLeft(); }
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).x();
 }
 
 LayoutUnit RenderInline::offsetTop() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->offsetTop(); }
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).y();
 }
 

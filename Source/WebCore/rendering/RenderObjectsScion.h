@@ -850,6 +850,8 @@ public:
 
     bool avoidsFloats() const;
 
+    LayoutUnit offsetLeft() const;
+
     LayoutUnit offsetTop() const;
 
     LayoutPoint flipForWritingModeForChild(const RenderBox& child, const LayoutPoint&) const;
@@ -900,6 +902,10 @@ public:
     }
 
     IntRect linesBoundingBox() const;
+
+    LayoutUnit offsetLeft() const;
+
+    LayoutUnit offsetTop() const;
 
     LayoutUnit offsetWidth() const;
 

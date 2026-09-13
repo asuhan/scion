@@ -5041,6 +5041,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit(value: 0)
   }
 
+  override func offsetLeft() -> LayoutUnit {
+    assert(isNativeImpl())
+    return adjustedPositionRelativeToOffsetParent(topLeftLocation()).x
+  }
+
   override func offsetTop() -> LayoutUnit {
     assert(isNativeImpl())
     return adjustedPositionRelativeToOffsetParent(topLeftLocation()).y

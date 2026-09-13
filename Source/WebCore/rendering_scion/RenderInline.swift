@@ -599,6 +599,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
       self, request, &result, locationInContainer, accumulatedOffset, hitTestAction)
   }
 
+  override final func offsetLeft() -> LayoutUnit {
+    assert(isNativeImpl())
+    return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).x
+  }
+
   override final func offsetTop() -> LayoutUnit {
     assert(isNativeImpl())
     return adjustedPositionRelativeToOffsetParent(firstInlineBoxTopLeft()).y

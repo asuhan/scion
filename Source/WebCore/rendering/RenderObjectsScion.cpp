@@ -721,6 +721,10 @@ extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
 extern "C" IntRectRaw RenderInlineScion_linesBoundingBox(const void*);
 
+extern "C" int32_t RenderInlineScion_offsetLeft(const void*);
+
+extern "C" int32_t RenderInlineScion_offsetTop(const void*);
+
 extern "C" int32_t RenderInlineScion_offsetWidth(const void*);
 
 extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
@@ -860,6 +864,8 @@ extern "C" LayoutRectRaw RenderBoxScion_overflowClipRect(const void*, LayoutPoin
 extern "C" LayoutRectRaw RenderBoxScion_overflowClipRectForChildLayers(const void*, LayoutPointRaw, void*, bool);
 
 extern "C" bool RenderBoxScion_avoidsFloats(const void*);
+
+extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
 
@@ -2293,6 +2299,16 @@ IntRect RenderInlineScion::linesBoundingBox() const
     return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
 }
 
+LayoutUnit RenderInlineScion::offsetLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_offsetLeft(m_handle));
+}
+
+LayoutUnit RenderInlineScion::offsetTop() const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_offsetTop(m_handle));
+}
+
 LayoutUnit RenderInlineScion::offsetWidth() const
 {
     return LayoutUnit::fromRawValue(RenderInlineScion_offsetWidth(m_handle));
@@ -2639,6 +2655,11 @@ LayoutRect RenderBoxScion::overflowClipRectForChildLayers(const LayoutPoint& loc
 bool RenderBoxScion::avoidsFloats() const
 {
     return RenderBoxScion_avoidsFloats(m_handle);
+}
+
+LayoutUnit RenderBoxScion::offsetLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_offsetLeft(m_handle));
 }
 
 LayoutUnit RenderBoxScion::offsetTop() const

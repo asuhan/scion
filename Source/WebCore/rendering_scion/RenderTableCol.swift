@@ -125,6 +125,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     return style().borderEnd(styleForFlow: table()!.style())
   }
 
+  override final func offsetLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func offsetTop() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

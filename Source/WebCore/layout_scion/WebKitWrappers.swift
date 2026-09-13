@@ -3288,6 +3288,18 @@ func RenderInlineScion_linesBoundingBox(_ inlineRaw: UnsafeRawPointer) -> IntRec
     size: IntSizeRaw(width: r.size.width, height: r.size.height))
 }
 
+@_cdecl("RenderInlineScion_offsetLeft")
+func RenderInlineScion_offsetLeft(_ inlineRaw: UnsafeRawPointer) -> Int32 {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return inline.offsetLeft().rawValue()
+}
+
+@_cdecl("RenderInlineScion_offsetTop")
+func RenderInlineScion_offsetTop(_ inlineRaw: UnsafeRawPointer) -> Int32 {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return inline.offsetTop().rawValue()
+}
+
 @_cdecl("RenderInlineScion_offsetWidth")
 func RenderInlineScion_offsetWidth(_ inlineRaw: UnsafeRawPointer) -> Int32 {
   let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
@@ -3874,6 +3886,12 @@ func RenderBoxScion_overflowClipRectForChildLayers(
 func RenderBoxScion_avoidsFloats(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   return box.avoidsFloats()
+}
+
+@_cdecl("RenderBoxScion_offsetLeft")
+func RenderBoxScion_offsetLeft(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.offsetLeft().rawValue()
 }
 
 @_cdecl("RenderBoxScion_offsetTop")
