@@ -1011,6 +1011,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return node()?.hasBodyTagName() ?? false
   }
 
+  func isHR() -> Bool {
+    assert(isNativeImpl())
+    return node()?.hasHRTagName() ?? false
+  }
+
   func isLegend() -> Bool {
     assert(isNativeImpl())
     return node()?.hasLegendTagName() ?? false

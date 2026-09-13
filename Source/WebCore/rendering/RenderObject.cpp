@@ -589,6 +589,39 @@ RenderElement* RenderObject::firstNonAnonymousAncestor() const
     return ancestor;
 }
 
+bool RenderObject::isHR() const
+{
+    if (m_scion) { return m_scion->isHR(); }
+    return node() && node()->hasTagName(HTMLNames::hrTag);
+}
+
+bool RenderObject::beingDestroyed() const
+{
+    if (m_scion) { return m_scion->beingDestroyed(); }
+    return m_stateBitfields.hasFlag(StateFlag::BeingDestroyed);
+}
+
+bool RenderObject::isAnonymousForPercentageResolution() const
+{
+    if (m_scion) { return m_scion->isAnonymousForPercentageResolution(); }
+    return isAnonymous() && !isViewTransitionPseudo();
+}
+
+bool RenderObject::isRenderTextOrLineBreak() const
+{
+    if (m_scion) { return m_scion->isRenderTextOrLineBreak(); }
+    return isRenderText() || isRenderLineBreak();
+}
+
+void RenderObject::setIsExcludedFromNormalLayout(bool excluded)
+{
+    if (m_scion) {
+        m_scion->setIsExcludedFromNormalLayout(excluded);
+        return;
+    }
+    m_stateBitfields.setFlag(StateFlag::IsExcludedFromNormalLayout, excluded);
+}
+
 bool RenderObject::isLegend() const
 {
     if (m_scion) { return m_scion->isLegend(); }

@@ -169,6 +169,16 @@ extern "C" bool RenderObjectScion_isDocumentElementRenderer(const void*);
 
 extern "C" bool RenderObjectScion_isBody(const void*);
 
+extern "C" bool RenderObjectScion_isHR(const void*);
+
+extern "C" bool RenderObjectScion_beingDestroyed(const void*);
+
+extern "C" bool RenderObjectScion_isAnonymousForPercentageResolution(const void*);
+
+extern "C" bool RenderObjectScion_isRenderTextOrLineBreak(const void*);
+
+extern "C" void RenderObjectScion_setIsExcludedFromNormalLayout(void*, bool);
+
 extern "C" bool RenderObjectScion_isLegend(const void*);
 
 extern "C" bool RenderObjectScion_isHTMLMarquee(const void*);
@@ -1296,6 +1306,16 @@ bool RenderObjectScion::isRenderScrollbarPart() const { return RenderObjectScion
 bool RenderObjectScion::isDocumentElementRenderer() const { return RenderObjectScion_isDocumentElementRenderer(m_handle); }
 
 bool RenderObjectScion::isBody() const { return RenderObjectScion_isBody(m_handle); }
+
+bool RenderObjectScion::isHR() const { return RenderObjectScion_isHR(m_handle); }
+
+bool RenderObjectScion::beingDestroyed() const { return RenderObjectScion_beingDestroyed(m_handle); }
+
+bool RenderObjectScion::isAnonymousForPercentageResolution() const { return RenderObjectScion_isAnonymousForPercentageResolution(m_handle); }
+
+bool RenderObjectScion::isRenderTextOrLineBreak() const { return RenderObjectScion_isRenderTextOrLineBreak(m_handle); }
+
+void RenderObjectScion::setIsExcludedFromNormalLayout(bool excluded) { RenderObjectScion_setIsExcludedFromNormalLayout(m_handle, excluded); }
 
 bool RenderObjectScion::isLegend() const { return RenderObjectScion_isLegend(m_handle); }
 

@@ -201,6 +201,16 @@ public:
 
     bool isBody() const;
 
+    bool isHR() const;
+
+    bool beingDestroyed() const;
+
+    bool isAnonymousForPercentageResolution() const;
+
+    bool isRenderTextOrLineBreak() const;
+
+    void setIsExcludedFromNormalLayout(bool);
+
     bool isLegend() const;
 
     bool isHTMLMarquee() const;

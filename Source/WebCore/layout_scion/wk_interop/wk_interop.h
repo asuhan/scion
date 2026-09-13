@@ -1824,6 +1824,7 @@ bool Settings_userInterfaceDirectionPolicy(const void*);
 bool Settings_visualViewportEnabled(const void*);
 bool Node_hasFieldsetTagName(const void*);
 bool Node_hasBodyTagName(const void*);
+bool Node_hasHRTagName(const void*);
 bool Node_hasLegendTagName(const void*);
 bool Node_hasMarqueeTagName(const void*);
 bool Node_hasTextPathTagName(const void*);

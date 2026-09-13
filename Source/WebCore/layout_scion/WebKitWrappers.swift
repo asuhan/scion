@@ -1581,6 +1581,38 @@ func RenderObjectScion_isBody(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isBody()
 }
 
+@_cdecl("RenderObjectScion_isHR")
+func RenderObjectScion_isHR(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isHR()
+}
+
+@_cdecl("RenderObjectScion_beingDestroyed")
+func RenderObjectScion_beingDestroyed(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.beingDestroyed()
+}
+
+@_cdecl("RenderObjectScion_isAnonymousForPercentageResolution")
+func RenderObjectScion_isAnonymousForPercentageResolution(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isAnonymousForPercentageResolution()
+}
+
+@_cdecl("RenderObjectScion_isRenderTextOrLineBreak")
+func RenderObjectScion_isRenderTextOrLineBreak(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTextOrLineBreak()
+}
+
+@_cdecl("RenderObjectScion_setIsExcludedFromNormalLayout")
+func RenderObjectScion_setIsExcludedFromNormalLayout(
+  _ objectRaw: UnsafeMutableRawPointer, _ excluded: Bool
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setIsExcludedFromNormalLayout(excluded: excluded)
+}
+
 @_cdecl("RenderObjectScion_isLegend")
 func RenderObjectScion_isLegend(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

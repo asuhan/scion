@@ -566,11 +566,7 @@ public:
 
     bool isDocumentElementRenderer() const;
     bool isBody() const;
-    bool isHR() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return node() && node()->hasTagName(HTMLNames::hrTag);
-    }
+    bool isHR() const;
     bool isLegend() const;
 
     bool isHTMLMarquee() const;
@@ -590,11 +586,7 @@ public:
     static inline bool isAfterContent(const RenderObject* obj) { return obj && obj->isAfterContent(); }
     static inline bool isBeforeOrAfterContent(const RenderObject* obj) { return obj && obj->isBeforeOrAfterContent(); }
 
-    bool beingDestroyed() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_stateBitfields.hasFlag(StateFlag::BeingDestroyed);
-    }
+    bool beingDestroyed() const;
 
     bool everHadLayout() const;
     std::optional<bool> wasSkippedDuringLastLayoutDueToContentVisibility() const
@@ -887,11 +879,7 @@ public:
     virtual bool hasIntrinsicAspectRatio() const;
     bool isAnonymous() const;
     bool isAnonymousBlock() const;
-    bool isAnonymousForPercentageResolution() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isAnonymous() && !isViewTransitionPseudo();
-    }
+    bool isAnonymousForPercentageResolution() const;
     bool isBlockBox() const;
     inline bool isBlockLevelBox() const;
     bool isBlockContainer() const;
@@ -924,11 +912,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderLineBreak() && isWBR();
     }
-    bool isRenderTextOrLineBreak() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderText() || isRenderLineBreak();
-    }
+    bool isRenderTextOrLineBreak() const;
     bool isRenderBox() const;
     bool isRenderTableRow() const;
     bool isRenderView() const;
@@ -951,11 +935,7 @@ public:
     }
 
     bool isExcludedFromNormalLayout() const;
-    void setIsExcludedFromNormalLayout(bool excluded)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_stateBitfields.setFlag(StateFlag::IsExcludedFromNormalLayout, excluded);
-    }
+    void setIsExcludedFromNormalLayout(bool excluded);
     bool isExcludedAndPlacedInBorder() const;
 
     WEBCORE_EXPORT bool hasLayer() const;
