@@ -1560,7 +1560,7 @@ template<typename CharacterType> static inline bool containsOnlyCollapsibleWhite
 
 bool RenderText::containsOnlyCollapsibleWhitespace() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->containsOnlyCollapsibleWhitespace(); }
     if (text().is8Bit())
         return WebCore::containsOnlyCollapsibleWhitespace(text().span8(), style());
     return WebCore::containsOnlyCollapsibleWhitespace(text().span16(), style());

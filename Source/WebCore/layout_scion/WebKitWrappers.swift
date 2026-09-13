@@ -4578,3 +4578,9 @@ func RenderObjectScion_nextOffset(_ objectRaw: UnsafeRawPointer, _ current: Int3
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.nextOffset(current)
 }
+
+@_cdecl("RenderTextScion_containsOnlyCollapsibleWhitespace")
+func RenderTextScion_containsOnlyCollapsibleWhitespace(_ renderTextRaw: UnsafeRawPointer) -> Bool {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.containsOnlyCollapsibleWhitespace()
+}

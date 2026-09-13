@@ -494,6 +494,8 @@ extern "C" void RenderTextScion_setNeedsVisualReordering(void*);
 
 extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
+extern "C" bool RenderTextScion_containsOnlyCollapsibleWhitespace(const void*);
+
 extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
@@ -2144,6 +2146,11 @@ bool RenderTextScion::canUseSimpleFontCodePath() const
 void RenderTextScion::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
     RenderTextScion_styleDidChange(m_handle, static_cast<uint8_t>(diff), oldStyle);
+}
+
+bool RenderTextScion::containsOnlyCollapsibleWhitespace() const
+{
+    return RenderTextScion_containsOnlyCollapsibleWhitespace(m_handle);
 }
 
 RenderInline* RenderTextScion::inlineWrapperForDisplayContents()

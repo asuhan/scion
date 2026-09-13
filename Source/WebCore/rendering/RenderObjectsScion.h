@@ -643,6 +643,8 @@ public:
 
     bool canUseSimpleFontCodePath() const;
 
+    bool containsOnlyCollapsibleWhitespace() const;
+
     void styleDidChange(StyleDifference, const RenderStyle*);
 
     RenderInline* inlineWrapperForDisplayContents();
