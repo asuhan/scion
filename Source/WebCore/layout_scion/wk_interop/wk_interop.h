@@ -190,6 +190,11 @@ struct TextEdgeRaw {
     uint8_t under;
 };
 
+struct TextDecorationThicknessRaw {
+    uint8_t type;
+    const void* length;
+};
+
 struct OptionalTextBoxTrimRaw {
     bool trimFirstFormattedLine;
     struct TextEdgeRaw propagatedTextBoxEdge;
@@ -1368,6 +1373,7 @@ bool RenderStyle_fieldSizing(const void*);
 const void* RenderStyle_textIndent(const void*);
 uint8_t RenderStyle_textBoxTrim(const void*);
 struct TextEdgeRaw RenderStyle_textBoxEdge(const void*);
+struct TextDecorationThicknessRaw RenderStyle_textDecorationThickness(const void*);
 bool RenderStyle_isFixedTableLayout(const void*);
 const void* RenderStyle_marginTop(const void*);
 const void* RenderStyle_marginBottom(const void*);

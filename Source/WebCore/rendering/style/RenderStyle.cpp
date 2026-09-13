@@ -1705,6 +1705,21 @@ extern "C" WEBCORE_EXPORT TextEdgeRaw RenderStyle_textBoxEdge(const void* p)
     return { static_cast<uint8_t>(edge.over), static_cast<uint8_t>(edge.under) };
 }
 
+struct TextDecorationThicknessRaw {
+    uint8_t type;
+    const void* length;
+};
+
+extern "C" WEBCORE_EXPORT TextDecorationThicknessRaw RenderStyle_textDecorationThickness(const void* p)
+{
+    const auto thickness = static_cast<const WebCore::RenderStyle*>(p)->textDecorationThickness();
+    if (thickness.isAuto())
+        return { static_cast<uint8_t>(WebCore::TextDecorationThickness::Type::Auto), nullptr };
+    if (thickness.isFromFont())
+        return { static_cast<uint8_t>(WebCore::TextDecorationThickness::Type::FromFont), nullptr };
+    return { static_cast<uint8_t>(WebCore::TextDecorationThickness::Type::Length), new WebCore::Length(thickness.length()) };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isFixedTableLayout(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isFixedTableLayout();

@@ -98,13 +98,13 @@ public:
         }
     }
 
-private:
     enum class Type : uint8_t {
         Auto,
         FromFont,
         Length
     };
 
+private:
     TextDecorationThickness(Type type)
         : m_type(type)
     {

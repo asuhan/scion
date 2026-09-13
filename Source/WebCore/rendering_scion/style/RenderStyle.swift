@@ -1660,8 +1660,18 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textDecorationThickness() -> TextDecorationThickness {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_textDecorationThickness(p!)
+    switch raw.type {
+    case TextDecorationThickness.Type_.Auto.rawValue:
+      return TextDecorationThickness.createWithAuto()
+    case TextDecorationThickness.Type_.FromFont.rawValue:
+      return TextDecorationThickness.createFromFont()
+    case TextDecorationThickness.Type_.Length.rawValue:
+      return TextDecorationThickness.createWithLength(
+        LengthWrapper(p: raw.length!, owner: true))
+    default:
+      fatalError("Not reached")
+    }
   }
 
   func textIndentLine() -> TextIndentLine {

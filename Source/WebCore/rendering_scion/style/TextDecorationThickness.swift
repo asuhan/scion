@@ -28,6 +28,14 @@ struct TextDecorationThickness {
     return TextDecorationThickness(type: .Auto)
   }
 
+  static func createFromFont() -> TextDecorationThickness {
+    return TextDecorationThickness(type: .FromFont)
+  }
+
+  static func createWithLength(_ length: LengthWrapper) -> TextDecorationThickness {
+    return TextDecorationThickness(type: .Length, length: length)
+  }
+
   func isAuto() -> Bool {
     return type == .Auto
   }
@@ -58,15 +66,23 @@ struct TextDecorationThickness {
     return length.value()
   }
 
-  private enum `Type` {
+  enum Type_: UInt8 {
     case Auto
     case FromFont
     case Length
   }
 
-  private init(type: `Type`) { self.type = type }
+  private init(type: Type_) {
+    self.type = type
+    self.length = LengthWrapper()
+  }
 
-  private let type: `Type`
-  private let length = LengthWrapper()
+  private init(type: Type_, length: LengthWrapper) {
+    self.type = type
+    self.length = length
+  }
+
+  private let type: Type_
+  private let length: LengthWrapper
   private static let textDecorationBaseFontSize = 16
 }
