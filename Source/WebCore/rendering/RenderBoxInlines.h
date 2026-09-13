@@ -87,7 +87,7 @@ inline LayoutUnit RenderBox::contentLogicalWidth() const
 }
 inline LayoutSize RenderBox::contentSize() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->contentSize(); }
     return { contentWidth(), contentHeight() };
 }
 inline LayoutUnit RenderBox::contentWidth() const

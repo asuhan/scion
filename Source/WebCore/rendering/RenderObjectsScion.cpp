@@ -875,6 +875,8 @@ extern "C" LayoutRectRaw RenderBoxScion_overflowClipRectForChildLayers(const voi
 
 extern "C" bool RenderBoxScion_avoidsFloats(const void*);
 
+extern "C" LayoutSizeRaw RenderBoxScion_contentSize(const void*);
+
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
@@ -2675,6 +2677,12 @@ LayoutRect RenderBoxScion::overflowClipRectForChildLayers(const LayoutPoint& loc
 bool RenderBoxScion::avoidsFloats() const
 {
     return RenderBoxScion_avoidsFloats(m_handle);
+}
+
+LayoutSize RenderBoxScion::contentSize() const
+{
+    const auto sizeRaw = RenderBoxScion_contentSize(m_handle);
+    return { LayoutUnit::fromRawValue(sizeRaw.width), LayoutUnit::fromRawValue(sizeRaw.height) };
 }
 
 LayoutUnit RenderBoxScion::offsetLeft() const

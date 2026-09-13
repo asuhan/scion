@@ -860,6 +860,8 @@ public:
 
     bool avoidsFloats() const;
 
+    LayoutSize contentSize() const;
+
     LayoutUnit offsetLeft() const;
 
     LayoutUnit offsetTop() const;

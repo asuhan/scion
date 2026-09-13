@@ -3920,6 +3920,14 @@ func RenderBoxScion_avoidsFloats(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.avoidsFloats()
 }
 
+@_cdecl("RenderBoxScion_contentSize")
+func RenderBoxScion_contentSize(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let contentSize = box.contentSize()
+  return LayoutSizeRaw(
+    width: contentSize.width().rawValue(), height: contentSize.height().rawValue())
+}
+
 @_cdecl("RenderBoxScion_offsetLeft")
 func RenderBoxScion_offsetLeft(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
