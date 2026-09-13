@@ -1083,14 +1083,34 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func inlineWrapperForDisplayContents() -> RenderInlineWrapper? {
+    assert(isNativeImpl())
+    assert(
+      m_hasInlineWrapperForDisplayContents
+        == wk_interop.inlineWrapperForDisplayContentsMap_contains(wkRenderObject(self)))
+
     if !m_hasInlineWrapperForDisplayContents { return nil }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let wrapperRaw = wk_interop.inlineWrapperForDisplayContentsMap_get(wkRenderObject(self))
+    else {
+      return nil
+    }
+    return createRenderObjectWrapperOrNative(wrapperRaw) as? RenderInlineWrapper
   }
 
   func setInlineWrapperForDisplayContents(wrapper: RenderInlineWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(
+      m_hasInlineWrapperForDisplayContents
+        == wk_interop.inlineWrapperForDisplayContentsMap_contains(wkRenderObject(self)))
+
+    if wrapper == nil {
+      if !m_hasInlineWrapperForDisplayContents { return }
+      wk_interop.inlineWrapperForDisplayContentsMap_remove(wkRenderObject(self))
+      m_hasInlineWrapperForDisplayContents = false
+      return
+    }
+    wk_interop.inlineWrapperForDisplayContentsMap_add(
+      wkRenderObject(self), wkRenderObject(wrapper))
+    m_hasInlineWrapperForDisplayContents = true
   }
 
   private static func measureTextConsideringPossibleTrailingSpace(

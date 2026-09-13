@@ -492,6 +492,8 @@ extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
 
+extern "C" void RenderTextScion_setInlineWrapperForDisplayContents(void*, void*);
+
 extern "C" void RenderTextScion_resetMinMaxWidth(void*);
 
 extern "C" void RenderTextScion_removeAndDestroyLegacyTextBoxes(void*);
@@ -2133,6 +2135,11 @@ void RenderTextScion::styleDidChange(StyleDifference diff, const RenderStyle* ol
 RenderInline* RenderTextScion::inlineWrapperForDisplayContents()
 {
     return static_cast<RenderInline*>(RenderTextScion_inlineWrapperForDisplayContents(m_handle));
+}
+
+void RenderTextScion::setInlineWrapperForDisplayContents(RenderInline* wrapper)
+{
+    RenderTextScion_setInlineWrapperForDisplayContents(m_handle, wrapper);
 }
 
 void RenderTextScion::resetMinMaxWidth()

@@ -2305,7 +2305,10 @@ RenderInline* RenderText::inlineWrapperForDisplayContents()
 
 void RenderText::setInlineWrapperForDisplayContents(RenderInline* wrapper)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setInlineWrapperForDisplayContents(wrapper);
+        return;
+    }
     ASSERT(m_hasInlineWrapperForDisplayContents == inlineWrapperForDisplayContentsMap().contains(this));
 
     if (!wrapper) {
@@ -2422,4 +2425,29 @@ extern "C" WEBCORE_EXPORT bool originalTextMap_contains(const void* render_text_
 {
     const auto render_text = static_cast<const WebCore::RenderText*>(render_text_raw);
     return WebCore::originalTextMap().contains(render_text);
+}
+
+extern "C" WEBCORE_EXPORT void* inlineWrapperForDisplayContentsMap_get(const void* render_text_raw)
+{
+    const auto render_text = static_cast<const WebCore::RenderText*>(render_text_raw);
+    return WebCore::inlineWrapperForDisplayContentsMap().get(render_text).get();
+}
+
+extern "C" WEBCORE_EXPORT void inlineWrapperForDisplayContentsMap_add(const void* render_text_raw, void* wrapper_raw)
+{
+    const auto& render_text = *static_cast<const WebCore::RenderText*>(render_text_raw);
+    const auto wrapper = static_cast<WebCore::RenderInline*>(wrapper_raw);
+    WebCore::inlineWrapperForDisplayContentsMap().add(render_text, wrapper);
+}
+
+extern "C" WEBCORE_EXPORT void inlineWrapperForDisplayContentsMap_remove(const void* render_text_raw)
+{
+    const auto& render_text = *static_cast<const WebCore::RenderText*>(render_text_raw);
+    WebCore::inlineWrapperForDisplayContentsMap().remove(render_text);
+}
+
+extern "C" WEBCORE_EXPORT bool inlineWrapperForDisplayContentsMap_contains(const void* render_text_raw)
+{
+    const auto render_text = static_cast<const WebCore::RenderText*>(render_text_raw);
+    return WebCore::inlineWrapperForDisplayContentsMap().contains(render_text);
 }

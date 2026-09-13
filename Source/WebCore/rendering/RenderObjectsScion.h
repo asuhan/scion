@@ -641,6 +641,8 @@ public:
 
     RenderInline* inlineWrapperForDisplayContents();
 
+    void setInlineWrapperForDisplayContents(RenderInline*);
+
     void resetMinMaxWidth();
 
     void removeAndDestroyLegacyTextBoxes();

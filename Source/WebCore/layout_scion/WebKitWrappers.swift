@@ -2648,8 +2648,18 @@ func RenderTextScion_inlineWrapperForDisplayContents(_ renderTextRaw: UnsafeMuta
   -> UnsafeMutableRawPointer?
 {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
-  assert(renderText.inlineWrapperForDisplayContents() == nil)
-  return nil
+  return wkRenderObject(renderText.inlineWrapperForDisplayContents())
+}
+
+@_cdecl("RenderTextScion_setInlineWrapperForDisplayContents")
+func RenderTextScion_setInlineWrapperForDisplayContents(
+  _ renderTextRaw: UnsafeMutableRawPointer, _ wrapperRaw: UnsafeMutableRawPointer?
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let wrapper =
+    wrapperRaw != nil
+    ? (createRenderObjectWrapperOrNative(wrapperRaw!) as? RenderInlineWrapper) : nil
+  renderText.setInlineWrapperForDisplayContents(wrapper: wrapper)
 }
 
 @_cdecl("RenderTextScion_resetMinMaxWidth")
