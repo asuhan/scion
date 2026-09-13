@@ -1110,6 +1110,8 @@ void RenderTreeBuilder::markBoxForRelayoutAfterSplit(RenderBox& box)
     box.setNeedsLayoutAndPrefWidthsRecalc();
 }
 
+extern "C" void RenderTreeBuilderScion_removeFloatingObjects(void*);
+
 void RenderTreeBuilder::removeFloatingObjects(RenderBlock& renderer)
 {
     if (renderer.renderTreeBeingDestroyed())
@@ -1118,6 +1120,11 @@ void RenderTreeBuilder::removeFloatingObjects(RenderBlock& renderer)
     auto* blockFlow = dynamicDowncast<RenderBlockFlow>(renderer);
     if (!blockFlow)
         return;
+
+    if (auto* scion = blockFlow->scion()) {
+        RenderTreeBuilderScion_removeFloatingObjects(scion);
+        return;
+    }
 
     auto* floatingObjects = blockFlow->floatingObjectSet();
     if (!floatingObjects)

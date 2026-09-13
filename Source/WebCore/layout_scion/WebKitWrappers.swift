@@ -4657,3 +4657,9 @@ func RenderTextScion_containsOnlyCollapsibleWhitespace(_ renderTextRaw: UnsafeRa
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
   return renderText.containsOnlyCollapsibleWhitespace()
 }
+
+@_cdecl("RenderTreeBuilderScion_removeFloatingObjects")
+func RenderTreeBuilderScion_removeFloatingObjects(_ blockRaw: UnsafeMutableRawPointer) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  RenderTreeBuilder.removeFloatingObjects(renderer: block)
+}

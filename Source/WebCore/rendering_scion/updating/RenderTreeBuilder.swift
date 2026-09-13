@@ -1128,6 +1128,10 @@ class RenderTreeBuilder {
   }
 
   func removeFloatingObjects(renderer: RenderBlockWrapper) {
+    RenderTreeBuilder.removeFloatingObjects(renderer: renderer)
+  }
+
+  static func removeFloatingObjects(renderer: RenderBlockWrapper) {
     if renderer.renderTreeBeingDestroyed() {
       return
     }
@@ -1142,7 +1146,8 @@ class RenderTreeBuilder {
       return
     }
     // Here we remove the floating objects from the descendants as well.
-    for floatingObject in floatingObjects! {
+    let copyOfFloatingObjects = Array(floatingObjects!)
+    for floatingObject in copyOfFloatingObjects {
       floatingObject.renderer!.removeFloatingOrPositionedChildFromBlockLists()
     }
   }
