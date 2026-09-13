@@ -955,6 +955,21 @@ class RenderTextWrapper: RenderObjectWrapper {
     return m_canUseSimpleFontCodePath
   }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    // TODO(asuhan): remove the secure text timer here once secureText() is implemented.
+
+    removeAndDestroyLegacyTextBoxes()
+
+    if m_originalTextDiffersFromRendered {
+      wk_interop.originalTextMap_remove(wkRenderObject(self))
+    }
+
+    setInlineWrapperForDisplayContents(wrapper: nil)
+
+    super.willBeDestroyed()
+  }
+
   func removeAndDestroyLegacyTextBoxes() {
     assert(isNativeImpl())
     if !renderTreeBeingDestroyed() {
