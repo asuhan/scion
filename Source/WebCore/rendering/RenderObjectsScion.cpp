@@ -743,6 +743,8 @@ extern "C" int32_t RenderInlineScion_offsetWidth(const void*);
 
 extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
 
+extern "C" RepaintRectsRaw RenderInlineScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
+
 extern "C" void RenderInlineScion_setWk(void*, void*);
 
 extern "C" IntRectRaw RenderLineBreakScion_linesBoundingBox(const void*);
@@ -2339,6 +2341,13 @@ IntRect RenderInlineScion::linesBoundingBox() const
 {
     const auto r = RenderInlineScion_linesBoundingBox(m_handle);
     return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
+}
+
+RenderObject::RepaintRects RenderInlineScion::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds repaintOutlineBounds) const
+{
+    return convertRepaintRectsRaw(
+        RenderInlineScion_rectsForRepaintingAfterLayout(
+            m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), repaintOutlineBounds == RepaintOutlineBounds::Yes));
 }
 
 LayoutUnit RenderInlineScion::offsetLeft() const

@@ -712,9 +712,9 @@ LayoutRect RenderInline::clippedOverflowRect(const RenderLayerModelObject* repai
     return repaintRect;
 }
 
-auto RenderInline::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds) const -> RepaintRects
+auto RenderInline::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds repaintOutlineBounds) const -> RepaintRects
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->rectsForRepaintingAfterLayout(repaintContainer, repaintOutlineBounds); }
     // RepaintOutlineBounds is unused for inlines.
     return { clippedOverflowRect(repaintContainer, visibleRectContextForRepaint()) };
 }

@@ -2370,18 +2370,24 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
 }
 
-@_cdecl("RenderObjectScion_rectsForRepaintingAfterLayout")
-func RenderObjectScion_rectsForRepaintingAfterLayout(
-  _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
-  _ repaintOutlineBounds: Bool
+private func rectsForRepaintingAfterLayoutImpl<T: RenderObjectWrapper>(
+  _ object: T, _ repaintContainerRaw: UnsafeMutableRawPointer?, _ repaintOutlineBounds: Bool
 ) -> RepaintRectsRaw {
-  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   let repaintContainer =
     repaintContainerRaw != nil
     ? createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
     : nil
   return convertRepaintRects(
     object.rectsForRepaintingAfterLayout(repaintContainer, repaintOutlineBounds ? .Yes : .No))
+}
+
+@_cdecl("RenderObjectScion_rectsForRepaintingAfterLayout")
+func RenderObjectScion_rectsForRepaintingAfterLayout(
+  _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
+  _ repaintOutlineBounds: Bool
+) -> RepaintRectsRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return rectsForRepaintingAfterLayoutImpl(object, repaintContainerRaw, repaintOutlineBounds)
 }
 
 @_cdecl("RenderObjectScion_isFloatingOrOutOfFlowPositioned")
@@ -3342,6 +3348,15 @@ func RenderInlineScion_offsetWidth(_ inlineRaw: UnsafeRawPointer) -> Int32 {
 func RenderInlineScion_offsetHeight(_ inlineRaw: UnsafeRawPointer) -> Int32 {
   let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
   return inline.offsetHeight().rawValue()
+}
+
+@_cdecl("RenderInlineScion_rectsForRepaintingAfterLayout")
+func RenderInlineScion_rectsForRepaintingAfterLayout(
+  _ inlineRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
+  _ repaintOutlineBounds: Bool
+) -> RepaintRectsRaw {
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return rectsForRepaintingAfterLayoutImpl(inline, repaintContainerRaw, repaintOutlineBounds)
 }
 
 @_cdecl("RenderInlineScion_setWk")

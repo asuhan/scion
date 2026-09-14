@@ -929,6 +929,8 @@ public:
 
     LayoutUnit offsetHeight() const;
 
+    RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
+
     void setWk(void*);
 
 private:
