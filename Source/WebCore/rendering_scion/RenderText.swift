@@ -386,7 +386,9 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   deinit {
     // Do not add any code here. Add it to willBeDestroyed() instead.
-    assert(!originalTextMap_contains(wkRenderObject(self)))
+    // An interop wrapper going away does not destroy the C++ renderer it wraps, which may still
+    // legitimately have an originalTextMap entry (e.g. a RenderCombineText showing combined text).
+    assert(!isNativeImpl() || !originalTextMap_contains(wkRenderObject(self)))
   }
 
   override func layoutBox() -> InlineTextBoxWrapper? {
