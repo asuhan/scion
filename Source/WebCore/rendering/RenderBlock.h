@@ -85,12 +85,7 @@ public:
     void removePositionedObjects(const RenderBlock*, ContainingBlockState = SameContainingBlock);
 
     TrackedRendererListHashSet* positionedObjects() const;
-    bool hasPositionedObjects() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        auto* objects = positionedObjects();
-        return objects && !objects->isEmptyIgnoringNullReferences();
-    }
+    bool hasPositionedObjects() const;
 
     void addPercentHeightDescendant(RenderBox&);
     static void removePercentHeightDescendant(RenderBox&);

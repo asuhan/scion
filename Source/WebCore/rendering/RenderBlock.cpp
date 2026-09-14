@@ -1847,6 +1847,13 @@ TrackedRendererListHashSet* RenderBlock::positionedObjects() const
     return positionedDescendantsMap().positionedRenderers(*this);
 }
 
+bool RenderBlock::hasPositionedObjects() const
+{
+    if (m_scion) { return m_scion->hasPositionedObjects(); }
+    auto* objects = positionedObjects();
+    return objects && !objects->isEmptyIgnoringNullReferences();
+}
+
 void RenderBlock::insertPositionedObject(RenderBox& positioned)
 {
     if (m_scion) {

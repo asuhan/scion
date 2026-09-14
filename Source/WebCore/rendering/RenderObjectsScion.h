@@ -991,6 +991,8 @@ public:
 
     bool canHaveChildren() const;
 
+    bool hasPositionedObjects() const;
+
     std::optional<LayoutUnit> availableLogicalHeightForPercentageComputation() const;
 
     LayoutUnit logicalLeftOffsetForContent() const;

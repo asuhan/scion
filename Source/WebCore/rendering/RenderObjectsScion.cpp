@@ -965,6 +965,8 @@ extern "C" void RenderBlockScion_setMarginAfterForChild(const void*, void*, int3
 
 extern "C" bool RenderBlockScion_canHaveChildren(const void*);
 
+extern "C" bool RenderBlockScion_hasPositionedObjects(const void*);
+
 extern "C" OptionalLayoutUnitRaw RenderBlockScion_availableLogicalHeightForPercentageComputation(const void*);
 
 extern "C" int32_t RenderBlockScion_logicalLeftOffsetForContent(const void*);
@@ -2885,6 +2887,11 @@ void RenderBlockScion::getFirstLetter(RenderObject*& firstLetter, RenderElement*
 bool RenderBlockScion::canHaveChildren() const
 {
     return RenderBlockScion_canHaveChildren(m_handle);
+}
+
+bool RenderBlockScion::hasPositionedObjects() const
+{
+    return RenderBlockScion_hasPositionedObjects(m_handle);
 }
 
 LayoutUnit RenderBlockScion::logicalLeftOffsetForContent() const

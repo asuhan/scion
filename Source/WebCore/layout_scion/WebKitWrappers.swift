@@ -4381,6 +4381,12 @@ func RenderBlockScion_canHaveChildren(_ blockRaw: UnsafeRawPointer) -> Bool {
   return block.canHaveChildren()
 }
 
+@_cdecl("RenderBlockScion_hasPositionedObjects")
+func RenderBlockScion_hasPositionedObjects(_ blockRaw: UnsafeRawPointer) -> Bool {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.hasPositionedObjects()
+}
+
 @_cdecl("RenderBlockScion_logicalLeftOffsetForContent")
 func RenderBlockScion_logicalLeftOffsetForContent(_ blockRaw: UnsafeRawPointer) -> Int32 {
   let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
