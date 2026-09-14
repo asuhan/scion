@@ -21,6 +21,7 @@
 #pragma once
 
 #include "RenderBoxModelObject.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 
 namespace WebCore {
@@ -32,7 +33,7 @@ inline LayoutUnit RenderBoxModelObject::borderAfter() const
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderAndPaddingLogicalHeight(); }
     return borderAndPaddingBefore() + borderAndPaddingAfter();
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalWidth() const
@@ -142,7 +143,7 @@ inline bool RenderBoxModelObject::hasInlineDirectionBordersPaddingOrMargin() con
 }
 inline LayoutUnit RenderBoxModelObject::horizontalBorderAndPaddingExtent() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->horizontalBorderAndPaddingExtent(); }
     return borderLeft() + borderRight() + paddingLeft() + paddingRight();
 }
 inline LayoutUnit RenderBoxModelObject::horizontalBorderExtent() const

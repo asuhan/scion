@@ -3417,6 +3417,24 @@ func RenderBoxModelObjectScion_borderRight(_ boxModelObjectRaw: UnsafeRawPointer
   return boxModelObject.borderRight().rawValue()
 }
 
+@_cdecl("RenderBoxModelObjectScion_borderAndPaddingLogicalHeight")
+func RenderBoxModelObjectScion_borderAndPaddingLogicalHeight(_ boxModelObjectRaw: UnsafeRawPointer)
+  -> Int32
+{
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.borderAndPaddingLogicalHeight().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_horizontalBorderAndPaddingExtent")
+func RenderBoxModelObjectScion_horizontalBorderAndPaddingExtent(
+  _ boxModelObjectRaw: UnsafeRawPointer
+) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.horizontalBorderAndPaddingExtent().rawValue()
+}
+
 @_cdecl("RenderBoxModelObjectScion_borderAndPaddingBefore")
 func RenderBoxModelObjectScion_borderAndPaddingBefore(_ boxModelObjectRaw: UnsafeRawPointer)
   -> Int32
