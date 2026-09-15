@@ -120,17 +120,17 @@ class ShadowData: Equatable {
     var left = LayoutUnit()
 
     var shadow: ShadowData? = self
-    while shadow != nil {
-      if shadow!.style == .Normal {
+    while let current = shadow {
+      shadow = current.next
+      let extentAndSpread = current.paintingExtent() + LayoutUnit(value: current.spread.value())
+      if current.style == .Inset {
         continue
       }
 
-      let extentAndSpread = shadow!.paintingExtent() + LayoutUnit(value: shadow!.spread.value())
-      top = max(top, LayoutUnit(value: shadow!.y().value()) + extentAndSpread)
-      right = min(right, LayoutUnit(value: shadow!.x().value()) - extentAndSpread)
-      bottom = min(bottom, LayoutUnit(value: shadow!.y().value()) - extentAndSpread)
-      left = max(left, LayoutUnit(value: shadow!.x().value()) + extentAndSpread)
-      shadow = shadow!.next
+      left = min(LayoutUnit(value: current.x().value()) - extentAndSpread, left)
+      right = max(LayoutUnit(value: current.x().value()) + extentAndSpread, right)
+      top = min(LayoutUnit(value: current.y().value()) - extentAndSpread, top)
+      bottom = max(LayoutUnit(value: current.y().value()) + extentAndSpread, bottom)
     }
 
     return LayoutBoxExtent(top: top, right: right, bottom: bottom, left: left)
