@@ -24,7 +24,7 @@
 
 import Foundation
 
-enum ShadowStyle {
+enum ShadowStyle: UInt8 {
   case Normal
   case Inset
 }
@@ -40,6 +40,19 @@ class ShadowData: Equatable {
     self.style = .Normal
     self.isWebkitBoxShadow = false
     self.next = nil
+  }
+
+  init(
+    location: LengthPoint, spread: LengthWrapper, radius: LengthWrapper, color: StyleColorWrapper,
+    style: ShadowStyle, isWebkitBoxShadow: Bool, next: ShadowData?
+  ) {
+    self.location = location
+    self.spread = spread
+    self.radius = radius
+    self.color = color
+    self.style = style
+    self.isWebkitBoxShadow = isWebkitBoxShadow
+    self.next = next
   }
 
   init(o: ShadowData) {

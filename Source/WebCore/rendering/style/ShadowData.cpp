@@ -152,3 +152,29 @@ TextStream& operator<<(TextStream& ts, const ShadowData& data)
 }
 
 } // namespace WebCore
+
+struct ShadowDataRaw {
+    const void* x;
+    const void* y;
+    const void* spread;
+    const void* radius;
+    const void* color;
+    uint8_t style;
+    bool isWebkitBoxShadow;
+    const void* next;
+};
+
+extern "C" WEBCORE_EXPORT ShadowDataRaw ShadowData_raw(const void* p)
+{
+    const auto& shadow = *static_cast<const WebCore::ShadowData*>(p);
+    return {
+        &shadow.x(),
+        &shadow.y(),
+        &shadow.spread(),
+        &shadow.radius(),
+        &shadow.color(),
+        static_cast<uint8_t>(shadow.style()),
+        shadow.isWebkitBoxShadow(),
+        shadow.next()
+    };
+}

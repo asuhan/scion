@@ -2211,6 +2211,17 @@ struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaint(const
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaintIfText(const void*, const void*);
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRecompositeLayer(const void*, const void*);
 void RenderCounter_rendererStyleChanged(void*, const void*, const void*);
+struct ShadowDataRaw {
+    const void* x;
+    const void* y;
+    const void* spread;
+    const void* radius;
+    const void* color;
+    uint8_t style;
+    bool isWebkitBoxShadow;
+    const void* next;
+};
+struct ShadowDataRaw ShadowData_raw(const void*);
 const void* StyleColor_create();
 void StyleColor_destroy(const void*);
 bool StyleColor_isCurrentColor(const void*);

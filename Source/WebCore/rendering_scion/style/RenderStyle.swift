@@ -650,6 +650,29 @@ private func convertLengthSizeRaw(_ lengthSize: LengthSizeRaw) -> LengthSize {
     width: LengthWrapper(p: lengthSize.width), height: LengthWrapper(p: lengthSize.height))
 }
 
+// Builds the Swift shadow list over the C++ one. The Lengths and the color point into the
+// C++ ShadowData, which the RenderStyle owns, like the other style accessors here. The list is
+// built back to front so that long shadow lists do not recurse, as in the C++ destructor.
+private func convertShadowData(_ first: UnsafeRawPointer?) -> ShadowData? {
+  var raws: [ShadowDataRaw] = []
+  var current = first
+  while let node = current {
+    let raw = wk_interop.ShadowData_raw(node)
+    raws.append(raw)
+    current = raw.next
+  }
+
+  var next: ShadowData? = nil
+  for raw in raws.reversed() {
+    next = ShadowData(
+      location: LengthPoint(x: LengthWrapper(p: raw.x!), y: LengthWrapper(p: raw.y!)),
+      spread: LengthWrapper(p: raw.spread!), radius: LengthWrapper(p: raw.radius!),
+      color: StyleColorWrapper(raw.color!), style: ShadowStyle(rawValue: raw.style)!,
+      isWebkitBoxShadow: raw.isWebkitBoxShadow, next: next)
+  }
+  return next
+}
+
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
   var pOwner: Bool = false
@@ -1229,9 +1252,7 @@ class RenderStyleWrapper: Equatable {
   func preserveNewline() -> Bool { return wk_interop.RenderStyle_preserveNewline(p!) }
 
   func textShadow() -> ShadowData? {
-    if wk_interop.RenderStyle_textShadow(p!) == nil { return nil }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertShadowData(wk_interop.RenderStyle_textShadow(p!))
   }
 
   func textShadowExtent() -> LayoutBoxExtent {
@@ -2094,12 +2115,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxShadow() -> ShadowData? {
-    let raw = wk_interop.RenderStyle_boxShadow(p!)
-    if raw == nil {
-      return nil
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertShadowData(wk_interop.RenderStyle_boxShadow(p!))
   }
 
   func boxShadowExtent() -> LayoutBoxExtent {
