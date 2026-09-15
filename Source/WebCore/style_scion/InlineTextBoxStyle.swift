@@ -85,11 +85,112 @@ func visualOverflowForDecorations(
   )
 }
 
+private func isAncestorAndWithinBlock(
+  _ ancestor: RenderInlineWrapper, _ child: RenderObjectWrapper?
+) -> Bool {
+  var object = child
+  while object != nil && (!object!.isRenderBlock() || object!.isInline()) {
+    if CPtrToInt(object!.id()) == CPtrToInt(ancestor.id()) {
+      return true
+    }
+    object = object!.parent()
+  }
+  return false
+}
+
+private func minLogicalTopForTextDecorationLineUnder(
+  _ lineBox: InlineIterator.LineBoxIterator, _ textRunLogicalTop: Float32,
+  _ decoratingBoxRendererForUnderline: RenderElementWrapper
+) -> Float32 {
+  var minLogicalTop = textRunLogicalTop
+  let run = lineBox.get().firstLeafBox()
+  while run.bool() {
+    defer { run.traverseNextOnLine() }
+    let box = run.get()
+    if box.renderer().isOutOfFlowPositioned() {
+      continue  // Positioned placeholders don't affect calculations.
+    }
+
+    if !box.style().textDecorationsInEffect().contains(.Underline) {
+      continue  // If the text decoration isn't in effect on the child, then it must be outside of |decoratingBoxRendererForUnderline|'s hierarchy.
+    }
+
+    if let renderInline = decoratingBoxRendererForUnderline as? RenderInlineWrapper,
+      !isAncestorAndWithinBlock(renderInline, box.renderer())
+    {
+      continue
+    }
+
+    if box.isText() || box.style().textDecorationSkipInk() == .None {
+      minLogicalTop = min(minLogicalTop, box.logicalTop())
+    }
+  }
+  return minLogicalTop
+}
+
+private func maxLogicalBottomForTextDecorationLineUnder(
+  _ lineBox: InlineIterator.LineBoxIterator, _ textRunLogicalBottom: Float32,
+  _ decoratingBoxRendererForUnderline: RenderElementWrapper
+) -> Float32 {
+  var maxLogicalBottom = textRunLogicalBottom
+  let run = lineBox.get().firstLeafBox()
+  while run.bool() {
+    defer { run.traverseNextOnLine() }
+    let box = run.get()
+    if box.renderer().isOutOfFlowPositioned() {
+      continue  // Positioned placeholders don't affect calculations.
+    }
+
+    if !box.style().textDecorationsInEffect().contains(.Underline) {
+      continue  // If the text decoration isn't in effect on the child, then it must be outside of |decoratingBoxRendererForUnderline|'s hierarchy.
+    }
+
+    if let renderInline = decoratingBoxRendererForUnderline as? RenderInlineWrapper,
+      !isAncestorAndWithinBlock(renderInline, box.renderer())
+    {
+      continue
+    }
+
+    if box.isText() || box.style().textDecorationSkipInk() == .None {
+      maxLogicalBottom = max(maxLogicalBottom, box.logicalBottom())
+    }
+  }
+  return maxLogicalBottom
+}
+
+private func boxOffsetFromBottomMost(
+  _ lineBox: InlineIterator.LineBoxIterator, _ decoratingInlineBoxRenderer: RenderElementWrapper,
+  _ boxLogicalTop: Float32, _ boxLogicalBottom: Float32
+) -> Float32 {
+  if decoratingInlineBoxRenderer.style().isFlippedLinesWritingMode() {
+    return boxLogicalTop
+      - minLogicalTopForTextDecorationLineUnder(lineBox, boxLogicalTop, decoratingInlineBoxRenderer)
+  }
+  return maxLogicalBottomForTextDecorationLineUnder(
+    lineBox, boxLogicalBottom, decoratingInlineBoxRenderer) - boxLogicalBottom
+}
+
+private func inlineBoxContentBoxHeight(_ inlineBox: InlineIterator.InlineBox) -> Float32 {
+  var contentBoxHeight = inlineBox.logicalHeight()
+  if !inlineBox.isRootInlineBox() {
+    contentBoxHeight -=
+      (inlineBox.renderer().borderAndPaddingBefore()
+      + inlineBox.renderer().borderAndPaddingAfter()).float()
+  }
+  return contentBoxHeight
+}
+
 func underlineOffsetForTextBoxPainting(
   inlineBox: InlineIterator.InlineBox, style: RenderStyleWrapper
 ) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !wk_interop.isAlignedForUnderByStyle(style.p) {
+    return wk_interop.computedUnderlineOffsetByStyle(style.p, false, 0, 0)
+  }
+
+  let textRunOffset = boxOffsetFromBottomMost(
+    inlineBox.lineBox(), inlineBox.renderer(), inlineBox.logicalTop(), inlineBox.logicalBottom())
+  return wk_interop.computedUnderlineOffsetByStyle(
+    style.p, true, inlineBoxContentBoxHeight(inlineBox), textRunOffset)
 }
 
 func overlineOffsetForTextBoxPainting(

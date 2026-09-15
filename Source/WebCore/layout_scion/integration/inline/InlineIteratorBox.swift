@@ -117,6 +117,8 @@ extension InlineIterator {
 
     func logicalBottom() -> Float32 { return logicalRectIgnoringInlineDirection().maxY() }
 
+    func logicalHeight() -> Float32 { return logicalRectIgnoringInlineDirection().height() }
+
     func logicalWidth() -> Float32 { return logicalRectIgnoringInlineDirection().width() }
 
     // Return visual left/right coords in inline direction (they are still considered logical values as there's no flip for writing mode).

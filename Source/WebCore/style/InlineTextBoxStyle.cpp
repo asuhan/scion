@@ -371,3 +371,16 @@ float overlineOffsetForTextBoxPainting(const InlineIterator::InlineBox& inlineBo
 }
 
 }
+
+extern "C" WEBCORE_EXPORT bool isAlignedForUnderByStyle(const void* style_ptr)
+{
+    return WebCore::isAlignedForUnder(*static_cast<const WebCore::RenderStyle*>(style_ptr));
+}
+
+extern "C" WEBCORE_EXPORT float computedUnderlineOffsetByStyle(const void* style_ptr, bool has_text_underline_position_under, float text_run_logical_height, float text_run_offset_from_bottom_most)
+{
+    const auto& style = *static_cast<const WebCore::RenderStyle*>(style_ptr);
+    if (!has_text_underline_position_under)
+        return WebCore::computedUnderlineOffset({ style, { } });
+    return WebCore::computedUnderlineOffset({ style, WebCore::TextUnderlinePositionUnder { text_run_logical_height, text_run_offset_from_bottom_most } });
+}
