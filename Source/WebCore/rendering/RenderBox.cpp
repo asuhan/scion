@@ -184,6 +184,21 @@ extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingContainingBlockContentSi
     static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingContainingBlockContentSize();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingContentSize(void* box_raw_ptr)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingContentSize();
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingLogicalHeight(void* box_raw_ptr)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingLogicalHeight();
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingLogicalWidth(void* box_raw_ptr)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingLogicalWidth();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalWidthLength(void* box_raw_ptr, const void* length_raw_ptr)
 {
     auto* renderer = static_cast<WebCore::RenderBox*>(box_raw_ptr);
@@ -1846,21 +1861,30 @@ void RenderBox::setOverridingLogicalWidth(LayoutUnit width)
 
 void RenderBox::clearOverridingLogicalHeight()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingLogicalHeight();
+        return;
+    }
     if (gOverridingLogicalHeightMap)
         gOverridingLogicalHeightMap->remove(*this);
 }
 
 void RenderBox::clearOverridingLogicalWidth()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingLogicalWidth();
+        return;
+    }
     if (gOverridingLogicalWidthMap)
         gOverridingLogicalWidthMap->remove(*this);
 }
 
 void RenderBox::clearOverridingContentSize()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingContentSize();
+        return;
+    }
     clearOverridingLogicalHeight();
     clearOverridingLogicalWidth();
 }

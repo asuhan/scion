@@ -883,6 +883,12 @@ extern "C" bool RenderBoxScion_avoidsFloats(const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_contentSize(const void*);
 
+extern "C" void RenderBoxScion_clearOverridingContentSize(void*);
+
+extern "C" void RenderBoxScion_clearOverridingLogicalHeight(void*);
+
+extern "C" void RenderBoxScion_clearOverridingLogicalWidth(void*);
+
 extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalWidth(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
@@ -2706,6 +2712,21 @@ LayoutRect RenderBoxScion::overflowClipRectForChildLayers(const LayoutPoint& loc
 bool RenderBoxScion::avoidsFloats() const
 {
     return RenderBoxScion_avoidsFloats(m_handle);
+}
+
+void RenderBoxScion::clearOverridingContentSize()
+{
+    RenderBoxScion_clearOverridingContentSize(m_handle);
+}
+
+void RenderBoxScion::clearOverridingLogicalHeight()
+{
+    RenderBoxScion_clearOverridingLogicalHeight(m_handle);
+}
+
+void RenderBoxScion::clearOverridingLogicalWidth()
+{
+    RenderBoxScion_clearOverridingLogicalWidth(m_handle);
 }
 
 LayoutSize RenderBoxScion::contentSize() const

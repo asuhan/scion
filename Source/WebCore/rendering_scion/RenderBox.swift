@@ -1978,18 +1978,32 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverridingContentSize() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_clearOverridingContentSize(id())
+      return
+    }
+    clearOverridingLogicalHeight()
+    clearOverridingLogicalWidth()
   }
 
   func clearOverridingLogicalHeight() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_clearOverridingLogicalHeight(id())
+      return
+    }
+    if gOverridingLogicalHeightMap != nil {
+      gOverridingLogicalHeightMap!.remove(self)
+    }
   }
 
   func clearOverridingLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_clearOverridingLogicalWidth(id())
+      return
+    }
+    if gOverridingLogicalWidthMap != nil {
+      gOverridingLogicalWidthMap!.remove(self)
+    }
   }
 
   func overridingContentLogicalWidth(_ overridingLogicalWidth: LayoutUnit) -> LayoutUnit {

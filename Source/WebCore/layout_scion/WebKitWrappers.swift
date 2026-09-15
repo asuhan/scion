@@ -3953,6 +3953,24 @@ func RenderBoxScion_avoidsFloats(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.avoidsFloats()
 }
 
+@_cdecl("RenderBoxScion_clearOverridingContentSize")
+func RenderBoxScion_clearOverridingContentSize(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingContentSize()
+}
+
+@_cdecl("RenderBoxScion_clearOverridingLogicalHeight")
+func RenderBoxScion_clearOverridingLogicalHeight(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingLogicalHeight()
+}
+
+@_cdecl("RenderBoxScion_clearOverridingLogicalWidth")
+func RenderBoxScion_clearOverridingLogicalWidth(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingLogicalWidth()
+}
+
 @_cdecl("RenderBoxScion_contentSize")
 func RenderBoxScion_contentSize(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
