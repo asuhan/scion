@@ -594,6 +594,8 @@ extern "C" bool RenderElementScion_shouldApplyLayoutContainment(const void*);
 
 extern "C" bool RenderElementScion_shouldApplySizeContainment(const void*);
 
+extern "C" bool RenderElementScion_shouldApplyStyleContainment(const void*);
+
 extern "C" bool RenderElementScion_shouldApplyPaintContainment(const void*);
 
 extern "C" const void* RenderElementScion_spellingErrorPseudoStyle(const void*);
@@ -1853,6 +1855,11 @@ bool RenderElementScion::shouldApplyLayoutContainment() const
 bool RenderElementScion::shouldApplySizeContainment() const
 {
     return RenderElementScion_shouldApplySizeContainment(m_handle);
+}
+
+bool RenderElementScion::shouldApplyStyleContainment() const
+{
+    return RenderElementScion_shouldApplyStyleContainment(m_handle);
 }
 
 bool RenderElementScion::shouldApplyPaintContainment() const

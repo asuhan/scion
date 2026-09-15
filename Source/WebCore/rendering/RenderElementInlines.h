@@ -86,12 +86,6 @@ inline bool RenderElement::shouldApplySizeOrStyleContainment(bool containsAccord
     return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox()) && style().display() != DisplayType::RubyAnnotation && (!isTablePart() || isRenderTableCaption()) && !isRenderTable();
 }
 
-inline bool RenderElement::shouldApplyStyleContainment() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return shouldApplySizeOrStyleContainment(style().containsStyle() || style().contentVisibility() != ContentVisibility::Visible);
-}
-
 inline int adjustForAbsoluteZoom(int value, const RenderElement& renderer)
 {
     return adjustForAbsoluteZoom(value, renderer.style());

@@ -2896,6 +2896,12 @@ func RenderElementScion_shouldApplySizeContainment(_ elementRaw: UnsafeRawPointe
   return element.shouldApplySizeContainment()
 }
 
+@_cdecl("RenderElementScion_shouldApplyStyleContainment")
+func RenderElementScion_shouldApplyStyleContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.shouldApplyStyleContainment()
+}
+
 @_cdecl("RenderElementScion_shouldApplyPaintContainment")
 func RenderElementScion_shouldApplyPaintContainment(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

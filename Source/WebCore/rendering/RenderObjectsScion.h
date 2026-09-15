@@ -520,6 +520,8 @@ public:
 
     bool shouldApplySizeContainment() const;
 
+    bool shouldApplyStyleContainment() const;
+
     bool shouldApplyPaintContainment() const;
 
     const RenderStyle* spellingErrorPseudoStyle() const;

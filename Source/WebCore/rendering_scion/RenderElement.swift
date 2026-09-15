@@ -580,6 +580,12 @@ class RenderElementWrapper: RenderObjectWrapper {
       || shouldApplySizeOrStyleContainment(style().containsSizeOrInlineSize())
   }
 
+  func shouldApplyStyleContainment() -> Bool {
+    assert(isNativeImpl())
+    return shouldApplySizeOrStyleContainment(
+      style().containsStyle() || style().contentVisibility() != .Visible)
+  }
+
   func shouldApplyPaintContainment() -> Bool {
     assert(isNativeImpl())
     return shouldApplyLayoutOrPaintContainment(style().containsPaint())
