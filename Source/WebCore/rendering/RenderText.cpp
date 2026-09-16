@@ -1113,7 +1113,7 @@ unsigned RenderText::lastCharacterIndexStrippingSpaces() const
 
 RenderText::Widths RenderText::trimmedPreferredWidths(float leadWidth, bool& stripFrontSpaces)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->trimmedPreferredWidths(leadWidth, stripFrontSpaces); }
     auto& style = this->style();
     bool collapseWhiteSpace = style.collapseWhiteSpace();
 

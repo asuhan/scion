@@ -4715,6 +4715,22 @@ func RenderObjectScion_nextOffset(_ objectRaw: UnsafeRawPointer, _ current: Int3
   return object.nextOffset(current)
 }
 
+@_cdecl("RenderTextScion_trimmedPreferredWidths")
+func RenderTextScion_trimmedPreferredWidths(
+  _ renderTextRaw: UnsafeMutableRawPointer, _ leadWidth: Float32,
+  _ stripFrontSpacesRaw: UnsafeMutablePointer<Bool>
+) -> RenderTextWidthsRaw {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let widths = renderText.trimmedPreferredWidths(
+    leadWidth: leadWidth, stripFrontSpaces: &stripFrontSpacesRaw.pointee)
+  return RenderTextWidthsRaw(
+    min: widths.min, max: widths.max, beginMin: widths.beginMin, endMin: widths.endMin,
+    beginMax: widths.beginMax, endMax: widths.endMax, beginWS: widths.beginWS,
+    endWS: widths.endWS, endZeroSpace: widths.endZeroSpace,
+    hasBreakableChar: widths.hasBreakableChar, hasBreak: widths.hasBreak,
+    endsWithBreak: widths.endsWithBreak)
+}
+
 @_cdecl("RenderTextScion_containsOnlyCollapsibleWhitespace")
 func RenderTextScion_containsOnlyCollapsibleWhitespace(_ renderTextRaw: UnsafeRawPointer) -> Bool {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

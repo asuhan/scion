@@ -2211,6 +2211,21 @@ struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaint(const
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaintIfText(const void*, const void*);
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRecompositeLayer(const void*, const void*);
 void RenderCounter_rendererStyleChanged(void*, const void*, const void*);
+struct RenderTextWidthsRaw {
+    float min;
+    float max;
+    float beginMin;
+    float endMin;
+    float beginMax;
+    float endMax;
+    bool beginWS;
+    bool endWS;
+    bool endZeroSpace;
+    bool hasBreakableChar;
+    bool hasBreak;
+    bool endsWithBreak;
+};
+
 struct ShadowDataRaw {
     const void* x;
     const void* y;

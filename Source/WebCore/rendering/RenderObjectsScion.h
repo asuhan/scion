@@ -31,6 +31,7 @@
 #include "RenderElement.h"
 #include "RenderObject.h"
 #include "RenderStyle.h"
+#include "RenderText.h"
 #include "ScrollTypes.h"
 
 extern "C" void* RenderViewScion_create(void*, const void*);
@@ -656,6 +657,8 @@ public:
     bool canUseSimpleFontCodePath() const;
 
     bool containsOnlyCollapsibleWhitespace() const;
+
+    RenderText::Widths trimmedPreferredWidths(float leadWidth, bool& stripFrontSpaces);
 
     void styleDidChange(StyleDifference, const RenderStyle*);
 

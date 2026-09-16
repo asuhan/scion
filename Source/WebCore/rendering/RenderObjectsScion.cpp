@@ -506,6 +506,23 @@ extern "C" bool RenderTextScion_canUseSimpleFontCodePath(const void*);
 
 extern "C" bool RenderTextScion_containsOnlyCollapsibleWhitespace(const void*);
 
+struct RenderTextWidthsRaw {
+    float min;
+    float max;
+    float beginMin;
+    float endMin;
+    float beginMax;
+    float endMax;
+    bool beginWS;
+    bool endWS;
+    bool endZeroSpace;
+    bool hasBreakableChar;
+    bool hasBreak;
+    bool endsWithBreak;
+};
+
+extern "C" RenderTextWidthsRaw RenderTextScion_trimmedPreferredWidths(void*, float, bool*);
+
 extern "C" void RenderTextScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderTextScion_inlineWrapperForDisplayContents(void*);
@@ -2204,6 +2221,25 @@ void RenderTextScion::styleDidChange(StyleDifference diff, const RenderStyle* ol
 bool RenderTextScion::containsOnlyCollapsibleWhitespace() const
 {
     return RenderTextScion_containsOnlyCollapsibleWhitespace(m_handle);
+}
+
+RenderText::Widths RenderTextScion::trimmedPreferredWidths(float leadWidth, bool& stripFrontSpaces)
+{
+    const auto raw = RenderTextScion_trimmedPreferredWidths(m_handle, leadWidth, &stripFrontSpaces);
+    RenderText::Widths widths;
+    widths.min = raw.min;
+    widths.max = raw.max;
+    widths.beginMin = raw.beginMin;
+    widths.endMin = raw.endMin;
+    widths.beginMax = raw.beginMax;
+    widths.endMax = raw.endMax;
+    widths.beginWS = raw.beginWS;
+    widths.endWS = raw.endWS;
+    widths.endZeroSpace = raw.endZeroSpace;
+    widths.hasBreakableChar = raw.hasBreakableChar;
+    widths.hasBreak = raw.hasBreak;
+    widths.endsWithBreak = raw.endsWithBreak;
+    return widths;
 }
 
 RenderInline* RenderTextScion::inlineWrapperForDisplayContents()
