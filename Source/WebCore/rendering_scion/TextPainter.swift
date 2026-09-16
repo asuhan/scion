@@ -342,7 +342,7 @@ struct TextPainter {
   private var style = TextPaintStyle()
   private var emphasisMark = AtomStringWrapper()
   private var shadow: ShadowData? = nil
-  private var shadowColorFilter = FilterOperations()
+  private var shadowColorFilter: FilterOperations? = nil
   private var combinedText: RenderCombineTextWrapper? = nil
   private var glyphDisplayList: DisplayList.DisplayListWrapper? = nil
   private var emphasisMarkOffset: Float32 = 0
