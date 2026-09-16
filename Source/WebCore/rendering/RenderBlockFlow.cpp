@@ -2541,7 +2541,10 @@ void RenderBlockFlow::deleteLines()
 
 void RenderBlockFlow::addFloatsToNewParent(RenderBlockFlow& toBlockFlow) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->addFloatsToNewParent(toBlockFlow);
+        return;
+    }
     // When a portion of the render tree is being detached, anonymous blocks
     // will be combined as their children are deleted. In this process, the
     // anonymous block later in the tree is merged into the one preceeding it.

@@ -1057,6 +1057,8 @@ public:
 
     void deleteLines();
 
+    void addFloatsToNewParent(RenderBlockFlow&) const;
+
     void removeFloatingObjects();
 
     LayoutUnit lowestFloatLogicalBottom(uint8_t) const;

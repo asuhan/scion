@@ -1030,6 +1030,8 @@ extern "C" bool RenderBlockFlowScion_containsFloat(const void*, void*);
 
 extern "C" void RenderBlockFlowScion_deleteLines(void*);
 
+extern "C" void RenderBlockFlowScion_addFloatsToNewParent(const void*, void*);
+
 extern "C" void RenderBlockFlowScion_removeFloatingObjects(void*);
 
 extern "C" int32_t RenderBlockFlowScion_lowestFloatLogicalBottom(void*, uint8_t);
@@ -3078,6 +3080,11 @@ bool RenderBlockFlowScion::containsFloat(RenderBox& renderer) const
 void RenderBlockFlowScion::deleteLines()
 {
     RenderBlockFlowScion_deleteLines(m_handle);
+}
+
+void RenderBlockFlowScion::addFloatsToNewParent(RenderBlockFlow& toBlockFlow) const
+{
+    RenderBlockFlowScion_addFloatsToNewParent(m_handle, &toBlockFlow);
 }
 
 void RenderBlockFlowScion::removeFloatingObjects()

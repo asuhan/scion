@@ -4232,6 +4232,15 @@ func RenderBlockFlowScion_setChildrenInline(_ blockFlowRaw: UnsafeMutableRawPoin
   blockFlow.setChildrenInline(b: value)
 }
 
+@_cdecl("RenderBlockFlowScion_addFloatsToNewParent")
+func RenderBlockFlowScion_addFloatsToNewParent(
+  _ blockFlowRaw: UnsafeRawPointer, _ toBlockFlowRaw: UnsafeMutableRawPointer
+) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  let toBlockFlow = createRenderObjectWrapperOrNative(toBlockFlowRaw) as! RenderBlockFlowWrapper
+  blockFlow.addFloatsToNewParent(toBlockFlow: toBlockFlow)
+}
+
 @_cdecl("RenderBlockFlowScion_removeFloatingObjects")
 func RenderBlockFlowScion_removeFloatingObjects(_ blockFlowRaw: UnsafeMutableRawPointer) {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
