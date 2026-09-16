@@ -2537,10 +2537,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasAppleColorFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasAppleColorFilter() -> Bool { return wk_interop.RenderStyle_hasAppleColorFilter(p!) }
 
   func hasBackdropFilter() -> Bool { return wk_interop.RenderStyle_hasBackdropFilter(p!) }
 

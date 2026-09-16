@@ -1241,6 +1241,7 @@ const void* RenderStyle_filter(const void*);
 bool RenderStyle_hasFilter(const void*);
 bool RenderStyle_hasReferenceFilterOnly(const void*);
 bool RenderStyle_hasBackdropFilter(const void*);
+bool RenderStyle_hasAppleColorFilter(const void*);
 bool RenderStyle_isInSubtreeWithBlendMode(const void*);
 uint8_t RenderStyle_blendMode(const void*);
 bool RenderStyle_hasBlendMode(const void*);

@@ -721,6 +721,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBackdropFilter(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBackdropFilter();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasAppleColorFilter(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasAppleColorFilter();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isInSubtreeWithBlendMode(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isInSubtreeWithBlendMode();
