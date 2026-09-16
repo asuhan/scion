@@ -76,8 +76,16 @@ class FontCascadeWrapper: Equatable {
   func dashesForIntersectionsWithRect(
     run: TextRunWrapper, textOrigin: FloatPoint, lineExtents: FloatRectWrapper
   ) -> DashArray {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.FontCascade_dashesForIntersectionsWithRect(
+      p, run.p, convertFloatPoint(textOrigin), toFloatRectRaw(lineExtents))!
+    defer { wk_interop.DashArray_destroy(raw) }
+    var dashes = DashArray()
+    let size = wk_interop.DashArray_size(raw)
+    dashes.reserveCapacity(Int(size))
+    for index in 0..<size {
+      dashes.append(wk_interop.DashArray_at(raw, index))
+    }
+    return dashes
   }
 
   func widthOfTextRange(

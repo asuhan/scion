@@ -74,6 +74,42 @@ extern "C" WEBCORE_EXPORT void DisplayList_destroy(const void* p)
     delete static_cast<const WebCore::DisplayList::DisplayList*>(p);
 }
 
+struct DashesFloatPointRaw {
+    float x;
+    float y;
+};
+
+struct DashesFloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT void* FontCascade_dashesForIntersectionsWithRect(const void* p, const void* runRaw, DashesFloatPointRaw textOriginRaw, DashesFloatRectRaw lineExtentsRaw)
+{
+    auto fontCascade = static_cast<const WebCore::FontCascade*>(p);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    const WebCore::FloatPoint textOrigin { textOriginRaw.x, textOriginRaw.y };
+    const WebCore::FloatRect lineExtents { lineExtentsRaw.x, lineExtentsRaw.y, lineExtentsRaw.width, lineExtentsRaw.height };
+    return new WebCore::DashArray(fontCascade->dashesForIntersectionsWithRect(run, textOrigin, lineExtents));
+}
+
+extern "C" WEBCORE_EXPORT uint64_t DashArray_size(const void* p)
+{
+    return static_cast<const WebCore::DashArray*>(p)->size();
+}
+
+extern "C" WEBCORE_EXPORT double DashArray_at(const void* p, uint64_t index)
+{
+    return (*static_cast<const WebCore::DashArray*>(p))[index];
+}
+
+extern "C" WEBCORE_EXPORT void DashArray_destroy(const void* p)
+{
+    delete static_cast<const WebCore::DashArray*>(p);
+}
+
 extern "C" WEBCORE_EXPORT const void* DisplayList_items(const void* p)
 {
     return &static_cast<const WebCore::DisplayList::DisplayList*>(p)->items();

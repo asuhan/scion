@@ -546,6 +546,10 @@ void* FontCascade_displayListForTextRun(
     struct OptionalUIntRaw toRaw,
     bool useFallbackIfFontNotReady);
 void DisplayList_destroy(const void*);
+void* FontCascade_dashesForIntersectionsWithRect(const void*, const void*, struct FloatPointRaw, struct FloatRectRaw);
+uint64_t DashArray_size(const void*);
+double DashArray_at(const void*, uint64_t);
+void DashArray_destroy(const void*);
 const void* DisplayList_items(const void*);
 const void* DisplayList_resourceHeap(const void*);
 uint32_t FontCascade_generation(const void*);
