@@ -433,6 +433,15 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_drawLineForText(void* p, FloatRec
     static_cast<WebCore::GraphicsContext*>(p)->drawLineForText({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, printing, doubleUnderlines, static_cast<WebCore::StrokeStyle>(style));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawLinesForText(void* p, FloatPointRaw point_raw, float thickness, const double* widths, uint64_t widths_count, bool printing, bool doubleUnderlines, uint8_t style)
+{
+    WebCore::DashArray dashes;
+    dashes.reserveInitialCapacity(widths_count);
+    for (uint64_t i = 0; i < widths_count; ++i)
+        dashes.append(static_cast<WebCore::DashArrayElement>(widths[i]));
+    static_cast<WebCore::GraphicsContext*>(p)->drawLinesForText({ point_raw.x, point_raw.y }, thickness, dashes, printing, doubleUnderlines, static_cast<WebCore::StrokeStyle>(style));
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_drawDisplayListItems(void* p, const void* itemsRaw, const void* resourceHeapRaw, void* controlFactoryRaw, FloatPointRaw destinationRaw)
 {
     const auto& items = *static_cast<const Vector<WebCore::DisplayList::Item>*>(itemsRaw);

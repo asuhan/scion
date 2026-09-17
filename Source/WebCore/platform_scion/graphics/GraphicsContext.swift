@@ -441,8 +441,11 @@ class GraphicsContextWrapper {
     point: FloatPoint, thickness: Float32, widths: DashArray, printing: Bool,
     doubleUnderlines: Bool, strokeStyle: StrokeStyle
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    widths.withUnsafeBufferPointer { buffer in
+      wk_interop.GraphicsContext_drawLinesForText(
+        p!, convertFloatPoint(point), thickness, buffer.baseAddress, UInt64(buffer.count), printing,
+        doubleUnderlines, strokeStyle.rawValue)
+    }
   }
 
   func drawDotsForDocumentMarker(rect: FloatRectWrapper, style: DocumentMarkerLineStyle) {

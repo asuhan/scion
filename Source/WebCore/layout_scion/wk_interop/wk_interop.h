@@ -2057,6 +2057,7 @@ struct FloatSizeRaw GraphicsContext_drawText(void*, const void*, const void*, st
 void GraphicsContext_drawEmphasisMarks(void*, const void*, const void*, const void*, struct FloatPointRaw, uint32_t, struct OptionalUIntRaw);
 struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct FloatRectRaw, bool);
 void GraphicsContext_drawLineForText(void*, struct FloatRectRaw, bool printing, bool doubleUnderlines, uint8_t);
+void GraphicsContext_drawLinesForText(void*, struct FloatPointRaw, float thickness, const double* widths, uint64_t widthsCount, bool printing, bool doubleUnderlines, uint8_t);
 void GraphicsContext_drawDisplayListItems(void*, const void*, const void*, void*, struct FloatPointRaw);
 void GraphicsContext_beginTransparencyLayer(void*, float);
 void GraphicsContext_endTransparencyLayer(void*);
