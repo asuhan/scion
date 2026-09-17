@@ -2011,6 +2011,7 @@ void GraphicsContext_setFillRule(void*, uint8_t);
 struct SRGBARaw GraphicsContext_strokeColor(const void*);
 uint8_t GraphicsContext_strokeStyle(const void*);
 void GraphicsContext_setStrokeStyle(void*, uint8_t);
+void GraphicsContext_setDropShadow(void*, float offsetWidth, float offsetHeight, float radius, struct SRGBARaw, bool legacyRadiusMode, float opacity);
 void GraphicsContext_clearDropShadow(void*);
 void GraphicsContext_setStrokeColor(void*, struct SRGBARaw);
 float GraphicsContext_strokeThickness(const void*);

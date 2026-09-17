@@ -110,6 +110,17 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setStrokeStyle(void* p, uint8_t s
     static_cast<WebCore::GraphicsContext*>(p)->setStrokeStyle(static_cast<WebCore::StrokeStyle>(style));
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setDropShadow(void* p, float offset_width, float offset_height, float radius, SRGBARaw color, bool legacy_radius_mode, float opacity)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setDropShadow({
+        { offset_width, offset_height },
+        radius,
+        WebCore::SRGBA<uint8_t> { color.red, color.green, color.blue, color.alpha },
+        legacy_radius_mode ? WebCore::ShadowRadiusMode::Legacy : WebCore::ShadowRadiusMode::Default,
+        opacity
+    });
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_clearDropShadow(void* p)
 {
     static_cast<WebCore::GraphicsContext*>(p)->clearDropShadow();

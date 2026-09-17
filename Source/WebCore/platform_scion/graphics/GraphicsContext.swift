@@ -135,8 +135,12 @@ class GraphicsContextWrapper {
   }
 
   func setDropShadow(dropShadow: GraphicsDropShadow) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Colors cross the bridge as 8-bit sRGBA, like setFillColor and setStrokeColor.
+    let srgba = dropShadow.color.toSRGBA()
+    wk_interop.GraphicsContext_setDropShadow(
+      p!, dropShadow.offset.width, dropShadow.offset.height, dropShadow.radius,
+      SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha),
+      dropShadow.radiusMode == .Legacy, dropShadow.opacity)
   }
 
   func clearDropShadow() { wk_interop.GraphicsContext_clearDropShadow(p!) }
