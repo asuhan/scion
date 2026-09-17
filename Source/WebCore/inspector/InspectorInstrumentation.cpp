@@ -1384,3 +1384,8 @@ InstrumentingAgents* InspectorInstrumentation::instrumentingAgents(ScriptExecuti
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT void InspectorInstrumentation_didAddOrRemoveScrollbars(void* renderer_raw)
+{
+    WebCore::InspectorInstrumentation::didAddOrRemoveScrollbars(*static_cast<WebCore::RenderObject*>(renderer_raw));
+}

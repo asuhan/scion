@@ -29,8 +29,10 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+import wk_interop
+
 class InspectorInstrumentationWrapper {
   static func didAddOrRemoveScrollbars(renderer: RenderObjectWrapper) {
-    print("TODO: implement didAddOrRemoveScrollbars in InspectorInstrumentation")
+    wk_interop.InspectorInstrumentation_didAddOrRemoveScrollbars(wkRenderObject(renderer))
   }
 }
