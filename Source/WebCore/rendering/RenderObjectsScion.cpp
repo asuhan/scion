@@ -754,6 +754,8 @@ extern "C" int32_t RenderBoxModelObjectScion_borderLogicalLeft(const void* p);
 
 extern "C" IntRectRaw RenderInlineScion_linesBoundingBox(const void*);
 
+extern "C" LayoutRectRaw RenderInlineScion_linesVisualOverflowBoundingBox(const void*);
+
 extern "C" int32_t RenderInlineScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderInlineScion_offsetTop(const void*);
@@ -2392,6 +2394,11 @@ IntRect RenderInlineScion::linesBoundingBox() const
 {
     const auto r = RenderInlineScion_linesBoundingBox(m_handle);
     return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
+}
+
+LayoutRect RenderInlineScion::linesVisualOverflowBoundingBox() const
+{
+    return convertLayoutRectRaw(RenderInlineScion_linesVisualOverflowBoundingBox(m_handle));
 }
 
 RenderObject::RepaintRects RenderInlineScion::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds repaintOutlineBounds) const

@@ -932,6 +932,8 @@ public:
 
     IntRect linesBoundingBox() const;
 
+    LayoutRect linesVisualOverflowBoundingBox() const;
+
     LayoutUnit offsetLeft() const;
 
     LayoutUnit offsetTop() const;

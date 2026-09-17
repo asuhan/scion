@@ -602,7 +602,7 @@ IntRect RenderInline::linesBoundingBox() const
 
 LayoutRect RenderInline::linesVisualOverflowBoundingBox() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->linesVisualOverflowBoundingBox(); }
     if (auto* layout = LayoutIntegration::LineLayout::containing(*this)) {
         if (!layoutBox()) {
             // Repaint may be issued on subtrees during content mutation with newly inserted renderers. 

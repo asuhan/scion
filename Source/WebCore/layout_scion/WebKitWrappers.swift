@@ -3332,6 +3332,14 @@ func RenderInlineScion_linesBoundingBox(_ inlineRaw: UnsafeRawPointer) -> IntRec
     size: IntSizeRaw(width: r.size.width, height: r.size.height))
 }
 
+@_cdecl("RenderInlineScion_linesVisualOverflowBoundingBox")
+func RenderInlineScion_linesVisualOverflowBoundingBox(_ inlineRaw: UnsafeRawPointer)
+  -> LayoutRectRaw
+{
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return convertLayoutRect(inline.linesVisualOverflowBoundingBox())
+}
+
 @_cdecl("RenderInlineScion_offsetLeft")
 func RenderInlineScion_offsetLeft(_ inlineRaw: UnsafeRawPointer) -> Int32 {
   let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
