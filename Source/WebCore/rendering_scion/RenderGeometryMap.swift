@@ -143,8 +143,9 @@ class RenderGeometryMap {
       assert(mapping.isEmpty)
       pushMappingsToAncestor(layer!.renderer().view(), nil)
 
-      let unused = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
-      use(unused)
+      let oldInsertionPosition = insertionPosition
+      insertionPosition = mapping.count
+      defer { insertionPosition = oldInsertionPosition }
       while layer!.parent() != nil {
         pushMappingsToAncestor(
           layer: layer, ancestorLayer: layer!.parent(), respectTransforms: respectTransforms)
@@ -159,8 +160,9 @@ class RenderGeometryMap {
       newFlags.remove(.UseTransforms)
     }
 
-    let unused = SetForScope(scopedVariable: &mapCoordinatesFlags, newValue: newFlags)
-    use(unused)
+    let oldMapCoordinatesFlags = mapCoordinatesFlags
+    mapCoordinatesFlags = newFlags
+    defer { mapCoordinatesFlags = oldMapCoordinatesFlags }
 
     let renderer = layer!.renderer()
 
@@ -175,8 +177,9 @@ class RenderGeometryMap {
         pushMappingsToAncestor(ancestorLayer!.renderer(), nil)
       }
 
-      let unused = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
-      use(unused)
+      let oldInsertionPosition = insertionPosition
+      insertionPosition = mapping.count
+      defer { insertionPosition = oldInsertionPosition }
       push(
         renderer, layerOffset, accumulatingTransform: true, isNonUniform: false,
         isFixedPosition: false, hasTransform: false)
@@ -196,8 +199,9 @@ class RenderGeometryMap {
   ) {
     assert(isNativeImpl())
     // We need to push mappings in reverse order here, so do insertions rather than appends.
-    let unused = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
-    use(unused)
+    let oldInsertionPosition = insertionPosition
+    insertionPosition = mapping.count
+    defer { insertionPosition = oldInsertionPosition }
     var renderer = renderer
     repeat {
       renderer = renderer!.pushMappingToContainer(ancestorRenderer, self)
