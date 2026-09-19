@@ -430,6 +430,8 @@ extern "C" void RenderObjectScion_repaintRectangle(void*, LayoutRectRaw, bool);
 
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
 
+extern "C" IntRectRaw RenderObjectScion_absoluteBoundingBoxRect(const void*, bool, bool*);
+
 extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
 
 extern "C" bool RenderObjectScion_isFloatingOrOutOfFlowPositioned(const void*);
@@ -1697,6 +1699,12 @@ LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerMod
     return convertLayoutRectRaw(
         RenderObjectScion_clippedOverflowRectForRepaint(
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer)));
+}
+
+IntRect RenderObjectScion::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const
+{
+    const auto r = RenderObjectScion_absoluteBoundingBoxRect(m_handle, useTransforms, wasFixed);
+    return { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
 }
 
 namespace {

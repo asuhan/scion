@@ -1397,7 +1397,7 @@ void RenderObject::collectSelectionGeometries(Vector<SelectionGeometry>& geometr
 
 IntRect RenderObject::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->absoluteBoundingBoxRect(useTransforms, wasFixed); }
     if (useTransforms) {
         Vector<FloatQuad> quads;
         absoluteQuads(quads, wasFixed);

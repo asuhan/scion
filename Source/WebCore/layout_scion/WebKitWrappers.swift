@@ -2370,6 +2370,21 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
 }
 
+@_cdecl("RenderObjectScion_absoluteBoundingBoxRect")
+func RenderObjectScion_absoluteBoundingBoxRect(
+  _ objectRaw: UnsafeRawPointer, _ useTransforms: Bool, _ wasFixedRaw: UnsafeMutablePointer<Bool>?
+) -> IntRectRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  var wasFixed: Bool? = wasFixedRaw != nil ? wasFixedRaw!.pointee : nil
+  let r = object.absoluteBoundingBoxRect(useTransforms, &wasFixed)
+  if let wasFixedRaw {
+    wasFixedRaw.pointee = wasFixed!
+  }
+  return IntRectRaw(
+    location: IntPointRaw(x: r.location.x, y: r.location.y),
+    size: IntSizeRaw(width: r.size.width, height: r.size.height))
+}
+
 private func rectsForRepaintingAfterLayoutImpl<T: RenderObjectWrapper>(
   _ object: T, _ repaintContainerRaw: UnsafeMutableRawPointer?, _ repaintOutlineBounds: Bool
 ) -> RepaintRectsRaw {

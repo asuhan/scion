@@ -422,6 +422,8 @@ public:
 
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
 
+    IntRect absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const;
+
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
 
     bool isFloatingOrOutOfFlowPositioned() const;
