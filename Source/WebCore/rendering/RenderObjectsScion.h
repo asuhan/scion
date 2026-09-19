@@ -1067,6 +1067,8 @@ public:
     {
     }
 
+    void layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight);
+
     void willBeDestroyed();
 
     LayoutUnit collapsedMarginAfter() const;

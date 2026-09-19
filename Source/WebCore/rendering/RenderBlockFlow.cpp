@@ -588,7 +588,10 @@ bool RenderBlockFlow::inlineLayoutHasDetachedContent() const
 
 void RenderBlockFlow::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->layoutBlock(relayoutChildren, pageLogicalHeight);
+        return;
+    }
     ASSERT(needsLayout());
 
     if (!relayoutChildren && simplifiedLayout())

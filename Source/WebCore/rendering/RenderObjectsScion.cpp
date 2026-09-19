@@ -928,6 +928,8 @@ extern "C" LayoutSizeRaw RenderBoxScion_cachedSizeForOverflowClip(const void*);
 
 extern "C" void RenderBlockScion_scrollbarsChanged(void*, bool, bool);
 
+extern "C" void RenderBlockFlowScion_layoutBlock(void*, bool, int32_t);
+
 extern "C" bool RenderObjectScion_isDescendantOf(const void*, const void*);
 
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
@@ -2879,6 +2881,11 @@ LayoutSize RenderBoxScion::cachedSizeForOverflowClip() const
 {
     const auto size = RenderBoxScion_cachedSizeForOverflowClip(m_handle);
     return { LayoutUnit::fromRawValue(size.width), LayoutUnit::fromRawValue(size.height) };
+}
+
+void RenderBlockFlowScion::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight)
+{
+    RenderBlockFlowScion_layoutBlock(m_handle, relayoutChildren, pageLogicalHeight.rawValue());
 }
 
 void RenderBlockScion::scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged)

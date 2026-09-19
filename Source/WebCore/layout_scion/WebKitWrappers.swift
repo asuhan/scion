@@ -4081,6 +4081,16 @@ func RenderBoxScion_cachedSizeForOverflowClip(_ boxRaw: UnsafeRawPointer) -> Lay
   return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
 }
 
+@_cdecl("RenderBlockFlowScion_layoutBlock")
+func RenderBlockFlowScion_layoutBlock(
+  _ blockFlowRaw: UnsafeMutableRawPointer, _ relayoutChildren: Bool, _ pageLogicalHeightRaw: Int32
+) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  blockFlow.layoutBlock(
+    relayoutChildren: relayoutChildren,
+    pageLogicalHeight: LayoutUnit.fromRawValue(value: pageLogicalHeightRaw))
+}
+
 @_cdecl("RenderBlockScion_scrollbarsChanged")
 func RenderBlockScion_scrollbarsChanged(
   _ blockRaw: UnsafeMutableRawPointer, _ horizontalScrollbarChanged: Bool,
