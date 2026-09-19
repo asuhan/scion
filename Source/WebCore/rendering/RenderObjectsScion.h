@@ -996,6 +996,8 @@ public:
     {
     }
 
+    void scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged);
+
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     void insertPositionedObject(RenderBox&);

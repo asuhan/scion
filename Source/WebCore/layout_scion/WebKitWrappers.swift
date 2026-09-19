@@ -4067,6 +4067,15 @@ func RenderBoxScion_cachedSizeForOverflowClip(_ boxRaw: UnsafeRawPointer) -> Lay
   return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
 }
 
+@_cdecl("RenderBlockScion_scrollbarsChanged")
+func RenderBlockScion_scrollbarsChanged(
+  _ blockRaw: UnsafeMutableRawPointer, _ horizontalScrollbarChanged: Bool,
+  _ verticalScrollbarChanged: Bool
+) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.scrollbarsChanged(horizontalScrollbarChanged, verticalScrollbarChanged)
+}
+
 @_cdecl("RenderObjectScion_isDescendantOf")
 func RenderObjectScion_isDescendantOf(
   _ objectRaw: UnsafeRawPointer, _ ancestorRaw: UnsafeRawPointer?

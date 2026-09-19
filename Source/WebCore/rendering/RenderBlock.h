@@ -308,10 +308,7 @@ public:
 
     void getFirstLetter(RenderObject*& firstLetter, RenderElement*& firstLetterContainer, RenderObject* skipObject = nullptr);
 
-    virtual void scrollbarsChanged(bool /*horizontalScrollbarChanged*/, bool /*verticalScrollbarChanged*/)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-    }
+    virtual void scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged);
 
     LayoutUnit logicalLeftOffsetForContent(RenderFragmentContainer*) const;
     LayoutUnit logicalRightOffsetForContent(RenderFragmentContainer*) const;

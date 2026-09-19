@@ -3687,6 +3687,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
     maxLogicalWidth = max(floatLeftWidth + floatRightWidth, maxLogicalWidth)
   }
 
+  func scrollbarsChanged(_ horizontalScrollbarChanged: Bool, _ verticalScrollbarChanged: Bool) {
+    assert(isNativeImpl())
+  }
+
   override func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
     assert(isNativeImpl())
     if continuation() == nil {

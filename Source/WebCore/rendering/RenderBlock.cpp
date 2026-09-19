@@ -362,6 +362,12 @@ void RenderBlock::setScionHandle(void* handle) {
     m_scion = std::make_unique<RenderBlockScion>(handle);
 }
 
+void RenderBlock::scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged)
+{
+    if (m_scion)
+        m_scion->scrollbarsChanged(horizontalScrollbarChanged, verticalScrollbarChanged);
+}
+
 void RenderBlock::removePositionedObjectsIfNeeded(const RenderStyle& oldStyle, const RenderStyle& newStyle)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
