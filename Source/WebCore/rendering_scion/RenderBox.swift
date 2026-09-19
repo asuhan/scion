@@ -926,6 +926,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: size().height() + top + bottom)
   }
 
+  override func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    if let fragmentedFlow = enclosingFragmentedFlow(),
+      fragmentedFlow.absoluteQuadsForBox(&quads, &wasFixed, self)
+    {
+      return
+    }
+
+    let localRect = FloatRectWrapper(
+      x: 0, y: 0, width: width().toFloat(), height: height().toFloat())
+    quads.append(localToAbsoluteQuad(FloatQuad(inRect: localRect), .UseTransforms, &wasFixed))
+  }
+
   func borderBoxRect() -> LayoutRectWrapper {
     assert(isNativeImpl())
     return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
