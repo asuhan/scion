@@ -59,6 +59,17 @@ struct IntRect: Equatable {
   mutating func setWidth(width: Int32) { size.width = width }
   private mutating func setHeight(height: Int32) { size.height = height }
 
+  func toRectWithExtentsClippedToNumericLimits() -> IntRect {
+    var clippedRect = self
+    if x().addingReportingOverflow(width()).overflow {
+      clippedRect.setWidth(width: Int32.max - x())
+    }
+    if y().addingReportingOverflow(height()).overflow {
+      clippedRect.setHeight(height: Int32.max - y())
+    }
+    return clippedRect
+  }
+
   func isEmpty() -> Bool { return size.isEmpty() }
 
   mutating func move(_ size: IntSize) { location += size }
