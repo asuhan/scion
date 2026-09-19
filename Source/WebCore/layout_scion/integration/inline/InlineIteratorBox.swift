@@ -74,6 +74,10 @@ extension InlineIterator {
       }
     }
 
+    func isSVGText() -> Bool {
+      return isText() && renderer().isRenderSVGInlineText()
+    }
+
     func isRootInlineBox() -> Bool {
       switch m_pathVariant {
       case .modern(let path):
