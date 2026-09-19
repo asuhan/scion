@@ -889,6 +889,8 @@ public:
 
     void setLogicalLeft(LayoutUnit);
 
+    LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const;
+
     LayoutUnit offsetLeft() const;
 
     LayoutUnit offsetTop() const;

@@ -4050,6 +4050,16 @@ func RenderBoxScion_setLogicalLeft(_ boxRaw: UnsafeMutableRawPointer, _ leftRaw:
   box.setLogicalLeft(left: LayoutUnit.fromRawValue(value: leftRaw))
 }
 
+@_cdecl("RenderBoxScion_marginAfter")
+func RenderBoxScion_marginAfter(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let margin = box.marginAfter(
+    otherStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
+  return margin.rawValue()
+}
+
 @_cdecl("RenderBoxScion_overridingLogicalWidth")
 func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
