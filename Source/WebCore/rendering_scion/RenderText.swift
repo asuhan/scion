@@ -364,6 +364,34 @@ private func isInlineFlowOrEmptyText(_ renderer: RenderObjectWrapper) -> Bool {
   return (renderer as? RenderTextWrapper)?.text().isEmpty() ?? false
 }
 
+private enum ClippingOption {
+  case NoClipping
+  case ClipToEllipsis
+}
+
+// FIXME: Unify with absoluteQuadsForRange.
+private func collectAbsoluteQuads(
+  _ textRenderer: RenderTextWrapper, _ wasFixed: inout Bool?, _ clipping: ClippingOption
+) -> [FloatQuad] {
+  var quads: [FloatQuad] = []
+  for textBox in InlineIterator.textBoxesFor(textRenderer) {
+    let boundaries =
+      textBox.isSVGText()
+      ? InlineIterator.SVGTextBox(textBox.m_pathVariant).calculateBoundariesIncludingSVGTransform()
+      : textBox.visualRectIgnoringBlockDirection()
+
+    // Shorten the width of this text box if it ends in an ellipsis.
+    if clipping == .ClipToEllipsis {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    quads.append(
+      textRenderer.localToAbsoluteQuad(FloatQuad(inRect: boundaries), .UseTransforms, &wasFixed))
+  }
+  return quads
+}
+
 class RenderTextWrapper: RenderObjectWrapper {
   convenience init(type: `Type`, textNode: TextWrapper, text: StringWrapper) {
     self.init(type, textNode, text)
@@ -705,6 +733,11 @@ class RenderTextWrapper: RenderObjectWrapper {
       }
     }
     return UInt32.max
+  }
+
+  override final func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    quads.append(contentsOf: collectAbsoluteQuads(self, &wasFixed, .NoClipping))
   }
 
   func linesBoundingBox() -> IntRect {
