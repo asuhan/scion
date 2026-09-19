@@ -52,4 +52,8 @@ struct TextBoxSelectableRange {
   func clamp(startOffset: UInt32, endOffset: UInt32) -> (UInt32, UInt32) {
     return (clamp(offset: startOffset), clamp(offset: endOffset))
   }
+
+  func intersects(startOffset: UInt32, endOffset: UInt32) -> Bool {
+    return clamp(offset: startOffset) < clamp(offset: endOffset)
+  }
 }
