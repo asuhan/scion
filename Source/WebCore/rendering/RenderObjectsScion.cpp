@@ -878,6 +878,8 @@ struct VisibleRectContextRaw {
 
 extern "C" OptionalRepaintRectsRaw RenderBoxScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
 
+extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRect(const void*, void*, VisibleRectContextRaw);
+
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
 
 extern "C" bool RenderBoxScion_stretchesToViewport(const void*);
@@ -2744,6 +2746,13 @@ VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRe
 }
 
 } // namespace
+
+LayoutRect RenderObjectScion::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, RenderObject::VisibleRectContext context) const
+{
+    return convertLayoutRectRaw(
+        RenderObjectScion_clippedOverflowRect(
+            m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), convertVisibleRectContext(context)));
+}
 
 std::optional<WebCore::RenderObject::RepaintRects> RenderBoxScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
 {

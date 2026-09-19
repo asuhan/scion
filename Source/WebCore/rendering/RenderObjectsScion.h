@@ -422,6 +422,8 @@ public:
 
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
 
+    LayoutRect clippedOverflowRect(const RenderLayerModelObject* repaintContainer, RenderObject::VisibleRectContext) const;
+
     IntRect absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const;
 
     bool isDescendantOf(const RenderObject*) const;

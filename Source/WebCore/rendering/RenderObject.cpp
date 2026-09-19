@@ -1728,7 +1728,7 @@ auto RenderObject::rectsForRepaintingAfterLayout(const RenderLayerModelObject* r
 
 LayoutRect RenderObject::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->clippedOverflowRect(repaintContainer, context); }
     auto repaintRects = localRectsForRepaint(RepaintOutlineBounds::No);
     if (repaintRects.clippedOverflowRect.isEmpty())
         return { };

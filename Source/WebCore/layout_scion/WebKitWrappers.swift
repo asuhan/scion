@@ -2360,6 +2360,20 @@ func RenderObjectScion_repaintRectangle(
     repaintRect: convertLayoutRect(repaintRect), shouldClipToLayer: shouldClipToLayer)
 }
 
+@_cdecl("RenderObjectScion_clippedOverflowRect")
+func RenderObjectScion_clippedOverflowRect(
+  _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
+  _ contextRaw: VisibleRectContextRaw
+) -> LayoutRectRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let repaintContainer =
+    repaintContainerRaw != nil
+    ? createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
+    : nil
+  return convertLayoutRect(
+    object.clippedOverflowRect(repaintContainer, convertVisibleRectContext(contextRaw)))
+}
+
 @_cdecl("RenderObjectScion_clippedOverflowRectForRepaint")
 func RenderObjectScion_clippedOverflowRectForRepaint(
   _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?
