@@ -3687,6 +3687,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
     maxLogicalWidth = max(floatLeftWidth + floatRightWidth, maxLogicalWidth)
   }
 
+  override func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    if continuation() == nil {
+      absoluteQuadsIgnoringContinuation(
+        FloatRectWrapper(location: FloatPoint(), size: size().FloatSize()), &quads, &wasFixed)
+      return
+    }
+    // For blocks inside inlines, we include margins so that we run right up to the inline boxes
+    // above and below us (thus getting merged with them to form a single irregular shape).
+    let logicalRect = FloatRectWrapper(
+      x: 0, y: -collapsedMarginBefore().toFloat(), width: width().toFloat(),
+      height: (height() + collapsedMarginBefore() + collapsedMarginAfter()).toFloat())
+    absoluteQuadsIgnoringContinuation(logicalRect, &quads, &wasFixed)
+    collectAbsoluteQuadsForContinuation(&quads, &wasFixed)
+  }
+
+  override final func absoluteQuadsIgnoringContinuation(
+    _ logicalRect: FloatRectWrapper, _ quads: inout [FloatQuad], _ wasFixed: inout Bool?
+  ) {
+    assert(isNativeImpl())
+    // FIXME: This is wrong for block-flows that are horizontal.
+    // https://bugs.webkit.org/show_bug.cgi?id=46781
+    let fragmentedFlow = enclosingFragmentedFlow()
+    if fragmentedFlow == nil || !fragmentedFlow!.absoluteQuadsForBox(&quads, &wasFixed, self) {
+      quads.append(localToAbsoluteQuad(FloatQuad(inRect: logicalRect), .UseTransforms, &wasFixed))
+    }
+  }
+
   override final func rectWithOutlineForRepaint(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
   ) -> LayoutRectWrapper {
