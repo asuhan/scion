@@ -58,6 +58,8 @@ class LineBoxIteratorLegacyPath {
 
   func contentLogicalLeft() -> Float32 { return m_rootInlineBox!.logicalLeft() }
 
+  func contentLogicalRight() -> Float32 { return m_rootInlineBox!.logicalRight() }
+
   func formattingContextRoot() -> RenderBlockFlowWrapper { m_rootInlineBox!.blockFlow() }
 
   func isFirstAfterPageBreak() -> Bool { return false }

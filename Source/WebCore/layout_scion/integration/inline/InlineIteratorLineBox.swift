@@ -98,6 +98,17 @@ class InlineIterator {
       }
     }
 
+    func contentLogicalRight() -> Float32 {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.contentLogicalRight()
+      case .legacy(let path):
+        return path.contentLogicalRight()
+      }
+    }
+
+    func contentLogicalWidth() -> Float32 { return contentLogicalRight() - contentLogicalLeft() }
+
     func contentLogicalHeight() -> Float32 { return contentLogicalBottom() - contentLogicalTop() }
 
     func contentLogicalTopAdjustedForPrecedingLineBox() -> Float32 {
