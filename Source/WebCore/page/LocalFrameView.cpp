@@ -298,6 +298,11 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_fixedScrollableAreaBounds
     return convertLayoutRect(rect);
 }
 
+extern "C" WEBCORE_EXPORT void* LocalFrameView_scrollAnchoringController(void* p)
+{
+    return static_cast<WebCore::LocalFrameView*>(p)->scrollAnchoringController();
+}
+
 extern "C" WEBCORE_EXPORT LayoutRectRaw LocalFrameView_layoutViewportRect(const void* p)
 {
     return convertLayoutRect(static_cast<const WebCore::LocalFrameView*>(p)->layoutViewportRect());

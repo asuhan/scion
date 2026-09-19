@@ -383,3 +383,18 @@ void ScrollAnchoringController::adjustScrollPositionForAnchoring()
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT bool ScrollAnchoringController_hasAnchorElement(const void* p)
+{
+    return static_cast<const WebCore::ScrollAnchoringController*>(p)->anchorElement();
+}
+
+extern "C" WEBCORE_EXPORT void ScrollAnchoringController_notifyChildHadSuppressingStyleChange(void* p)
+{
+    static_cast<WebCore::ScrollAnchoringController*>(p)->notifyChildHadSuppressingStyleChange();
+}
+
+extern "C" WEBCORE_EXPORT bool ScrollAnchoringController_isInScrollAnchoringAncestorChain(void* p, const void* rendererRaw)
+{
+    return static_cast<WebCore::ScrollAnchoringController*>(p)->isInScrollAnchoringAncestorChain(*static_cast<const WebCore::RenderObject*>(rendererRaw));
+}

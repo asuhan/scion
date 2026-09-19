@@ -88,6 +88,13 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     return r.is_valid ? convertLayoutRect(r.rect) : nil
   }
 
+  func scrollAnchoringController() -> ScrollAnchoringControllerWrapper? {
+    guard let controller = wk_interop.LocalFrameView_scrollAnchoringController(pInterop) else {
+      return nil
+    }
+    return ScrollAnchoringControllerWrapper(p: controller)
+  }
+
   // These are in document coordinates, unaffected by page scale (but affected by zooming).
   func layoutViewportRect() -> LayoutRectWrapper {
     return convertLayoutRect(wk_interop.LocalFrameView_layoutViewportRect(pInterop))

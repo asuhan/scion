@@ -1091,8 +1091,28 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   static func searchParentChainForScrollAnchoringController(_ renderer: RenderObjectWrapper)
     -> ScrollAnchoringControllerWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.hasLayer() {
+      if let scrollableArea = (renderer as! RenderLayerModelObjectWrapper).layer()!.scrollableArea()
+      {
+        if let controller = scrollableArea.scrollAnchoringController(),
+          controller.hasAnchorElement()
+        {
+          return controller
+        }
+      }
+    }
+    var enclosingLayer = renderer.enclosingLayer()
+    while let layer = enclosingLayer {
+      if let scrollableArea = layer.scrollableArea() {
+        if let controller = scrollableArea.scrollAnchoringController(),
+          controller.hasAnchorElement()
+        {
+          return controller
+        }
+      }
+      enclosingLayer = layer.parent()
+    }
+    return renderer.view().frameView().scrollAnchoringController()
   }
 
   func childrenInline() -> Bool {

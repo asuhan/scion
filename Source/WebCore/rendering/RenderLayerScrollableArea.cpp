@@ -81,6 +81,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT void* RenderLayerScrollableArea_scrollAnchoringController(void* p)
+{
+    return static_cast<WebCore::RenderLayerScrollableArea*>(p)->scrollAnchoringController();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayerScrollableArea_verticalScrollbarWidth(const void* p, bool relevancy, bool isHorizontalWritingMode)
 {
     return static_cast<const WebCore::RenderLayerScrollableArea*>(p)->verticalScrollbarWidth(relevancy ? WebCore::OverlayScrollbarSizeRelevancy::IncludeOverlayScrollbarSize : WebCore::OverlayScrollbarSizeRelevancy::IgnoreOverlayScrollbarSize, isHorizontalWritingMode);

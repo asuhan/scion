@@ -23,14 +23,25 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+import wk_interop
+
 final class ScrollAnchoringControllerWrapper {
+  init(p: UnsafeMutableRawPointer) {
+    self.p = p
+  }
+
+  func hasAnchorElement() -> Bool {
+    return wk_interop.ScrollAnchoringController_hasAnchorElement(p)
+  }
+
   func notifyChildHadSuppressingStyleChange() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.ScrollAnchoringController_notifyChildHadSuppressingStyleChange(p)
   }
 
   func isInScrollAnchoringAncestorChain(_ object: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.ScrollAnchoringController_isInScrollAnchoringAncestorChain(
+      p, wkRenderObject(object))
   }
+
+  private let p: UnsafeMutableRawPointer
 }

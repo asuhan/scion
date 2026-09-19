@@ -89,6 +89,18 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollAnchoringController() -> ScrollAnchoringControllerWrapper? {
+    if !isNativeImpl() {
+      guard
+        let controller = wk_interop.RenderLayerScrollableArea_scrollAnchoringController(pInterop!)
+      else {
+        return nil
+      }
+      return ScrollAnchoringControllerWrapper(p: controller)
+    }
+    return m_scrollAnchoringController
+  }
+
   func marquee() -> RenderMarqueeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -967,5 +979,6 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private var scrollCorner: RenderScrollbarPartWrapper? = nil
   private var resizer: RenderScrollbarPartWrapper? = nil
 
+  private var m_scrollAnchoringController: ScrollAnchoringControllerWrapper? = nil
   private var m_marquee: RenderMarqueeWrapper? = nil  // Used for <marquee>.
 }
