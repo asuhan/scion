@@ -95,6 +95,33 @@ extern "C" WEBCORE_EXPORT void* FontCascade_dashesForIntersectionsWithRect(const
     return new WebCore::DashArray(fontCascade->dashesForIntersectionsWithRect(run, textOrigin, lineExtents));
 }
 
+struct SelectionLayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+static WebCore::LayoutRect convertSelectionLayoutRectRaw(const SelectionLayoutRectRaw& r)
+{
+    return { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height) };
+}
+
+static SelectionLayoutRectRaw convertSelectionLayoutRect(const WebCore::LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+extern "C" WEBCORE_EXPORT SelectionLayoutRectRaw FontCascade_adjustSelectionRectForText(const void* p, bool canUseSimplifiedTextMeasuring, const void* runRaw, SelectionLayoutRectRaw selectionRectRaw, uint32_t from, OptionalUIntRaw toRaw)
+{
+    auto fontCascade = static_cast<const WebCore::FontCascade*>(p);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    auto selectionRect = convertSelectionLayoutRectRaw(selectionRectRaw);
+    const auto to = toRaw.is_valid ? toRaw.value : std::optional<unsigned>();
+    fontCascade->adjustSelectionRectForText(canUseSimplifiedTextMeasuring, run, selectionRect, from, to);
+    return convertSelectionLayoutRect(selectionRect);
+}
+
 extern "C" WEBCORE_EXPORT uint64_t DashArray_size(const void* p)
 {
     return static_cast<const WebCore::DashArray*>(p)->size();

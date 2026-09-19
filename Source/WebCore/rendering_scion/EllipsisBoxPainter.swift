@@ -114,7 +114,7 @@ struct EllipsisBoxPainter {
     let canUseSimplifiedTextMeasuring = false
     style.fontCascade().adjustSelectionRectForText(
       canUseSimplifiedTextMeasuring: canUseSimplifiedTextMeasuring, run: ellipsisText,
-      selectionRect: visualRect)
+      selectionRect: &visualRect)
     context.fillRect(
       rect: snapRectToDevicePixelsWithWritingDirection(
         rect: visualRect,

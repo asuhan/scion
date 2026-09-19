@@ -152,11 +152,13 @@ class FontCascadeWrapper: Equatable {
   }
 
   func adjustSelectionRectForText(
-    canUseSimplifiedTextMeasuring: Bool, run: TextRunWrapper, selectionRect: LayoutRectWrapper,
-    from: UInt32 = 0, to: UInt32? = nil
+    canUseSimplifiedTextMeasuring: Bool, run: TextRunWrapper,
+    selectionRect: inout LayoutRectWrapper, from: UInt32 = 0, to: UInt32? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    selectionRect = convertLayoutRect(
+      wk_interop.FontCascade_adjustSelectionRectForText(
+        p, canUseSimplifiedTextMeasuring, run.p, convertLayoutRect(selectionRect), from,
+        OptionalUIntRaw(value: to ?? 0, is_valid: to != nil)))
   }
 
   func isSmallCaps() -> Bool {

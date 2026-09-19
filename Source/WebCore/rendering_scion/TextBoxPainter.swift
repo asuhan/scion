@@ -138,10 +138,10 @@ private func calculateDocumentMarkerBounds(
     || markedText.endOffset != textBox.get().selectableRange().clamp(offset: textBox.get().end())
   {
     let run = textBox.get().textRun()
-    let selectionRect = LayoutRectWrapper(x: 0, y: y, width: 0, height: height)
+    var selectionRect = LayoutRectWrapper(x: 0, y: y, width: 0, height: height)
     font.adjustSelectionRectForText(
       canUseSimplifiedTextMeasuring: textBox.get().renderer().canUseSimplifiedTextMeasuring()
-        ?? false, run: run, selectionRect: selectionRect,
+        ?? false, run: run, selectionRect: &selectionRect,
       from: markedText.startOffset, to: markedText.endOffset)
     return selectionRect.FloatRect()
   }
@@ -435,13 +435,13 @@ class TextBoxPainter {
             rect: LayoutRectWrapper(r: paintRect), deviceScaleFactor: document.deviceScaleFactor(),
             ltr: paintTextRun.ltr())
           if startOffset != 0 || endOffset != paintTextRun.length() {
-            let selectionRect = LayoutRectWrapper(
+            var selectionRect = LayoutRectWrapper(
               x: paintRect.x(), y: paintRect.y(), width: paintRect.width(),
               height: paintRect.height())
             fontCascade().adjustSelectionRectForText(
               canUseSimplifiedTextMeasuring: renderer.canUseSimplifiedTextMeasuring() ?? false,
               run: paintTextRun,
-              selectionRect: selectionRect, from: startOffset, to: endOffset)
+              selectionRect: &selectionRect, from: startOffset, to: endOffset)
             snappedPaintRect = snapRectToDevicePixelsWithWritingDirection(
               rect: selectionRect, deviceScaleFactor: document.deviceScaleFactor(),
               ltr: paintTextRun.ltr())
@@ -820,7 +820,7 @@ class TextBoxPainter {
     var adjustedSelectionRect = selectionRect
     fontCascade().adjustSelectionRectForText(
       canUseSimplifiedTextMeasuring: renderer.canUseSimplifiedTextMeasuring() ?? false,
-      run: paintTextRun, selectionRect: adjustedSelectionRect,
+      run: paintTextRun, selectionRect: &adjustedSelectionRect,
       from: startOffset, to: endOffset)
     if paintTextRun.length() == endOffset - startOffset {
       // FIXME: We should reconsider re-measuring the content when non-whitespace runs are joined together (see webkit.org/b/251318).
