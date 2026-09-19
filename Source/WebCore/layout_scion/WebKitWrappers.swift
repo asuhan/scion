@@ -4044,6 +4044,12 @@ func RenderBoxScion_contentSize(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
     width: contentSize.width().rawValue(), height: contentSize.height().rawValue())
 }
 
+@_cdecl("RenderBoxScion_setLogicalLeft")
+func RenderBoxScion_setLogicalLeft(_ boxRaw: UnsafeMutableRawPointer, _ leftRaw: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setLogicalLeft(left: LayoutUnit.fromRawValue(value: leftRaw))
+}
+
 @_cdecl("RenderBoxScion_overridingLogicalWidth")
 func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

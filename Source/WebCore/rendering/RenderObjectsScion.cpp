@@ -918,6 +918,8 @@ extern "C" void RenderBoxScion_clearOverridingLogicalWidth(void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalWidth(const void*);
 
+extern "C" void RenderBoxScion_setLogicalLeft(void*, int32_t);
+
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
@@ -2839,6 +2841,11 @@ LayoutSize RenderBoxScion::contentSize() const
 {
     const auto sizeRaw = RenderBoxScion_contentSize(m_handle);
     return { LayoutUnit::fromRawValue(sizeRaw.width), LayoutUnit::fromRawValue(sizeRaw.height) };
+}
+
+void RenderBoxScion::setLogicalLeft(LayoutUnit left)
+{
+    RenderBoxScion_setLogicalLeft(m_handle, left.rawValue());
 }
 
 std::optional<LayoutUnit> RenderBoxScion::overridingLogicalWidth() const

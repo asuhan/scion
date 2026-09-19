@@ -288,7 +288,10 @@ inline void RenderBox::setLogicalHeight(LayoutUnit size)
 
 inline void RenderBox::setLogicalLeft(LayoutUnit left)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setLogicalLeft(left);
+        return;
+    }
     if (style().isHorizontalWritingMode())
         setX(left);
     else

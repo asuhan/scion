@@ -887,6 +887,8 @@ public:
 
     std::optional<LayoutUnit> overridingLogicalWidth() const;
 
+    void setLogicalLeft(LayoutUnit);
+
     LayoutUnit offsetLeft() const;
 
     LayoutUnit offsetTop() const;
