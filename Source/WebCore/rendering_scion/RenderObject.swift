@@ -2546,6 +2546,32 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not reached")
   }
 
+  // Build an array of quads in absolute coords for line boxes
+  func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {}
+
+  func absoluteQuads(_ quads: inout [FloatQuad]) {
+    var unused: Bool? = nil
+    absoluteQuads(&quads, &unused)
+  }
+
+  func absoluteBoundingBoxRect(_ useTransforms: Bool = true) -> IntRect {
+    var unused: Bool? = nil
+    return absoluteBoundingBoxRect(useTransforms, &unused)
+  }
+
+  func absoluteBoundingBoxRect(_ useTransforms: Bool, _ wasFixed: inout Bool?) -> IntRect {
+    assert(isNativeImpl())
+    if useTransforms {
+      var quads: [FloatQuad] = []
+      absoluteQuads(&quads, &wasFixed)
+      return enclosingIntRect(rect: unitedBoundingBoxes(quads))
+        .toRectWithExtentsClippedToNumericLimits()
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Convert the given local point to absolute coordinates. If OptionSet<MapCoordinatesMode> includes UseTransforms, take transforms into account.
   func localToAbsolute(
     localPoint: FloatPoint = FloatPoint(), mode: MapCoordinatesMode = MapCoordinatesMode()
