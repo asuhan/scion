@@ -936,6 +936,32 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     layer()!.contentChanged(changeType)
   }
 
+  func absoluteQuadsIgnoringContinuation(
+    _ logicalRect: FloatRectWrapper, _ quads: inout [FloatQuad], _ wasFixed: inout Bool?
+  ) {
+    fatalError("Not reached")
+  }
+
+  func collectAbsoluteQuadsForContinuation(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    assert(continuation() != nil)
+    var nextInContinuation = continuation()
+    while let next = nextInContinuation {
+      defer { nextInContinuation = next.continuation() }
+      if let blockBox = next as? RenderBlockWrapper {
+        // For blocks inside inlines, we include margins so that we run right up to the inline boxes
+        // above and below us (thus getting merged with them to form a single irregular shape).
+        let logicalRect = FloatRectWrapper(
+          x: 0, y: -blockBox.collapsedMarginBefore().toFloat(), width: blockBox.width().toFloat(),
+          height: (blockBox.height() + blockBox.collapsedMarginBefore()
+            + blockBox.collapsedMarginAfter()).toFloat())
+        next.absoluteQuadsIgnoringContinuation(logicalRect, &quads, &wasFixed)
+        continue
+      }
+      next.absoluteQuadsIgnoringContinuation(FloatRectWrapper(), &quads, &wasFixed)
+    }
+  }
+
   func continuation() -> RenderBoxModelObjectWrapper? {
     // TODO(asuhan): assert(isNativeImpl())
     if !hasContinuationChainNode() {
