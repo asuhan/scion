@@ -90,6 +90,8 @@ struct FloatRectWrapper: Equatable {
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
+  func isZero() -> Bool { return m_size.isZero() }
+
   func center() -> FloatPoint { return location() + size() / 2 }
 
   mutating func move(delta: FloatSize) { m_location += delta }
