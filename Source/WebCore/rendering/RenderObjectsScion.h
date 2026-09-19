@@ -424,6 +424,8 @@ public:
 
     IntRect absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const;
 
+    bool isDescendantOf(const RenderObject*) const;
+
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
 
     bool isFloatingOrOutOfFlowPositioned() const;

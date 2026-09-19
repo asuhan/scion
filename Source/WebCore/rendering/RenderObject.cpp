@@ -548,7 +548,7 @@ RenderTheme& RenderObject::theme() const
 
 bool RenderObject::isDescendantOf(const RenderObject* ancestor) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->isDescendantOf(ancestor); }
     for (auto* renderer = this; renderer; renderer = renderer->parent()) {
         if (renderer == ancestor)
             return true;

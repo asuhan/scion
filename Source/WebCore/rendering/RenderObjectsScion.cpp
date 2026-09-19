@@ -924,6 +924,8 @@ extern "C" int32_t RenderBoxScion_marginAfter(const void*, const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_cachedSizeForOverflowClip(const void*);
 
+extern "C" bool RenderObjectScion_isDescendantOf(const void*, const void*);
+
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
@@ -1751,6 +1753,11 @@ Vector<FloatQuad> RenderTextScion::absoluteQuadsForRange(unsigned startOffset, u
     Vector<FloatQuad> quads;
     RenderTextScion_absoluteQuadsForRange(m_handle, startOffset, endOffset, behavior.toRaw(), &quads, wasFixed);
     return quads;
+}
+
+bool RenderObjectScion::isDescendantOf(const RenderObject* ancestor) const
+{
+    return RenderObjectScion_isDescendantOf(m_handle, ancestor);
 }
 
 IntRect RenderObjectScion::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const

@@ -4067,6 +4067,20 @@ func RenderBoxScion_cachedSizeForOverflowClip(_ boxRaw: UnsafeRawPointer) -> Lay
   return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
 }
 
+@_cdecl("RenderObjectScion_isDescendantOf")
+func RenderObjectScion_isDescendantOf(
+  _ objectRaw: UnsafeRawPointer, _ ancestorRaw: UnsafeRawPointer?
+)
+  -> Bool
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let ancestorRaw else {
+    return false
+  }
+  return object.isDescendantOf(
+    ancestor: createRenderObjectWrapperOrNative(UnsafeMutableRawPointer(mutating: ancestorRaw)))
+}
+
 @_cdecl("RenderBoxScion_overridingLogicalWidth")
 func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
