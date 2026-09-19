@@ -434,6 +434,8 @@ extern "C" IntRectRaw RenderObjectScion_absoluteBoundingBoxRect(const void*, boo
 
 extern "C" void RenderObjectScion_absoluteQuads(const void*, void*, bool*);
 
+extern "C" void RenderTextScion_absoluteQuadsForRange(const void*, unsigned, unsigned, uint8_t, void*, bool*);
+
 extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
 
 extern "C" bool RenderObjectScion_isFloatingOrOutOfFlowPositioned(const void*);
@@ -1736,6 +1738,13 @@ void RenderViewScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) co
 void RenderTextScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
     RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
+}
+
+Vector<FloatQuad> RenderTextScion::absoluteQuadsForRange(unsigned startOffset, unsigned endOffset, OptionSet<RenderObject::BoundingRectBehavior> behavior, bool* wasFixed) const
+{
+    Vector<FloatQuad> quads;
+    RenderTextScion_absoluteQuadsForRange(m_handle, startOffset, endOffset, behavior.toRaw(), &quads, wasFixed);
+    return quads;
 }
 
 IntRect RenderObjectScion::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const

@@ -2387,6 +2387,25 @@ func RenderObjectScion_absoluteQuads(
   }
 }
 
+@_cdecl("RenderTextScion_absoluteQuadsForRange")
+func RenderTextScion_absoluteQuadsForRange(
+  _ renderTextRaw: UnsafeRawPointer, _ startOffset: UInt32, _ endOffset: UInt32,
+  _ behaviorRaw: UInt8, _ quadsRaw: UnsafeMutableRawPointer,
+  _ wasFixedRaw: UnsafeMutablePointer<Bool>?
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  var wasFixed: Bool? = wasFixedRaw != nil ? wasFixedRaw!.pointee : nil
+  let quads = renderText.absoluteQuadsForRange(
+    startOffset, endOffset, RenderObjectWrapper.BoundingRectBehavior(rawValue: behaviorRaw),
+    &wasFixed)
+  if let wasFixedRaw {
+    wasFixedRaw.pointee = wasFixed!
+  }
+  for quad in quads {
+    wk_interop.FloatQuadVector_append(quadsRaw, convertFloatQuad(quad))
+  }
+}
+
 @_cdecl("RenderObjectScion_absoluteBoundingBoxRect")
 func RenderObjectScion_absoluteBoundingBoxRect(
   _ objectRaw: UnsafeRawPointer, _ useTransforms: Bool, _ wasFixedRaw: UnsafeMutablePointer<Bool>?

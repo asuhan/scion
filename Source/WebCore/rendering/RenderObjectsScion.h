@@ -634,6 +634,8 @@ public:
 
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
+    Vector<FloatQuad> absoluteQuadsForRange(unsigned startOffset, unsigned endOffset, OptionSet<RenderObject::BoundingRectBehavior>, bool* wasFixed) const;
+
     Text* textNode() const;
 
     const RenderStyle& style() const;
