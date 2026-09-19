@@ -24,9 +24,21 @@
  */
 
 struct LineSelection {
+  static func logicalTop(lineBox: InlineIterator.LineBox) -> Float32 {
+    return lineBox.contentLogicalTopAdjustedForPrecedingLineBox()
+  }
+
   static func logicalBottom(lineBox: InlineIterator.LineBox) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return lineBox.contentLogicalBottomAdjustedForFollowingLineBox()
+  }
+
+  static func logicalRect(lineBox: InlineIterator.LineBox) -> FloatRectWrapper {
+    return FloatRectWrapper(
+      topLeft: FloatPoint(
+        x: lineBox.contentLogicalLeft(), y: lineBox.contentLogicalTopAdjustedForPrecedingLineBox()),
+      bottomRight: FloatPoint(
+        x: lineBox.contentLogicalRight(),
+        y: lineBox.contentLogicalBottomAdjustedForFollowingLineBox()))
   }
 
   static func logicalTopAdjustedForPrecedingBlock(lineBox: InlineIterator.LineBox) -> Float32 {
