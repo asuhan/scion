@@ -184,6 +184,15 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   // The same as the FrameView's layoutHeight/layoutWidth but with null check guards.
+  override final func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    if wasFixed != nil {
+      wasFixed = false
+    }
+    quads.append(
+      FloatQuad(inRect: FloatRectWrapper(location: FloatPoint(), size: FloatSize(size: layer()!.size()))))
+  }
+
   func viewHeight() -> Int32 {
     assert(isNativeImpl())
     var height: Int32 = 0
