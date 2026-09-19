@@ -278,3 +278,14 @@ struct FloatQuad {
   private var m_p3: FloatPoint
   private var m_p4: FloatPoint
 }
+
+func unitedBoundingBoxes(_ quads: [FloatQuad]) -> FloatRectWrapper {
+  if quads.isEmpty {
+    return FloatRectWrapper()
+  }
+  var result = quads[0].boundingBox()
+  for quad in quads.dropFirst() {
+    result.uniteEvenIfEmpty(other: quad.boundingBox())
+  }
+  return result
+}
