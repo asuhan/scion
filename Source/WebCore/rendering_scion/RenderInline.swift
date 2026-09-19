@@ -78,7 +78,11 @@ private func computeMargin(_ renderer: RenderInlineWrapper?, _ margin: LengthWra
   return LayoutUnit(value: 0)
 }
 
-private class AbsoluteRectsGeneratorContext {
+private protocol LineBoxRectsGeneratorContext {
+  func addRect(_ rect: FloatRectWrapper)
+}
+
+private class AbsoluteRectsGeneratorContext: LineBoxRectsGeneratorContext {
   init(_ rects: ArraySlice<LayoutRectWrapper>, _ accumulatedOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -100,6 +104,19 @@ private class AbsoluteRectsIgnoringEmptyGeneratorContext: AbsoluteRectsGenerator
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+}
+
+private class AbsoluteQuadsGeneratorContext: LineBoxRectsGeneratorContext {
+  init(_ renderer: RenderInlineWrapper) {
+    m_geometryMap.pushMappingsToAncestor(renderer, nil)
+  }
+
+  func addRect(_ rect: FloatRectWrapper) {
+    quads.append(FloatQuad(inRect: m_geometryMap.absoluteRect(rect)))
+  }
+
+  var quads: [FloatQuad] = []
+  private let m_geometryMap = RenderGeometryMap()
 }
 
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
@@ -549,7 +566,24 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return true
   }
 
-  private func generateLineBoxRects(_ context: AbsoluteRectsGeneratorContext) {
+  override final func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    absoluteQuadsIgnoringContinuation(FloatRectWrapper(), &quads, &wasFixed)
+    if continuation() != nil {
+      collectAbsoluteQuadsForContinuation(&quads, &wasFixed)
+    }
+  }
+
+  override final func absoluteQuadsIgnoringContinuation(
+    _ logicalRect: FloatRectWrapper, _ quads: inout [FloatQuad], _ wasFixed: inout Bool?
+  ) {
+    assert(isNativeImpl())
+    let context = AbsoluteQuadsGeneratorContext(self)
+    generateLineBoxRects(context)
+    quads.append(contentsOf: context.quads)
+  }
+
+  private func generateLineBoxRects(_ context: LineBoxRectsGeneratorContext) {
     if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
       let inlineBoxRects = lineLayout.collectInlineBoxRects(renderInline: self)
       if inlineBoxRects.isEmpty {

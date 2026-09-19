@@ -194,7 +194,7 @@ class RenderGeometryMap {
     popMappingsToAncestor(ancestorLayer?.renderer())
   }
 
-  private func pushMappingsToAncestor(
+  func pushMappingsToAncestor(
     _ renderer: RenderObjectWrapper?, _ ancestorRenderer: RenderLayerModelObjectWrapper?
   ) {
     assert(isNativeImpl())
