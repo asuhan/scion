@@ -547,6 +547,8 @@ void* FontCascade_displayListForTextRun(
     bool useFallbackIfFontNotReady);
 void DisplayList_destroy(const void*);
 void* FontCascade_dashesForIntersectionsWithRect(const void*, const void*, struct FloatPointRaw, struct FloatRectRaw);
+void FloatQuadVector_append(void*, struct FloatQuadRaw);
+
 struct LayoutRectRaw FontCascade_adjustSelectionRectForText(const void*, bool, const void*, struct LayoutRectRaw, uint32_t, struct OptionalUIntRaw);
 void* FontCascade_characterSelectionRectsForText(const void*, const void*, struct LayoutRectRaw, uint32_t, struct OptionalUIntRaw);
 uint64_t LayoutRectVector_size(const void*);

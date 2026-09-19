@@ -137,7 +137,10 @@ void RenderLineBreak::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint
 
 void RenderLineBreak::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->absoluteQuads(quads, wasFixed);
+        return;
+    }
     auto box = InlineIterator::boxFor(*this);
     if (!box)
         return;

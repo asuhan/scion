@@ -2947,7 +2947,10 @@ void RenderBlock::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& ac
 
 void RenderBlock::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->absoluteQuads(quads, wasFixed);
+        return;
+    }
     if (!continuation()) {
         absoluteQuadsIgnoringContinuation({ { }, size() }, quads, wasFixed);
         return;

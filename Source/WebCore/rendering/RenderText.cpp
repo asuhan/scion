@@ -698,7 +698,10 @@ Vector<FloatQuad> RenderText::absoluteQuadsClippedToEllipsis() const
 
 void RenderText::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->absoluteQuads(quads, wasFixed);
+        return;
+    }
     quads.appendVector(collectAbsoluteQuads(*this, wasFixed, ClippingOption::NoClipping));
 }
 

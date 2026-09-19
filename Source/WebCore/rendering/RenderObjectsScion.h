@@ -632,6 +632,8 @@ public:
     {
     }
 
+    void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
+
     Text* textNode() const;
 
     const RenderStyle& style() const;
@@ -756,6 +758,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     bool requiresLayerWithScrollableArea() const;
 
@@ -932,6 +936,8 @@ public:
     {
     }
 
+    void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
+
     IntRect linesBoundingBox() const;
 
     LayoutRect linesVisualOverflowBoundingBox() const;
@@ -959,6 +965,8 @@ public:
     {
     }
 
+    void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
+
     IntRect linesBoundingBox() const;
 
     bool isBR() const;
@@ -977,6 +985,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     void insertPositionedObject(RenderBox&);
 
@@ -1102,6 +1112,8 @@ public:
         , m_accumulatedRepaintRegion(nullptr)
     {
     }
+
+    void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     ~RenderViewScion();
 

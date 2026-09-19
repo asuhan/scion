@@ -2370,6 +2370,23 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
 }
 
+@_cdecl("RenderObjectScion_absoluteQuads")
+func RenderObjectScion_absoluteQuads(
+  _ objectRaw: UnsafeRawPointer, _ quadsRaw: UnsafeMutableRawPointer,
+  _ wasFixedRaw: UnsafeMutablePointer<Bool>?
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  var wasFixed: Bool? = wasFixedRaw != nil ? wasFixedRaw!.pointee : nil
+  var quads: [FloatQuad] = []
+  object.absoluteQuads(&quads, &wasFixed)
+  if let wasFixedRaw {
+    wasFixedRaw.pointee = wasFixed!
+  }
+  for quad in quads {
+    wk_interop.FloatQuadVector_append(quadsRaw, convertFloatQuad(quad))
+  }
+}
+
 @_cdecl("RenderObjectScion_absoluteBoundingBoxRect")
 func RenderObjectScion_absoluteBoundingBoxRect(
   _ objectRaw: UnsafeRawPointer, _ useTransforms: Bool, _ wasFixedRaw: UnsafeMutablePointer<Bool>?

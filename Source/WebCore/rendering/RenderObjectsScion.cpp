@@ -432,6 +432,8 @@ extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const v
 
 extern "C" IntRectRaw RenderObjectScion_absoluteBoundingBoxRect(const void*, bool, bool*);
 
+extern "C" void RenderObjectScion_absoluteQuads(const void*, void*, bool*);
+
 extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
 
 extern "C" bool RenderObjectScion_isFloatingOrOutOfFlowPositioned(const void*);
@@ -1628,6 +1630,11 @@ HitTestLocation convertHitTestLocation(const HitTestLocationRaw& hitTestLocation
 
 } // namespace
 
+extern "C" WEBCORE_EXPORT void FloatQuadVector_append(void* vectorRaw, FloatQuadRaw quad)
+{
+    static_cast<Vector<FloatQuad>*>(vectorRaw)->append(convertFloatQuad(quad));
+}
+
 bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter hitTestFilter)
 {
     HitTestRequestRaw requestRaw { request.type().toRaw(), request.userTriggered() };
@@ -1699,6 +1706,36 @@ LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerMod
     return convertLayoutRectRaw(
         RenderObjectScion_clippedOverflowRectForRepaint(
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer)));
+}
+
+void RenderBoxScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
+{
+    RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
+}
+
+void RenderInlineScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
+{
+    RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
+}
+
+void RenderLineBreakScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
+{
+    RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
+}
+
+void RenderBlockScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
+{
+    RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
+}
+
+void RenderViewScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
+{
+    RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
+}
+
+void RenderTextScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
+{
+    RenderObjectScion_absoluteQuads(m_handle, &quads, wasFixed);
 }
 
 IntRect RenderObjectScion::absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const

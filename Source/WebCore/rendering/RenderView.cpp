@@ -788,7 +788,10 @@ void RenderView::boundingRects(Vector<LayoutRect>& rects, const LayoutPoint& acc
 
 void RenderView::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->absoluteQuads(quads, wasFixed);
+        return;
+    }
     if (wasFixed)
         *wasFixed = false;
     quads.append(FloatRect(FloatPoint(), layer()->size()));
