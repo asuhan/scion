@@ -1785,7 +1785,7 @@ ScrollPosition RenderBox::scrollPosition() const
 
 LayoutSize RenderBox::cachedSizeForOverflowClip() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->cachedSizeForOverflowClip(); }
     ASSERT(hasNonVisibleOverflow());
     ASSERT(hasLayer());
     return layer()->size();

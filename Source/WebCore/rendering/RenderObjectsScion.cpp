@@ -922,6 +922,8 @@ extern "C" void RenderBoxScion_setLogicalLeft(void*, int32_t);
 
 extern "C" int32_t RenderBoxScion_marginAfter(const void*, const void*);
 
+extern "C" LayoutSizeRaw RenderBoxScion_cachedSizeForOverflowClip(const void*);
+
 extern "C" int32_t RenderBoxScion_offsetLeft(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetTop(const void*);
@@ -2853,6 +2855,12 @@ void RenderBoxScion::setLogicalLeft(LayoutUnit left)
 LayoutUnit RenderBoxScion::marginAfter(const RenderStyle* overrideStyle) const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_marginAfter(m_handle, overrideStyle));
+}
+
+LayoutSize RenderBoxScion::cachedSizeForOverflowClip() const
+{
+    const auto size = RenderBoxScion_cachedSizeForOverflowClip(m_handle);
+    return { LayoutUnit::fromRawValue(size.width), LayoutUnit::fromRawValue(size.height) };
 }
 
 std::optional<LayoutUnit> RenderBoxScion::overridingLogicalWidth() const

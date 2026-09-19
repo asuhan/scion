@@ -5338,7 +5338,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return ScrollPosition(x: 0, y: 0)
   }
 
-  private func cachedSizeForOverflowClip() -> LayoutSizeWrapper {
+  func cachedSizeForOverflowClip() -> LayoutSizeWrapper {
     assert(isNativeImpl())
     assert(hasNonVisibleOverflow())
     assert(hasLayer())

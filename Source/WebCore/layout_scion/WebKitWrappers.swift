@@ -4060,6 +4060,13 @@ func RenderBoxScion_marginAfter(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: Un
   return margin.rawValue()
 }
 
+@_cdecl("RenderBoxScion_cachedSizeForOverflowClip")
+func RenderBoxScion_cachedSizeForOverflowClip(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let size = box.cachedSizeForOverflowClip()
+  return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
+}
+
 @_cdecl("RenderBoxScion_overridingLogicalWidth")
 func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

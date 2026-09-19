@@ -891,6 +891,8 @@ public:
 
     LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const;
 
+    LayoutSize cachedSizeForOverflowClip() const;
+
     LayoutUnit offsetLeft() const;
 
     LayoutUnit offsetTop() const;
