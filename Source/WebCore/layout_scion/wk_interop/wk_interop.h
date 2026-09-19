@@ -548,6 +548,10 @@ void* FontCascade_displayListForTextRun(
 void DisplayList_destroy(const void*);
 void* FontCascade_dashesForIntersectionsWithRect(const void*, const void*, struct FloatPointRaw, struct FloatRectRaw);
 struct LayoutRectRaw FontCascade_adjustSelectionRectForText(const void*, bool, const void*, struct LayoutRectRaw, uint32_t, struct OptionalUIntRaw);
+void* FontCascade_characterSelectionRectsForText(const void*, const void*, struct LayoutRectRaw, uint32_t, struct OptionalUIntRaw);
+uint64_t LayoutRectVector_size(const void*);
+struct LayoutRectRaw LayoutRectVector_at(const void*, uint64_t);
+void LayoutRectVector_destroy(const void*);
 uint64_t DashArray_size(const void*);
 double DashArray_at(const void*, uint64_t);
 void DashArray_destroy(const void*);

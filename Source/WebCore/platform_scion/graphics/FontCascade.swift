@@ -161,6 +161,22 @@ class FontCascadeWrapper: Equatable {
         OptionalUIntRaw(value: to ?? 0, is_valid: to != nil)))
   }
 
+  func characterSelectionRectsForText(
+    _ run: TextRunWrapper, _ selectionRect: LayoutRectWrapper, _ from: UInt32, _ to: UInt32?
+  ) -> [LayoutRectWrapper] {
+    let raw = wk_interop.FontCascade_characterSelectionRectsForText(
+      p, run.p, convertLayoutRect(selectionRect), from,
+      OptionalUIntRaw(value: to ?? 0, is_valid: to != nil))!
+    defer { wk_interop.LayoutRectVector_destroy(raw) }
+    let size = wk_interop.LayoutRectVector_size(raw)
+    var rects: [LayoutRectWrapper] = []
+    rects.reserveCapacity(Int(size))
+    for i in 0..<size {
+      rects.append(convertLayoutRect(wk_interop.LayoutRectVector_at(raw, i)))
+    }
+    return rects
+  }
+
   func isSmallCaps() -> Bool {
     return wk_interop.FontCascade_isSmallCaps(p!)
   }

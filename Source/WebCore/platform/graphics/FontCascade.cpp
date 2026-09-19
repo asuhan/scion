@@ -122,6 +122,29 @@ extern "C" WEBCORE_EXPORT SelectionLayoutRectRaw FontCascade_adjustSelectionRect
     return convertSelectionLayoutRect(selectionRect);
 }
 
+extern "C" WEBCORE_EXPORT void* FontCascade_characterSelectionRectsForText(const void* p, const void* runRaw, SelectionLayoutRectRaw selectionRectRaw, uint32_t from, OptionalUIntRaw toRaw)
+{
+    auto fontCascade = static_cast<const WebCore::FontCascade*>(p);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    const auto to = toRaw.is_valid ? toRaw.value : std::optional<unsigned>();
+    return new Vector<WebCore::LayoutRect>(fontCascade->characterSelectionRectsForText(run, convertSelectionLayoutRectRaw(selectionRectRaw), from, to));
+}
+
+extern "C" WEBCORE_EXPORT uint64_t LayoutRectVector_size(const void* p)
+{
+    return static_cast<const Vector<WebCore::LayoutRect>*>(p)->size();
+}
+
+extern "C" WEBCORE_EXPORT SelectionLayoutRectRaw LayoutRectVector_at(const void* p, uint64_t index)
+{
+    return convertSelectionLayoutRect((*static_cast<const Vector<WebCore::LayoutRect>*>(p))[index]);
+}
+
+extern "C" WEBCORE_EXPORT void LayoutRectVector_destroy(const void* p)
+{
+    delete static_cast<const Vector<WebCore::LayoutRect>*>(p);
+}
+
 extern "C" WEBCORE_EXPORT uint64_t DashArray_size(const void* p)
 {
     return static_cast<const WebCore::DashArray*>(p)->size();
