@@ -43,6 +43,20 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return enclosingIntRect(rect: run.get().visualRectIgnoringBlockDirection())
   }
 
+  override final func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {
+    assert(isNativeImpl())
+    let box = InlineIterator.boxFor(self)
+    if !box.bool() {
+      return
+    }
+
+    let rect = box.get().visualRectIgnoringBlockDirection()
+    quads.append(
+      localToAbsoluteQuad(
+        FloatQuad(inRect: FloatRectWrapper(location: rect.location(), size: rect.size())),
+        .UseTransforms, &wasFixed))
+  }
+
   func isBR() -> Bool {
     assert(isNativeImpl())
     return !hasWBRLineBreakFlag()
