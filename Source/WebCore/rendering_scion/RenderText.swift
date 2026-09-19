@@ -364,6 +364,105 @@ private func isInlineFlowOrEmptyText(_ renderer: RenderObjectWrapper) -> Bool {
   return (renderer as? RenderTextWrapper)?.text().isEmpty() ?? false
 }
 
+private func selectionRectForTextBox(
+  _ textBox: InlineIterator.TextBox, _ rangeStart: UInt32, _ rangeEnd: UInt32
+) -> LayoutRectWrapper {
+  if textBox.legacyInlineBox() is SVGInlineTextBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let isCaretCase = rangeStart == rangeEnd
+
+  let (clampedStart, clampedEnd) = textBox.selectableRange().clamp(
+    startOffset: rangeStart, endOffset: rangeEnd)
+
+  if clampedStart >= clampedEnd {
+    if isCaretCase {
+      // handle unitary range, e.g.: representing caret position
+      let isCaretWithinTextBox = rangeStart >= textBox.start() && rangeStart < textBox.end()
+      // For last text box in a InlineTextBox chain, we allow the caret to move to a position 'after' the end of the last text box.
+      let isCaretWithinLastTextBox = rangeStart >= textBox.start() && rangeStart <= textBox.end()
+
+      let isLastTextBox = !textBox.nextTextBox().bool()
+
+      if (isLastTextBox && !isCaretWithinLastTextBox) || (!isLastTextBox && !isCaretWithinTextBox) {
+        return LayoutRectWrapper()
+      }
+    } else {
+      let isRangeWithinTextBox = rangeStart >= textBox.start() && rangeStart <= textBox.end()
+      if !isRangeWithinTextBox {
+        return LayoutRectWrapper()
+      }
+    }
+  }
+
+  let lineSelectionRect = LineSelection.logicalRect(lineBox: textBox.lineBox().get())
+  var selectionRect = LayoutRectWrapper(
+    x: textBox.logicalLeftIgnoringInlineDirection(), y: lineSelectionRect.y(),
+    width: textBox.logicalWidth(), height: lineSelectionRect.height())
+
+  let textRun = textBox.textRun()
+  if clampedStart != 0 || clampedEnd != textRun.length() {
+    textBox.fontCascade().adjustSelectionRectForText(
+      canUseSimplifiedTextMeasuring: textBox.renderer().canUseSimplifiedTextMeasuring() ?? false,
+      run: textRun, selectionRect: &selectionRect, from: clampedStart, to: clampedEnd)
+  }
+
+  return snappedSelectionRect(
+    selectionRect, textBox.logicalRightIgnoringInlineDirection(), lineSelectionRect.y(),
+    lineSelectionRect.height(), textBox.isHorizontal())
+}
+
+private func localQuadForTextBox(
+  _ textBox: InlineIterator.TextBox, _ start: UInt32, _ end: UInt32, _ useSelectionHeight: Bool
+) -> FloatRectWrapper {
+  var boxSelectionRect = selectionRectForTextBox(textBox, start, end)
+  if !boxSelectionRect.height().bool() {
+    return FloatRectWrapper()
+  }
+  if useSelectionHeight {
+    return boxSelectionRect.FloatRect()
+  }
+
+  let rect = textBox.visualRectIgnoringBlockDirection()
+  if textBox.isHorizontal() {
+    boxSelectionRect.setHeight(height: LayoutUnit(value: rect.height()))
+    boxSelectionRect.setY(y: LayoutUnit(value: rect.y()))
+  } else {
+    boxSelectionRect.setWidth(width: LayoutUnit(value: rect.width()))
+    boxSelectionRect.setX(x: LayoutUnit(value: rect.x()))
+  }
+  return boxSelectionRect.FloatRect()
+}
+
+private func characterRects(
+  _ run: InlineIterator.TextBox, _ rangeStart: UInt32, _ rangeEnd: UInt32
+) -> [LayoutRectWrapper] {
+  let (clampedStart, clampedEnd) = run.selectableRange().clamp(
+    startOffset: rangeStart, endOffset: rangeEnd)
+  if clampedStart >= clampedEnd {
+    return []
+  }
+
+  if run.legacyInlineBox() is SVGInlineTextBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let lineSelectionRect = LineSelection.logicalRect(lineBox: run.lineBox().get())
+  let selectionRect = LayoutRectWrapper(
+    x: run.logicalLeftIgnoringInlineDirection(), y: lineSelectionRect.y(),
+    width: run.logicalWidth(), height: lineSelectionRect.height())
+  return run.fontCascade().characterSelectionRectsForText(
+    run.textRun(), selectionRect, clampedStart, clampedEnd
+  ).map { characterRect in
+    snappedSelectionRect(
+      characterRect, run.logicalRightIgnoringInlineDirection(), lineSelectionRect.y(),
+      lineSelectionRect.height(), run.isHorizontal())
+  }
+}
+
 private enum ClippingOption {
   case NoClipping
   case ClipToEllipsis
@@ -733,6 +832,94 @@ class RenderTextWrapper: RenderObjectWrapper {
       }
     }
     return UInt32.max
+  }
+
+  func absoluteQuadsForRange(
+    _ start: UInt32 = 0, _ end: UInt32 = UInt32.max,
+    _ behavior: RenderObjectWrapper.BoundingRectBehavior = [], _ wasFixed: inout Bool?
+  ) -> [FloatQuad] {
+    assert(isNativeImpl())
+    let useSelectionHeight = behavior.contains(.UseSelectionHeight)
+    let ignoreEmptyTextSelections = behavior.contains(.IgnoreEmptyTextSelections)
+    let computeIndividualCharacterRects = behavior.contains(.ComputeIndividualCharacterRects)
+
+    // Work around signed/unsigned issues. This function takes unsigneds, and is often passed UINT_MAX
+    // to mean "all the way to the end". LegacyInlineTextBox coordinates are unsigneds, so changing this
+    // function to take ints causes various internal mismatches. But selectionRect takes ints, and
+    // passing UINT_MAX to it causes trouble. Ideally we'd change selectionRect to take unsigneds, but
+    // that would cause many ripple effects, so for now we'll just clamp our unsigned parameters to INT_MAX.
+    assert(end == UInt32.max || end <= UInt32(Int32.max))
+    assert(start <= UInt32(Int32.max))
+    var start = min(start, UInt32(Int32.max))
+    var end = min(end, UInt32(Int32.max))
+
+    let caretMinOffset = UInt32(self.caretMinOffset())
+    let caretMaxOffset = UInt32(self.caretMaxOffset())
+
+    // Narrows |start| and |end| into |caretMinOffset| and |caretMaxOffset| to ignore unrendered leading
+    // and trailing whitespaces.
+    start = min(max(caretMinOffset, start), caretMaxOffset)
+    end = min(max(caretMinOffset, end), caretMaxOffset)
+
+    var quads: [FloatQuad] = []
+    for textBox in InlineIterator.textBoxesFor(self) {
+      if ignoreEmptyTextSelections
+        && !textBox.selectableRange().intersects(startOffset: start, endOffset: end)
+      {
+        continue
+      }
+
+      if computeIndividualCharacterRects {
+        var rects = characterRects(textBox, start, end)
+
+        if !useSelectionHeight {
+          for i in rects.indices {
+            let visualRect = textBox.visualRectIgnoringBlockDirection()
+            if textBox.isHorizontal() {
+              rects[i].setHeight(height: LayoutUnit(value: visualRect.height()))
+              rects[i].setY(y: LayoutUnit(value: visualRect.y()))
+            } else {
+              rects[i].setWidth(width: LayoutUnit(value: visualRect.width()))
+              rects[i].setX(x: LayoutUnit(value: visualRect.x()))
+            }
+          }
+        }
+
+        for rect in rects {
+          let localRect = rect.FloatRect()
+          if !localRect.isZero() {
+            quads.append(localToAbsoluteQuad(FloatQuad(inRect: localRect), .UseTransforms, &wasFixed))
+          }
+        }
+        continue
+      }
+
+      if start <= textBox.start() && textBox.end() <= end {
+        var boundaries =
+          textBox.isSVGText()
+          ? InlineIterator.SVGTextBox(textBox.m_pathVariant)
+            .calculateBoundariesIncludingSVGTransform()
+          : textBox.visualRectIgnoringBlockDirection()
+
+        if useSelectionHeight {
+          let selectionRect = selectionRectForTextBox(textBox, start, end)
+          if textBox.isHorizontal() {
+            boundaries.setHeight(height: selectionRect.height().toFloat())
+            boundaries.setY(y: selectionRect.y().toFloat())
+          } else {
+            boundaries.setWidth(width: selectionRect.width().toFloat())
+            boundaries.setX(x: selectionRect.x().toFloat())
+          }
+        }
+        quads.append(localToAbsoluteQuad(FloatQuad(inRect: boundaries), .UseTransforms, &wasFixed))
+        continue
+      }
+      let rect = localQuadForTextBox(textBox, start, end, useSelectionHeight)
+      if !rect.isZero() {
+        quads.append(localToAbsoluteQuad(FloatQuad(inRect: rect), .UseTransforms, &wasFixed))
+      }
+    }
+    return quads
   }
 
   override final func absoluteQuads(_ quads: inout [FloatQuad], _ wasFixed: inout Bool?) {

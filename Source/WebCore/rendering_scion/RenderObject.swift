@@ -3023,6 +3023,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return !isFloatingOrOutOfFlowPositioned()
   }
 
+  struct BoundingRectBehavior: OptionSet {
+    let rawValue: UInt8
+
+    static let RespectClipping = BoundingRectBehavior(rawValue: 1 << 0)
+    static let UseVisibleBounds = BoundingRectBehavior(rawValue: 1 << 1)
+    static let IgnoreTinyRects = BoundingRectBehavior(rawValue: 1 << 2)
+    static let IgnoreEmptyTextSelections = BoundingRectBehavior(rawValue: 1 << 3)
+    static let UseSelectionHeight = BoundingRectBehavior(rawValue: 1 << 4)
+    static let ComputeIndividualCharacterRects = BoundingRectBehavior(rawValue: 1 << 5)
+  }
+
   enum HighlightState: UInt8 {
     case None  // The object is not selected.
     case Start  // The object either contains the start of a selection run or is the start of a run
