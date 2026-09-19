@@ -22,6 +22,35 @@
 
 import wk_interop
 
+func snappedSelectionRect(
+  _ selectionRect: LayoutRectWrapper, _ logicalRight: Float32, _ selectionTop: Float32,
+  _ selectionHeight: Float32, _ isHorizontal: Bool
+) -> LayoutRectWrapper {
+  let snappedSelectionRect = enclosingIntRect(rect: selectionRect)
+  var logicalWidth = LayoutUnit(value: snappedSelectionRect.width())
+  if Float32(snappedSelectionRect.x()) > logicalRight {
+    logicalWidth = LayoutUnit(value: Int32(0))
+  } else if Float32(snappedSelectionRect.maxX()) > logicalRight {
+    logicalWidth = LayoutUnit(value: logicalRight - Float32(snappedSelectionRect.x()))
+  }
+
+  var topPoint: LayoutPointWrapper
+  var width: LayoutUnit
+  var height: LayoutUnit
+  if isHorizontal {
+    topPoint = LayoutPointWrapper(
+      x: LayoutUnit(value: snappedSelectionRect.x()), y: LayoutUnit(value: selectionTop))
+    width = logicalWidth
+    height = LayoutUnit(value: selectionHeight)
+  } else {
+    topPoint = LayoutPointWrapper(
+      x: LayoutUnit(value: selectionTop), y: LayoutUnit(value: snappedSelectionRect.x()))
+    width = LayoutUnit(value: selectionHeight)
+    height = logicalWidth
+  }
+  return LayoutRectWrapper(location: topPoint, size: LayoutSizeWrapper(width: width, height: height))
+}
+
 class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
   init(_ renderer: RenderTextWrapper) { super.init(renderer) }
 
