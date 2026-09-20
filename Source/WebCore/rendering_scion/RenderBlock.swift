@@ -308,7 +308,7 @@ private typealias ContinuationOutlineTableMap = [ObjectIdentifier: ListHashSet<
 class RenderBlockRareData {
   var m_paginationStrut = LayoutUnit()
   var m_pageLogicalOffset = LayoutUnit()
-  let m_intrinsicBorderForFieldset = LayoutUnit()
+  var m_intrinsicBorderForFieldset = LayoutUnit()
 
   var m_enclosingFragmentedFlow: RenderFragmentedFlowWrapper? = nil
 }
@@ -1023,16 +1023,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   func setPaginationStrut(strut: LayoutUnit) {
     assert(isNativeImpl())
-    let rareData = getBlockRareData()
+    var rareData = getBlockRareData()
     if rareData == nil {
       if !strut.bool() {
         return
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      rareData = ensureBlockRareData()
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    rareData!.m_paginationStrut = strut
   }
 
   // The page logical offset is the object's offset from the top of the page in the page progression
@@ -1045,8 +1043,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // The page logical offset is the object's offset from the top of the page in the page progression
   // direction (so an x-offset in vertical text and a y-offset for horizontal text).
   func setPageLogicalOffset(logicalOffset: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var rareData = getBlockRareData()
+    if rareData == nil {
+      if !logicalOffset.bool() {
+        return
+      }
+      rareData = ensureBlockRareData()
+    }
+    rareData!.m_pageLogicalOffset = logicalOffset
   }
 
   // Fieldset legends that are taller than the fieldset border add in intrinsic border
@@ -1060,8 +1065,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func setIntrinsicBorderForFieldset(padding: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var rareData = getBlockRareData()
+    if rareData == nil {
+      if !padding.bool() {
+        return
+      }
+      rareData = ensureBlockRareData()
+    }
+    rareData!.m_intrinsicBorderForFieldset = padding
   }
 
   override func borderTop() -> LayoutUnit {
@@ -3893,8 +3905,18 @@ class RenderBlockWrapper: RenderBoxWrapper {
     if !renderBlockHasRareData {
       return nil
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderBlockWrapper.rareDataMap[ObjectIdentifier(self)]
+  }
+
+  func ensureBlockRareData() -> RenderBlockRareData {
+    assert(isNativeImpl())
+    if let rareData = RenderBlockWrapper.rareDataMap[ObjectIdentifier(self)] {
+      return rareData
+    }
+    renderBlockHasRareData = true
+    let rareData = RenderBlockRareData()
+    RenderBlockWrapper.rareDataMap[ObjectIdentifier(self)] = rareData
+    return rareData
   }
 
   func recomputeLogicalWidth() -> Bool {
@@ -3940,6 +3962,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
+  deinit {
+    // Blocks can be added to the rare data map during willBeDestroyed(), so this code can't move
+    // there.
+    if renderBlockHasRareData {
+      RenderBlockWrapper.rareDataMap.removeValue(forKey: ObjectIdentifier(self))
+    }
+  }
+
   // Used to store state between styleWillChange and styleDidChange
   static var canPropagateFloatIntoSibling = false
+
+  private static var rareDataMap = [ObjectIdentifier: RenderBlockRareData]()
 }
