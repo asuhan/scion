@@ -1021,6 +1021,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     assert(hasContinuationChainNode())
     assert(RenderBoxModelObjectWrapper.continuationChainNodeMap[id()] != nil)
     setHasContinuationChainNode(false)
+    RenderBoxModelObjectWrapper.continuationChainNodeMap[id()]!.unlink()
     RenderBoxModelObjectWrapper.continuationChainNodeMap.removeValue(forKey: id())
   }
 
@@ -1504,6 +1505,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     init(renderer: RenderBoxModelObjectWrapper) { self.renderer = renderer }
 
     deinit {
+      unlink()
+    }
+
+    // The C++ counterpart does this in ~ContinuationChainNode, which runs as soon as the owning
+    // unique_ptr is removed from the map. The chain keeps strong references here, so the node
+    // outlives its map entry and has to be unlinked explicitly instead.
+    func unlink() {
       if next != nil {
         assert(previous != nil)
         assert(ObjectIdentifier(next!.previous!) == ObjectIdentifier(self))
@@ -1513,6 +1521,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
         assert(ObjectIdentifier(previous!.next!) == ObjectIdentifier(self))
         previous!.next = next
       }
+      next = nil
+      previous = nil
     }
 
     func insertAfter(_ after: ContinuationChainNode) {
