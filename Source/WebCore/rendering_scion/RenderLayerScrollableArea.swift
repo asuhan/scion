@@ -731,7 +731,9 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func scrollingMayRevealBackground() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerScrollableArea_scrollingMayRevealBackground(pInterop!)
+    }
     return scrollsOverflow() || usesCompositedScrolling()
   }
 

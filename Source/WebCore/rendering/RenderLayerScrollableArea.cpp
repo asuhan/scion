@@ -86,6 +86,11 @@ extern "C" WEBCORE_EXPORT void* RenderLayerScrollableArea_scrollAnchoringControl
     return static_cast<WebCore::RenderLayerScrollableArea*>(p)->scrollAnchoringController();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayerScrollableArea_scrollingMayRevealBackground(const void* p)
+{
+    return static_cast<const WebCore::RenderLayerScrollableArea*>(p)->scrollingMayRevealBackground();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderLayerScrollableArea_horizontalScrollbar(const void* p)
 {
     return static_cast<const WebCore::RenderLayerScrollableArea*>(p)->horizontalScrollbar();

@@ -1676,6 +1676,7 @@ void RenderLayerScrollableArea_paintOverflowControls(void*, void*, struct IntPoi
 void* RenderLayerScrollableArea_marquee(const void*);
 void* RenderLayerScrollableArea_horizontalScrollbar(const void*);
 void* RenderLayerScrollableArea_verticalScrollbar(const void*);
+bool RenderLayerScrollableArea_scrollingMayRevealBackground(const void*);
 bool RenderMarquee_isHorizontal(const void*);
 bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);
 uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);
