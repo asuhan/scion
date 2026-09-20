@@ -42,6 +42,8 @@
  * version of this file under any of the LGPL, the MPL or the GPL.
  */
 
+import wk_interop
+
 // This class handles the auto-scrolling for <marquee>
 final class RenderMarqueeWrapper {
   init(_ layer: RenderLayerWrapper?) {
@@ -49,7 +51,12 @@ final class RenderMarqueeWrapper {
     fatalError("Not implemented")
   }
 
+  init(p: UnsafeMutableRawPointer) { self.p = p }
+
   func isHorizontal() -> Bool {
+    if let p = p {
+      return wk_interop.RenderMarquee_isHorizontal(p)
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -58,4 +65,6 @@ final class RenderMarqueeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer?
 }

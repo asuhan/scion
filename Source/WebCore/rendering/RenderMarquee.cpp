@@ -56,6 +56,11 @@
 #include "RenderView.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool RenderMarquee_isHorizontal(const void* p)
+{
+    return static_cast<const WebCore::RenderMarquee*>(p)->isHorizontal();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderMarquee);

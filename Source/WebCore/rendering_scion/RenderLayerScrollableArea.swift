@@ -102,8 +102,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func marquee() -> RenderMarqueeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      guard let marquee = wk_interop.RenderLayerScrollableArea_marquee(pInterop!) else {
+        return nil
+      }
+      return RenderMarqueeWrapper(p: marquee)
+    }
+    return m_marquee
   }
 
   func createOrDestroyMarquee() {
