@@ -1663,6 +1663,7 @@ int32_t RenderBlock_logicalLeftOffsetForContent(const void*);
 void RenderBlock_layout(void*);
 bool RenderBlock_isSelfCollapsingBlock(const void*);
 void RenderBlock_paint(void*, void*, struct LayoutPointRaw);
+void RenderBlock_insertPositionedObject(void*, void*);
 void* RenderLayerScrollableArea_scrollAnchoringController(void*);
 void* LocalFrameView_scrollAnchoringController(void*);
 bool ScrollAnchoringController_hasAnchorElement(const void*);

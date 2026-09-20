@@ -140,6 +140,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlock_logicalLeftOffsetForContent(const 
     return offset.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBlock_insertPositionedObject(void* p, void* positioned_raw)
+{
+    static_cast<WebCore::RenderBlock*>(p)->insertPositionedObject(*static_cast<WebCore::RenderBox*>(positioned_raw));
+}
+
 extern "C" WEBCORE_EXPORT void RenderBlock_layout(void* p)
 {
     static_cast<WebCore::RenderBlock*>(p)->layout();

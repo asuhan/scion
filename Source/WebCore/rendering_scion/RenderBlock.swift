@@ -451,7 +451,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   ) { fatalError("Not reached") }
 
   func insertPositionedObject(positioned: RenderBoxWrapper) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlock_insertPositionedObject(id(), wkRenderObject(positioned)!)
+      return
+    }
     assert(!isAnonymousBlock())
 
     positioned.clearOverridingContainingBlockContentSize()
