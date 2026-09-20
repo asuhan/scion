@@ -3846,13 +3846,20 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func rareData() -> RenderObjectRareData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasRareData())
+    return RenderObjectWrapper.rareDataMap[ObjectIdentifier(self)]!
   }
 
   func ensureRareData() -> RenderObjectRareData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.HasRareData)
+    if let rareData = RenderObjectWrapper.rareDataMap[ObjectIdentifier(self)] {
+      return rareData
+    }
+    let rareData = RenderObjectRareData()
+    RenderObjectWrapper.rareDataMap[ObjectIdentifier(self)] = rareData
+    return rareData
   }
 
   private func removeRareData() {
