@@ -543,7 +543,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func previousInFlowSibling() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let previousSiblingRaw = wk_interop.RenderObject_previousInFlowSibling(id()) else {
+        return nil
+      }
+      return createRenderObjectWrapperOrNative(previousSiblingRaw)
+    }
     var previousSibling = self.previousSibling()
     while previousSibling != nil && !previousSibling!.isInFlow() {
       previousSibling = previousSibling!.previousSibling()
@@ -552,7 +557,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInFlowSibling() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let nextSiblingRaw = wk_interop.RenderObject_nextInFlowSibling(id()) else { return nil }
+      return createRenderObjectWrapperOrNative(nextSiblingRaw)
+    }
     var nextSibling = self.nextSibling()
     while nextSibling != nil && !nextSibling!.isInFlow() {
       nextSibling = nextSibling!.nextSibling()
@@ -562,12 +570,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Use RenderElement versions instead.
   func firstChildSlow() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    // NB(asuhan): this returns nil for both native and interop paths, we can skip the check
     return nil
   }
 
   func lastChildSlow() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    // NB(asuhan): this returns nil for both native and interop paths, we can skip the check
     return nil
   }
 

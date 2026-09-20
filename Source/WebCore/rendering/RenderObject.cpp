@@ -100,6 +100,16 @@ extern "C" WEBCORE_EXPORT void* RenderObject_nextSibling(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->nextSibling();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_previousInFlowSibling(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->previousInFlowSibling();
+}
+
+extern "C" WEBCORE_EXPORT void* RenderObject_nextInFlowSibling(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->nextInFlowSibling();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_enclosingLayer(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->enclosingLayer();
@@ -566,6 +576,24 @@ RenderObject* RenderObject::nextSibling() const
 {
     if (m_scion) { return m_scion->nextSibling(); }
     return m_next.get();
+}
+
+RenderObject* RenderObject::previousInFlowSibling() const
+{
+    if (m_scion) { return m_scion->previousInFlowSibling(); }
+    auto* previousSibling = this->previousSibling();
+    while (previousSibling && !previousSibling->isInFlow())
+        previousSibling = previousSibling->previousSibling();
+    return previousSibling;
+}
+
+RenderObject* RenderObject::nextInFlowSibling() const
+{
+    if (m_scion) { return m_scion->nextInFlowSibling(); }
+    auto* nextSibling = this->nextSibling();
+    while (nextSibling && !nextSibling->isInFlow())
+        nextSibling = nextSibling->nextSibling();
+    return nextSibling;
 }
 
 RenderObject* RenderObject::firstChildSlow() const

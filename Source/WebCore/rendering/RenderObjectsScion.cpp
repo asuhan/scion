@@ -880,6 +880,10 @@ extern "C" OptionalRepaintRectsRaw RenderBoxScion_computeVisibleRectsInContainer
 
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRect(const void*, void*, VisibleRectContextRaw);
 
+extern "C" void* RenderObjectScion_previousInFlowSibling(const void*);
+
+extern "C" void* RenderObjectScion_nextInFlowSibling(const void*);
+
 extern "C" RepaintRectsRaw RenderBoxScion_localRectsForRepaint(const void*, bool);
 
 extern "C" bool RenderBoxScion_stretchesToViewport(const void*);
@@ -2748,6 +2752,16 @@ VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRe
 }
 
 } // namespace
+
+RenderObject* RenderObjectScion::previousInFlowSibling() const
+{
+    return static_cast<RenderObject*>(RenderObjectScion_previousInFlowSibling(m_handle));
+}
+
+RenderObject* RenderObjectScion::nextInFlowSibling() const
+{
+    return static_cast<RenderObject*>(RenderObjectScion_nextInFlowSibling(m_handle));
+}
 
 LayoutRect RenderObjectScion::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, RenderObject::VisibleRectContext context) const
 {

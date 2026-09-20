@@ -2360,6 +2360,22 @@ func RenderObjectScion_repaintRectangle(
     repaintRect: convertLayoutRect(repaintRect), shouldClipToLayer: shouldClipToLayer)
 }
 
+@_cdecl("RenderObjectScion_previousInFlowSibling")
+func RenderObjectScion_previousInFlowSibling(_ objectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.previousInFlowSibling())
+}
+
+@_cdecl("RenderObjectScion_nextInFlowSibling")
+func RenderObjectScion_nextInFlowSibling(_ objectRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.nextInFlowSibling())
+}
+
 @_cdecl("RenderObjectScion_clippedOverflowRect")
 func RenderObjectScion_clippedOverflowRect(
   _ objectRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,

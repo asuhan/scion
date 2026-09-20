@@ -215,6 +215,12 @@ extern "C" WEBCORE_EXPORT void* RenderElement_firstChildSlow(const void* p)
     return static_cast<const WebCore::RenderElement*>(p)->firstChildSlow();
 }
 
+// RenderElement::lastChildSlow() is private, so go through the RenderObject virtual.
+extern "C" WEBCORE_EXPORT void* RenderElement_lastChildSlow(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->lastChildSlow();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderElement_scion(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->scion();

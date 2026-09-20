@@ -426,6 +426,10 @@ public:
 
     IntRect absoluteBoundingBoxRect(bool useTransforms, bool* wasFixed) const;
 
+    RenderObject* previousInFlowSibling() const;
+
+    RenderObject* nextInFlowSibling() const;
+
     bool isDescendantOf(const RenderObject*) const;
 
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;

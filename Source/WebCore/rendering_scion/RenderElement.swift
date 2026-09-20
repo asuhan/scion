@@ -2605,7 +2605,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   override func lastChildSlow() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let child = wk_interop.RenderElement_lastChildSlow(id()) else { return nil }
+      return createRenderObjectWrapperOrNative(child)
+    }
     return lastChild()
   }
 

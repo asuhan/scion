@@ -1802,24 +1802,6 @@ inline void Node::setRenderer(RenderObject* renderer)
         notifyInspectorOfRendererChange();
 }
 
-inline RenderObject* RenderObject::previousInFlowSibling() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    auto* previousSibling = this->previousSibling();
-    while (previousSibling && !previousSibling->isInFlow())
-        previousSibling = previousSibling->previousSibling();
-    return previousSibling;
-}
-
-inline RenderObject* RenderObject::nextInFlowSibling() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    auto* nextSibling = this->nextSibling();
-    while (nextSibling && !nextSibling->isInFlow())
-        nextSibling = nextSibling->nextSibling();
-    return nextSibling;
-}
-
 #if ENABLE(MATHML)
 inline bool RenderObject::isRenderMathMLRow() const
 {
