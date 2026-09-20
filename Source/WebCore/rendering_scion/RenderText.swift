@@ -888,7 +888,8 @@ class RenderTextWrapper: RenderObjectWrapper {
         for rect in rects {
           let localRect = rect.FloatRect()
           if !localRect.isZero() {
-            quads.append(localToAbsoluteQuad(FloatQuad(inRect: localRect), .UseTransforms, &wasFixed))
+            quads.append(
+              localToAbsoluteQuad(FloatQuad(inRect: localRect), .UseTransforms, &wasFixed))
           }
         }
         continue

@@ -190,7 +190,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
       wasFixed = false
     }
     quads.append(
-      FloatQuad(inRect: FloatRectWrapper(location: FloatPoint(), size: FloatSize(size: layer()!.size()))))
+      FloatQuad(
+        inRect: FloatRectWrapper(location: FloatPoint(), size: FloatSize(size: layer()!.size()))))
   }
 
   func viewHeight() -> Int32 {

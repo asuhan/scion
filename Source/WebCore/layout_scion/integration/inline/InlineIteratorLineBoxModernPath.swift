@@ -81,7 +81,9 @@ extension InlineIterator {
       return line().lineBoxLeft() + line().contentLogicalLeftIgnoringInlineDirection
     }
 
-    func contentLogicalRight() -> Float32 { return contentLogicalLeft() + line().contentLogicalWidth }
+    func contentLogicalRight() -> Float32 {
+      return contentLogicalLeft() + line().contentLogicalWidth
+    }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
       return m_inlineContent!.formattingContextRoot()

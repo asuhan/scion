@@ -48,7 +48,8 @@ func snappedSelectionRect(
     width = LayoutUnit(value: selectionHeight)
     height = logicalWidth
   }
-  return LayoutRectWrapper(location: topPoint, size: LayoutSizeWrapper(width: width, height: height))
+  return LayoutRectWrapper(
+    location: topPoint, size: LayoutSizeWrapper(width: width, height: height))
 }
 
 class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
