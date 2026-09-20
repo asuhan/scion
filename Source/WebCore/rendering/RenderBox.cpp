@@ -1910,7 +1910,7 @@ std::optional<LayoutUnit> RenderBox::overridingLogicalWidth() const
 
 std::optional<LayoutUnit> RenderBox::overridingLogicalHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->overridingLogicalHeight(); }
     if (!gOverridingLogicalHeightMap)
         return { };
     if (auto result = gOverridingLogicalHeightMap->find(*this); result != gOverridingLogicalHeightMap->end())
