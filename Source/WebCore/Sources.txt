@@ -2890,6 +2890,7 @@ rendering/style/StyleGeneratedImage.cpp
 rendering/style/StyleGradientImage.cpp
 rendering/style/StyleGridData.cpp
 rendering/style/StyleGridItemData.cpp
+rendering/style/StyleImage.cpp
 rendering/style/StyleImageSet.cpp
 rendering/style/StyleInheritedData.cpp
 rendering/style/StyleInvalidImage.cpp

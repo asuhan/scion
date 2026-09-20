@@ -21,6 +21,8 @@
  *
  */
 
+import wk_interop
+
 class StyleImage: Equatable {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -54,11 +56,17 @@ class StyleImage: Equatable {
     fatalError("Not implemented")
   }
 
-  func addClient(_ renderer: RenderElementWrapper) { fatalError("Not reached") }
+  func addClient(_ renderer: RenderElementWrapper) {
+    wk_interop.StyleImage_addClient(p, wkRenderObject(renderer)!)
+  }
 
-  func removeClient(_ renderer: RenderElementWrapper) { fatalError("Not reached") }
+  func removeClient(_ renderer: RenderElementWrapper) {
+    wk_interop.StyleImage_removeClient(p, wkRenderObject(renderer)!)
+  }
 
-  func hasClient(_ renderer: RenderElementWrapper) -> Bool { fatalError("Not reached") }
+  func hasClient(_ renderer: RenderElementWrapper) -> Bool {
+    return wk_interop.StyleImage_hasClient(p, wkRenderObject(renderer)!)
+  }
 
   // Size / scale.
   func imageSize(_ renderer: RenderElementWrapper?, _ multiplier: Float32) -> FloatSize {
