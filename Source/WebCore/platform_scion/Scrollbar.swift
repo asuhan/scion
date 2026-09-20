@@ -24,6 +24,10 @@
  */
 
 class Scrollbar: Widget {
+  init() { self.p = nil }
+
+  init(p: UnsafeMutableRawPointer) { self.p = p }
+
   func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -147,4 +151,6 @@ class Scrollbar: Widget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let p: UnsafeMutableRawPointer?
 }

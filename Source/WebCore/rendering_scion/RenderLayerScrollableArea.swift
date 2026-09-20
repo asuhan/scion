@@ -484,12 +484,23 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   override final func horizontalScrollbar() -> Scrollbar? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let scrollbar = wk_interop.RenderLayerScrollableArea_horizontalScrollbar(pInterop!)
+      else {
+        return nil
+      }
+      return Scrollbar(p: scrollbar)
+    }
     return hBar
   }
 
   override final func verticalScrollbar() -> Scrollbar? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let scrollbar = wk_interop.RenderLayerScrollableArea_verticalScrollbar(pInterop!) else {
+        return nil
+      }
+      return Scrollbar(p: scrollbar)
+    }
     return vBar
   }
 
