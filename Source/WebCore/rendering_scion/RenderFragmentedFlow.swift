@@ -48,6 +48,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     assert(isRenderFragmentedFlow())
   }
 
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func removeFlowChildInfo(_ child: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
