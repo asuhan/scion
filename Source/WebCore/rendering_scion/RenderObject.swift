@@ -738,12 +738,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Return our enclosing flow thread if we are contained inside one. Follows the containing block chain.
   func enclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let fragmentedFlowRaw = wk_interop.RenderObject_enclosingFragmentedFlow(id()) else {
+        return nil
+      }
+      return createRenderObjectWrapperOrNative(fragmentedFlowRaw) as? RenderFragmentedFlowWrapper
+    }
     if fragmentedFlowState() == .NotInsideFlow {
       return nil
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return locateEnclosingFragmentedFlow()
+  }
+
+  func locateEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
+    assert(isNativeImpl())
+    return containingBlock()?.enclosingFragmentedFlow()
   }
 
   func useDarkAppearance() -> Bool {

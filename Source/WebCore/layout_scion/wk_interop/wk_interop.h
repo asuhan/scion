@@ -845,6 +845,7 @@ bool RenderObject_isInline(const void*);
 bool RenderObject_isReplacedOrInlineBlock(const void*);
 bool RenderObject_isHorizontalWritingMode(const void*);
 bool RenderObject_isRenderFragmentedFlow(const void*);
+void* RenderObject_enclosingFragmentedFlow(const void*);
 bool RenderObject_isExcludedFromNormalLayout(const void*);
 bool RenderObject_isExcludedAndPlacedInBorder(const void*);
 bool RenderObject_hasLayer(const void*);

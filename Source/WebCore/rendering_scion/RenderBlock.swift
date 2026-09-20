@@ -310,7 +310,9 @@ class RenderBlockRareData {
   var m_pageLogicalOffset = LayoutUnit()
   var m_intrinsicBorderForFieldset = LayoutUnit()
 
-  var m_enclosingFragmentedFlow: RenderFragmentedFlowWrapper? = nil
+  // The outer optional tracks whether the cached value is up to date, matching the
+  // std::optional<SingleThreadWeakPtr<RenderFragmentedFlow>> upstream.
+  var m_enclosingFragmentedFlow: RenderFragmentedFlowWrapper?? = nil
 }
 
 private let continuationOutlineTable = ContinuationOutlineTableMap()
@@ -1478,12 +1480,42 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   private func cachedEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
     assert(isNativeImpl())
-    return getBlockRareData()?.m_enclosingFragmentedFlow
+    guard let rareData = getBlockRareData(), let fragmentedFlow = rareData.m_enclosingFragmentedFlow
+    else {
+      return nil
+    }
+    return fragmentedFlow
+  }
+
+  func cachedEnclosingFragmentedFlowNeedsUpdate() -> Bool {
+    assert(isNativeImpl())
+    guard let rareData = getBlockRareData(), rareData.m_enclosingFragmentedFlow != nil else {
+      return true
+    }
+    return false
   }
 
   func setCachedEnclosingFragmentedFlowNeedsUpdate() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    ensureBlockRareData().m_enclosingFragmentedFlow = nil
+  }
+
+  private func updateCachedEnclosingFragmentedFlow(_ fragmentedFlow: RenderFragmentedFlowWrapper?)
+    -> RenderFragmentedFlowWrapper?
+  {
+    assert(isNativeImpl())
+    ensureBlockRareData().m_enclosingFragmentedFlow = .some(fragmentedFlow)
+    return fragmentedFlow
+  }
+
+  override func locateEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
+    assert(isNativeImpl())
+    guard let rareData = getBlockRareData(), let fragmentedFlow = rareData.m_enclosingFragmentedFlow
+    else {
+      return updateCachedEnclosingFragmentedFlow(super.locateEnclosingFragmentedFlow())
+    }
+    assert(fragmentedFlow === super.locateEnclosingFragmentedFlow())
+    return fragmentedFlow
   }
 
   override final func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(

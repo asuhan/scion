@@ -50,6 +50,16 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  override func locateEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
+    assert(isNativeImpl())
+    return self
+  }
+
+  override func cachedEnclosingFragmentedFlowNeedsUpdate() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   func removeFlowChildInfo(_ child: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
