@@ -128,11 +128,7 @@ public:
     LayoutSize size() const;
     inline LayoutSize logicalSize() const;
 
-    void setLocation(const LayoutPoint& location)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_frameRect.setLocation(location);
-    }
+    void setLocation(const LayoutPoint&);
     
     void setSize(const LayoutSize& size)
     {

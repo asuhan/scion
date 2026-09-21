@@ -3889,6 +3889,15 @@ void RenderBox::overrideLogicalHeightForSizeContainment()
     setLogicalHeight(intrinsicHeight + borderAndPadding + scrollbarLogicalHeight());
 }
 
+void RenderBox::setLocation(const LayoutPoint& location)
+{
+    if (m_scion) {
+        m_scion->setLocation(location);
+        return;
+    }
+    m_frameRect.setLocation(location);
+}
+
 LayoutUnit RenderBox::marginTop() const
 {
     if (m_scion) { return m_scion->marginTop(); }

@@ -934,6 +934,8 @@ extern "C" void RenderBlockScion_markPositionedObjectsForLayout(void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalHeight(const void*);
 
+extern "C" void RenderBoxScion_setLocation(void*, int32_t, int32_t);
+
 extern "C" int32_t RenderBoxScion_marginTop(const void*);
 
 extern "C" int32_t RenderBoxScion_marginBottom(const void*);
@@ -2958,6 +2960,11 @@ std::optional<LayoutUnit> RenderBoxScion::overridingLogicalWidth() const
         return std::nullopt;
     }
     return LayoutUnit::fromRawValue(width.value);
+}
+
+void RenderBoxScion::setLocation(const LayoutPoint& location)
+{
+    RenderBoxScion_setLocation(m_handle, location.x().rawValue(), location.y().rawValue());
 }
 
 LayoutUnit RenderBoxScion::marginTop() const

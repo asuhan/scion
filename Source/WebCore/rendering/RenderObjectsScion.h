@@ -903,6 +903,8 @@ public:
 
     std::optional<LayoutUnit> overridingLogicalHeight() const;
 
+    void setLocation(const LayoutPoint&);
+
     LayoutUnit marginTop() const;
 
     LayoutUnit marginBottom() const;

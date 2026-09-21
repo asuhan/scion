@@ -4169,6 +4169,15 @@ func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Option
   return OptionalLayoutUnitRaw(value: width.rawValue(), is_valid: true)
 }
 
+@_cdecl("RenderBoxScion_setLocation")
+func RenderBoxScion_setLocation(_ boxRaw: UnsafeMutableRawPointer, _ x: Int32, _ y: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setLocation(
+    p: LayoutPointWrapper(
+      x: LayoutUnit.fromRawValue(value: x), y: LayoutUnit.fromRawValue(value: y))
+  )
+}
+
 @_cdecl("RenderBoxScion_marginTop")
 func RenderBoxScion_marginTop(_ boxRaw: UnsafeRawPointer) -> Int32 {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
