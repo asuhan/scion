@@ -38,7 +38,7 @@ inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalHeight() const
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderAndPaddingLogicalWidth(); }
     return borderStart() + borderEnd() + paddingStart() + paddingEnd();
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalLeft() const
