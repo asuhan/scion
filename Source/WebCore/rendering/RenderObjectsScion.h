@@ -903,6 +903,8 @@ public:
 
     std::optional<LayoutUnit> overridingLogicalHeight() const;
 
+    void updateLogicalHeight();
+
     void setOverridingLogicalWidthLength(const Length&);
 
     void clearOverridingLogicalWidthLength();

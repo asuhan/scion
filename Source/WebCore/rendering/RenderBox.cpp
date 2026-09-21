@@ -3891,7 +3891,10 @@ void RenderBox::overrideLogicalHeightForSizeContainment()
 
 void RenderBox::updateLogicalHeight()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->updateLogicalHeight();
+        return;
+    }
     if (shouldApplySizeContainment() && !isRenderGrid())
         overrideLogicalHeightForSizeContainment();
 
