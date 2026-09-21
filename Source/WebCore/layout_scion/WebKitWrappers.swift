@@ -4143,6 +4143,20 @@ func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Option
   return OptionalLayoutUnitRaw(value: width.rawValue(), is_valid: true)
 }
 
+@_cdecl("RenderBoxScion_setOverridingLogicalWidthLength")
+func RenderBoxScion_setOverridingLogicalWidthLength(
+  _ boxRaw: UnsafeMutableRawPointer, _ lengthRaw: UnsafeRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setOverridingLogicalWidthLength(height: LengthWrapper(p: lengthRaw))
+}
+
+@_cdecl("RenderBoxScion_clearOverridingLogicalWidthLength")
+func RenderBoxScion_clearOverridingLogicalWidthLength(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingLogicalWidthLength()
+}
+
 @_cdecl("RenderBoxScion_overridingLogicalHeight")
 func RenderBoxScion_overridingLogicalHeight(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

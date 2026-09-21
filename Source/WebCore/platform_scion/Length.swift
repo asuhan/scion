@@ -70,6 +70,13 @@ class LengthWrapper: Equatable {
     self.owner = owner
   }
 
+  // Upstream stores Length by value; use this wherever a wrapper has to outlive the C++ Length it
+  // was handed, e.g. when putting one in a map.
+  init(copyOf other: LengthWrapper) {
+    self.p = wk_interop.Length_copy(other.p)
+    self.owner = true
+  }
+
   deinit { if self.owner { wk_interop.Length_destroy(p) } }
 
   func setValue(type: LengthType, value: Int32) {

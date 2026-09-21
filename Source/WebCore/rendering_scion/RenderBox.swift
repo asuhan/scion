@@ -28,7 +28,7 @@ private let gOverridingLogicalWidthMap: OverrideSizeMap? = nil
 
 private typealias OverridingLengthMap = WeakHashMap<RenderBoxWrapper, LengthWrapper>
 private let gOverridingLogicalHeightLengthMap: OverridingLengthMap? = nil
-private let gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
+private var gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
 
 // FIXME: We should store these based on physical direction.
 private typealias OverrideOptionalSizeMap = WeakHashMap<
@@ -2136,8 +2136,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_setOverridingLogicalWidthLength(id(), height.p)
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setOverridingLogicalWidthLength(id(), height.p)
+      return
+    }
+    if gOverridingLogicalWidthLengthMap == nil {
+      gOverridingLogicalWidthLengthMap = OverridingLengthMap()
+    }
+    gOverridingLogicalWidthLengthMap!.set(self, LengthWrapper(copyOf: height))
   }
 
   func clearOverridingLogicalHeightLength() {
@@ -2146,8 +2152,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverridingLogicalWidthLength() {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_clearOverridingLogicalWidthLength(id())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_clearOverridingLogicalWidthLength(id())
+      return
+    }
+    gOverridingLogicalWidthLengthMap?.remove(self)
   }
 
   func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {

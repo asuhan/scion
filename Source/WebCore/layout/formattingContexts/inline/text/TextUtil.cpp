@@ -618,6 +618,11 @@ extern "C" WEBCORE_EXPORT const void* Length_new_float64(double value, uint8_t t
     return new WebCore::Length(value, static_cast<WebCore::LengthType>(type), has_quirk);
 }
 
+extern "C" WEBCORE_EXPORT const void* Length_copy(const void* p)
+{
+    return new WebCore::Length(*static_cast<const WebCore::Length*>(p));
+}
+
 extern "C" WEBCORE_EXPORT void Length_destroy(const void* p)
 {
     delete static_cast<const WebCore::Length*>(p);

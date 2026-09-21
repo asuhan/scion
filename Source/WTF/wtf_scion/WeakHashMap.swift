@@ -44,6 +44,10 @@ final class WeakHashMap<KeyType: AnyObject, ValueType> {
     return ensure(key, { () in return value })
   }
 
+  func set(_ key: KeyType, _ value: ValueType) {
+    m_impl[ObjectIdentifier(key)] = value
+  }
+
   func get(_ key: KeyType, _ defaultValue: ValueType) -> ValueType {
     return m_impl[ObjectIdentifier(key)] ?? defaultValue
   }

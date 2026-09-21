@@ -2022,7 +2022,10 @@ std::optional<Length> RenderBox::overridingLogicalWidthLength() const
 
 void RenderBox::setOverridingLogicalWidthLength(const Length& height)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOverridingLogicalWidthLength(height);
+        return;
+    }
     if (!gOverridingLogicalWidthLengthMap)
         gOverridingLogicalWidthLengthMap = new OverridingLengthMap();
     gOverridingLogicalWidthLengthMap->set(*this, height);
@@ -2030,7 +2033,10 @@ void RenderBox::setOverridingLogicalWidthLength(const Length& height)
 
 void RenderBox::clearOverridingLogicalWidthLength()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingLogicalWidthLength();
+        return;
+    }
     if (gOverridingLogicalWidthLengthMap)
         gOverridingLogicalWidthLengthMap->remove(*this);
 }

@@ -897,6 +897,10 @@ public:
 
     std::optional<LayoutUnit> overridingLogicalHeight() const;
 
+    void setOverridingLogicalWidthLength(const Length&);
+
+    void clearOverridingLogicalWidthLength();
+
     void setLogicalLeft(LayoutUnit);
 
     LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const;
