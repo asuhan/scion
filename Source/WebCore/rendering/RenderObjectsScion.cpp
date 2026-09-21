@@ -934,6 +934,14 @@ extern "C" void RenderBlockScion_markPositionedObjectsForLayout(void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalHeight(const void*);
 
+extern "C" int32_t RenderBoxScion_marginTop(const void*);
+
+extern "C" int32_t RenderBoxScion_marginBottom(const void*);
+
+extern "C" int32_t RenderBoxScion_marginLeft(const void*);
+
+extern "C" int32_t RenderBoxScion_marginRight(const void*);
+
 extern "C" void RenderBoxScion_updateLogicalHeight(void*);
 
 extern "C" void RenderBoxScion_setOverridingLogicalWidthLength(void*, const void*);
@@ -2950,6 +2958,26 @@ std::optional<LayoutUnit> RenderBoxScion::overridingLogicalWidth() const
         return std::nullopt;
     }
     return LayoutUnit::fromRawValue(width.value);
+}
+
+LayoutUnit RenderBoxScion::marginTop() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginTop(m_handle));
+}
+
+LayoutUnit RenderBoxScion::marginBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginBottom(m_handle));
+}
+
+LayoutUnit RenderBoxScion::marginLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginLeft(m_handle));
+}
+
+LayoutUnit RenderBoxScion::marginRight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginRight(m_handle));
 }
 
 void RenderBoxScion::updateLogicalHeight()

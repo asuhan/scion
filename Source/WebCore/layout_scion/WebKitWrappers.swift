@@ -4169,6 +4169,30 @@ func RenderBoxScion_overridingLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Option
   return OptionalLayoutUnitRaw(value: width.rawValue(), is_valid: true)
 }
 
+@_cdecl("RenderBoxScion_marginTop")
+func RenderBoxScion_marginTop(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.marginTop().rawValue()
+}
+
+@_cdecl("RenderBoxScion_marginBottom")
+func RenderBoxScion_marginBottom(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.marginBottom().rawValue()
+}
+
+@_cdecl("RenderBoxScion_marginLeft")
+func RenderBoxScion_marginLeft(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.marginLeft().rawValue()
+}
+
+@_cdecl("RenderBoxScion_marginRight")
+func RenderBoxScion_marginRight(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.marginRight().rawValue()
+}
+
 @_cdecl("RenderBoxScion_updateLogicalHeight")
 func RenderBoxScion_updateLogicalHeight(_ boxRaw: UnsafeMutableRawPointer) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -3889,6 +3889,30 @@ void RenderBox::overrideLogicalHeightForSizeContainment()
     setLogicalHeight(intrinsicHeight + borderAndPadding + scrollbarLogicalHeight());
 }
 
+LayoutUnit RenderBox::marginTop() const
+{
+    if (m_scion) { return m_scion->marginTop(); }
+    return m_marginBox.top();
+}
+
+LayoutUnit RenderBox::marginBottom() const
+{
+    if (m_scion) { return m_scion->marginBottom(); }
+    return m_marginBox.bottom();
+}
+
+LayoutUnit RenderBox::marginLeft() const
+{
+    if (m_scion) { return m_scion->marginLeft(); }
+    return m_marginBox.left();
+}
+
+LayoutUnit RenderBox::marginRight() const
+{
+    if (m_scion) { return m_scion->marginRight(); }
+    return m_marginBox.right();
+}
+
 void RenderBox::updateLogicalHeight()
 {
     if (m_scion) {

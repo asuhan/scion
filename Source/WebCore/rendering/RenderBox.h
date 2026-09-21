@@ -280,26 +280,10 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_marginBox;
     }
-    LayoutUnit marginTop() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marginBox.top();
-    }
-    LayoutUnit marginBottom() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marginBox.bottom();
-    }
-    LayoutUnit marginLeft() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marginBox.left();
-    }
-    LayoutUnit marginRight() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marginBox.right();
-    }
+    LayoutUnit marginTop() const override;
+    LayoutUnit marginBottom() const override;
+    LayoutUnit marginLeft() const override;
+    LayoutUnit marginRight() const override;
     void setMarginTop(LayoutUnit margin)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
