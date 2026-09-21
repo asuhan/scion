@@ -756,6 +756,10 @@ public:
 
     LayoutUnit horizontalBorderAndPaddingExtent() const;
 
+    LayoutUnit verticalMarginExtent() const;
+
+    LayoutUnit horizontalMarginExtent() const;
+
     LayoutUnit borderLogicalLeft() const;
 
 private:

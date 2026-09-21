@@ -181,16 +181,8 @@ public:
     virtual LayoutUnit marginAfter(const RenderStyle* otherStyle = nullptr) const = 0;
     virtual LayoutUnit marginStart(const RenderStyle* otherStyle = nullptr) const = 0;
     virtual LayoutUnit marginEnd(const RenderStyle* otherStyle = nullptr) const = 0;
-    LayoutUnit verticalMarginExtent() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return marginTop() + marginBottom();
-    }
-    LayoutUnit horizontalMarginExtent() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return marginLeft() + marginRight();
-    }
+    LayoutUnit verticalMarginExtent() const;
+    LayoutUnit horizontalMarginExtent() const;
     LayoutUnit marginLogicalHeight() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

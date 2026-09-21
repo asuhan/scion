@@ -742,6 +742,10 @@ extern "C" LayoutSizeRaw RenderBoxModelObjectScion_offsetForInFlowPosition(const
 
 extern "C" int32_t RenderBoxModelObjectScion_borderTop(const void*);
 
+extern "C" int32_t RenderBoxModelObjectScion_verticalMarginExtent(const void*);
+
+extern "C" int32_t RenderBoxModelObjectScion_horizontalMarginExtent(const void*);
+
 extern "C" int32_t RenderBoxModelObjectScion_borderBottom(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_borderLeft(const void*);
@@ -2428,6 +2432,16 @@ LayoutSize RenderBoxModelObjectScion::offsetForInFlowPosition() const
 {
     const auto offset = RenderBoxModelObjectScion_offsetForInFlowPosition(m_handle);
     return { LayoutUnit::fromRawValue(offset.width), LayoutUnit::fromRawValue(offset.height) };
+}
+
+LayoutUnit RenderBoxModelObjectScion::verticalMarginExtent() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_verticalMarginExtent(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::horizontalMarginExtent() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_horizontalMarginExtent(m_handle));
 }
 
 LayoutUnit RenderBoxModelObjectScion::borderTop() const

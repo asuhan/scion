@@ -3503,6 +3503,22 @@ func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: Unsa
   return LayoutSizeRaw(width: position.width().rawValue(), height: position.height().rawValue())
 }
 
+@_cdecl("RenderBoxModelObjectScion_verticalMarginExtent")
+func RenderBoxModelObjectScion_verticalMarginExtent(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.verticalMarginExtent().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_horizontalMarginExtent")
+func RenderBoxModelObjectScion_horizontalMarginExtent(_ boxModelObjectRaw: UnsafeRawPointer)
+  -> Int32
+{
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.horizontalMarginExtent().rawValue()
+}
+
 @_cdecl("RenderBoxModelObjectScion_borderTop")
 func RenderBoxModelObjectScion_borderTop(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
   let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)

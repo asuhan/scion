@@ -746,6 +746,18 @@ LayoutSize RenderBoxModelObject::offsetForInFlowPosition() const
     return LayoutSize();
 }
 
+LayoutUnit RenderBoxModelObject::verticalMarginExtent() const
+{
+    if (m_scion) { return m_scion->verticalMarginExtent(); }
+    return marginTop() + marginBottom();
+}
+
+LayoutUnit RenderBoxModelObject::horizontalMarginExtent() const
+{
+    if (m_scion) { return m_scion->horizontalMarginExtent(); }
+    return marginLeft() + marginRight();
+}
+
 LayoutUnit RenderBoxModelObject::offsetLeft() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
