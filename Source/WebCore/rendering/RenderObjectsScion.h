@@ -1010,6 +1010,8 @@ public:
 
     void insertPositionedObject(RenderBox&);
 
+    void markPositionedObjectsForLayout();
+
     void removePositionedObjects(const RenderBlock*, WebCore::ContainingBlockState = WebCore::SameContainingBlock);
 
     void addPercentHeightDescendant(RenderBox&);

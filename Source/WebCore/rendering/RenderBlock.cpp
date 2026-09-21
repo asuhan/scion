@@ -1085,7 +1085,10 @@ void RenderBlock::layoutPositionedObjects(bool relayoutChildren, bool fixedPosit
 
 void RenderBlock::markPositionedObjectsForLayout()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->markPositionedObjectsForLayout();
+        return;
+    }
     auto* positionedDescendants = positionedObjects();
     if (!positionedDescendants)
         return;

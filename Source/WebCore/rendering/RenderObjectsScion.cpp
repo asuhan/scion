@@ -924,6 +924,8 @@ extern "C" void RenderBoxScion_clearOverridingLogicalWidth(void*);
 
 extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalWidth(const void*);
 
+extern "C" void RenderBlockScion_markPositionedObjectsForLayout(void*);
+
 extern "C" OptionalLayoutUnitRaw RenderBoxScion_overridingLogicalHeight(const void*);
 
 extern "C" void RenderBoxScion_setLogicalLeft(void*, int32_t);
@@ -2902,6 +2904,11 @@ LayoutSize RenderBoxScion::cachedSizeForOverflowClip() const
 void RenderBlockFlowScion::layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight)
 {
     RenderBlockFlowScion_layoutBlock(m_handle, relayoutChildren, pageLogicalHeight.rawValue());
+}
+
+void RenderBlockScion::markPositionedObjectsForLayout()
+{
+    RenderBlockScion_markPositionedObjectsForLayout(m_handle);
 }
 
 void RenderBlockScion::scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged)

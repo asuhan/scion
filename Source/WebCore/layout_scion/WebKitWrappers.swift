@@ -4465,6 +4465,12 @@ func RenderBlockFlowScion_firstLineBaseline(_ blockFlowRaw: UnsafeRawPointer)
   return OptionalLayoutUnitRaw(value: baseline.rawValue(), is_valid: true)
 }
 
+@_cdecl("RenderBlockScion_markPositionedObjectsForLayout")
+func RenderBlockScion_markPositionedObjectsForLayout(_ blockRaw: UnsafeMutableRawPointer) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  block.markPositionedObjectsForLayout()
+}
+
 @_cdecl("RenderBlockScion_insertPositionedObject")
 func RenderBlockScion_insertPositionedObject(
   _ blockRaw: UnsafeMutableRawPointer, _ positionedRaw: UnsafeMutableRawPointer
