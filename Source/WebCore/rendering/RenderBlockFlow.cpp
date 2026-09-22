@@ -580,6 +580,12 @@ LayoutIntegration::LineLayout* RenderBlockFlow::inlineLayout()
     return hasInlineLayout() ? std::get<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout).get() : nullptr;
 }
 
+bool RenderBlockFlow::hasInlineLayout() const
+{
+    if (m_scion) { return m_scion->hasInlineLayout(); }
+    return std::holds_alternative<std::unique_ptr<LayoutIntegration::LineLayout>>(m_lineLayout);
+}
+
 bool RenderBlockFlow::inlineLayoutHasDetachedContent() const
 {
     if (m_scion) { return m_scion->inlineLayoutHasDetachedContent(); }

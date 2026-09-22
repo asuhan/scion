@@ -1129,6 +1129,8 @@ public:
 
     LayoutIntegration::LineLayout* inlineLayout();
 
+    bool hasInlineLayout() const;
+
     bool inlineLayoutHasDetachedContent() const;
 
     LayoutUnit maxPositiveMarginBefore() const;

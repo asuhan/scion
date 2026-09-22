@@ -4493,6 +4493,12 @@ func RenderBlockFlowScion_inlineLayout(_ blockFlowRaw: UnsafeMutableRawPointer)
   return nil
 }
 
+@_cdecl("RenderBlockFlowScion_hasInlineLayout")
+func RenderBlockFlowScion_hasInlineLayout(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.hasInlineLayout()
+}
+
 @_cdecl("RenderBlockFlowScion_inlineLayoutHasDetachedContent")
 func RenderBlockFlowScion_inlineLayoutHasDetachedContent(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()

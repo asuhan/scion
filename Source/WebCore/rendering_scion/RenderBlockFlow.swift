@@ -4614,7 +4614,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
-  private func hasInlineLayout() -> Bool {
+  func hasInlineLayout() -> Bool {
     assert(isNativeImpl())
     switch lineLayout {
     case .Integration:
