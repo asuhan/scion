@@ -1131,6 +1131,9 @@ public:
 
     bool hasInlineLayout() const;
 
+    // RenderBlockFlow::InvalidationReason; RenderBlockFlow.h cannot be included here.
+    void invalidateLineLayoutPath(uint8_t invalidationReason);
+
     bool inlineLayoutHasDetachedContent() const;
 
     LayoutUnit maxPositiveMarginBefore() const;

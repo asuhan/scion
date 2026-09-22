@@ -4056,7 +4056,10 @@ bool RenderBlockFlow::hasLines() const
 
 void RenderBlockFlow::invalidateLineLayoutPath(InvalidationReason invalidationReason)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->invalidateLineLayoutPath(static_cast<uint8_t>(invalidationReason));
+        return;
+    }
     switch (lineLayoutPath()) {
     case UndeterminedPath:
         return;

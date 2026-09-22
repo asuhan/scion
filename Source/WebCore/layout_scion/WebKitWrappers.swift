@@ -4499,6 +4499,25 @@ func RenderBlockFlowScion_hasInlineLayout(_ blockFlowRaw: UnsafeRawPointer) -> B
   return blockFlow.hasInlineLayout()
 }
 
+@_cdecl("RenderBlockFlowScion_invalidateLineLayoutPath")
+func RenderBlockFlowScion_invalidateLineLayoutPath(
+  _ blockFlowRaw: UnsafeMutableRawPointer, _ invalidationReasonRaw: UInt8
+) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  let invalidationReason: RenderBlockFlowWrapper.InvalidationReason
+  switch invalidationReasonRaw {
+  case 0:
+    invalidationReason = .StyleChange
+  case 1:
+    invalidationReason = .InsertionOrRemoval
+  case 2:
+    invalidationReason = .ContentChange
+  default:
+    fatalError("Not reached")
+  }
+  blockFlow.invalidateLineLayoutPath(invalidationReason: invalidationReason)
+}
+
 @_cdecl("RenderBlockFlowScion_inlineLayoutHasDetachedContent")
 func RenderBlockFlowScion_inlineLayoutHasDetachedContent(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
