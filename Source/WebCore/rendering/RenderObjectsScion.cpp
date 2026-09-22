@@ -1096,6 +1096,8 @@ extern "C" bool RenderBlockFlowScion_hasInlineLayout(const void*);
 
 extern "C" void RenderBlockFlowScion_invalidateLineLayoutPath(void*, uint8_t);
 
+extern "C" bool RenderBlockFlowScion_shouldInvalidateLineLayoutPath(void*, void*, bool);
+
 extern "C" bool RenderBlockFlowScion_inlineLayoutHasDetachedContent(const void*);
 
 extern "C" int32_t RenderBlockFlowScion_maxPositiveMarginBefore(const void*);
@@ -3346,6 +3348,11 @@ bool RenderBlockFlowScion::hasInlineLayout() const
 void RenderBlockFlowScion::invalidateLineLayoutPath(uint8_t invalidationReason)
 {
     RenderBlockFlowScion_invalidateLineLayoutPath(m_handle, invalidationReason);
+}
+
+bool RenderBlockFlowScion::shouldInvalidateLineLayoutPath(RenderObject& renderer, bool isRemoval)
+{
+    return RenderBlockFlowScion_shouldInvalidateLineLayoutPath(m_handle, &renderer, isRemoval);
 }
 
 bool RenderBlockFlowScion::inlineLayoutHasDetachedContent() const

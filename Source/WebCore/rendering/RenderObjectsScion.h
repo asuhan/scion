@@ -1134,6 +1134,11 @@ public:
     // RenderBlockFlow::InvalidationReason; RenderBlockFlow.h cannot be included here.
     void invalidateLineLayoutPath(uint8_t invalidationReason);
 
+    // RenderTreeBuilder's invalidateLineLayout asks this instead of dereferencing a
+    // LayoutIntegration::LineLayout*. Like the C++ lambda it mirrors, it records partial
+    // invalidation damage as a side effect, so it is not a pure query.
+    bool shouldInvalidateLineLayoutPath(RenderObject&, bool isRemoval);
+
     bool inlineLayoutHasDetachedContent() const;
 
     LayoutUnit maxPositiveMarginBefore() const;

@@ -42,7 +42,7 @@ private func invalidateLineLayout(renderer: RenderObjectWrapper, isRemoval: IsRe
   }
 }
 
-private func shouldInvalidateLineLayoutPath(
+func shouldInvalidateLineLayoutPath(
   inlineLayout: LayoutIntegration.LineLayout, renderer: RenderObjectWrapper, isRemoval: IsRemoval,
   container: RenderBlockFlowWrapper
 ) -> Bool {
