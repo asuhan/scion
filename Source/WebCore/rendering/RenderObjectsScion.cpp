@@ -1098,6 +1098,10 @@ extern "C" void RenderBlockFlowScion_invalidateLineLayoutPath(void*, uint8_t);
 
 extern "C" bool RenderBlockFlowScion_shouldInvalidateLineLayoutPath(void*, void*, bool);
 
+extern "C" void RenderBlockFlowScion_lineLayoutRootStyleWillChange(void*, const void*);
+
+extern "C" void RenderBlockFlowScion_lineLayoutStyleWillChange(void*, void*, const void*, uint8_t);
+
 extern "C" bool RenderBlockFlowScion_inlineLayoutHasDetachedContent(const void*);
 
 extern "C" int32_t RenderBlockFlowScion_maxPositiveMarginBefore(const void*);
@@ -3353,6 +3357,16 @@ void RenderBlockFlowScion::invalidateLineLayoutPath(uint8_t invalidationReason)
 bool RenderBlockFlowScion::shouldInvalidateLineLayoutPath(RenderObject& renderer, bool isRemoval)
 {
     return RenderBlockFlowScion_shouldInvalidateLineLayoutPath(m_handle, &renderer, isRemoval);
+}
+
+void RenderBlockFlowScion::rootStyleWillChange(const RenderStyle& newStyle)
+{
+    RenderBlockFlowScion_lineLayoutRootStyleWillChange(m_handle, &newStyle);
+}
+
+void RenderBlockFlowScion::styleWillChange(RenderElement& renderer, const RenderStyle& newStyle, uint8_t diff)
+{
+    RenderBlockFlowScion_lineLayoutStyleWillChange(m_handle, &renderer, &newStyle, diff);
 }
 
 bool RenderBlockFlowScion::inlineLayoutHasDetachedContent() const

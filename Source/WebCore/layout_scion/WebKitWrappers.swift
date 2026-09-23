@@ -4518,6 +4518,27 @@ func RenderBlockFlowScion_invalidateLineLayoutPath(
   blockFlow.invalidateLineLayoutPath(invalidationReason: invalidationReason)
 }
 
+@_cdecl("RenderBlockFlowScion_lineLayoutRootStyleWillChange")
+func RenderBlockFlowScion_lineLayoutRootStyleWillChange(
+  _ blockFlowRaw: UnsafeMutableRawPointer, _ newStyleRaw: UnsafeRawPointer
+) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  guard let inlineLayout = blockFlow.inlineLayout() else { return }
+  inlineLayout.rootStyleWillChange(root: blockFlow, newStyle: convert_render_style(p: newStyleRaw))
+}
+
+@_cdecl("RenderBlockFlowScion_lineLayoutStyleWillChange")
+func RenderBlockFlowScion_lineLayoutStyleWillChange(
+  _ blockFlowRaw: UnsafeMutableRawPointer, _ rendererRaw: UnsafeMutableRawPointer,
+  _ newStyleRaw: UnsafeRawPointer, _ diffRaw: UInt8
+) {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  guard let inlineLayout = blockFlow.inlineLayout() else { return }
+  inlineLayout.styleWillChange(
+    renderer: createRenderObjectWrapperOrNative(rendererRaw) as! RenderElementWrapper,
+    newStyle: convert_render_style(p: newStyleRaw), diff: StyleDifference(rawValue: diffRaw)!)
+}
+
 @_cdecl("RenderBlockFlowScion_shouldInvalidateLineLayoutPath")
 func RenderBlockFlowScion_shouldInvalidateLineLayoutPath(
   _ containerRaw: UnsafeMutableRawPointer, _ rendererRaw: UnsafeMutableRawPointer, _ isRemoval: Bool

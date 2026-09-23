@@ -5183,6 +5183,18 @@ bool RenderBlockFlow::scionShouldInvalidateLineLayoutPath(RenderObject& renderer
     return m_scion->shouldInvalidateLineLayoutPath(renderer, isRemoval);
 }
 
+void RenderBlockFlow::scionRootStyleWillChange(const RenderStyle& newStyle)
+{
+    ASSERT(m_scion);
+    m_scion->rootStyleWillChange(newStyle);
+}
+
+void RenderBlockFlow::scionStyleWillChange(RenderElement& renderer, const RenderStyle& newStyle, StyleDifference diff)
+{
+    ASSERT(m_scion);
+    m_scion->styleWillChange(renderer, newStyle, static_cast<uint8_t>(diff));
+}
+
 void* RenderBlockFlow::scion() const
 {
     return m_scion ? m_scion->handle() : nullptr;

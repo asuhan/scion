@@ -1139,6 +1139,11 @@ public:
     // invalidation damage as a side effect, so it is not a pure query.
     bool shouldInvalidateLineLayoutPath(RenderObject&, bool isRemoval);
 
+    void rootStyleWillChange(const RenderStyle& newStyle);
+
+    // StyleDifference crosses as its underlying uint8_t.
+    void styleWillChange(RenderElement&, const RenderStyle& newStyle, uint8_t diff);
+
     bool inlineLayoutHasDetachedContent() const;
 
     LayoutUnit maxPositiveMarginBefore() const;
