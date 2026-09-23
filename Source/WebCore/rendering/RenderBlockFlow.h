@@ -654,6 +654,10 @@ public:
 
     void* scion() const;
 
+    // Scion only: answers what RenderTreeBuilder's shouldInvalidateLineLayoutPath lambda answers
+    // for the C++ path, which needs a LayoutIntegration::LineLayout& a scion flow cannot provide.
+    bool scionShouldInvalidateLineLayoutPath(RenderObject&, bool isRemoval);
+
 protected:
     std::unique_ptr<FloatingObjects> m_floatingObjects;
     std::unique_ptr<RenderBlockFlowRareData> m_rareBlockFlowData;

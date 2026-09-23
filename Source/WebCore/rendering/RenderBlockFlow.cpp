@@ -5177,6 +5177,12 @@ bool RenderBlockFlow::tryComputePreferredWidthsUsingInlinePath(LayoutUnit& minLo
     return true;
 }
 
+bool RenderBlockFlow::scionShouldInvalidateLineLayoutPath(RenderObject& renderer, bool isRemoval)
+{
+    ASSERT(m_scion);
+    return m_scion->shouldInvalidateLineLayoutPath(renderer, isRemoval);
+}
+
 void* RenderBlockFlow::scion() const
 {
     return m_scion ? m_scion->handle() : nullptr;
