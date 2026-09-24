@@ -1687,6 +1687,7 @@ uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);
 int32_t u_toupper_scion(int32_t);
 int32_t u_totitle_scion(int32_t);
 void* wordBreakIterator_scion(const uint16_t* characters, uint32_t length);
+uint32_t numCodeUnitsInGraphemeClusters_scion(const void*, uint32_t);
 int32_t ubrk_first_scion(void*);
 int32_t ubrk_next_scion(void*);
 void ubidi_close_scion(void*);

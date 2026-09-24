@@ -157,6 +157,11 @@ extern "C" WEBCORE_EXPORT void* wordBreakIterator_scion(const uint16_t* characte
     return WTF::wordBreakIterator(std::span<const UChar> { reinterpret_cast<const char16_t*>(characters), length });
 }
 
+extern "C" WEBCORE_EXPORT uint32_t numCodeUnitsInGraphemeClusters_scion(const void* p, uint32_t numGraphemeClusters)
+{
+    return numCodeUnitsInGraphemeClusters(*static_cast<const WTF::StringView*>(p), numGraphemeClusters);
+}
+
 extern "C" WEBCORE_EXPORT int32_t ubrk_first_scion(void* p)
 {
     return ubrk_first(static_cast<UBreakIterator*>(p));

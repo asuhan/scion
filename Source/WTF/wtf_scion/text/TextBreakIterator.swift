@@ -123,6 +123,5 @@ func wordBreakIterator(characters: UnsafeBufferPointer<UChar>) -> UnsafeMutableR
 func numCodeUnitsInGraphemeClusters(string: StringWrapperView, numGraphemeClusters: UInt32)
   -> UInt32
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return wk_interop.numCodeUnitsInGraphemeClusters_scion(string.p, numGraphemeClusters)
 }
