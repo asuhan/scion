@@ -551,11 +551,7 @@ public:
         return type() == Type::MultiColumnSet;
     }
     bool isRenderMultiColumnFlow() const;
-    bool isRenderMultiColumnSpannerPlaceholder() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::MultiColumnSpannerPlaceholder;
-    }
+    bool isRenderMultiColumnSpannerPlaceholder() const;
 
     bool isRenderScrollbarPart() const;
     bool isRenderVTTCue() const

@@ -3857,6 +3857,12 @@ bool RenderObject::isRenderGrid() const
     return type() == Type::Grid;
 }
 
+bool RenderObject::isRenderMultiColumnSpannerPlaceholder() const
+{
+    if (m_scion) { return m_scion->isRenderMultiColumnSpannerPlaceholder(); }
+    return type() == Type::MultiColumnSpannerPlaceholder;
+}
+
 bool RenderObject::isRenderMultiColumnFlow() const
 {
     if (m_scion) { return m_scion->isRenderMultiColumnFlow(); }

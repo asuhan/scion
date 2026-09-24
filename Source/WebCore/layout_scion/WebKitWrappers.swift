@@ -1557,6 +1557,13 @@ func RenderObjectScion_isRenderGrid(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isRenderGrid()
 }
 
+@_cdecl("RenderObjectScion_isRenderMultiColumnSpannerPlaceholder")
+func RenderObjectScion_isRenderMultiColumnSpannerPlaceholder(_ objectRaw: UnsafeRawPointer) -> Bool
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderMultiColumnSpannerPlaceholder()
+}
+
 @_cdecl("RenderObjectScion_isRenderMultiColumnFlow")
 func RenderObjectScion_isRenderMultiColumnFlow(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

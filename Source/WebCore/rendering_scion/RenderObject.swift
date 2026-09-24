@@ -851,6 +851,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .FileUploadControl
   }
 
+  func isRenderMultiColumnSpannerPlaceholder() -> Bool {
+    assert(isNativeImpl())
+    return type() == .MultiColumnSpannerPlaceholder
+  }
+
   func isRenderFrame() -> Bool {
     assert(isNativeImpl())
     return type() == .Frame

@@ -163,6 +163,8 @@ extern "C" bool RenderObjectScion_isRenderGrid(const void*);
 
 extern "C" bool RenderObjectScion_isRenderMultiColumnFlow(const void*);
 
+extern "C" bool RenderObjectScion_isRenderMultiColumnSpannerPlaceholder(const void*);
+
 extern "C" bool RenderObjectScion_isRenderScrollbarPart(const void*);
 
 extern "C" bool RenderObjectScion_isDocumentElementRenderer(const void*);
@@ -1403,6 +1405,8 @@ bool RenderObjectScion::isRenderHTMLCanvas() const { return RenderObjectScion_is
 bool RenderObjectScion::isRenderGrid() const { return RenderObjectScion_isRenderGrid(m_handle); }
 
 bool RenderObjectScion::isRenderMultiColumnFlow() const { return RenderObjectScion_isRenderMultiColumnFlow(m_handle); }
+
+bool RenderObjectScion::isRenderMultiColumnSpannerPlaceholder() const { return RenderObjectScion_isRenderMultiColumnSpannerPlaceholder(m_handle); }
 
 bool RenderObjectScion::isRenderScrollbarPart() const { return RenderObjectScion_isRenderScrollbarPart(m_handle); }
 

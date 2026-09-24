@@ -196,6 +196,8 @@ public:
 
     bool isRenderMultiColumnFlow() const;
 
+    bool isRenderMultiColumnSpannerPlaceholder() const;
+
     bool isRenderScrollbarPart() const;
 
     bool isDocumentElementRenderer() const;
