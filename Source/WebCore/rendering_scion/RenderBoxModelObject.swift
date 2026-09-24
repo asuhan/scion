@@ -927,6 +927,28 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       && isRenderBlock() && !isRenderSVGBlock()
   }
 
+  override func setSelectionState(_ state: HighlightState) {
+    assert(isNativeImpl())
+    if state == .Inside && selectionState() != .None {
+      return
+    }
+
+    if (state == .Start && selectionState() == .End)
+      || (state == .End && selectionState() == .Start)
+    {
+      super.setSelectionState(.Both)
+    } else {
+      super.setSelectionState(state)
+    }
+
+    // FIXME: We should consider whether it is OK propagating to ancestor RenderInlines.
+    // This is a workaround for http://webkit.org/b/32123
+    // The containing block can be null in case of an orphaned tree.
+    if let containingBlock = containingBlock(), !containingBlock.isRenderView() {
+      containingBlock.setSelectionState(state)
+    }
+  }
+
   func contentChanged(_ changeType: ContentChangeType) {
     assert(isNativeImpl())
     if !hasLayer() {

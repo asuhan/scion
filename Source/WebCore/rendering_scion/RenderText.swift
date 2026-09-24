@@ -602,6 +602,16 @@ class RenderTextWrapper: RenderObjectWrapper {
     return m_text!
   }
 
+  override func setSelectionState(_ state: HighlightState) {
+    assert(isNativeImpl())
+    super.setSelectionState(state)
+
+    // The containing block can be null in case of an orphaned tree.
+    if let containingBlock = containingBlock(), !containingBlock.isRenderView() {
+      containingBlock.setSelectionState(state)
+    }
+  }
+
   func text() -> StringWrapper {
     assert(isNativeImpl())
     return m_text!

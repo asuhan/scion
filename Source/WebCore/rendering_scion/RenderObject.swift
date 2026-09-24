@@ -1195,6 +1195,20 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFragmentedFlowState(state)
   }
 
+  func setSelectionState(_ state: HighlightState) {
+    assert(isNativeImpl())
+    m_stateBitfields.setSelectionState(state)
+  }
+
+  final func setSelectionStateIfNeeded(_ state: HighlightState) {
+    assert(isNativeImpl())
+    if selectionState() == state {
+      return
+    }
+
+    setSelectionState(state)
+  }
+
   func isRenderMathMLFenced() -> Bool {
     assert(isNativeImpl())
     return type() == .MathMLFenced
@@ -3806,6 +3820,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     func selectionState() -> HighlightState { return m_selectionState }
 
+    mutating func setSelectionState(_ selectionState: HighlightState) {
+      m_selectionState = selectionState
+    }
+
     func fragmentedFlowState() -> FragmentedFlowState { return m_fragmentedFlowState }
 
     mutating func setFragmentedFlowState(_ fragmentedFlowState: FragmentedFlowState) {
@@ -3818,7 +3836,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     private var flags: StateFlag = []
     private var m_positionedState: PositionedState = .IsStaticallyPositioned
-    private let m_selectionState: HighlightState = .None
+    private var m_selectionState: HighlightState = .None
     private var m_fragmentedFlowState: FragmentedFlowState = .NotInsideFlow
     var boxDecorationState: BoxDecorationState = .None
   }
