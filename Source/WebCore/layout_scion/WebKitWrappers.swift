@@ -1270,13 +1270,16 @@ func RenderObjectScion_nextInPreOrder(_ objectRaw: UnsafeRawPointer) -> UnsafeMu
 
 @_cdecl("RenderObjectScion_nextInPreOrderStayWithin")
 func RenderObjectScion_nextInPreOrderStayWithin(
-  _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
+  _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer?
 )
   -> UnsafeMutableRawPointer?
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  return wkRenderObject(
-    object.nextInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin)))
+  var stayWithinWrapper: RenderObjectWrapper? = nil
+  if let stayWithin {
+    stayWithinWrapper = createRenderObjectWrapperOrNative(stayWithin)
+  }
+  return wkRenderObject(object.nextInPreOrder(stayWithin: stayWithinWrapper))
 }
 
 @_cdecl("RenderObjectScion_previousInPreOrder")
@@ -1289,11 +1292,14 @@ func RenderObjectScion_previousInPreOrder(_ objectRaw: UnsafeRawPointer)
 
 @_cdecl("RenderObjectScion_previousInPreOrderStayWithin")
 func RenderObjectScion_previousInPreOrderStayWithin(
-  _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer
+  _ objectRaw: UnsafeRawPointer, stayWithin: UnsafeMutableRawPointer?
 ) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  return wkRenderObject(
-    object.previousInPreOrder(stayWithin: createRenderObjectWrapperOrNative(stayWithin)))
+  var stayWithinWrapper: RenderObjectWrapper? = nil
+  if let stayWithin {
+    stayWithinWrapper = createRenderObjectWrapperOrNative(stayWithin)
+  }
+  return wkRenderObject(object.previousInPreOrder(stayWithin: stayWithinWrapper))
 }
 
 @_cdecl("RenderObjectScion_nextInPreOrderAfterChildren")
@@ -2342,14 +2348,18 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
 
 @_cdecl("RenderObjectScion_repaintUsingContainer")
 func RenderObjectScion_repaintUsingContainer(
-  _ objectRaw: UnsafeMutableRawPointer, _ repaintContainer: UnsafeMutableRawPointer,
+  _ objectRaw: UnsafeMutableRawPointer, _ repaintContainer: UnsafeMutableRawPointer?,
   _ r: LayoutRectRaw,
   _ shouldClipToLayer: Bool
 ) {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  object.repaintUsingContainer(
-    createRenderObjectWrapperOrNative(repaintContainer) as! RenderLayerModelObjectWrapper?,
-    convertLayoutRect(r), shouldClipToLayer)
+  var container: RenderLayerModelObjectWrapper? = nil
+  if let repaintContainer {
+    container =
+      createRenderObjectWrapperOrNative(repaintContainer)
+      as! RenderLayerModelObjectWrapper?
+  }
+  object.repaintUsingContainer(container, convertLayoutRect(r), shouldClipToLayer)
 }
 
 @_cdecl("RenderObjectScion_repaint")
