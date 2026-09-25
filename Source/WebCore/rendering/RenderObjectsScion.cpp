@@ -63,6 +63,12 @@ extern "C" int32_t RenderObjectScion_nextOffset(const void*, int32_t);
 
 extern "C" void* RenderObjectScion_firstChildSlow(const void*);
 
+extern "C" void* RenderObjectScion_childAt(const void*, uint32_t);
+
+extern "C" void* RenderObjectScion_firstLeafChild(const void*);
+
+extern "C" void* RenderObjectScion_lastLeafChild(const void*);
+
 extern "C" void* RenderObjectScion_lastChildSlow(const void*);
 
 extern "C" void RenderObjectScion_setPreviousSibling(void*, void*);
@@ -1724,6 +1730,21 @@ RenderBlock* RenderObjectScion::containingBlock() const { return static_cast<Ren
 FloatPoint RenderObjectScion::localToAbsolute(const FloatPoint& localPoint, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
     return convertFloatPoint(RenderObjectScion_localToAbsolute(m_handle, convertFloatPoint(localPoint), mode.toRaw(), wasFixed));
+}
+
+RenderObject* RenderObjectScion::childAt(unsigned index) const
+{
+    return static_cast<RenderObject*>(RenderObjectScion_childAt(m_handle, index));
+}
+
+RenderObject* RenderObjectScion::firstLeafChild() const
+{
+    return static_cast<RenderObject*>(RenderObjectScion_firstLeafChild(m_handle));
+}
+
+RenderObject* RenderObjectScion::lastLeafChild() const
+{
+    return static_cast<RenderObject*>(RenderObjectScion_lastLeafChild(m_handle));
 }
 
 FloatQuad RenderObjectScion::localToAbsoluteQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const

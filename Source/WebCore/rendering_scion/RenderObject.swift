@@ -662,6 +662,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return child
   }
 
+  func firstLeafChild() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    var r = firstChildSlow()
+    while r != nil {
+      if let n = r!.firstChildSlow() {
+        r = n
+      } else {
+        break
+      }
+    }
+    return r
+  }
+
   func lastLeafChild() -> RenderObjectWrapper? {
     assert(isNativeImpl())
     var r = lastChildSlow()

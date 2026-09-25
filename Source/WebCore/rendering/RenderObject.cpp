@@ -932,7 +932,7 @@ RenderObject* RenderObject::previousInPreOrder(const RenderObject* stayWithin) c
 
 RenderObject* RenderObject::childAt(unsigned index) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->childAt(index); }
     RenderObject* child = firstChildSlow();
     for (unsigned i = 0; child && i < index; i++)
         child = child->nextSibling();
@@ -941,7 +941,7 @@ RenderObject* RenderObject::childAt(unsigned index) const
 
 RenderObject* RenderObject::firstLeafChild() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->firstLeafChild(); }
     RenderObject* r = firstChildSlow();
     while (r) {
         RenderObject* n = nullptr;
@@ -955,7 +955,7 @@ RenderObject* RenderObject::firstLeafChild() const
 
 RenderObject* RenderObject::lastLeafChild() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->lastLeafChild(); }
     RenderObject* r = lastChildSlow();
     while (r) {
         RenderObject* n = nullptr;

@@ -2282,6 +2282,26 @@ func RenderObjectScion_localToAbsolute(
   return convertFloatPoint(object.localToAbsolute(localPoint, mode, &wasFixedCopy))
 }
 
+@_cdecl("RenderObjectScion_childAt")
+func RenderObjectScion_childAt(_ objectRaw: UnsafeRawPointer, _ index: UInt32)
+  -> UnsafeMutableRawPointer?
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.childAt(index))
+}
+
+@_cdecl("RenderObjectScion_firstLeafChild")
+func RenderObjectScion_firstLeafChild(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.firstLeafChild())
+}
+
+@_cdecl("RenderObjectScion_lastLeafChild")
+func RenderObjectScion_lastLeafChild(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return wkRenderObject(object.lastLeafChild())
+}
+
 @_cdecl("RenderObjectScion_localToAbsoluteQuad")
 func RenderObjectScion_localToAbsoluteQuad(
   _ objectRaw: UnsafeRawPointer, _ quadRaw: FloatQuadRaw, _ modeRaw: UInt8,

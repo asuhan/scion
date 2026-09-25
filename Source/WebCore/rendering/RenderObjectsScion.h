@@ -438,6 +438,12 @@ public:
 
     LayoutRect computeRectForRepaint(const LayoutRect&, const RenderLayerModelObject* repaintContainer) const;
 
+    RenderObject* childAt(unsigned index) const;
+
+    RenderObject* firstLeafChild() const;
+
+    RenderObject* lastLeafChild() const;
+
     bool isDescendantOf(const RenderObject*) const;
 
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
