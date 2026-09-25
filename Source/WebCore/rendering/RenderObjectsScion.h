@@ -432,6 +432,12 @@ public:
 
     RenderObject* nextInFlowSibling() const;
 
+    std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
+
+    RenderObject::RepaintRects computeRects(const RenderObject::RepaintRects&, const RenderLayerModelObject* repaintContainer, RenderObject::VisibleRectContext) const;
+
+    LayoutRect computeRectForRepaint(const LayoutRect&, const RenderLayerModelObject* repaintContainer) const;
+
     bool isDescendantOf(const RenderObject*) const;
 
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;

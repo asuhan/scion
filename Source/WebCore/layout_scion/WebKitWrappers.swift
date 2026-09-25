@@ -3967,6 +3967,46 @@ func RenderBoxScion_localRectsForRepaint(_ boxRaw: UnsafeRawPointer, _ repaintOu
   return convertRepaintRects(box.localRectsForRepaint(repaintOutlineBounds ? .Yes : .No))
 }
 
+@_cdecl("RenderObjectScion_computeRects")
+func RenderObjectScion_computeRects(
+  _ objectRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
+  _ contextRaw: VisibleRectContextRaw
+) -> RepaintRectsRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  var container: RenderLayerModelObjectWrapper? = nil
+  if let containerRaw {
+    container = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw)
+      .takeUnretainedValue()
+  }
+  return convertRepaintRects(
+    object.computeRects(
+      convertRepaintRects(rectsRaw), container, convertVisibleRectContext(contextRaw)))
+}
+
+@_cdecl("RenderObjectScion_computeRectForRepaint")
+func RenderObjectScion_computeRectForRepaint(
+  _ objectRaw: UnsafeRawPointer, _ rectRaw: LayoutRectRaw, _ containerRaw: UnsafeRawPointer?
+) -> LayoutRectRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  var container: RenderLayerModelObjectWrapper? = nil
+  if let containerRaw {
+    container = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw)
+      .takeUnretainedValue()
+  }
+  return convertLayoutRect(
+    object.computeRectForRepaint(
+      rect: convertLayoutRect(rectRaw), repaintContainer: container))
+}
+
+@_cdecl("RenderObjectScion_computeVisibleRectsInContainer")
+func RenderObjectScion_computeVisibleRectsInContainer(
+  _ objectRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
+  _ contextRaw: VisibleRectContextRaw
+) -> OptionalRepaintRectsRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return computeVisibleRectsInContainerImpl(object, rectsRaw, containerRaw, contextRaw)
+}
+
 @_cdecl("RenderBoxScion_computeVisibleRectsInContainer")
 func RenderBoxScion_computeVisibleRectsInContainer(
   _ boxRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,

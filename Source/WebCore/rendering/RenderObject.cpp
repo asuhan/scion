@@ -1769,9 +1769,15 @@ LayoutRect RenderObject::clippedOverflowRect(const RenderLayerModelObject* repai
     return computeRects(repaintRects, repaintContainer, context).clippedOverflowRect;
 }
 
+LayoutRect RenderObject::computeRectForRepaint(const LayoutRect& rect, const RenderLayerModelObject* repaintContainer) const
+{
+    if (m_scion) { return m_scion->computeRectForRepaint(rect, repaintContainer); }
+    return computeRects({ rect }, repaintContainer, visibleRectContextForRepaint()).clippedOverflowRect;
+}
+
 auto RenderObject::computeRects(const RepaintRects& rects, const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const -> RepaintRects
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->computeRects(rects, repaintContainer, context); }
     auto result = computeVisibleRectsInContainer(rects, repaintContainer, context);
     RELEASE_ASSERT(result);
     return *result;
@@ -1787,7 +1793,7 @@ FloatRect RenderObject::computeFloatRectForRepaint(const FloatRect& rect, const 
 
 auto RenderObject::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->computeVisibleRectsInContainer(rects, container, context); }
     if (container == this)
         return rects;
 

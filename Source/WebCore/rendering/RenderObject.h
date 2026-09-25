@@ -1358,11 +1358,7 @@ public:
     // of repaintContainer suitable for the given VisibleRectContext.
     RepaintRects computeRects(const RepaintRects&, const RenderLayerModelObject* repaintContainer, VisibleRectContext) const;
 
-    LayoutRect computeRectForRepaint(const LayoutRect& rect, const RenderLayerModelObject* repaintContainer) const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return computeRects({ rect }, repaintContainer, visibleRectContextForRepaint()).clippedOverflowRect;
-    }
+    LayoutRect computeRectForRepaint(const LayoutRect& rect, const RenderLayerModelObject* repaintContainer) const;
     FloatRect computeFloatRectForRepaint(const FloatRect&, const RenderLayerModelObject* repaintContainer) const;
 
     virtual RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds) const;

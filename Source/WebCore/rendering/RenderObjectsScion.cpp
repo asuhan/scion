@@ -886,6 +886,12 @@ struct VisibleRectContextRaw {
 
 extern "C" OptionalRepaintRectsRaw RenderBoxScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
 
+extern "C" OptionalRepaintRectsRaw RenderObjectScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
+
+extern "C" RepaintRectsRaw RenderObjectScion_computeRects(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
+
+extern "C" LayoutRectRaw RenderObjectScion_computeRectForRepaint(const void*, LayoutRectRaw, const void*);
+
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRect(const void*, void*, VisibleRectContextRaw);
 
 extern "C" void* RenderObjectScion_previousInFlowSibling(const void*);
@@ -2823,6 +2829,28 @@ LayoutRect RenderObjectScion::clippedOverflowRect(const RenderLayerModelObject* 
     return convertLayoutRectRaw(
         RenderObjectScion_clippedOverflowRect(
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), convertVisibleRectContext(context)));
+}
+
+WebCore::RenderObject::RepaintRects RenderObjectScion::computeRects(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* repaintContainer, WebCore::RenderObject::VisibleRectContext context) const
+{
+    return convertRepaintRectsRaw(RenderObjectScion_computeRects(m_handle, convertRepaintRects(rects), repaintContainer ? repaintContainer->scion() : nullptr, convertVisibleRectContext(context)));
+}
+
+LayoutRect RenderObjectScion::computeRectForRepaint(const LayoutRect& rect, const RenderLayerModelObject* repaintContainer) const
+{
+    return convertLayoutRectRaw(RenderObjectScion_computeRectForRepaint(m_handle, convertLayoutRect(rect), repaintContainer ? repaintContainer->scion() : nullptr));
+}
+
+std::optional<WebCore::RenderObject::RepaintRects> RenderObjectScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
+{
+    if (container && !container->scion()) {
+        ASSERT_NOT_REACHED();
+    }
+    const auto raw = RenderObjectScion_computeVisibleRectsInContainer(m_handle, convertRepaintRects(rects), container ? container->scion() : nullptr, convertVisibleRectContext(context));
+    if (!raw.is_valid) {
+        return {};
+    }
+    return convertRepaintRectsRaw(raw.rects);
 }
 
 std::optional<WebCore::RenderObject::RepaintRects> RenderBoxScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
