@@ -169,7 +169,7 @@ public:
 
     bool canBeSelectionLeaf() const override
     {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
+        // NB(asuhan): this returns true for both native and interop paths, we can skip the check
         return true;
     }
 

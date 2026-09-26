@@ -1213,6 +1213,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFragmentedFlowState(state)
   }
 
+  func canUpdateSelectionOnRootLineBoxes() -> Bool {
+    assert(isNativeImpl())
+    if needsLayout() {
+      return false
+    }
+
+    guard let containingBlock = containingBlock() else { return true }
+    return !containingBlock.needsLayout()
+  }
+
   func setSelectionState(_ state: HighlightState) {
     assert(isNativeImpl())
     m_stateBitfields.setSelectionState(state)
@@ -2140,7 +2150,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       localQuad: localQuad, container: container, mode: mode, wasFixed: &wasFixed)
   }
 
-  private func localToContainerQuad(
+  func localToContainerQuad(
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?, mode: MapCoordinatesMode,
     wasFixed: inout Bool?
   ) -> FloatQuad {

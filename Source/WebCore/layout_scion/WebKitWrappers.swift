@@ -2282,6 +2282,50 @@ func RenderObjectScion_localToAbsolute(
   return convertFloatPoint(object.localToAbsolute(localPoint, mode, &wasFixedCopy))
 }
 
+@_cdecl("RenderObjectScion_canUpdateSelectionOnRootLineBoxes")
+func RenderObjectScion_canUpdateSelectionOnRootLineBoxes(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.canUpdateSelectionOnRootLineBoxes()
+}
+
+@_cdecl("RenderObjectScion_localToContainerQuad")
+func RenderObjectScion_localToContainerQuad(
+  _ objectRaw: UnsafeRawPointer, _ quadRaw: FloatQuadRaw,
+  _ containerRaw: UnsafeMutableRawPointer?, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) -> FloatQuadRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  var container: RenderLayerModelObjectWrapper? = nil
+  if let containerRaw {
+    container = createRenderObjectWrapperOrNative(containerRaw) as? RenderLayerModelObjectWrapper
+  }
+  var wasFixedCopy = wasFixed?.pointee
+  let quad = object.localToContainerQuad(
+    localQuad: convertFloatQuad(quadRaw), container: container,
+    mode: MapCoordinatesMode(rawValue: modeRaw), wasFixed: &wasFixedCopy)
+  wasFixed?.pointee = wasFixedCopy ?? false
+  return convertFloatQuad(quad)
+}
+
+@_cdecl("RenderObjectScion_localToContainerPoint")
+func RenderObjectScion_localToContainerPoint(
+  _ objectRaw: UnsafeRawPointer, _ pointRaw: FloatPointRaw,
+  _ containerRaw: UnsafeMutableRawPointer?, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) -> FloatPointRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  var container: RenderLayerModelObjectWrapper? = nil
+  if let containerRaw {
+    container = createRenderObjectWrapperOrNative(containerRaw) as? RenderLayerModelObjectWrapper
+  }
+  var wasFixedCopy = wasFixed?.pointee
+  let point = object.localToContainerPoint(
+    localPoint: FloatPoint(x: pointRaw.x, y: pointRaw.y), container: container,
+    wasFixed: &wasFixedCopy, mode: MapCoordinatesMode(rawValue: modeRaw))
+  wasFixed?.pointee = wasFixedCopy ?? false
+  return FloatPointRaw(x: point.x, y: point.y)
+}
+
 @_cdecl("RenderObjectScion_childAt")
 func RenderObjectScion_childAt(_ objectRaw: UnsafeRawPointer, _ index: UInt32)
   -> UnsafeMutableRawPointer?

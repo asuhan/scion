@@ -440,6 +440,12 @@ public:
 
     void mapLocalToContainer(const RenderLayerModelObject* repaintContainer, TransformState&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
 
+    bool canUpdateSelectionOnRootLineBoxes() const;
+
+    FloatQuad localToContainerQuad(const FloatQuad&, const RenderLayerModelObject* container, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
+
+    FloatPoint localToContainerPoint(const FloatPoint&, const RenderLayerModelObject* container, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
+
     RenderObject* childAt(unsigned index) const;
 
     RenderObject* firstLeafChild() const;

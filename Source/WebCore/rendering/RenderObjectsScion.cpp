@@ -63,6 +63,8 @@ extern "C" int32_t RenderObjectScion_nextOffset(const void*, int32_t);
 
 extern "C" void* RenderObjectScion_firstChildSlow(const void*);
 
+extern "C" bool RenderObjectScion_canUpdateSelectionOnRootLineBoxes(const void*);
+
 extern "C" void* RenderObjectScion_childAt(const void*, uint32_t);
 
 extern "C" void* RenderObjectScion_firstLeafChild(const void*);
@@ -416,6 +418,10 @@ extern "C" void* RenderObjectScion_containingBlock(const void*);
 extern "C" FloatPointRaw RenderObjectScion_localToAbsolute(const void*, FloatPointRaw, uint8_t, bool*);
 
 extern "C" FloatQuadRaw RenderObjectScion_localToAbsoluteQuad(const void*, FloatQuadRaw, uint8_t, bool*);
+
+extern "C" FloatQuadRaw RenderObjectScion_localToContainerQuad(const void*, FloatQuadRaw, void*, uint8_t, bool*);
+
+extern "C" FloatPointRaw RenderObjectScion_localToContainerPoint(const void*, FloatPointRaw, void*, uint8_t, bool*);
 
 extern "C" const void* RenderObjectScion_style(const void*);
 
@@ -1732,6 +1738,22 @@ RenderBlock* RenderObjectScion::containingBlock() const { return static_cast<Ren
 FloatPoint RenderObjectScion::localToAbsolute(const FloatPoint& localPoint, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
     return convertFloatPoint(RenderObjectScion_localToAbsolute(m_handle, convertFloatPoint(localPoint), mode.toRaw(), wasFixed));
+}
+
+bool RenderObjectScion::canUpdateSelectionOnRootLineBoxes() const
+{
+    return RenderObjectScion_canUpdateSelectionOnRootLineBoxes(m_handle);
+}
+
+FloatQuad RenderObjectScion::localToContainerQuad(const FloatQuad& quad, const RenderLayerModelObject* container, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    return convertFloatQuad(RenderObjectScion_localToContainerQuad(m_handle, convertFloatQuad(quad), const_cast<RenderLayerModelObject*>(container), mode.toRaw(), wasFixed));
+}
+
+FloatPoint RenderObjectScion::localToContainerPoint(const FloatPoint& point, const RenderLayerModelObject* container, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    const auto raw = RenderObjectScion_localToContainerPoint(m_handle, FloatPointRaw { point.x(), point.y() }, const_cast<RenderLayerModelObject*>(container), mode.toRaw(), wasFixed);
+    return { raw.x, raw.y };
 }
 
 RenderObject* RenderObjectScion::childAt(unsigned index) const
