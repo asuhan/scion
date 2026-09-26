@@ -63,6 +63,16 @@ extern "C" WEBCORE_EXPORT void* RenderHighlight_start(const void* p)
     return static_cast<const WebCore::RenderHighlight*>(p)->start();
 }
 
+extern "C" WEBCORE_EXPORT unsigned RenderHighlight_startOffset(const void* p)
+{
+    return static_cast<const WebCore::RenderHighlight*>(p)->startOffset();
+}
+
+extern "C" WEBCORE_EXPORT unsigned RenderHighlight_endOffset(const void* p)
+{
+    return static_cast<const WebCore::RenderHighlight*>(p)->endOffset();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderHighlight_end(const void* p)
 {
     return static_cast<const WebCore::RenderHighlight*>(p)->end();

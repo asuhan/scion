@@ -143,12 +143,16 @@ class RenderHighlight {
   }
 
   func startOffset() -> UInt32 {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderHighlight_startOffset(p!)
+    }
     return renderRange.startOffset
   }
 
   func endOffset() -> UInt32 {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderHighlight_endOffset(p!)
+    }
     return renderRange.endOffset
   }
 
