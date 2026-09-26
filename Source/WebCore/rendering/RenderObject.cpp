@@ -2174,7 +2174,10 @@ FloatQuad RenderObject::absoluteToLocalQuad(const FloatQuad& quad, OptionSet<Map
 
 void RenderObject::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->mapLocalToContainer(ancestorContainer, transformState, mode, wasFixed);
+        return;
+    }
     if (ancestorContainer == this)
         return;
 

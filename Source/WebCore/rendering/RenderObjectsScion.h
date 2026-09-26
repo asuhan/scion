@@ -438,6 +438,8 @@ public:
 
     LayoutRect computeRectForRepaint(const LayoutRect&, const RenderLayerModelObject* repaintContainer) const;
 
+    void mapLocalToContainer(const RenderLayerModelObject* repaintContainer, TransformState&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
+
     RenderObject* childAt(unsigned index) const;
 
     RenderObject* firstLeafChild() const;

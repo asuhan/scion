@@ -1019,6 +1019,8 @@ extern "C" bool RenderBoxScion_shouldTrimChildMargin(const void*, uint8_t, void*
 
 extern "C" void RenderBoxScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
 
+extern "C" void RenderObjectScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
+
 extern "C" void RenderBoxScion_mapAbsoluteToLocalPoint(const void*, uint8_t, void*);
 
 extern "C" const void* RenderBoxScion_pushMappingToContainer(const void*, const void*, void*);
@@ -3157,6 +3159,11 @@ void RenderBoxScion::willBeDestroyed()
 bool RenderBoxScion::shouldTrimChildMargin(MarginTrimType marginTrimType, const RenderBox& child) const
 {
     return RenderBoxScion_shouldTrimChildMargin(m_handle, static_cast<uint8_t>(marginTrimType), const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderObjectScion::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    RenderObjectScion_mapLocalToContainer(m_handle, const_cast<RenderLayerModelObject*>(ancestorContainer), &transformState, mode.toRaw(), wasFixed);
 }
 
 void RenderBoxScion::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const

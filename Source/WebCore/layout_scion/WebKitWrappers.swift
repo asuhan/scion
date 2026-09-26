@@ -4431,6 +4431,16 @@ func RenderBoxScion_shouldTrimChildMargin(
   return box.shouldTrimChildMarginForBox(type: type, child: child)
 }
 
+@_cdecl("RenderObjectScion_mapLocalToContainer")
+func RenderObjectScion_mapLocalToContainer(
+  _ objectRaw: UnsafeRawPointer, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
+  _ transformStateRaw: UnsafeMutableRawPointer, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  mapLocalToContainerImpl(object, ancestorContainerRaw, transformStateRaw, modeRaw, wasFixed)
+}
+
 @_cdecl("RenderBoxScion_mapLocalToContainer")
 func RenderBoxScion_mapLocalToContainer(
   _ boxRaw: UnsafeRawPointer, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
