@@ -1638,7 +1638,10 @@ IntPoint RenderText::firstRunLocation() const
 
 void RenderText::setSelectionState(HighlightState state)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setSelectionState(state);
+        return;
+    }
     RenderObject::setSelectionState(state);
 
     // The containing block can be null in case of an orphaned tree.

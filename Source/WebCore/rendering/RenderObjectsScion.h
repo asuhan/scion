@@ -452,6 +452,7 @@ public:
 
     RenderObject* lastLeafChild() const;
 
+    void setSelectionStateIfNeeded(RenderObject::HighlightState);
     bool isDescendantOf(const RenderObject*) const;
 
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
@@ -461,6 +462,8 @@ public:
     bool isInFlow() const;
 
     RenderObject::HighlightState selectionState() const;
+
+    void setSelectionState(RenderObject::HighlightState);
 
     bool renderTreeBeingDestroyed() const;
 
@@ -662,6 +665,8 @@ public:
     {
     }
 
+    void setSelectionState(RenderObject::HighlightState);
+
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     Vector<FloatQuad> absoluteQuadsForRange(unsigned startOffset, unsigned endOffset, OptionSet<RenderObject::BoundingRectBehavior>, bool* wasFixed) const;
@@ -779,6 +784,9 @@ public:
     LayoutUnit borderAndPaddingLogicalWidth() const;
 
     LayoutUnit horizontalBorderAndPaddingExtent() const;
+
+    // Dispatches virtually on the Swift wrapper, so one bridge serves every override.
+    void setSelectionState(RenderObject::HighlightState);
 
     LayoutUnit verticalMarginExtent() const;
 

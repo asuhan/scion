@@ -990,11 +990,7 @@ public:
     bool isRooted() const;
 
     Node* node() const;
-    RefPtr<Node> protectedNode() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return node();
-    }
+    RefPtr<Node> protectedNode() const;
 
     Node* nonPseudoNode() const;
 
@@ -1388,7 +1384,7 @@ public:
     // descendants (as described above in the HighlightState enum declaration).
     HighlightState selectionState() const;
     virtual void setSelectionState(HighlightState);
-    inline void setSelectionStateIfNeeded(HighlightState);
+    void setSelectionStateIfNeeded(HighlightState);
     bool canUpdateSelectionOnRootLineBoxes();
 
     // A single rectangle that encompasses all of the selected objects within this object.  Used to determine the tightest
@@ -1713,15 +1709,6 @@ inline bool RenderObject::isBeforeOrAfterContent() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return isBeforeContent() || isAfterContent();
-}
-
-inline void RenderObject::setSelectionStateIfNeeded(HighlightState state)
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (selectionState() == state)
-        return;
-
-    setSelectionState(state);
 }
 
 inline void RenderObject::setHasVisibleBoxDecorations(bool b)

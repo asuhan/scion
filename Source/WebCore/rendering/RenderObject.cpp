@@ -2830,9 +2830,30 @@ OptionSet<StyleColorOptions> RenderObject::styleColorOptions() const
     return document().styleColorOptions(&style());
 }
 
+RefPtr<Node> RenderObject::protectedNode() const
+{
+    if (m_scion) { return m_scion->node(); }
+    return node();
+}
+
+void RenderObject::setSelectionStateIfNeeded(HighlightState state)
+{
+    if (m_scion) {
+        m_scion->setSelectionStateIfNeeded(state);
+        return;
+    }
+    if (selectionState() == state)
+        return;
+
+    setSelectionState(state);
+}
+
 void RenderObject::setSelectionState(HighlightState state)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setSelectionState(state);
+        return;
+    }
     m_stateBitfields.setSelectionState(state);
 }
 

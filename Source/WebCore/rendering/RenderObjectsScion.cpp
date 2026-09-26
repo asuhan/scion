@@ -458,6 +458,10 @@ extern "C" bool RenderObjectScion_isInFlow(const void*);
 
 extern "C" uint8_t RenderObjectScion_selectionState(const void*);
 
+extern "C" void RenderObjectScion_setSelectionState(void*, uint8_t);
+
+extern "C" void RenderObjectScion_setSelectionStateIfNeeded(void*, uint8_t);
+
 extern "C" bool RenderObjectScion_renderTreeBeingDestroyed(const void*);
 
 extern "C" void RenderObjectScion_destroy(void*);
@@ -1890,6 +1894,26 @@ bool RenderObjectScion::isInFlow() const { return RenderObjectScion_isInFlow(m_h
 RenderObject::HighlightState RenderObjectScion::selectionState() const
 {
     return static_cast<RenderObject::HighlightState>(RenderObjectScion_selectionState(m_handle));
+}
+
+void RenderObjectScion::setSelectionState(RenderObject::HighlightState state)
+{
+    RenderObjectScion_setSelectionState(m_handle, static_cast<uint8_t>(state));
+}
+
+void RenderObjectScion::setSelectionStateIfNeeded(RenderObject::HighlightState state)
+{
+    RenderObjectScion_setSelectionStateIfNeeded(m_handle, static_cast<uint8_t>(state));
+}
+
+void RenderBoxModelObjectScion::setSelectionState(RenderObject::HighlightState state)
+{
+    RenderObjectScion_setSelectionState(m_handle, static_cast<uint8_t>(state));
+}
+
+void RenderTextScion::setSelectionState(RenderObject::HighlightState state)
+{
+    RenderObjectScion_setSelectionState(m_handle, static_cast<uint8_t>(state));
 }
 
 bool RenderObjectScion::renderTreeBeingDestroyed() const { return RenderObjectScion_renderTreeBeingDestroyed(m_handle); }
