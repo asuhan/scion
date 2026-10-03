@@ -1099,6 +1099,7 @@ bool inlineWrapperForDisplayContentsMap_contains(const void*);
 int32_t RenderInline_marginStart(const void*, const void*);
 int32_t RenderInline_marginEnd(const void*, const void*);
 void* RenderInline_scion(const void*);
+void* RenderLineBreak_scion(const void*);
 void* RenderHighlight_start(const void*);
 void* RenderHighlight_end(const void*);
 unsigned RenderHighlight_startOffset(const void*);

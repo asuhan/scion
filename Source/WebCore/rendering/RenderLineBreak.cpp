@@ -43,6 +43,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderLineBreak_scion(const void* p)
+{
+    return static_cast<const WebCore::RenderLineBreak*>(p)->scion();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderLineBreak);

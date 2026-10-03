@@ -2403,6 +2403,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderInlineWrapper>.fromOpaque(renderInlineRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderLineBreak(raw),
+    let renderLineBreakRaw = wk_interop.RenderLineBreak_scion(raw)
+  {
+    return Unmanaged<RenderLineBreakWrapper>.fromOpaque(renderLineBreakRaw).takeUnretainedValue()
+  }
   if wk_interop.RenderObject_isRenderText(raw), let renderTextRaw = wk_interop.RenderText_scion(raw)
   {
     return Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
