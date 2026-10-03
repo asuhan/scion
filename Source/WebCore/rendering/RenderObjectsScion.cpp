@@ -806,6 +806,8 @@ extern "C" bool RenderLineBreakScion_isWBR(const void*);
 
 extern "C" void RenderLineBreakScion_setWk(void*, void*);
 
+extern "C" void RenderIFrameScion_setWk(void*, void*);
+
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" bool RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(const void*, LayoutRectRaw);
@@ -2659,6 +2661,11 @@ bool RenderLineBreakScion::isWBR() const
 void RenderLineBreakScion::setWk(void* wk)
 {
     RenderLineBreakScion_setWk(wk, m_handle);
+}
+
+void RenderIFrameScion::setWk(void* wk)
+{
+    RenderIFrameScion_setWk(wk, m_handle);
 }
 
 bool RenderBoxScion::requiresLayerWithScrollableArea() const

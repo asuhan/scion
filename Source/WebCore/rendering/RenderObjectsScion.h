@@ -46,6 +46,8 @@ extern "C" void* RenderInlineScion_create(uint8_t, void*, const void*);
 
 extern "C" void* RenderLineBreakScion_create(bool, void*, const void*);
 
+extern "C" void* RenderIFrameScion_create(void*, const void*);
+
 namespace WebCore {
 
 class HitTestLocation;
@@ -1365,6 +1367,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setWk(void*);
 
 private:
     void* m_handle;

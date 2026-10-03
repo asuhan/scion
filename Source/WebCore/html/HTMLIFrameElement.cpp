@@ -38,6 +38,8 @@
 #include "NodeName.h"
 #include "Quirks.h"
 #include "RenderIFrame.h"
+#include "RenderObjectsScion.h"
+#include "RenderStyleInlines.h"
 #include "ScriptController.h"
 #include "ScriptableDocumentParser.h"
 #include "Settings.h"
@@ -159,6 +161,12 @@ bool HTMLIFrameElement::rendererIsNeeded(const RenderStyle& style)
 
 RenderPtr<RenderElement> HTMLIFrameElement::createElementRenderer(RenderStyle&& style, const RenderTreePosition&)
 {
+    if (Document::s_useScionRendering >= 6) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderIFrame>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderIFrameScion_create(this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderIFrame>(*this, WTFMove(style));
 }
 

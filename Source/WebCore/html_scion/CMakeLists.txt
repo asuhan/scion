@@ -8,9 +8,11 @@ target_sources(layout_scion PRIVATE
     HTMLDivElement.swift
     HTMLElement.swift
     HTMLFormControlElement.swift
+    HTMLFrameElementBase.swift
     HTMLFrameOwnerElement.swift
     HTMLFrameSetElement.swift
     HTMLHtmlElement.swift
+    HTMLIFrameElement.swift
     HTMLImageElement.swift
     HTMLInputElement.swift
     HTMLLegendElement.swift

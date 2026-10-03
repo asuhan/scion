@@ -24,6 +24,13 @@
  */
 
 final class RenderIFrameWrapper: RenderFrameBaseWrapper {
+  init(_ element: HTMLIFrameElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(.IFrame, element, style)
+    assert(isRenderIFrame())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override func isInlineBlockOrInlineTable() -> Bool {
     assert(isNativeImpl())
     return isInline()
@@ -48,4 +55,11 @@ final class RenderIFrameWrapper: RenderFrameBaseWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }

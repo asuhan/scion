@@ -2407,6 +2407,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderIFrame(raw),
+    let iframeRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()
+  }
   return createRenderObjectWrapper(raw)
 }
 
@@ -3503,6 +3508,17 @@ func RenderLineBreakScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderIFrameScion_create")
+func RenderIFrameScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let iframe = RenderIFrameWrapper(HTMLIFrameElementWrapper(p: elementRaw), style)
+  let unmanaged = Unmanaged.passRetained(iframe)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderInlineScion_linesBoundingBox")
 func RenderInlineScion_linesBoundingBox(_ inlineRaw: UnsafeRawPointer) -> IntRectRaw {
   let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
@@ -3586,6 +3602,12 @@ func RenderLineBreakScion_setWk(
 ) {
   let lineBreak = Unmanaged<RenderLineBreakWrapper>.fromOpaque(lineBreakRaw).takeUnretainedValue()
   lineBreak.setWk(wk)
+}
+
+@_cdecl("RenderIFrameScion_setWk")
+func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
+  let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()
+  iframe.setWk(wk)
 }
 
 @_cdecl("RenderBoxModelObjectScion_offsetForInFlowPosition")

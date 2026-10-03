@@ -22,6 +22,16 @@
 
 // TODO(asuhan): inherit from OverlapTestRequestClient as well
 class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ element: HTMLFrameOwnerElementWrapper,
+    _ style: RenderStyleWrapper
+  ) {
+    super.init(type, element, style, .IsWidget)
+    setInline(false)
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func frameOwnerElement() -> HTMLFrameOwnerElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

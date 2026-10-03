@@ -64,6 +64,7 @@ void RenderIFrame::setScionHandle(void* handle)
     RenderWidget::setScionHandle(handle);
     RenderFrameBase::setScionHandle(handle);
     m_scion = std::make_unique<RenderIFrameScion>(handle);
+    m_scion->setWk(this);
 }
 
 HTMLIFrameElement& RenderIFrame::iframeElement() const

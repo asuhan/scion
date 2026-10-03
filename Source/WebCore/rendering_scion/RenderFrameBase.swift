@@ -24,4 +24,13 @@
  */
 
 // Base class for RenderFrame and RenderIFrame
-class RenderFrameBaseWrapper: RenderWidgetWrapper {}
+class RenderFrameBaseWrapper: RenderWidgetWrapper {
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ element: HTMLFrameElementBaseWrapper,
+    _ style: RenderStyleWrapper
+  ) {
+    super.init(type, element, style)
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+}
