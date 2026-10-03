@@ -33,8 +33,8 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   func frameOwnerElement() -> HTMLFrameOwnerElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nodeForNonAnonymous() as! HTMLFrameOwnerElementWrapper
   }
 
   func widget() -> Widget? {
