@@ -32,6 +32,7 @@
 #include "LocalFrameView.h"
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderView.h"
 #include "Settings.h"
@@ -52,28 +53,46 @@ RenderIFrame::RenderIFrame(HTMLIFrameElement& element, RenderStyle&& style)
 
 RenderIFrame::~RenderIFrame() = default;
 
+void RenderIFrame::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    RenderReplaced::setScionHandle(handle);
+    RenderWidget::setScionHandle(handle);
+    RenderFrameBase::setScionHandle(handle);
+    m_scion = std::make_unique<RenderIFrameScion>(handle);
+}
+
 HTMLIFrameElement& RenderIFrame::iframeElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLIFrameElement>(RenderFrameBase::frameOwnerElement());
 }
 
 bool RenderIFrame::shouldComputeSizeAsReplaced() const
 {
+    // NB(asuhan): this returns a constant, we can skip the Scion check
     return true;
 }
 
 bool RenderIFrame::isInlineBlockOrInlineTable() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isInline();
 }
 
 bool RenderIFrame::requiresLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderFrameBase::requiresLayer() || style().resize() != Resize::None;
 }
 
 bool RenderIFrame::isFullScreenIFrame() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Some authors implement fullscreen popups as out-of-flow iframes with size set to full viewport (using vw/vh units).
     // The size used may not perfectly match the viewport size so the following heuristic uses a relaxed constraint.
     return style().hasOutOfFlowPosition() && style().usesViewportUnits();
@@ -81,6 +100,7 @@ bool RenderIFrame::isFullScreenIFrame() const
 
 void RenderIFrame::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
 

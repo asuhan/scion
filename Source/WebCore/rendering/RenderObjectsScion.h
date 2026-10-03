@@ -1359,4 +1359,48 @@ private:
     mutable IntRect m_printRect;
 };
 
+class RenderIFrameScion final {
+public:
+    RenderIFrameScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderFrameBaseScion final {
+public:
+    RenderFrameBaseScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderWidgetScion final {
+public:
+    RenderWidgetScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderReplacedScion final {
+public:
+    RenderReplacedScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 }

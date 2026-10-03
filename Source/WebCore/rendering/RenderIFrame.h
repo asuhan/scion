@@ -30,6 +30,7 @@
 namespace WebCore {
 
 class RenderView;
+class RenderIFrameScion;
 
 class RenderIFrame final : public RenderFrameBase {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderIFrame);
@@ -37,6 +38,8 @@ class RenderIFrame final : public RenderFrameBase {
 public:
     RenderIFrame(HTMLIFrameElement&, RenderStyle&&);
     virtual ~RenderIFrame();
+
+    void setScionHandle(void* handle);
 
     HTMLIFrameElement& iframeElement() const;
 
@@ -48,11 +51,17 @@ private:
 
     void layout() override;
 
-    ASCIILiteral renderName() const override { return "RenderIFrame"_s; }
+    ASCIILiteral renderName() const override
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return "RenderIFrame"_s;
+    }
 
     bool requiresLayer() const override;
 
     bool isFullScreenIFrame() const;
+
+    std::unique_ptr<RenderIFrameScion> m_scion;
 };
 
 } // namespace WebCore

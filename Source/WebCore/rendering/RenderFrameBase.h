@@ -32,6 +32,7 @@ namespace WebCore {
 
 class HTMLFrameElementBase;
 class RenderView;
+class RenderFrameBaseScion;
 
 // Base class for RenderFrame and RenderIFrame
 class RenderFrameBase : public RenderWidget {
@@ -41,11 +42,19 @@ protected:
     RenderFrameBase(Type, HTMLFrameElementBase&, RenderStyle&&);
     virtual ~RenderFrameBase();
 
+    void setScionHandle(void* handle);
+
 public:
-    LocalFrameView* childView() const { return downcast<LocalFrameView>(RenderWidget::widget()); }
+    LocalFrameView* childView() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<LocalFrameView>(RenderWidget::widget());
+    }
 
 private:
     void widget() const = delete;
+
+    std::unique_ptr<RenderFrameBaseScion> m_scion;
 };
 
 } // namespace WebCore

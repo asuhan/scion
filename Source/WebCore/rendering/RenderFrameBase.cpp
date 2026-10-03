@@ -31,6 +31,7 @@
 #include "LocalFrameView.h"
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderView.h"
 #include "ScriptDisallowedScope.h"
 #include <wtf/TZoneMallocInlines.h>
@@ -45,6 +46,11 @@ RenderFrameBase::RenderFrameBase(Type type, HTMLFrameElementBase& element, Rende
 }
 
 RenderFrameBase::~RenderFrameBase() = default;
+
+void RenderFrameBase::setScionHandle(void* handle)
+{
+    m_scion = std::make_unique<RenderFrameBaseScion>(handle);
+}
 
 inline bool shouldExpandFrame(LayoutUnit width, LayoutUnit height, bool hasFixedWidth, bool hasFixedHeight)
 {

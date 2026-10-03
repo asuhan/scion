@@ -48,6 +48,7 @@
 #include "RenderHighlight.h"
 #include "RenderImage.h"
 #include "RenderLayer.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderTheme.h"
 #include "RenderVideo.h"
@@ -92,8 +93,14 @@ RenderReplaced::RenderReplaced(Type type, Document& document, RenderStyle&& styl
 
 RenderReplaced::~RenderReplaced() = default;
 
+void RenderReplaced::setScionHandle(void* handle)
+{
+    m_scion = std::make_unique<RenderReplacedScion>(handle);
+}
+
 void RenderReplaced::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!renderTreeBeingDestroyed() && parent())
         parent()->dirtyLineFromChangedChild();
 
@@ -102,6 +109,7 @@ void RenderReplaced::willBeDestroyed()
 
 void RenderReplaced::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::styleDidChange(diff, oldStyle);
     auto previousUsedZoom = oldStyle ? oldStyle->usedZoom() : RenderStyle::initialZoom();
     if (previousUsedZoom != style().usedZoom())
@@ -110,6 +118,7 @@ void RenderReplaced::styleDidChange(StyleDifference diff, const RenderStyle* old
 
 void RenderReplaced::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
     
@@ -136,6 +145,7 @@ void RenderReplaced::layout()
 
 void RenderReplaced::intrinsicSizeChanged()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     int scaledWidth = static_cast<int>(cDefaultWidth * style().usedZoom());
     int scaledHeight = static_cast<int>(cDefaultHeight * style().usedZoom());
     m_intrinsicSize = IntSize(scaledWidth, scaledHeight);
@@ -144,6 +154,7 @@ void RenderReplaced::intrinsicSizeChanged()
 
 bool RenderReplaced::shouldDrawSelectionTint() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return selectionState() != HighlightState::None && !document().printing();
 }
 
@@ -163,6 +174,7 @@ inline static bool contentContainsReplacedElement(const Vector<WeakPtr<RenderedD
 
 Color RenderReplaced::calculateHighlightColor() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderHighlight renderHighlight;
 #if ENABLE(APP_HIGHLIGHTS)
     if (auto appHighlightRegistry = document().appHighlightRegistryIfExists()) {
@@ -222,6 +234,7 @@ Color RenderReplaced::calculateHighlightColor() const
 
 void RenderReplaced::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!shouldPaint(paintInfo, paintOffset))
         return;
 
@@ -333,6 +346,7 @@ void RenderReplaced::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 bool RenderReplaced::shouldPaint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if ((paintInfo.paintBehavior.contains(PaintBehavior::ExcludeSelection)) && isSelected())
         return false;
 
@@ -374,6 +388,7 @@ bool RenderReplaced::shouldPaint(PaintInfo& paintInfo, const LayoutPoint& paintO
 
 bool RenderReplaced::hasReplacedLogicalHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().logicalHeight().isAuto())
         return false;
 
@@ -391,6 +406,7 @@ bool RenderReplaced::hasReplacedLogicalHeight() const
 
 bool RenderReplaced::setNeedsLayoutIfNeededAfterIntrinsicSizeChange()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setPreferredLogicalWidthsDirty(true);
 
     // If the actual area occupied by the image has changed and it is not constrained by style then a layout is required.
@@ -428,6 +444,7 @@ static bool isVideoWithDefaultObjectSize(const RenderReplaced* maybeVideo)
 
 void RenderReplaced::computeAspectRatioInformationForRenderBox(RenderBox* contentRenderer, FloatSize& constrainedSize, FloatSize& intrinsicRatio) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     FloatSize intrinsicSize;
     if (shouldApplySizeOrInlineSizeContainment())
         RenderReplaced::computeIntrinsicRatioInformation(intrinsicSize, intrinsicRatio);
@@ -464,6 +481,7 @@ void RenderReplaced::computeAspectRatioInformationForRenderBox(RenderBox* conten
 
 void RenderReplaced::computeIntrinsicSizesConstrainedByTransferredMinMaxSizes(RenderBox* contentRenderer, FloatSize& intrinsicSize, FloatSize& intrinsicRatio) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     computeAspectRatioInformationForRenderBox(contentRenderer, intrinsicSize, intrinsicRatio);
 
     // Now constrain the intrinsic size along each axis according to minimum and maximum width/heights along the
@@ -489,6 +507,7 @@ void RenderReplaced::computeIntrinsicSizesConstrainedByTransferredMinMaxSizes(Re
 
 LayoutRect RenderReplaced::replacedContentRect(const LayoutSize& intrinsicSize) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect contentRect = contentBoxRect();
     if (intrinsicSize.isEmpty())
         return contentRect;
@@ -523,6 +542,7 @@ LayoutRect RenderReplaced::replacedContentRect(const LayoutSize& intrinsicSize) 
 
 double RenderReplaced::computeIntrinsicAspectRatio() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     FloatSize intrinsicRatio;
     FloatSize intrinsicSize;
     computeAspectRatioInformationForRenderBox(embeddedContentBox(), intrinsicSize, intrinsicRatio);
@@ -531,6 +551,7 @@ double RenderReplaced::computeIntrinsicAspectRatio() const
 
 void RenderReplaced::computeIntrinsicRatioInformation(FloatSize& intrinsicSize, FloatSize& intrinsicRatio) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If there's an embeddedContentBox() of a remote, referenced document available, this code-path should never be used.
     ASSERT(!embeddedContentBox() || shouldApplySizeOrInlineSizeContainment());
     intrinsicSize = FloatSize(intrinsicLogicalWidth(), intrinsicLogicalHeight());
@@ -553,6 +574,7 @@ void RenderReplaced::computeIntrinsicRatioInformation(FloatSize& intrinsicSize, 
 
 LayoutUnit RenderReplaced::computeConstrainedLogicalWidth(ShouldComputePreferred shouldComputePreferred) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldComputePreferred == ComputePreferred)
         return computeReplacedLogicalWidthRespectingMinMaxWidth(0_lu, ComputePreferred);
 
@@ -590,6 +612,7 @@ static inline bool hasIntrinsicSize(RenderBox*contentRenderer, bool hasIntrinsic
 
 LayoutUnit RenderReplaced::computeReplacedLogicalWidth(ShouldComputePreferred shouldComputePreferred) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().logicalWidth().isSpecified())
         return computeReplacedLogicalWidthRespectingMinMaxWidth(computeReplacedLogicalWidthUsing(RenderBox::SizeType::MainOrPreferredSize, style().logicalWidth()), shouldComputePreferred);
     if (style().logicalWidth().isIntrinsic())
@@ -662,6 +685,7 @@ static inline LayoutUnit resolveHeightForRatio(LayoutUnit borderAndPaddingLogica
 
 LayoutUnit RenderReplaced::computeReplacedLogicalHeight(std::optional<LayoutUnit> estimatedUsedWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // 10.5 Content height: the 'height' property: http://www.w3.org/TR/CSS21/visudet.html#propdef-height
     if (hasReplacedLogicalHeight())
         return computeReplacedLogicalHeightRespectingMinMaxHeight(computeReplacedLogicalHeightUsing(RenderBox::SizeType::MainOrPreferredSize, style().logicalHeight()));
@@ -706,11 +730,13 @@ LayoutUnit RenderReplaced::computeReplacedLogicalHeight(std::optional<LayoutUnit
 
 void RenderReplaced::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     minLogicalWidth = maxLogicalWidth = intrinsicLogicalWidth();
 }
 
 void RenderReplaced::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
 
     // We cannot resolve any percent logical width here as the available logical
@@ -744,6 +770,7 @@ void RenderReplaced::computePreferredLogicalWidths()
 
 VisiblePosition RenderReplaced::positionForPoint(const LayoutPoint& point, HitTestSource source, const RenderFragmentContainer* fragment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto [top, bottom] = [&]() -> std::pair<float, float> {
         if (auto run = InlineIterator::boxFor(*this)) {
             auto lineBox = run->lineBox();
@@ -773,6 +800,7 @@ VisiblePosition RenderReplaced::positionForPoint(const LayoutPoint& point, HitTe
 
 LayoutRect RenderReplaced::selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsLayout());
 
     if (!isSelected())
@@ -786,6 +814,7 @@ LayoutRect RenderReplaced::selectionRectForRepaint(const RenderLayerModelObject*
 
 LayoutRect RenderReplaced::localSelectionRect(bool checkWhetherSelected) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (checkWhetherSelected && !isSelected())
         return LayoutRect();
 
@@ -794,11 +823,13 @@ LayoutRect RenderReplaced::localSelectionRect(bool checkWhetherSelected) const
 
 bool RenderReplaced::isSelected() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return isHighlighted(selectionState(), view().selection());
 }
 
 bool RenderReplaced::isHighlighted(HighlightState state, const RenderHighlight& rangeData) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (state == HighlightState::None)
         return false;
     if (state == HighlightState::Inside)
@@ -820,6 +851,7 @@ bool RenderReplaced::isHighlighted(HighlightState state, const RenderHighlight& 
 
 auto RenderReplaced::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isInsideEntirelyHiddenLayer())
         return { };
 
@@ -840,6 +872,7 @@ auto RenderReplaced::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBou
 
 bool RenderReplaced::isContentLikelyVisibleInViewport()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isVisibleIgnoringGeometry())
         return false;
 
@@ -856,12 +889,14 @@ bool RenderReplaced::isContentLikelyVisibleInViewport()
 
 bool RenderReplaced::needsPreferredWidthsRecalculation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the height is a percentage and the width is auto, then the containingBlocks's height changing can cause this node to change it's preferred width because it maintains aspect ratio.
     return (hasRelativeLogicalHeight() || (isGridItem() && hasStretchedLogicalHeight())) && style().logicalWidth().isAuto();
 }
 
 LayoutSize RenderReplaced::intrinsicSize() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutSize size = m_intrinsicSize;
     if (isHorizontalWritingMode() ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment())
         size.setWidth(explicitIntrinsicInnerWidth().value_or(0));

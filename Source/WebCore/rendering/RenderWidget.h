@@ -29,6 +29,7 @@
 namespace WebCore {
 
 class RemoteFrame;
+class RenderWidgetScion;
 
 class WidgetHierarchyUpdatesSuspensionScope {
 public:
@@ -68,10 +69,24 @@ class RenderWidget : public RenderReplaced, private OverlapTestRequestClient, pu
 public:
     virtual ~RenderWidget();
 
-    HTMLFrameOwnerElement& frameOwnerElement() const { return downcast<HTMLFrameOwnerElement>(nodeForNonAnonymous()); }
+    void setScionHandle(void* handle);
 
-    Widget* widget() const { return m_widget.get(); }
-    RefPtr<Widget> protectedWidget() const { return m_widget; }
+    HTMLFrameOwnerElement& frameOwnerElement() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<HTMLFrameOwnerElement>(nodeForNonAnonymous());
+    }
+
+    Widget* widget() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_widget.get();
+    }
+    RefPtr<Widget> protectedWidget() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_widget;
+    }
     WEBCORE_EXPORT void setWidget(RefPtr<Widget>&&);
 
     static RenderWidget* find(const Widget&);
@@ -110,6 +125,8 @@ private:
 
     RefPtr<Widget> m_widget;
     IntRect m_clipRect; // The rectangle needs to remain correct after scrolling, so it is stored in content view coordinates, and not clipped to window.
+
+    std::unique_ptr<RenderWidgetScion> m_scion;
 };
 
 } // namespace WebCore

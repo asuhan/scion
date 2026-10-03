@@ -25,17 +25,25 @@
 
 namespace WebCore {
 
+class RenderReplacedScion;
+
 class RenderReplaced : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderReplaced);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderReplaced);
 public:
     virtual ~RenderReplaced();
 
+    void setScionHandle(void* handle);
+
     LayoutUnit computeReplacedLogicalWidth(ShouldComputePreferred = ComputeActual) const override;
     LayoutUnit computeReplacedLogicalHeight(std::optional<LayoutUnit> estimatedUsedWidth = std::nullopt) const override;
 
     LayoutRect replacedContentRect(const LayoutSize& intrinsicSize) const;
-    LayoutRect replacedContentRect() const { return replacedContentRect(intrinsicSize()); }
+    LayoutRect replacedContentRect() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return replacedContentRect(intrinsicSize());
+    }
 
     bool setNeedsLayoutIfNeededAfterIntrinsicSizeChange();
 
@@ -57,15 +65,27 @@ protected:
 
     void computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const final;
 
-    virtual LayoutUnit minimumReplacedHeight() const { return 0_lu; }
+    virtual LayoutUnit minimumReplacedHeight() const
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0_lu;
+    }
 
     bool isSelected() const;
 
     void styleDidChange(StyleDifference, const RenderStyle* oldStyle) override;
 
-    void setIntrinsicSize(const LayoutSize& intrinsicSize) { m_intrinsicSize = intrinsicSize; }
+    void setIntrinsicSize(const LayoutSize& intrinsicSize)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_intrinsicSize = intrinsicSize;
+    }
     virtual void intrinsicSizeChanged();
-    virtual bool hasRelativeIntrinsicLogicalWidth() const { return false; }
+    virtual bool hasRelativeIntrinsicLogicalWidth() const
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return false;
+    }
 
     void paint(PaintInfo&, const LayoutPoint&) override;
     bool shouldPaint(PaintInfo&, const LayoutPoint&);
@@ -76,19 +96,38 @@ protected:
 private:
     LayoutUnit computeConstrainedLogicalWidth(ShouldComputePreferred) const;
 
-    virtual RenderBox* embeddedContentBox() const { return 0; }
-    ASCIILiteral renderName() const override { return "RenderReplaced"_s; }
+    virtual RenderBox* embeddedContentBox() const
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return 0;
+    }
+    ASCIILiteral renderName() const override
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return "RenderReplaced"_s;
+    }
 
-    bool canHaveChildren() const override { return false; }
+    bool canHaveChildren() const override
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return false;
+    }
 
     void computePreferredLogicalWidths() final;
-    virtual void paintReplaced(PaintInfo&, const LayoutPoint&) { }
+    virtual void paintReplaced(PaintInfo&, const LayoutPoint&)
+    {
+        // NB(asuhan): this is a no-op, we can skip the Scion check
+    }
 
     RepaintRects localRectsForRepaint(RepaintOutlineBounds) const override;
 
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*) final;
     
-    bool canBeSelectionLeaf() const override { return true; }
+    bool canBeSelectionLeaf() const override
+    {
+        // NB(asuhan): this returns a constant, we can skip the Scion check
+        return true;
+    }
 
     LayoutRect selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent = true) final;
     void computeAspectRatioInformationForRenderBox(RenderBox*, FloatSize& constrainedSize, FloatSize& intrinsicRatio) const;
@@ -103,6 +142,8 @@ private:
 
     mutable LayoutSize m_intrinsicSize;
     mutable FloatSize m_intrinsicRatio;
+
+    std::unique_ptr<RenderReplacedScion> m_scion;
 };
 
 } // namespace WebCore

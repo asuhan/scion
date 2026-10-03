@@ -37,6 +37,7 @@
 #include "RenderLayer.h"
 #include "RenderLayerBacking.h"
 #include "RenderLayerScrollableArea.h"
+#include "RenderObjectsScion.h"
 #include "RenderView.h"
 #include "SecurityOrigin.h"
 #include <wtf/Ref.h>
@@ -103,6 +104,7 @@ RenderWidget::RenderWidget(Type type, HTMLFrameOwnerElement& element, RenderStyl
 
 void RenderWidget::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (CheckedPtr cache = document().existingAXObjectCache()) {
         cache->childrenChanged(this->parent());
         cache->remove(this);
@@ -118,6 +120,11 @@ void RenderWidget::willBeDestroyed()
 
 RenderWidget::~RenderWidget() = default;
 
+void RenderWidget::setScionHandle(void* handle)
+{
+    m_scion = std::make_unique<RenderWidgetScion>(handle);
+}
+
 // Widgets are always placed on integer boundaries, so rounding the size is actually
 // the desired behavior. This function is here because it's otherwise seldom what we
 // want to do with a LayoutRect.
@@ -128,6 +135,7 @@ static inline IntRect roundedIntRect(const LayoutRect& rect)
 
 bool RenderWidget::setWidgetGeometry(const LayoutRect& frame)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     IntRect clipRect = roundedIntRect(enclosingLayer()->childrenClipRect());
     IntRect newFrameRect = roundedIntRect(frame);
     IntRect oldFrameRect = m_widget->frameRect();
@@ -157,6 +165,7 @@ bool RenderWidget::setWidgetGeometry(const LayoutRect& frame)
 
 bool RenderWidget::updateWidgetGeometry()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_widget->transformsAffectFrameRect())
         return setWidgetGeometry(absoluteContentBox());
 
@@ -172,6 +181,7 @@ bool RenderWidget::updateWidgetGeometry()
 
 void RenderWidget::setWidget(RefPtr<Widget>&& widget)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (widget == m_widget)
         return;
 
@@ -216,6 +226,7 @@ void RenderWidget::setWidget(RefPtr<Widget>&& widget)
 
 void RenderWidget::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
 
@@ -224,6 +235,7 @@ void RenderWidget::layout()
 
 void RenderWidget::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderReplaced::styleDidChange(diff, oldStyle);
     if (m_widget) {
         if (style().usedVisibility() != Visibility::Visible)
@@ -238,6 +250,7 @@ void RenderWidget::styleDidChange(StyleDifference diff, const RenderStyle* oldSt
 
 void RenderWidget::paintContents(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (paintInfo.requireSecurityOriginAccessForWidgets) {
         if (auto contentDocument = frameOwnerElement().contentDocument()) {
             if (!document().protectedSecurityOrigin()->isSameOriginDomain(contentDocument->securityOrigin()))
@@ -295,6 +308,7 @@ void RenderWidget::paintContents(PaintInfo& paintInfo, const LayoutPoint& paintO
 
 void RenderWidget::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!shouldPaint(paintInfo, paintOffset))
         return;
 
@@ -357,12 +371,14 @@ void RenderWidget::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 void RenderWidget::setOverlapTestResult(bool isOverlapped)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_widget);
     downcast<LocalFrameView>(*m_widget).setIsOverlapped(isOverlapped);
 }
 
 RenderWidget::ChildWidgetState RenderWidget::updateWidgetPosition()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_widget)
         return ChildWidgetState::Destroyed;
 
@@ -386,12 +402,14 @@ RenderWidget::ChildWidgetState RenderWidget::updateWidgetPosition()
 
 IntRect RenderWidget::windowClipRect() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Ref frameView = view().frameView();
     return intersection(frameView->contentsToWindow(m_clipRect), frameView->windowClipRect());
 }
 
 void RenderWidget::setSelectionState(HighlightState state)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The selection state for our containing block hierarchy is updated by the base class call.
     RenderReplaced::setSelectionState(state);
 
@@ -406,6 +424,7 @@ RenderWidget* RenderWidget::find(const Widget& widget)
 
 bool RenderWidget::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction action)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto shouldHitTestChildFrameContent = request.allowsChildFrameContent() || (request.allowsVisibleChildFrameContent() && visibleToHitTesting(request));
     auto* childFrameView = dynamicDowncast<LocalFrameView>(widget());
     if (shouldHitTestChildFrameContent && childFrameView && childFrameView->renderView()) {
@@ -440,11 +459,13 @@ bool RenderWidget::nodeAtPoint(const HitTestRequest& request, HitTestResult& res
 
 bool RenderWidget::requiresLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderReplaced::requiresLayer() || requiresAcceleratedCompositing();
 }
 
 bool RenderWidget::requiresAcceleratedCompositing() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If this is a renderer with a contentDocument and that document needs a layer, then we need a layer.
     if (auto* contentDocument = frameOwnerElement().contentDocument()) {
         if (RenderView* view = contentDocument->renderView())
@@ -459,11 +480,13 @@ bool RenderWidget::requiresAcceleratedCompositing() const
 
 RemoteFrame* RenderWidget::remoteFrame() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return dynamicDowncast<RemoteFrame>(frameOwnerElement().contentFrame());
 }
 
 bool RenderWidget::needsPreferredWidthsRecalculation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderReplaced::needsPreferredWidthsRecalculation())
         return true;
     return embeddedContentBox();
@@ -471,6 +494,7 @@ bool RenderWidget::needsPreferredWidthsRecalculation() const
 
 RenderBox* RenderWidget::embeddedContentBox() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!is<RenderEmbeddedObject>(this))
         return nullptr;
     RefPtr frameView = dynamicDowncast<LocalFrameView>(widget());
