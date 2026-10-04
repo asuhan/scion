@@ -41,6 +41,11 @@ extern "C" WEBCORE_EXPORT void* HTMLFrameOwnerElement_contentDocument(const void
     return static_cast<const WebCore::HTMLFrameOwnerElement*>(p)->contentDocument();
 }
 
+extern "C" WEBCORE_EXPORT void HTMLFrameOwnerElement_scheduleInvalidateStyleAndLayerComposition(void* p)
+{
+    static_cast<WebCore::HTMLFrameOwnerElement*>(p)->scheduleInvalidateStyleAndLayerComposition();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLFrameOwnerElement);

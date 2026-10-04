@@ -33,7 +33,6 @@ class HTMLFrameOwnerElementWrapper: HTMLElementWrapper {
   }
 
   func scheduleInvalidateStyleAndLayerComposition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.HTMLFrameOwnerElement_scheduleInvalidateStyleAndLayerComposition(p)
   }
 }

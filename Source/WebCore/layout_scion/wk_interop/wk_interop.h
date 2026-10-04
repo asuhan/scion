@@ -2185,6 +2185,7 @@ uint8_t HTMLImageElement_decodingMode(const void*);
 bool HTMLOptionElement_selected(const void*, bool);
 bool HTMLImageElement_isDeferred(const void*);
 void* HTMLFrameOwnerElement_contentDocument(const void*);
+void HTMLFrameOwnerElement_scheduleInvalidateStyleAndLayerComposition(void*);
 bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
 void HTMLTextFormControlElement_updatePlaceholderVisibility(void*);
 bool HTMLTextFormControlElement_isInnerTextElementEditable(const void*);
