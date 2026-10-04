@@ -52,8 +52,8 @@ final class RenderIFrameWrapper: RenderFrameBaseWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.requiresLayer() || style().resize() != .None
   }
 
   // TODO(asuhan): remove
