@@ -30,6 +30,11 @@
 #include "RemoteFrameClient.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* Widget_toRemoteFrameView(void* p)
+{
+    return &downcast<WebCore::RemoteFrameView>(*static_cast<WebCore::Widget*>(p));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RemoteFrameView);

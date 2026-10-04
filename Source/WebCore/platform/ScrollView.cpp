@@ -175,6 +175,11 @@ extern "C" WEBCORE_EXPORT IntRectRaw ScrollView_frameRect(const void* p)
     return { { r.x(), r.y() }, { r.width(), r.height() } };
 }
 
+extern "C" WEBCORE_EXPORT void* ScrollView_asWidget(void* p)
+{
+    return static_cast<WebCore::Widget*>(static_cast<WebCore::ScrollView*>(p));
+}
+
 extern "C" WEBCORE_EXPORT void ScrollView_show(void* p)
 {
     static_cast<WebCore::ScrollView*>(p)->show();

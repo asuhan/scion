@@ -32,6 +32,16 @@
 #include "NotImplemented.h"
 #include <wtf/Assertions.h>
 
+extern "C" WEBCORE_EXPORT bool Widget_isLocalFrameView(const void* p)
+{
+    return static_cast<const WebCore::Widget*>(p)->isLocalFrameView();
+}
+
+extern "C" WEBCORE_EXPORT bool Widget_isRemoteFrameView(const void* p)
+{
+    return static_cast<const WebCore::Widget*>(p)->isRemoteFrameView();
+}
+
 namespace WebCore {
 
 void Widget::init(PlatformWidget widget)

@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 // TODO(asuhan): inherit from OverlapTestRequestClient as well
 class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   init(
@@ -308,4 +310,15 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   private let m_widget: Widget? = nil
+}
+
+func createWidgetWrapper(_ widgetRaw: UnsafeMutableRawPointer) -> Widget {
+  if wk_interop.Widget_isLocalFrameView(widgetRaw) {
+    return LocalFrameViewWrapper(wk_interop.Widget_toLocalFrameView(widgetRaw)!)
+  }
+  if wk_interop.Widget_isRemoteFrameView(widgetRaw) {
+    return RemoteFrameViewWrapper(wk_interop.Widget_toRemoteFrameView(widgetRaw)!)
+  }
+  // TODO(asuhan): implement this for plugins
+  fatalError("Not implemented")
 }
