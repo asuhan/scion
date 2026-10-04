@@ -43,6 +43,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   func requiresAcceleratedCompositing() -> Bool {
+    assert(isNativeImpl())
     // If this is a renderer with a contentDocument and that document needs a layer, then we need a layer.
     if let contentDocument = frameOwnerElement().contentDocument(),
       let view = contentDocument.renderView()
@@ -63,6 +64,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     if m_widget != nil {
       if style().usedVisibility() != .Visible {
@@ -83,6 +85,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if !shouldPaint(&paintInfo, paintOffset) {
       return
     }
@@ -167,6 +170,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
+    assert(isNativeImpl())
     let shouldHitTestChildFrameContent =
       request.allowsChildFrameContent()
       || (request.allowsVisibleChildFrameContent() && visibleToHitTesting(request: request))
@@ -215,6 +219,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override func needsPreferredWidthsRecalculation() -> Bool {
+    assert(isNativeImpl())
     if super.needsPreferredWidthsRecalculation() {
       return true
     }
@@ -222,6 +227,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override final func embeddedContentBox() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
     if !(self is RenderEmbeddedObjectWrapper) {
       return nil
     }
@@ -235,6 +241,7 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   private func paintContents(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if paintInfo.requireSecurityOriginAccessForWidgets {
       if let contentDocument = frameOwnerElement().contentDocument() {
         if !document().protectedSecurityOrigin().isSameOriginDomain(
