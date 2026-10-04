@@ -38,8 +38,8 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   func widget() -> Widget? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_widget
   }
 
   func requiresAcceleratedCompositing() -> Bool {
