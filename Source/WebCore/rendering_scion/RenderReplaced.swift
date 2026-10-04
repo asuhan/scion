@@ -95,6 +95,15 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    if !renderTreeBeingDestroyed(), let parent = parent() {
+      parent.dirtyLineFromChangedChild()
+    }
+
+    super.willBeDestroyed()
+  }
+
   override func computeReplacedLogicalWidth(
     shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   )
