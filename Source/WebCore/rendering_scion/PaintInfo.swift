@@ -253,8 +253,14 @@ class PaintInfoWrapper {
 
   var overlapTestRequests: OverlapTestRequestMap? {
     get {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if n == nil {
+        if !wk_interop.PaintInfo_hasOverlapTestRequests(p!) {
+          return nil
+        }
+        // TODO(asuhan): implement this for a non-null C++ map
+        fatalError("Not implemented")
+      }
+      return n!.overlapTestRequests
     }
     set {
       // TODO(asuhan): implement this

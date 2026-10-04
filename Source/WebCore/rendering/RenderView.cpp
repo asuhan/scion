@@ -149,6 +149,11 @@ extern "C" WEBCORE_EXPORT void* PaintInfo_eventRegionContext(void* p)
     return static_cast<WebCore::PaintInfo*>(p)->eventRegionContext();
 }
 
+extern "C" WEBCORE_EXPORT bool PaintInfo_hasOverlapTestRequests(const void* p)
+{
+    return static_cast<const WebCore::PaintInfo*>(p)->overlapTestRequests;
+}
+
 extern "C" WEBCORE_EXPORT bool PaintInfo_requireSecurityOriginAccessForWidgets(const void* p)
 {
     return static_cast<const WebCore::PaintInfo*>(p)->requireSecurityOriginAccessForWidgets;
