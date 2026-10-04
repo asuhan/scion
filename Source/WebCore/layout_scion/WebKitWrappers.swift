@@ -3828,6 +3828,13 @@ func RenderBoxScion_location(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
   return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
 }
 
+@_cdecl("RenderBoxScion_contentBoxLocation")
+func RenderBoxScion_contentBoxLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let point = box.contentBoxLocation()
+  return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
+}
+
 @_cdecl("RenderBoxScion_locationOffset")
 func RenderBoxScion_locationOffset(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

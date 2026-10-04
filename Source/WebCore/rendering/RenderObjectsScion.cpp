@@ -830,6 +830,8 @@ extern "C" int32_t RenderBoxScion_logicalHeight(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_location(const void*);
 
+extern "C" LayoutPointRaw RenderBoxScion_contentBoxLocation(const void*);
+
 extern "C" LayoutSizeRaw RenderBoxScion_locationOffset(const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
@@ -2721,6 +2723,12 @@ LayoutUnit RenderBoxScion::logicalHeight() const
 LayoutPoint RenderBoxScion::location() const
 {
     const auto point = RenderBoxScion_location(m_handle);
+    return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
+}
+
+LayoutPoint RenderBoxScion::contentBoxLocation() const
+{
+    const auto point = RenderBoxScion_contentBoxLocation(m_handle);
     return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
 }
 

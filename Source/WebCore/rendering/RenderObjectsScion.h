@@ -831,6 +831,8 @@ public:
 
     LayoutPoint location() const;
 
+    LayoutPoint contentBoxLocation() const;
+
     LayoutSize locationOffset() const;
 
     LayoutSize size() const;
