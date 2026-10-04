@@ -159,10 +159,8 @@ class PaintInfoWrapper {
 
   func eventRegionContext() -> EventRegionContext? {
     if n == nil {
-      if wk_interop.PaintInfo_eventRegionContext(p!) == nil {
-        return nil
-      }
-      return EventRegionContext(p!)
+      guard let raw = wk_interop.PaintInfo_eventRegionContext(p!) else { return nil }
+      return EventRegionContext(raw)
     }
     return n!.regionContext as? EventRegionContext
   }
