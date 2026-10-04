@@ -19,6 +19,8 @@
  *
  */
 
+import wk_interop
+
 class HTMLFrameOwnerElementWrapper: HTMLElementWrapper {
   func contentFrame() -> FrameWrapper? {
     // TODO(asuhan): implement this
@@ -26,8 +28,8 @@ class HTMLFrameOwnerElementWrapper: HTMLElementWrapper {
   }
 
   func contentDocument() -> Document? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.HTMLFrameOwnerElement_contentDocument(p) else { return nil }
+    return Document(raw)
   }
 
   func scheduleInvalidateStyleAndLayerComposition() {

@@ -36,6 +36,11 @@
 #include <wtf/Ref.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* HTMLFrameOwnerElement_contentDocument(const void* p)
+{
+    return static_cast<const WebCore::HTMLFrameOwnerElement*>(p)->contentDocument();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLFrameOwnerElement);
