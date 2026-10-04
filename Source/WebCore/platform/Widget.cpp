@@ -42,6 +42,16 @@ extern "C" WEBCORE_EXPORT bool Widget_isRemoteFrameView(const void* p)
     return static_cast<const WebCore::Widget*>(p)->isRemoteFrameView();
 }
 
+extern "C" WEBCORE_EXPORT void Widget_ref(void* p)
+{
+    static_cast<WebCore::Widget*>(p)->ref();
+}
+
+extern "C" WEBCORE_EXPORT void Widget_deref(void* p)
+{
+    static_cast<WebCore::Widget*>(p)->deref();
+}
+
 namespace WebCore {
 
 void Widget::init(PlatformWidget widget)

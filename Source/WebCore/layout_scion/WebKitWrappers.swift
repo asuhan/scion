@@ -3627,6 +3627,15 @@ func RenderLineBreakScion_setWk(
   lineBreak.setWk(wk)
 }
 
+@_cdecl("RenderWidgetScion_setWidget")
+func RenderWidgetScion_setWidget(
+  _ widgetRendererRaw: UnsafeMutableRawPointer, _ widgetRaw: UnsafeMutableRawPointer?
+) {
+  let renderWidget = Unmanaged<RenderWidgetWrapper>.fromOpaque(widgetRendererRaw)
+    .takeUnretainedValue()
+  renderWidget.setWidget(widgetRaw.map(createWidgetWrapper))
+}
+
 @_cdecl("RenderIFrameScion_setWk")
 func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
   let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()

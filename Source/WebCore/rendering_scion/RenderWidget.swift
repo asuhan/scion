@@ -44,6 +44,63 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
     return m_widget
   }
 
+  func setWidget(_ widget: Widget?) {
+    assert(isNativeImpl())
+    if widget.map(widgetRaw) == m_widget.map(widgetRaw) {
+      return
+    }
+
+    if (m_widget is RemoteFrameViewWrapper) != (widget is RemoteFrameViewWrapper) {
+      frameOwnerElement().scheduleInvalidateStyleAndLayerComposition()
+    }
+
+    if let oldWidget = m_widget {
+      let oldWidgetRaw = widgetRaw(oldWidget)
+      wk_interop.RenderWidget_moveWidgetToParentSoon(oldWidgetRaw, nil)
+      wk_interop.LocalFrameView_willRemoveWidgetFromRenderTree(
+        view().frameView().pInterop, oldWidgetRaw)
+      wk_interop.RenderWidget_widgetRendererMapRemove(oldWidgetRaw)
+      m_widget = nil
+      wk_interop.Widget_deref(oldWidgetRaw)
+    }
+    m_widget = widget
+    if let newWidget = m_widget {
+      let newWidgetRaw = widgetRaw(newWidget)
+      wk_interop.Widget_ref(newWidgetRaw)
+      wk_interop.RenderWidget_widgetRendererMapAdd(newWidgetRaw, getWk())
+      wk_interop.LocalFrameView_didAddWidgetToRenderTree(view().frameView().pInterop, newWidgetRaw)
+      // If we've already received a layout, apply the calculated space to the
+      // widget immediately, but we have to have really been fully constructed.
+      if hasInitializedStyle {
+        if !needsLayout() {
+          // TODO(asuhan): updateWidgetGeometry may destroy this renderer, upstream checks a weak
+          // pointer here.
+          _ = updateWidgetGeometry()
+        }
+
+        if style().usedVisibility() != .Visible {
+          newWidget.hide()
+        } else {
+          newWidget.show()
+          repaint()
+        }
+        if let cache = document().existingAXObjectCache() {
+          cache.onWidgetVisibilityChanged(self)
+        }
+      }
+      wk_interop.RenderWidget_moveWidgetToParentSoon(newWidgetRaw, view().frameView().pInterop)
+    }
+
+    if let cache = document().existingAXObjectCache() {
+      cache.childrenChanged(renderer: self)
+    }
+  }
+
+  private func updateWidgetGeometry() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresAcceleratedCompositing() -> Bool {
     assert(isNativeImpl())
     // If this is a renderer with a contentDocument and that document needs a layer, then we need a layer.
@@ -309,7 +366,16 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
     }
   }
 
-  private let m_widget: Widget? = nil
+  private var m_widget: Widget? = nil
+}
+
+// Returns the C++ Widget pointer behind a Swift widget wrapper.
+private func widgetRaw(_ widget: Widget) -> UnsafeMutableRawPointer {
+  guard let scrollView = widget as? ScrollViewWrapper else {
+    // TODO(asuhan): implement this for plugins and scrollbars
+    fatalError("Not implemented")
+  }
+  return wk_interop.ScrollView_asWidget(scrollView.pInterop!)
 }
 
 func createWidgetWrapper(_ widgetRaw: UnsafeMutableRawPointer) -> Widget {

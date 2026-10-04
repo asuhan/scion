@@ -61,6 +61,7 @@ class RenderLayerModelObject;
 class RenderMultiColumnFlow;
 class RenderObject;
 class RenderSelection;
+class Widget;
 
 namespace Layout {
 class InitialContainingBlock;
@@ -1399,6 +1400,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setWidget(Widget*);
 
 private:
     void* m_handle;

@@ -95,6 +95,25 @@ static void moveWidgetToParentSoon(Widget& child, LocalFrameView* parent)
     WidgetHierarchyUpdatesSuspensionScope::scheduleWidgetToMove(child, parent);
 }
 
+}
+
+extern "C" WEBCORE_EXPORT void RenderWidget_moveWidgetToParentSoon(void* child, void* parent)
+{
+    WebCore::moveWidgetToParentSoon(*static_cast<WebCore::Widget*>(child), static_cast<WebCore::LocalFrameView*>(parent));
+}
+
+extern "C" WEBCORE_EXPORT void RenderWidget_widgetRendererMapAdd(void* widget, void* renderWidget)
+{
+    WebCore::widgetRendererMap().add(*static_cast<WebCore::Widget*>(widget), *static_cast<WebCore::RenderWidget*>(renderWidget));
+}
+
+extern "C" WEBCORE_EXPORT void RenderWidget_widgetRendererMapRemove(void* widget)
+{
+    WebCore::widgetRendererMap().remove(*static_cast<WebCore::Widget*>(widget));
+}
+
+namespace WebCore {
+
 RenderWidget::RenderWidget(Type type, HTMLFrameOwnerElement& element, RenderStyle&& style)
     : RenderReplaced(type, element, WTFMove(style), ReplacedFlag::IsWidget)
 {
@@ -181,7 +200,10 @@ bool RenderWidget::updateWidgetGeometry()
 
 void RenderWidget::setWidget(RefPtr<Widget>&& widget)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setWidget(widget.get());
+        return;
+    }
     if (widget == m_widget)
         return;
 

@@ -153,6 +153,16 @@ extern "C" WEBCORE_EXPORT void* Widget_toLocalFrameView(void* p)
     return &downcast<WebCore::LocalFrameView>(*static_cast<WebCore::Widget*>(p));
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameView_didAddWidgetToRenderTree(void* p, void* widget)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->didAddWidgetToRenderTree(*static_cast<WebCore::Widget*>(widget));
+}
+
+extern "C" WEBCORE_EXPORT void LocalFrameView_willRemoveWidgetFromRenderTree(void* p, void* widget)
+{
+    static_cast<WebCore::LocalFrameView*>(p)->willRemoveWidgetFromRenderTree(*static_cast<WebCore::Widget*>(widget));
+}
+
 extern "C" WEBCORE_EXPORT void* LocalFrameView_frame(const void* p)
 {
     return &static_cast<const WebCore::LocalFrameView*>(p)->frame();
