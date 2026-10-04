@@ -31,6 +31,11 @@ final class RenderIFrameWrapper: RenderFrameBaseWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  override func shouldComputeSizeAsReplaced() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func isInlineBlockOrInlineTable() -> Bool {
     assert(isNativeImpl())
     return isInline()
