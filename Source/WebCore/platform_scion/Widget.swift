@@ -42,7 +42,7 @@
 
 typealias PlatformWidget = UnsafeMutableRawPointer?
 
-enum SecurityOriginPaintPolicy {
+enum SecurityOriginPaintPolicy: UInt8 {
   case AnyOrigin
   case AccessibleOriginOnly
 }

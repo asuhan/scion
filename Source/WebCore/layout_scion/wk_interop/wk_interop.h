@@ -1999,6 +1999,7 @@ void ScrollView_updateScrollbarSteps(void*);
 bool ScrollView_useFixedLayout(const void*);
 struct IntSizeRaw ScrollView_size(const void*);
 struct IntPointRaw ScrollView_location(const void*);
+void ScrollView_paint(void*, void*, struct IntRectRaw, uint8_t, void*);
 void ScrollView_setFrameRect(void* p, struct IntRectRaw);
 struct IntRectRaw ScrollView_frameRect(const void*);
 void ScrollView_show(void*);

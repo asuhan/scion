@@ -160,8 +160,13 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     _ securityOriginPaintPolicy: SecurityOriginPaintPolicy = .AnyOrigin,
     _ regionContext: RegionContext? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(regionContext == nil || !regionContext!.isNativeImpl())
+    wk_interop.ScrollView_paint(
+      pInterop, context.p!,
+      IntRectRaw(
+        location: IntPointRaw(x: rect.x(), y: rect.y()),
+        size: IntSizeRaw(width: rect.width(), height: rect.height())),
+      securityOriginPaintPolicy.rawValue, regionContext?.p)
   }
 
   func show() { wk_interop.ScrollView_show(pInterop) }

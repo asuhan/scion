@@ -154,6 +154,14 @@ extern "C" WEBCORE_EXPORT IntPointRaw ScrollView_location(const void* p)
     return { location.x(), location.y() };
 }
 
+extern "C" WEBCORE_EXPORT void ScrollView_paint(void* p, void* context, IntRectRaw rect, uint8_t securityOriginPaintPolicy, void* regionContext)
+{
+    static_cast<WebCore::ScrollView*>(p)->paint(*static_cast<WebCore::GraphicsContext*>(context),
+        { { rect.location.x, rect.location.y }, { rect.size.width, rect.size.height } },
+        static_cast<WebCore::Widget::SecurityOriginPaintPolicy>(securityOriginPaintPolicy),
+        static_cast<WebCore::RegionContext*>(regionContext));
+}
+
 extern "C" WEBCORE_EXPORT void ScrollView_setFrameRect(void* p, IntRectRaw rect)
 {
     static_cast<WebCore::ScrollView*>(p)->setFrameRect(
