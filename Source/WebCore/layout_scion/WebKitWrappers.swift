@@ -2358,6 +2358,24 @@ func RenderObjectScion_localToAbsoluteQuad(
   return convertFloatQuad(object.localToAbsoluteQuad(quad, mode, &wasFixedCopy))
 }
 
+@_cdecl("RenderObjectScion_absoluteToLocal")
+func RenderObjectScion_absoluteToLocal(
+  _ objectRaw: UnsafeRawPointer, _ containerPointRaw: FloatPointRaw, _ modeRaw: UInt8
+) -> FloatPointRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  return convertFloatPoint(object.absoluteToLocal(convertFloatPoint(containerPointRaw), mode))
+}
+
+@_cdecl("RenderObjectScion_absoluteToLocalQuad")
+func RenderObjectScion_absoluteToLocalQuad(
+  _ objectRaw: UnsafeRawPointer, _ quadRaw: FloatQuadRaw, _ modeRaw: UInt8
+) -> FloatQuadRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  return convertFloatQuad(object.absoluteToLocalQuad(convertFloatQuad(quadRaw), mode))
+}
+
 @_cdecl("RenderObjectScion_style")
 func RenderObjectScion_style(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

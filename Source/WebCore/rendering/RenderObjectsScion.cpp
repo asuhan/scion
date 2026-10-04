@@ -419,6 +419,10 @@ extern "C" FloatPointRaw RenderObjectScion_localToAbsolute(const void*, FloatPoi
 
 extern "C" FloatQuadRaw RenderObjectScion_localToAbsoluteQuad(const void*, FloatQuadRaw, uint8_t, bool*);
 
+extern "C" FloatPointRaw RenderObjectScion_absoluteToLocal(const void*, FloatPointRaw, uint8_t);
+
+extern "C" FloatQuadRaw RenderObjectScion_absoluteToLocalQuad(const void*, FloatQuadRaw, uint8_t);
+
 extern "C" FloatQuadRaw RenderObjectScion_localToContainerQuad(const void*, FloatQuadRaw, void*, uint8_t, bool*);
 
 extern "C" FloatPointRaw RenderObjectScion_localToContainerPoint(const void*, FloatPointRaw, void*, uint8_t, bool*);
@@ -1782,6 +1786,16 @@ RenderObject* RenderObjectScion::lastLeafChild() const
 FloatQuad RenderObjectScion::localToAbsoluteQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
     return convertFloatQuad(RenderObjectScion_localToAbsoluteQuad(m_handle, convertFloatQuad(quad), mode.toRaw(), wasFixed));
+}
+
+FloatPoint RenderObjectScion::absoluteToLocal(const FloatPoint& containerPoint, OptionSet<MapCoordinatesMode> mode) const
+{
+    return convertFloatPoint(RenderObjectScion_absoluteToLocal(m_handle, convertFloatPoint(containerPoint), mode.toRaw()));
+}
+
+FloatQuad RenderObjectScion::absoluteToLocalQuad(const FloatQuad& quad, OptionSet<MapCoordinatesMode> mode) const
+{
+    return convertFloatQuad(RenderObjectScion_absoluteToLocalQuad(m_handle, convertFloatQuad(quad), mode.toRaw()));
 }
 
 const RenderStyle& RenderObjectScion::style() const { return *static_cast<const RenderStyle*>(RenderObjectScion_style(m_handle)); }

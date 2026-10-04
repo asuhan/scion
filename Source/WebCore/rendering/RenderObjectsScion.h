@@ -410,6 +410,10 @@ public:
 
     FloatQuad localToAbsoluteQuad(const FloatQuad&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
 
+    FloatPoint absoluteToLocal(const FloatPoint&, OptionSet<MapCoordinatesMode>) const;
+
+    FloatQuad absoluteToLocalQuad(const FloatQuad&, OptionSet<MapCoordinatesMode>) const;
+
     const RenderStyle& style() const;
 
     const RenderStyle& firstLineStyle() const;

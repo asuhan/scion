@@ -2144,6 +2144,27 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return localToContainerQuad(localQuad: quad, container: nil, mode: mode, wasFixed: &wasFixed)
   }
 
+  func absoluteToLocal(_ containerPoint: FloatPoint, _ mode: MapCoordinatesMode = []) -> FloatPoint
+  {
+    assert(isNativeImpl())
+    let transformState = TransformState(.UnapplyInverseTransformDirection, containerPoint)
+    mapAbsoluteToLocalPoint(mode, transformState)
+    transformState.flatten()
+
+    return transformState.lastPlanarPoint()
+  }
+
+  func absoluteToLocalQuad(_ quad: FloatQuad, _ mode: MapCoordinatesMode = .UseTransforms)
+    -> FloatQuad
+  {
+    assert(isNativeImpl())
+    let transformState = TransformState(
+      .UnapplyInverseTransformDirection, quad.boundingBox().center(), quad)
+    mapAbsoluteToLocalPoint(mode, transformState)
+    transformState.flatten()
+    return transformState.lastPlanarQuad()
+  }
+
   // Convert a local quad into the coordinate system of container, taking transforms into account.
   func localToContainerQuad(
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,
