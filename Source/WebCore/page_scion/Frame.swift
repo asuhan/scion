@@ -38,7 +38,10 @@ class FrameWrapper {
     fatalError("Not implemented")
   }
 
-  func page() -> PageWrapper? { return PageWrapper(wk_interop.Frame_page(p)) }
+  func page() -> PageWrapper? {
+    guard let raw = wk_interop.Frame_page(p) else { return nil }
+    return PageWrapper(raw)
+  }
 
   func settings() -> SettingsWrapper { return SettingsWrapper(wk_interop.Frame_settings(p)) }
 
