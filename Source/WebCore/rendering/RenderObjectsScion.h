@@ -837,6 +837,8 @@ public:
 
     LayoutPoint contentBoxLocation() const;
 
+    FloatQuad absoluteContentQuad() const;
+
     LayoutSize locationOffset() const;
 
     LayoutSize size() const;

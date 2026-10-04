@@ -836,6 +836,8 @@ extern "C" LayoutPointRaw RenderBoxScion_location(const void*);
 
 extern "C" LayoutPointRaw RenderBoxScion_contentBoxLocation(const void*);
 
+extern "C" FloatQuadRaw RenderBoxScion_absoluteContentQuad(const void*);
+
 extern "C" LayoutSizeRaw RenderBoxScion_locationOffset(const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_size(const void*);
@@ -2744,6 +2746,11 @@ LayoutPoint RenderBoxScion::contentBoxLocation() const
 {
     const auto point = RenderBoxScion_contentBoxLocation(m_handle);
     return { LayoutUnit::fromRawValue(point.x), LayoutUnit::fromRawValue(point.y) };
+}
+
+FloatQuad RenderBoxScion::absoluteContentQuad() const
+{
+    return convertFloatQuad(RenderBoxScion_absoluteContentQuad(m_handle));
 }
 
 LayoutSize RenderBoxScion::locationOffset() const

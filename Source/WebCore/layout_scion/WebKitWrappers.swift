@@ -3846,6 +3846,12 @@ func RenderBoxScion_location(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
   return LayoutPointRaw(x: point.x.rawValue(), y: point.y.rawValue())
 }
 
+@_cdecl("RenderBoxScion_absoluteContentQuad")
+func RenderBoxScion_absoluteContentQuad(_ boxRaw: UnsafeRawPointer) -> FloatQuadRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return convertFloatQuad(box.absoluteContentQuad())
+}
+
 @_cdecl("RenderBoxScion_contentBoxLocation")
 func RenderBoxScion_contentBoxLocation(_ boxRaw: UnsafeRawPointer) -> LayoutPointRaw {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

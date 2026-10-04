@@ -949,6 +949,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return borderBoxRect()
   }
 
+  func absoluteContentQuad() -> FloatQuad {
+    assert(isNativeImpl())
+    let rect = contentBoxRect()
+    var wasFixed: Bool? = nil
+    return localToAbsoluteQuad(FloatQuad(inRect: rect.FloatRect()), .UseTransforms, &wasFixed)
+  }
+
   // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
   func contentBoxRect() -> LayoutRectWrapper {
     assert(isNativeImpl())

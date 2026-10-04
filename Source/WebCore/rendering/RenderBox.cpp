@@ -1350,7 +1350,7 @@ IntRect RenderBox::absoluteContentBox() const
 
 FloatQuad RenderBox::absoluteContentQuad() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->absoluteContentQuad(); }
     LayoutRect rect = contentBoxRect();
     return localToAbsoluteQuad(FloatRect(rect));
 }
