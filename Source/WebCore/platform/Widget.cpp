@@ -42,6 +42,16 @@ extern "C" WEBCORE_EXPORT bool Widget_isRemoteFrameView(const void* p)
     return static_cast<const WebCore::Widget*>(p)->isRemoteFrameView();
 }
 
+extern "C" WEBCORE_EXPORT bool Widget_transformsAffectFrameRect(void* p)
+{
+    return static_cast<WebCore::Widget*>(p)->transformsAffectFrameRect();
+}
+
+extern "C" WEBCORE_EXPORT void Widget_clipRectChanged(void* p)
+{
+    static_cast<WebCore::Widget*>(p)->clipRectChanged();
+}
+
 extern "C" WEBCORE_EXPORT void Widget_ref(void* p)
 {
     static_cast<WebCore::Widget*>(p)->ref();
