@@ -1723,7 +1723,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     setAllowsBackingStoreDetaching(allowDetaching)
   }
 
-  private func updateAfterWidgetResize() {
+  func updateAfterWidgetResize() {
     assert(isNativeImpl())
     guard let renderWidget = renderer() as? RenderWidgetWrapper else { return }
 

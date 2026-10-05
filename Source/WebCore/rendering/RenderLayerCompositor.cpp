@@ -142,6 +142,11 @@ extern "C" WEBCORE_EXPORT void RenderLayerCompositor_rootBackgroundColorOrTransp
     return static_cast<WebCore::RenderLayerCompositor*>(p)->rootBackgroundColorOrTransparencyChanged();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayerCompositor_widgetDidChangeSize(void* p, void* widget)
+{
+    static_cast<WebCore::RenderLayerCompositor*>(p)->widgetDidChangeSize(*static_cast<WebCore::RenderWidget*>(widget));
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayerCompositor_repaintCompositedLayers(void* p)
 {
     static_cast<WebCore::RenderLayerCompositor*>(p)->repaintCompositedLayers();

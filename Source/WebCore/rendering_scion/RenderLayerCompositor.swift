@@ -922,6 +922,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
   }
 
+  func widgetDidChangeSize(_ widget: RenderWidgetWrapper) {
+    assert(!isNativeImpl())
+    wk_interop.RenderLayerCompositor_widgetDidChangeSize(interop(), widget.getWk())
+  }
+
   // Called after the view transparency, or the document or base background color change.
   func rootBackgroundColorOrTransparencyChanged() {
     if !isNativeImpl() {
