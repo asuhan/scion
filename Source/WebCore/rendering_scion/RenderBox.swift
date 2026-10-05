@@ -956,6 +956,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return localToAbsoluteQuad(FloatQuad(inRect: rect.FloatRect()), .UseTransforms, &wasFixed)
   }
 
+  func absoluteContentBox() -> IntRect {
+    assert(isNativeImpl())
+    // This is wrong with transforms and flipped writing modes.
+    var rect = snappedIntRect(rect: contentBoxRect())
+    let absPos = localToAbsolute()
+    rect.move(IntSize(width: Int32(absPos.x), height: Int32(absPos.y)))
+    return rect
+  }
+
   // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
   func contentBoxRect() -> LayoutRectWrapper {
     assert(isNativeImpl())
