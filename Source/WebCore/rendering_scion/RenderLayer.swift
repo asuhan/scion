@@ -1785,6 +1785,11 @@ class RenderLayerWrapper {
     return curr
   }
 
+  func childrenClipRect() -> LayoutRectWrapper {
+    assert(!isNativeImpl())
+    return convertLayoutRect(wk_interop.RenderLayer_childrenClipRect(pInterop!))
+  }
+
   // The layer relative to which clipping rects for this layer are computed.
   func clippingRootForPainting() -> RenderLayerWrapper? {
     assert(isNativeImpl())

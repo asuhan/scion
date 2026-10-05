@@ -931,6 +931,7 @@ void* LocalFrame_rootFrame(const void*);
 void LocalFrameViewLayoutContext_scheduleLayout(void*);
 void LocalFrameViewLayoutContext_scheduleSubtreeLayout(void*, void*);
 void LocalFrameViewLayoutContext_layout(void*);
+struct LayoutRectRaw RenderLayer_childrenClipRect(const void*);
 bool LocalFrameViewLayoutContext_isInLayout(const void*);
 bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void*);
 void* LocalFrameViewLayoutContext_subtreeLayoutRoot(const void*);

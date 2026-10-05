@@ -238,6 +238,12 @@ extern "C" WEBCORE_EXPORT void RenderLayer_setBackingNeedsRepaintInRect(void* p,
         shouldClip ? WebCore::GraphicsLayer::ClipToLayer : WebCore::GraphicsLayer::DoNotClipToLayer);
 }
 
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderLayer_childrenClipRect(const void* p)
+{
+    const auto r = static_cast<const WebCore::RenderLayer*>(p)->childrenClipRect();
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_styleChanged(void* p, uint8_t diff_raw, const void* old_style_raw)
 {
     const auto diff = static_cast<WebCore::StyleDifference>(diff_raw);
