@@ -35,6 +35,8 @@ class LocalFrameViewLayoutContextWrapper {
     self.p = p
   }
 
+  func layout() { wk_interop.LocalFrameViewLayoutContext_layout(p) }
+
   func scheduleLayout() { wk_interop.LocalFrameViewLayoutContext_scheduleLayout(p) }
 
   func scheduleSubtreeLayout(_ layoutRoot: RenderElementWrapper) {
