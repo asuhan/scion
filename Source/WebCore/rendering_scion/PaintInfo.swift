@@ -279,6 +279,13 @@ class PaintInfoWrapper {
   var regionContext: RegionContext? {
     get {
       if n == nil {
+        guard let raw = wk_interop.PaintInfo_regionContext(p!) else { return nil }
+        if wk_interop.RegionContext_isEventRegionContext(raw) {
+          return EventRegionContext(raw)
+        }
+        if wk_interop.RegionContext_isAccessibilityRegionContext(raw) {
+          return AccessibilityRegionContext(raw)
+        }
         // TODO(asuhan): implement this
         fatalError("Not implemented")
       }

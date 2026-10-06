@@ -29,6 +29,16 @@
 #include "Path.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool RegionContext_isEventRegionContext(const void* p)
+{
+    return static_cast<const WebCore::RegionContext*>(p)->isEventRegionContext();
+}
+
+extern "C" WEBCORE_EXPORT bool RegionContext_isAccessibilityRegionContext(const void* p)
+{
+    return static_cast<const WebCore::RegionContext*>(p)->isAccessibilityRegionContext();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RegionContext);

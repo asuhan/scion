@@ -144,6 +144,11 @@ extern "C" WEBCORE_EXPORT void* PaintInfo_enclosingSelfPaintingLayer(const void*
     return const_cast<void*>(static_cast<const void*>(layer));
 }
 
+extern "C" WEBCORE_EXPORT void* PaintInfo_regionContext(void* p)
+{
+    return static_cast<WebCore::PaintInfo*>(p)->regionContext;
+}
+
 extern "C" WEBCORE_EXPORT void* PaintInfo_eventRegionContext(void* p)
 {
     return static_cast<WebCore::PaintInfo*>(p)->eventRegionContext();
