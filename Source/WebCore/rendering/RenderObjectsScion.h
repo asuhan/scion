@@ -1401,6 +1401,8 @@ public:
     {
     }
 
+    Widget* widget() const;
+
     void setWidget(Widget*);
 
     uint8_t updateWidgetPosition();

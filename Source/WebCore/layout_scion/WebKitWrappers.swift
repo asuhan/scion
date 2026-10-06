@@ -3627,6 +3627,13 @@ func RenderLineBreakScion_setWk(
   lineBreak.setWk(wk)
 }
 
+@_cdecl("RenderWidgetScion_widget")
+func RenderWidgetScion_widget(_ widgetRendererRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let renderWidget = Unmanaged<RenderWidgetWrapper>.fromOpaque(widgetRendererRaw)
+    .takeUnretainedValue()
+  return renderWidget.widget().map(widgetRaw)
+}
+
 @_cdecl("RenderWidgetScion_setWidget")
 func RenderWidgetScion_setWidget(
   _ widgetRendererRaw: UnsafeMutableRawPointer, _ widgetRaw: UnsafeMutableRawPointer?

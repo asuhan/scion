@@ -452,7 +452,7 @@ private func roundedIntRect(_ rect: LayoutRectWrapper) -> IntRect {
 }
 
 // Returns the C++ Widget pointer behind a Swift widget wrapper.
-private func widgetRaw(_ widget: Widget) -> UnsafeMutableRawPointer {
+func widgetRaw(_ widget: Widget) -> UnsafeMutableRawPointer {
   guard let scrollView = widget as? ScrollViewWrapper else {
     // TODO(asuhan): implement this for plugins and scrollbars
     fatalError("Not implemented")

@@ -198,6 +198,18 @@ bool RenderWidget::updateWidgetGeometry()
     return setWidgetGeometry(absoluteContentBox);
 }
 
+Widget* RenderWidget::widget() const
+{
+    if (m_scion) { return m_scion->widget(); }
+    return m_widget.get();
+}
+
+RefPtr<Widget> RenderWidget::protectedWidget() const
+{
+    if (m_scion) { return m_scion->widget(); }
+    return m_widget;
+}
+
 void RenderWidget::setWidget(RefPtr<Widget>&& widget)
 {
     if (m_scion) {

@@ -812,6 +812,8 @@ extern "C" void RenderLineBreakScion_setWk(void*, void*);
 
 extern "C" void RenderIFrameScion_setWk(void*, void*);
 
+extern "C" void* RenderWidgetScion_widget(const void*);
+
 extern "C" void RenderWidgetScion_setWidget(void*, void*);
 
 extern "C" uint8_t RenderWidgetScion_updateWidgetPosition(void*);
@@ -2688,6 +2690,11 @@ void RenderLineBreakScion::setWk(void* wk)
 void RenderIFrameScion::setWk(void* wk)
 {
     RenderIFrameScion_setWk(wk, m_handle);
+}
+
+Widget* RenderWidgetScion::widget() const
+{
+    return static_cast<Widget*>(RenderWidgetScion_widget(m_handle));
 }
 
 void RenderWidgetScion::setWidget(Widget* widget)

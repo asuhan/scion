@@ -77,16 +77,8 @@ public:
         return downcast<HTMLFrameOwnerElement>(nodeForNonAnonymous());
     }
 
-    Widget* widget() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_widget.get();
-    }
-    RefPtr<Widget> protectedWidget() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_widget;
-    }
+    Widget* widget() const;
+    RefPtr<Widget> protectedWidget() const;
     WEBCORE_EXPORT void setWidget(RefPtr<Widget>&&);
 
     static RenderWidget* find(const Widget&);
