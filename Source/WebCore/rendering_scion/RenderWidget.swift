@@ -34,6 +34,26 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  override func willBeDestroyed() {
+    assert(isNativeImpl())
+    if let cache = document().existingAXObjectCache() {
+      if let parent = parent() {
+        cache.childrenChanged(renderer: parent)
+      }
+      cache.remove(self)
+    }
+
+    if renderTreeBeingDestroyed() && document().backForwardCacheState() == .NotInBackForwardCache,
+      let widget = m_widget
+    {
+      wk_interop.Widget_willBeDestroyed(widgetRaw(widget))
+    }
+
+    setWidget(nil)
+
+    super.willBeDestroyed()
+  }
+
   func frameOwnerElement() -> HTMLFrameOwnerElementWrapper {
     assert(isNativeImpl())
     return nodeForNonAnonymous() as! HTMLFrameOwnerElementWrapper

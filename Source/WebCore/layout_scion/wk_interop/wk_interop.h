@@ -2197,6 +2197,7 @@ bool Widget_isLocalFrameView(const void*);
 bool Widget_isRemoteFrameView(const void*);
 bool Widget_transformsAffectFrameRect(void*);
 void Widget_clipRectChanged(void*);
+void Widget_willBeDestroyed(void*);
 void Widget_ref(void*);
 void Widget_deref(void*);
 void* Widget_toLocalFrameView(void*);

@@ -52,6 +52,11 @@ extern "C" WEBCORE_EXPORT void Widget_clipRectChanged(void* p)
     static_cast<WebCore::Widget*>(p)->clipRectChanged();
 }
 
+extern "C" WEBCORE_EXPORT void Widget_willBeDestroyed(void* p)
+{
+    static_cast<WebCore::Widget*>(p)->willBeDestroyed();
+}
+
 extern "C" WEBCORE_EXPORT void Widget_ref(void* p)
 {
     static_cast<WebCore::Widget*>(p)->ref();
