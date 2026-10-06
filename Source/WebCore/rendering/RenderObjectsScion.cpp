@@ -814,6 +814,8 @@ extern "C" void RenderIFrameScion_setWk(void*, void*);
 
 extern "C" void RenderWidgetScion_setWidget(void*, void*);
 
+extern "C" uint8_t RenderWidgetScion_updateWidgetPosition(void*);
+
 extern "C" bool RenderBoxScion_requiresLayerWithScrollableArea(const void*);
 
 extern "C" bool RenderBoxScion_backgroundIsKnownToBeOpaqueInRect(const void*, LayoutRectRaw);
@@ -2691,6 +2693,11 @@ void RenderIFrameScion::setWk(void* wk)
 void RenderWidgetScion::setWidget(Widget* widget)
 {
     RenderWidgetScion_setWidget(m_handle, widget);
+}
+
+uint8_t RenderWidgetScion::updateWidgetPosition()
+{
+    return RenderWidgetScion_updateWidgetPosition(m_handle);
 }
 
 bool RenderBoxScion::requiresLayerWithScrollableArea() const

@@ -400,7 +400,7 @@ void RenderWidget::setOverlapTestResult(bool isOverlapped)
 
 RenderWidget::ChildWidgetState RenderWidget::updateWidgetPosition()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return static_cast<ChildWidgetState>(m_scion->updateWidgetPosition()); }
     if (!m_widget)
         return ChildWidgetState::Destroyed;
 

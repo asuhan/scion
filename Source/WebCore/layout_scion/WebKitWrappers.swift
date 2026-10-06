@@ -3636,6 +3636,13 @@ func RenderWidgetScion_setWidget(
   renderWidget.setWidget(widgetRaw.map(createWidgetWrapper))
 }
 
+@_cdecl("RenderWidgetScion_updateWidgetPosition")
+func RenderWidgetScion_updateWidgetPosition(_ widgetRendererRaw: UnsafeMutableRawPointer) -> UInt8 {
+  let renderWidget = Unmanaged<RenderWidgetWrapper>.fromOpaque(widgetRendererRaw)
+    .takeUnretainedValue()
+  return renderWidget.updateWidgetPosition().rawValue
+}
+
 @_cdecl("RenderIFrameScion_setWk")
 func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
   let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()

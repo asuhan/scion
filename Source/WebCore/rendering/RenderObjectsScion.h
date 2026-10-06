@@ -1403,6 +1403,8 @@ public:
 
     void setWidget(Widget*);
 
+    uint8_t updateWidgetPosition();
+
 private:
     void* m_handle;
 };

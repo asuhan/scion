@@ -96,9 +96,84 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
     }
   }
 
+  enum ChildWidgetState: UInt8 {
+    case Valid
+    case Destroyed
+  }
+
+  func updateWidgetPosition() -> ChildWidgetState {
+    assert(isNativeImpl())
+    guard let widget = m_widget else {
+      return .Destroyed
+    }
+
+    // TODO(asuhan): updateWidgetGeometry may destroy this renderer, upstream checks a weak
+    // pointer here.
+    let widgetSizeChanged = updateWidgetGeometry()
+    if m_widget == nil {
+      return .Destroyed
+    }
+
+    // if the frame size got changed, or if view needs layout (possibly indicating
+    // content size is wrong) we have to do a layout to set the right widget size.
+    if let frameView = widget as? LocalFrameViewWrapper {
+      // Check the frame's page to make sure that the frame isn't in the process of being destroyed.
+      let localFrame = frameView.frame()
+      if (widgetSizeChanged || frameView.needsLayout()) && localFrame.page() != nil
+        && localFrame.document() != nil
+      {
+        frameView.layoutContext().layout()
+      }
+    }
+    return .Valid
+  }
+
+  private func setWidgetGeometry(_ frame: LayoutRectWrapper) -> Bool {
+    assert(isNativeImpl())
+    let clipRect = roundedIntRect(enclosingLayer()!.childrenClipRect())
+    let newFrameRect = roundedIntRect(frame)
+    let oldFrameRect = m_widget!.frameRect()
+    let clipChanged = m_clipRect != clipRect
+    let boundsChanged = oldFrameRect != newFrameRect
+
+    if !boundsChanged && !clipChanged {
+      return false
+    }
+
+    m_clipRect = clipRect
+
+    // TODO(asuhan): these calls *may* cause this renderer to disappear from underneath, upstream
+    // follows up with a weak pointer check.
+    if boundsChanged {
+      m_widget!.setFrameRect(newFrameRect)
+    } else if clipChanged {
+      wk_interop.Widget_clipRectChanged(widgetRaw(m_widget!))
+    }
+
+    if boundsChanged {
+      view().compositor().widgetDidChangeSize(self)
+    }
+
+    return oldFrameRect.size != newFrameRect.size
+  }
+
   private func updateWidgetGeometry() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !wk_interop.Widget_transformsAffectFrameRect(widgetRaw(m_widget!)) {
+      return setWidgetGeometry(LayoutRectWrapper(rect: absoluteContentBox()))
+    }
+
+    var contentBox = contentBoxRect()
+    var wasFixed: Bool? = nil
+    let absoluteContentBox = LayoutRectWrapper(
+      r: localToAbsoluteQuad(FloatQuad(inRect: contentBox.FloatRect()), .UseTransforms, &wasFixed)
+        .boundingBox())
+    if m_widget is LocalFrameViewWrapper {
+      contentBox.setLocation(location: absoluteContentBox.location())
+      return setWidgetGeometry(contentBox)
+    }
+
+    return setWidgetGeometry(absoluteContentBox)
   }
 
   func requiresAcceleratedCompositing() -> Bool {
@@ -367,6 +442,13 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   private var m_widget: Widget? = nil
+  // The rectangle needs to remain correct after scrolling, so it is stored in content view coordinates, and not clipped to window.
+  private var m_clipRect = IntRect()
+}
+
+private func roundedIntRect(_ rect: LayoutRectWrapper) -> IntRect {
+  return IntRect(
+    location: roundedIntPoint(point: rect.location()), size: roundedIntSize(s: rect.size()))
 }
 
 // Returns the C++ Widget pointer behind a Swift widget wrapper.
