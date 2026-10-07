@@ -264,8 +264,8 @@ class FontCascadeWrapper: Equatable {
   }
 
   func fontSelector() -> FontSelectorWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.FontCascade_fontSelector(p!) else { return nil }
+    return FontSelectorWrapper(p: raw)
   }
 
   static func treatAsSpace(ch: UInt32) -> Bool {

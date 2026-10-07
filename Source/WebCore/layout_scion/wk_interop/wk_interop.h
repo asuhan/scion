@@ -565,6 +565,7 @@ uint8_t FontCascade_characterRangeCodePath(const void*);
 bool FontCascade_useBackslashAsYenSymbol(const void*);
 void* FontCascade_fonts(const void*);
 bool FontCascade_isLoadingCustomFonts(const void*);
+void* FontCascade_fontSelector(const void*);
 void* FontCascadeDescription_create();
 void FontCascadeDescription_destroy(const void*);
 float FontCascadeDescription_specifiedSize(const void*);
