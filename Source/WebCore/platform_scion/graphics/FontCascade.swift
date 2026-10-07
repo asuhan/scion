@@ -26,6 +26,7 @@ import wk_interop
 
 class FontCascadeWrapper: Equatable {
   var p: UnsafeRawPointer?
+  private var owner = false
 
   init(p: UnsafeRawPointer? = nil) {
     self.p = p
@@ -37,9 +38,11 @@ class FontCascadeWrapper: Equatable {
   }
 
   init(_ description: FontCascadeDescriptionWrapper, _ other: FontCascadeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = UnsafeRawPointer(wk_interop.FontCascade_createWithDescription(description.p, other.p!))
+    self.owner = true
   }
+
+  deinit { if owner { wk_interop.FontCascade_destroy(p!) } }
 
   static func == (_ this: FontCascadeWrapper, _ other: FontCascadeWrapper) -> Bool {
     return wk_interop.FontCascade_eq(this.p!, other.p!)
