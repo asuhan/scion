@@ -54,8 +54,7 @@ class FontCascadeWrapper: Equatable {
   }
 
   func update(fontSelector: FontSelectorWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FontCascade_update(p!, fontSelector?.p)
   }
 
   enum CustomFontNotReadyAction {

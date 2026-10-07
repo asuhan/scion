@@ -200,6 +200,11 @@ extern "C" WEBCORE_EXPORT void* FontCascade_fontSelector(const void* p)
     return static_cast<const WebCore::FontCascade*>(p)->fontSelector();
 }
 
+extern "C" WEBCORE_EXPORT void FontCascade_update(const void* p, void* fontSelector)
+{
+    static_cast<const WebCore::FontCascade*>(p)->update(static_cast<WebCore::FontSelector*>(fontSelector));
+}
+
 extern "C" WEBCORE_EXPORT bool FontCascade_isLoadingCustomFonts(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->isLoadingCustomFonts();
