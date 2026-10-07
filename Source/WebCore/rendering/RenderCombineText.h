@@ -26,6 +26,8 @@
 
 namespace WebCore {
 
+class RenderCombineTextScion;
+
 class RenderCombineText final : public RenderText {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderCombineText);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderCombineText);
@@ -33,15 +35,37 @@ public:
     RenderCombineText(Text&, const String&);
     virtual ~RenderCombineText();
 
-    Text& textNode() const { return downcast<Text>(nodeForNonAnonymous()); }
+    void setScionHandle(void* handle);
+
+    Text& textNode() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<Text>(nodeForNonAnonymous());
+    }
 
     void combineTextIfNeeded();
     std::optional<FloatPoint> computeTextOrigin(const FloatRect& boxRect) const;
     String combinedStringForRendering() const;
-    bool isCombined() const { return m_isCombined; }
-    float combinedTextWidth(const FontCascade& font) const { return font.size(); }
-    const FontCascade& originalFont() const { return parent()->style().fontCascade(); }
-    const FontCascade& textCombineFont() const { return m_combineFontStyle->fontCascade(); }
+    bool isCombined() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_isCombined;
+    }
+    float combinedTextWidth(const FontCascade& font) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return font.size();
+    }
+    const FontCascade& originalFont() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return parent()->style().fontCascade();
+    }
+    const FontCascade& textCombineFont() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_combineFontStyle->fontCascade();
+    }
 
 private:
     void node() const = delete;
@@ -56,6 +80,7 @@ private:
     float m_combinedTextDescent { 0 };
     bool m_isCombined : 1;
     bool m_needsFontUpdate : 1;
+    std::unique_ptr<RenderCombineTextScion> m_scion;
 };
 
 } // namespace WebCore

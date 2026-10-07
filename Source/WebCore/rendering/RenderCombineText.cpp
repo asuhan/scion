@@ -22,6 +22,7 @@
 #include "RenderCombineText.h"
 
 #include "RenderBlock.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "StyleInheritedData.h"
 #include <wtf/NeverDestroyed.h>
@@ -43,8 +44,15 @@ RenderCombineText::RenderCombineText(Text& textNode, const String& string)
 
 RenderCombineText::~RenderCombineText() = default;
 
+void RenderCombineText::setScionHandle(void* handle)
+{
+    RenderText::setScionHandle(handle);
+    m_scion = std::make_unique<RenderCombineTextScion>(handle);
+}
+
 void RenderCombineText::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: This is pretty hackish.
     // Only cache a new font style if our old one actually changed. We do this to avoid
     // clobbering width variants and shrink-to-fit changes, since we won't recombine when
@@ -66,6 +74,7 @@ void RenderCombineText::styleDidChange(StyleDifference diff, const RenderStyle* 
 
 void RenderCombineText::setRenderedText(const String& text)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderText::setRenderedText(text);
 
     m_needsFontUpdate = true;
@@ -74,6 +83,7 @@ void RenderCombineText::setRenderedText(const String& text)
 
 std::optional<FloatPoint> RenderCombineText::computeTextOrigin(const FloatRect& boxRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_isCombined)
         return std::nullopt;
 
@@ -87,6 +97,7 @@ std::optional<FloatPoint> RenderCombineText::computeTextOrigin(const FloatRect& 
 
 String RenderCombineText::combinedStringForRendering() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_isCombined) {
         auto originalText = this->originalText();
         ASSERT(!originalText.isNull());
@@ -98,6 +109,7 @@ String RenderCombineText::combinedStringForRendering() const
 
 void RenderCombineText::combineTextIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_needsFontUpdate)
         return;
 
