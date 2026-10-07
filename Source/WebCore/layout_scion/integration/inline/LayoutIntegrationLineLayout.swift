@@ -1117,10 +1117,7 @@ class LayoutIntegration {
       return inlineContentCache!.inlineItems.requiresVisualReordering()
     }
 
-    func damage() -> InlineDamageWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func damage() -> InlineDamageWrapper? { return lineDamage }
 
     func hasDetachedContent() -> Bool {
       if let lineDamage = lineDamage {
