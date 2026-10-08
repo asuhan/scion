@@ -491,8 +491,31 @@ class TextUtil {
   }
 
   static func containsStrongDirectionalityText(text: StringWrapperView) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if text.is8Bit() {
+      return false
+    }
+
+    // Upstream filters the UTF-16 code units with SIMD first; this is the scalar equivalent.
+    let span = text.span16()
+    var maybeBidiRTL = false
+    for index in 0..<span.size() {
+      // TODO(asuhan): add SIMD version.
+      if mayBeBidiRTL(UInt32(span[index])) {
+        maybeBidiRTL = true
+        break
+      }
+    }
+    if !maybeBidiRTL {
+      return false
+    }
+
+    for character in text.codePoints() {
+      if isStrongDirectionalityCharacter(character) {
+        return true
+      }
+    }
+
+    return false
   }
 
   static func ellipsisTextInInlineDirection(isHorizontal: Bool = true) -> AtomStringWrapper {
