@@ -41,7 +41,7 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
       return
     }
 
-    let description = originalFont().fontDescription()
+    let description = originalFont().fontDescription().deepCopy()
     let emWidth = description.computedSize() * textCombineMargin
     var shouldUpdateFont = false
 
