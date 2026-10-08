@@ -3052,8 +3052,7 @@ class RenderStyleWrapper: Equatable {
 
   @discardableResult
   func setFontDescription(description: FontCascadeDescriptionWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_setFontDescription(p!, description.p)
   }
 
   func capStyle() -> LineCap { return LineCap(rawValue: RenderStyle_capStyle(p!))! }

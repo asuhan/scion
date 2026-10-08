@@ -2219,6 +2219,11 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setUnicodeBidi(const void* p, uint8_t
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setUnicodeBidi(static_cast<WebCore::UnicodeBidi>(v));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_setFontDescription(const void* p, const void* description)
+{
+    return static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFontDescription(WebCore::FontCascadeDescription { *static_cast<const WebCore::FontCascadeDescription*>(description) });
+}
+
 extern "C" WEBCORE_EXPORT void RenderStyle_setTextWrapMode(const void* p, bool v)
 {
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setTextWrapMode(v ? WebCore::TextWrapMode::NoWrap : WebCore::TextWrapMode::Wrap);

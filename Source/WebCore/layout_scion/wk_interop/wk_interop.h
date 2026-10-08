@@ -1508,6 +1508,7 @@ uint8_t RenderStyle_usedPointerEvents(const void*);
 uint8_t RenderStyle_usedTransformStyle3D(const void*);
 bool RenderStyle_preserves3D(const void*);
 void RenderStyle_setUnicodeBidi(const void*, uint8_t);
+bool RenderStyle_setFontDescription(const void*, const void*);
 void RenderStyle_setTextWrapMode(const void*, bool);
 uint8_t RenderStyle_capStyle(const void*);
 uint8_t RenderStyle_paintOrder(const void*);
