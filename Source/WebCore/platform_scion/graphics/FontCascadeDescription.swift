@@ -35,6 +35,11 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     super.init(p: wk_interop.FontCascadeDescription_create())
   }
 
+  private init(ownedP: UnsafeRawPointer) {
+    owner = true
+    super.init(p: ownedP)
+  }
+
   deinit { if owner { wk_interop.FontCascadeDescription_destroy(p) } }
 
   func specifiedSize() -> Float32 { return wk_interop.FontCascadeDescription_specifiedSize(p) }
@@ -56,8 +61,7 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
   func setSpecifiedSize(s: Float32) { wk_interop.FontCascadeDescription_setSpecifiedSize(p, s) }
 
   func deepCopy() -> FontCascadeDescriptionWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FontCascadeDescriptionWrapper(ownedP: wk_interop.FontCascadeDescription_copy(p))
   }
 
   private let owner: Bool

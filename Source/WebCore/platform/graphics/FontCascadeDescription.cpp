@@ -42,6 +42,11 @@ extern "C" WEBCORE_EXPORT void* FontCascadeDescription_create()
     return new WebCore::FontCascadeDescription();
 }
 
+extern "C" WEBCORE_EXPORT void* FontCascadeDescription_copy(const void* p)
+{
+    return new WebCore::FontCascadeDescription(*static_cast<const WebCore::FontCascadeDescription*>(p));
+}
+
 extern "C" WEBCORE_EXPORT void FontCascadeDescription_destroy(const void* p)
 {
     delete static_cast<const WebCore::FontCascadeDescription*>(p);
