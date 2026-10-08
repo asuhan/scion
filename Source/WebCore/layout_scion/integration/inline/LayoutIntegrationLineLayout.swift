@@ -277,6 +277,7 @@ class LayoutIntegration {
         }
 
         if shouldOnlyCheckForRelativeDimension && !siblingHasRelativeDimensions {
+          sibling = sibling!.nextSibling()
           continue
         }
 
