@@ -22,6 +22,13 @@
 private let textCombineMargin: Float32 = 1.15
 
 final class RenderCombineTextWrapper: RenderTextWrapper {
+  init(_ textNode: TextWrapper, _ string: StringWrapper) {
+    super.init(.CombineText, textNode, string)
+    assert(isRenderCombineText())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func combineTextIfNeeded() {
     assert(isNativeImpl())
     if !needsFontUpdate {

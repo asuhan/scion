@@ -186,8 +186,14 @@ RenderPtr<RenderText> Text::createTextRenderer(const RenderStyle& style)
     if (isSVGText(*this) || isSVGShadowText(*this))
         return createRenderer<RenderSVGInlineText>(*this, data());
 
-    if (style.hasTextCombine())
+    if (style.hasTextCombine()) {
+        if (Document::s_useScionRendering >= 7) {
+            auto renderer = createRenderer<RenderCombineText>(*this, data());
+            renderer->setScionHandle(RenderCombineTextScion_create(this, &data()));
+            return renderer;
+        }
         return createRenderer<RenderCombineText>(*this, data());
+    }
 
     if (Document::s_useScionRendering >= 3) {
         auto renderer = createRenderer<RenderText>(RenderObject::Type::Text, *this, data());

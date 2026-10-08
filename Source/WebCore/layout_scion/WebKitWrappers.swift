@@ -3531,6 +3531,16 @@ func RenderLineBreakScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderCombineTextScion_create")
+func RenderCombineTextScion_create(_ textNode: UnsafeMutableRawPointer, _ text: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let renderCombineText = RenderCombineTextWrapper(
+    TextWrapper(p: textNode), StringWrapper(p: text, owner: false))
+  let unmanaged = Unmanaged.passRetained(renderCombineText)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderIFrameScion_create")
 func RenderIFrameScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer

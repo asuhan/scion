@@ -48,6 +48,8 @@ extern "C" void* RenderLineBreakScion_create(bool, void*, const void*);
 
 extern "C" void* RenderIFrameScion_create(void*, const void*);
 
+extern "C" void* RenderCombineTextScion_create(void*, const void*);
+
 namespace WebCore {
 
 class HitTestLocation;

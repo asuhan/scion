@@ -500,7 +500,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     self.init(type, document.ContainerNode(), text)
   }
 
-  private init(_ type: `Type`, _ node: NodeWrapper, _ text: StringWrapper) {
+  init(_ type: `Type`, _ node: NodeWrapper, _ text: StringWrapper) {
     super.init(type, node, .IsText, RenderObjectWrapper.TypeSpecificFlags())
     m_text = text
     m_containsOnlyASCII = text.containsOnlyASCII()
