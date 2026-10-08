@@ -348,8 +348,7 @@ struct TextPainter {
   private var emphasisMarkOffset: Float32 = 0
   private var textBoxIsHorizontal: Bool = true
 
-  private static var objectReplacementCharacterTextRun: TextRunWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  private static let objectReplacementCharacterTextRun = TextRunWrapper(
+    text: StringWrapper(
+      characters: WTF.span(character: CharacterNames.Unicode.objectReplacementCharacter)))
 }
