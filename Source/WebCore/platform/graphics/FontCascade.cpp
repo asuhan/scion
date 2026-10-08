@@ -51,6 +51,13 @@ extern "C" WEBCORE_EXPORT bool FontCascade_canUseSimplifiedTextMeasuring(const v
     return fontCascade->canUseSimplifiedTextMeasuring(character, fontVariant, whitespaceIsCollapsed, primaryFont);
 }
 
+struct GlyphOverflowRaw {
+    int32_t left;
+    int32_t right;
+    int32_t top;
+    int32_t bottom;
+};
+
 struct OptionalUIntRaw {
     uint32_t value;
     bool is_valid;
@@ -193,6 +200,19 @@ extern "C" WEBCORE_EXPORT bool FontCascade_useBackslashAsYenSymbol(const void* p
 extern "C" WEBCORE_EXPORT void* FontCascade_fonts(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->fonts();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_widthWithGlyphOverflow(const void* p, const void* run, GlyphOverflowRaw* glyphOverflowRaw, bool computeBounds)
+{
+    WebCore::GlyphOverflow glyphOverflow;
+    glyphOverflow.left = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->left);
+    glyphOverflow.right = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->right);
+    glyphOverflow.top = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->top);
+    glyphOverflow.bottom = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->bottom);
+    glyphOverflow.computeBounds = computeBounds;
+    const auto result = static_cast<const WebCore::FontCascade*>(p)->width(*static_cast<const WebCore::TextRun*>(run), nullptr, &glyphOverflow);
+    *glyphOverflowRaw = { glyphOverflow.left.rawValue(), glyphOverflow.right.rawValue(), glyphOverflow.top.rawValue(), glyphOverflow.bottom.rawValue() };
+    return result;
 }
 
 extern "C" WEBCORE_EXPORT void* FontCascade_createWithDescription(const void* description, const void* other)

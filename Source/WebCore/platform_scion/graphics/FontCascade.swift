@@ -98,12 +98,29 @@ class FontCascadeWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func width(run: TextRunWrapper, _ fallbackFonts: WeakHashSet<FontWrapper>? = nil) -> Float32 {
+    var glyphOverflow: GlyphOverflow? = nil
+    return width(run: run, fallbackFonts, &glyphOverflow)
+  }
+
   func width(
-    run: TextRunWrapper, _ fallbackFonts: WeakHashSet<FontWrapper>? = nil,
-    _ glyphOverflow: GlyphOverflow? = nil
+    run: TextRunWrapper, _ fallbackFonts: WeakHashSet<FontWrapper>?,
+    _ glyphOverflow: inout GlyphOverflow?
   ) -> Float32 {
-    if p != nil && run.p != nil && fallbackFonts == nil && glyphOverflow == nil {
-      return font_cascade_width(fontCascadePtr: p!, textRunPtr: run.p!)
+    if p != nil && run.p != nil && fallbackFonts == nil {
+      if glyphOverflow == nil {
+        return font_cascade_width(fontCascadePtr: p!, textRunPtr: run.p!)
+      }
+      var raw = GlyphOverflowRaw(
+        left: glyphOverflow!.left.rawValue(), right: glyphOverflow!.right.rawValue(),
+        top: glyphOverflow!.top.rawValue(), bottom: glyphOverflow!.bottom.rawValue())
+      let result = wk_interop.FontCascade_widthWithGlyphOverflow(
+        p!, run.p!, &raw, glyphOverflow!.computeBounds)
+      glyphOverflow!.left = LayoutUnit.fromRawValue(value: raw.left)
+      glyphOverflow!.right = LayoutUnit.fromRawValue(value: raw.right)
+      glyphOverflow!.top = LayoutUnit.fromRawValue(value: raw.top)
+      glyphOverflow!.bottom = LayoutUnit.fromRawValue(value: raw.bottom)
+      return result
     }
     // TODO(asuhan): implement this
     fatalError("Not implemented")

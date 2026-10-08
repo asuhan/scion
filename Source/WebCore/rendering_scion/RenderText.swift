@@ -1033,7 +1033,7 @@ class RenderTextWrapper: RenderObjectWrapper {
       run.setTabSize(allow: !style.collapseWhiteSpace(), size: style.tabSize())
       run.setXPos(xPos)
 
-      width = fontCascade.width(run: run, fallbackFonts, glyphOverflow)
+      width = fontCascade.width(run: run, fallbackFonts, &glyphOverflow)
     }
 
     return clampTo(value: width, min: 0)
@@ -1991,7 +1991,9 @@ class RenderTextWrapper: RenderObjectWrapper {
     run.setCharacterScanForCodePath(!canUseSimpleFontCodePath())
     run.setTabSize(allow: !style.collapseWhiteSpace(), size: style.tabSize())
     run.setXPos(xPos)
-    return fontCascade.width(run: run, fallbackFonts, glyphOverflow)
+    // TODO(asuhan): glyphOverflow is an out parameter upstream
+    var glyphOverflow = glyphOverflow
+    return fontCascade.width(run: run, fallbackFonts, &glyphOverflow)
   }
 
   private func computeUseBackslashAsYenSymbol() -> Bool {
@@ -2063,7 +2065,9 @@ class RenderTextWrapper: RenderObjectWrapper {
 
       let run = RenderBlockWrapper.constructTextRun(fragmentWithHyphen.toString(), style)
       run.setCharacterScanForCodePath(!canUseSimpleFontCodePath())
-      let fragmentWidth = font.width(run: run, fallbackFonts, glyphOverflow)
+      var fragmentGlyphOverflow: GlyphOverflow? = glyphOverflow
+      let fragmentWidth = font.width(run: run, fallbackFonts, &fragmentGlyphOverflow)
+      glyphOverflow = fragmentGlyphOverflow!
 
       // Narrow prefixes are ignored. See tryHyphenating in RenderBlockLineLayout.cpp.
       if fragmentWidth <= minimumFragmentWidthToConsider {
