@@ -1377,6 +1377,8 @@ public:
     {
     }
 
+    bool isCombined() const;
+
 private:
     void* m_handle;
 };

@@ -812,6 +812,8 @@ extern "C" void RenderLineBreakScion_setWk(void*, void*);
 
 extern "C" void RenderIFrameScion_setWk(void*, void*);
 
+extern "C" bool RenderCombineTextScion_isCombined(const void*);
+
 extern "C" void* RenderWidgetScion_widget(const void*);
 
 extern "C" void RenderWidgetScion_setWidget(void*, void*);
@@ -2690,6 +2692,11 @@ void RenderLineBreakScion::setWk(void* wk)
 void RenderIFrameScion::setWk(void* wk)
 {
     RenderIFrameScion_setWk(wk, m_handle);
+}
+
+bool RenderCombineTextScion::isCombined() const
+{
+    return RenderCombineTextScion_isCombined(m_handle);
 }
 
 Widget* RenderWidgetScion::widget() const

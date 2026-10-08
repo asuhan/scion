@@ -46,11 +46,7 @@ public:
     void combineTextIfNeeded();
     std::optional<FloatPoint> computeTextOrigin(const FloatRect& boxRect) const;
     String combinedStringForRendering() const;
-    bool isCombined() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_isCombined;
-    }
+    bool isCombined() const;
     float combinedTextWidth(const FontCascade& font) const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -81,6 +81,12 @@ void RenderCombineText::setRenderedText(const String& text)
     combineTextIfNeeded();
 }
 
+bool RenderCombineText::isCombined() const
+{
+    if (m_scion) { return m_scion->isCombined(); }
+    return m_isCombined;
+}
+
 std::optional<FloatPoint> RenderCombineText::computeTextOrigin(const FloatRect& boxRect) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

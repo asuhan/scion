@@ -3650,6 +3650,13 @@ func RenderWidgetScion_updateWidgetPosition(_ widgetRendererRaw: UnsafeMutableRa
   return renderWidget.updateWidgetPosition().rawValue
 }
 
+@_cdecl("RenderCombineTextScion_isCombined")
+func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bool {
+  let combineText = Unmanaged<RenderCombineTextWrapper>.fromOpaque(combineTextRaw)
+    .takeUnretainedValue()
+  return combineText.isCombined()
+}
+
 @_cdecl("RenderIFrameScion_setWk")
 func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
   let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()
