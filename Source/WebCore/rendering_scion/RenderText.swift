@@ -596,8 +596,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   func originalText() -> StringWrapper {
     assert(isNativeImpl())
     if m_originalTextDiffersFromRendered {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return StringWrapper(p: wk_interop.originalTextMap_get(wkRenderObject(self)), owner: false)
     }
     return m_text!
   }

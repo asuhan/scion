@@ -1100,6 +1100,7 @@ void RenderText_resetMinMaxWidth(void*);
 void* RenderText_scion(const void*);
 void originalTextMap_remove(const void*);
 void originalTextMap_set(const void*, const void*);
+const void* originalTextMap_get(const void*);
 bool originalTextMap_contains(const void*);
 void* inlineWrapperForDisplayContentsMap_get(const void*);
 void inlineWrapperForDisplayContentsMap_add(const void*, void*);

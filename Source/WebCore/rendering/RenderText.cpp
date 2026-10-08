@@ -2439,6 +2439,14 @@ extern "C" WEBCORE_EXPORT void originalTextMap_set(const void* render_text_raw, 
     WebCore::originalTextMap().set(render_text, original_text);
 }
 
+extern "C" WEBCORE_EXPORT const void* originalTextMap_get(const void* render_text_raw)
+{
+    const auto render_text = static_cast<const WebCore::RenderText*>(render_text_raw);
+    auto it = WebCore::originalTextMap().find(render_text);
+    ASSERT(it != WebCore::originalTextMap().end());
+    return &it->value;
+}
+
 extern "C" WEBCORE_EXPORT bool originalTextMap_contains(const void* render_text_raw)
 {
     const auto render_text = static_cast<const WebCore::RenderText*>(render_text_raw);
