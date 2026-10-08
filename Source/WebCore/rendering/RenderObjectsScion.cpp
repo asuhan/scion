@@ -518,6 +518,8 @@ extern "C" const void* RenderTextScion_grammarErrorPseudoStyle(const void*);
 
 extern "C" const void* RenderTextScion_text(const void*);
 
+extern "C" const void* RenderTextScion_originalText(const void*);
+
 extern "C" const void* RenderTextScion_textWithoutConvertingBackslashToYenSymbol(const void*);
 
 extern "C" IntRectRaw RenderTextScion_linesBoundingBox(const void*);
@@ -2399,6 +2401,11 @@ const RenderStyle* RenderTextScion::grammarErrorPseudoStyle() const
 const String& RenderTextScion::text() const
 {
     return *static_cast<const String*>(RenderTextScion_text(m_handle));
+}
+
+String RenderTextScion::originalText() const
+{
+    return *static_cast<const String*>(RenderTextScion_originalText(m_handle));
 }
 
 String RenderTextScion::textWithoutConvertingBackslashToYenSymbol() const

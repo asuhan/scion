@@ -2807,6 +2807,12 @@ func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer
   return text.p
 }
 
+@_cdecl("RenderTextScion_originalText")
+func RenderTextScion_originalText(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  return renderText.originalText().p
+}
+
 @_cdecl("RenderTextScion_textWithoutConvertingBackslashToYenSymbol")
 func RenderTextScion_textWithoutConvertingBackslashToYenSymbol(_ renderTextRaw: UnsafeRawPointer)
   -> UnsafeRawPointer

@@ -568,7 +568,7 @@ const RenderStyle* RenderText::grammarErrorPseudoStyle() const
 
 String RenderText::originalText() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->originalText(); }
     return m_originalTextDiffersFromRendered ? originalTextMap().get(this) : m_text;
 }
 

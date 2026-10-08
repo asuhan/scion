@@ -692,6 +692,8 @@ public:
 
     const String& text() const;
 
+    String originalText() const;
+
     String textWithoutConvertingBackslashToYenSymbol() const;
 
     IntRect linesBoundingBox() const;
