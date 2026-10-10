@@ -111,6 +111,17 @@
 #include <pal/cf/CoreMediaSoftLink.h>
 #endif
 
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT IntSizeRaw HTMLCanvasElement_size(const void* p)
+{
+    const auto size = static_cast<const WebCore::HTMLCanvasElement*>(p)->size();
+    return { size.width(), size.height() };
+}
+
 extern "C" WEBCORE_EXPORT void HTMLCanvasElement_setIsSnapshotting(void* p, bool isSnapshotting)
 {
     static_cast<WebCore::HTMLCanvasElement*>(p)->setIsSnapshotting(isSnapshotting);

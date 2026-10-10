@@ -45,7 +45,7 @@ final class HTMLCanvasElementWrapper: HTMLElementWrapper {
 
   // TODO(asuhan): should come from CanvasBase
   func size() -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let size = wk_interop.HTMLCanvasElement_size(p)
+    return IntSize(width: size.width, height: size.height)
   }
 }

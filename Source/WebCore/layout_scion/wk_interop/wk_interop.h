@@ -2197,6 +2197,7 @@ int32_t HTMLFrameSetElement_totalCols(const void*);
 int32_t HTMLFrameSetElement_border(const void*);
 bool HTMLFrameSetElement_hasBorderColor(const void*);
 bool is_HTMLFrameSetElement(const void*);
+struct IntSizeRaw HTMLCanvasElement_size(const void*);
 void HTMLCanvasElement_setIsSnapshotting(void*, bool);
 uint8_t HTMLImageElement_decodingMode(const void*);
 bool HTMLOptionElement_selected(const void*, bool);
