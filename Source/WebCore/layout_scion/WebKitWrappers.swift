@@ -3686,6 +3686,15 @@ func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeM
   iframe.setWk(wk)
 }
 
+@_cdecl("RenderBoxModelObjectScion_hasAcceleratedCompositing")
+func RenderBoxModelObjectScion_hasAcceleratedCompositing(_ boxModelObjectRaw: UnsafeRawPointer)
+  -> Bool
+{
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  return boxModelObject.hasAcceleratedCompositing()
+}
+
 @_cdecl("RenderBoxModelObjectScion_offsetForInFlowPosition")
 func RenderBoxModelObjectScion_offsetForInFlowPosition(_ boxModelObjectRaw: UnsafeRawPointer)
   -> LayoutSizeRaw

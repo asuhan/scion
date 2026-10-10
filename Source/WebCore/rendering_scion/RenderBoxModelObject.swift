@@ -496,6 +496,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       size: constraints.computeStickyOffset(constrainingRect: constrainingRect))
   }
 
+  func hasAcceleratedCompositing() -> Bool {
+    assert(isNativeImpl())
+    return view().compositor().hasAcceleratedCompositing()
+  }
+
   func offsetForInFlowPosition() -> LayoutSizeWrapper {
     assert(isNativeImpl())
     if isRelativelyPositioned() {

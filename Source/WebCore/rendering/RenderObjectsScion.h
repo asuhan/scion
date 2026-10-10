@@ -778,6 +778,8 @@ public:
 
     LayoutSize offsetForInFlowPosition() const;
 
+    bool hasAcceleratedCompositing() const;
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;

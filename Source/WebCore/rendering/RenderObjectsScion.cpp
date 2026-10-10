@@ -764,6 +764,8 @@ struct LayoutSizeRaw {
 
 extern "C" LayoutSizeRaw RenderBoxModelObjectScion_offsetForInFlowPosition(const void* p);
 
+extern "C" bool RenderBoxModelObjectScion_hasAcceleratedCompositing(const void*);
+
 extern "C" int32_t RenderBoxModelObjectScion_borderTop(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_verticalMarginExtent(const void*);
@@ -2566,6 +2568,11 @@ bool RenderLayerModelObjectScion::hasSelfPaintingLayer() const
 bool RenderLayerModelObjectScion::shouldPlaceVerticalScrollbarOnLeft() const
 {
     return RenderLayerModelObjectScion_shouldPlaceVerticalScrollbarOnLeft(m_handle);
+}
+
+bool RenderBoxModelObjectScion::hasAcceleratedCompositing() const
+{
+    return RenderBoxModelObjectScion_hasAcceleratedCompositing(m_handle);
 }
 
 LayoutSize RenderBoxModelObjectScion::offsetForInFlowPosition() const

@@ -221,7 +221,7 @@ void RenderBoxModelObject::contentChanged(ContentChangeType changeType)
 
 bool RenderBoxModelObject::hasAcceleratedCompositing() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hasAcceleratedCompositing(); }
     return view().compositor().hasAcceleratedCompositing();
 }
 
