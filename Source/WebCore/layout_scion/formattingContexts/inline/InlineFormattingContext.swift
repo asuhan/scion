@@ -106,7 +106,8 @@ internal func computePreviousLine(
   if lineDamage == nil || lineDamage!.layoutStartPosition() == nil {
     fatalError("Not reached")
   }
-  let lastLineIndex = lineDamage!.layoutStartPosition()!.lineIndex - 1
+  // NB(asuhan): upstream relies on size_t wraparound when the damage starts on the first line.
+  let lastLineIndex = lineDamage!.layoutStartPosition()!.lineIndex &- 1
   // FIXME: We should be able to extract the last line information and provide it to layout as "previous line" (ends in line break and inline direction).
   return PreviousLine(
     lineIndex: lastLineIndex, trailingOverflowingContentWidth: nil, endsWithLineBreak: false,
@@ -332,7 +333,7 @@ class InlineFormattingContext {
         needsLayoutRange: InlineItemRange(
           start: leadingInlineItemPosition, end: needsLayoutRange.end),
         initialLogicalRect: lineInitialRect)
-      let lineIndex = previousLine_ != nil ? previousLine_!.lineIndex + 1 : 0
+      let lineIndex = previousLine_ != nil ? previousLine_!.lineIndex &+ 1 : 0
 
       let lineLayoutResult = lineBuilder.layoutInlineContent(
         lineInput: lineInput, previousLine: previousLine_)
