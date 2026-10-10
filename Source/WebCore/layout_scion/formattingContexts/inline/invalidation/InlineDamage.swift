@@ -75,8 +75,21 @@ class InlineDamageWrapper {
   typealias TrailingDisplayBoxList = [InlineDisplay.Box]
 
   func trailingContentForLine(lineIndex: UInt64) -> InlineDisplay.Box? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_trailingDisplayBoxes.isEmpty {
+      // Couldn't compute trailing positions for damaged lines.
+      return nil
+    }
+    guard let layoutStartPosition = layoutStartPosition(),
+      layoutStartPosition.lineIndex <= lineIndex
+    else {
+      fatalError("Not reached")
+    }
+    let relativeLineIndex = lineIndex - layoutStartPosition.lineIndex
+    if relativeLineIndex >= m_trailingDisplayBoxes.count {
+      // At the time of the damage, we didn't have this line yet -e.g content insert at a new line.
+      return nil
+    }
+    return m_trailingDisplayBoxes[Int(relativeLineIndex)]
   }
 
   func addDetachedBox(layoutBox: BoxWrapper) {
@@ -96,7 +109,10 @@ class InlineDamageWrapper {
     wk_interop.InlineDamage_setDamageReason(p, reason.rawValue)
   }
 
-  func resetLayoutPosition() { wk_interop.InlineDamage_resetLayoutPosition(p) }
+  func resetLayoutPosition() {
+    wk_interop.InlineDamage_resetLayoutPosition(p)
+    m_trailingDisplayBoxes.removeAll()
+  }
 
   func setLayoutStartPosition(_ position: LayoutPosition) {
     let positionRaw = LayoutPositionRaw(
@@ -108,8 +124,7 @@ class InlineDamageWrapper {
   }
 
   func setTrailingDisplayBoxes(_ trailingDisplayBoxes: TrailingDisplayBoxList) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_trailingDisplayBoxes = trailingDisplayBoxes
   }
 
   func hasDetachedContent() -> Bool {
@@ -120,4 +135,6 @@ class InlineDamageWrapper {
 
   var p: UnsafeMutableRawPointer
   private let pOwner: Bool
+  // NB(asuhan): is it ok to store the display boxes here rather than the C++ interop?
+  private var m_trailingDisplayBoxes: TrailingDisplayBoxList = []
 }
