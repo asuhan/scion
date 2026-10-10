@@ -174,24 +174,22 @@ extension LayoutIntegration {
         lineCount: numberOfDamagedLines!, damagedRect: &damagedRect)
 
       if layoutResult.range == .FullFromDamage {
-        var displayContent = inlineContent.displayContent
-        displayContent.remove(
+        inlineContent.displayContent.remove(
           firstLineIndex: firstDamagedLineIndex!, numberOfLines: numberOfDamagedLines!,
           firstBoxIndex: firstDamagedBoxIndex!,
           numberOfBoxes: numberOfDamagedBoxes!)
-        displayContent.append(newContent: layoutResult.displayContent)
+        inlineContent.displayContent.append(newContent: layoutResult.displayContent)
       } else if layoutResult.range == .PartialFromDamage {
-        var displayContent = inlineContent.displayContent
-        displayContent.remove(
+        inlineContent.displayContent.remove(
           firstLineIndex: firstDamagedLineIndex!, numberOfLines: numberOfDamagedLines!,
           firstBoxIndex: firstDamagedBoxIndex!,
           numberOfBoxes: numberOfDamagedBoxes!)
-        displayContent.insert(
+        inlineContent.displayContent.insert(
           newContent: layoutResult.displayContent, lineIndex: firstDamagedLineIndex!,
           boxIndex: firstDamagedBoxIndex!)
 
         InlineContentBuilder.adjustCachedBoxIndexesIfNeeded(
-          displayContent: displayContent,
+          displayContent: inlineContent.displayContent,
           firstDamagedLineIndex: firstDamagedLineIndex!, numberOfNewBoxes: numberOfNewBoxes,
           numberOfDamagedBoxes: numberOfDamagedBoxes!, numberOfDamagedLines: numberOfDamagedLines!)
       } else {
