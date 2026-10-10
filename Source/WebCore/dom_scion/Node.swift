@@ -98,8 +98,8 @@ class NodeWrapper {
   }
 
   func parentOrShadowHostElement() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Node_parentOrShadowHostElement(p) else { return nil }
+    return ElementWrapper(p: raw)
   }
 
   // Returns the enclosing event parent Element (or self) that, when clicked, would trigger a navigation.
