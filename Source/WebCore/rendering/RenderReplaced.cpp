@@ -896,7 +896,7 @@ bool RenderReplaced::needsPreferredWidthsRecalculation() const
 
 LayoutSize RenderReplaced::intrinsicSize() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->intrinsicSize(); }
     LayoutSize size = m_intrinsicSize;
     if (isHorizontalWritingMode() ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment())
         size.setWidth(explicitIntrinsicInnerWidth().value_or(0));

@@ -1446,6 +1446,8 @@ public:
     {
     }
 
+    LayoutSize intrinsicSize() const;
+
 private:
     void* m_handle;
 };

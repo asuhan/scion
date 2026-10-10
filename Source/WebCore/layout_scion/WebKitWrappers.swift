@@ -3673,6 +3673,13 @@ func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bo
   return combineText.isCombined()
 }
 
+@_cdecl("RenderReplacedScion_intrinsicSize")
+func RenderReplacedScion_intrinsicSize(_ replacedRaw: UnsafeRawPointer) -> LayoutSizeRaw {
+  let replaced = Unmanaged<RenderReplacedWrapper>.fromOpaque(replacedRaw).takeUnretainedValue()
+  let size = replaced.intrinsicSize()
+  return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
+}
+
 @_cdecl("RenderIFrameScion_setWk")
 func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
   let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()
