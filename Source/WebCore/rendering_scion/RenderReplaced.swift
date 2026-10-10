@@ -893,8 +893,53 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   private func calculateHighlightColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderHighlight = RenderHighlight()
+    // TODO(asuhan): support APP_HIGHLIGHTS
+    if document().settings().highlightAPIEnabled() {
+      if let highlightRegistry = document().highlightRegistryIfExists() {
+        for highlightName in highlightRegistry.highlightNames() {
+          for highlightRange in highlightRegistry.get(name: highlightName).highlightRanges() {
+            if !renderHighlight.setRenderRange(highlightRange: highlightRange) {
+              continue
+            }
+
+            let state = renderHighlight.highlightStateForRenderer(self)
+            if !isHighlighted(state, renderHighlight) {
+              continue
+            }
+
+            if let highlightStyle = getCachedPseudoStyle(
+              pseudoElementIdentifier: Style.PseudoElementIdentifier(
+                pseudoId: .Highlight, nameArgument: highlightName),
+              parentStyle: style())
+            {
+              return highlightStyle.colorResolvingCurrentColor(
+                color: highlightStyle.backgroundColor())
+            }
+          }
+        }
+      }
+    }
+    if document().settings().scrollToTextFragmentEnabled() {
+      if let highlightRegistry = document().fragmentHighlightRegistryIfExists() {
+        for highlightName in highlightRegistry.highlightNames() {
+          for highlightRange in highlightRegistry.get(name: highlightName).highlightRanges() {
+            if !renderHighlight.setRenderRange(highlightRange: highlightRange) {
+              continue
+            }
+
+            let state = renderHighlight.highlightStateForRenderer(self)
+            if !isHighlighted(state, renderHighlight) {
+              continue
+            }
+
+            let styleColorOptions: StyleColorOptions = .UseSystemAppearance
+            return theme().annotationHighlightColor(options: styleColorOptions)
+          }
+        }
+      }
+    }
+    return ColorWrapper()
   }
 
   private func isHighlighted(_ state: HighlightState, _ rangeData: RenderHighlight) -> Bool {

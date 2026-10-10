@@ -156,7 +156,7 @@ class RenderHighlight {
     return renderRange.endOffset
   }
 
-  private func highlightStateForRenderer(_ renderer: RenderObjectWrapper)
+  func highlightStateForRenderer(_ renderer: RenderObjectWrapper)
     -> RenderObjectWrapper.HighlightState
   {
     assert(isNativeImpl())

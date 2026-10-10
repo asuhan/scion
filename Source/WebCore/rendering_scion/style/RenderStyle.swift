@@ -3277,7 +3277,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  private func backgroundColor() -> StyleColorWrapper {
+  func backgroundColor() -> StyleColorWrapper {
     return StyleColorWrapper(wk_interop.RenderStyle_backgroundColor(p!)!)
   }
 
