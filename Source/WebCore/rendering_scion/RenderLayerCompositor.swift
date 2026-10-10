@@ -495,6 +495,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   deinit { wk_interop.RenderLayerCompositor_destroy(interop()) }
 
+  func hasAcceleratedCompositing() -> Bool {
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerCompositor_hasAcceleratedCompositing(interop())
+    }
+    return m_hasAcceleratedCompositing
+  }
+
   // Return true if this RenderView is in "compositing mode" (i.e. has one or more
   // composited RenderLayers)
   func usesCompositing() -> Bool {

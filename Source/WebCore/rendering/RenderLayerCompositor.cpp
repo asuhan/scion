@@ -120,6 +120,11 @@ extern "C" WEBCORE_EXPORT void RenderLayerCompositor_destroy(void* p)
     delete static_cast<WebCore::RenderLayerCompositor*>(p);
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayerCompositor_hasAcceleratedCompositing(const void* p)
+{
+    return static_cast<const WebCore::RenderLayerCompositor*>(p)->hasAcceleratedCompositing();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayerCompositor_usesCompositing(const void* p)
 {
     return static_cast<const WebCore::RenderLayerCompositor*>(p)->usesCompositing();

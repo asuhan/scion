@@ -938,6 +938,7 @@ void LocalFrameViewLayoutContext_scheduleLayout(void*);
 void LocalFrameViewLayoutContext_scheduleSubtreeLayout(void*, void*);
 void LocalFrameViewLayoutContext_layout(void*);
 void RenderLayerCompositor_widgetDidChangeSize(void*, void*);
+bool RenderLayerCompositor_hasAcceleratedCompositing(const void*);
 struct LayoutRectRaw RenderLayer_childrenClipRect(const void*);
 bool LocalFrameViewLayoutContext_isInLayout(const void*);
 bool LocalFrameViewLayoutContext_needsSkippedContentLayout(const void*);
