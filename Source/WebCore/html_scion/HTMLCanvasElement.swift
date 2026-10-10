@@ -30,8 +30,11 @@ import wk_interop
 // TODO(asuhan): inherit from CanvasBase and ActiveDOMObject as well
 final class HTMLCanvasElementWrapper: HTMLElementWrapper {
   func renderingContext() -> CanvasRenderingContextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.HTMLCanvasElement_renderingContext(p) else { return nil }
+    if wk_interop.CanvasRenderingContext_is2dBase(raw) {
+      return CanvasRenderingContext2DBaseWrapper(p: raw)
+    }
+    return CanvasRenderingContextWrapper(p: raw)
   }
 
   func paint(_ context: GraphicsContextWrapper, _ r: LayoutRectWrapper) {

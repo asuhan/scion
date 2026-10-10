@@ -2198,6 +2198,7 @@ int32_t HTMLFrameSetElement_border(const void*);
 bool HTMLFrameSetElement_hasBorderColor(const void*);
 bool is_HTMLFrameSetElement(const void*);
 struct IntSizeRaw HTMLCanvasElement_size(const void*);
+void* HTMLCanvasElement_renderingContext(const void*);
 bool CanvasRenderingContext_delegatesDisplay(const void*);
 bool CanvasRenderingContext_is2dBase(const void*);
 bool CanvasRenderingContext2DBase_isAccelerated(const void*);

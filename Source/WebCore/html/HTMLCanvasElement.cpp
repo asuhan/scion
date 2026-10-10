@@ -122,6 +122,11 @@ extern "C" WEBCORE_EXPORT IntSizeRaw HTMLCanvasElement_size(const void* p)
     return { size.width(), size.height() };
 }
 
+extern "C" WEBCORE_EXPORT void* HTMLCanvasElement_renderingContext(const void* p)
+{
+    return static_cast<const WebCore::HTMLCanvasElement*>(p)->renderingContext();
+}
+
 extern "C" WEBCORE_EXPORT void HTMLCanvasElement_setIsSnapshotting(void* p, bool isSnapshotting)
 {
     static_cast<WebCore::HTMLCanvasElement*>(p)->setIsSnapshotting(isSnapshotting);
