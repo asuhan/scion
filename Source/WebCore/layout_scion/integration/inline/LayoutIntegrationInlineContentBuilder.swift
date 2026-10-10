@@ -217,10 +217,11 @@ extension LayoutIntegration {
         return
       }
       let firstCleanLineIndex = firstDamagedLineIndex + numberOfDamagedLines
-      let offset = numberOfNewBoxes - numberOfDamagedBoxes
+      // NB(asuhan): Upstream relies on unsigned wraparound here, check for alternatives.
+      let offset = numberOfNewBoxes &- numberOfDamagedBoxes
       let lines = displayContent.lines
       for line in lines[Int(firstCleanLineIndex)...] {
-        let adjustedFirstBoxIndex = line.firstBoxIndex() + offset
+        let adjustedFirstBoxIndex = line.firstBoxIndex() &+ offset
         assert(adjustedFirstBoxIndex > 0)
         line.setFirstBoxIndex(firstBoxIndex: adjustedFirstBoxIndex)
       }
