@@ -40,6 +40,7 @@
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderLayer.h"
 #include "RenderLayerBacking.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderView.h"
 #include <wtf/TZoneMallocInlines.h>
@@ -58,13 +59,26 @@ RenderHTMLCanvas::RenderHTMLCanvas(HTMLCanvasElement& element, RenderStyle&& sty
 
 RenderHTMLCanvas::~RenderHTMLCanvas() = default;
 
+void RenderHTMLCanvas::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    RenderReplaced::setScionHandle(handle);
+    m_scion = std::make_unique<RenderHTMLCanvasScion>(handle);
+}
+
 HTMLCanvasElement& RenderHTMLCanvas::canvasElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLCanvasElement>(nodeForNonAnonymous());
 }
 
 bool RenderHTMLCanvas::requiresLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderReplaced::requiresLayer())
         return true;
 
@@ -73,6 +87,7 @@ bool RenderHTMLCanvas::requiresLayer() const
 
 void RenderHTMLCanvas::paintReplaced(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     GraphicsContext& context = paintInfo.context();
 
     LayoutRect contentBoxRect = this->contentBoxRect();
@@ -105,6 +120,7 @@ void RenderHTMLCanvas::paintReplaced(PaintInfo& paintInfo, const LayoutPoint& pa
 
 void RenderHTMLCanvas::canvasSizeChanged()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     IntSize canvasSize = canvasElement().size();
     LayoutSize zoomedSize(canvasSize.width() * style().usedZoom(), canvasSize.height() * style().usedZoom());
 

@@ -30,6 +30,7 @@
 namespace WebCore {
 
 class HTMLCanvasElement;
+class RenderHTMLCanvasScion;
 
 class RenderHTMLCanvas final : public RenderReplaced {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderHTMLCanvas);
@@ -37,6 +38,8 @@ class RenderHTMLCanvas final : public RenderReplaced {
 public:
     RenderHTMLCanvas(HTMLCanvasElement&, RenderStyle&&);
     virtual ~RenderHTMLCanvas();
+
+    void setScionHandle(void* handle);
 
     HTMLCanvasElement& canvasElement() const;
 
@@ -47,7 +50,13 @@ private:
     bool requiresLayer() const override;
     ASCIILiteral renderName() const override { return "RenderHTMLCanvas"_s; }
     void paintReplaced(PaintInfo&, const LayoutPoint&) override;
-    void intrinsicSizeChanged() override { canvasSizeChanged(); }
+    void intrinsicSizeChanged() override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        canvasSizeChanged();
+    }
+
+    std::unique_ptr<RenderHTMLCanvasScion> m_scion;
 };
 
 } // namespace WebCore
