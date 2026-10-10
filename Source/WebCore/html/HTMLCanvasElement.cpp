@@ -127,6 +127,19 @@ extern "C" WEBCORE_EXPORT void* HTMLCanvasElement_renderingContext(const void* p
     return static_cast<const WebCore::HTMLCanvasElement*>(p)->renderingContext();
 }
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT void HTMLCanvasElement_paint(void* p, void* context, LayoutRectRaw r)
+{
+    static_cast<WebCore::HTMLCanvasElement*>(p)->paint(*static_cast<WebCore::GraphicsContext*>(context),
+        { WebCore::LayoutUnit::fromRawValue(r.x), WebCore::LayoutUnit::fromRawValue(r.y), WebCore::LayoutUnit::fromRawValue(r.width), WebCore::LayoutUnit::fromRawValue(r.height) });
+}
+
 extern "C" WEBCORE_EXPORT void HTMLCanvasElement_setIsSnapshotting(void* p, bool isSnapshotting)
 {
     static_cast<WebCore::HTMLCanvasElement*>(p)->setIsSnapshotting(isSnapshotting);

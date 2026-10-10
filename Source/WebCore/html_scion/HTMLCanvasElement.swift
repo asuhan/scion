@@ -38,8 +38,7 @@ final class HTMLCanvasElementWrapper: HTMLElementWrapper {
   }
 
   func paint(_ context: GraphicsContextWrapper, _ r: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.HTMLCanvasElement_paint(p, context.p!, convertLayoutRect(r))
   }
 
   func setIsSnapshotting(_ isSnapshotting: Bool) {

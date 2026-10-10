@@ -2204,6 +2204,7 @@ void* HTMLCanvasElement_renderingContext(const void*);
 bool CanvasRenderingContext_delegatesDisplay(const void*);
 bool CanvasRenderingContext_is2dBase(const void*);
 bool CanvasRenderingContext2DBase_isAccelerated(const void*);
+void HTMLCanvasElement_paint(void*, void*, struct LayoutRectRaw);
 void HTMLCanvasElement_setIsSnapshotting(void*, bool);
 uint8_t HTMLImageElement_decodingMode(const void*);
 bool HTMLOptionElement_selected(const void*, bool);
