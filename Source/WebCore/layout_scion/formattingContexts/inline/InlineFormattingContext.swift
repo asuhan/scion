@@ -671,7 +671,7 @@ class InlineFormattingContext {
       return InlineItemPosition()
     }
     if let startPosition = lineDamage!.layoutStartPosition() {
-      if lineDamage!.damageReasons.contains(.Pagination) {
+      if lineDamage!.reasons().contains(.Pagination) {
         // FIXME: We don't support partial rebuild with certain types of content. Let's just re-collect inline items.
         return InlineItemPosition()
       }

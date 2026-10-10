@@ -1602,6 +1602,7 @@ void InlineDamage_destroy(const void*);
 struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);
 bool InlineDamage_isInlineItemListDirty(const void*);
 void InlineDamage_setInlineItemListClean(void*);
+uint8_t InlineDamage_reasons(const void*);
 void InlineDamage_setDamageReason(void*, uint8_t);
 void InlineDamage_resetLayoutPosition(void*);
 void InlineDamage_setLayoutStartPosition(void*, struct LayoutPositionRaw);

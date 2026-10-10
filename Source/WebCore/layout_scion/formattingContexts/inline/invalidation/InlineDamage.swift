@@ -49,7 +49,7 @@ class InlineDamageWrapper {
   }
 
   func reasons() -> Reason {
-    return damageReasons
+    return Reason(rawValue: wk_interop.InlineDamage_reasons(p))
   }
 
   // FIXME: Add support for damage range with multiple, different damage types.
@@ -120,5 +120,4 @@ class InlineDamageWrapper {
 
   var p: UnsafeMutableRawPointer
   private let pOwner: Bool
-  var damageReasons = Reason(rawValue: 0)
 }
