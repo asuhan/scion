@@ -803,7 +803,7 @@ final class LineBuilder: AbstractLineBuilder {
   }
 
   private func placeFloatBox(boxGeometry: BoxGeometry, floatBox: BoxWrapper) {
-    let lineIndex = previousLine != nil ? (previousLine!.lineIndex + 1) : 0
+    let lineIndex = previousLine != nil ? (previousLine!.lineIndex &+ 1) : 0
     let floatItem = floatingContext.makeFloatItem(
       floatBox: floatBox, boxGeometry: boxGeometry, line: lineIndex)
     layoutState().placedFloats().append(newFloatItem: floatItem)
@@ -883,7 +883,7 @@ final class LineBuilder: AbstractLineBuilder {
   private func availableWidthForCandidateContent(
     constraints: RectAndFloatConstraints, inlineContent: LineCandidate.InlineContent
   ) -> InlineLayoutUnit {
-    let lineIndex = previousLine != nil ? (previousLine!.lineIndex + 1) : 0
+    let lineIndex = previousLine != nil ? (previousLine!.lineIndex &+ 1) : 0
     // If width constraint overrides exist (e.g. text-wrap: balance), modify the available width accordingly.
     let availableLineWidthOverride = layoutState().availableLineWidthOverride
     let widthOverride = availableLineWidthOverride.availableLineWidthOverrideForLine(
