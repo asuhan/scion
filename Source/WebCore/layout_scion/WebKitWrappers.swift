@@ -3680,6 +3680,12 @@ func RenderReplacedScion_intrinsicSize(_ replacedRaw: UnsafeRawPointer) -> Layou
   return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
 }
 
+@_cdecl("RenderReplacedScion_replacedContentRect")
+func RenderReplacedScion_replacedContentRect(_ replacedRaw: UnsafeRawPointer) -> LayoutRectRaw {
+  let replaced = Unmanaged<RenderReplacedWrapper>.fromOpaque(replacedRaw).takeUnretainedValue()
+  return convertLayoutRect(replaced.replacedContentRect())
+}
+
 @_cdecl("RenderIFrameScion_setWk")
 func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
   let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()

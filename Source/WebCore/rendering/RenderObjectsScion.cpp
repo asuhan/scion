@@ -818,6 +818,8 @@ extern "C" void RenderIFrameScion_setWk(void*, void*);
 
 extern "C" LayoutSizeRaw RenderReplacedScion_intrinsicSize(const void*);
 
+extern "C" LayoutRectRaw RenderReplacedScion_replacedContentRect(const void*);
+
 extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
 extern "C" void* RenderWidgetScion_widget(const void*);
@@ -2714,6 +2716,11 @@ LayoutSize RenderReplacedScion::intrinsicSize() const
 {
     const auto size = RenderReplacedScion_intrinsicSize(m_handle);
     return { LayoutUnit::fromRawValue(size.width), LayoutUnit::fromRawValue(size.height) };
+}
+
+LayoutRect RenderReplacedScion::replacedContentRect() const
+{
+    return convertLayoutRectRaw(RenderReplacedScion_replacedContentRect(m_handle));
 }
 
 bool RenderCombineTextScion::isCombined() const

@@ -505,6 +505,12 @@ void RenderReplaced::computeIntrinsicSizesConstrainedByTransferredMinMaxSizes(Re
     }
 }
 
+LayoutRect RenderReplaced::replacedContentRect() const
+{
+    if (m_scion) { return m_scion->replacedContentRect(); }
+    return replacedContentRect(intrinsicSize());
+}
+
 LayoutRect RenderReplaced::replacedContentRect(const LayoutSize& intrinsicSize) const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

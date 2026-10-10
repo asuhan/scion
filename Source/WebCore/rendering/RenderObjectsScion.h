@@ -1450,6 +1450,8 @@ public:
 
     LayoutSize intrinsicSize() const;
 
+    LayoutRect replacedContentRect() const;
+
 private:
     void* m_handle;
 };

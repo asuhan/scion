@@ -39,11 +39,7 @@ public:
     LayoutUnit computeReplacedLogicalHeight(std::optional<LayoutUnit> estimatedUsedWidth = std::nullopt) const override;
 
     LayoutRect replacedContentRect(const LayoutSize& intrinsicSize) const;
-    LayoutRect replacedContentRect() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return replacedContentRect(intrinsicSize());
-    }
+    LayoutRect replacedContentRect() const;
 
     bool setNeedsLayoutIfNeededAfterIntrinsicSizeChange();
 
