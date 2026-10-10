@@ -81,6 +81,11 @@
 #include <wtf/text/StringBuilder.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT bool CanvasRenderingContext2DBase_isAccelerated(const void* p)
+{
+    return static_cast<const WebCore::CanvasRenderingContext2DBase*>(p)->isAccelerated();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

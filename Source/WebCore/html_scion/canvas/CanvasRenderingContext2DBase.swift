@@ -30,9 +30,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class CanvasRenderingContext2DBaseWrapper: CanvasRenderingContextWrapper {
   func isAccelerated() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.CanvasRenderingContext2DBase_isAccelerated(p)
   }
 }

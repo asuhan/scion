@@ -23,15 +23,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 // TODO(asuhan): inherit from ScriptWrappable
 class CanvasRenderingContextWrapper {
+  init(p: UnsafeMutableRawPointer) { self.p = p }
+
   func delegatesDisplay() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.CanvasRenderingContext_delegatesDisplay(p)
   }
 
   func setContentsToLayer(_ layer: GraphicsLayer) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let p: UnsafeMutableRawPointer
 }
