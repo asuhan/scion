@@ -76,6 +76,12 @@ extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void* root_rend
     }
 }
 
+extern "C" WEBCORE_EXPORT void BoxTree_insert(void* child_raw, const void* before_child_raw)
+{
+    auto& child = *static_cast<WebCore::RenderObject*>(child_raw);
+    WebCore::LayoutIntegration::BoxTree::insertChild(WebCore::LayoutIntegration::BoxTree::createLayoutBox(child), child, static_cast<const WebCore::RenderObject*>(before_child_raw));
+}
+
 extern "C" WEBCORE_EXPORT void BoxTree_updateStyle(void* renderer_raw)
 {
     WebCore::LayoutIntegration::BoxTree::updateStyle(*static_cast<WebCore::RenderObject*>(renderer_raw));

@@ -66,8 +66,8 @@ extension LayoutIntegration {
     func insert(
       parent: RenderElementWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
     ) -> BoxWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      wk_interop.BoxTree_insert(wkRenderObject(child)!, wkRenderObject(beforeChild))
+      return child.layoutBox()!
     }
 
     func remove(parent: RenderElementWrapper, child: RenderObjectWrapper) -> BoxWrapper {

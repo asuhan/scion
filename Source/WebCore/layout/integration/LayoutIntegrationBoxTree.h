@@ -33,6 +33,7 @@
 
 extern "C" WEBCORE_EXPORT const void* BoxTree_handleNullRootBox(void*);
 extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void*);
+extern "C" WEBCORE_EXPORT void BoxTree_insert(void*, const void*);
 extern "C" WEBCORE_EXPORT void BoxTree_updateStyle(void*);
 
 namespace WebCore {
@@ -94,6 +95,7 @@ private:
 
     friend const void* ::BoxTree_handleNullRootBox(void* root_renderer_raw);
     friend void ::BoxTree_buildTreeForInlineContent(void* root_renderer_raw);
+    friend void ::BoxTree_insert(void* child_raw, const void* before_child_raw);
 };
 
 #if ENABLE(TREE_DEBUGGING)
