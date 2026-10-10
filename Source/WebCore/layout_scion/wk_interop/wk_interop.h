@@ -835,6 +835,7 @@ bool RenderObject_isFixedPositioned(const void*);
 bool RenderObject_isRenderText(const void*);
 bool RenderObject_isRenderLineBreak(const void*);
 bool RenderObject_isRenderIFrame(const void*);
+bool RenderObject_isRenderHTMLCanvas(const void*);
 bool RenderObject_isRenderListBox(const void*);
 bool RenderObject_isRenderListItem(const void*);
 bool RenderObject_isRenderListMarker(const void*);

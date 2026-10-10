@@ -67,6 +67,7 @@
 #include "RenderBoxInlines.h"
 #include "RenderElement.h"
 #include "RenderHTMLCanvas.h"
+#include "RenderObjectsScion.h"
 #include "ResourceLoadObserver.h"
 #include "ScriptController.h"
 #include "ScriptTelemetryCategory.h"
@@ -216,8 +217,15 @@ void HTMLCanvasElement::attributeChanged(const QualifiedName& name, const AtomSt
 RenderPtr<RenderElement> HTMLCanvasElement::createElementRenderer(RenderStyle&& style, const RenderTreePosition& insertionPosition)
 {
     RefPtr frame { document().frame() };
-    if (frame && frame->script().canExecuteScripts(ReasonForCallingCanExecuteScripts::NotAboutToExecuteScript))
+    if (frame && frame->script().canExecuteScripts(ReasonForCallingCanExecuteScripts::NotAboutToExecuteScript)) {
+        if (Document::s_useScionRendering >= 8) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderHTMLCanvas>(*this, WTFMove(style));
+            renderer->setScionHandle(RenderHTMLCanvasScion_create(this, clonedStyle.release()));
+            return renderer;
+        }
         return createRenderer<RenderHTMLCanvas>(*this, WTFMove(style));
+    }
     return HTMLElement::createElementRenderer(WTFMove(style), insertionPosition);
 }
 

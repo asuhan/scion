@@ -2435,6 +2435,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderHTMLCanvas(raw),
+    let canvasRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderHTMLCanvasWrapper>.fromOpaque(canvasRaw).takeUnretainedValue()
+  }
   return createRenderObjectWrapper(raw)
 }
 
@@ -3547,6 +3552,19 @@ func RenderCombineTextScion_create(_ textNode: UnsafeMutableRawPointer, _ text: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderHTMLCanvasScion_create")
+func RenderHTMLCanvasScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let canvas = RenderHTMLCanvasWrapper(HTMLCanvasElementWrapper(p: elementRaw), style)
+  let unmanaged = Unmanaged.passRetained(canvas)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderIFrameScion_create")
 func RenderIFrameScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer
@@ -3671,6 +3689,14 @@ func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bo
   let combineText = Unmanaged<RenderCombineTextWrapper>.fromOpaque(combineTextRaw)
     .takeUnretainedValue()
   return combineText.isCombined()
+}
+
+@_cdecl("RenderHTMLCanvasScion_setWk")
+func RenderHTMLCanvasScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ canvasRaw: UnsafeMutableRawPointer
+) {
+  let canvas = Unmanaged<RenderHTMLCanvasWrapper>.fromOpaque(canvasRaw).takeUnretainedValue()
+  canvas.setWk(wk)
 }
 
 @_cdecl("RenderReplacedScion_intrinsicSize")

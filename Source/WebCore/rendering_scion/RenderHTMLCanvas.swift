@@ -24,6 +24,13 @@
  */
 
 final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
+  init(_ element: HTMLCanvasElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(.HTMLCanvas, element, style, LayoutSizeWrapper(size: element.size()))
+    assert(isRenderHTMLCanvas())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func canvasElement() -> HTMLCanvasElementWrapper {
     return nodeForNonAnonymous() as! HTMLCanvasElementWrapper
   }
@@ -95,4 +102,11 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
   }
 
   override func intrinsicSizeChanged() { canvasSizeChanged() }
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }

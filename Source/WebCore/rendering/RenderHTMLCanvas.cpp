@@ -68,6 +68,7 @@ void RenderHTMLCanvas::setScionHandle(void* handle)
     RenderBox::setScionHandle(handle);
     RenderReplaced::setScionHandle(handle);
     m_scion = std::make_unique<RenderHTMLCanvasScion>(handle);
+    m_scion->setWk(this);
 }
 
 HTMLCanvasElement& RenderHTMLCanvas::canvasElement() const

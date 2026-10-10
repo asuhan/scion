@@ -93,6 +93,16 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     assert(isRenderReplaced())
   }
 
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ element: ElementWrapper, _ style: RenderStyleWrapper,
+    _ intrinsicSize: LayoutSizeWrapper, _ flags: RenderObjectWrapper.ReplacedFlag = []
+  ) {
+    super.init(type, element, style, [], RenderObjectWrapper.TypeSpecificFlags(flags))
+    m_intrinsicSize = intrinsicSize
+    setReplacedOrInlineBlock(true)
+    assert(isRenderReplaced())
+  }
+
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   override func willBeDestroyed() {
