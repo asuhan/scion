@@ -38,6 +38,7 @@
 namespace WebCore {
 
 class FlexLayoutItem;
+class RenderFlexibleBoxScion;
 namespace LayoutIntegration {
 class FlexLayout;
 }
@@ -50,10 +51,13 @@ public:
     RenderFlexibleBox(Type, Document&, RenderStyle&&);
     virtual ~RenderFlexibleBox();
 
+    void setScionHandle(void* handle);
+
     using Direction = FlowDirection;
 
     ASCIILiteral renderName() const override;
 
+    // NB(asuhan): these return literals, we can skip the Scion check
     bool avoidsFloats() const final { return true; }
     bool canDropAnonymousBlockChild() const final { return false; }
     void layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight = 0_lu) final;
@@ -70,6 +74,7 @@ public:
     bool isHorizontalFlow() const;
     inline Direction crossAxisDirection() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         switch (writingModeToBlockFlowDirection(style().writingMode())) {
         case FlowDirection::TopToBottom:
             if (style().isRowFlexDirection())
@@ -93,7 +98,11 @@ public:
         }
     }
 
-    const OrderIterator& orderIterator() const { return m_orderIterator; }
+    const OrderIterator& orderIterator() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_orderIterator;
+    }
 
     LayoutOptionalOutsets allowedLayoutOverflow() const override;
 
@@ -122,16 +131,28 @@ public:
 
     bool shouldApplyMinBlockSizeAutoForFlexItem(const RenderBox&) const;
 
-    bool isComputingFlexBaseSizes() const { return m_isComputingFlexBaseSizes; }
+    bool isComputingFlexBaseSizes() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_isComputingFlexBaseSizes;
+    }
 
     static std::optional<TextDirection> leftRightAxisDirectionFromStyle(const RenderStyle&);
 
-    bool hasModernLayout() const { return m_hasFlexFormattingContextLayout; }
+    bool hasModernLayout() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hasFlexFormattingContextLayout;
+    }
 
 protected:
     void computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const override;
 
-    bool shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const override { return m_shouldResetFlexItemLogicalHeightBeforeLayout; }
+    bool shouldResetChildLogicalHeightBeforeLayout(const RenderBox&) const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_shouldResetFlexItemLogicalHeightBeforeLayout;
+    }
 
 private:
     friend class FlexLayoutAlgorithm;
@@ -261,7 +282,11 @@ private:
 
     bool flexItemHasPercentHeightDescendants(const RenderBox&) const;
 
-    void resetHasDefiniteHeight() { m_hasDefiniteHeight = SizeDefiniteness::Unknown; }
+    void resetHasDefiniteHeight()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_hasDefiniteHeight = SizeDefiniteness::Unknown;
+    }
     const RenderBox* flexItemForFirstBaseline() const;
     const RenderBox* flexItemForLastBaseline() const;
     const RenderBox* firstBaselineCandidateOnLine(OrderIterator, ItemPosition baselinePosition, size_t numberOfItemsOnLine) const;
@@ -304,6 +329,7 @@ private:
     bool m_shouldResetFlexItemLogicalHeightBeforeLayout { false };
     bool m_isComputingFlexBaseSizes { false };
     bool m_hasFlexFormattingContextLayout { false };
+    std::unique_ptr<RenderFlexibleBoxScion> m_scion;
 };
 
 } // namespace WebCore
