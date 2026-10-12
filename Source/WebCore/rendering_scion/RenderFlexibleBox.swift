@@ -89,8 +89,11 @@ private func updateFlexItemDirtyBitsBeforeLayout(relayoutFlexItem: Bool, flexIte
 }
 
 private func contentAlignmentNormalBehavior() -> StyleContentAlignmentData {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // The justify-content property applies along the main axis, but since
+  // flexing in the main axis is controlled by flex, stretch behaves as
+  // flex-start (ignoring the specified fallback alignment, if any).
+  // https://drafts.csswg.org/css-align/#distribution-flex
+  return StyleContentAlignmentData(position: .Normal, distribution: .Stretch)
 }
 
 // FIXME: consider adding this check to RenderBox::hasIntrinsicAspectRatio(). We could even make it
