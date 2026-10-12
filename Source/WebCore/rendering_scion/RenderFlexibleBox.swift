@@ -3426,7 +3426,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   // sizing of children.
   let relaidOutFlexItems = WeakHashSet<RenderBoxWrapper>()
 
-  let orderIterator: OrderIterator? = nil
+  // Upstream initializes the order iterator with the flexbox itself.
+  lazy var orderIterator: OrderIterator? = OrderIterator(containerBox: self)
   var numberOfFlexItemsOnFirstLine: UInt64 = 0
   var numberOfFlexItemsOnLastLine: UInt64 = 0
 

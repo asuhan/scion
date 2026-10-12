@@ -3558,7 +3558,9 @@ func RenderCombineTextScion_create(_ textNode: UnsafeMutableRawPointer, _ text: 
 }
 
 @_cdecl("RenderFlexibleBoxScion_create")
-func RenderFlexibleBoxScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+func RenderFlexibleBoxScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
   -> UnsafeMutableRawPointer
 {
   let style = convert_render_style(p: styleRaw)
