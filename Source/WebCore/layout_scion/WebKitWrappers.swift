@@ -2440,6 +2440,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderHTMLCanvasWrapper>.fromOpaque(canvasRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderFlexibleBox(raw),
+    let flexibleBoxRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderFlexibleBoxWrapper>.fromOpaque(flexibleBoxRaw).takeUnretainedValue()
+  }
   return createRenderObjectWrapper(raw)
 }
 
@@ -3552,6 +3557,18 @@ func RenderCombineTextScion_create(_ textNode: UnsafeMutableRawPointer, _ text: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderFlexibleBoxScion_create")
+func RenderFlexibleBoxScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let flexibleBox = RenderFlexibleBoxWrapper(
+    type: .FlexibleBox, element: ElementWrapper(p: elementRaw), style: style)
+  let unmanaged = Unmanaged.passRetained(flexibleBox)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderHTMLCanvasScion_create")
 func RenderHTMLCanvasScion_create(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
@@ -3689,6 +3706,15 @@ func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bo
   let combineText = Unmanaged<RenderCombineTextWrapper>.fromOpaque(combineTextRaw)
     .takeUnretainedValue()
   return combineText.isCombined()
+}
+
+@_cdecl("RenderFlexibleBoxScion_setWk")
+func RenderFlexibleBoxScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ flexibleBoxRaw: UnsafeMutableRawPointer
+) {
+  let flexibleBox = Unmanaged<RenderFlexibleBoxWrapper>.fromOpaque(flexibleBoxRaw)
+    .takeUnretainedValue()
+  flexibleBox.setWk(wk)
 }
 
 @_cdecl("RenderHTMLCanvasScion_setWk")

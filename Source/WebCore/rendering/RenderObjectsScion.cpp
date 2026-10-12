@@ -822,6 +822,8 @@ extern "C" LayoutRectRaw RenderReplacedScion_replacedContentRect(const void*);
 
 extern "C" void RenderHTMLCanvasScion_setWk(void*, void*);
 
+extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
+
 extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
 extern "C" void* RenderWidgetScion_widget(const void*);
@@ -2728,6 +2730,11 @@ LayoutRect RenderReplacedScion::replacedContentRect() const
 void RenderHTMLCanvasScion::setWk(void* wk)
 {
     RenderHTMLCanvasScion_setWk(wk, m_handle);
+}
+
+void RenderFlexibleBoxScion::setWk(void* wk)
+{
+    RenderFlexibleBoxScion_setWk(wk, m_handle);
 }
 
 bool RenderCombineTextScion::isCombined() const

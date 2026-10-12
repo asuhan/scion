@@ -111,6 +111,7 @@ void RenderFlexibleBox::setScionHandle(void* handle)
     RenderBox::setScionHandle(handle);
     RenderBlock::setScionHandle(handle);
     m_scion = std::make_unique<RenderFlexibleBoxScion>(handle);
+    m_scion->setWk(this);
 }
 
 ASCIILiteral RenderFlexibleBox::renderName() const

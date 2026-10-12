@@ -343,6 +343,12 @@ private func alignContentSpaceBetweenFlexItems(
 func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
+  convenience init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
+    self.init(type, element, style, .IsFlexibleBox)
+    assert(isRenderFlexibleBox())
+    setChildrenInline(b: false)  // All of our children must be block-level.
+  }
+
   convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
     self.init(type, document, style, .IsFlexibleBox)
     assert(isRenderFlexibleBox())
@@ -3443,4 +3449,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   var shouldResetFlexItemLogicalHeightBeforeLayout = false
   var isComputingFlexBaseSizes = false
   var hasFlexFormattingContextLayout = false
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }
