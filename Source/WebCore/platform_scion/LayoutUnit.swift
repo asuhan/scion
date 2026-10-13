@@ -40,14 +40,15 @@ internal let intMinForLayoutUnit = Int32.min / kFixedPointDenominator
 private func boundedMultiply(a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
   var result = Int64(a.rawValue()) * Int64(b.rawValue()) / Int64(kFixedPointDenominator)
   let high = Int32(result >> 32)
-  let low = Int32(result & 0xFFFF_FFFF)
+  // static_cast<int32_t> upstream, which truncates.
+  let low = Int32(truncatingIfNeeded: result)
   // If the higher 32 bits does not match the lower 32 with sign extension the operation overflowed.
   if high != low >> 31 {
     result = Int64(
       (UInt32(bitPattern: a.rawValue() ^ b.rawValue()) >> 31) + UInt32(bitPattern: Int32.max))
   }
 
-  return LayoutUnit.fromRawValue(value: Int32(result))
+  return LayoutUnit.fromRawValue(value: Int32(truncatingIfNeeded: result))
 }
 
 struct LayoutUnit: Comparable {
