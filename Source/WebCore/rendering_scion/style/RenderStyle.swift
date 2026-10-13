@@ -673,6 +673,20 @@ private func convertShadowData(_ first: UnsafeRawPointer?) -> ShadowData? {
   return next
 }
 
+private func resolvedContentAlignmentPosition(
+  _ value: StyleContentAlignmentData, _ normalValueBehavior: StyleContentAlignmentData
+) -> ContentPosition {
+  return (value.position == .Normal && value.distribution == .Default)
+    ? normalValueBehavior.position : value.position
+}
+
+private func resolvedContentAlignmentDistribution(
+  _ value: StyleContentAlignmentData, _ normalValueBehavior: StyleContentAlignmentData
+) -> ContentDistribution {
+  return (value.position == .Normal && value.distribution == .Default)
+    ? normalValueBehavior.distribution : value.distribution
+}
+
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
   var pOwner: Bool = false
@@ -775,29 +789,25 @@ class RenderStyleWrapper: Equatable {
   func resolvedJustifyContentPosition(normalValueBehavior: StyleContentAlignmentData)
     -> ContentPosition
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return resolvedContentAlignmentPosition(justifyContent(), normalValueBehavior)
   }
 
   func resolvedJustifyContentDistribution(normalValueBehavior: StyleContentAlignmentData)
     -> ContentDistribution
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return resolvedContentAlignmentDistribution(justifyContent(), normalValueBehavior)
   }
 
   func resolvedAlignContentPosition(normalValueBehavior: StyleContentAlignmentData)
     -> ContentPosition
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return resolvedContentAlignmentPosition(alignContent(), normalValueBehavior)
   }
 
   func resolvedAlignContentDistribution(normalValueBehavior: StyleContentAlignmentData)
     -> ContentDistribution
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return resolvedContentAlignmentDistribution(alignContent(), normalValueBehavior)
   }
 
   func resolvedAlignItems(_ normalValueBehaviour: ItemPosition) -> StyleSelfAlignmentData {
