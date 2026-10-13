@@ -2032,8 +2032,11 @@ class RenderStyleWrapper: Equatable {
   func flexWrap() -> FlexWrap { return FlexWrap(rawValue: wk_interop.RenderStyle_flexWrap(p!))! }
 
   func justifyContent() -> StyleContentAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_justifyContent(p)
+    return StyleContentAlignmentData(
+      position: ContentPosition(rawValue: raw.position)!,
+      distribution: ContentDistribution(rawValue: raw.distribution)!,
+      overflow: OverflowAlignment(rawValue: raw.overflow)!)
   }
 
   func justifySelf() -> StyleSelfAlignmentData {
