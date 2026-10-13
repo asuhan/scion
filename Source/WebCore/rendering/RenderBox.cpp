@@ -189,6 +189,16 @@ extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingContentSize(void* box_ra
     static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingContentSize();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalHeight(void* box_raw_ptr, int32_t height)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->setOverridingLogicalHeight(WebCore::LayoutUnit::fromRawValue(height));
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalWidth(void* box_raw_ptr, int32_t width)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->setOverridingLogicalWidth(WebCore::LayoutUnit::fromRawValue(width));
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingLogicalHeight(void* box_raw_ptr)
 {
     static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingLogicalHeight();

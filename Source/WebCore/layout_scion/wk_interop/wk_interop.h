@@ -1052,6 +1052,8 @@ void RenderBox_setMarginAfter(void*, int32_t, const void*);
 int32_t RenderBox_minPreferredLogicalWidth(const void*);
 void RenderBox_clearOverridingContainingBlockContentSize(void*);
 void RenderBox_clearOverridingContentSize(void*);
+void RenderBox_setOverridingLogicalHeight(void*, int32_t);
+void RenderBox_setOverridingLogicalWidth(void*, int32_t);
 void RenderBox_clearOverridingLogicalHeight(void*);
 void RenderBox_clearOverridingLogicalWidth(void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);

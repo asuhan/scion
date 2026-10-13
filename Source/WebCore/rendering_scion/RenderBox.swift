@@ -23,8 +23,8 @@
 import wk_interop
 
 private typealias OverrideSizeMap = WeakHashMap<RenderBoxWrapper, LayoutUnit>
-private let gOverridingLogicalHeightMap: OverrideSizeMap? = nil
-private let gOverridingLogicalWidthMap: OverrideSizeMap? = nil
+private var gOverridingLogicalHeightMap: OverrideSizeMap? = nil
+private var gOverridingLogicalWidthMap: OverrideSizeMap? = nil
 
 private typealias OverridingLengthMap = WeakHashMap<RenderBoxWrapper, LengthWrapper>
 private let gOverridingLogicalHeightLengthMap: OverridingLengthMap? = nil
@@ -1997,13 +1997,25 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setOverridingLogicalHeight(height: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setOverridingLogicalHeight(id(), height.rawValue())
+      return
+    }
+    if gOverridingLogicalHeightMap == nil {
+      gOverridingLogicalHeightMap = OverrideSizeMap()
+    }
+    gOverridingLogicalHeightMap!.set(self, height)
   }
 
   func setOverridingLogicalWidth(width: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setOverridingLogicalWidth(id(), width.rawValue())
+      return
+    }
+    if gOverridingLogicalWidthMap == nil {
+      gOverridingLogicalWidthMap = OverrideSizeMap()
+    }
+    gOverridingLogicalWidthMap!.set(self, width)
   }
 
   func clearOverridingContentSize() {
