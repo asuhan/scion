@@ -28,6 +28,10 @@ import wk_interop
 class SettingsWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
+  func flexFormattingContextIntegrationEnabled() -> Bool {
+    return wk_interop.Settings_flexFormattingContextIntegrationEnabled(p)
+  }
+
   func acceleratedCompositingEnabled() -> Bool {
     return wk_interop.Settings_acceleratedCompositingEnabled(p)
   }

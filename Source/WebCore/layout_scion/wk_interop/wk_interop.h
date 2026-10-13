@@ -1855,6 +1855,7 @@ bool Document_hasHighlight(const void*);
 void* Document_highlightRegistryIfExists(void*);
 void* Document_fragmentHighlightRegistryIfExists(void*);
 bool Document_activeDOMObjectsAreSuspended(const void*);
+bool Settings_flexFormattingContextIntegrationEnabled(const void*);
 bool Settings_acceleratedCompositingEnabled(const void*);
 bool Settings_acceleratedCompositingForFixedPositionEnabled(const void*);
 bool Settings_acceleratedDrawingEnabled(const void*);

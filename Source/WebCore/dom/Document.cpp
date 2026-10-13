@@ -610,6 +610,11 @@ extern "C" WEBCORE_EXPORT bool Document_activeDOMObjectsAreSuspended(const void*
     return static_cast<const WebCore::Document*>(raw)->activeDOMObjectsAreSuspended();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_flexFormattingContextIntegrationEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->flexFormattingContextIntegrationEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_acceleratedCompositingEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->acceleratedCompositingEnabled();
