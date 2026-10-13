@@ -105,7 +105,8 @@ class OrderIterator {
     m_isReset = true
   }
 
-  private let m_containerBox: RenderBoxWrapper
+  // Upstream holds a reference; the container owns this iterator.
+  private unowned let m_containerBox: RenderBoxWrapper
   private var m_currentChild: RenderBoxWrapper? = nil
 
   typealias OrderValues = SortedSet<Int32>
