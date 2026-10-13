@@ -1524,8 +1524,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       mainAxisIsInlineAxis: mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
     use(scoped)
     // FIXME: While we are supposed to ignore min/max here, clients of maybeCacheFlexItemMainIntrinsicSize may expect min/max constrained size.
-    let unused = SetForScope(scopedVariable: &isComputingFlexBaseSizes, newValue: true)
-    use(unused)
+    // NB(asuhan): SetForScope upstream.
+    let savedIsComputingFlexBaseSizes = isComputingFlexBaseSizes
+    isComputingFlexBaseSizes = true
+    defer { isComputingFlexBaseSizes = savedIsComputingFlexBaseSizes }
 
     maybeCacheFlexItemMainIntrinsicSize(flexItem: flexItem, relayoutChildren: relayoutChildren)
 
@@ -3009,9 +3011,14 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         flexItem.setOverridingLogicalHeight(height: desiredLogicalHeight)
       }
       if flexItemNeedsRelayout {
-        let unused = SetForScope(
-          scopedVariable: &shouldResetFlexItemLogicalHeightBeforeLayout, newValue: true)
-        use(unused)
+        // NB(asuhan): SetForScope upstream.
+        let savedShouldResetFlexItemLogicalHeightBeforeLayout =
+          shouldResetFlexItemLogicalHeightBeforeLayout
+        shouldResetFlexItemLogicalHeightBeforeLayout = true
+        defer {
+          shouldResetFlexItemLogicalHeightBeforeLayout =
+            savedShouldResetFlexItemLogicalHeightBeforeLayout
+        }
         // We cache the child's intrinsic content logical height to avoid it being
         // reset to the stretched height.
         // FIXME: This is fragile. RenderBoxes should be smart enough to
