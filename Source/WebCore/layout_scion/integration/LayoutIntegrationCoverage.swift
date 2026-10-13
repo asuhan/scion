@@ -73,7 +73,10 @@ extension LayoutIntegration {
   }
 
   static func canUseForFlexLayout(flexBox: RenderFlexibleBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
+    if !flexBox.document().settings().flexFormattingContextIntegrationEnabled() {
+      return false
+    }
+    // TODO(asuhan): implement the remaining checks
     fatalError("Not implemented")
   }
 }
