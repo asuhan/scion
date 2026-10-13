@@ -2382,13 +2382,33 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // when a flexbox is laying out its descendants. If multiple calls are made to beginUpdateScrollInfoAfterLayoutTransaction()
   // then endAndCommitUpdateScrollInfoAfterLayoutTransaction() will do nothing until it is called the same number of times.
   func beginUpdateScrollInfoAfterLayoutTransaction() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    view().frameView().layoutContext().updateScrollInfoAfterLayoutTransaction().nestedCount += 1
   }
 
   func endAndCommitUpdateScrollInfoAfterLayoutTransaction() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard
+      let transaction = view().frameView().layoutContext()
+        .updateScrollInfoAfterLayoutTransactionIfExists()
+    else {
+      fatalError("Not reached")
+    }
+    transaction.nestedCount -= 1
+    if transaction.nestedCount != 0 {
+      return
+    }
+
+    // Calling RenderLayer::updateScrollInfoAfterLayout() may cause its associated block to layout again and
+    // updates its scroll info (i.e. call RenderBlock::updateScrollInfoAfterLayout()). We decrement the nestedCount first
+    // so that all subsequent calls to RenderBlock::updateScrollInfoAfterLayout() are dispatched immediately.
+    // That is, to ensure that such subsequent calls aren't added to |transaction| while we are processing it.
+    let blocksToUpdate = transaction.takeBlocks()
+
+    for block in blocksToUpdate {
+      assert(block.hasNonVisibleOverflow())
+      block.layer()!.updateScrollInfoAfterLayout()
+    }
   }
 
   func updateScrollInfoAfterLayout() {
