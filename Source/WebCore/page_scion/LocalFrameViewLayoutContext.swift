@@ -25,9 +25,30 @@
 
 import wk_interop
 
-struct UpdateScrollInfoAfterLayoutTransaction {
-  let nestedCount: Int32
-  let blocks = WeakHashSet<RenderBlockWrapper>()
+// Wraps the layout context's C++ transaction, which holds the delayed C++ render blocks.
+final class UpdateScrollInfoAfterLayoutTransaction {
+  init(p: UnsafeMutableRawPointer) { self.p = p }
+
+  var nestedCount: Int32 {
+    get { return wk_interop.UpdateScrollInfoAfterLayoutTransaction_nestedCount(p) }
+    set { wk_interop.UpdateScrollInfoAfterLayoutTransaction_setNestedCount(p, newValue) }
+  }
+
+  func addBlock(_ block: RenderBlockWrapper) {
+    wk_interop.UpdateScrollInfoAfterLayoutTransaction_addBlock(p, wkRenderObject(block)!)
+  }
+
+  // Returns the delayed blocks and clears them from the transaction.
+  func takeBlocks() -> [RenderBlockWrapper] {
+    let count = Int(wk_interop.UpdateScrollInfoAfterLayoutTransaction_blockCount(p))
+    var raws = [UnsafeMutableRawPointer?](repeating: nil, count: count)
+    raws.withUnsafeMutableBufferPointer { buffer in
+      wk_interop.UpdateScrollInfoAfterLayoutTransaction_takeBlocks(p, buffer.baseAddress)
+    }
+    return raws.map { createRenderObjectWrapperOrNative($0!) as! RenderBlockWrapper }
+  }
+
+  let p: UnsafeMutableRawPointer
 }
 
 class LocalFrameViewLayoutContextWrapper {
@@ -94,6 +115,11 @@ class LocalFrameViewLayoutContextWrapper {
       p, LayoutSizeRaw(width: delta.width().rawValue(), height: delta.height().rawValue()))
   }
 
+  func updateScrollInfoAfterLayoutTransaction() -> UpdateScrollInfoAfterLayoutTransaction {
+    return UpdateScrollInfoAfterLayoutTransaction(
+      p: wk_interop.LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransaction(p))
+  }
+
   func updateScrollInfoAfterLayoutTransactionIfExists() -> UpdateScrollInfoAfterLayoutTransaction? {
     guard
       let info =
@@ -101,12 +127,7 @@ class LocalFrameViewLayoutContextWrapper {
     else {
       return nil
     }
-    if !wk_interop.UpdateScrollInfoAfterLayoutTransaction_blocksIsEmpty(info) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    let nestedCount = wk_interop.UpdateScrollInfoAfterLayoutTransaction_nestedCount(info)
-    return UpdateScrollInfoAfterLayoutTransaction(nestedCount: nestedCount)
+    return UpdateScrollInfoAfterLayoutTransaction(p: info)
   }
 
   func setBoxNeedsTransformUpdateAfterContainerLayout(

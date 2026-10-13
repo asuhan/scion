@@ -133,6 +133,36 @@ extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfte
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransactionIfExists();
 }
 
+extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransaction(void* p)
+{
+    return &static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransaction();
+}
+
+extern "C" WEBCORE_EXPORT void UpdateScrollInfoAfterLayoutTransaction_setNestedCount(void* p, int nestedCount)
+{
+    static_cast<WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p)->nestedCount = nestedCount;
+}
+
+extern "C" WEBCORE_EXPORT void UpdateScrollInfoAfterLayoutTransaction_addBlock(void* p, void* block)
+{
+    static_cast<WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p)->blocks.add(*static_cast<WebCore::RenderBlock*>(block));
+}
+
+extern "C" WEBCORE_EXPORT uint64_t UpdateScrollInfoAfterLayoutTransaction_blockCount(const void* p)
+{
+    return static_cast<const WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p)->blocks.computeSize();
+}
+
+// Copies the blocks into the caller's buffer, which holds blockCount() entries, and clears the set.
+extern "C" WEBCORE_EXPORT void UpdateScrollInfoAfterLayoutTransaction_takeBlocks(void* p, void** blocks)
+{
+    auto& transaction = *static_cast<WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p);
+    size_t index = 0;
+    for (auto& block : copyToVector(transaction.blocks))
+        blocks[index++] = block.get();
+    transaction.blocks.clear();
+}
+
 extern "C" WEBCORE_EXPORT int UpdateScrollInfoAfterLayoutTransaction_nestedCount(const void* p)
 {
     return static_cast<const WebCore::UpdateScrollInfoAfterLayoutTransaction*>(p)->nestedCount;

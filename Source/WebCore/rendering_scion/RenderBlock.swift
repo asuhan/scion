@@ -2405,7 +2405,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       if let transaction = view().frameView().layoutContext()
         .updateScrollInfoAfterLayoutTransactionIfExists(), transaction.nestedCount != 0
       {
-        transaction.blocks.add(value: self)
+        transaction.addBlock(self)
         return
       }
     }
