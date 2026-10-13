@@ -278,6 +278,12 @@ struct LogicalExtentComputedValuesRaw {
     struct ComputedMarginValuesRaw margins;
 };
 
+struct StyleSelfAlignmentDataRaw {
+    uint8_t position;
+    uint8_t overflow;
+    bool isLegacy;
+};
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;
@@ -1510,6 +1516,9 @@ uint8_t RenderStyle_userDrag(const void*);
 uint8_t RenderStyle_userSelect(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_justifyContent(const void*);
+struct StyleSelfAlignmentDataRaw RenderStyle_alignItems(const void*);
+struct StyleSelfAlignmentDataRaw RenderStyle_alignSelf(const void*);
+struct StyleSelfAlignmentDataRaw RenderStyle_justifySelf(const void*);
 uint8_t RenderStyle_resize(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);

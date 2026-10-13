@@ -673,6 +673,15 @@ private func convertShadowData(_ first: UnsafeRawPointer?) -> ShadowData? {
   return next
 }
 
+private func convertStyleSelfAlignmentData(_ raw: StyleSelfAlignmentDataRaw)
+  -> StyleSelfAlignmentData
+{
+  return StyleSelfAlignmentData(
+    position: ItemPosition(rawValue: raw.position)!,
+    overflow: OverflowAlignment(rawValue: raw.overflow)!,
+    positionType: raw.isLegacy ? .Legacy : .NonLegacy)
+}
+
 private func resolvedContentAlignmentPosition(
   _ value: StyleContentAlignmentData, _ normalValueBehavior: StyleContentAlignmentData
 ) -> ContentPosition {
@@ -2011,14 +2020,14 @@ class RenderStyleWrapper: Equatable {
       overflow: OverflowAlignment(rawValue: raw.overflow)!)
   }
 
+  // TODO(asuhan): don't create a new instance every time this is called
   func alignItems() -> StyleSelfAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertStyleSelfAlignmentData(wk_interop.RenderStyle_alignItems(p))
   }
 
+  // TODO(asuhan): don't create a new instance every time this is called
   func alignSelf() -> StyleSelfAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertStyleSelfAlignmentData(wk_interop.RenderStyle_alignSelf(p))
   }
 
   func flexDirection() -> FlexDirection {
@@ -2039,9 +2048,9 @@ class RenderStyleWrapper: Equatable {
       overflow: OverflowAlignment(rawValue: raw.overflow)!)
   }
 
+  // TODO(asuhan): don't create a new instance every time this is called
   func justifySelf() -> StyleSelfAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertStyleSelfAlignmentData(wk_interop.RenderStyle_justifySelf(p))
   }
 
   func namedGridColumnLines() -> NamedGridLinesMap {
