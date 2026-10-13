@@ -331,8 +331,14 @@ struct LayoutUnit: Comparable {
   }
 
   static func clamp(value: Float64) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // clampTo<LayoutUnit>(value, LayoutUnit::min(), LayoutUnit::max()) upstream.
+    if value >= LayoutUnit.max().toDouble() {
+      return LayoutUnit.max()
+    }
+    if value <= LayoutUnit.min().toDouble() {
+      return LayoutUnit.min()
+    }
+    return LayoutUnit(value: value)
   }
 
   init() {}
