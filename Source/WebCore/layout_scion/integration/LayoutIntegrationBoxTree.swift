@@ -70,9 +70,10 @@ extension LayoutIntegration {
       return child.layoutBox()!
     }
 
+    // The returned box owns its C++ layout box; hand it to InlineDamageWrapper.addDetachedBox.
     func remove(parent: RenderElementWrapper, child: RenderObjectWrapper) -> BoxWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let detachedBox = wk_interop.BoxTree_remove(wkRenderObject(child)!)!
+      return RenderObjectWrapper.createLayoutBoxWrapper(UnsafeRawPointer(detachedBox))
     }
 
     func rootLayoutBox() -> ElementBoxWrapper {

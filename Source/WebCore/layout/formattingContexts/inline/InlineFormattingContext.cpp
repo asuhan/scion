@@ -191,6 +191,11 @@ extern "C" WEBCORE_EXPORT void InlineDamage_setLayoutStartPosition(void* p, Layo
     static_cast<WebCore::Layout::InlineDamage*>(p)->setLayoutStartPosition(position);
 }
 
+extern "C" WEBCORE_EXPORT void InlineDamage_addDetachedBox(void* p, void* layout_box_raw)
+{
+    static_cast<WebCore::Layout::InlineDamage*>(p)->addDetachedBox(makeUniqueRefFromNonNullUniquePtr(std::unique_ptr<WebCore::Layout::Box>(static_cast<WebCore::Layout::Box*>(layout_box_raw))));
+}
+
 extern "C" WEBCORE_EXPORT bool InlineDamage_hasDetachedContent(const void* p)
 {
     return static_cast<const WebCore::Layout::InlineDamage*>(p)->hasDetachedContent();

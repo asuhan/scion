@@ -92,9 +92,9 @@ class InlineDamageWrapper {
     return m_trailingDisplayBoxes[Int(relativeLineIndex)]
   }
 
+  // Takes ownership of the C++ layout box detached by BoxTree.remove.
   func addDetachedBox(layoutBox: BoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.InlineDamage_addDetachedBox(p, UnsafeMutableRawPointer(mutating: layoutBox.p!))
   }
 
   func isInlineItemListDirty() -> Bool {

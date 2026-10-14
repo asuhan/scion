@@ -82,6 +82,18 @@ extern "C" WEBCORE_EXPORT void BoxTree_insert(void* child_raw, const void* befor
     WebCore::LayoutIntegration::BoxTree::insertChild(WebCore::LayoutIntegration::BoxTree::createLayoutBox(child), child, static_cast<const WebCore::RenderObject*>(before_child_raw));
 }
 
+// Returns the detached layout box as an owning raw pointer; InlineDamage_addDetachedBox takes it back.
+extern "C" WEBCORE_EXPORT void* BoxTree_remove(void* child_raw)
+{
+    auto& child = *static_cast<WebCore::RenderObject*>(child_raw);
+    ASSERT(child.layoutBox());
+
+    auto* layoutBox = child.layoutBox();
+    child.clearLayoutBox();
+
+    return layoutBox->removeFromParent().moveToUniquePtr().release();
+}
+
 extern "C" WEBCORE_EXPORT void BoxTree_updateStyle(void* renderer_raw)
 {
     WebCore::LayoutIntegration::BoxTree::updateStyle(*static_cast<WebCore::RenderObject*>(renderer_raw));
