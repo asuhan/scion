@@ -2200,6 +2200,11 @@ extern "C" WEBCORE_EXPORT StyleSelfAlignmentDataRaw RenderStyle_alignSelf(const 
     return convertStyleSelfAlignmentData(static_cast<const WebCore::RenderStyle*>(p)->alignSelf());
 }
 
+extern "C" WEBCORE_EXPORT StyleSelfAlignmentDataRaw RenderStyle_justifyItems(const void* p)
+{
+    return convertStyleSelfAlignmentData(static_cast<const WebCore::RenderStyle*>(p)->justifyItems());
+}
+
 extern "C" WEBCORE_EXPORT StyleSelfAlignmentDataRaw RenderStyle_justifySelf(const void* p)
 {
     return convertStyleSelfAlignmentData(static_cast<const WebCore::RenderStyle*>(p)->justifySelf());

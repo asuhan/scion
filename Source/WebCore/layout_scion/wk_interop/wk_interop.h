@@ -1520,6 +1520,7 @@ struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_justifyContent(const void*);
 struct StyleSelfAlignmentDataRaw RenderStyle_alignItems(const void*);
 struct StyleSelfAlignmentDataRaw RenderStyle_alignSelf(const void*);
+struct StyleSelfAlignmentDataRaw RenderStyle_justifyItems(const void*);
 struct StyleSelfAlignmentDataRaw RenderStyle_justifySelf(const void*);
 uint8_t RenderStyle_resize(const void*);
 uint8_t RenderStyle_lineAlign(const void*);

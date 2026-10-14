@@ -682,6 +682,22 @@ private func convertStyleSelfAlignmentData(_ raw: StyleSelfAlignmentDataRaw)
     positionType: raw.isLegacy ? .Legacy : .NonLegacy)
 }
 
+private func resolvedSelfAlignment(
+  _ value: StyleSelfAlignmentData, _ normalValueBehavior: ItemPosition
+) -> StyleSelfAlignmentData {
+  if value.position == .Legacy || value.position == .Normal || value.position == .Auto {
+    return StyleSelfAlignmentData(position: normalValueBehavior, overflow: .Default)
+  }
+  return value
+}
+
+private func resolvedContentAlignment(
+  _ value: StyleContentAlignmentData, _ normalValueBehavior: StyleContentAlignmentData
+) -> StyleContentAlignmentData {
+  return (value.position == .Normal && value.distribution == .Default)
+    ? normalValueBehavior : value
+}
+
 private func resolvedContentAlignmentPosition(
   _ value: StyleContentAlignmentData, _ normalValueBehavior: StyleContentAlignmentData
 ) -> ContentPosition {
@@ -820,36 +836,47 @@ class RenderStyleWrapper: Equatable {
   }
 
   func resolvedAlignItems(_ normalValueBehaviour: ItemPosition) -> StyleSelfAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return resolvedSelfAlignment(alignItems(), normalValueBehaviour)
   }
 
   func resolvedAlignSelf(parentStyle: RenderStyleWrapper?, normalValueBehaviour: ItemPosition)
     -> StyleSelfAlignmentData
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The auto keyword computes to the parent's align-items computed value.
+    // We will return the behaviour of 'normal' value if needed, which is specific of each layout model.
+    if parentStyle == nil || alignSelf().position != .Auto {
+      return resolvedSelfAlignment(alignSelf(), normalValueBehaviour)
+    }
+    return parentStyle!.resolvedAlignItems(normalValueBehaviour)
+  }
+
+  func resolvedJustifyItems(_ normalValueBehaviour: ItemPosition) -> StyleSelfAlignmentData {
+    return resolvedSelfAlignment(justifyItems(), normalValueBehaviour)
   }
 
   func resolvedAlignContent(normalValueBehavior: StyleContentAlignmentData)
     -> StyleContentAlignmentData
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We will return the behaviour of 'normal' value if needed, which is specific of each layout model.
+    return resolvedContentAlignment(alignContent(), normalValueBehavior)
   }
 
   func resolvedJustifySelf(parentStyle: RenderStyleWrapper?, normalValueBehaviour: ItemPosition)
     -> StyleSelfAlignmentData
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The auto keyword computes to the parent's justify-items computed value.
+    // We will return the behaviour of 'normal' value if needed, which is specific of each layout model.
+    if parentStyle == nil || justifySelf().position != .Auto {
+      return resolvedSelfAlignment(justifySelf(), normalValueBehaviour)
+    }
+    return parentStyle!.resolvedJustifyItems(normalValueBehaviour)
   }
 
   func resolvedJustifyContent(normalValueBehavior: StyleContentAlignmentData)
     -> StyleContentAlignmentData
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We will return the behaviour of 'normal' value if needed, which is specific of each layout model.
+    return resolvedContentAlignment(justifyContent(), normalValueBehavior)
   }
 
   func pseudoElementType() -> PseudoId {
@@ -2046,6 +2073,11 @@ class RenderStyleWrapper: Equatable {
       position: ContentPosition(rawValue: raw.position)!,
       distribution: ContentDistribution(rawValue: raw.distribution)!,
       overflow: OverflowAlignment(rawValue: raw.overflow)!)
+  }
+
+  // TODO(asuhan): don't create a new instance every time this is called
+  func justifyItems() -> StyleSelfAlignmentData {
+    return convertStyleSelfAlignmentData(wk_interop.RenderStyle_justifyItems(p))
   }
 
   // TODO(asuhan): don't create a new instance every time this is called
