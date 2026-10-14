@@ -1859,11 +1859,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
 
     var lineStates = FlexLineStates()
-    let sumFlexBaseSize = LayoutUnit()
+    var sumFlexBaseSize = LayoutUnit()
     var totalFlexGrow: Float64 = 0
     var totalFlexShrink: Float64 = 0
     var totalWeightedFlexShrink: Float64 = 0
-    let sumHypotheticalMainSize = LayoutUnit()
+    var sumHypotheticalMainSize = LayoutUnit()
 
     // Set up our master list of flex items. All of the rest of the algorithm
     // should work off this list of a subset.
@@ -1900,7 +1900,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // TODO(asuhan): call into InspectorInstrumentation
     repeat {
       let nextFlexLine = flexAlgorithm.computeNextFlexLine(nextIndex: &nextIndex)
-      if nextFlexLine.lineItems.count == 0 {
+      lineItems = nextFlexLine.lineItems
+      sumFlexBaseSize = nextFlexLine.sumFlexBaseSize
+      totalFlexGrow = nextFlexLine.totalFlexGrow
+      totalFlexShrink = nextFlexLine.totalFlexShrink
+      totalWeightedFlexShrink = nextFlexLine.totalWeightedFlexShrink
+      sumHypotheticalMainSize = nextFlexLine.sumHypotheticalMainSize
+      if lineItems.isEmpty {
         break
       }
       numLines += 1
