@@ -23,4 +23,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ControlPartWrapper {}
+import wk_interop
+
+class ControlPartWrapper {
+  // Adopts a reference to the C++ control part, like RefPtr::adoptRef.
+  init(adoptRef p: UnsafeMutableRawPointer) { self.p = p }
+
+  deinit { wk_interop.ControlPart_deref(p) }
+
+  func type() -> StyleAppearance {
+    return StyleAppearance(rawValue: wk_interop.ControlPart_type(p))!
+  }
+
+  let p: UnsafeMutableRawPointer
+}

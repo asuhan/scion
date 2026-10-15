@@ -85,3 +85,13 @@ void ControlPart::draw(GraphicsContext& context, const FloatRoundedRect& borderR
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT uint8_t ControlPart_type(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::ControlPart*>(p)->type());
+}
+
+extern "C" WEBCORE_EXPORT void ControlPart_deref(void* p)
+{
+    static_cast<WebCore::ControlPart*>(p)->deref();
+}

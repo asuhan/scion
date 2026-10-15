@@ -48,6 +48,38 @@ struct RenderTheme {
   // appropriate platform theme.
   static func singleton() -> RenderTheme { return RenderTheme(wk_interop.RenderTheme_singleton()) }
 
+  func canCreateControlPartForRenderer(_ renderer: RenderObjectWrapper) -> Bool {
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_canCreateControlPartForRenderer(p!, wkRenderObject(renderer))
+    }
+    return false
+  }
+
+  func canCreateControlPartForBorderOnly(_ renderer: RenderObjectWrapper) -> Bool {
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_canCreateControlPartForBorderOnly(p!, wkRenderObject(renderer))
+    }
+    return false
+  }
+
+  func canCreateControlPartForDecorations(_ renderer: RenderObjectWrapper) -> Bool {
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_canCreateControlPartForDecorations(p!, wkRenderObject(renderer))
+    }
+    return false
+  }
+
+  func createControlPart(_ renderer: RenderObjectWrapper) -> ControlPartWrapper? {
+    if !isNativeImpl() {
+      guard let part = wk_interop.RenderTheme_createControlPart(p!, wkRenderObject(renderer)) else {
+        return nil
+      }
+      return ControlPartWrapper(adoptRef: part)
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateControlPartForRenderer(part: ControlPartWrapper, renderer: RenderObjectWrapper)
   {
     // TODO(asuhan): implement this

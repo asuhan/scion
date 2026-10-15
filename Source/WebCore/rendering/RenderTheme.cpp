@@ -129,6 +129,27 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw RenderTheme_adjustedPaintRect(const void
     return convertLayoutRect(static_cast<const WebCore::RenderTheme*>(p)->adjustedPaintRect(box, paintRect));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderTheme_canCreateControlPartForRenderer(const void* p, const void* rendererRaw)
+{
+    return static_cast<const WebCore::RenderTheme*>(p)->canCreateControlPartForRenderer(*static_cast<const WebCore::RenderObject*>(rendererRaw));
+}
+
+extern "C" WEBCORE_EXPORT bool RenderTheme_canCreateControlPartForBorderOnly(const void* p, const void* rendererRaw)
+{
+    return static_cast<const WebCore::RenderTheme*>(p)->canCreateControlPartForBorderOnly(*static_cast<const WebCore::RenderObject*>(rendererRaw));
+}
+
+extern "C" WEBCORE_EXPORT bool RenderTheme_canCreateControlPartForDecorations(const void* p, const void* rendererRaw)
+{
+    return static_cast<const WebCore::RenderTheme*>(p)->canCreateControlPartForDecorations(*static_cast<const WebCore::RenderObject*>(rendererRaw));
+}
+
+// Returns the new control part with a reference owned by the caller; ControlPart_deref releases it.
+extern "C" WEBCORE_EXPORT void* RenderTheme_createControlPart(const void* p, const void* rendererRaw)
+{
+    return static_cast<const WebCore::RenderTheme*>(p)->createControlPart(*static_cast<const WebCore::RenderObject*>(rendererRaw)).leakRef();
+}
+
 extern "C" WEBCORE_EXPORT FloatRectRaw RenderTheme_adjustRepaintRect(const void* p, const void* boxRaw, FloatRectRaw rectRaw)
 {
     const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
