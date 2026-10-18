@@ -21,6 +21,14 @@
 
 import wk_interop
 
+private func synthesizedBaselineFromContentBox(box: RenderBoxWrapper, direction: LineDirectionMode)
+  -> LayoutUnit
+{
+  return direction == .HorizontalLine
+    ? box.borderTop() + box.paddingTop() + box.contentHeight()
+    : box.borderRight() + box.paddingRight() + box.contentWidth()
+}
+
 final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   init(_ element: HTMLFormControlElementWrapper, _ style: RenderStyleWrapper) {
     super.init(type: .Button, element: element, style: style)
@@ -85,10 +93,22 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   ) -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_baselinePosition(
-        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_baselinePosition(
+          id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    }
+    if shouldApplyLayoutContainment() {
+      return super.baselinePosition(
+        baselineType: baselineType, firstLine: firstLine, direction: direction,
+        linePositionMode: linePositionMode)
+    }
+    // We cannot rely on RenderFlexibleBox::baselinePosition() because of flexboxes have some special behavior
+    // regarding baselines that shouldn't apply to buttons.
+    let baseline =
+      firstLineBaseline() ?? synthesizedBaselineFromContentBox(box: self, direction: direction)
+    let marginAscent = direction == .HorizontalLine ? marginTop() : marginRight()
+    return baseline + marginAscent
   }
 
   override func hasLineIfEmpty() -> Bool {
