@@ -44,6 +44,8 @@ extern "C" void* RenderTextScion_create(uint8_t, void*, const void*);
 
 extern "C" void* RenderInlineScion_create(uint8_t, void*, const void*);
 
+extern "C" void* RenderInlineScion_createFromDocument(uint8_t, void*, const void*);
+
 extern "C" void* RenderLineBreakScion_create(bool, void*, const void*);
 
 extern "C" void* RenderIFrameScion_create(void*, const void*);

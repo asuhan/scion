@@ -185,10 +185,23 @@ void RenderTreeBuilder::FirstLetter::updateStyle(RenderBlock& firstLetterBlock, 
     if (Style::determineChange(firstLetter->style(), *pseudoStyle) == Style::Change::Renderer) {
         // The first-letter renderer needs to be replaced. Create a new renderer of the right type.
         RenderPtr<RenderBoxModelObject> newFirstLetter;
-        if (pseudoStyle->display() == DisplayType::Inline)
-            newFirstLetter = createRenderer<RenderInline>(RenderObject::Type::Inline, firstLetterBlock.document(), WTFMove(*pseudoStyle));
-        else
-            newFirstLetter = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, firstLetterBlock.document(), WTFMove(*pseudoStyle));
+        if (pseudoStyle->display() == DisplayType::Inline) {
+            if (Document::s_useScionRendering >= 10) {
+                auto clonedStyle = RenderStyle::clonePtr(*pseudoStyle);
+                auto newInline = createRenderer<RenderInline>(RenderObject::Type::Inline, firstLetterBlock.document(), WTFMove(*pseudoStyle));
+                newInline->setScionHandle(RenderInlineScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::Inline), &firstLetterBlock.document(), clonedStyle.release()));
+                newFirstLetter = WTFMove(newInline);
+            } else
+                newFirstLetter = createRenderer<RenderInline>(RenderObject::Type::Inline, firstLetterBlock.document(), WTFMove(*pseudoStyle));
+        } else {
+            if (Document::s_useScionRendering >= 10) {
+                auto clonedStyle = RenderStyle::clonePtr(*pseudoStyle);
+                auto newBlockFlow = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, firstLetterBlock.document(), WTFMove(*pseudoStyle));
+                newBlockFlow->setScionHandle(RenderBlockFlowScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &firstLetterBlock.document(), clonedStyle.release(), 0));
+                newFirstLetter = WTFMove(newBlockFlow);
+            } else
+                newFirstLetter = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, firstLetterBlock.document(), WTFMove(*pseudoStyle));
+        }
         newFirstLetter->initializeStyle();
         newFirstLetter->setIsFirstLetter();
 
@@ -231,10 +244,23 @@ void RenderTreeBuilder::FirstLetter::createRenderers(RenderText& currentTextChil
         return;
 
     RenderPtr<RenderBoxModelObject> newFirstLetter;
-    if (pseudoStyle->display() == DisplayType::Inline)
-        newFirstLetter = createRenderer<RenderInline>(RenderObject::Type::Inline, currentTextChild.document(), WTFMove(*pseudoStyle));
-    else
-        newFirstLetter = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, currentTextChild.document(), WTFMove(*pseudoStyle));
+    if (pseudoStyle->display() == DisplayType::Inline) {
+        if (Document::s_useScionRendering >= 10) {
+            auto clonedStyle = RenderStyle::clonePtr(*pseudoStyle);
+            auto newInline = createRenderer<RenderInline>(RenderObject::Type::Inline, currentTextChild.document(), WTFMove(*pseudoStyle));
+            newInline->setScionHandle(RenderInlineScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::Inline), &currentTextChild.document(), clonedStyle.release()));
+            newFirstLetter = WTFMove(newInline);
+        } else
+            newFirstLetter = createRenderer<RenderInline>(RenderObject::Type::Inline, currentTextChild.document(), WTFMove(*pseudoStyle));
+    } else {
+        if (Document::s_useScionRendering >= 10) {
+            auto clonedStyle = RenderStyle::clonePtr(*pseudoStyle);
+            auto newBlockFlow = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, currentTextChild.document(), WTFMove(*pseudoStyle));
+            newBlockFlow->setScionHandle(RenderBlockFlowScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &currentTextChild.document(), clonedStyle.release(), 0));
+            newFirstLetter = WTFMove(newBlockFlow);
+        } else
+            newFirstLetter = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, currentTextChild.document(), WTFMove(*pseudoStyle));
+    }
     newFirstLetter->initializeStyle();
     newFirstLetter->setIsFirstLetter();
 

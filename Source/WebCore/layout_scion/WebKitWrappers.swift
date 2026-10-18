@@ -3535,6 +3535,18 @@ func RenderInlineScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderInlineScion_createFromDocument")
+func RenderInlineScion_createFromDocument(
+  _ typeRaw: UInt8, _ document: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  assert(typeRaw == 15)
+  let renderInline = RenderInlineWrapper(type: .Inline, document: Document(document), style: style)
+  let unmanaged = Unmanaged.passRetained(renderInline)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderLineBreakScion_create")
 func RenderLineBreakScion_create(
   _ isWBR: Bool, _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
