@@ -89,8 +89,16 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
-  override func setTextInternal(_ text: StringWrapper, _ force: Bool) {
-    // TODO(asuhan): implement this
+  override func setTextInternal(_ newText: StringWrapper, _ force: Bool) {
+    assert(isNativeImpl())
+    super.setTextInternal(newText, force)
+
+    m_start = 0
+    m_end = text().length()
+    if firstLetter == nil {
+      return
+    }
+    // TODO(asuhan): destroy the first letter through the render tree builder
     fatalError("Not implemented")
   }
 
