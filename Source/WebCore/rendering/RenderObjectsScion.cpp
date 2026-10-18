@@ -712,6 +712,8 @@ extern "C" bool RenderElementScion_isContinuation(const void*);
 
 extern "C" void RenderElementScion_setIsContinuation(void*);
 
+extern "C" void RenderElementScion_setIsFirstLetter(void*);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
@@ -2295,6 +2297,11 @@ bool RenderElementScion::hasBlendMode() const
 void RenderElementScion::setIsContinuation()
 {
     RenderElementScion_setIsContinuation(m_handle);
+}
+
+void RenderElementScion::setIsFirstLetter()
+{
+    RenderElementScion_setIsFirstLetter(m_handle);
 }
 
 bool RenderElementScion::hasContinuationChainNode() const

@@ -3340,6 +3340,12 @@ func RenderElementScion_setIsContinuation(_ elementRaw: UnsafeRawPointer) {
   element.setIsContinuation()
 }
 
+@_cdecl("RenderElementScion_setIsFirstLetter")
+func RenderElementScion_setIsFirstLetter(_ elementRaw: UnsafeRawPointer) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setIsFirstLetter()
+}
+
 @_cdecl("RenderElementScion_hasContinuationChainNode")
 func RenderElementScion_hasContinuationChainNode(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

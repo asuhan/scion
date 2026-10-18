@@ -2749,6 +2749,15 @@ bool RenderElement::isContinuation() const
     return m_isContinuation;
 }
 
+void RenderElement::setIsFirstLetter()
+{
+    if (m_scion) {
+        m_scion->setIsFirstLetter();
+        return;
+    }
+    m_isFirstLetter = true;
+}
+
 ReferencedSVGResources& RenderElement::ensureReferencedSVGResources()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

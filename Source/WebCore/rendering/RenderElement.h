@@ -298,11 +298,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_isFirstLetter;
     }
-    void setIsFirstLetter()
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_isFirstLetter = true;
-    }
+    void setIsFirstLetter();
 
     RenderObject* attachRendererInternal(RenderPtr<RenderObject> child, RenderObject* beforeChild);
     RenderPtr<RenderObject> detachRendererInternal(RenderObject&);

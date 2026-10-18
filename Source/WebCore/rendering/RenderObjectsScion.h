@@ -547,6 +547,8 @@ public:
 
     void setIsContinuation();
 
+    void setIsFirstLetter();
+
     const RenderStyle& style() const;
 
     const RenderStyle& firstLineStyle() const;
