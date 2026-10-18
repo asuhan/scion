@@ -59,6 +59,11 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     return textNode()?.hasEditableStyle() ?? false
   }
 
+  func start() -> UInt32 {
+    assert(isNativeImpl())
+    return m_start
+  }
+
   func setFirstLetter(firstLetter: RenderBoxModelObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -84,6 +89,11 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     m_altText = altText
   }
 
+  func contentString() -> StringWrapper? {
+    assert(isNativeImpl())
+    return m_contentString
+  }
+
   func setContentString(text: StringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -103,8 +113,15 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   }
 
   override func previousCharacter() -> UChar {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if start() != 0 {
+      let original = textNode()?.data() ?? contentString()
+      if let original, !original.isNull() && start() <= original.length() {
+        return original[start() - 1]
+      }
+    }
+
+    return super.previousCharacter()
   }
 
   private var m_start: UInt32
