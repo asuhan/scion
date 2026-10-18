@@ -826,6 +826,8 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
+extern "C" void RenderTextFragmentScion_setAltText(void*, const void*);
+
 extern "C" void* RenderWidgetScion_widget(const void*);
 
 extern "C" void RenderWidgetScion_setWidget(void*, void*);
@@ -2740,6 +2742,11 @@ void RenderFlexibleBoxScion::setWk(void* wk)
 bool RenderCombineTextScion::isCombined() const
 {
     return RenderCombineTextScion_isCombined(m_handle);
+}
+
+void RenderTextFragmentScion::setAltText(const String& altText)
+{
+    RenderTextFragmentScion_setAltText(m_handle, &altText);
 }
 
 Widget* RenderWidgetScion::widget() const

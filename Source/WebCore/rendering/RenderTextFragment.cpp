@@ -121,6 +121,15 @@ RenderBlock* RenderTextFragment::blockForAccompanyingFirstLetter()
     return nullptr;
 }
 
+void RenderTextFragment::setAltText(const String& altText)
+{
+    if (m_scion) {
+        m_scion->setAltText(altText);
+        return;
+    }
+    m_altText = altText;
+}
+
 void RenderTextFragment::setContentString(const String& text)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

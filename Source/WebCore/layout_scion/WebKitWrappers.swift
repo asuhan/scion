@@ -3752,6 +3752,15 @@ func RenderWidgetScion_updateWidgetPosition(_ widgetRendererRaw: UnsafeMutableRa
   return renderWidget.updateWidgetPosition().rawValue
 }
 
+@_cdecl("RenderTextFragmentScion_setAltText")
+func RenderTextFragmentScion_setAltText(
+  _ textFragmentRaw: UnsafeMutableRawPointer, _ altText: UnsafeRawPointer
+) {
+  let textFragment = Unmanaged<RenderTextFragmentWrapper>.fromOpaque(textFragmentRaw)
+    .takeUnretainedValue()
+  textFragment.setAltText(StringWrapper(p: wk_interop.String_new_copy(altText), owner: true))
+}
+
 @_cdecl("RenderCombineTextScion_isCombined")
 func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bool {
   let combineText = Unmanaged<RenderCombineTextWrapper>.fromOpaque(combineTextRaw)

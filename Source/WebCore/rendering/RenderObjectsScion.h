@@ -1395,6 +1395,8 @@ public:
     {
     }
 
+    void setAltText(const String&);
+
 private:
     void* m_handle;
 };

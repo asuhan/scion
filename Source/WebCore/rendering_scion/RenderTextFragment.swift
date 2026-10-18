@@ -79,6 +79,11 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     return nil
   }
 
+  func setAltText(_ altText: StringWrapper) {
+    assert(isNativeImpl())
+    m_altText = altText
+  }
+
   func setContentString(text: StringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

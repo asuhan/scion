@@ -83,11 +83,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return m_altText;
     }
-    void setAltText(const String& altText)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_altText = altText;
-    }
+    void setAltText(const String& altText);
     
 private:
     void setTextInternal(const String&, bool force) override;
