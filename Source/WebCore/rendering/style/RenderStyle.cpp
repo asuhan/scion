@@ -897,6 +897,36 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setFlexGrow(const void* p, float grow
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFlexGrow(grow);
 }
 
+extern "C" WEBCORE_EXPORT void RenderStyle_setMinWidth(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMinWidth(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setMinHeight(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMinHeight(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setMarginTop(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMarginTop(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setMarginBottom(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMarginBottom(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setMarginLeft(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMarginLeft(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setMarginRight(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMarginRight(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
 extern "C" WEBCORE_EXPORT void RenderStyle_setFlexShrink(const void* p, float shrink)
 {
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setFlexShrink(shrink);

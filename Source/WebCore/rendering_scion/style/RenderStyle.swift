@@ -2656,15 +2656,9 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func setMinWidth(_ length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setMinWidth(_ length: LengthWrapper) { wk_interop.RenderStyle_setMinWidth(p!, length.p) }
 
-  func setMinHeight(_ length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setMinHeight(_ length: LengthWrapper) { wk_interop.RenderStyle_setMinHeight(p!, length.p) }
 
   func setLogicalMinWidth(_ width: LengthWrapper) {
     // TODO(asuhan): implement this
@@ -2692,24 +2686,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func setMarginTop(_ length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setMarginTop(_ length: LengthWrapper) { wk_interop.RenderStyle_setMarginTop(p!, length.p) }
 
   func setMarginBottom(_ length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setMarginBottom(p!, length.p)
   }
 
-  func setMarginLeft(_ length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setMarginLeft(_ length: LengthWrapper) { wk_interop.RenderStyle_setMarginLeft(p!, length.p) }
 
   func setMarginRight(_ length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setMarginRight(p!, length.p)
   }
 
   func setMarginStart(_ margin: LengthWrapper) {
