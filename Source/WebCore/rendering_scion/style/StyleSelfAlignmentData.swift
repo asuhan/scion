@@ -40,6 +40,6 @@ class StyleSelfAlignmentData {
   }
 
   var position: ItemPosition = .Legacy
-  private let positionType: ItemPositionType  // ItemPositionType: Whether or not alignment uses the 'legacy' keyword.
+  let positionType: ItemPositionType  // ItemPositionType: Whether or not alignment uses the 'legacy' keyword.
   var overflow: OverflowAlignment = .Default
 }

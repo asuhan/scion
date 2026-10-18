@@ -2783,13 +2783,19 @@ class RenderStyleWrapper: Equatable {
   func setFlexShrink(_ shrink: Float32) { wk_interop.RenderStyle_setFlexShrink(p!, shrink) }
 
   func setAlignContent(_ data: StyleContentAlignmentData) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setAlignContent(
+      p!,
+      StyleContentAlignmentDataRaw(
+        position: data.position.rawValue, distribution: data.distribution.rawValue,
+        overflow: data.overflow.rawValue))
   }
 
   func setAlignItems(_ data: StyleSelfAlignmentData) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setAlignItems(
+      p!,
+      StyleSelfAlignmentDataRaw(
+        position: data.position.rawValue, overflow: data.overflow.rawValue,
+        isLegacy: data.positionType == .Legacy))
   }
 
   func setAlignSelfPosition(_ position: ItemPosition) {
@@ -2803,8 +2809,11 @@ class RenderStyleWrapper: Equatable {
   func setFlexWrap(_ wrap: FlexWrap) { wk_interop.RenderStyle_setFlexWrap(p!, wrap.rawValue) }
 
   func setJustifyContent(_ data: StyleContentAlignmentData) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setJustifyContent(
+      p!,
+      StyleContentAlignmentDataRaw(
+        position: data.position.rawValue, distribution: data.distribution.rawValue,
+        overflow: data.overflow.rawValue))
   }
 
   func setColumnSpan(_ span: ColumnSpan) {

@@ -2220,6 +2220,31 @@ static StyleSelfAlignmentDataRaw convertStyleSelfAlignmentData(const WebCore::St
     return { static_cast<uint8_t>(data.position()), static_cast<uint8_t>(data.overflow()), data.positionType() == WebCore::ItemPositionType::Legacy };
 }
 
+static WebCore::StyleSelfAlignmentData convertStyleSelfAlignmentDataRaw(StyleSelfAlignmentDataRaw raw)
+{
+    return { static_cast<WebCore::ItemPosition>(raw.position), static_cast<WebCore::OverflowAlignment>(raw.overflow), raw.isLegacy ? WebCore::ItemPositionType::Legacy : WebCore::ItemPositionType::NonLegacy };
+}
+
+static WebCore::StyleContentAlignmentData convertStyleContentAlignmentDataRaw(StyleContentAlignmentDataRaw raw)
+{
+    return { static_cast<WebCore::ContentPosition>(raw.position), static_cast<WebCore::ContentDistribution>(raw.distribution), static_cast<WebCore::OverflowAlignment>(raw.overflow) };
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setAlignContent(const void* p, StyleContentAlignmentDataRaw data)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setAlignContent(convertStyleContentAlignmentDataRaw(data));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setAlignItems(const void* p, StyleSelfAlignmentDataRaw data)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setAlignItems(convertStyleSelfAlignmentDataRaw(data));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setJustifyContent(const void* p, StyleContentAlignmentDataRaw data)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setJustifyContent(convertStyleContentAlignmentDataRaw(data));
+}
+
 extern "C" WEBCORE_EXPORT StyleSelfAlignmentDataRaw RenderStyle_alignItems(const void* p)
 {
     return convertStyleSelfAlignmentData(static_cast<const WebCore::RenderStyle*>(p)->alignItems());
