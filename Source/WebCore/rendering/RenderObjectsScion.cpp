@@ -826,6 +826,8 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
+extern "C" void* RenderTextFragmentScion_firstLetter(const void*);
+
 extern "C" void RenderTextFragmentScion_setAltText(void*, const void*);
 
 extern "C" void* RenderWidgetScion_widget(const void*);
@@ -2742,6 +2744,11 @@ void RenderFlexibleBoxScion::setWk(void* wk)
 bool RenderCombineTextScion::isCombined() const
 {
     return RenderCombineTextScion_isCombined(m_handle);
+}
+
+RenderBoxModelObject* RenderTextFragmentScion::firstLetter() const
+{
+    return static_cast<RenderBoxModelObject*>(RenderTextFragmentScion_firstLetter(m_handle));
 }
 
 void RenderTextFragmentScion::setAltText(const String& altText)

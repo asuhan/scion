@@ -64,16 +64,21 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     return m_start
   }
 
+  func firstLetter() -> RenderBoxModelObjectWrapper? {
+    assert(isNativeImpl())
+    return m_firstLetter
+  }
+
   func setFirstLetter(firstLetter: RenderBoxModelObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func blockForAccompanyingFirstLetter() -> RenderBlockWrapper? {
-    if firstLetter == nil {
+    if m_firstLetter == nil {
       return nil
     }
-    for block: RenderBlockWrapper in ancestorsOfType(descendant: firstLetter!) {
+    for block: RenderBlockWrapper in ancestorsOfType(descendant: m_firstLetter!) {
       if block is RenderMultiColumnFlowWrapper {
         break
       }
@@ -105,7 +110,7 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
 
     m_start = 0
     m_end = text().length()
-    if firstLetter == nil {
+    if m_firstLetter == nil {
       return
     }
     // TODO(asuhan): destroy the first letter through the render tree builder
@@ -129,5 +134,5 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   // Alternative description that can be used for accessibility instead of the native text.
   private var m_altText: StringWrapper? = nil
   private var m_contentString: StringWrapper? = nil
-  private let firstLetter: RenderBoxModelObjectWrapper? = nil
+  private let m_firstLetter: RenderBoxModelObjectWrapper? = nil
 }

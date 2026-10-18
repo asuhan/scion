@@ -3752,6 +3752,15 @@ func RenderWidgetScion_updateWidgetPosition(_ widgetRendererRaw: UnsafeMutableRa
   return renderWidget.updateWidgetPosition().rawValue
 }
 
+@_cdecl("RenderTextFragmentScion_firstLetter")
+func RenderTextFragmentScion_firstLetter(_ textFragmentRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let textFragment = Unmanaged<RenderTextFragmentWrapper>.fromOpaque(textFragmentRaw)
+    .takeUnretainedValue()
+  return wkRenderObject(textFragment.firstLetter())
+}
+
 @_cdecl("RenderTextFragmentScion_setAltText")
 func RenderTextFragmentScion_setAltText(
   _ textFragmentRaw: UnsafeMutableRawPointer, _ altText: UnsafeRawPointer

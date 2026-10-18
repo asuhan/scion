@@ -1395,6 +1395,8 @@ public:
     {
     }
 
+    RenderBoxModelObject* firstLetter() const;
+
     void setAltText(const String&);
 
 private:

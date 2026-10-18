@@ -107,6 +107,13 @@ UChar RenderTextFragment::previousCharacter() const
     return RenderText::previousCharacter();
 }
 
+RenderBoxModelObject* RenderTextFragment::firstLetter() const
+{
+    if (m_scion)
+        return m_scion->firstLetter();
+    return m_firstLetter.get();
+}
+
 RenderBlock* RenderTextFragment::blockForAccompanyingFirstLetter()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

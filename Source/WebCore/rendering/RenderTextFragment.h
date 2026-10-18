@@ -58,11 +58,7 @@ public:
         return m_end;
     }
 
-    RenderBoxModelObject* firstLetter() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_firstLetter.get();
-    }
+    RenderBoxModelObject* firstLetter() const;
     void setFirstLetter(RenderBoxModelObject& firstLetter)
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
