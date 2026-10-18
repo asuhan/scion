@@ -346,17 +346,19 @@ private func alignContentSpaceBetweenFlexItems(
 func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
-  convenience init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
-    self.init(type, element, style, .IsFlexibleBox)
+  init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(type, element, style, .IsFlexibleBox)
     assert(isRenderFlexibleBox())
     setChildrenInline(b: false)  // All of our children must be block-level.
   }
 
-  convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
-    self.init(type, document, style, .IsFlexibleBox)
+  init(type: `Type`, document: Document, style: RenderStyleWrapper) {
+    super.init(type, document, style, .IsFlexibleBox)
     assert(isRenderFlexibleBox())
     setChildrenInline(b: false)  // All of our children must be block-level.
   }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   typealias Direction = FlowDirection
 
