@@ -205,6 +205,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_isContinuation(const void* p)
     return static_cast<const WebCore::RenderElement*>(p)->isContinuation();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_isFirstLetter(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->isFirstLetter();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderElement_createsNewFormattingContext(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->createsNewFormattingContext();

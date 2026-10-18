@@ -3886,6 +3886,17 @@ func RenderBoxModelObjectScion_horizontalMarginExtent(_ boxModelObjectRaw: Unsaf
   return boxModelObject.horizontalMarginExtent().rawValue()
 }
 
+@_cdecl("RenderBoxModelObjectScion_setFirstLetterRemainingText")
+func RenderBoxModelObjectScion_setFirstLetterRemainingText(
+  _ boxModelObjectRaw: UnsafeMutableRawPointer, _ remainingTextRaw: UnsafeMutableRawPointer
+) {
+  let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)
+    .takeUnretainedValue()
+  boxModelObject.setFirstLetterRemainingText(
+    remainingText: createRenderObjectWrapperOrNative(remainingTextRaw) as! RenderTextFragmentWrapper
+  )
+}
+
 @_cdecl("RenderBoxModelObjectScion_borderTop")
 func RenderBoxModelObjectScion_borderTop(_ boxModelObjectRaw: UnsafeRawPointer) -> Int32 {
   let boxModelObject = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(boxModelObjectRaw)

@@ -1554,6 +1554,13 @@ class RenderElementWrapper: RenderObjectWrapper {
     m_isContinuation = true
   }
 
+  func isFirstLetter() -> Bool {
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_isFirstLetter(id())
+    }
+    return m_isFirstLetter
+  }
+
   func setIsFirstLetter() {
     assert(isNativeImpl())
     m_isFirstLetter = true

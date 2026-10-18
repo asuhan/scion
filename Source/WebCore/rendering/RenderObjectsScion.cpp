@@ -770,6 +770,8 @@ extern "C" bool RenderBoxModelObjectScion_hasAcceleratedCompositing(const void*)
 
 extern "C" int32_t RenderBoxModelObjectScion_borderTop(const void*);
 
+extern "C" void RenderBoxModelObjectScion_setFirstLetterRemainingText(void*, void*);
+
 extern "C" int32_t RenderBoxModelObjectScion_verticalMarginExtent(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingLogicalWidth(const void*);
@@ -2648,6 +2650,11 @@ LayoutUnit RenderBoxModelObjectScion::borderAndPaddingLogicalHeight() const
 LayoutUnit RenderBoxModelObjectScion::horizontalBorderAndPaddingExtent() const
 {
     return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_horizontalBorderAndPaddingExtent(m_handle));
+}
+
+void RenderBoxModelObjectScion::setFirstLetterRemainingText(RenderTextFragment& remainingText)
+{
+    RenderBoxModelObjectScion_setFirstLetterRemainingText(m_handle, &remainingText);
 }
 
 LayoutUnit RenderBoxModelObjectScion::borderAndPaddingAfter() const

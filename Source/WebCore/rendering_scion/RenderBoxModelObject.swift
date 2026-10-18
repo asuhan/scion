@@ -58,6 +58,12 @@ enum ContentChangeType {
   case ModelChanged
 }
 
+private typealias FirstLetterRemainingTextMap = WeakHashMap<
+  RenderBoxModelObjectWrapper, WeakPtr<RenderTextFragmentWrapper>
+>
+
+private let firstLetterRemainingTextMap = FirstLetterRemainingTextMap()
+
 private func accumulateInFlowPositionOffsets(child: RenderObjectWrapper) -> LayoutSizeWrapper {
   if !child.isAnonymousBlock() || !child.isInFlowPositioned() {
     return LayoutSizeWrapper()
@@ -1409,8 +1415,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func setFirstLetterRemainingText(remainingText: RenderTextFragmentWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isFirstLetter())
+    firstLetterRemainingTextMap.set(self, WeakPtr(remainingText))
   }
 
   enum ScaleByUsedZoom {

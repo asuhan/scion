@@ -1075,7 +1075,10 @@ RenderTextFragment* RenderBoxModelObject::firstLetterRemainingText() const
 
 void RenderBoxModelObject::setFirstLetterRemainingText(RenderTextFragment& remainingText)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setFirstLetterRemainingText(remainingText);
+        return;
+    }
     ASSERT(isFirstLetter());
     firstLetterRemainingTextMap().set(*this, remainingText);
 }

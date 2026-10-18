@@ -77,6 +77,7 @@ class RenderLayerModelObject;
 class RenderMultiColumnFlow;
 class RenderObject;
 class RenderSelection;
+class RenderTextFragment;
 class Widget;
 
 namespace Layout {
@@ -816,6 +817,8 @@ public:
 
     // Dispatches virtually on the Swift wrapper, so one bridge serves every override.
     void setSelectionState(RenderObject::HighlightState);
+
+    void setFirstLetterRemainingText(RenderTextFragment&);
 
     LayoutUnit verticalMarginExtent() const;
 
