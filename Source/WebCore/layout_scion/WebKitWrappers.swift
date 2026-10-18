@@ -3557,6 +3557,17 @@ func RenderCombineTextScion_create(_ textNode: UnsafeMutableRawPointer, _ text: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderButtonScion_create")
+func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let button = RenderButtonWrapper(HTMLFormControlElementWrapper(p: elementRaw), style)
+  let unmanaged = Unmanaged.passRetained(button)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderFlexibleBoxScion_create")
 func RenderFlexibleBoxScion_create(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer

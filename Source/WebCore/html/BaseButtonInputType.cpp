@@ -32,9 +32,11 @@
 #include "config.h"
 #include "BaseButtonInputType.h"
 
+#include "Document.h"
 #include "HTMLInputElement.h"
 #include "HTMLNames.h"
 #include "RenderButton.h"
+#include "RenderObjectsScion.h"
 #include <wtf/TZoneMallocInlines.h>
 
 namespace WebCore {
@@ -57,6 +59,12 @@ bool BaseButtonInputType::appendFormData(DOMFormData&) const
 RenderPtr<RenderElement> BaseButtonInputType::createInputRenderer(RenderStyle&& style)
 {
     ASSERT(element());
+    if (Document::s_useScionRendering >= 11) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderButton>(*element(), WTFMove(style));
+        renderer->setScionHandle(RenderButtonScion_create(element(), clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderButton>(*element(), WTFMove(style));
 }
 

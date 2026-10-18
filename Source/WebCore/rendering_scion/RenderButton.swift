@@ -22,6 +22,11 @@
 import wk_interop
 
 final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
+  init(_ element: HTMLFormControlElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(type: .Button, element: element, style: style)
+    assert(isRenderButton())
+  }
+
   override func canBeSelectionLeaf() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

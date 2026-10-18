@@ -34,6 +34,7 @@
 #include "HTMLNames.h"
 #include "KeyboardEvent.h"
 #include "RenderButton.h"
+#include "RenderObjectsScion.h"
 #include <wtf/SetForScope.h>
 #include <wtf/StdLibExtras.h>
 #include <wtf/TZoneMallocInlines.h>
@@ -77,6 +78,12 @@ RenderPtr<RenderElement> HTMLButtonElement::createElementRenderer(RenderStyle&& 
     DisplayType display = style.display();
     if (display == DisplayType::InlineGrid || display == DisplayType::Grid || display == DisplayType::InlineFlex || display == DisplayType::Flex)
         return HTMLFormControlElement::createElementRenderer(WTFMove(style), position);
+    if (Document::s_useScionRendering >= 11) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderButton>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderButtonScion_create(this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderButton>(*this, WTFMove(style));
 }
 

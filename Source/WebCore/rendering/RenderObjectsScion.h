@@ -52,6 +52,8 @@ extern "C" void* RenderHTMLCanvasScion_create(void*, const void*);
 
 extern "C" void* RenderFlexibleBoxScion_create(void*, const void*);
 
+extern "C" void* RenderButtonScion_create(void*, const void*);
+
 extern "C" void* RenderCombineTextScion_create(void*, const void*);
 
 namespace WebCore {
