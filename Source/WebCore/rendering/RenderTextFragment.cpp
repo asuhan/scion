@@ -26,6 +26,7 @@
 #include "RenderBlock.h"
 #include "RenderIterator.h"
 #include "RenderMultiColumnFlow.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderTreeBuilder.h"
 #include "Text.h"
@@ -65,13 +66,21 @@ RenderTextFragment::~RenderTextFragment()
     ASSERT(!m_firstLetter);
 }
 
+void RenderTextFragment::setScionHandle(void* handle)
+{
+    RenderText::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextFragmentScion>(handle);
+}
+
 bool RenderTextFragment::canBeSelectionLeaf() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return textNode() && textNode()->hasEditableStyle();
 }
 
 void RenderTextFragment::setTextInternal(const String& newText, bool force)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderText::setTextInternal(newText, force);
 
     m_start = 0;
@@ -88,6 +97,7 @@ void RenderTextFragment::setTextInternal(const String& newText, bool force)
 
 UChar RenderTextFragment::previousCharacter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (start()) {
         String original = textNode() ? textNode()->data() : contentString();
         if (!original.isNull() && start() <= original.length())
@@ -99,6 +109,7 @@ UChar RenderTextFragment::previousCharacter() const
 
 RenderBlock* RenderTextFragment::blockForAccompanyingFirstLetter()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_firstLetter)
         return nullptr;
     for (auto& block : ancestorsOfType<RenderBlock>(*m_firstLetter)) {
@@ -112,6 +123,7 @@ RenderBlock* RenderTextFragment::blockForAccompanyingFirstLetter()
 
 void RenderTextFragment::setContentString(const String& text)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_contentString = text;
     setText(text);
 }

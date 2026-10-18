@@ -27,6 +27,8 @@
 
 namespace WebCore {
 
+class RenderTextFragmentScion;
+
 // Used to represent a text substring of an element, e.g., for text runs that are split because of
 // first letter and that must therefore have different styles (and positions in the render tree).
 // We cache offsets so that text transformations can be applied in such a way that we can recover
@@ -41,21 +43,51 @@ public:
 
     virtual ~RenderTextFragment();
 
+    void setScionHandle(void* handle);
+
     bool canBeSelectionLeaf() const override;
 
-    unsigned start() const { return m_start; }
-    unsigned end() const { return m_end; }
+    unsigned start() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_start;
+    }
+    unsigned end() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_end;
+    }
 
-    RenderBoxModelObject* firstLetter() const { return m_firstLetter.get(); }
-    void setFirstLetter(RenderBoxModelObject& firstLetter) { m_firstLetter = firstLetter; }
+    RenderBoxModelObject* firstLetter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_firstLetter.get();
+    }
+    void setFirstLetter(RenderBoxModelObject& firstLetter)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_firstLetter = firstLetter;
+    }
     
     RenderBlock* blockForAccompanyingFirstLetter();
 
     void setContentString(const String& text);
-    StringImpl* contentString() const { return m_contentString.impl(); }
+    StringImpl* contentString() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_contentString.impl();
+    }
 
-    const String& altText() const { return m_altText; }
-    void setAltText(const String& altText) { m_altText = altText; }
+    const String& altText() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_altText;
+    }
+    void setAltText(const String& altText)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_altText = altText;
+    }
     
 private:
     void setTextInternal(const String&, bool force) override;
@@ -68,6 +100,7 @@ private:
     String m_altText;
     String m_contentString;
     SingleThreadWeakPtr<RenderBoxModelObject> m_firstLetter;
+    std::unique_ptr<RenderTextFragmentScion> m_scion;
 };
 
 } // namespace WebCore
