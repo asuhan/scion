@@ -1539,6 +1539,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     var previousText = previousInPreOrder()
     while previousText != nil {
       if !previousText!.isInFlow() {
+        previousText = previousText!.previousInPreOrder()
         continue
       }
       if !isInlineFlowOrEmptyText(previousText!) {
