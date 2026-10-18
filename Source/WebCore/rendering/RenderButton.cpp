@@ -31,6 +31,7 @@
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderChildIterator.h"
 #include "RenderElementInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleSetters.h"
 #include "RenderTheme.h"
 #include "RenderTreeBuilder.h"
@@ -55,23 +56,33 @@ RenderButton::RenderButton(HTMLFormControlElement& element, RenderStyle&& style)
 
 RenderButton::~RenderButton() = default;
 
+void RenderButton::setScionHandle(void* handle)
+{
+    RenderFlexibleBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderButtonScion>(handle);
+}
+
 HTMLFormControlElement& RenderButton::formControlElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLFormControlElement>(nodeForNonAnonymous());
 }
 
 bool RenderButton::canBeSelectionLeaf() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return formControlElement().hasEditableStyle();
 }
 
 bool RenderButton::hasLineIfEmpty() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return is<HTMLInputElement>(formControlElement());
 }
 
 void RenderButton::setInnerRenderer(RenderBlock& innerRenderer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_inner.get());
     m_inner = innerRenderer;
     updateAnonymousChildStyle(m_inner->mutableStyle());
@@ -89,6 +100,7 @@ void RenderButton::setInnerRenderer(RenderBlock& innerRenderer)
 
 void RenderButton::updateAnonymousChildStyle(RenderStyle& childStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     childStyle.setFlexGrow(1.0f);
 
     // min-inline-size: 0; is needed for correct shrinking.
@@ -112,6 +124,7 @@ void RenderButton::updateAnonymousChildStyle(RenderStyle& childStyle) const
 
 void RenderButton::updateFromElement()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If we're an input element, we may need to change our button text.
     if (RefPtr input = dynamicDowncast<HTMLInputElement>(formControlElement())) {
         String value = input->valueWithDefault();
@@ -121,6 +134,7 @@ void RenderButton::updateFromElement()
 
 void RenderButton::setText(const String& str)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_buttonText && str.isEmpty())
         return;
 
@@ -147,6 +161,7 @@ void RenderButton::setText(const String& str)
 
 String RenderButton::text() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_buttonText)
         return m_buttonText->text();
     return { };
@@ -154,6 +169,7 @@ String RenderButton::text() const
 
 bool RenderButton::canHaveGeneratedChildren() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Input elements can't have generated children, but button elements can. We'll
     // write the code assuming any other button types that might emerge in the future
     // can also have children.
@@ -162,6 +178,7 @@ bool RenderButton::canHaveGeneratedChildren() const
 
 LayoutRect RenderButton::controlClipRect(const LayoutPoint& additionalOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Clip to the padding box to at least give content the extra padding space.
     return LayoutRect(additionalOffset.x() + borderLeft(), additionalOffset.y() + borderTop(), width() - borderLeft() - borderRight(), height() - borderTop() - borderBottom());
 }
@@ -173,6 +190,7 @@ static LayoutUnit synthesizedBaselineFromContentBox(const RenderBox& box, LineDi
 
 LayoutUnit RenderButton::baselinePosition(FontBaseline fontBaseline, bool firstLine, LineDirectionMode direction, LinePositionMode mode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldApplyLayoutContainment())
         return RenderFlexibleBox::baselinePosition(fontBaseline, firstLine, direction, mode);
     // We cannot rely on RenderFlexibleBox::baselinePosition() because of flexboxes have some special behavior
@@ -185,6 +203,7 @@ LayoutUnit RenderButton::baselinePosition(FontBaseline fontBaseline, bool firstL
 #if PLATFORM(IOS_FAMILY)
 void RenderButton::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFlexibleBox::layout();
 
     // FIXME: We should not be adjusting styles during layout. See <rdar://problem/7675493>.
@@ -195,6 +214,7 @@ void RenderButton::layout()
 // Only clip overflow on input elements, to match other browsers.
 bool RenderButton::hasControlClip() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return is<HTMLInputElement>(formControlElement());
 }
 

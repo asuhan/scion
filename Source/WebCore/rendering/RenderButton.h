@@ -28,6 +28,7 @@
 namespace WebCore {
 
 class HTMLFormControlElement;
+class RenderButtonScion;
 class RenderTextFragment;
 
 // RenderButtons are just like normal flexboxes except that they will generate an anonymous block child.
@@ -40,10 +41,13 @@ public:
     RenderButton(HTMLFormControlElement&, RenderStyle&&);
     virtual ~RenderButton();
 
+    void setScionHandle(void* handle);
+
     HTMLFormControlElement& formControlElement() const;
 
     bool canBeSelectionLeaf() const override;
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool createsAnonymousWrapper() const override { return true; }
 
     void updateFromElement() override;
@@ -61,9 +65,17 @@ public:
     void layout() override;
 #endif
 
-    RenderTextFragment* textRenderer() const { return m_buttonText.get(); }
+    RenderTextFragment* textRenderer() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_buttonText.get();
+    }
 
-    RenderBlock* innerRenderer() const { return m_inner.get(); }
+    RenderBlock* innerRenderer() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_inner.get();
+    }
     void setInnerRenderer(RenderBlock&);
 
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;
@@ -71,6 +83,7 @@ public:
 private:
     void element() const = delete;
 
+    // NB(asuhan): these return literals, we can skip the Scion check
     ASCIILiteral renderName() const override { return "RenderButton"_s; }
 
     bool hasLineIfEmpty() const override;
@@ -79,6 +92,7 @@ private:
 
     SingleThreadWeakPtr<RenderTextFragment> m_buttonText;
     SingleThreadWeakPtr<RenderBlock> m_inner;
+    std::unique_ptr<RenderButtonScion> m_scion;
 };
 
 } // namespace WebCore

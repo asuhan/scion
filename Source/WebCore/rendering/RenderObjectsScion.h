@@ -1380,6 +1380,17 @@ private:
     mutable IntRect m_printRect;
 };
 
+class RenderButtonScion final {
+public:
+    RenderButtonScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderFlexibleBoxScion final {
 public:
     RenderFlexibleBoxScion(void* handle)
