@@ -3779,6 +3779,16 @@ func RenderTextFragmentScion_firstLetter(_ textFragmentRaw: UnsafeRawPointer)
   return wkRenderObject(textFragment.firstLetter())
 }
 
+@_cdecl("RenderTextFragmentScion_setFirstLetter")
+func RenderTextFragmentScion_setFirstLetter(
+  _ textFragmentRaw: UnsafeMutableRawPointer, _ firstLetterRaw: UnsafeMutableRawPointer
+) {
+  let textFragment = Unmanaged<RenderTextFragmentWrapper>.fromOpaque(textFragmentRaw)
+    .takeUnretainedValue()
+  textFragment.setFirstLetter(
+    firstLetter: createRenderObjectWrapperOrNative(firstLetterRaw) as! RenderBoxModelObjectWrapper)
+}
+
 @_cdecl("RenderTextFragmentScion_setAltText")
 func RenderTextFragmentScion_setAltText(
   _ textFragmentRaw: UnsafeMutableRawPointer, _ altText: UnsafeRawPointer

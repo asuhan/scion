@@ -830,6 +830,8 @@ extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
 extern "C" void* RenderTextFragmentScion_firstLetter(const void*);
 
+extern "C" void RenderTextFragmentScion_setFirstLetter(void*, void*);
+
 extern "C" void RenderTextFragmentScion_setAltText(void*, const void*);
 
 extern "C" void* RenderWidgetScion_widget(const void*);
@@ -2756,6 +2758,11 @@ bool RenderCombineTextScion::isCombined() const
 RenderBoxModelObject* RenderTextFragmentScion::firstLetter() const
 {
     return static_cast<RenderBoxModelObject*>(RenderTextFragmentScion_firstLetter(m_handle));
+}
+
+void RenderTextFragmentScion::setFirstLetter(RenderBoxModelObject& firstLetter)
+{
+    RenderTextFragmentScion_setFirstLetter(m_handle, &firstLetter);
 }
 
 void RenderTextFragmentScion::setAltText(const String& altText)

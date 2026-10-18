@@ -70,8 +70,8 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   }
 
   func setFirstLetter(firstLetter: RenderBoxModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_firstLetter = firstLetter
   }
 
   func blockForAccompanyingFirstLetter() -> RenderBlockWrapper? {
@@ -134,5 +134,5 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   // Alternative description that can be used for accessibility instead of the native text.
   private var m_altText: StringWrapper? = nil
   private var m_contentString: StringWrapper? = nil
-  private let m_firstLetter: RenderBoxModelObjectWrapper? = nil
+  private weak var m_firstLetter: RenderBoxModelObjectWrapper? = nil
 }

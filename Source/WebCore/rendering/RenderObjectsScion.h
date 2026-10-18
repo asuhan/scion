@@ -1400,6 +1400,7 @@ public:
     }
 
     RenderBoxModelObject* firstLetter() const;
+    void setFirstLetter(RenderBoxModelObject&);
 
     void setAltText(const String&);
 

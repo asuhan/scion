@@ -114,6 +114,15 @@ RenderBoxModelObject* RenderTextFragment::firstLetter() const
     return m_firstLetter.get();
 }
 
+void RenderTextFragment::setFirstLetter(RenderBoxModelObject& firstLetter)
+{
+    if (m_scion) {
+        m_scion->setFirstLetter(firstLetter);
+        return;
+    }
+    m_firstLetter = firstLetter;
+}
+
 RenderBlock* RenderTextFragment::blockForAccompanyingFirstLetter()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

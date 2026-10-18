@@ -59,11 +59,7 @@ public:
     }
 
     RenderBoxModelObject* firstLetter() const;
-    void setFirstLetter(RenderBoxModelObject& firstLetter)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_firstLetter = firstLetter;
-    }
+    void setFirstLetter(RenderBoxModelObject&);
     
     RenderBlock* blockForAccompanyingFirstLetter();
 
