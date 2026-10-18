@@ -25,19 +25,33 @@
 // We cache offsets so that text transformations can be applied in such a way that we can recover
 // the original unaltered string from our corresponding DOM node.
 final class RenderTextFragmentWrapper: RenderTextWrapper {
-  convenience init(textNode: TextWrapper, text: StringWrapper, startOffset: Int32, length: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(textNode: TextWrapper, text: StringWrapper, startOffset: Int32, length: Int32) {
+    m_start = UInt32(startOffset)
+    m_end = UInt32(length)
+    super.init(
+      .TextFragment, textNode,
+      text.substring(position: UInt32(startOffset), length: UInt32(length)))
   }
 
-  convenience init(document: Document, text: StringWrapper, startOffset: Int32, length: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(document: Document, text: StringWrapper, startOffset: Int32, length: Int32) {
+    m_start = UInt32(startOffset)
+    m_end = UInt32(length)
+    super.init(
+      .TextFragment, document.ContainerNode(),
+      text.substring(position: UInt32(startOffset), length: UInt32(length)))
   }
 
-  convenience init(document: Document, text: StringWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(document: Document, text: StringWrapper) {
+    m_start = 0
+    m_end = text.length()
+    m_contentString = text
+    super.init(.TextFragment, document.ContainerNode(), text)
+  }
+
+  override init(p: UnsafeMutableRawPointer) {
+    m_start = 0
+    m_end = 0
+    super.init(p: p)
   }
 
   override func canBeSelectionLeaf() -> Bool {
@@ -80,5 +94,10 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  private var m_start: UInt32
+  private var m_end: UInt32
+  // Alternative description that can be used for accessibility instead of the native text.
+  private var m_altText: StringWrapper? = nil
+  private var m_contentString: StringWrapper? = nil
   private let firstLetter: RenderBoxModelObjectWrapper? = nil
 }

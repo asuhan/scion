@@ -22,10 +22,12 @@
 #include "config.h"
 #include "ContentData.h"
 
+#include "Document.h"
 #include "RenderCounter.h"
 #include "RenderImage.h"
 #include "RenderImageResource.h"
 #include "RenderImageResourceStyleImage.h"
+#include "RenderObjectsScion.h"
 #include "RenderQuote.h"
 #include "RenderStyle.h"
 #include "RenderTextFragment.h"
@@ -62,6 +64,8 @@ RenderPtr<RenderObject> ImageContentData::createContentRenderer(Document& docume
 RenderPtr<RenderObject> TextContentData::createContentRenderer(Document& document, const RenderStyle&) const
 {
     auto fragment = createRenderer<RenderTextFragment>(document, m_text);
+    if (Document::s_useScionRendering >= 10)
+        fragment->setScionHandle(RenderTextFragmentScion_createFromContentString(&document, &m_text));
     fragment->setAltText(altText());
     return fragment;
 }

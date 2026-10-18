@@ -28,6 +28,7 @@
 #include "RenderBlock.h"
 #include "RenderButton.h"
 #include "RenderInline.h"
+#include "RenderObjectsScion.h"
 #include "RenderSVGText.h"
 #include "RenderStyleSetters.h"
 #include "RenderTable.h"
@@ -279,9 +280,14 @@ void RenderTreeBuilder::FirstLetter::createRenderers(RenderText& currentTextChil
         RenderPtr<RenderTextFragment> newRemainingText;
         if (textNode) {
             newRemainingText = createRenderer<RenderTextFragment>(*textNode, oldText, length, oldText.length() - length);
+            if (Document::s_useScionRendering >= 10)
+                newRemainingText->setScionHandle(RenderTextFragmentScion_create(textNode, &oldText, length, oldText.length() - length));
             textNode->setRenderer(newRemainingText.get());
-        } else
+        } else {
             newRemainingText = createRenderer<RenderTextFragment>(m_builder.m_view.document(), oldText, length, oldText.length() - length);
+            if (Document::s_useScionRendering >= 10)
+                newRemainingText->setScionHandle(RenderTextFragmentScion_createFromDocument(&m_builder.m_view.document(), &oldText, length, oldText.length() - length));
+        }
 
         RenderTextFragment& remainingText = *newRemainingText;
         ASSERT_UNUSED(hasInlineWrapperForDisplayContents, hasInlineWrapperForDisplayContents == inlineWrapperForDisplayContents.get());
@@ -296,6 +302,8 @@ void RenderTreeBuilder::FirstLetter::createRenderers(RenderText& currentTextChil
 
         // Construct text fragment for the first letter.
         auto letter = createRenderer<RenderTextFragment>(m_builder.m_view.document(), oldText, 0, length);
+        if (Document::s_useScionRendering >= 10)
+            letter->setScionHandle(RenderTextFragmentScion_createFromDocument(&m_builder.m_view.document(), &oldText, 0, length));
         m_builder.attach(firstLetter, WTFMove(letter));
     }
 }

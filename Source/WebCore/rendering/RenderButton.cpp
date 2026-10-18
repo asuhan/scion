@@ -140,6 +140,8 @@ void RenderButton::setText(const String& str)
 
     if (!m_buttonText) {
         auto newButtonText = createRenderer<RenderTextFragment>(document(), str);
+        if (Document::s_useScionRendering >= 10)
+            newButtonText->setScionHandle(RenderTextFragmentScion_createFromContentString(&document(), &str));
         m_buttonText = *newButtonText;
         // FIXME: This mutation should go through the normal RenderTreeBuilder path.
         if (RenderTreeBuilder::current())

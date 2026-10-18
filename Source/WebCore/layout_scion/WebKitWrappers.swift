@@ -3557,6 +3557,41 @@ func RenderCombineTextScion_create(_ textNode: UnsafeMutableRawPointer, _ text: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderTextFragmentScion_create")
+func RenderTextFragmentScion_create(
+  _ textNode: UnsafeMutableRawPointer, _ text: UnsafeRawPointer, _ startOffset: Int32,
+  _ length: Int32
+) -> UnsafeMutableRawPointer {
+  let renderTextFragment = RenderTextFragmentWrapper(
+    textNode: TextWrapper(p: textNode), text: StringWrapper(p: text, owner: false),
+    startOffset: startOffset, length: length)
+  let unmanaged = Unmanaged.passRetained(renderTextFragment)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("RenderTextFragmentScion_createFromDocument")
+func RenderTextFragmentScion_createFromDocument(
+  _ document: UnsafeMutableRawPointer, _ text: UnsafeRawPointer, _ startOffset: Int32,
+  _ length: Int32
+) -> UnsafeMutableRawPointer {
+  let renderTextFragment = RenderTextFragmentWrapper(
+    document: Document(document), text: StringWrapper(p: text, owner: false),
+    startOffset: startOffset, length: length)
+  let unmanaged = Unmanaged.passRetained(renderTextFragment)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("RenderTextFragmentScion_createFromContentString")
+func RenderTextFragmentScion_createFromContentString(
+  _ document: UnsafeMutableRawPointer, _ text: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let renderTextFragment = RenderTextFragmentWrapper(
+    document: Document(document),
+    text: StringWrapper(p: wk_interop.String_new_copy(text), owner: true))
+  let unmanaged = Unmanaged.passRetained(renderTextFragment)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderButtonScion_create")
 func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer

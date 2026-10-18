@@ -56,6 +56,12 @@ extern "C" void* RenderButtonScion_create(void*, const void*);
 
 extern "C" void* RenderCombineTextScion_create(void*, const void*);
 
+extern "C" void* RenderTextFragmentScion_create(void*, const void*, int32_t, int32_t);
+
+extern "C" void* RenderTextFragmentScion_createFromDocument(void*, const void*, int32_t, int32_t);
+
+extern "C" void* RenderTextFragmentScion_createFromContentString(void*, const void*);
+
 namespace WebCore {
 
 class HitTestLocation;

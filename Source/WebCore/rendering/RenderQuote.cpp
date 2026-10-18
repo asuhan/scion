@@ -24,7 +24,9 @@
 #include "RenderQuote.h"
 
 #include "QuotesData.h"
+#include "Document.h"
 #include "RenderBoxModelObjectInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderTextFragment.h"
 #include "RenderTreeBuilder.h"
 #include "RenderView.h"
@@ -445,6 +447,12 @@ void RenderQuote::updateTextRenderer(RenderTreeBuilder& builder)
     if (auto* renderText = dynamicDowncast<RenderTextFragment>(lastChild())) {
         renderText->setContentString(m_text);
         renderText->dirtyLegacyLineBoxes(false);
+        return;
+    }
+    if (Document::s_useScionRendering >= 10) {
+        auto fragment = createRenderer<RenderTextFragment>(document(), m_text);
+        fragment->setScionHandle(RenderTextFragmentScion_createFromContentString(&document(), &m_text));
+        builder.attach(*this, WTFMove(fragment));
         return;
     }
     builder.attach(*this, createRenderer<RenderTextFragment>(document(), m_text));
