@@ -1027,14 +1027,14 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private typealias RenderFragmentContainerRangeMap = HashMap<
     RenderBoxWrapper, RenderFragmentContainerRange
   >
-  private let fragmentRangeMap = RenderFragmentContainerRangeMap()
+  private lazy var fragmentRangeMap = RenderFragmentContainerRangeMap()
 
   // Map a box with a fragment break to the auto height fragment affected by that break.
   private typealias RenderBoxToFragmentMap = HashMap<
     RenderBoxWrapper, RenderFragmentContainerWrapper
   >
-  private let breakBeforeToFragmentMap = RenderBoxToFragmentMap()
-  private let breakAfterToFragmentMap = RenderBoxToFragmentMap()
+  private lazy var breakBeforeToFragmentMap = RenderBoxToFragmentMap()
+  private lazy var breakAfterToFragmentMap = RenderBoxToFragmentMap()
 
   private let fragmentIntervalTree = FragmentIntervalTree()
 
