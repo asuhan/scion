@@ -117,13 +117,29 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   func innerRenderer() -> RenderBlockWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_inner
   }
 
   func setInnerRenderer(innerRenderer: RenderBlockWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(m_inner == nil)
+    m_inner = innerRenderer
+    updateAnonymousChildStyle(m_inner!.mutableStyle())
+
+    if m_inner != nil && m_inner!.layoutBox() != nil {
+      if let inlineFormattingContextRoot = m_inner as? RenderBlockFlowWrapper {
+        inlineFormattingContextRoot.inlineLayout()?.rootStyleWillChange(
+          root: inlineFormattingContextRoot, newStyle: inlineFormattingContextRoot.style())
+      }
+      if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: m_inner!) {
+        lineLayout.styleWillChange(renderer: m_inner!, newStyle: m_inner!.style(), diff: .Layout)
+      }
+      LayoutIntegration.LineLayout.updateStyle(m_inner!)
+      for child: RenderTextWrapper in childrenOfType(parent: m_inner!) {
+        LayoutIntegration.LineLayout.updateStyle(child)
+      }
+    }
   }
 
   override final func baselinePosition(
@@ -159,4 +175,5 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   private weak var m_buttonText: RenderTextFragmentWrapper? = nil
+  private weak var m_inner: RenderBlockWrapper? = nil
 }

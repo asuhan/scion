@@ -71,11 +71,7 @@ public:
         return m_buttonText.get();
     }
 
-    RenderBlock* innerRenderer() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_inner.get();
-    }
+    RenderBlock* innerRenderer() const;
     void setInnerRenderer(RenderBlock&);
 
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;

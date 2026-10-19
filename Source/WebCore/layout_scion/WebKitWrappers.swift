@@ -3795,6 +3795,21 @@ func RenderButtonScion_updateFromElement(_ buttonRaw: UnsafeMutableRawPointer) {
   button.updateFromElement()
 }
 
+@_cdecl("RenderButtonScion_innerRenderer")
+func RenderButtonScion_innerRenderer(_ buttonRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let button = Unmanaged<RenderButtonWrapper>.fromOpaque(buttonRaw).takeUnretainedValue()
+  return wkRenderObject(button.innerRenderer())
+}
+
+@_cdecl("RenderButtonScion_setInnerRenderer")
+func RenderButtonScion_setInnerRenderer(
+  _ buttonRaw: UnsafeMutableRawPointer, _ innerRendererRaw: UnsafeMutableRawPointer
+) {
+  let button = Unmanaged<RenderButtonWrapper>.fromOpaque(buttonRaw).takeUnretainedValue()
+  button.setInnerRenderer(
+    innerRenderer: createRenderObjectWrapperOrNative(innerRendererRaw) as! RenderBlockWrapper)
+}
+
 @_cdecl("RenderTextFragmentScion_setAltText")
 func RenderTextFragmentScion_setAltText(
   _ textFragmentRaw: UnsafeMutableRawPointer, _ altText: UnsafeRawPointer

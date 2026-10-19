@@ -80,9 +80,19 @@ bool RenderButton::hasLineIfEmpty() const
     return is<HTMLInputElement>(formControlElement());
 }
 
+RenderBlock* RenderButton::innerRenderer() const
+{
+    if (m_scion)
+        return m_scion->innerRenderer();
+    return m_inner.get();
+}
+
 void RenderButton::setInnerRenderer(RenderBlock& innerRenderer)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setInnerRenderer(innerRenderer);
+        return;
+    }
     ASSERT(!m_inner.get());
     m_inner = innerRenderer;
     updateAnonymousChildStyle(m_inner->mutableStyle());

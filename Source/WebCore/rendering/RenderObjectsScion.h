@@ -1420,6 +1420,9 @@ public:
 
     void updateFromElement();
 
+    RenderBlock* innerRenderer() const;
+    void setInnerRenderer(RenderBlock&);
+
 private:
     void* m_handle;
 };
