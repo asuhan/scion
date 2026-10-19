@@ -2877,6 +2877,13 @@ bool RenderObject::canHaveGeneratedChildren() const
     return canHaveChildren();
 }
 
+Node* RenderObject::generatingNode() const
+{
+    if (m_scion)
+        return m_scion->generatingNode();
+    return isPseudoElement() ? generatingPseudoHostElement() : node();
+}
+
 Node* RenderObject::generatingPseudoHostElement() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

@@ -997,11 +997,7 @@ public:
     // Returns the styled node that caused the generation of this renderer.
     // This is the same as node() except for renderers of :before and :after
     // pseudo elements for which their parent node is returned.
-    Node* generatingNode() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isPseudoElement() ? generatingPseudoHostElement() : node();
-    }
+    Node* generatingNode() const;
 
     Document& document() const;
     Ref<Document> protectedDocument() const;

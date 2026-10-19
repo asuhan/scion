@@ -345,6 +345,8 @@ extern "C" bool RenderObjectScion_isRooted(const void*);
 
 extern "C" void* RenderObjectScion_node(const void*);
 
+extern "C" void* RenderObjectScion_generatingNode(const void*);
+
 extern "C" void* RenderObjectScion_nonPseudoNode(const void*);
 
 extern "C" void* RenderObjectScion_document(const void*);
@@ -1660,6 +1662,8 @@ RenderView& RenderObjectScion::view() const { return *static_cast<RenderView*>(R
 bool RenderObjectScion::isRooted() const { return RenderObjectScion_isRooted(m_handle); }
 
 Node* RenderObjectScion::node() const { return static_cast<Node*>(RenderObjectScion_node(m_handle)); }
+
+Node* RenderObjectScion::generatingNode() const { return static_cast<Node*>(RenderObjectScion_generatingNode(m_handle)); }
 
 Node* RenderObjectScion::nonPseudoNode() const { return static_cast<Node*>(RenderObjectScion_nonPseudoNode(m_handle)); }
 

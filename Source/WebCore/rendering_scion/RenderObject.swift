@@ -1896,6 +1896,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return node()
   }
 
+  // Returns the styled node that caused the generation of this renderer.
+  // This is the same as node() except for renderers of :before and :after
+  // pseudo elements for which their parent node is returned.
+  func generatingNode() -> NodeWrapper? {
+    assert(isNativeImpl())
+    return isPseudoElement() ? generatingPseudoHostElement() : node()
+  }
+
+  func generatingPseudoHostElement() -> NodeWrapper? {
+    assert(isNativeImpl())
+    return PseudoElementWrapper(p: node()!.p).hostElement()
+  }
+
   func nonPseudoNode() -> NodeWrapper? {
     assert(isNativeImpl())
     return isPseudoElement() ? nil : node()

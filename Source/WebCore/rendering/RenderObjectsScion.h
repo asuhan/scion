@@ -390,6 +390,8 @@ public:
 
     Node* node() const;
 
+    Node* generatingNode() const;
+
     Node* nonPseudoNode() const;
 
     Document& document() const;

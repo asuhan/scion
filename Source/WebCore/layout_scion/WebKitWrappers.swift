@@ -2098,6 +2098,13 @@ func RenderObjectScion_node(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPo
   return node.p
 }
 
+@_cdecl("RenderObjectScion_generatingNode")
+func RenderObjectScion_generatingNode(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let node = object.generatingNode() else { return nil }
+  return node.p
+}
+
 @_cdecl("RenderObjectScion_nonPseudoNode")
 func RenderObjectScion_nonPseudoNode(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
