@@ -25,9 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 final class PseudoElementWrapper: ElementWrapper {
   func hostElement() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let hostElement = wk_interop.PseudoElement_hostElement(p) else { return nil }
+    return ElementWrapper(p: hostElement)
   }
 }
