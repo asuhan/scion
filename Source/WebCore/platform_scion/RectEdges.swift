@@ -115,7 +115,11 @@ extension LayoutBoxExtent {
     }
   }
 
+  mutating func setTop(_ top: LayoutUnit) { self.top = top }
+
   mutating func setRight(_ right: LayoutUnit) { self.right = right }
+
+  mutating func setBottom(_ bottom: LayoutUnit) { self.bottom = bottom }
 
   mutating func setLeft(_ left: LayoutUnit) { self.left = left }
 
