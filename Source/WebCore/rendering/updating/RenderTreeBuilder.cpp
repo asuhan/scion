@@ -1143,3 +1143,24 @@ void RenderTreeBuilder::removeFloatingObjects(RenderBlock& renderer)
 }
 
 }
+
+// Like the renderers that mutate the tree outside of the normal RenderTreeBuilder path, these use
+// the current builder if there is one, and a temporary one otherwise.
+extern "C" WEBCORE_EXPORT void RenderTreeBuilder_attach(void* parent_raw, void* child_raw)
+{
+    auto& parent = *static_cast<WebCore::RenderElement*>(parent_raw);
+    WebCore::RenderPtr<WebCore::RenderObject> child(static_cast<WebCore::RenderObject*>(child_raw));
+    if (WebCore::RenderTreeBuilder::current())
+        WebCore::RenderTreeBuilder::current()->attach(parent, WTFMove(child));
+    else
+        WebCore::RenderTreeBuilder(*parent.document().renderView()).attach(parent, WTFMove(child));
+}
+
+extern "C" WEBCORE_EXPORT void RenderTreeBuilder_destroy(void* renderer_raw)
+{
+    auto& renderer = *static_cast<WebCore::RenderObject*>(renderer_raw);
+    if (WebCore::RenderTreeBuilder::current())
+        WebCore::RenderTreeBuilder::current()->destroy(renderer);
+    else
+        WebCore::RenderTreeBuilder(*renderer.document().renderView()).destroy(renderer);
+}

@@ -3789,6 +3789,12 @@ func RenderTextFragmentScion_setFirstLetter(
     firstLetter: createRenderObjectWrapperOrNative(firstLetterRaw) as! RenderBoxModelObjectWrapper)
 }
 
+@_cdecl("RenderButtonScion_updateFromElement")
+func RenderButtonScion_updateFromElement(_ buttonRaw: UnsafeMutableRawPointer) {
+  let button = Unmanaged<RenderButtonWrapper>.fromOpaque(buttonRaw).takeUnretainedValue()
+  button.updateFromElement()
+}
+
 @_cdecl("RenderTextFragmentScion_setAltText")
 func RenderTextFragmentScion_setAltText(
   _ textFragmentRaw: UnsafeMutableRawPointer, _ altText: UnsafeRawPointer

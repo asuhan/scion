@@ -836,6 +836,8 @@ extern "C" void RenderTextFragmentScion_setFirstLetter(void*, void*);
 
 extern "C" void RenderTextFragmentScion_setAltText(void*, const void*);
 
+extern "C" void RenderButtonScion_updateFromElement(void*);
+
 extern "C" void* RenderWidgetScion_widget(const void*);
 
 extern "C" void RenderWidgetScion_setWidget(void*, void*);
@@ -2770,6 +2772,11 @@ RenderBoxModelObject* RenderTextFragmentScion::firstLetter() const
 void RenderTextFragmentScion::setFirstLetter(RenderBoxModelObject& firstLetter)
 {
     RenderTextFragmentScion_setFirstLetter(m_handle, &firstLetter);
+}
+
+void RenderButtonScion::updateFromElement()
+{
+    RenderButtonScion_updateFromElement(m_handle);
 }
 
 void RenderTextFragmentScion::setAltText(const String& altText)

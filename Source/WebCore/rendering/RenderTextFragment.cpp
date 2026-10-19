@@ -154,3 +154,14 @@ void RenderTextFragment::setContentString(const String& text)
 }
 
 } // namespace WebCore
+
+// Returns the new renderer as an owning raw pointer; RenderTreeBuilder_attach takes it back.
+extern "C" WEBCORE_EXPORT void* RenderTextFragment_createFromContentString(void* document_raw, const void* text_raw)
+{
+    auto& document = *static_cast<WebCore::Document*>(document_raw);
+    auto& text = *static_cast<const String*>(text_raw);
+    auto fragment = WebCore::createRenderer<WebCore::RenderTextFragment>(document, text);
+    if (WebCore::Document::s_useScionRendering >= 10)
+        fragment->setScionHandle(RenderTextFragmentScion_createFromContentString(&document, &text));
+    return fragment.release();
+}

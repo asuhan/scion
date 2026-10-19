@@ -35,6 +35,11 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     assert(isRenderButton())
   }
 
+  func formControlElement() -> HTMLFormControlElementWrapper {
+    assert(isNativeImpl())
+    return nodeForNonAnonymous() as! HTMLFormControlElementWrapper
+  }
+
   override func canBeSelectionLeaf() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -79,6 +84,38 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     childStyle.setAlignContent(style().alignContent())
   }
 
+  func updateFromElement() {
+    assert(isNativeImpl())
+    // If we're an input element, we may need to change our button text.
+    if let input = formControlElement() as? HTMLInputElementWrapper {
+      let value = input.valueWithDefault()
+      setText(value)
+    }
+  }
+
+  func setText(_ str: StringWrapper) {
+    assert(isNativeImpl())
+    if m_buttonText == nil && str.isEmpty() {
+      return
+    }
+
+    if m_buttonText == nil {
+      let newButtonText = wk_interop.RenderTextFragment_createFromContentString(
+        document().p, str.p)!
+      m_buttonText =
+        (createRenderObjectWrapperOrNative(newButtonText) as! RenderTextFragmentWrapper)
+      // FIXME: This mutation should go through the normal RenderTreeBuilder path.
+      wk_interop.RenderTreeBuilder_attach(getWk(), newButtonText)
+      return
+    }
+
+    if !str.isEmpty() {
+      m_buttonText!.setText(newContent: str)
+      return
+    }
+    wk_interop.RenderTreeBuilder_destroy(m_buttonText!.getWk())
+  }
+
   func innerRenderer() -> RenderBlockWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -120,4 +157,6 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     assert(isNativeImpl())
     return true
   }
+
+  private weak var m_buttonText: RenderTextFragmentWrapper? = nil
 }

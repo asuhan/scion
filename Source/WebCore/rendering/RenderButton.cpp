@@ -124,7 +124,10 @@ void RenderButton::updateAnonymousChildStyle(RenderStyle& childStyle) const
 
 void RenderButton::updateFromElement()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->updateFromElement();
+        return;
+    }
     // If we're an input element, we may need to change our button text.
     if (RefPtr input = dynamicDowncast<HTMLInputElement>(formControlElement())) {
         String value = input->valueWithDefault();
