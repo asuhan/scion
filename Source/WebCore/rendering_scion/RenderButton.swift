@@ -47,9 +47,10 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
 
   override func createsAnonymousWrapper() -> Bool { return true }
 
+  // Only clip overflow on input elements, to match other browsers.
   override func hasControlClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return formControlElement() is HTMLInputElementWrapper
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
