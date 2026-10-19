@@ -46,8 +46,19 @@ struct OverridingSizesScope: ~Copyable {
   }
 
   init(box: RenderBoxWrapper, axis: Axis, size: LayoutUnit? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(size == nil || axis != .Both)
+    self.box = box
+    self.axis = axis
+    // Both previous sizes are read before either is replaced, which is equivalent to upstream
+    // since the width and height overrides are independent.
+    overridingWidth = axis == .Both || axis == .Inline ? box.overridingLogicalWidth() : nil
+    overridingHeight = axis == .Both || axis == .Block ? box.overridingLogicalHeight() : nil
+    if axis == .Both || axis == .Inline {
+      setOrClearOverridingWidth(size: size)
+    }
+    if axis == .Both || axis == .Block {
+      setOrClearOverridingHeight(size: size)
+    }
   }
 
   deinit {
@@ -61,15 +72,22 @@ struct OverridingSizesScope: ~Copyable {
   }
 
   private func setOrClearOverridingWidth(size: LayoutUnit?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let size {
+      box.setOverridingLogicalWidth(width: size)
+    } else {
+      box.clearOverridingLogicalWidth()
+    }
   }
 
   private func setOrClearOverridingHeight(size: LayoutUnit?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let size {
+      box.setOverridingLogicalHeight(height: size)
+    } else {
+      box.clearOverridingLogicalHeight()
+    }
   }
 
+  private let box: RenderBoxWrapper
   private let axis: Axis
   private let overridingWidth: LayoutUnit?
   private let overridingHeight: LayoutUnit?
