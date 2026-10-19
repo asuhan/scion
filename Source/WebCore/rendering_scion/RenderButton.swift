@@ -41,8 +41,8 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return formControlElement().hasEditableStyle()
   }
 
   override func createsAnonymousWrapper() -> Bool { return true }
