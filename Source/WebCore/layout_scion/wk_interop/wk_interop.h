@@ -2260,6 +2260,7 @@ void RenderWidget_moveWidgetToParentSoon(void*, void*);
 void RenderWidget_widgetRendererMapAdd(void*, void*);
 void RenderWidget_widgetRendererMapRemove(void*);
 bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
+const void* HTMLInputElement_valueWithDefault(const void*);
 void HTMLTextFormControlElement_updatePlaceholderVisibility(void*);
 bool HTMLTextFormControlElement_isInnerTextElementEditable(const void*);
 uint32_t HTMLSelectElement_size(const void*);

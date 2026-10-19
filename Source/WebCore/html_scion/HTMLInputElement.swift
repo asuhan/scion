@@ -39,6 +39,10 @@ final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
     fatalError("Not implemented")
   }
 
+  func valueWithDefault() -> StringWrapper {
+    return StringWrapper(p: wk_interop.HTMLInputElement_valueWithDefault(p), owner: true)
+  }
+
   func hasAutoFillStrongPasswordButton() -> Bool {
     return wk_interop.HTMLInputElement_hasAutoFillStrongPasswordButton(p)
   }

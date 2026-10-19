@@ -96,6 +96,11 @@ extern "C" WEBCORE_EXPORT bool HTMLInputElement_hasAutoFillStrongPasswordButton(
     return static_cast<const WebCore::HTMLInputElement*>(p)->hasAutoFillStrongPasswordButton();
 }
 
+extern "C" WEBCORE_EXPORT const void* HTMLInputElement_valueWithDefault(const void* p)
+{
+    return new String(static_cast<const WebCore::HTMLInputElement*>(p)->valueWithDefault());
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLInputElement);
