@@ -3637,6 +3637,17 @@ func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderFileUploadControlScion_create")
+func RenderFileUploadControlScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let fileUploadControl = RenderFileUploadControlWrapper(HTMLInputElementWrapper(p: elementRaw), style)
+  let unmanaged = Unmanaged.passRetained(fileUploadControl)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderFlexibleBoxScion_create")
 func RenderFlexibleBoxScion_create(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer

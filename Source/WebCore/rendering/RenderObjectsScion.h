@@ -56,6 +56,8 @@ extern "C" void* RenderFlexibleBoxScion_create(void*, const void*);
 
 extern "C" void* RenderButtonScion_create(void*, const void*);
 
+extern "C" void* RenderFileUploadControlScion_create(void*, const void*);
+
 extern "C" void* RenderCombineTextScion_create(void*, const void*);
 
 extern "C" void* RenderTextFragmentScion_create(void*, const void*, int32_t, int32_t);

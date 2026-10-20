@@ -23,6 +23,12 @@
 // associated with it to receive click/hover events.
 
 final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
+  init(_ input: HTMLInputElementWrapper, _ style: RenderStyleWrapper) {
+    m_canReceiveDroppedFiles = input.canReceiveDroppedFiles()
+    super.init(type: .FileUploadControl, element: input, style: style)
+    assert(isRenderFileUploadControl())
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
@@ -47,4 +53,6 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
     assert(isNativeImpl())
     return VisiblePosition()
   }
+
+  private var m_canReceiveDroppedFiles: Bool
 }

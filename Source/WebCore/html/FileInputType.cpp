@@ -41,6 +41,7 @@
 #include "LocalizedStrings.h"
 #include "MIMETypeRegistry.h"
 #include "RenderFileUploadControl.h"
+#include "RenderObjectsScion.h"
 #include "ScriptDisallowedScope.h"
 #include "Settings.h"
 #include "ShadowRoot.h"
@@ -186,6 +187,12 @@ bool FileInputType::allowsShowPickerAcrossFrames()
 RenderPtr<RenderElement> FileInputType::createInputRenderer(RenderStyle&& style)
 {
     ASSERT(element());
+    if (Document::s_useScionRendering >= 12) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderFileUploadControl>(*element(), WTFMove(style));
+        renderer->setScionHandle(RenderFileUploadControlScion_create(element(), clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderFileUploadControl>(*element(), WTFMove(style));
 }
 
