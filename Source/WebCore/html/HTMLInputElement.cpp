@@ -96,6 +96,16 @@ extern "C" WEBCORE_EXPORT bool HTMLInputElement_hasAutoFillStrongPasswordButton(
     return static_cast<const WebCore::HTMLInputElement*>(p)->hasAutoFillStrongPasswordButton();
 }
 
+extern "C" WEBCORE_EXPORT bool HTMLInputElement_isFileUpload(const void* p)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->isFileUpload();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLInputElement_files(void* p)
+{
+    return static_cast<WebCore::HTMLInputElement*>(p)->files();
+}
+
 extern "C" WEBCORE_EXPORT bool HTMLInputElement_canReceiveDroppedFiles(const void* p)
 {
     return static_cast<const WebCore::HTMLInputElement*>(p)->canReceiveDroppedFiles();

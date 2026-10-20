@@ -39,6 +39,13 @@ final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
     fatalError("Not implemented")
   }
 
+  func isFileUpload() -> Bool { return wk_interop.HTMLInputElement_isFileUpload(p) }
+
+  func files() -> FileListWrapper? {
+    guard let files = wk_interop.HTMLInputElement_files(p) else { return nil }
+    return FileListWrapper(p: files)
+  }
+
   func canReceiveDroppedFiles() -> Bool {
     return wk_interop.HTMLInputElement_canReceiveDroppedFiles(p)
   }
