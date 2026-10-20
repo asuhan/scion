@@ -78,6 +78,8 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func setActive(_ value: Bool = true) { wk_interop.Element_setActive(p, value) }
+
   func shadowRoot() -> ShadowRootWrapper? {
     guard let shadowRoot = wk_interop.Element_shadowRoot(p) else { return nil }
     return ShadowRootWrapper(p: shadowRoot)

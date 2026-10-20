@@ -2009,6 +2009,7 @@ bool WillChangeData_canTriggerCompositingOnInline(const void*);
 bool Element_hasNowrapAttr(const void*);
 bool Element_hasAltAttr(const void*);
 bool Element_hasFontTag(const void*);
+void Element_setActive(void*, bool);
 void* Element_shadowRoot(const void*);
 bool Element_isFormControlElement(const void*);
 bool Element_isDisabledFormControl(const void*);
