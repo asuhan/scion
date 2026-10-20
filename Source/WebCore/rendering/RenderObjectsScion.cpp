@@ -347,6 +347,8 @@ extern "C" void* RenderObjectScion_node(const void*);
 
 extern "C" void* RenderObjectScion_generatingNode(const void*);
 
+extern "C" uint8_t RenderObjectScion_styleColorOptions(const void*);
+
 extern "C" void* RenderObjectScion_nonPseudoNode(const void*);
 
 extern "C" void* RenderObjectScion_document(const void*);
@@ -1664,6 +1666,8 @@ bool RenderObjectScion::isRooted() const { return RenderObjectScion_isRooted(m_h
 Node* RenderObjectScion::node() const { return static_cast<Node*>(RenderObjectScion_node(m_handle)); }
 
 Node* RenderObjectScion::generatingNode() const { return static_cast<Node*>(RenderObjectScion_generatingNode(m_handle)); }
+
+OptionSet<StyleColorOptions> RenderObjectScion::styleColorOptions() const { return OptionSet<StyleColorOptions>::fromRaw(RenderObjectScion_styleColorOptions(m_handle)); }
 
 Node* RenderObjectScion::nonPseudoNode() const { return static_cast<Node*>(RenderObjectScion_nonPseudoNode(m_handle)); }
 

@@ -2826,7 +2826,8 @@ bool RenderObject::useDarkAppearance() const
 
 OptionSet<StyleColorOptions> RenderObject::styleColorOptions() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->styleColorOptions();
     return document().styleColorOptions(&style());
 }
 

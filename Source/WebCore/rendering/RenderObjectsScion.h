@@ -392,6 +392,8 @@ public:
 
     Node* generatingNode() const;
 
+    OptionSet<StyleColorOptions> styleColorOptions() const;
+
     Node* nonPseudoNode() const;
 
     Document& document() const;
