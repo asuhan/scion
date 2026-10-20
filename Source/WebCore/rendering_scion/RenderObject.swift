@@ -3944,7 +3944,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     var backdropRenderer = WeakPtr<RenderBlockFlowWrapper>(nil)
 
     // From RenderBox
-    let controlPart: ControlPartWrapper? = nil
+    var controlPart: ControlPartWrapper? = nil
   }
 
   func rareData() -> RenderObjectRareData {

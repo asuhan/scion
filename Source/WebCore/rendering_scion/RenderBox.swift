@@ -4693,19 +4693,33 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  private func ensureControlPart() -> ControlPartWrapper? {
+    assert(isNativeImpl())
+    let rareData = ensureRareData()
+    let type = style().usedAppearance()
+
+    // Some form-controls may change because of zooming without recreating
+    // a new renderer (e.g Menulist <-> MenulistButton).
+    if rareData.controlPart == nil || type != rareData.controlPart!.type() {
+      rareData.controlPart = theme().createControlPart(self)
+    }
+
+    return rareData.controlPart
+  }
+
   func ensureControlPartForRenderer() -> ControlPartWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return theme().canCreateControlPartForRenderer(self) ? ensureControlPart() : nil
   }
 
   func ensureControlPartForBorderOnly() -> ControlPartWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return theme().canCreateControlPartForBorderOnly(self) ? ensureControlPart() : nil
   }
 
   func ensureControlPartForDecorations() -> ControlPartWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return theme().canCreateControlPartForDecorations(self) ? ensureControlPart() : nil
   }
 
   func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
