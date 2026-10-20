@@ -1408,6 +1408,8 @@ public:
     {
     }
 
+    void updateFromElement();
+
 private:
     void* m_handle;
 };

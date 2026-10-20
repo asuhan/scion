@@ -842,6 +842,8 @@ extern "C" void RenderTextFragmentScion_setAltText(void*, const void*);
 
 extern "C" void RenderButtonScion_updateFromElement(void*);
 
+extern "C" void RenderFileUploadControlScion_updateFromElement(void*);
+
 extern "C" void* RenderButtonScion_innerRenderer(const void*);
 
 extern "C" void RenderButtonScion_setInnerRenderer(void*, void*);
@@ -2789,6 +2791,11 @@ void RenderTextFragmentScion::setFirstLetter(RenderBoxModelObject& firstLetter)
 void RenderButtonScion::updateFromElement()
 {
     RenderButtonScion_updateFromElement(m_handle);
+}
+
+void RenderFileUploadControlScion::updateFromElement()
+{
+    RenderFileUploadControlScion_updateFromElement(m_handle);
 }
 
 RenderBlock* RenderButtonScion::innerRenderer() const

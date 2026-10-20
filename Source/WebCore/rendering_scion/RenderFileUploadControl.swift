@@ -29,6 +29,32 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
     assert(isRenderFileUploadControl())
   }
 
+  func inputElement() -> HTMLInputElementWrapper {
+    assert(isNativeImpl())
+    return nodeForNonAnonymous() as! HTMLInputElementWrapper
+  }
+
+  func updateFromElement() {
+    assert(isNativeImpl())
+    assert(inputElement().isFileUpload())
+
+    if let button = uploadButton() {
+      let newCanReceiveDroppedFilesState = inputElement().canReceiveDroppedFiles()
+      if m_canReceiveDroppedFiles != newCanReceiveDroppedFilesState {
+        m_canReceiveDroppedFiles = newCanReceiveDroppedFilesState
+        button.setActive(newCanReceiveDroppedFilesState)
+      }
+    }
+
+    // This only supports clearing out the files, but that's OK because for
+    // security reasons that's the only change the DOM is allowed to make.
+    let files = inputElement().files()
+    assert(files != nil)
+    if let files, files.isEmpty() {
+      repaint()
+    }
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
@@ -52,6 +78,16 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   ) -> VisiblePosition {
     assert(isNativeImpl())
     return VisiblePosition()
+  }
+
+  private func uploadButton() -> HTMLInputElementWrapper? {
+    assert(isNativeImpl())
+    assert(inputElement().shadowRoot() != nil)
+    guard let firstChild = inputElement().shadowRoot()!.firstChild(), firstChild.hasInputTagName()
+    else {
+      return nil
+    }
+    return HTMLInputElementWrapper(p: firstChild.p)
   }
 
   private var m_canReceiveDroppedFiles: Bool

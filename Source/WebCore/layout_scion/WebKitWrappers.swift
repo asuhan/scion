@@ -3820,6 +3820,15 @@ func RenderButtonScion_updateFromElement(_ buttonRaw: UnsafeMutableRawPointer) {
   button.updateFromElement()
 }
 
+@_cdecl("RenderFileUploadControlScion_updateFromElement")
+func RenderFileUploadControlScion_updateFromElement(_ fileUploadControlRaw: UnsafeMutableRawPointer)
+{
+  let fileUploadControl = Unmanaged<RenderFileUploadControlWrapper>.fromOpaque(
+    fileUploadControlRaw
+  ).takeUnretainedValue()
+  fileUploadControl.updateFromElement()
+}
+
 @_cdecl("RenderButtonScion_innerRenderer")
 func RenderButtonScion_innerRenderer(_ buttonRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let button = Unmanaged<RenderButtonWrapper>.fromOpaque(buttonRaw).takeUnretainedValue()

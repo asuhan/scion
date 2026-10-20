@@ -92,7 +92,10 @@ HTMLInputElement& RenderFileUploadControl::inputElement() const
 
 void RenderFileUploadControl::updateFromElement()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->updateFromElement();
+        return;
+    }
     ASSERT(inputElement().isFileUpload());
 
     if (HTMLInputElement* button = uploadButton()) {
