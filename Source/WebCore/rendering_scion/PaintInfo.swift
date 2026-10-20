@@ -330,7 +330,7 @@ class PaintInfoWrapper {
     let context: GraphicsContextWrapper
   }
 
-  private var p: UnsafeMutableRawPointer? = nil
+  private(set) var p: UnsafeMutableRawPointer? = nil
   private let pOwner: Bool
   private var n: native? = nil
 }

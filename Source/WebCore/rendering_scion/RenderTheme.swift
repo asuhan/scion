@@ -94,7 +94,10 @@ struct RenderTheme {
     box: RenderBoxWrapper, part: ControlPartWrapper, paintInfo: PaintInfoWrapper,
     rect: LayoutRectWrapper
   ) -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_paintControlPart(
+        p!, wkRenderObject(box), part.p, paintInfo.p!, convertLayoutRect(rect))
+    }
     // If painting is disabled, but we aren't updating control tints, then just bail.
     // If we are updating control tints, just schedule a repaint if the theme supports tinting
     // for that control.
@@ -128,7 +131,10 @@ struct RenderTheme {
 
   @discardableResult
   func paint(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper) -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_paint(
+        p!, wkRenderObject(box), paintInfo.p!, convertLayoutRect(rect))
+    }
     // If painting is disabled, but we aren't updating control tints, then just bail.
     // If we are updating control tints, just schedule a repaint if the theme supports tinting
     // for that control.
@@ -204,7 +210,10 @@ struct RenderTheme {
   func paintBorderOnly(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
     -> Bool
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_paintBorderOnly(
+        p!, wkRenderObject(box), paintInfo.p!, convertLayoutRect(rect))
+    }
     if paintInfo.context().paintingDisabled() {
       return false
     }
@@ -252,7 +261,11 @@ struct RenderTheme {
 
   func paintDecorations(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderTheme_paintDecorations(
+        p!, wkRenderObject(box), paintInfo.p!, convertLayoutRect(rect))
+      return
+    }
     if paintInfo.context().paintingDisabled() {
       return
     }

@@ -150,6 +150,35 @@ extern "C" WEBCORE_EXPORT void* RenderTheme_createControlPart(const void* p, con
     return static_cast<const WebCore::RenderTheme*>(p)->createControlPart(*static_cast<const WebCore::RenderObject*>(rendererRaw)).leakRef();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderTheme_paintControlPart(const void* p, const void* boxRaw, void* partRaw, const void* paintInfoRaw, LayoutRectRaw rectRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    auto& part = *static_cast<WebCore::ControlPart*>(partRaw);
+    const auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(paintInfoRaw);
+    return static_cast<WebCore::RenderTheme*>(const_cast<void*>(p))->paint(box, part, paintInfo, convertLayoutRectRaw(rectRaw));
+}
+
+extern "C" WEBCORE_EXPORT bool RenderTheme_paint(const void* p, const void* boxRaw, const void* paintInfoRaw, LayoutRectRaw rectRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    const auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(paintInfoRaw);
+    return static_cast<WebCore::RenderTheme*>(const_cast<void*>(p))->paint(box, paintInfo, convertLayoutRectRaw(rectRaw));
+}
+
+extern "C" WEBCORE_EXPORT bool RenderTheme_paintBorderOnly(const void* p, const void* boxRaw, const void* paintInfoRaw, LayoutRectRaw rectRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    const auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(paintInfoRaw);
+    return static_cast<WebCore::RenderTheme*>(const_cast<void*>(p))->paintBorderOnly(box, paintInfo, convertLayoutRectRaw(rectRaw));
+}
+
+extern "C" WEBCORE_EXPORT void RenderTheme_paintDecorations(const void* p, const void* boxRaw, const void* paintInfoRaw, LayoutRectRaw rectRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    const auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(paintInfoRaw);
+    static_cast<WebCore::RenderTheme*>(const_cast<void*>(p))->paintDecorations(box, paintInfo, convertLayoutRectRaw(rectRaw));
+}
+
 extern "C" WEBCORE_EXPORT FloatRectRaw RenderTheme_adjustRepaintRect(const void* p, const void* boxRaw, FloatRectRaw rectRaw)
 {
     const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
