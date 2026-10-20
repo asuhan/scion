@@ -2371,6 +2371,7 @@ void* ControlFactory_shared();
 void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, void*, const void*, const void*);
 void* RenderTheme_singleton();
 struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);
+struct FloatRectRaw RenderTheme_adjustRepaintRect(const void*, const void*, struct FloatRectRaw);
 int32_t RenderTheme_baselinePosition(const void*, const void*);
 struct SRGBARaw RenderTheme_activeSelectionBackgroundColor(const void*, uint32_t);
 struct SRGBARaw RenderTheme_inactiveSelectionBackgroundColor(const void*, uint32_t);

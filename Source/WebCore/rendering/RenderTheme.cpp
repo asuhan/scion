@@ -101,6 +101,13 @@ struct LayoutRectRaw {
     int32_t height;
 };
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
 namespace {
 
 LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
@@ -120,6 +127,14 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw RenderTheme_adjustedPaintRect(const void
     const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
     const auto paintRect = convertLayoutRectRaw(paintRectRaw);
     return convertLayoutRect(static_cast<const WebCore::RenderTheme*>(p)->adjustedPaintRect(box, paintRect));
+}
+
+extern "C" WEBCORE_EXPORT FloatRectRaw RenderTheme_adjustRepaintRect(const void* p, const void* boxRaw, FloatRectRaw rectRaw)
+{
+    const auto& box = *static_cast<const WebCore::RenderBox*>(boxRaw);
+    WebCore::FloatRect rect(rectRaw.x, rectRaw.y, rectRaw.width, rectRaw.height);
+    static_cast<WebCore::RenderTheme*>(const_cast<void*>(p))->adjustRepaintRect(box, rect);
+    return { rect.x(), rect.y(), rect.width(), rect.height() };
 }
 
 extern "C" WEBCORE_EXPORT int32_t RenderTheme_baselinePosition(const void* p, const void* boxRaw)

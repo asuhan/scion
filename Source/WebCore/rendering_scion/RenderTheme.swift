@@ -285,8 +285,8 @@ struct RenderTheme {
   }
 
   func adjustRepaintRect(renderer: RenderBoxWrapper, rect: inout FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    rect = toFloatRect(
+      wk_interop.RenderTheme_adjustRepaintRect(p!, wkRenderObject(renderer), toFloatRectRaw(rect)))
   }
 
   // A method asking if the theme is able to draw the focus ring.
