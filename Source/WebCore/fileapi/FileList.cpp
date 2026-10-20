@@ -28,6 +28,11 @@
 
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool FileList_isEmpty(const void* p)
+{
+    return static_cast<const WebCore::FileList*>(p)->isEmpty();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(FileList);
