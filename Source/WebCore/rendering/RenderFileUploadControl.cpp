@@ -36,6 +36,7 @@
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderButton.h"
 #include "RenderElementInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderText.h"
 #include "RenderTheme.h"
 #include "ShadowRoot.h"
@@ -77,13 +78,21 @@ RenderFileUploadControl::RenderFileUploadControl(HTMLInputElement& input, Render
 
 RenderFileUploadControl::~RenderFileUploadControl() = default;
 
+void RenderFileUploadControl::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderFileUploadControlScion>(handle);
+}
+
 HTMLInputElement& RenderFileUploadControl::inputElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLInputElement>(nodeForNonAnonymous());
 }
 
 void RenderFileUploadControl::updateFromElement()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(inputElement().isFileUpload());
 
     if (HTMLInputElement* button = uploadButton()) {
@@ -116,6 +125,7 @@ static int nodeLogicalHeight(Node* node)
 
 int RenderFileUploadControl::maxFilenameLogicalWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #if PLATFORM(COCOA)
     int iconLogicalWidth = nodeLogicalHeight(uploadButton());
 #endif
@@ -125,6 +135,7 @@ int RenderFileUploadControl::maxFilenameLogicalWidth() const
 
 void RenderFileUploadControl::paintObject(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().usedVisibility() != Visibility::Visible)
         return;
     
@@ -137,6 +148,7 @@ void RenderFileUploadControl::paintObject(PaintInfo& paintInfo, const LayoutPoin
 
 void RenderFileUploadControl::paintControl(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Push a clip.
     GraphicsContextStateSaver stateSaver(paintInfo.context(), false);
     if (paintInfo.phase == PaintPhase::Foreground || paintInfo.phase == PaintPhase::ChildBlockBackgrounds) {
@@ -257,6 +269,7 @@ void RenderFileUploadControl::paintControl(PaintInfo& paintInfo, const LayoutPoi
 
 void RenderFileUploadControl::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (shouldApplySizeOrInlineSizeContainment()) {
         if (auto logicalWidth = explicitIntrinsicInnerLogicalWidth()) {
             minLogicalWidth = logicalWidth.value();
@@ -288,6 +301,7 @@ void RenderFileUploadControl::computeIntrinsicLogicalWidths(LayoutUnit& minLogic
 
 void RenderFileUploadControl::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
 
     m_minPreferredLogicalWidth = 0;
@@ -305,17 +319,20 @@ void RenderFileUploadControl::computePreferredLogicalWidths()
 
 VisiblePosition RenderFileUploadControl::positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*)
 {
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     return VisiblePosition();
 }
 
 HTMLInputElement* RenderFileUploadControl::uploadButton() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(inputElement().shadowRoot());
     return dynamicDowncast<HTMLInputElement>(inputElement().shadowRoot()->firstChild());
 }
 
 String RenderFileUploadControl::buttonValue()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (HTMLInputElement* button = uploadButton())
         return button->value();
     
@@ -324,6 +341,7 @@ String RenderFileUploadControl::buttonValue()
 
 String RenderFileUploadControl::fileTextValue() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto& input = inputElement();
     if (!input.files())
         return { };

@@ -1399,6 +1399,17 @@ private:
     mutable IntRect m_printRect;
 };
 
+class RenderFileUploadControlScion final {
+public:
+    RenderFileUploadControlScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderTextFragmentScion final {
 public:
     RenderTextFragmentScion(void* handle)

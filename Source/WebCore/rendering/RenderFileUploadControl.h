@@ -25,6 +25,7 @@
 namespace WebCore {
 
 class HTMLInputElement;
+class RenderFileUploadControlScion;
 
 // Each RenderFileUploadControl contains a RenderButton (for opening the file chooser), and
 // sufficient space to draw a file icon and filename. The RenderButton has a shadow node
@@ -37,6 +38,8 @@ public:
     RenderFileUploadControl(HTMLInputElement&, RenderStyle&&);
     virtual ~RenderFileUploadControl();
 
+    void setScionHandle(void* handle);
+
     String buttonValue();
     String fileTextValue() const;
 
@@ -45,6 +48,7 @@ public:
 private:
     void element() const = delete;
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     ASCIILiteral renderName() const override { return "RenderFileUploadControl"_s; }
 
     void updateFromElement() override;
@@ -60,6 +64,7 @@ private:
     HTMLInputElement* uploadButton() const;
 
     bool m_canReceiveDroppedFiles;
+    std::unique_ptr<RenderFileUploadControlScion> m_scion;
 };
 
 } // namespace WebCore
