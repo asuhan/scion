@@ -2261,6 +2261,7 @@ void RenderWidget_moveWidgetToParentSoon(void*, void*);
 void RenderWidget_widgetRendererMapAdd(void*, void*);
 void RenderWidget_widgetRendererMapRemove(void*);
 bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
+bool HTMLInputElement_canReceiveDroppedFiles(const void*);
 const void* HTMLInputElement_valueWithDefault(const void*);
 void* RenderTextFragment_createFromContentString(void*, const void*);
 void RenderTreeBuilder_attach(void*, void*);
