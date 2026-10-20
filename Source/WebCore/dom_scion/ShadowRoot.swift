@@ -25,8 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 // TODO(asuhan): inherit from DocumentFragment as well
 final class ShadowRootWrapper: TreeScopeWrapper {
+  init(p: UnsafeMutableRawPointer) { self.p = p }
+
+  // TODO(asuhan): inherit this from ContainerNode
+  func firstChild() -> NodeWrapper? {
+    guard let firstChild = wk_interop.ContainerNode_firstChild(p) else { return nil }
+    return NodeWrapper(p: firstChild)
+  }
+
   func host() -> ElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -36,4 +46,6 @@ final class ShadowRootWrapper: TreeScopeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let p: UnsafeMutableRawPointer
 }

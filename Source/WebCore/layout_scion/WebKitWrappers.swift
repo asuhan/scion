@@ -3643,7 +3643,8 @@ func RenderFileUploadControlScion_create(
 ) -> UnsafeMutableRawPointer {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let fileUploadControl = RenderFileUploadControlWrapper(HTMLInputElementWrapper(p: elementRaw), style)
+  let fileUploadControl = RenderFileUploadControlWrapper(
+    HTMLInputElementWrapper(p: elementRaw), style)
   let unmanaged = Unmanaged.passRetained(fileUploadControl)
   return unmanaged.toOpaque()
 }

@@ -78,6 +78,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func shadowRoot() -> ShadowRootWrapper? {
+    guard let shadowRoot = wk_interop.Element_shadowRoot(p) else { return nil }
+    return ShadowRootWrapper(p: shadowRoot)
+  }
+
   func isFormControlElement() -> Bool { return wk_interop.Element_isFormControlElement(p) }
 
   // Used for disabled form elements; if true, prevents mouse events from being dispatched

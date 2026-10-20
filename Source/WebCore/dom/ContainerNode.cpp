@@ -72,6 +72,11 @@ extern "C" WEBCORE_EXPORT uint32_t ContainerNode_countChildNodes(const void* p)
     return static_cast<const WebCore::ContainerNode*>(p)->countChildNodes();
 }
 
+extern "C" WEBCORE_EXPORT void* ContainerNode_firstChild(const void* p)
+{
+    return static_cast<const WebCore::ContainerNode*>(p)->firstChild();
+}
+
 extern "C" WEBCORE_EXPORT void* ContainerNode_renderer(const void* p)
 {
     return static_cast<const WebCore::ContainerNode*>(p)->renderer();

@@ -181,6 +181,11 @@ extern "C" WEBCORE_EXPORT bool Element_hasFontTag(const void* p)
     return static_cast<const WebCore::Element*>(p)->hasTagName(WebCore::HTMLNames::fontTag);
 }
 
+extern "C" WEBCORE_EXPORT void* Element_shadowRoot(const void* p)
+{
+    return static_cast<const WebCore::Element*>(p)->shadowRoot();
+}
+
 extern "C" WEBCORE_EXPORT bool Element_isFormControlElement(const void* p)
 {
     return static_cast<const WebCore::Element*>(p)->isFormControlElement();
