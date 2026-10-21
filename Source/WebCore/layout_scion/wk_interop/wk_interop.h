@@ -2265,6 +2265,8 @@ void RenderWidget_moveWidgetToParentSoon(void*, void*);
 void RenderWidget_widgetRendererMapAdd(void*, void*);
 void RenderWidget_widgetRendererMapRemove(void*);
 bool HTMLInputElement_hasAutoFillStrongPasswordButton(const void*);
+void* HTMLInputElement_icon(const void*);
+void Icon_paint(void*, void*, struct FloatRectRaw);
 bool HTMLInputElement_multiple(const void*);
 bool HTMLInputElement_isFileUpload(const void*);
 void* HTMLInputElement_files(void*);

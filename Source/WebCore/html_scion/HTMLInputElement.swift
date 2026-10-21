@@ -39,6 +39,11 @@ final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
     fatalError("Not implemented")
   }
 
+  func icon() -> IconWrapper? {
+    guard let icon = wk_interop.HTMLInputElement_icon(p) else { return nil }
+    return IconWrapper(p: icon)
+  }
+
   func multiple() -> Bool { return wk_interop.HTMLInputElement_multiple(p) }
 
   func isFileUpload() -> Bool { return wk_interop.HTMLInputElement_isFileUpload(p) }

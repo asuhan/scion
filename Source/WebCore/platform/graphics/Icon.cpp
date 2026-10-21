@@ -26,6 +26,9 @@
 #include "config.h"
 #include "Icon.h"
 
+#include "FloatRect.h"
+#include "GraphicsContext.h"
+
 #if !PLATFORM(IOS_FAMILY) && !PLATFORM(MAC) && !PLATFORM(WIN)
 
 namespace WebCore {
@@ -44,3 +47,15 @@ RefPtr<Icon> Icon::createIconForFiles(const Vector<String>&)
 } // namespace WebCore
 
 #endif // !PLATFORM(GTK) && !PLATFORM(IOS_FAMILY) && !PLATFORM(MAC) && !PLATFORM(WIN)
+
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT void Icon_paint(void* p, void* contextRaw, FloatRectRaw rectRaw)
+{
+    static_cast<WebCore::Icon*>(p)->paint(*static_cast<WebCore::GraphicsContext*>(contextRaw), { rectRaw.x, rectRaw.y, rectRaw.width, rectRaw.height });
+}

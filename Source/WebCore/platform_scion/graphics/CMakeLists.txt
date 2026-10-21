@@ -39,6 +39,7 @@ target_sources(layout_scion PRIVATE
     GraphicsLayerFactory.swift
     GraphicsStyle.swift
     GraphicsTypes.swift
+    Icon.swift
     Image.swift
     ImageBuffer.swift
     ImageBufferPixelFormat.swift
