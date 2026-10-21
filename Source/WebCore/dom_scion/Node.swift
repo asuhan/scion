@@ -83,9 +83,8 @@ class NodeWrapper {
   }
 
   func containingShadowRoot() -> ShadowRootWrapper? {
-    if wk_interop.Node_containingShadowRoot(p) == nil { return nil }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let shadowRoot = wk_interop.Node_containingShadowRoot(p) else { return nil }
+    return ShadowRootWrapper(p: shadowRoot)
   }
 
   func hasEverPaintedImages() -> Bool { return wk_interop.Node_hasEverPaintedImages(p) }
