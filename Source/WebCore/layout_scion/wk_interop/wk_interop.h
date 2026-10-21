@@ -1933,6 +1933,8 @@ bool Node_needsSVGRendererUpdate(const void*);
 void Node_setNeedsSVGRendererUpdate(void*, bool);
 void* Node_containingShadowRoot(const void*);
 bool Node_hasEverPaintedImages(const void*);
+void* Node_shadowHost(const void*);
+void* Node_parentElement(const void*);
 void* Node_parentOrShadowHostElement(const void*);
 void Node_setHasEverPaintedImages(void*, bool);
 bool Node_isRootEditableElement(const void*);

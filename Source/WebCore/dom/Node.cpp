@@ -187,6 +187,16 @@ extern "C" WEBCORE_EXPORT bool Node_hasEverPaintedImages(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->hasEverPaintedImages();
 }
 
+extern "C" WEBCORE_EXPORT void* Node_shadowHost(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->shadowHost();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_parentElement(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->parentElement();
+}
+
 extern "C" WEBCORE_EXPORT void* Node_parentOrShadowHostElement(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->parentOrShadowHostElement();

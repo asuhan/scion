@@ -43,8 +43,8 @@ class NodeWrapper {
   func hasMarqueeTagName() -> Bool { return wk_interop.Node_hasMarqueeTagName(p) }
 
   func parentElement() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let parentElement = wk_interop.Node_parentElement(p) else { return nil }
+    return ElementWrapper(p: parentElement)
   }
 
   func nextSibling() -> NodeWrapper? {
@@ -78,8 +78,8 @@ class NodeWrapper {
 
   // If this node is in a shadow tree, returns its shadow host. Otherwise, returns null.
   func shadowHost() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let shadowHost = wk_interop.Node_shadowHost(p) else { return nil }
+    return ElementWrapper(p: shadowHost)
   }
 
   func containingShadowRoot() -> ShadowRootWrapper? {
