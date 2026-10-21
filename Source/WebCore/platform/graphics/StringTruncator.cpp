@@ -335,3 +335,13 @@ String StringTruncator::rightClipToWord(const String& string, float maxWidth, co
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT const void* StringTruncator_centerTruncate(const void* string, float maxWidth, const void* font)
+{
+    return new String(WebCore::StringTruncator::centerTruncate(*static_cast<const String*>(string), maxWidth, *static_cast<const WebCore::FontCascade*>(font)));
+}
+
+extern "C" WEBCORE_EXPORT const void* StringTruncator_rightTruncate(const void* string, float maxWidth, const void* font)
+{
+    return new String(WebCore::StringTruncator::rightTruncate(*static_cast<const String*>(string), maxWidth, *static_cast<const WebCore::FontCascade*>(font)));
+}

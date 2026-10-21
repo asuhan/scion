@@ -71,6 +71,7 @@ target_sources(layout_scion PRIVATE
     RenderingResourceIdentifier.swift
     RotationDirection.swift
     RoundedRect.swift
+    StringTruncator.swift
     SurrogatePairAwareTextIterator.swift
     SystemFontDatabase.swift
     TabSize.swift
