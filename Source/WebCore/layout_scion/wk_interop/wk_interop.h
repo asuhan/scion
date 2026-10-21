@@ -2144,6 +2144,7 @@ void GraphicsContext_clipOut(void*, struct FloatRectRaw);
 void GraphicsContext_clipOutRoundedRect(void*, struct FloatRoundedRectRaw);
 void GraphicsContext_clipPath(void*, const void*, bool);
 struct FloatSizeRaw GraphicsContext_drawText(void*, const void*, const void*, struct FloatPointRaw, uint32_t, struct OptionalUIntRaw);
+void GraphicsContext_drawBidiText(void*, const void*, const void*, struct FloatPointRaw, bool);
 void GraphicsContext_drawEmphasisMarks(void*, const void*, const void*, const void*, struct FloatPointRaw, uint32_t, struct OptionalUIntRaw);
 struct FloatRectRaw GraphicsContext_computeUnderlineBoundsForText(void*, struct FloatRectRaw, bool);
 void GraphicsContext_drawLineForText(void*, struct FloatRectRaw, bool printing, bool doubleUnderlines, uint8_t);

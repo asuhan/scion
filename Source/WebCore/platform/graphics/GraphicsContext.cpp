@@ -411,6 +411,15 @@ struct OptionalUIntRaw {
     bool is_valid;
 };
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawBidiText(void* p, const void* fontRaw, const void* runRaw, FloatPointRaw pointRaw, bool useFallbackIfFontNotReady)
+{
+    auto context = static_cast<WebCore::GraphicsContext*>(p);
+    const auto& font = *static_cast<const WebCore::FontCascade*>(fontRaw);
+    const auto& run = *static_cast<const WebCore::TextRun*>(runRaw);
+    WebCore::FloatPoint point { pointRaw.x, pointRaw.y };
+    context->drawBidiText(font, run, point, useFallbackIfFontNotReady ? WebCore::FontCascade::CustomFontNotReadyAction::UseFallbackIfFontNotReady : WebCore::FontCascade::CustomFontNotReadyAction::DoNotPaintIfFontNotReady);
+}
+
 extern "C" WEBCORE_EXPORT FloatSizeRaw GraphicsContext_drawText(void* p, const void* fontRaw, const void* runRaw, FloatPointRaw pointRaw, uint32_t from, OptionalUIntRaw toRaw)
 {
     auto context = static_cast<WebCore::GraphicsContext*>(p);

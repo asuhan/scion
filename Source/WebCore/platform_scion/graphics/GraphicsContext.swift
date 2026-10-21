@@ -415,8 +415,9 @@ class GraphicsContextWrapper {
     customFontNotReadyAction: FontCascadeWrapper.CustomFontNotReadyAction =
       .DoNotPaintIfFontNotReady
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_drawBidiText(
+      p!, font.p!, run.p!, FloatPointRaw(x: point.x, y: point.y),
+      customFontNotReadyAction == .UseFallbackIfFontNotReady)
   }
 
   func drawEmphasisMarks(
