@@ -72,6 +72,10 @@ struct IntRect: Equatable {
 
   func isEmpty() -> Bool { return size.isEmpty() }
 
+  func transposedRect() -> IntRect {
+    return IntRect(location: location.transposedPoint(), size: size.transposedSize())
+  }
+
   mutating func move(_ size: IntSize) { location += size }
 
   mutating func moveBy(offset: IntPoint) {

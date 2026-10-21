@@ -117,6 +117,11 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     wk_interop.RenderTreeBuilder_destroy(m_buttonText!.getWk())
   }
 
+  func textRenderer() -> RenderTextFragmentWrapper? {
+    assert(isNativeImpl())
+    return m_buttonText
+  }
+
   func innerRenderer() -> RenderBlockWrapper? {
     assert(isNativeImpl())
     return m_inner

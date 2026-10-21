@@ -37,6 +37,8 @@ struct IntSize: Equatable {
   }
 
   func isEmpty() -> Bool { return width <= 0 || height <= 0 }
+
+  func transposedSize() -> IntSize { return IntSize(width: height, height: width) }
   func isZero() -> Bool { return width == 0 && height == 0 }
 
   mutating func expand(width: Int32, height: Int32) {

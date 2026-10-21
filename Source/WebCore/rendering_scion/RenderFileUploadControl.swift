@@ -23,8 +23,20 @@
 // associated with it to receive click/hover events.
 
 private let afterButtonSpacing: Int32 = 4
+private let buttonShadowHeight: Int32 = 2
+
+// On Cocoa platforms the icon height matches the button height, to maximize the icon size.
+private let iconLogicalHeight: Int32 = 16
+private let iconLogicalWidth: Int32 = 16
+
+private let iconFilenameSpacing: Int32 = 2
 
 private let defaultWidthNumChars: Int32 = 34
+
+private func nodeLogicalWidth(_ node: NodeWrapper?) -> Int32 {
+  guard let renderBox = node?.renderBox() else { return 0 }
+  return roundToInt(value: renderBox.logicalSize().width())
+}
 
 final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   init(_ input: HTMLInputElementWrapper, _ style: RenderStyleWrapper) {
@@ -129,9 +141,178 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
+  private func maxFilenameLogicalWidth() -> Int32 {
+    assert(isNativeImpl())
+    return max(
+      0,
+      roundToInt(value: contentLogicalWidth()) - nodeLogicalWidth(uploadButton())
+        - afterButtonSpacing
+        - (inputElement().icon() != nil ? iconLogicalWidth + iconFilenameSpacing : 0))
+  }
+
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if style().usedVisibility() != .Visible {
+      return
+    }
+
+    if !paintInfo.context().paintingDisabled() {
+      paintControl(&paintInfo, paintOffset)
+    }
+
+    // Paint the children.
+    super.paintObject(paintInfo: &paintInfo, paintOffset: paintOffset)
+  }
+
+  private func paintControl(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
+  {
+    assert(isNativeImpl())
+    // Push a clip.
+    let stateSaver = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: false)
+    if paintInfo.phase == .Foreground || paintInfo.phase == .ChildBlockBackgrounds {
+      let clipRect = enclosingIntRect(
+        rect: LayoutRectWrapper(
+          x: paintOffset.x + borderLeft(), y: paintOffset.y + borderTop(),
+          width: width() - borderLeft() - borderRight(),
+          height: height() - borderBottom() - borderTop() + LayoutUnit(value: buttonShadowHeight)))
+      if clipRect.isEmpty() {
+        return
+      }
+      stateSaver.save()
+      paintInfo.context().clip(rect: FloatRectWrapper(r: clipRect))
+    }
+
+    let isHorizontalWritingMode = style().isHorizontalWritingMode()
+    let isFlippedBlocksWritingMode = style().isFlippedBlocksWritingMode()
+    let logicalPaintOffset = isHorizontalWritingMode ? paintOffset : paintOffset.transposedPoint()
+
+    if paintInfo.phase == .Foreground {
+      let displayedFilename = fileTextValue()
+      let font = style().fontCascade()
+      let textRun = RenderBlockWrapper.constructTextRun(
+        displayedFilename, style(), ExpansionBehaviorWrapper.allowRightOnly(),
+        [.RespectDirection, .RespectDirectionOverride])
+      // Determine where the filename should be placed
+      var contentLogicalLeft = logicalPaintOffset.x + logicalLeftOffsetForContent()
+      if style().isLeftToRightDirection() {
+        contentLogicalLeft += textIndentOffset()
+      } else {
+        contentLogicalLeft -= textIndentOffset()
+      }
+
+      guard let button = uploadButton() else {
+        use(stateSaver)
+        return
+      }
+
+      let buttonLogicalWidth = LayoutUnit(value: nodeLogicalWidth(button))
+      let buttonAndIconLogicalWidth =
+        buttonLogicalWidth + LayoutUnit(value: afterButtonSpacing)
+        + LayoutUnit(
+          value: inputElement().icon() != nil ? iconLogicalWidth + iconFilenameSpacing : 0)
+      var textLogicalLeft: LayoutUnit
+      if style().isLeftToRightDirection() {
+        textLogicalLeft = contentLogicalLeft + buttonAndIconLogicalWidth
+      } else {
+        textLogicalLeft = LayoutUnit(
+          value: (contentLogicalLeft + contentLogicalWidth() - buttonAndIconLogicalWidth).toFloat()
+            - font.width(run: textRun))
+      }
+
+      // We want to match the button's baseline
+      // FIXME: Make this work with transforms.
+      let textLogicalTop = { () -> Float32 in
+        if let buttonRenderer = button.renderer().map({ $0 as! RenderButtonWrapper }) {
+          if let buttonTextRenderer = buttonRenderer.textRenderer() {
+            let textBox = InlineIterator.firstTextBoxFor(buttonTextRenderer)
+            if textBox.bool() {
+              var textVisualRect = textBox.get().visualRectIgnoringBlockDirection()
+              textVisualRect.setLocation(
+                location: buttonTextRenderer.localToContainerPoint(
+                  localPoint: textVisualRect.location(), container: self))
+              textVisualRect.moveBy(
+                delta: roundPointToDevicePixels(
+                  point: paintOffset, pixelSnappingFactor: document().deviceScaleFactor()))
+
+              let metrics = textBox.get().style().fontCascade().metricsOfPrimaryFont()
+
+              if !isHorizontalWritingMode {
+                if isFlippedBlocksWritingMode {
+                  return textVisualRect.x() - Float32(metrics.intAscent())
+                }
+
+                return textVisualRect.x() + Float32(metrics.intDescent())
+              }
+
+              if isFlippedBlocksWritingMode {
+                return textVisualRect.y() - Float32(metrics.intDescent())
+              }
+
+              return textVisualRect.y() + Float32(metrics.intAscent())
+            }
+          }
+        }
+
+        return Float32(
+          roundToInt(
+            value:
+              baselinePosition(
+                baselineType: .AlphabeticBaseline, firstLine: true,
+                direction: isHorizontalWritingMode ? .HorizontalLine : .VerticalLine,
+                linePositionMode: .PositionOnContainingLine
+              )))
+      }()
+
+      paintInfo.context().setFillColor(
+        color: style().visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor))
+
+      // Draw the filename
+      do {
+        let stateSaver = GraphicsContextStateSaver(context: paintInfo.context())
+
+        var textOrigin = IntPoint(
+          x: roundToInt(value: textLogicalLeft), y: Int32(textLogicalTop.rounded()))
+        if !isHorizontalWritingMode {
+          textOrigin = textOrigin.transposedPoint()
+          paintInfo.context().translate(p: FloatPoint(p: textOrigin))
+          paintInfo.context().rotate(piOverTwoFloat)
+          paintInfo.context().translate(p: FloatPoint(p: -textOrigin))
+        }
+
+        paintInfo.context().drawBidiText(font: font, run: textRun, point: FloatPoint(p: textOrigin))
+        use(stateSaver)
+      }
+
+      if let icon = inputElement().icon() {
+        // Determine where the icon should be placed
+        let borderAndPaddingOffsetForIcon =
+          (!isHorizontalWritingMode && isFlippedBlocksWritingMode)
+          ? borderAndPaddingAfter() : borderAndPaddingBefore()
+        let iconLogicalTop =
+          logicalPaintOffset.y + borderAndPaddingOffsetForIcon
+          + (contentLogicalHeight() - LayoutUnit(value: iconLogicalHeight)) / 2
+        var iconLogicalLeft: LayoutUnit
+        if style().isLeftToRightDirection() {
+          iconLogicalLeft =
+            contentLogicalLeft + buttonLogicalWidth + LayoutUnit(value: afterButtonSpacing)
+        } else {
+          iconLogicalLeft =
+            contentLogicalLeft + contentLogicalWidth() - buttonLogicalWidth
+            - LayoutUnit(value: afterButtonSpacing) - LayoutUnit(value: iconLogicalWidth)
+        }
+
+        var iconRect = IntRect(
+          x: iconLogicalLeft.toInt(), y: iconLogicalTop.toInt(), width: iconLogicalWidth,
+          height: iconLogicalHeight)
+        if !isHorizontalWritingMode {
+          iconRect = iconRect.transposedRect()
+        }
+
+        // Draw the file icon
+        icon.paint(paintInfo.context(), FloatRectWrapper(r: iconRect))
+      }
+    }
+    use(stateSaver)
   }
 
   override func positionForPoint(
@@ -140,6 +321,28 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   ) -> VisiblePosition {
     assert(isNativeImpl())
     return VisiblePosition()
+  }
+
+  func fileTextValue() -> StringWrapper {
+    assert(isNativeImpl())
+    let input = inputElement()
+    guard let files = input.files() else {
+      return StringWrapper()
+    }
+    if files.length() != 0 && !input.displayString().isEmpty() {
+      if files.length() == 1 {
+        return StringTruncator.centerTruncate(
+          input.displayString(), maxWidth: Float32(maxFilenameLogicalWidth()),
+          font: style().fontCascade())
+      }
+
+      return StringTruncator.rightTruncate(
+        input.displayString(), maxWidth: Float32(maxFilenameLogicalWidth()),
+        font: style().fontCascade())
+    }
+    return theme().fileListNameForWidth(
+      fileList: files, font: style().fontCascade(), width: maxFilenameLogicalWidth(),
+      multipleFilesAllowed: input.multiple())
   }
 
   private func uploadButton() -> HTMLInputElementWrapper? {

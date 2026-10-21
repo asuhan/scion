@@ -877,6 +877,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return m_frameRect.size()
   }
 
+  func logicalSize() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? m_frameRect.size() : m_frameRect.size().transposedSize()
+  }
+
   func setLocation(p: LayoutPointWrapper) {
     if !isNativeImpl() {
       wk_interop.RenderBox_setLocation(self.id(), p.x.rawValue(), p.y.rawValue())

@@ -1433,6 +1433,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return startOffsetForContent(fragment: fragmentAtBlockOffset(blockOffset: blockOffset))
   }
 
+  func textIndentOffset() -> LayoutUnit {
+    assert(isNativeImpl())
+    var cw = LayoutUnit()
+    if style().textIndent().isPercentOrCalculated() {
+      cw = availableLogicalWidth()
+    }
+    return minimumValueForLength(length: style().textIndent(), maximumValue: cw)
+  }
+
   func logicalLeftOffsetForContent() -> LayoutUnit {
     if !isNativeImpl() {
       return LayoutUnit.fromRawValue(
