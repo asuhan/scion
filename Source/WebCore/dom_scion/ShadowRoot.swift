@@ -42,10 +42,7 @@ final class ShadowRootWrapper: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
-  func mode() -> ShadowRootMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func mode() -> ShadowRootMode { return ShadowRootMode(rawValue: wk_interop.ShadowRoot_mode(p))! }
 
   let p: UnsafeMutableRawPointer
 }

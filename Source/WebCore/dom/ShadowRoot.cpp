@@ -47,6 +47,11 @@
 #include "markup.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT uint8_t ShadowRoot_mode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::ShadowRoot*>(p)->mode());
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(ShadowRoot);

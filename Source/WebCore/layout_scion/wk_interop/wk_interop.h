@@ -1924,6 +1924,7 @@ bool Node_hasChildNodes(const void*);
 bool Node_isSVGElement(const void*);
 bool Node_isPseudoElement(const void*);
 void* PseudoElement_hostElement(const void*);
+uint8_t ShadowRoot_mode(const void*);
 bool Node_isBeforePseudoElement(const void*);
 bool Node_isAfterPseudoElement(const void*);
 bool Node_isDocumentNode(const void*);

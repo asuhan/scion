@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum ShadowRootMode {
+enum ShadowRootMode: UInt8 {
   case UserAgent
   case Closed
   case Open
