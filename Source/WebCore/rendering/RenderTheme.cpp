@@ -129,6 +129,11 @@ extern "C" WEBCORE_EXPORT LayoutRectRaw RenderTheme_adjustedPaintRect(const void
     return convertLayoutRect(static_cast<const WebCore::RenderTheme*>(p)->adjustedPaintRect(box, paintRect));
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderTheme_fileListDefaultLabel(const void* p, bool multipleFilesAllowed)
+{
+    return new String(static_cast<const WebCore::RenderTheme*>(p)->fileListDefaultLabel(multipleFilesAllowed));
+}
+
 extern "C" WEBCORE_EXPORT bool RenderTheme_canCreateControlPartForRenderer(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::RenderTheme*>(p)->canCreateControlPartForRenderer(*static_cast<const WebCore::RenderObject*>(rendererRaw));

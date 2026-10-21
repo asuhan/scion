@@ -48,6 +48,12 @@ struct RenderTheme {
   // appropriate platform theme.
   static func singleton() -> RenderTheme { return RenderTheme(wk_interop.RenderTheme_singleton()) }
 
+  func fileListDefaultLabel(multipleFilesAllowed: Bool) -> StringWrapper {
+    assert(!isNativeImpl())
+    return StringWrapper(
+      p: wk_interop.RenderTheme_fileListDefaultLabel(p!, multipleFilesAllowed), owner: true)
+  }
+
   func canCreateControlPartForRenderer(_ renderer: RenderObjectWrapper) -> Bool {
     if !isNativeImpl() {
       return wk_interop.RenderTheme_canCreateControlPartForRenderer(p!, wkRenderObject(renderer))

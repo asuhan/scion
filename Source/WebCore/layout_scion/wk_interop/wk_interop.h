@@ -2378,6 +2378,7 @@ void* ControlFactory_shared();
 void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, void*, const void*, const void*);
 void* RenderTheme_singleton();
 struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);
+const void* RenderTheme_fileListDefaultLabel(const void*, bool);
 bool RenderTheme_canCreateControlPartForRenderer(const void*, const void*);
 bool RenderTheme_canCreateControlPartForBorderOnly(const void*, const void*);
 bool RenderTheme_canCreateControlPartForDecorations(const void*, const void*);
