@@ -22,6 +22,10 @@
 // sufficient space to draw a file icon and filename. The RenderButton has a shadow node
 // associated with it to receive click/hover events.
 
+private let afterButtonSpacing: Int32 = 4
+
+private let defaultWidthNumChars: Int32 = 34
+
 final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   init(_ input: HTMLInputElementWrapper, _ style: RenderStyleWrapper) {
     m_canReceiveDroppedFiles = input.canReceiveDroppedFiles()
@@ -58,13 +62,71 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let logicalWidth = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = logicalWidth
+        maxLogicalWidth = logicalWidth
+      }
+      return
+    }
+    // Figure out how big the filename space needs to be for a given number of characters
+    // (using "0" as the nominal character).
+    let character = UChar(Character("0").asciiValue!)
+    let characterAsString = StringWrapper(characters: WTF.span(character: character))
+    let font = style().fontCascade()
+    let minDefaultLabelWidth =
+      Float32(defaultWidthNumChars)
+      * font.width(
+        run: RenderBlockWrapper.constructTextRun(
+          characterAsString, style(), ExpansionBehaviorWrapper.allowRightOnly()))
+
+    let label = theme().fileListDefaultLabel(multipleFilesAllowed: inputElement().multiple())
+    var defaultLabelWidth = font.width(
+      run: RenderBlockWrapper.constructTextRun(
+        label, style(), ExpansionBehaviorWrapper.allowRightOnly()))
+    if let button = uploadButton() {
+      if let buttonRenderer = button.renderer() {
+        defaultLabelWidth +=
+          (buttonRenderer.maxPreferredLogicalWidth() + LayoutUnit(value: afterButtonSpacing))
+          .toFloat()
+      }
+    }
+    maxLogicalWidth = LayoutUnit(
+      value: Int32(max(minDefaultLabelWidth, defaultLabelWidth).rounded(.up)))
+
+    let logicalWidth = style().logicalWidth()
+    if logicalWidth.isCalculated() {
+      minLogicalWidth = max(
+        LayoutUnit(value: 0),
+        valueForLength(length: logicalWidth, maximumValue: LayoutUnit(value: 0)))
+    } else if !logicalWidth.isPercent() {
+      minLogicalWidth = maxLogicalWidth
+    }
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(preferredLogicalWidthsDirty())
+
+    m_minPreferredLogicalWidth = LayoutUnit(value: 0)
+    m_maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    if style().logicalWidth().isFixed() && style().logicalWidth().value() > 0 {
+      m_maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: style().logicalWidth())
+      m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &m_minPreferredLogicalWidth, maxLogicalWidth: &m_maxPreferredLogicalWidth)
+    }
+
+    renderBoxComputePreferredLogicalWidths(
+      style().logicalMinWidth(), style().logicalMaxWidth(),
+      style().isHorizontalWritingMode()
+        ? horizontalBorderAndPaddingExtent() : verticalBorderAndPaddingExtent())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
