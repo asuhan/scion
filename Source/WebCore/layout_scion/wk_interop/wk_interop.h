@@ -2387,6 +2387,7 @@ void* GlyphDisplayListCacheLegacyInlineTextBox_get(const void*, const void*, voi
 void* RenderTheme_singleton();
 struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, struct LayoutRectRaw);
 const void* RenderTheme_fileListDefaultLabel(const void*, bool);
+const void* RenderTheme_fileListNameForWidth(const void*, const void*, const void*, int32_t, bool);
 bool RenderTheme_canCreateControlPartForRenderer(const void*, const void*);
 bool RenderTheme_canCreateControlPartForBorderOnly(const void*, const void*);
 bool RenderTheme_canCreateControlPartForDecorations(const void*, const void*);

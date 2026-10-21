@@ -134,6 +134,11 @@ extern "C" WEBCORE_EXPORT const void* RenderTheme_fileListDefaultLabel(const voi
     return new String(static_cast<const WebCore::RenderTheme*>(p)->fileListDefaultLabel(multipleFilesAllowed));
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderTheme_fileListNameForWidth(const void* p, const void* fileList, const void* font, int32_t width, bool multipleFilesAllowed)
+{
+    return new String(static_cast<const WebCore::RenderTheme*>(p)->fileListNameForWidth(static_cast<const WebCore::FileList*>(fileList), *static_cast<const WebCore::FontCascade*>(font), width, multipleFilesAllowed));
+}
+
 extern "C" WEBCORE_EXPORT bool RenderTheme_canCreateControlPartForRenderer(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::RenderTheme*>(p)->canCreateControlPartForRenderer(*static_cast<const WebCore::RenderObject*>(rendererRaw));
