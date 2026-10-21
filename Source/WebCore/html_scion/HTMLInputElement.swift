@@ -39,6 +39,10 @@ final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
     fatalError("Not implemented")
   }
 
+  func displayString() -> StringWrapper {
+    return StringWrapper(p: wk_interop.HTMLInputElement_displayString(p), owner: true)
+  }
+
   func icon() -> IconWrapper? {
     guard let icon = wk_interop.HTMLInputElement_icon(p) else { return nil }
     return IconWrapper(p: icon)
