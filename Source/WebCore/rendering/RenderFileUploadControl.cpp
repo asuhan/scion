@@ -344,7 +344,8 @@ String RenderFileUploadControl::buttonValue()
 
 String RenderFileUploadControl::fileTextValue() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->fileTextValue();
     auto& input = inputElement();
     if (!input.files())
         return { };

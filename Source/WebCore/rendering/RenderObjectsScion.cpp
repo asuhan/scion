@@ -844,6 +844,8 @@ extern "C" void RenderButtonScion_updateFromElement(void*);
 
 extern "C" void RenderFileUploadControlScion_updateFromElement(void*);
 
+extern "C" const void* RenderFileUploadControlScion_fileTextValue(const void*);
+
 extern "C" void* RenderButtonScion_innerRenderer(const void*);
 
 extern "C" void RenderButtonScion_setInnerRenderer(void*, void*);
@@ -2796,6 +2798,13 @@ void RenderButtonScion::updateFromElement()
 void RenderFileUploadControlScion::updateFromElement()
 {
     RenderFileUploadControlScion_updateFromElement(m_handle);
+}
+
+String RenderFileUploadControlScion::fileTextValue() const
+{
+    // The Swift side hands over a heap-allocated copy.
+    std::unique_ptr<const String> value(static_cast<const String*>(RenderFileUploadControlScion_fileTextValue(m_handle)));
+    return *value;
 }
 
 RenderBlock* RenderButtonScion::innerRenderer() const

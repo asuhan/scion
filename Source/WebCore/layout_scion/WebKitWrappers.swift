@@ -3829,6 +3829,16 @@ func RenderFileUploadControlScion_updateFromElement(_ fileUploadControlRaw: Unsa
   fileUploadControl.updateFromElement()
 }
 
+@_cdecl("RenderFileUploadControlScion_fileTextValue")
+func RenderFileUploadControlScion_fileTextValue(_ fileUploadControlRaw: UnsafeRawPointer)
+  -> UnsafeRawPointer
+{
+  let fileUploadControl = Unmanaged<RenderFileUploadControlWrapper>.fromOpaque(
+    fileUploadControlRaw
+  ).takeUnretainedValue()
+  return wk_interop.String_new_copy(fileUploadControl.fileTextValue().p)
+}
+
 @_cdecl("RenderButtonScion_innerRenderer")
 func RenderButtonScion_innerRenderer(_ buttonRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let button = Unmanaged<RenderButtonWrapper>.fromOpaque(buttonRaw).takeUnretainedValue()

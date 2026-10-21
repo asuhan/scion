@@ -1410,6 +1410,8 @@ public:
 
     void updateFromElement();
 
+    String fileTextValue() const;
+
 private:
     void* m_handle;
 };
