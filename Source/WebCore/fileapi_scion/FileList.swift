@@ -28,6 +28,8 @@ import wk_interop
 final class FileListWrapper {
   init(p: UnsafeMutableRawPointer) { self.p = p }
 
+  func length() -> UInt32 { return wk_interop.FileList_length(p) }
+
   func isEmpty() -> Bool { return wk_interop.FileList_isEmpty(p) }
 
   let p: UnsafeMutableRawPointer

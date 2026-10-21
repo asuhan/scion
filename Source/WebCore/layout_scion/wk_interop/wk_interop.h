@@ -2271,6 +2271,7 @@ void Icon_paint(void*, void*, struct FloatRectRaw);
 bool HTMLInputElement_multiple(const void*);
 bool HTMLInputElement_isFileUpload(const void*);
 void* HTMLInputElement_files(void*);
+uint32_t FileList_length(const void*);
 bool FileList_isEmpty(const void*);
 bool HTMLInputElement_canReceiveDroppedFiles(const void*);
 const void* HTMLInputElement_valueWithDefault(const void*);

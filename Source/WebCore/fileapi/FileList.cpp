@@ -28,6 +28,11 @@
 
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT uint32_t FileList_length(const void* p)
+{
+    return static_cast<const WebCore::FileList*>(p)->length();
+}
+
 extern "C" WEBCORE_EXPORT bool FileList_isEmpty(const void* p)
 {
     return static_cast<const WebCore::FileList*>(p)->isEmpty();
