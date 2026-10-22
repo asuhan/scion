@@ -43,8 +43,8 @@ class StringWrapper: Hashable {
 
   // Construct a string from a constant string literal.
   init(_ characters: ASCIILiteral) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    p = characters.string.withCString { wk_interop.String_new_latin1($0) }
+    owner = true
   }
 
   deinit {

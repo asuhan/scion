@@ -668,6 +668,7 @@ void* TextRun_subRun(const void*, uint32_t, uint32_t);
 void TextRun_destroy(const void*);
 uint16_t TextRun_subscript(const void*, uint32_t);
 const void* String_new();
+const void* String_new_latin1(const char*);
 const void* String_new_copy(const void*);
 const void* String_new_span(const void*);
 void StringWrapper_destroy(const void*);

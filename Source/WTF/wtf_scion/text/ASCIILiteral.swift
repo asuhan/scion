@@ -26,7 +26,9 @@
 
 struct ASCIILiteral {
   init(_ string: String) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(string.allSatisfy { $0.isASCII })
+    self.string = string
   }
+
+  let string: String
 }
