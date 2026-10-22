@@ -28,6 +28,7 @@
 namespace WebCore {
 
 class HTMLOListElement;
+class RenderListItemScion;
 
 class RenderListItem final : public RenderBlockFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderListItem);
@@ -36,13 +37,27 @@ public:
     RenderListItem(Element&, RenderStyle&&);
     virtual ~RenderListItem();
 
-    Element& element() const { return downcast<Element>(nodeForNonAnonymous()); }
+    void setScionHandle(void* handle);
+
+    Element& element() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<Element>(nodeForNonAnonymous());
+    }
 
     int value() const;
     void updateValue();
 
-    void setNotInList(bool notInList) { m_notInList = notInList; }
-    bool notInList() const { return m_notInList; }
+    void setNotInList(bool notInList)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_notInList = notInList;
+    }
+    bool notInList() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_notInList;
+    }
 
     WEBCORE_EXPORT StringView markerTextWithoutSuffix() const;
     StringView markerTextWithSuffix() const;
@@ -54,12 +69,21 @@ public:
 
     RenderStyle computeMarkerStyle() const;
 
-    RenderListMarker* markerRenderer() const { return m_marker.get(); }
-    void setMarkerRenderer(RenderListMarker& marker) { m_marker = marker; }
+    RenderListMarker* markerRenderer() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_marker.get();
+    }
+    void setMarkerRenderer(RenderListMarker& marker)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_marker = marker;
+    }
 
     bool isInReversedOrderedList() const;
 
 private:
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     ASCIILiteral renderName() const final { return "RenderListItem"_s; }
     
     void paint(PaintInfo&, const LayoutPoint&) final;
@@ -77,12 +101,14 @@ private:
     SingleThreadWeakPtr<RenderListMarker> m_marker;
     mutable std::optional<int> m_value;
     bool m_notInList { false };
+    std::unique_ptr<RenderListItemScion> m_scion;
 };
 
 bool isHTMLListElement(const Node&);
 
 inline int RenderListItem::value() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_value)
         updateValueNow();
     return m_value.value();

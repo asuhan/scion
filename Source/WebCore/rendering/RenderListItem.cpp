@@ -34,6 +34,7 @@
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderElementInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleSetters.h"
 #include "RenderTreeBuilder.h"
 #include "RenderView.h"
@@ -67,8 +68,15 @@ RenderListItem::~RenderListItem()
     ASSERT(!m_marker);
 }
 
+void RenderListItem::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderListItemScion>(handle);
+}
+
 RenderStyle RenderListItem::computeMarkerStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!is<PseudoElement>(element())) {
         if (auto markerStyle = getCachedPseudoStyle({ PseudoId::Marker }, &style()))
             return RenderStyle::clone(*markerStyle);
@@ -205,6 +213,7 @@ unsigned RenderListItem::itemCountForOrderedList(const HTMLOListElement& list)
 
 void RenderListItem::updateValueNow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* list = enclosingList(*this);
     auto* orderedList = dynamicDowncast<HTMLOListElement>(list);
 
@@ -260,6 +269,7 @@ void RenderListItem::updateValueNow() const
 
 void RenderListItem::updateValue()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_value = std::nullopt;
     if (m_marker)
         m_marker->setNeedsLayoutAndPrefWidthsRecalc();
@@ -267,6 +277,7 @@ void RenderListItem::updateValue()
 
 void RenderListItem::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::styleDidChange(diff, oldStyle);
 
     if (!oldStyle || oldStyle->counterDirectives().map.get("list-item"_s) == style().counterDirectives().map.get("list-item"_s))
@@ -277,6 +288,7 @@ void RenderListItem::styleDidChange(StyleDifference diff, const RenderStyle* old
 
 void RenderListItem::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
 
@@ -285,6 +297,7 @@ void RenderListItem::layout()
 
 void RenderListItem::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: RenderListMarker::updateMargins() mutates margin style which affects preferred widths.
     if (m_marker && m_marker->preferredLogicalWidthsDirty())
         m_marker->updateMarginsAndContent();
@@ -294,6 +307,7 @@ void RenderListItem::computePreferredLogicalWidths()
 
 void RenderListItem::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!logicalHeight() && hasNonVisibleOverflow())
         return;
 
@@ -302,6 +316,7 @@ void RenderListItem::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 StringView RenderListItem::markerTextWithoutSuffix() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_marker)
         return { };
     return m_marker->textWithoutSuffix();
@@ -309,6 +324,7 @@ StringView RenderListItem::markerTextWithoutSuffix() const
 
 StringView RenderListItem::markerTextWithSuffix() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_marker)
         return { };
     return m_marker->textWithSuffix();
@@ -316,6 +332,7 @@ StringView RenderListItem::markerTextWithSuffix() const
 
 void RenderListItem::counterDirectivesChanged()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_marker)
         m_marker->setNeedsLayoutAndPrefWidthsRecalc();
 
@@ -330,6 +347,7 @@ void RenderListItem::counterDirectivesChanged()
 
 void RenderListItem::updateListMarkerNumbers()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* list = enclosingList(*this);
     if (!list)
         return;
@@ -350,6 +368,7 @@ void RenderListItem::updateListMarkerNumbers()
 
 bool RenderListItem::isInReversedOrderedList() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* list = dynamicDowncast<HTMLOListElement>(enclosingList(*this));
     return list && list->isReversed();
 }

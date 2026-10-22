@@ -31,6 +31,7 @@
 #include "GraphicsContext.h"
 #include "ListStyleType.h"
 #include "RenderBoxInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderLayer.h"
 #include "RenderListItem.h"
 #include "RenderMultiColumnFlow.h"
@@ -71,8 +72,19 @@ RenderListMarker::RenderListMarker(RenderListItem& listItem, RenderStyle&& style
 // Do not add any code in below destructor. Add it to willBeDestroyed() instead.
 RenderListMarker::~RenderListMarker() = default;
 
+void RenderListMarker::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderListMarkerScion>(handle);
+}
+
 void RenderListMarker::willBeDestroyed()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_image)
         m_image->removeClient(*this);
     RenderBox::willBeDestroyed();
@@ -89,11 +101,13 @@ static StyleDifference adjustedStyleDifference(StyleDifference diff, const Rende
 
 void RenderListMarker::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::styleWillChange(adjustedStyleDifference(diff, style(), newStyle), newStyle);
 }
 
 void RenderListMarker::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (oldStyle)
         diff = adjustedStyleDifference(diff, *oldStyle, style());
     RenderBox::styleDidChange(diff, oldStyle);
@@ -109,11 +123,13 @@ void RenderListMarker::styleDidChange(StyleDifference diff, const RenderStyle* o
 
 bool RenderListMarker::isImage() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_image && !m_image->errorOccurred();
 }
 
 LayoutRect RenderListMarker::localSelectionRect()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return LayoutRect(LayoutPoint(), size());
 }
 
@@ -137,6 +153,7 @@ struct RenderListMarker::TextRunWithUnderlyingString {
 
 auto RenderListMarker::textRun() const -> TextRunWithUnderlyingString
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_textWithSuffix.isEmpty());
 
     // Since the bidi algorithm doesn't run on this text, we instead reorder the characters here.
@@ -159,6 +176,7 @@ auto RenderListMarker::textRun() const -> TextRunWithUnderlyingString
 
 void RenderListMarker::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (paintInfo.phase != PaintPhase::Foreground && paintInfo.phase != PaintPhase::Accessibility)
         return;
 
@@ -243,6 +261,7 @@ void RenderListMarker::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffse
 
 RenderBox* RenderListMarker::parentBox(RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_listItem);
     CheckedPtr multiColumnFlow = dynamicDowncast<RenderMultiColumnFlow>(m_listItem->enclosingFragmentedFlow());
     if (!multiColumnFlow)
@@ -253,6 +272,7 @@ RenderBox* RenderListMarker::parentBox(RenderBox& box)
 
 void RenderListMarker::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
 
@@ -287,6 +307,7 @@ void RenderListMarker::layout()
 
 void RenderListMarker::imageChanged(WrappedImagePtr o, const IntRect* rect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (parent()) {
         if (m_image && o == m_image->data()) {
             if (width() != m_image->imageSize(this, style().usedZoom()).width() || height() != m_image->imageSize(this, style().usedZoom()).height() || m_image->errorOccurred())
@@ -300,6 +321,7 @@ void RenderListMarker::imageChanged(WrappedImagePtr o, const IntRect* rect)
 
 void RenderListMarker::updateMarginsAndContent()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: It's messy to use the preferredLogicalWidths dirty bit for this optimization, also unclear if this is premature optimization.
     if (preferredLogicalWidthsDirty())
         updateContent();
@@ -308,6 +330,7 @@ void RenderListMarker::updateMarginsAndContent()
 
 void RenderListMarker::updateContent()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isImage()) {
         // FIXME: This is a somewhat arbitrary width.  Generated images for markers really won't become particularly useful
         // until we support the CSS3 marker pseudoclass to allow control over the width and height of the marker box.
@@ -356,6 +379,7 @@ void RenderListMarker::updateContent()
 
 void RenderListMarker::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
     updateContent();
 
@@ -385,6 +409,7 @@ void RenderListMarker::computePreferredLogicalWidths()
 
 void RenderListMarker::updateMargins()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const FontMetrics& fontMetrics = style().metricsOfPrimaryFont();
 
     LayoutUnit marginStart;
@@ -422,6 +447,7 @@ void RenderListMarker::updateMargins()
 
 LayoutUnit RenderListMarker::lineHeight(bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isImage())
         return m_listItem->lineHeight(firstLine, direction, PositionOfInteriorLineBoxes);
     return RenderBox::lineHeight(firstLine, direction, linePositionMode);
@@ -429,6 +455,7 @@ LayoutUnit RenderListMarker::lineHeight(bool firstLine, LineDirectionMode direct
 
 LayoutUnit RenderListMarker::baselinePosition(FontBaseline baselineType, bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isImage())
         return m_listItem->baselinePosition(baselineType, firstLine, direction, PositionOfInteriorLineBoxes);
     return RenderBox::baselinePosition(baselineType, firstLine, direction, linePositionMode);
@@ -436,16 +463,19 @@ LayoutUnit RenderListMarker::baselinePosition(FontBaseline baselineType, bool fi
 
 bool RenderListMarker::isInside() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_listItem->notInList() || style().listStylePosition() == ListStylePosition::Inside;
 }
 
 const RenderListItem* RenderListMarker::listItem() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_listItem.get();
 }
 
 FloatRect RenderListMarker::relativeMarkerRect()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isImage())
         return FloatRect(0, 0, m_image->imageSize(this, style().usedZoom()).width(), m_image->imageSize(this, style().usedZoom()).height());
 
@@ -473,6 +503,7 @@ FloatRect RenderListMarker::relativeMarkerRect()
 
 LayoutRect RenderListMarker::selectionRectForRepaint(const RenderLayerModelObject*, bool)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsLayout());
 
     return LayoutRect();
@@ -480,16 +511,19 @@ LayoutRect RenderListMarker::selectionRectForRepaint(const RenderLayerModelObjec
 
 StringView RenderListMarker::textWithoutSuffix() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return StringView { m_textWithSuffix }.left(m_textWithoutSuffixLength);
 }
 
 RefPtr<CSSCounterStyle> RenderListMarker::counterStyle() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return document().counterStyleRegistry().resolvedCounterStyle(style().listStyleType());
 }
 
 bool RenderListMarker::widthUsesMetricsOfPrimaryFont() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto listType = style().listStyleType();
     return listType.isCircle() || listType.isDisc() || listType.isSquare();
 }

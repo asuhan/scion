@@ -32,6 +32,8 @@ class StyleRuleCounterStyle;
 
 // Used to render the list item's marker.
 // The RenderListMarker always has to be a child of a RenderListItem.
+class RenderListMarkerScion;
+
 class RenderListMarker final : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderListMarker);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderListMarker);
@@ -39,8 +41,14 @@ public:
     RenderListMarker(RenderListItem&, RenderStyle&&);
     virtual ~RenderListMarker();
 
+    void setScionHandle(void* handle);
+
     StringView textWithoutSuffix() const;
-    StringView textWithSuffix() const { return m_textWithSuffix; }
+    StringView textWithSuffix() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_textWithSuffix;
+    }
 
     bool isInside() const;
 
@@ -48,11 +56,16 @@ public:
 
     bool isImage() const final;
 
-    LayoutUnit lineLogicalOffsetForListItem() const { return m_lineLogicalOffsetForListItem; }
+    LayoutUnit lineLogicalOffsetForListItem() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_lineLogicalOffsetForListItem;
+    }
     const RenderListItem* listItem() const;
 
 private:
     void willBeDestroyed() final;
+    // NB(asuhan): these return literals, we can skip the Scion check
     ASCIILiteral renderName() const final { return "RenderListMarker"_s; }
     void computePreferredLogicalWidths() final;
     bool canHaveChildren() const final { return false; }
@@ -87,6 +100,7 @@ private:
     SingleThreadWeakPtr<RenderListItem> m_listItem;
     LayoutUnit m_lineOffsetForListItem;
     LayoutUnit m_lineLogicalOffsetForListItem;
+    std::unique_ptr<RenderListMarkerScion> m_scion;
 };
 
 } // namespace WebCore
