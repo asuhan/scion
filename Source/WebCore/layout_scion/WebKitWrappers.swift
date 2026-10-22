@@ -2453,6 +2453,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderHTMLCanvasWrapper>.fromOpaque(canvasRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderListMarker(raw),
+    let markerRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderListMarkerWrapper>.fromOpaque(markerRaw).takeUnretainedValue()
+  }
   if wk_interop.RenderObject_isRenderFlexibleBox(raw),
     let flexibleBoxRaw = wk_interop.RenderElement_scion(raw)
   {
@@ -3637,6 +3642,30 @@ func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderListItemScion_create")
+func RenderListItemScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let listItem = RenderListItemWrapper(ElementWrapper(p: elementRaw), style)
+  let unmanaged = Unmanaged.passRetained(listItem)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("RenderListMarkerScion_create")
+func RenderListMarkerScion_create(
+  _ listItemRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let listItem = createRenderObjectWrapperOrNative(listItemRaw) as! RenderListItemWrapper
+  assert(listItem.isNativeImpl())
+  let marker = RenderListMarkerWrapper(listItem: listItem, style: style)
+  let unmanaged = Unmanaged.passRetained(marker)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderFileUploadControlScion_create")
 func RenderFileUploadControlScion_create(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
@@ -3877,6 +3906,14 @@ func RenderFlexibleBoxScion_setWk(
   let flexibleBox = Unmanaged<RenderFlexibleBoxWrapper>.fromOpaque(flexibleBoxRaw)
     .takeUnretainedValue()
   flexibleBox.setWk(wk)
+}
+
+@_cdecl("RenderListMarkerScion_setWk")
+func RenderListMarkerScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer
+) {
+  let marker = Unmanaged<RenderListMarkerWrapper>.fromOpaque(markerRaw).takeUnretainedValue()
+  marker.setWk(wk)
 }
 
 @_cdecl("RenderHTMLCanvasScion_setWk")

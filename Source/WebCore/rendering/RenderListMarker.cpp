@@ -80,6 +80,7 @@ void RenderListMarker::setScionHandle(void* handle)
     RenderBoxModelObject::setScionHandle(handle);
     RenderBox::setScionHandle(handle);
     m_scion = std::make_unique<RenderListMarkerScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderListMarker::willBeDestroyed()

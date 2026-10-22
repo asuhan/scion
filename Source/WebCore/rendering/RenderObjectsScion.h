@@ -58,6 +58,10 @@ extern "C" void* RenderButtonScion_create(void*, const void*);
 
 extern "C" void* RenderFileUploadControlScion_create(void*, const void*);
 
+extern "C" void* RenderListItemScion_create(void*, const void*);
+
+extern "C" void* RenderListMarkerScion_create(void*, const void*);
+
 extern "C" void* RenderCombineTextScion_create(void*, const void*);
 
 extern "C" void* RenderTextFragmentScion_create(void*, const void*, int32_t, int32_t);
@@ -1418,6 +1422,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setWk(void*);
 
 private:
     void* m_handle;

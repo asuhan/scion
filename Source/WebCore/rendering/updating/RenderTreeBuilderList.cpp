@@ -30,6 +30,7 @@
 #include "RenderListMarker.h"
 #include "RenderMenuList.h"
 #include "RenderMultiColumnFlow.h"
+#include "RenderObjectsScion.h"
 #include "RenderTable.h"
 #include <wtf/TZoneMallocInlines.h>
 
@@ -104,7 +105,12 @@ void RenderTreeBuilder::List::updateItemMarker(RenderListItem& listItemRenderer)
     if (markerRenderer)
         markerRenderer->setStyle(WTFMove(newStyle));
     else {
-        newMarkerRenderer = WebCore::createRenderer<RenderListMarker>(listItemRenderer, WTFMove(newStyle));
+        if (Document::s_useScionRendering >= 13) {
+            auto clonedStyle = RenderStyle::clonePtr(newStyle);
+            newMarkerRenderer = WebCore::createRenderer<RenderListMarker>(listItemRenderer, WTFMove(newStyle));
+            newMarkerRenderer->setScionHandle(RenderListMarkerScion_create(&listItemRenderer, clonedStyle.release()));
+        } else
+            newMarkerRenderer = WebCore::createRenderer<RenderListMarker>(listItemRenderer, WTFMove(newStyle));
         newMarkerRenderer->initializeStyle();
         markerRenderer = newMarkerRenderer.get();
         listItemRenderer.setMarkerRenderer(*markerRenderer);

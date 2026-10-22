@@ -44,10 +44,15 @@ private func reversed(_ string: StringWrapperView) -> StringWrapper {
 }
 
 final class RenderListMarkerWrapper: RenderBoxWrapper {
-  convenience init(listItem: RenderListItemWrapper, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(listItem: RenderListItemWrapper, style: RenderStyleWrapper) {
+    m_listItem = listItem
+    super.init(.ListMarker, listItem.document(), style)
+    setInline(true)
+    setReplacedOrInlineBlock(true)  // pretend to be replaced
+    assert(isRenderListMarker())
   }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   func isInside() -> Bool {
     assert(!isNativeImpl())
@@ -481,7 +486,14 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   private var textWithoutSuffixLength: UInt8 = 0
   private var textIsLeftToRightDirection = true
   private var image: StyleImage? = nil
-  private let m_listItem: RenderListItemWrapper? = nil
+  private weak var m_listItem: RenderListItemWrapper? = nil
   private var lineOffsetForListItem = LayoutUnit()
   private var lineLogicalOffsetForListItem = LayoutUnit()
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }
