@@ -2048,6 +2048,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   // TODO(asuhan): don't create a new instance every time this is called
+  func counterDirectives() -> CounterDirectiveMap {
+    return CounterDirectiveMap(p: wk_interop.RenderStyle_counterDirectives(p))
+  }
+
+  // TODO(asuhan): don't create a new instance every time this is called
   func alignItems() -> StyleSelfAlignmentData {
     return convertStyleSelfAlignmentData(wk_interop.RenderStyle_alignItems(p))
   }

@@ -284,6 +284,15 @@ struct StyleSelfAlignmentDataRaw {
     bool isLegacy;
 };
 
+struct CounterDirectivesRaw {
+    int32_t resetValue;
+    int32_t incrementValue;
+    int32_t setValue;
+    bool hasResetValue;
+    bool hasIncrementValue;
+    bool hasSetValue;
+};
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;
@@ -1527,6 +1536,8 @@ uint8_t RenderStyle_userSelect(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_justifyContent(const void*);
 struct StyleSelfAlignmentDataRaw RenderStyle_alignItems(const void*);
+const void* RenderStyle_counterDirectives(const void*);
+struct CounterDirectivesRaw CounterDirectiveMap_get(const void*, const void*);
 void RenderStyle_setAlignContent(const void*, struct StyleContentAlignmentDataRaw);
 void RenderStyle_setAlignItems(const void*, struct StyleSelfAlignmentDataRaw);
 void RenderStyle_setJustifyContent(const void*, struct StyleContentAlignmentDataRaw);

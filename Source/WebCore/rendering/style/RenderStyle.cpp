@@ -2209,6 +2209,27 @@ extern "C" WEBCORE_EXPORT StyleContentAlignmentDataRaw RenderStyle_alignContent(
     return { static_cast<uint8_t>(align_content.position()), static_cast<uint8_t>(align_content.distribution()), static_cast<uint8_t>(align_content.overflow()) };
 }
 
+struct CounterDirectivesRaw {
+    int32_t resetValue;
+    int32_t incrementValue;
+    int32_t setValue;
+    bool hasResetValue;
+    bool hasIncrementValue;
+    bool hasSetValue;
+};
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_counterDirectives(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->counterDirectives();
+}
+
+extern "C" WEBCORE_EXPORT CounterDirectivesRaw CounterDirectiveMap_get(const void* p, const void* name)
+{
+    auto directives = static_cast<const WebCore::CounterDirectiveMap*>(p)->map.get(AtomString(*static_cast<const String*>(name)));
+    return { directives.resetValue.value_or(0), directives.incrementValue.value_or(0), directives.setValue.value_or(0),
+        directives.resetValue.has_value(), directives.incrementValue.has_value(), directives.setValue.has_value() };
+}
+
 struct StyleSelfAlignmentDataRaw {
     uint8_t position;
     uint8_t overflow;

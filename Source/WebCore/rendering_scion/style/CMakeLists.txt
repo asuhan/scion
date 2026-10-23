@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     BorderValue.swift
     CollapsedBorderValue.swift
     ContentData.swift
+    CounterDirectives.swift
     FillLayer.swift
     GapLength.swift
     GridArea.swift
