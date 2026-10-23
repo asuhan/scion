@@ -1891,6 +1891,7 @@ bool Document_inRenderTreeUpdate(const void*);
 void* Document_securityOrigin(const void* raw);
 bool Document_activeViewTransitionCapturedDocumentElement(const void*);
 bool Document_hasViewTransitionPseudoElementTree(const void*);
+void* Document_fontSelector(const void*);
 bool Document_renderingIsSuppressedForViewTransition(const void*);
 bool Document_hasTopLayerElement(const void*);
 bool Document_hasHighlight(const void*);
