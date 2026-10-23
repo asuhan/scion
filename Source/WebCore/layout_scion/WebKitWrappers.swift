@@ -3915,7 +3915,8 @@ func RenderListItemScion_updateListMarkerNumbers(_ listItemRaw: UnsafeMutableRaw
 }
 
 @_cdecl("RenderListItemScion_markerRenderer")
-func RenderListItemScion_markerRenderer(_ listItemRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+func RenderListItemScion_markerRenderer(_ listItemRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer?
+{
   let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
   return wkRenderObject(listItem.markerRenderer())
 }

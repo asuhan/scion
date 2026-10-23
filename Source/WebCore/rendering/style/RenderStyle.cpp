@@ -111,6 +111,26 @@ extern "C" WEBCORE_EXPORT ChangedContextSensitiveProperties RenderStyle_changeRe
     return { diff.toRaw(), requires_layout };
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_create()
+{
+    return new WebCore::RenderStyle(WebCore::RenderStyle::create());
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_inheritFrom(const void* p, const void* inheritParent)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->inheritFrom(*static_cast<const WebCore::RenderStyle*>(inheritParent));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setWhiteSpaceCollapse(const void* p, uint8_t v)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setWhiteSpaceCollapse(static_cast<WebCore::WhiteSpaceCollapse>(v));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setTextTransform(const void* p, uint8_t v)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setTextTransform(OptionSet<WebCore::TextTransform>::fromRaw(v));
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_clone(const void* p)
 {
     auto cloned = WebCore::RenderStyle::clonePtr(*static_cast<const WebCore::RenderStyle*>(p));

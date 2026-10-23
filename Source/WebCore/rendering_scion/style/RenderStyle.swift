@@ -757,8 +757,9 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func create() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = convert_render_style(p: wk_interop.RenderStyle_create())
+    style.pOwner = true
+    return style
   }
 
   static func clone(style: RenderStyleWrapper) -> RenderStyleWrapper {
@@ -797,8 +798,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func inheritFrom(inheritParent: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_inheritFrom(p!, inheritParent.p!)
   }
 
   func copyContentFrom(other: RenderStyleWrapper) {
@@ -3103,6 +3103,14 @@ class RenderStyleWrapper: Equatable {
   func setUnicodeBidi(v: UnicodeBidi) { wk_interop.RenderStyle_setUnicodeBidi(p!, v.rawValue) }
 
   func setTextWrapMode(v: TextWrapMode) { wk_interop.RenderStyle_setTextWrapMode(p!, v == .NoWrap) }
+
+  func setWhiteSpaceCollapse(_ v: WhiteSpaceCollapse) {
+    wk_interop.RenderStyle_setWhiteSpaceCollapse(p!, v.rawValue)
+  }
+
+  func setTextTransform(_ v: TextTransform) {
+    wk_interop.RenderStyle_setTextTransform(p!, v.rawValue)
+  }
 
   @discardableResult
   func setFontDescription(description: FontCascadeDescriptionWrapper) -> Bool {
