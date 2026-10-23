@@ -834,6 +834,8 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" void RenderListItemScion_updateListMarkerNumbers(void*);
+
 extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
 extern "C" void* RenderTextFragmentScion_firstLetter(const void*);
@@ -2770,6 +2772,11 @@ LayoutRect RenderReplacedScion::replacedContentRect() const
 void RenderHTMLCanvasScion::setWk(void* wk)
 {
     RenderHTMLCanvasScion_setWk(wk, m_handle);
+}
+
+void RenderListItemScion::updateListMarkerNumbers()
+{
+    RenderListItemScion_updateListMarkerNumbers(m_handle);
 }
 
 void RenderListMarkerScion::setWk(void* wk)

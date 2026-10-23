@@ -3908,6 +3908,12 @@ func RenderFlexibleBoxScion_setWk(
   flexibleBox.setWk(wk)
 }
 
+@_cdecl("RenderListItemScion_updateListMarkerNumbers")
+func RenderListItemScion_updateListMarkerNumbers(_ listItemRaw: UnsafeMutableRawPointer) {
+  let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
+  listItem.updateListMarkerNumbers()
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

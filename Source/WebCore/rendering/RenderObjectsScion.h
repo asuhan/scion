@@ -1412,6 +1412,8 @@ public:
     {
     }
 
+    void updateListMarkerNumbers();
+
 private:
     void* m_handle;
 };
