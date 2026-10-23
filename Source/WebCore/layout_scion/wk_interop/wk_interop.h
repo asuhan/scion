@@ -2468,7 +2468,7 @@ void TextStream_writeString(void*, const void*);
 void TextStream_writeStringView(void*, const void*);
 void TextStream_indent(void*);
 void* Text_renderer(const void*);
-void Resolver_styleForPseudoElement(void*, void*, struct PseudoElementRequestRaw, const void*);
+void* Resolver_styleForPseudoElement(void*, void*, struct PseudoElementRequestRaw, const void*);
 void EventRegionContext_unite(void*, struct FloatRoundedRectRaw, void*, const void*, bool);
 bool EventRegionContext_contains(void*, struct IntRectRaw);
 double SRGBA_relativeLuminance(struct SRGBARaw);

@@ -53,9 +53,13 @@ extension Style {
             value: convertToStyleScrollbarStateRaw(pseudoElementRequest.scrollbarState()!),
             is_valid: true)
           : OptionalStyleScrollbarStateRaw(value: StyleScrollbarStateRaw(), is_valid: false))
-      wk_interop.Resolver_styleForPseudoElement(
-        p, element.p, pseudoElementRequestRaw, context.parentStyle?.p)
-      return nil
+      guard
+        let style = wk_interop.Resolver_styleForPseudoElement(
+          p, element.p, pseudoElementRequestRaw, context.parentStyle?.p)
+      else { return nil }
+      let resolvedStyle = convert_render_style(p: style)
+      resolvedStyle.pOwner = true
+      return ResolvedStyle(style: resolvedStyle)
     }
 
     private let p: UnsafeMutableRawPointer

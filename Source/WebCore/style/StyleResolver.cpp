@@ -124,7 +124,8 @@ WebCore::StyleScrollbarState convertToStyleScrollbarState(const StyleScrollbarSt
 
 } // namespace
 
-extern "C" WEBCORE_EXPORT void Resolver_styleForPseudoElement(void* p, void* elementRaw, PseudoElementRequestRaw pseudoElementRequestRaw, const void* parentStyleRaw)
+// Returns the resolved style as an owning raw pointer, or null when there is none.
+extern "C" WEBCORE_EXPORT void* Resolver_styleForPseudoElement(void* p, void* elementRaw, PseudoElementRequestRaw pseudoElementRequestRaw, const void* parentStyleRaw)
 {
     auto& element = *static_cast<WebCore::Element*>(elementRaw);
     const auto pseudoId = static_cast<WebCore::PseudoId>(pseudoElementRequestRaw.identifier.pseudoId);
@@ -134,10 +135,10 @@ extern "C" WEBCORE_EXPORT void Resolver_styleForPseudoElement(void* p, void* ele
     ? std::make_optional(convertToStyleScrollbarState(pseudoElementRequestRaw.scrollbarState.value)) : std::nullopt;
     WebCore::Style::PseudoElementRequest pseudoElementRequest { pseudoElementIdentifier, scrollbarState };
     const auto parentStyle = static_cast<const WebCore::RenderStyle*>(parentStyleRaw);
-    const auto resolved = static_cast<WebCore::Style::Resolver*>(p)->styleForPseudoElement(element, pseudoElementRequest, { parentStyle });
-    if (resolved) {
-        ASSERT_NOT_REACHED();
-    }
+    auto resolved = static_cast<WebCore::Style::Resolver*>(p)->styleForPseudoElement(element, pseudoElementRequest, { parentStyle });
+    if (!resolved)
+        return nullptr;
+    return resolved->style.release();
 }
 
 namespace WebCore {
