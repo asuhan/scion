@@ -799,6 +799,7 @@ class RenderStyleWrapper: Equatable {
 
   func inheritFrom(inheritParent: RenderStyleWrapper) {
     wk_interop.RenderStyle_inheritFrom(p!, inheritParent.p!)
+    refreshFontCascade()
   }
 
   func copyContentFrom(other: RenderStyleWrapper) {
@@ -3114,7 +3115,15 @@ class RenderStyleWrapper: Equatable {
 
   @discardableResult
   func setFontDescription(description: FontCascadeDescriptionWrapper) -> Bool {
-    return wk_interop.RenderStyle_setFontDescription(p!, description.p)
+    let changed = wk_interop.RenderStyle_setFontDescription(p!, description.p)
+    refreshFontCascade()
+    return changed
+  }
+
+  // The inherited data is copy-on-write in C++, so the cached font cascade can point at a detached
+  // copy once the C++ style replaces it.
+  private func refreshFontCascade() {
+    inheritedData.fontCascade = FontCascadeWrapper(p: wk_interop.RenderStyle_fontCascade(p!))
   }
 
   func capStyle() -> LineCap { return LineCap(rawValue: RenderStyle_capStyle(p!))! }
