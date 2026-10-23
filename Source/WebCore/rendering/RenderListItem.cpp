@@ -76,7 +76,8 @@ void RenderListItem::setScionHandle(void* handle)
 
 RenderStyle RenderListItem::computeMarkerStyle() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->computeMarkerStyle();
     if (!is<PseudoElement>(element())) {
         if (auto markerStyle = getCachedPseudoStyle({ PseudoId::Marker }, &style()))
             return RenderStyle::clone(*markerStyle);

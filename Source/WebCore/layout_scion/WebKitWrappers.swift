@@ -3908,6 +3908,17 @@ func RenderFlexibleBoxScion_setWk(
   flexibleBox.setWk(wk)
 }
 
+@_cdecl("RenderListItemScion_computeMarkerStyle")
+func RenderListItemScion_computeMarkerStyle(_ listItemRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
+  let style = listItem.computeMarkerStyle()
+  assert(style.p != nil && style.pOwner)
+  style.pOwner = false
+  return UnsafeMutableRawPointer(mutating: style.p!)
+}
+
 @_cdecl("RenderListItemScion_updateListMarkerNumbers")
 func RenderListItemScion_updateListMarkerNumbers(_ listItemRaw: UnsafeMutableRawPointer) {
   let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()

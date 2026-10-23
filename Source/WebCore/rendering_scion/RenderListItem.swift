@@ -167,8 +167,33 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
   }
 
   func computeMarkerStyle() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !element()!.isPseudoElement() {
+      if let markerStyle = getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .Marker),
+        parentStyle: style())
+      {
+        return RenderStyleWrapper.clone(style: markerStyle)
+      }
+    }
+
+    // The marker always inherits from the list item, regardless of where it might end
+    // up (e.g., in some deeply nested line box). See CSS3 spec.
+    let markerStyle = RenderStyleWrapper.create()
+    markerStyle.inheritFrom(inheritParent: style())
+
+    // In the case of a ::before or ::after pseudo-element, we manually apply the properties
+    // otherwise set in the user-agent stylesheet since we don't support ::before::marker or
+    // ::after::marker. See bugs.webkit.org/b/218897.
+    let fontDescription = style().fontDescription().deepCopy()
+    fontDescription.setVariantNumericSpacing(.TabularNumbers)
+    markerStyle.setFontDescription(description: fontDescription)
+    markerStyle.fontCascade().update(fontSelector: document().fontSelector())
+    markerStyle.setUnicodeBidi(v: .Isolate)
+    markerStyle.setWhiteSpaceCollapse(.Preserve)
+    markerStyle.setTextWrapMode(v: .NoWrap)
+    markerStyle.setTextTransform([])
+    return markerStyle
   }
 
   func markerRenderer() -> RenderListMarkerWrapper? {

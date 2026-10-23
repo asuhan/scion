@@ -836,6 +836,8 @@ extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
 extern "C" void RenderListItemScion_updateListMarkerNumbers(void*);
 
+extern "C" void* RenderListItemScion_computeMarkerStyle(const void*);
+
 extern "C" void* RenderListItemScion_markerRenderer(const void*);
 
 extern "C" void RenderListItemScion_setMarkerRenderer(void*, void*);
@@ -2776,6 +2778,13 @@ LayoutRect RenderReplacedScion::replacedContentRect() const
 void RenderHTMLCanvasScion::setWk(void* wk)
 {
     RenderHTMLCanvasScion_setWk(wk, m_handle);
+}
+
+RenderStyle RenderListItemScion::computeMarkerStyle() const
+{
+    // The Swift side hands over ownership of the style.
+    std::unique_ptr<RenderStyle> style(static_cast<RenderStyle*>(RenderListItemScion_computeMarkerStyle(m_handle)));
+    return WTFMove(*style);
 }
 
 void RenderListItemScion::updateListMarkerNumbers()

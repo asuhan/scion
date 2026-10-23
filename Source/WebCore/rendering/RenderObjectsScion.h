@@ -1415,6 +1415,8 @@ public:
 
     void updateListMarkerNumbers();
 
+    RenderStyle computeMarkerStyle() const;
+
     RenderListMarker* markerRenderer() const;
     void setMarkerRenderer(RenderListMarker&);
 
