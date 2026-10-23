@@ -1196,6 +1196,7 @@ const void* RenderStyle_createAnonymousStyleWithDisplay(const void*, uint8_t);
 void RenderStyle_destroy(const void*);
 uint32_t RenderStyle_pseudoElementType(const void*);
 const void* RenderStyle_pseudoElementNameArgument(const void*);
+const void* RenderStyle_addCachedPseudoStyle(const void*, void*);
 const void* RenderStyle_getCachedPseudoStyle(const void*, uint32_t, const void*);
 bool RenderStyle_isFloating(const void*);
 uint8_t RenderStyle_position(const void*);

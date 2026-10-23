@@ -173,6 +173,13 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_getCachedPseudoStyle(const voi
     return static_cast<const WebCore::RenderStyle*>(p)->getCachedPseudoStyle({pseudoId, nameArgument});
 }
 
+// Takes ownership of the pseudo style and returns the cached instance.
+extern "C" WEBCORE_EXPORT const void* RenderStyle_addCachedPseudoStyle(const void* p, void* pseudoRaw)
+{
+    std::unique_ptr<WebCore::RenderStyle> pseudo(static_cast<WebCore::RenderStyle*>(pseudoRaw));
+    return static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->addCachedPseudoStyle(WTFMove(pseudo));
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isFloating(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isFloating();

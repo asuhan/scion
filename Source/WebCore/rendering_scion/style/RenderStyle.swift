@@ -907,8 +907,17 @@ class RenderStyleWrapper: Equatable {
 
   @discardableResult
   func addCachedPseudoStyle(pseudo: RenderStyleWrapper?) -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let pseudo else {
+      return nil
+    }
+    // The C++ style takes over ownership, like the std::unique_ptr it is passed in upstream.
+    assert(pseudo.p != nil && pseudo.pOwner)
+    pseudo.pOwner = false
+    guard
+      let cached = wk_interop.RenderStyle_addCachedPseudoStyle(
+        p!, UnsafeMutableRawPointer(mutating: pseudo.p!))
+    else { return nil }
+    return convert_render_style(p: cached)
   }
 
   func cachedPseudoStyles() -> PseudoStyleCache? {
