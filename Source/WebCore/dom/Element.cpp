@@ -181,6 +181,21 @@ extern "C" WEBCORE_EXPORT bool Element_hasFontTag(const void* p)
     return static_cast<const WebCore::Element*>(p)->hasTagName(WebCore::HTMLNames::fontTag);
 }
 
+extern "C" WEBCORE_EXPORT void* ElementTraversal_nextIncludingPseudo(const void* current, const void* stayWithin)
+{
+    return WebCore::ElementTraversal::nextIncludingPseudo(*static_cast<const WebCore::Node*>(current), static_cast<const WebCore::Node*>(stayWithin));
+}
+
+extern "C" WEBCORE_EXPORT void* ElementTraversal_nextIncludingPseudoSkippingChildren(const void* current, const void* stayWithin)
+{
+    return WebCore::ElementTraversal::nextIncludingPseudoSkippingChildren(*static_cast<const WebCore::Node*>(current), static_cast<const WebCore::Node*>(stayWithin));
+}
+
+extern "C" WEBCORE_EXPORT void* ElementTraversal_previousIncludingPseudo(const void* current, const void* stayWithin)
+{
+    return WebCore::ElementTraversal::previousIncludingPseudo(*static_cast<const WebCore::Node*>(current), static_cast<const WebCore::Node*>(stayWithin));
+}
+
 extern "C" WEBCORE_EXPORT void Element_setActive(void* p, bool value)
 {
     static_cast<WebCore::Element*>(p)->setActive(value);

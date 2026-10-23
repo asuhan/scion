@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     ElementAncestorIterator.swift
     ElementChildIterator.swift
     Element.swift
+    ElementTraversal.swift
     Node.swift
     Position.swift
     PseudoElement.swift
