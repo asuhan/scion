@@ -1040,6 +1040,7 @@ bool RenderElement_hasContinuationChainNode(const void*);
 void RenderElement_setHasContinuationChainNode(void*, bool);
 bool RenderElement_isContinuation(const void*);
 bool RenderElement_isFirstLetter(const void*);
+bool RenderElement_shouldApplyStyleContainment(const void*);
 bool RenderElement_createsNewFormattingContext(const void*);
 void* RenderElement_firstChildSlow(const void*);
 void* RenderElement_lastChildSlow(const void*);
