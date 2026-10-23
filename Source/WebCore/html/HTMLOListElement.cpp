@@ -31,6 +31,21 @@
 #include "RenderListItem.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT int32_t HTMLOListElement_start(const void* p)
+{
+    return static_cast<const WebCore::HTMLOListElement*>(p)->start();
+}
+
+extern "C" WEBCORE_EXPORT bool HTMLOListElement_isReversed(const void* p)
+{
+    return static_cast<const WebCore::HTMLOListElement*>(p)->isReversed();
+}
+
+extern "C" WEBCORE_EXPORT void HTMLOListElement_itemCountChanged(void* p)
+{
+    static_cast<WebCore::HTMLOListElement*>(p)->itemCountChanged();
+}
+
 // FIXME: There should be a standard way to turn a std::expected into a Optional.
 // Maybe we should put this into the header file for Expected and give it a better name.
 template<typename T, typename E> inline std::optional<T> optionalValue(Expected<T, E>&& expected)

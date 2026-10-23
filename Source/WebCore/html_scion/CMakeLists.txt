@@ -18,6 +18,7 @@ target_sources(layout_scion PRIVATE
     HTMLLegendElement.swift
     HTMLMapElement.swift
     HTMLOptionElement.swift
+    HTMLOListElement.swift
     HTMLOptGroupElement.swift
     HTMLSelectElement.swift
     HTMLSlotElement.swift
