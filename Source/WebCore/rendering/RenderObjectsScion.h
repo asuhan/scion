@@ -80,6 +80,7 @@ class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
+class RenderListMarker;
 class RenderMultiColumnFlow;
 class RenderObject;
 class RenderSelection;
@@ -1413,6 +1414,9 @@ public:
     }
 
     void updateListMarkerNumbers();
+
+    RenderListMarker* markerRenderer() const;
+    void setMarkerRenderer(RenderListMarker&);
 
 private:
     void* m_handle;

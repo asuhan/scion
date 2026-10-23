@@ -345,6 +345,22 @@ void RenderListItem::counterDirectivesChanged()
         item->updateValue();
 }
 
+RenderListMarker* RenderListItem::markerRenderer() const
+{
+    if (m_scion)
+        return m_scion->markerRenderer();
+    return m_marker.get();
+}
+
+void RenderListItem::setMarkerRenderer(RenderListMarker& marker)
+{
+    if (m_scion) {
+        m_scion->setMarkerRenderer(marker);
+        return;
+    }
+    m_marker = marker;
+}
+
 void RenderListItem::updateListMarkerNumbers()
 {
     if (m_scion) {

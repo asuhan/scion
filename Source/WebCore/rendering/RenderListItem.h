@@ -69,16 +69,8 @@ public:
 
     RenderStyle computeMarkerStyle() const;
 
-    RenderListMarker* markerRenderer() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marker.get();
-    }
-    void setMarkerRenderer(RenderListMarker& marker)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_marker = marker;
-    }
+    RenderListMarker* markerRenderer() const;
+    void setMarkerRenderer(RenderListMarker&);
 
     bool isInReversedOrderedList() const;
 

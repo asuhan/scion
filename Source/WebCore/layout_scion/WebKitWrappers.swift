@@ -3914,6 +3914,21 @@ func RenderListItemScion_updateListMarkerNumbers(_ listItemRaw: UnsafeMutableRaw
   listItem.updateListMarkerNumbers()
 }
 
+@_cdecl("RenderListItemScion_markerRenderer")
+func RenderListItemScion_markerRenderer(_ listItemRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
+  return wkRenderObject(listItem.markerRenderer())
+}
+
+@_cdecl("RenderListItemScion_setMarkerRenderer")
+func RenderListItemScion_setMarkerRenderer(
+  _ listItemRaw: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer
+) {
+  let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
+  listItem.setMarkerRenderer(
+    marker: createRenderObjectWrapperOrNative(markerRaw) as! RenderListMarkerWrapper)
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

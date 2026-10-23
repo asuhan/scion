@@ -836,6 +836,10 @@ extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
 extern "C" void RenderListItemScion_updateListMarkerNumbers(void*);
 
+extern "C" void* RenderListItemScion_markerRenderer(const void*);
+
+extern "C" void RenderListItemScion_setMarkerRenderer(void*, void*);
+
 extern "C" bool RenderCombineTextScion_isCombined(const void*);
 
 extern "C" void* RenderTextFragmentScion_firstLetter(const void*);
@@ -2777,6 +2781,16 @@ void RenderHTMLCanvasScion::setWk(void* wk)
 void RenderListItemScion::updateListMarkerNumbers()
 {
     RenderListItemScion_updateListMarkerNumbers(m_handle);
+}
+
+RenderListMarker* RenderListItemScion::markerRenderer() const
+{
+    return static_cast<RenderListMarker*>(RenderListItemScion_markerRenderer(m_handle));
+}
+
+void RenderListItemScion::setMarkerRenderer(RenderListMarker& marker)
+{
+    RenderListItemScion_setMarkerRenderer(m_handle, &marker);
 }
 
 void RenderListMarkerScion::setWk(void* wk)
