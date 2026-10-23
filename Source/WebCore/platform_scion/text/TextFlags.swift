@@ -67,6 +67,12 @@ struct ExpansionBehaviorWrapper: Equatable {
   var right: Behavior
 }
 
+enum FontVariantNumericSpacing: UInt8 {
+  case Normal
+  case ProportionalNumbers
+  case TabularNumbers
+}
+
 enum FontWidthVariant: UInt8 {
   case RegularWidth
   case HalfWidth

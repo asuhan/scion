@@ -586,6 +586,7 @@ void FontCascade_destroy(const void*);
 void* FontCascade_fontSelector(const void*);
 void FontCascade_update(const void*, void*);
 void* FontCascadeDescription_create();
+void FontCascadeDescription_setVariantNumericSpacing(void*, uint8_t);
 void* FontCascadeDescription_copy(const void*);
 void FontCascadeDescription_destroy(const void*);
 float FontCascadeDescription_specifiedSize(const void*);

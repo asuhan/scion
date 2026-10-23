@@ -40,6 +40,11 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     super.init(p: ownedP)
   }
 
+  func setVariantNumericSpacing(_ spacing: FontVariantNumericSpacing) {
+    wk_interop.FontCascadeDescription_setVariantNumericSpacing(
+      UnsafeMutableRawPointer(mutating: p), spacing.rawValue)
+  }
+
   deinit { if owner { wk_interop.FontCascadeDescription_destroy(p) } }
 
   func specifiedSize() -> Float32 { return wk_interop.FontCascadeDescription_specifiedSize(p) }

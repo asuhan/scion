@@ -42,6 +42,11 @@ extern "C" WEBCORE_EXPORT void* FontCascadeDescription_create()
     return new WebCore::FontCascadeDescription();
 }
 
+extern "C" WEBCORE_EXPORT void FontCascadeDescription_setVariantNumericSpacing(void* p, uint8_t spacing)
+{
+    static_cast<WebCore::FontCascadeDescription*>(p)->setVariantNumericSpacing(static_cast<WebCore::FontVariantNumericSpacing>(spacing));
+}
+
 extern "C" WEBCORE_EXPORT void* FontCascadeDescription_copy(const void* p)
 {
     return new WebCore::FontCascadeDescription(*static_cast<const WebCore::FontCascadeDescription*>(p));
