@@ -1927,6 +1927,8 @@ bool Node_hasFieldsetTagName(const void*);
 bool Node_hasBodyTagName(const void*);
 void InspectorInstrumentation_didAddOrRemoveScrollbars(void*);
 bool Node_hasHRTagName(const void*);
+bool Node_hasULTagName(const void*);
+bool Node_hasOLTagName(const void*);
 bool Node_hasInputTagName(const void*);
 bool Node_hasLegendTagName(const void*);
 bool Node_hasMarqueeTagName(const void*);

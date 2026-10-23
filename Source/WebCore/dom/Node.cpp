@@ -117,6 +117,16 @@ extern "C" WEBCORE_EXPORT bool Node_hasHRTagName(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::hrTag);
 }
 
+extern "C" WEBCORE_EXPORT bool Node_hasULTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::ulTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasOLTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::olTag);
+}
+
 extern "C" WEBCORE_EXPORT bool Node_hasInputTagName(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::inputTag);

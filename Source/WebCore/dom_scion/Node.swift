@@ -36,6 +36,10 @@ class NodeWrapper {
 
   func hasHRTagName() -> Bool { return wk_interop.Node_hasHRTagName(p) }
 
+  func hasULTagName() -> Bool { return wk_interop.Node_hasULTagName(p) }
+
+  func hasOLTagName() -> Bool { return wk_interop.Node_hasOLTagName(p) }
+
   func hasInputTagName() -> Bool { return wk_interop.Node_hasInputTagName(p) }
 
   func hasLegendTagName() -> Bool { return wk_interop.Node_hasLegendTagName(p) }
