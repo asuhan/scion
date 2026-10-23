@@ -124,8 +124,8 @@ class ElementWrapper: ContainerNodeWrapper {
   func didDetachRenderers() { wk_interop.Element_didDetachRenderers(p) }
 
   func renderOrDisplayContentsStyle() -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let style = wk_interop.Element_renderOrDisplayContentsStyle(p) else { return nil }
+    return convert_render_style(p: style)
   }
 
   func clearBeforePseudoElement() { wk_interop.Element_clearBeforePseudoElement(p) }

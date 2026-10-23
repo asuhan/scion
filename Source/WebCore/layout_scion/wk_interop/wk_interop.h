@@ -2026,6 +2026,7 @@ bool WillChangeData_canTriggerCompositingOnInline(const void*);
 bool Element_hasNowrapAttr(const void*);
 bool Element_hasAltAttr(const void*);
 bool Element_hasFontTag(const void*);
+const void* Element_renderOrDisplayContentsStyle(const void*);
 void* ElementTraversal_nextIncludingPseudo(const void*, const void*);
 void* ElementTraversal_nextIncludingPseudoSkippingChildren(const void*, const void*);
 void* ElementTraversal_previousIncludingPseudo(const void*, const void*);

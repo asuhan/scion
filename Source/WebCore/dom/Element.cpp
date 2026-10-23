@@ -181,6 +181,11 @@ extern "C" WEBCORE_EXPORT bool Element_hasFontTag(const void* p)
     return static_cast<const WebCore::Element*>(p)->hasTagName(WebCore::HTMLNames::fontTag);
 }
 
+extern "C" WEBCORE_EXPORT const void* Element_renderOrDisplayContentsStyle(const void* p)
+{
+    return static_cast<const WebCore::Element*>(p)->renderOrDisplayContentsStyle();
+}
+
 extern "C" WEBCORE_EXPORT void* ElementTraversal_nextIncludingPseudo(const void* current, const void* stayWithin)
 {
     return WebCore::ElementTraversal::nextIncludingPseudo(*static_cast<const WebCore::Node*>(current), static_cast<const WebCore::Node*>(stayWithin));
