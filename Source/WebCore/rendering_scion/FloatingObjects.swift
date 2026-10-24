@@ -370,7 +370,7 @@ class FloatingObjectTreeWrapper {
     wk_interop.FloatingObjectTree_add(p, interval.low, interval.high, interval.obj)
   }
 
-  func allOverlapsWithAdapter(_ adapter: ComputeFloatOffsetForFloatLayoutAdapter) {
+  func allOverlapsWithAdapter(_ adapter: ComputeFloatOffsetAdapter) {
     let unmanaged = Unmanaged.passUnretained(adapter)
     wk_interop.FloatingObjectTree_allOverlapsWithComputeFloatOffsetForFloatLayoutAdapter(
       p, unmanaged.toOpaque())
@@ -509,6 +509,48 @@ final class ComputeFloatOffsetForFloatLayoutAdapter: ComputeFloatOffsetAdapter {
   }
 }
 
+final class ComputeFloatOffsetForLineLayoutAdapter: ComputeFloatOffsetAdapter {
+  override init(
+    _ type: FloatingObjectWrapper.Type_, _ renderer: RenderBlockFlowWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit, offset: LayoutUnit
+  ) {
+    super.init(type, renderer, lineTop: lineTop, lineBottom: lineBottom, offset: offset)
+  }
+
+  override func updateOffsetIfNeeded(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    m_type == .FloatLeft
+      ? updateOffsetIfNeededLeft(floatingObject) : updateOffsetIfNeededRight(floatingObject)
+  }
+
+  private func updateOffsetIfNeededLeft(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    let logicalRight = m_renderer.logicalRightForFloat(floatingObject)
+    if floatingObject.renderer!.shapeOutsideInfo() != nil {
+      // TODO(asuhan): apply the shape-outside deltas
+      fatalError("Not implemented")
+    }
+    if logicalRight > m_offset {
+      m_offset = logicalRight
+      return true
+    }
+
+    return false
+  }
+
+  private func updateOffsetIfNeededRight(_ floatingObject: FloatingObjectWrapper) -> Bool {
+    let logicalLeft = m_renderer.logicalLeftForFloat(floatingObject)
+    if floatingObject.renderer!.shapeOutsideInfo() != nil {
+      // TODO(asuhan): apply the shape-outside deltas
+      fatalError("Not implemented")
+    }
+    if logicalLeft < m_offset {
+      m_offset = logicalLeft
+      return true
+    }
+
+    return false
+  }
+}
+
 final class FindNextFloatLogicalBottomAdapter {
   init(_ renderer: RenderBlockFlowWrapper, _ belowLogicalHeight: LayoutUnit) {
     m_renderer = renderer
@@ -638,6 +680,32 @@ class FloatingObjects {
     }
 
     heightRemaining = adapter.heightRemaining()
+
+    return min(fixedOffset, adapter.offset())
+  }
+
+  func logicalLeftOffset(
+    fixedOffset: LayoutUnit, logicalTop: LayoutUnit, logicalHeight: LayoutUnit
+  ) -> LayoutUnit {
+    let adapter = ComputeFloatOffsetForLineLayoutAdapter(
+      .FloatLeft, m_renderer, lineTop: logicalTop, lineBottom: logicalTop + logicalHeight,
+      offset: fixedOffset)
+    if let placedFloatsTree = self.placedFloatsTree() {
+      placedFloatsTree.allOverlapsWithAdapter(adapter)
+    }
+
+    return adapter.offset()
+  }
+
+  func logicalRightOffset(
+    fixedOffset: LayoutUnit, logicalTop: LayoutUnit, logicalHeight: LayoutUnit
+  ) -> LayoutUnit {
+    let adapter = ComputeFloatOffsetForLineLayoutAdapter(
+      .FloatRight, m_renderer, lineTop: logicalTop, lineBottom: logicalTop + logicalHeight,
+      offset: fixedOffset)
+    if let placedFloatsTree = self.placedFloatsTree() {
+      placedFloatsTree.allOverlapsWithAdapter(adapter)
+    }
 
     return min(fixedOffset, adapter.offset())
   }
