@@ -49,6 +49,10 @@ class Document: TreeScopeWrapper {
 
   func hasSVGRootNode() -> Bool { return wk_interop.Document_hasSVGRootNode(p) }
 
+  func counterStyleRegistry() -> CSSCounterStyleRegistryWrapper {
+    return CSSCounterStyleRegistryWrapper(p: wk_interop.Document_counterStyleRegistry(p))
+  }
+
   func fontSelector() -> CSSFontSelectorWrapper {
     return CSSFontSelectorWrapper(p: wk_interop.Document_fontSelector(p))
   }

@@ -430,6 +430,11 @@ extern "C" WEBCORE_EXPORT bool Document_isPluginDocument(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->isPluginDocument();
 }
 
+extern "C" WEBCORE_EXPORT void* Document_counterStyleRegistry(void* raw)
+{
+    return &static_cast<WebCore::Document*>(raw)->counterStyleRegistry();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_fontSelector(const void* raw)
 {
     return &static_cast<WebCore::Document*>(const_cast<void*>(raw))->fontSelector();

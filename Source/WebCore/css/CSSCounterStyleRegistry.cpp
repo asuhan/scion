@@ -32,6 +32,13 @@
 #include "ListStyleType.h"
 #include <wtf/NeverDestroyed.h>
 
+// Returns the counter style with a reference owned by the caller; CSSCounterStyle_deref releases it.
+extern "C" WEBCORE_EXPORT void* CSSCounterStyleRegistry_resolvedCounterStyle(void* p, uint8_t type, const void* identifier)
+{
+    WebCore::ListStyleType listStyleType { static_cast<WebCore::ListStyleType::Type>(type), *static_cast<const AtomString*>(identifier) };
+    return static_cast<WebCore::CSSCounterStyleRegistry*>(p)->resolvedCounterStyle(listStyleType).leakRef();
+}
+
 namespace WebCore {
 DEFINE_ALLOCATOR_WITH_HEAP_IDENTIFIER(CSSCounterStyleRegistry);
 
