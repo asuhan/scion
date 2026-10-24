@@ -284,6 +284,11 @@ struct StyleSelfAlignmentDataRaw {
     bool isLegacy;
 };
 
+struct ListStyleTypeRaw {
+    uint8_t type;
+    const void* identifier;
+};
+
 struct CounterDirectivesRaw {
     int32_t resetValue;
     int32_t incrementValue;
@@ -1242,6 +1247,8 @@ float RenderStyle_horizontalBorderSpacing(const void*);
 float RenderStyle_verticalBorderSpacing(const void*);
 uint8_t RenderStyle_emptyCells(const void*);
 uint8_t RenderStyle_captionSide(const void*);
+struct ListStyleTypeRaw RenderStyle_listStyleType(const void*);
+void* RenderStyle_listStyleImage(const void*);
 bool RenderStyle_listStylePosition(const void*);
 const void* RenderStyle_boxShadow(const void*);
 struct LayoutBoxExtentRaw RenderStyle_boxShadowExtent(const void*);

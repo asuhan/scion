@@ -1861,13 +1861,16 @@ class RenderStyleWrapper: Equatable {
   }
 
   func listStyleType() -> ListStyleType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_listStyleType(p!)
+    let type: ListStyleType.`Type`? = .init(rawValue: raw.type)
+    return ListStyleType(
+      type: type!,
+      identifier: AtomStringWrapper(p: raw.identifier, true))
   }
 
   func listStyleImage() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let image = wk_interop.RenderStyle_listStyleImage(p!) else { return nil }
+    return StyleImage(image)
   }
 
   func listStylePosition() -> ListStylePosition {
