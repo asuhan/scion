@@ -26,6 +26,7 @@
 #include "config.h"
 #include "RenderTableRow.h"
 
+#include "RenderObjectsScion.h"
 #include "Document.h"
 #include "HTMLNames.h"
 #include "HitTestResult.h"
@@ -65,8 +66,19 @@ RenderTableRow::RenderTableRow(Document& document, RenderStyle&& style)
 
 RenderTableRow::~RenderTableRow() = default;
 
+void RenderTableRow::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTableRowScion>(handle);
+}
+
 void RenderTableRow::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::willBeRemovedFromTree();
 
     section()->setNeedsCellRecalc();
@@ -82,6 +94,7 @@ static bool borderWidthChanged(const RenderStyle* oldStyle, const RenderStyle* n
 
 void RenderTableRow::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(style().display() == DisplayType::TableRow);
 
     RenderBox::styleDidChange(diff, oldStyle);
@@ -114,6 +127,7 @@ void RenderTableRow::styleDidChange(StyleDifference diff, const RenderStyle* old
 
 const BorderValue& RenderTableRow::borderAdjoiningStartCell(const RenderTableCell& cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, cell.isFirstOrLastCellInRow());
     // FIXME: https://webkit.org/b/79272 - Add support for mixed directionality at the cell level.
     return style().borderStart(table()->style());
@@ -121,6 +135,7 @@ const BorderValue& RenderTableRow::borderAdjoiningStartCell(const RenderTableCel
 
 const BorderValue& RenderTableRow::borderAdjoiningEndCell(const RenderTableCell& cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, cell.isFirstOrLastCellInRow());
     // FIXME: https://webkit.org/b/79272 - Add support for mixed directionality at the cell level.
     return style().borderEnd(table()->style());
@@ -128,6 +143,7 @@ const BorderValue& RenderTableRow::borderAdjoiningEndCell(const RenderTableCell&
 
 void RenderTableRow::didInsertTableCell(RenderTableCell& child, RenderObject* beforeChild)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Generated content can result in us having a null section so make sure to null check our parent.
     if (auto* section = this->section()) {
         section->addCell(&child, this);
@@ -140,6 +156,7 @@ void RenderTableRow::didInsertTableCell(RenderTableCell& child, RenderObject* be
 
 void RenderTableRow::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
 
@@ -176,6 +193,7 @@ void RenderTableRow::layout()
 
 LayoutRect RenderTableRow::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(parent());
     // Rows and cells are in the same coordinate space. We need to both compute our overflow rect (which
     // will accommodate a row outline and any visual effects on the row itself), but we also need to add in
@@ -191,6 +209,7 @@ LayoutRect RenderTableRow::clippedOverflowRect(const RenderLayerModelObject* rep
 
 auto RenderTableRow::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds repaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto rects = RepaintRects { clippedOverflowRect(repaintContainer, visibleRectContextForRepaint()) };
     if (repaintOutlineBounds == RepaintOutlineBounds::Yes)
         rects.outlineBoundsRect = outlineBoundsForRepaint(repaintContainer);
@@ -200,6 +219,7 @@ auto RenderTableRow::rectsForRepaintingAfterLayout(const RenderLayerModelObject*
 
 bool RenderTableRow::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction action)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Table rows cannot ever be hit tested.  Effectively they do not exist.
     // Just forward to our children always.
     auto* section = this->section();
@@ -225,6 +245,7 @@ bool RenderTableRow::nodeAtPoint(const HitTestRequest& request, HitTestResult& r
 
 void RenderTableRow::paintOutlineForRowIfNeeded(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutPoint adjustedPaintOffset = paintOffset + location();
     PaintPhase paintPhase = paintInfo.phase;
     if ((paintPhase == PaintPhase::Outline || paintPhase == PaintPhase::SelfOutline) && style().usedVisibility() == Visibility::Visible)
@@ -233,6 +254,7 @@ void RenderTableRow::paintOutlineForRowIfNeeded(PaintInfo& paintInfo, const Layo
 
 void RenderTableRow::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasSelfPaintingLayer());
 
     paintOutlineForRowIfNeeded(paintInfo, paintOffset);
@@ -247,6 +269,7 @@ void RenderTableRow::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 void RenderTableRow::imageChanged(WrappedImagePtr, const IntRect*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Examine cells and repaint only the rect the image paints in.
     if (!parent())
         return;
@@ -267,11 +290,13 @@ RenderPtr<RenderTableRow> RenderTableRow::createAnonymousWithParentRenderer(cons
 
 bool RenderTableRow::requiresLayer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasNonVisibleOverflow() || hasTransformRelatedProperty() || hasHiddenBackface() || hasClipPath() || createsGroup() || isStickilyPositioned() || requiresRenderingConsolidationForViewTransition();
 }
 
 RenderPtr<RenderBox> RenderTableRow::createAnonymousBoxWithSameTypeAs(const RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderTableRow::createTableRowWithStyle(renderer.document(), renderer.style());
 }
 

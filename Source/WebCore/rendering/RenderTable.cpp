@@ -27,6 +27,7 @@
 #include "config.h"
 #include "RenderTable.h"
 
+#include "RenderObjectsScion.h"
 #include "AutoTableLayout.h"
 #include "BackgroundPainter.h"
 #include "BorderPainter.h"
@@ -108,23 +109,38 @@ RenderTable::RenderTable(Type type, Document& document, RenderStyle&& style)
 
 RenderTable::~RenderTable() = default;
 
+void RenderTable::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    RenderBlock::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTableScion>(handle);
+}
+
 RenderTableSection* RenderTable::header() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_head.get();
 }
 
 RenderTableSection* RenderTable::footer() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_foot.get();
 }
 
 RenderTableSection* RenderTable::firstBody() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_firstBody.get();
 }
 
 RenderTableSection* RenderTable::topSection() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsSectionRecalc());
     if (m_head)
         return m_head.get();
@@ -135,6 +151,7 @@ RenderTableSection* RenderTable::topSection() const
 
 void RenderTable::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlock::styleDidChange(diff, oldStyle);
     propagateStyleToAnonymousChildren(StylePropagationType::AllChildren);
 
@@ -172,11 +189,13 @@ static inline void resetSectionPointerIfNotBefore(SingleThreadWeakPtr<RenderTabl
 
 void RenderTable::willInsertTableColumn(RenderTableCol&, RenderObject*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_hasColElements = true;
 }
 
 void RenderTable::willInsertTableSection(RenderTableSection& child, RenderObject* beforeChild)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     switch (child.style().display()) {
     case DisplayType::TableHeaderGroup:
         resetSectionPointerIfNotBefore(m_head, beforeChild);
@@ -209,18 +228,21 @@ void RenderTable::willInsertTableSection(RenderTableSection& child, RenderObject
 
 void RenderTable::addCaption(RenderTableCaption& caption)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_captions.find(&caption) == notFound);
     m_captions.append(caption);
 }
 
 void RenderTable::removeCaption(RenderTableCaption& oldCaption)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool removed = m_captions.removeFirst(&oldCaption);
     ASSERT_UNUSED(removed, removed);
 }
 
 void RenderTable::invalidateCachedColumns()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_columnRenderersValid = false;
     m_columnRenderers.shrink(0);
     m_effectiveColumnIndexMap.clear();
@@ -228,17 +250,20 @@ void RenderTable::invalidateCachedColumns()
 
 void RenderTable::invalidateCachedColumnOffsets()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_columnOffsetTop = -1;
     m_columnOffsetHeight = -1;
 }
 
 void RenderTable::addColumn(const RenderTableCol*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     invalidateCachedColumns();
 }
 
 void RenderTable::invalidateColumns()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     invalidateCachedColumns();
     // We don't really need to recompute our sections, but we need to update our
     // column count and whether we have a column. Currently, we only have one
@@ -248,6 +273,7 @@ void RenderTable::invalidateColumns()
 
 void RenderTable::updateLogicalWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     if (isGridItem()) {
@@ -341,6 +367,7 @@ void RenderTable::updateLogicalWidth()
 // This method takes a RenderStyle's logical width, min-width, or max-width length and computes its actual value.
 LayoutUnit RenderTable::convertStyleLogicalWidthToComputedWidth(const Length& styleLogicalWidth, LayoutUnit availableWidth)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleLogicalWidth.isIntrinsic())
         return computeIntrinsicLogicalWidthUsing(styleLogicalWidth, availableWidth, bordersPaddingAndSpacingInRowDirection());
 
@@ -355,6 +382,7 @@ LayoutUnit RenderTable::convertStyleLogicalWidthToComputedWidth(const Length& st
 
 LayoutUnit RenderTable::convertStyleLogicalHeightToComputedHeight(const Length& styleLogicalHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit borderAndPaddingBefore = borderBefore() + (collapseBorders() ? 0_lu : paddingBefore());
     LayoutUnit borderAndPaddingAfter = borderAfter() + (collapseBorders() ? 0_lu : paddingAfter());
     LayoutUnit borderAndPadding = borderAndPaddingBefore + borderAndPaddingAfter;
@@ -377,6 +405,7 @@ LayoutUnit RenderTable::convertStyleLogicalHeightToComputedHeight(const Length& 
 
 void RenderTable::layoutCaption(RenderTableCaption& caption)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect captionRect(caption.frameRect());
 
     if (caption.needsLayout()) {
@@ -397,6 +426,7 @@ void RenderTable::layoutCaption(RenderTableCaption& caption)
 
 void RenderTable::layoutCaptions(BottomCaptionLayoutPhase bottomCaptionLayoutPhase)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_captions.isEmpty())
         return;
     // FIXME: Collapse caption margin.
@@ -410,6 +440,7 @@ void RenderTable::layoutCaptions(BottomCaptionLayoutPhase bottomCaptionLayoutPha
 
 void RenderTable::distributeExtraLogicalHeight(LayoutUnit extraLogicalHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (extraLogicalHeight <= 0)
         return;
 
@@ -424,6 +455,7 @@ void RenderTable::distributeExtraLogicalHeight(LayoutUnit extraLogicalHeight)
 
 void RenderTable::simplifiedNormalFlowLayout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto& caption : m_captions)
         caption->layoutIfNeeded();
     for (RenderTableSection* section = topSection(); section; section = sectionBelow(section)) {
@@ -436,6 +468,7 @@ void RenderTable::simplifiedNormalFlowLayout()
 
 LayoutUnit RenderTable::sumCaptionsLogicalHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit height;
     for (auto& caption : m_captions)
         height += caption->logicalHeight() + caption->marginBefore() + caption->marginAfter();
@@ -444,6 +477,7 @@ LayoutUnit RenderTable::sumCaptionsLogicalHeight() const
 
 void RenderTable::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
 
@@ -641,6 +675,7 @@ void RenderTable::layout()
 
 void RenderTable::invalidateCollapsedBorders(RenderTableCell* cellWithStyleChange)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_collapsedBordersValid = false;
     m_collapsedBorders.clear();
 
@@ -678,6 +713,7 @@ void RenderTable::invalidateCollapsedBorders(RenderTableCell* cellWithStyleChang
 // Collect all the unique border values that we want to paint in a sorted list.
 void RenderTable::recalcCollapsedBorders()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_collapsedBordersValid)
         return;
     m_collapsedBorders.clear();
@@ -695,6 +731,7 @@ void RenderTable::recalcCollapsedBorders()
 
 void RenderTable::addOverflowFromChildren()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Add overflow from borders.
     // Technically it's odd that we are incorporating the borders into layout overflow, which is only supposed to be about overflow from our
     // descendant objects, but since tables don't support overflow:auto, this works out fine.
@@ -723,6 +760,7 @@ void RenderTable::addOverflowFromChildren()
 
 void RenderTable::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto isSkippedContent = [&] {
         if (style().usedContentVisibility() == ContentVisibility::Visible)
             return false;
@@ -756,6 +794,7 @@ void RenderTable::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 void RenderTable::paintObject(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     PaintPhase paintPhase = paintInfo.phase;
     if ((paintPhase == PaintPhase::BlockBackground || paintPhase == PaintPhase::ChildBlockBackground) && hasVisibleBoxDecorations() && style().usedVisibility() == Visibility::Visible)
         paintBoxDecorations(paintInfo, paintOffset);
@@ -810,6 +849,7 @@ void RenderTable::paintObject(PaintInfo& paintInfo, const LayoutPoint& paintOffs
 
 void RenderTable::adjustBorderBoxRectForPainting(LayoutRect& rect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (unsigned i = 0; i < m_captions.size(); i++) {
         LayoutUnit captionLogicalHeight = m_captions[i]->logicalHeight() + m_captions[i]->marginBefore() + m_captions[i]->marginAfter();
         bool captionIsBefore = (m_captions[i]->style().captionSide() != CaptionSide::Bottom) ^ style().isFlippedBlocksWritingMode();
@@ -829,6 +869,7 @@ void RenderTable::adjustBorderBoxRectForPainting(LayoutRect& rect)
 
 void RenderTable::paintBoxDecorations(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!paintInfo.shouldPaintWithinRoot(*this))
         return;
 
@@ -864,6 +905,7 @@ void RenderTable::paintBoxDecorations(PaintInfo& paintInfo, const LayoutPoint& p
 
 void RenderTable::paintMask(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().usedVisibility() != Visibility::Visible || paintInfo.phase != PaintPhase::Mask)
         return;
 
@@ -875,6 +917,7 @@ void RenderTable::paintMask(PaintInfo& paintInfo, const LayoutPoint& paintOffset
 
 void RenderTable::computeIntrinsicLogicalWidths(LayoutUnit& minWidth, LayoutUnit& maxWidth, TableIntrinsics intrinsics) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
     // FIXME: Do the recalc in borderStart/borderEnd and make those const_cast this call.
     // Then m_borderStart/m_borderEnd will be transparent a cache and it removes the possibility
@@ -888,16 +931,19 @@ void RenderTable::computeIntrinsicLogicalWidths(LayoutUnit& minWidth, LayoutUnit
 
 void RenderTable::computeIntrinsicLogicalWidths(LayoutUnit& minWidth, LayoutUnit& maxWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     computeIntrinsicLogicalWidths(minWidth, maxWidth, TableIntrinsics::ForLayout);
 }
 
 void RenderTable::computeIntrinsicKeywordLogicalWidths(LayoutUnit& minWidth, LayoutUnit& maxWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     computeIntrinsicLogicalWidths(minWidth, maxWidth, TableIntrinsics::ForKeyword);
 }
 
 void RenderTable::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
 
     computeIntrinsicLogicalWidths(m_minPreferredLogicalWidth, m_maxPreferredLogicalWidth);
@@ -931,6 +977,7 @@ void RenderTable::computePreferredLogicalWidths()
 
 RenderTableSection* RenderTable::topNonEmptySection() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTableSection* section = topSection();
     if (section && !section->numRows())
         section = sectionBelow(section, SkipEmptySections);
@@ -939,6 +986,7 @@ RenderTableSection* RenderTable::topNonEmptySection() const
 
 RenderTableSection* RenderTable::bottomNonEmptySection() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* section = bottomSection();
     if (section && !section->numRows())
         section = sectionAbove(section, SkipEmptySections);
@@ -947,6 +995,7 @@ RenderTableSection* RenderTable::bottomNonEmptySection() const
 
 void RenderTable::splitColumn(unsigned position, unsigned firstSpan)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We split the column at "position", taking "firstSpan" cells from the span.
     ASSERT(m_columns[position].span > firstSpan);
     m_columns.insert(position, { firstSpan });
@@ -966,6 +1015,7 @@ void RenderTable::splitColumn(unsigned position, unsigned firstSpan)
 
 void RenderTable::appendColumn(unsigned span)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned newColumnIndex = m_columns.size();
     m_columns.append({ span });
 
@@ -987,6 +1037,7 @@ void RenderTable::appendColumn(unsigned span)
 
 RenderTableCol* RenderTable::firstColumn() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     for (auto& child : childrenOfType<RenderObject>(*this)) {
         if (auto* column = dynamicDowncast<RenderTableCol>(child))
             return const_cast<RenderTableCol*>(column);
@@ -996,6 +1047,7 @@ RenderTableCol* RenderTable::firstColumn() const
 
 void RenderTable::updateColumnCache() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_hasColElements);
     ASSERT(m_columnRenderers.isEmpty());
     ASSERT(m_effectiveColumnIndexMap.isEmpty());
@@ -1016,6 +1068,7 @@ void RenderTable::updateColumnCache() const
 
 unsigned RenderTable::effectiveIndexOfColumn(const RenderTableCol& column) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_columnRenderersValid)
         updateColumnCache();
     const RenderTableCol* columnToUse = &column;
@@ -1030,6 +1083,7 @@ unsigned RenderTable::effectiveIndexOfColumn(const RenderTableCol& column) const
 
 LayoutUnit RenderTable::offsetTopForColumn(const RenderTableCol& column) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (effectiveIndexOfColumn(column) >= numEffCols())
         return 0;
     if (m_columnOffsetTop >= 0) {
@@ -1042,6 +1096,7 @@ LayoutUnit RenderTable::offsetTopForColumn(const RenderTableCol& column) const
 
 LayoutUnit RenderTable::offsetLeftForColumn(const RenderTableCol& column) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned columnIndex = effectiveIndexOfColumn(column);
     if (columnIndex >= numEffCols())
         return 0;
@@ -1050,6 +1105,7 @@ LayoutUnit RenderTable::offsetLeftForColumn(const RenderTableCol& column) const
 
 LayoutUnit RenderTable::offsetWidthForColumn(const RenderTableCol& column) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderTableCol* currentColumn = &column;
     bool hasColumnChildren;
     if ((hasColumnChildren = currentColumn->isTableColumnGroupWithColumnChildren()))
@@ -1080,6 +1136,7 @@ LayoutUnit RenderTable::offsetWidthForColumn(const RenderTableCol& column) const
 
 LayoutUnit RenderTable::offsetHeightForColumn(const RenderTableCol& column) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (effectiveIndexOfColumn(column) >= numEffCols())
         return 0;
     if (m_columnOffsetHeight >= 0) {
@@ -1095,6 +1152,7 @@ LayoutUnit RenderTable::offsetHeightForColumn(const RenderTableCol& column) cons
 
 RenderTableCol* RenderTable::slowColElement(unsigned col, bool* startEdge, bool* endEdge) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_hasColElements);
 
     if (!m_columnRenderersValid)
@@ -1122,6 +1180,7 @@ RenderTableCol* RenderTable::slowColElement(unsigned col, bool* startEdge, bool*
 
 void RenderTable::recalcSections() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_needsSectionRecalc);
 
     m_head.clear();
@@ -1191,6 +1250,7 @@ void RenderTable::recalcSections() const
 
 LayoutUnit RenderTable::calcBorderStart() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!collapseBorders())
         return RenderBlock::borderStart();
 
@@ -1245,6 +1305,7 @@ LayoutUnit RenderTable::calcBorderStart() const
 
 LayoutUnit RenderTable::calcBorderEnd() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!collapseBorders())
         return RenderBlock::borderEnd();
 
@@ -1300,6 +1361,7 @@ LayoutUnit RenderTable::calcBorderEnd() const
 
 void RenderTable::recalcBordersInRowDirection()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We need to compute the collapsed before / after borders in the same fashion.
     m_borderStart = calcBorderStart();
     m_borderEnd = calcBorderEnd();
@@ -1307,6 +1369,7 @@ void RenderTable::recalcBordersInRowDirection()
 
 LayoutUnit RenderTable::borderBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (collapseBorders()) {
         recalcSectionsIfNeeded();
         return outerBorderBefore();
@@ -1316,6 +1379,7 @@ LayoutUnit RenderTable::borderBefore() const
 
 LayoutUnit RenderTable::borderAfter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (collapseBorders()) {
         recalcSectionsIfNeeded();
         return outerBorderAfter();
@@ -1325,6 +1389,7 @@ LayoutUnit RenderTable::borderAfter() const
 
 LayoutUnit RenderTable::outerBorderBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!collapseBorders())
         return 0;
     LayoutUnit borderWidth;
@@ -1345,6 +1410,7 @@ LayoutUnit RenderTable::outerBorderBefore() const
 
 LayoutUnit RenderTable::outerBorderAfter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!collapseBorders())
         return 0;
     LayoutUnit borderWidth;
@@ -1367,6 +1433,7 @@ LayoutUnit RenderTable::outerBorderAfter() const
 
 LayoutUnit RenderTable::outerBorderStart() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!collapseBorders())
         return 0;
 
@@ -1394,6 +1461,7 @@ LayoutUnit RenderTable::outerBorderStart() const
 
 LayoutUnit RenderTable::outerBorderEnd() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!collapseBorders())
         return 0;
 
@@ -1421,6 +1489,7 @@ LayoutUnit RenderTable::outerBorderEnd() const
 
 RenderTableSection* RenderTable::sectionAbove(const RenderTableSection* section, SkipEmptySectionsValue skipEmptySections) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     if (section == m_head)
@@ -1440,6 +1509,7 @@ RenderTableSection* RenderTable::sectionAbove(const RenderTableSection* section,
 
 RenderTableSection* RenderTable::sectionBelow(const RenderTableSection* section, SkipEmptySectionsValue skipEmptySections) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     if (section == m_foot)
@@ -1459,6 +1529,7 @@ RenderTableSection* RenderTable::sectionBelow(const RenderTableSection* section,
 
 RenderTableSection* RenderTable::bottomSection() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
     if (m_foot)
         return m_foot.get();
@@ -1471,6 +1542,7 @@ RenderTableSection* RenderTable::bottomSection() const
 
 RenderTableCell* RenderTable::cellAbove(const RenderTableCell* cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     // Find the section and row to look in
@@ -1500,6 +1572,7 @@ RenderTableCell* RenderTable::cellAbove(const RenderTableCell* cell) const
 
 RenderTableCell* RenderTable::cellBelow(const RenderTableCell* cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     // Find the section and row to look in
@@ -1527,6 +1600,7 @@ RenderTableCell* RenderTable::cellBelow(const RenderTableCell* cell) const
 
 RenderTableCell* RenderTable::cellBefore(const RenderTableCell* cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     RenderTableSection* section = cell->section();
@@ -1541,6 +1615,7 @@ RenderTableCell* RenderTable::cellBefore(const RenderTableCell* cell) const
 
 RenderTableCell* RenderTable::cellAfter(const RenderTableCell* cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcSectionsIfNeeded();
 
     unsigned effCol = colToEffCol(cell->col() + cell->colSpan());
@@ -1551,6 +1626,7 @@ RenderTableCell* RenderTable::cellAfter(const RenderTableCell* cell) const
 
 LayoutUnit RenderTable::baselinePosition(FontBaseline baselineType, bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto baselinePos = firstLineBaseline())
         return (direction == HorizontalLine ? marginTop() : marginRight()) + baselinePos.value();
     return RenderBox::baselinePosition(baselineType, firstLine, direction, linePositionMode);
@@ -1558,12 +1634,14 @@ LayoutUnit RenderTable::baselinePosition(FontBaseline baselineType, bool firstLi
 
 std::optional<LayoutUnit> RenderTable::inlineBlockBaseline(LineDirectionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Tables are skipped when computing an inline-block's baseline.
     return std::optional<LayoutUnit>();
 }
 
 std::optional<LayoutUnit> RenderTable::firstLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The baseline of a 'table' is the same as the 'inline-table' baseline per CSS 3 Flexbox (CSS 2.1
     // doesn't define the baseline of a 'table' only an 'inline-table').
     // This is also needed to properly determine the baseline of a cell if it has a table child.
@@ -1586,6 +1664,7 @@ std::optional<LayoutUnit> RenderTable::firstLineBaseline() const
 
 std::optional<LayoutUnit> RenderTable::lastLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (isWritingModeRoot() || shouldApplyLayoutContainment())
         return { };
 
@@ -1602,6 +1681,7 @@ std::optional<LayoutUnit> RenderTable::lastLineBaseline() const
 
 LayoutRect RenderTable::overflowClipRect(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy, PaintPhase phase) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect rect;
     // Don't clip out the table's side of the collapsed borders if we're in the paint phase that will ask the sections to paint them.
     // Likewise, if we're self-painting we avoid clipping them out as the clip rect that will be passed down to child layers from RenderLayer will do that instead.
@@ -1632,6 +1712,7 @@ LayoutRect RenderTable::overflowClipRect(const LayoutPoint& location, RenderFrag
 
 bool RenderTable::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction action)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutPoint adjustedLocation = accumulatedOffset + location();
 
     // Check kids first.
@@ -1673,6 +1754,7 @@ RenderPtr<RenderTable> RenderTable::createAnonymousWithParentRenderer(const Rend
 
 void RenderTable::markForPaginationRelayoutIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* layoutState = view().frameView().layoutContext().layoutState();
     if (!layoutState || !layoutState->isPaginated() || (!layoutState->pageLogicalHeightChanged() && (!layoutState->pageLogicalHeight() || layoutState->pageLogicalOffset(this, logicalTop()) == pageLogicalOffset())))
         return;

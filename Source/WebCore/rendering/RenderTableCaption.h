@@ -25,6 +25,8 @@ namespace WebCore {
 
 class RenderTable;
 
+class RenderTableCaptionScion;
+
 class RenderTableCaption final : public RenderBlockFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTableCaption);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTableCaption);
@@ -32,7 +34,13 @@ public:
     RenderTableCaption(Element&, RenderStyle&&);
     virtual ~RenderTableCaption();
 
-    Element& element() const { return downcast<Element>(nodeForNonAnonymous()); }
+    void setScionHandle(void* handle);
+
+    Element& element() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<Element>(nodeForNonAnonymous());
+    }
 
 private:
     void insertedIntoTree() override;
@@ -40,6 +48,7 @@ private:
     LayoutUnit containingBlockLogicalWidthForContent() const final;
 
     RenderTable* table() const;
+    std::unique_ptr<RenderTableCaptionScion> m_scion;
 };
 
 } // namespace WebCore

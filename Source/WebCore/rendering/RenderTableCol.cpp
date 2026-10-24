@@ -26,6 +26,7 @@
 #include "config.h"
 #include "RenderTableCol.h"
 
+#include "RenderObjectsScion.h"
 #include "BorderData.h"
 #include "HTMLNames.h"
 #include "HTMLTableColElement.h"
@@ -63,8 +64,19 @@ RenderTableCol::RenderTableCol(Document& document, RenderStyle&& style)
 
 RenderTableCol::~RenderTableCol() = default;
 
+void RenderTableCol::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTableColScion>(handle);
+}
+
 void RenderTableCol::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::styleDidChange(diff, oldStyle);
     RenderTable* table = this->table();
     if (!table)
@@ -95,6 +107,7 @@ void RenderTableCol::styleDidChange(StyleDifference diff, const RenderStyle* old
 
 void RenderTableCol::updateFromElement()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(element());
     unsigned oldSpan = m_span;
     if (element()->hasTagName(colTag) || element()->hasTagName(colgroupTag)) {
@@ -112,12 +125,14 @@ void RenderTableCol::updateFromElement()
 
 void RenderTableCol::insertedIntoTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::insertedIntoTree();
     table()->addColumn(this);
 }
 
 void RenderTableCol::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::willBeRemovedFromTree();
     if (auto* table = this->table()) {
         // We only need to invalidate the column cache when only individual columns are being removed (as opposed to when the entire table is being collapsed).
@@ -127,12 +142,14 @@ void RenderTableCol::willBeRemovedFromTree()
 
 bool RenderTableCol::isChildAllowed(const RenderObject& child, const RenderStyle& style) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We cannot use isTableColumn here as style() may return 0.
     return style.display() == DisplayType::TableColumn && child.isRenderTableCol();
 }
 
 bool RenderTableCol::canHaveChildren() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Cols cannot have children. This is actually necessary to fix a bug
     // with libraries.uc.edu, which makes a <p> be a table-column.
     return isTableColumnGroup();
@@ -140,6 +157,7 @@ bool RenderTableCol::canHaveChildren() const
 
 LayoutRect RenderTableCol::clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext context) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For now, just repaint the whole table.
     // FIXME: Find a better way to do this, e.g., need to repaint all the cells that we
     // might have propagated a background color or borders into.
@@ -154,12 +172,14 @@ LayoutRect RenderTableCol::clippedOverflowRect(const RenderLayerModelObject* rep
 
 auto RenderTableCol::rectsForRepaintingAfterLayout(const RenderLayerModelObject* repaintContainer, RepaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Ignore RepaintOutlineBounds because it doesn't make sense to use the table's outline bounds to repaint a column.
     return { clippedOverflowRect(repaintContainer, visibleRectContextForRepaint()) };
 }
 
 void RenderTableCol::imageChanged(WrappedImagePtr, const IntRect*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Repaint only the rect the image paints in.
     if (!parent())
         return;
@@ -168,6 +188,7 @@ void RenderTableCol::imageChanged(WrappedImagePtr, const IntRect*)
 
 void RenderTableCol::clearPreferredLogicalWidthsDirtyBits()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setPreferredLogicalWidthsDirty(false);
 
     for (auto& child : childrenOfType<RenderObject>(*this))
@@ -176,6 +197,7 @@ void RenderTableCol::clearPreferredLogicalWidthsDirtyBits()
 
 RenderTable* RenderTableCol::table() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto table = parent();
     if (table && !is<RenderTable>(*table))
         table = table->parent();
@@ -184,6 +206,7 @@ RenderTable* RenderTableCol::table() const
 
 RenderTableCol* RenderTableCol::enclosingColumnGroup() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* parentColumnGroup = dynamicDowncast<RenderTableCol>(*parent());
     if (!parentColumnGroup)
         return nullptr;
@@ -195,6 +218,7 @@ RenderTableCol* RenderTableCol::enclosingColumnGroup() const
 
 RenderTableCol* RenderTableCol::nextColumn() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If |this| is a column-group, the next column is the colgroup's first child column.
     if (RenderObject* firstChild = this->firstChild())
         return downcast<RenderTableCol>(firstChild);
@@ -216,43 +240,51 @@ RenderTableCol* RenderTableCol::nextColumn() const
 
 const BorderValue& RenderTableCol::borderAdjoiningCellStartBorder() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().borderStart(table()->style());
 }
 
 const BorderValue& RenderTableCol::borderAdjoiningCellEndBorder() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().borderEnd(table()->style());
 }
 
 const BorderValue& RenderTableCol::borderAdjoiningCellBefore(const RenderTableCell& cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, table()->colElement(cell.col() + cell.colSpan()) == this);
     return style().borderStart(table()->style());
 }
 
 const BorderValue& RenderTableCol::borderAdjoiningCellAfter(const RenderTableCell& cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, table()->colElement(cell.col() - 1) == this);
     return style().borderEnd(table()->style());
 }
 
 LayoutUnit RenderTableCol::offsetLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return table()->offsetLeftForColumn(*this);
 }
 
 LayoutUnit RenderTableCol::offsetTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return table()->offsetTopForColumn(*this);
 }
 
 LayoutUnit RenderTableCol::offsetWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return table()->offsetWidthForColumn(*this);
 }
 
 LayoutUnit RenderTableCol::offsetHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return table()->offsetHeightForColumn(*this);
 }
 

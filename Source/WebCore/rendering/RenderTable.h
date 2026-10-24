@@ -42,6 +42,8 @@ class TableLayout;
 enum SkipEmptySectionsValue { DoNotSkipEmptySections, SkipEmptySections };
 enum class TableIntrinsics : uint8_t { ForLayout, ForKeyword };
 
+class RenderTableScion;
+
 class RenderTable : public RenderBlock {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTable);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTable);
@@ -50,15 +52,37 @@ public:
     RenderTable(Type, Document&, RenderStyle&&);
     virtual ~RenderTable();
 
+    void setScionHandle(void* handle);
+
     // Per CSS 3 writing-mode: "The first and second values of the 'border-spacing' property represent spacing between columns
     // and rows respectively, not necessarily the horizontal and vertical spacing respectively".
-    LayoutUnit hBorderSpacing() const { return m_hSpacing; }
-    LayoutUnit vBorderSpacing() const { return m_vSpacing; }
+    LayoutUnit hBorderSpacing() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_hSpacing;
+    }
+    LayoutUnit vBorderSpacing() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_vSpacing;
+    }
     
-    bool collapseBorders() const { return style().borderCollapse() == BorderCollapse::Collapse; }
+    bool collapseBorders() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return style().borderCollapse() == BorderCollapse::Collapse;
+    }
 
-    LayoutUnit borderStart() const final { return m_borderStart; }
-    LayoutUnit borderEnd() const final { return m_borderEnd; }
+    LayoutUnit borderStart() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_borderStart;
+    }
+    LayoutUnit borderEnd() const final
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_borderEnd;
+    }
     LayoutUnit borderBefore() const final;
     LayoutUnit borderAfter() const final;
 
@@ -68,7 +92,11 @@ public:
     inline LayoutUnit borderTop() const final;
     inline LayoutUnit borderBottom() const final;
 
-    Color bgColor() const { return style().visitedDependentColorWithColorFilter(CSSPropertyBackgroundColor); }
+    Color bgColor() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return style().visitedDependentColorWithColorFilter(CSSPropertyBackgroundColor);
+    }
 
     LayoutUnit outerBorderBefore() const;
     LayoutUnit outerBorderAfter() const;
@@ -86,6 +114,7 @@ public:
 
     void forceSectionsRecalc()
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         setNeedsSectionRecalc();
         recalcSections();
     }
@@ -93,10 +122,19 @@ public:
     struct ColumnStruct {
         unsigned span { 1 };
     };
-    const Vector<ColumnStruct>& columns() const { return m_columns; }
-    const Vector<LayoutUnit>& columnPositions() const { return m_columnPos; }
+    const Vector<ColumnStruct>& columns() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_columns;
+    }
+    const Vector<LayoutUnit>& columnPositions() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_columnPos;
+    }
     void setColumnPosition(unsigned index, LayoutUnit position)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         // Note that if our horizontal border-spacing changed, our position will change but not
         // our column's width. In practice, horizontal border-spacing won't change often.
         m_columnLogicalWidthChanged |= m_columnPos[index] != position;
@@ -115,15 +153,28 @@ public:
     RenderTableSection* topNonEmptySection() const;
     RenderTableSection* bottomNonEmptySection() const;
 
-    unsigned lastColumnIndex() const { return numEffCols() - 1; }
+    unsigned lastColumnIndex() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return numEffCols() - 1;
+    }
 
     void splitColumn(unsigned position, unsigned firstSpan);
     void appendColumn(unsigned span);
-    unsigned numEffCols() const { return m_columns.size(); }
-    unsigned spanOfEffCol(unsigned effCol) const { return m_columns[effCol].span; }
+    unsigned numEffCols() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_columns.size();
+    }
+    unsigned spanOfEffCol(unsigned effCol) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_columns[effCol].span;
+    }
     
     unsigned colToEffCol(unsigned column) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (!m_hasCellColspanThatDeterminesTableWidth)
             return column;
 
@@ -136,6 +187,7 @@ public:
     
     unsigned effColToCol(unsigned effCol) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (!m_hasCellColspanThatDeterminesTableWidth)
             return effCol;
 
@@ -147,6 +199,7 @@ public:
 
     LayoutUnit borderSpacingInRowDirection() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (unsigned effectiveColumnCount = numEffCols())
             return (effectiveColumnCount + 1) * hBorderSpacing();
 
@@ -160,15 +213,21 @@ public:
 
     RenderTableCol* colElement(unsigned col, bool* startEdge = 0, bool* endEdge = 0) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         // The common case is to not have columns, make that case fast.
         if (!m_hasColElements)
             return 0;
         return slowColElement(col, startEdge, endEdge);
     }
 
-    bool needsSectionRecalc() const { return m_needsSectionRecalc; }
+    bool needsSectionRecalc() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_needsSectionRecalc;
+    }
     void setNeedsSectionRecalc()
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (renderTreeBeingDestroyed())
             return;
         m_needsSectionRecalc = true;
@@ -184,15 +243,32 @@ public:
     RenderTableCell* cellAfter(const RenderTableCell*) const;
  
     typedef Vector<CollapsedBorderValue> CollapsedBorderValues;
-    bool collapsedBordersAreValid() const { return m_collapsedBordersValid; }
+    bool collapsedBordersAreValid() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_collapsedBordersValid;
+    }
     void invalidateCollapsedBorders(RenderTableCell* cellWithStyleChange = nullptr);
-    void collapsedEmptyBorderIsPresent() { m_collapsedEmptyBorderIsPresent = true; }
-    const CollapsedBorderValue* currentBorderValue() const { return m_currentBorder; }
+    void collapsedEmptyBorderIsPresent()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_collapsedEmptyBorderIsPresent = true;
+    }
+    const CollapsedBorderValue* currentBorderValue() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_currentBorder;
+    }
     
-    bool hasSections() const { return m_head || m_foot || m_firstBody; }
+    bool hasSections() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_head || m_foot || m_firstBody;
+    }
 
     void recalcSectionsIfNeeded() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (m_needsSectionRecalc)
             recalcSections();
     }
@@ -224,8 +300,10 @@ protected:
 private:
     static RenderPtr<RenderTable> createTableWithStyle(Document&, const RenderStyle&);
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     ASCIILiteral renderName() const override { return "RenderTable"_s; }
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool avoidsFloats() const final { return true; }
 
     void paint(PaintInfo&, const LayoutPoint&) final;
@@ -257,7 +335,11 @@ private:
     LayoutUnit convertStyleLogicalHeightToComputedHeight(const Length& styleLogicalHeight);
 
     LayoutRect overflowClipRect(const LayoutPoint& location, RenderFragmentContainer*, OverlayScrollbarSizeRelevancy = IgnoreOverlayScrollbarSize, PaintPhase = PaintPhase::BlockBackground) const final;
-    LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const override { return RenderBox::overflowClipRect(location, fragment, relevancy); }
+    LayoutRect overflowClipRectForChildLayers(const LayoutPoint& location, RenderFragmentContainer* fragment, OverlayScrollbarSizeRelevancy relevancy) const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return RenderBox::overflowClipRect(location, fragment, relevancy);
+    }
 
     void addOverflowFromChildren() final;
 
@@ -300,6 +382,7 @@ private:
 
     bool hasCellColspanThatDeterminesTableWidth() const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         for (unsigned c = 0; c < numEffCols(); c++) {
             if (m_columns[c].span > 1)
                 return true;
@@ -307,6 +390,7 @@ private:
         return false;
     }
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool shouldResetLogicalHeightBeforeLayout() const override { return true; }
 
     LayoutUnit m_hSpacing;
@@ -316,10 +400,12 @@ private:
     mutable LayoutUnit m_columnOffsetTop;
     mutable LayoutUnit m_columnOffsetHeight;
     unsigned m_recursiveSectionMovedWithPaginationLevel { 0 };
+    std::unique_ptr<RenderTableScion> m_scion;
 };
 
 inline RenderPtr<RenderBox> RenderTable::createAnonymousBoxWithSameTypeAs(const RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderTable::createTableWithStyle(renderer.document(), renderer.style());
 }
 

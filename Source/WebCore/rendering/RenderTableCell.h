@@ -36,6 +36,8 @@ static const unsigned maxColumnIndex = 0x1FFFFFE; // 33554430
 
 enum IncludeBorderColorOrNot { DoNotIncludeBorderColor, IncludeBorderColor };
 
+class RenderTableCellScion;
+
 class RenderTableCell final : public RenderBlockFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTableCell);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTableCell);
@@ -43,6 +45,8 @@ public:
     RenderTableCell(Element&, RenderStyle&&);
     RenderTableCell(Document&, RenderStyle&&);
     virtual ~RenderTableCell();
+
+    void setScionHandle(void* handle);
     
     unsigned colSpan() const;
     unsigned rowSpan() const;
@@ -56,7 +60,11 @@ public:
     RenderTableCell* nextCell() const;
     RenderTableCell* previousCell() const;
 
-    RenderTableRow* row() const { return downcast<RenderTableRow>(parent()); }
+    RenderTableRow* row() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<RenderTableRow>(parent());
+    }
     RenderTableSection* section() const;
     RenderTable* table() const;
     unsigned rowIndex() const;
@@ -89,10 +97,22 @@ public:
     bool isBaselineAligned() const;
 
     void computeIntrinsicPadding(LayoutUnit rowHeight);
-    void clearIntrinsicPadding() { setIntrinsicPadding(0, 0); }
+    void clearIntrinsicPadding()
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        setIntrinsicPadding(0, 0);
+    }
 
-    LayoutUnit intrinsicPaddingBefore() const { return m_intrinsicPaddingBefore; }
-    LayoutUnit intrinsicPaddingAfter() const { return m_intrinsicPaddingAfter; }
+    LayoutUnit intrinsicPaddingBefore() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_intrinsicPaddingBefore;
+    }
+    LayoutUnit intrinsicPaddingAfter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_intrinsicPaddingAfter;
+    }
 
     RectEdges<LayoutUnit> padding() const override;
     LayoutUnit paddingTop() const override;
@@ -110,8 +130,16 @@ public:
 
     void scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged) override;
 
-    bool cellWidthChanged() const { return m_cellWidthChanged; }
-    void setCellWidthChanged(bool b = true) { m_cellWidthChanged = b; }
+    bool cellWidthChanged() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_cellWidthChanged;
+    }
+    void setCellWidthChanged(bool b = true)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_cellWidthChanged = b;
+    }
 
     static RenderPtr<RenderTableCell> createAnonymousWithParentRenderer(const RenderTableRow&);
     RenderPtr<RenderBox> createAnonymousBoxWithSameTypeAs(const RenderBox&) const override;
@@ -119,7 +147,11 @@ public:
     // This function is used to unify which table part's style we use for computing direction and
     // writing mode. Writing modes are not allowed on internal table boxes.
     // This means we can safely use the same style in all cases to simplify our code.
-    const RenderStyle& styleForCellFlow() const { return table()->style(); }
+    const RenderStyle& styleForCellFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return table()->style();
+    }
 
     inline const BorderValue& borderAdjoiningTableStart() const;
     inline const BorderValue& borderAdjoiningTableEnd() const;
@@ -128,7 +160,11 @@ public:
 
     using RenderBlockFlow::nodeAtPoint;
 #if ASSERT_ENABLED
-    bool isFirstOrLastCellInRow() const { return !table()->cellAfter(this) || !table()->cellBefore(this); }
+    bool isFirstOrLastCellInRow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return !table()->cellAfter(this) || !table()->cellBefore(this);
+    }
 #endif
     
     RepaintRects localRectsForRepaint(RepaintOutlineBounds) const override;
@@ -144,7 +180,11 @@ private:
 
     static RenderPtr<RenderTableCell> createTableCellWithStyle(Document&, const RenderStyle&);
 
-    ASCIILiteral renderName() const override { return (isAnonymous() || isPseudoElement()) ? "RenderTableCell (anonymous)"_s : "RenderTableCell"_s; }
+    ASCIILiteral renderName() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return (isAnonymous() || isPseudoElement()) ? "RenderTableCell (anonymous)"_s : "RenderTableCell"_s;
+    }
 
     void willBeRemovedFromTree() override;
 
@@ -166,9 +206,21 @@ private:
     LayoutUnit borderHalfBefore(bool outer) const;
     LayoutUnit borderHalfAfter(bool outer) const;
 
-    void setIntrinsicPaddingBefore(LayoutUnit p) { m_intrinsicPaddingBefore = p; }
-    void setIntrinsicPaddingAfter(LayoutUnit p) { m_intrinsicPaddingAfter = p; }
-    void setIntrinsicPadding(LayoutUnit before, LayoutUnit after) { setIntrinsicPaddingBefore(before); setIntrinsicPaddingAfter(after); }
+    void setIntrinsicPaddingBefore(LayoutUnit p)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_intrinsicPaddingBefore = p;
+    }
+    void setIntrinsicPaddingAfter(LayoutUnit p)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_intrinsicPaddingAfter = p;
+    }
+    void setIntrinsicPadding(LayoutUnit before, LayoutUnit after)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        setIntrinsicPaddingBefore(before); setIntrinsicPaddingAfter(after);
+    }
 
     bool hasStartBorderAdjoiningTable() const;
     bool hasEndBorderAdjoiningTable() const;
@@ -211,20 +263,24 @@ private:
     mutable unsigned m_hasEmptyCollapsedEndBorder: 1;
     LayoutUnit m_intrinsicPaddingBefore { 0 };
     LayoutUnit m_intrinsicPaddingAfter { 0 };
+    std::unique_ptr<RenderTableCellScion> m_scion;
 };
 
 inline RenderTableCell* RenderTableCell::nextCell() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableCell>(RenderBlockFlow::nextSibling());
 }
 
 inline RenderTableCell* RenderTableCell::previousCell() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableCell>(RenderBlockFlow::previousSibling());
 }
 
 inline unsigned RenderTableCell::colSpan() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_hasColSpan)
         return 1;
     return parseColSpanFromDOM();
@@ -232,6 +288,7 @@ inline unsigned RenderTableCell::colSpan() const
 
 inline unsigned RenderTableCell::rowSpan() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_hasRowSpan)
         return 1;
     return parseRowSpanFromDOM();
@@ -239,6 +296,7 @@ inline unsigned RenderTableCell::rowSpan() const
 
 inline void RenderTableCell::setCol(unsigned column)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (UNLIKELY(column > maxColumnIndex))
         column = maxColumnIndex;
     m_column = column;
@@ -246,12 +304,14 @@ inline void RenderTableCell::setCol(unsigned column)
 
 inline unsigned RenderTableCell::col() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_column != unsetColumnIndex);
     return m_column;
 }
 
 inline RenderTableSection* RenderTableCell::section() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTableRow* row = this->row();
     if (!row)
         return nullptr;
@@ -260,6 +320,7 @@ inline RenderTableSection* RenderTableCell::section() const
 
 inline RenderTable* RenderTableCell::table() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTableSection* section = this->section();
     if (!section)
         return nullptr;
@@ -268,6 +329,7 @@ inline RenderTable* RenderTableCell::table() const
 
 inline unsigned RenderTableCell::rowIndex() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // This function shouldn't be called on a detached cell.
     ASSERT(row());
     return row()->rowIndex();
@@ -275,6 +337,7 @@ inline unsigned RenderTableCell::rowIndex() const
 
 inline bool RenderTableCell::isBaselineAligned() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto alignContent = style().alignContent(); !alignContent.isNormal())
         return alignContent.position() == ContentPosition::Baseline;
 
@@ -284,16 +347,19 @@ inline bool RenderTableCell::isBaselineAligned() const
 
 inline RenderTableCell* RenderTableRow::firstCell() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableCell>(RenderBox::firstChild());
 }
 
 inline RenderTableCell* RenderTableRow::lastCell() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableCell>(RenderBox::lastChild());
 }
 
 inline void RenderTableCell::setHasEmptyCollapsedBorder(CollapsedBorderSide side, bool empty) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     switch (side) {
     case CBSAfter: {
         m_hasEmptyCollapsedAfterBorder = empty;
@@ -318,6 +384,7 @@ inline void RenderTableCell::setHasEmptyCollapsedBorder(CollapsedBorderSide side
 
 inline void RenderTableCell::invalidateHasEmptyCollapsedBorders()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_hasEmptyCollapsedBeforeBorder = false;
     m_hasEmptyCollapsedAfterBorder = false;
     m_hasEmptyCollapsedStartBorder = false;
@@ -326,6 +393,7 @@ inline void RenderTableCell::invalidateHasEmptyCollapsedBorders()
 
 inline RenderPtr<RenderBox> RenderTableCell::createAnonymousBoxWithSameTypeAs(const RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderTableCell::createTableCellWithStyle(renderer.document(), renderer.style());
 }
 

@@ -31,6 +31,8 @@ namespace WebCore {
 static const unsigned unsetRowIndex = 0x7FFFFFFF;
 static const unsigned maxRowIndex = 0x7FFFFFFE; // 2,147,483,646
 
+class RenderTableRowScion;
+
 class RenderTableRow final : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTableRow);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTableRow);
@@ -38,6 +40,8 @@ public:
     RenderTableRow(Element&, RenderStyle&&);
     RenderTableRow(Document&, RenderStyle&&);
     virtual ~RenderTableRow();
+
+    void setScionHandle(void* handle);
 
     RenderTableRow* nextRow() const;
     RenderTableRow* previousRow() const;
@@ -53,7 +57,11 @@ public:
     RenderPtr<RenderBox> createAnonymousBoxWithSameTypeAs(const RenderBox&) const override;
 
     void setRowIndex(unsigned);
-    bool rowIndexWasSet() const { return m_rowIndex != unsetRowIndex; }
+    bool rowIndexWasSet() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_rowIndex != unsetRowIndex;
+    }
     unsigned rowIndex() const;
 
     inline const BorderValue& borderAdjoiningTableStart() const;
@@ -63,14 +71,23 @@ public:
 
     bool nodeAtPoint(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction) override;
 
-    RenderTableSection* section() const { return downcast<RenderTableSection>(parent()); }
+    RenderTableSection* section() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<RenderTableSection>(parent());
+    }
 
     void didInsertTableCell(RenderTableCell& child, RenderObject* beforeChild);
 
 private:
     static RenderPtr<RenderTableRow> createTableRowWithStyle(Document&, const RenderStyle&);
 
-    ASCIILiteral renderName() const override { return (isAnonymous() || isPseudoElement()) ? "RenderTableRow (anonymous)"_s : "RenderTableRow"_s; }
+    ASCIILiteral renderName() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return (isAnonymous() || isPseudoElement()) ? "RenderTableRow (anonymous)"_s : "RenderTableRow"_s;
+    }
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canHaveChildren() const override { return true; }
     void willBeRemovedFromTree() override;
     void layout() override;
@@ -89,10 +106,12 @@ private:
     void previousSibling() const = delete;
 
     unsigned m_rowIndex : 31;
+    std::unique_ptr<RenderTableRowScion> m_scion;
 };
 
 inline void RenderTableRow::setRowIndex(unsigned rowIndex)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (UNLIKELY(rowIndex > maxRowIndex))
         CRASH();
     m_rowIndex = rowIndex;
@@ -100,12 +119,14 @@ inline void RenderTableRow::setRowIndex(unsigned rowIndex)
 
 inline unsigned RenderTableRow::rowIndex() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(rowIndexWasSet());
     return m_rowIndex;
 }
 
 inline RenderTable* RenderTableRow::table() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTableSection* section = this->section();
     if (!section)
         return nullptr;
@@ -114,21 +135,25 @@ inline RenderTable* RenderTableRow::table() const
 
 inline RenderTableRow* RenderTableRow::nextRow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableRow>(RenderBox::nextSibling());
 }
 
 inline RenderTableRow* RenderTableRow::previousRow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableRow>(RenderBox::previousSibling());
 }
 
 inline RenderTableRow* RenderTableSection::firstRow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableRow>(RenderBox::firstChild());
 }
 
 inline RenderTableRow* RenderTableSection::lastRow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTableRow>(RenderBox::lastChild());
 }
 

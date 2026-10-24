@@ -25,6 +25,7 @@
 #include "config.h"
 #include "RenderTableCell.h"
 
+#include "RenderObjectsScion.h"
 #include "BackgroundPainter.h"
 #include "BorderPainter.h"
 #include "CollapsedBorderValue.h"
@@ -62,6 +63,7 @@ WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderTableCell);
 struct SameSizeAsRenderTableCell : public RenderBlockFlow {
     unsigned bitfields;
     LayoutUnit padding[2];
+    std::unique_ptr<void*> scion;
 };
 
 static_assert(sizeof(RenderTableCell) == sizeof(SameSizeAsRenderTableCell), "RenderTableCell should stay small");
@@ -100,8 +102,15 @@ RenderTableCell::RenderTableCell(Document& document, RenderStyle&& style)
 
 RenderTableCell::~RenderTableCell() = default;
 
+void RenderTableCell::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTableCellScion>(handle);
+}
+
 void RenderTableCell::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::willBeRemovedFromTree();
     if (!table() || !section())
         return;
@@ -113,6 +122,7 @@ void RenderTableCell::willBeRemovedFromTree()
 
 unsigned RenderTableCell::parseColSpanFromDOM() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(element());
     if (auto* cell = dynamicDowncast<HTMLTableCellElement>(*element()))
         return std::min<unsigned>(cell->colSpan(), maxColumnIndex);
@@ -126,6 +136,7 @@ unsigned RenderTableCell::parseColSpanFromDOM() const
 
 unsigned RenderTableCell::parseRowSpanFromDOM() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(element());
     if (auto* cell = dynamicDowncast<HTMLTableCellElement>(*element()))
         return std::min<unsigned>(cell->rowSpan(), maxRowIndex);
@@ -139,6 +150,7 @@ unsigned RenderTableCell::parseRowSpanFromDOM() const
 
 void RenderTableCell::updateColAndRowSpanFlags()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The vast majority of table cells do not have a colspan or rowspan,
     // so we keep a bool to know if we need to bother reading from the DOM.
     m_hasColSpan = element() && parseColSpanFromDOM() != 1;
@@ -147,6 +159,7 @@ void RenderTableCell::updateColAndRowSpanFlags()
 
 void RenderTableCell::colSpanOrRowSpanChanged()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(element());
 #if ENABLE(MATHML)
     ASSERT(element()->hasTagName(tdTag) || element()->hasTagName(thTag) || element()->hasTagName(MathMLNames::mtdTag));
@@ -165,6 +178,7 @@ void RenderTableCell::colSpanOrRowSpanChanged()
 
 Length RenderTableCell::logicalWidthFromColumns(RenderTableCol* firstColForThisCell, Length widthFromStyle) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(firstColForThisCell && firstColForThisCell == table()->colElement(col()));
     RenderTableCol* tableCol = firstColForThisCell;
 
@@ -197,6 +211,7 @@ Length RenderTableCell::logicalWidthFromColumns(RenderTableCol* firstColForThisC
 
 void RenderTableCell::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // The child cells rely on the grids up in the sections to do their computePreferredLogicalWidths work.  Normally the sections are set up early, as table
     // cells are added, but relayout can cause the cells to be freed, leaving stale pointers in the sections'
     // grids.  We must refresh those grids before the child cells try to use them.
@@ -219,6 +234,7 @@ void RenderTableCell::computePreferredLogicalWidths()
 
 LayoutRect RenderTableCell::frameRectForStickyPositioning() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // RenderTableCell has the RenderTableRow as the container, but is positioned relatively
     // to the RenderTableSection. The sticky positioning algorithm assumes that elements are
     // positioned relatively to their container, so we correct for that here.
@@ -230,6 +246,7 @@ LayoutRect RenderTableCell::frameRectForStickyPositioning() const
 
 void RenderTableCell::computeIntrinsicPadding(LayoutUnit rowHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit oldIntrinsicPaddingBefore = intrinsicPaddingBefore();
     LayoutUnit oldIntrinsicPaddingAfter = intrinsicPaddingAfter();
     LayoutUnit logicalHeightWithoutIntrinsicPadding = logicalHeight() - oldIntrinsicPaddingBefore - oldIntrinsicPaddingAfter;
@@ -284,10 +301,12 @@ void RenderTableCell::computeIntrinsicPadding(LayoutUnit rowHeight)
 
 void RenderTableCell::updateLogicalWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 }
 
 void RenderTableCell::setCellLogicalWidth(LayoutUnit tableLayoutLogicalWidth)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (tableLayoutLogicalWidth == logicalWidth())
         return;
 
@@ -300,6 +319,7 @@ void RenderTableCell::setCellLogicalWidth(LayoutUnit tableLayoutLogicalWidth)
 
 void RenderTableCell::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
 
     int oldCellBaseline = cellBaselinePosition();
@@ -326,6 +346,7 @@ void RenderTableCell::layout()
 
 RectEdges<LayoutUnit> RenderTableCell::padding() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto top = computedCSSPaddingTop();
     auto right = computedCSSPaddingRight();
     auto bottom = computedCSSPaddingBottom();
@@ -351,6 +372,7 @@ RectEdges<LayoutUnit> RenderTableCell::padding() const
 
 LayoutUnit RenderTableCell::paddingTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit result = computedCSSPaddingTop();
     if (!isHorizontalWritingMode())
         return result;
@@ -359,6 +381,7 @@ LayoutUnit RenderTableCell::paddingTop() const
 
 LayoutUnit RenderTableCell::paddingBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit result = computedCSSPaddingBottom();
     if (!isHorizontalWritingMode())
         return result;
@@ -367,6 +390,7 @@ LayoutUnit RenderTableCell::paddingBottom() const
 
 LayoutUnit RenderTableCell::paddingLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit result = computedCSSPaddingLeft();
     if (isHorizontalWritingMode())
         return result;
@@ -375,6 +399,7 @@ LayoutUnit RenderTableCell::paddingLeft() const
 
 LayoutUnit RenderTableCell::paddingRight() const
 {   
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit result = computedCSSPaddingRight();
     if (isHorizontalWritingMode())
         return result;
@@ -383,22 +408,26 @@ LayoutUnit RenderTableCell::paddingRight() const
 
 LayoutUnit RenderTableCell::paddingBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computedCSSPaddingBefore() + intrinsicPaddingBefore();
 }
 
 LayoutUnit RenderTableCell::paddingAfter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return computedCSSPaddingAfter() + intrinsicPaddingAfter();
 }
 
 void RenderTableCell::setOverridingLogicalHeightFromRowHeight(LayoutUnit rowHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     clearIntrinsicPadding();
     setOverridingLogicalHeight(rowHeight);
 }
 
 LayoutSize RenderTableCell::offsetFromContainer(RenderElement& container, const LayoutPoint& point, bool* offsetDependsOnPoint) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(&container == this->container());
 
     LayoutSize offset = RenderBlockFlow::offsetFromContainer(container, point, offsetDependsOnPoint);
@@ -410,6 +439,7 @@ LayoutSize RenderTableCell::offsetFromContainer(RenderElement& container, const 
 
 auto RenderTableCell::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBounds) const -> RepaintRects
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If the table grid is dirty, we cannot get reliable information about adjoining cells,
     // so we ignore outside borders. This should not be a problem because it means that
     // the table is going to recalculate the grid, relayout and repaint its current rect, which
@@ -464,6 +494,7 @@ auto RenderTableCell::localRectsForRepaint(RepaintOutlineBounds repaintOutlineBo
 
 auto RenderTableCell::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (container == this)
         return rects;
 
@@ -476,6 +507,7 @@ auto RenderTableCell::computeVisibleRectsInContainer(const RepaintRects& rects, 
 
 LayoutUnit RenderTableCell::cellBaselinePosition() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // <http://www.w3.org/TR/2007/CR-CSS21-20070719/tables.html#height-layout>: The baseline of a cell is the baseline of
     // the first in-flow line box in the cell, or the first in-flow table-row in the cell, whichever comes first. If there
     // is no such line box or table-row, the baseline is the bottom of content edge of the cell box.
@@ -491,6 +523,7 @@ static inline void markCellDirtyWhenCollapsedBorderChanges(RenderTableCell* cell
 
 void RenderTableCell::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(style().display() == DisplayType::TableCell);
     ASSERT(!row() || row()->rowIndexWasSet());
 
@@ -582,11 +615,13 @@ static CollapsedBorderValue chooseBorder(const CollapsedBorderValue& border1, co
 
 bool RenderTableCell::hasStartBorderAdjoiningTable() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return !col();
 }
 
 bool RenderTableCell::hasEndBorderAdjoiningTable() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return table()->colToEffCol(col() + colSpan() - 1) == table()->numEffCols() - 1;
 }
 
@@ -597,6 +632,7 @@ static CollapsedBorderValue emptyBorder()
 
 CollapsedBorderValue RenderTableCell::collapsedStartBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!table() || !section())
         return emptyBorder();
 
@@ -615,6 +651,7 @@ CollapsedBorderValue RenderTableCell::collapsedStartBorder(IncludeBorderColorOrN
 
 CollapsedBorderValue RenderTableCell::computeCollapsedStartBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For the start border, we need to check, in order of precedence:
     // (1) Our start border.
     CSSPropertyID startColorProperty = includeColor ? CSSProperty::resolveDirectionAwareProperty(CSSPropertyBorderInlineStartColor, styleForCellFlow().direction(), styleForCellFlow().writingMode()) : CSSPropertyInvalid;
@@ -708,6 +745,7 @@ CollapsedBorderValue RenderTableCell::computeCollapsedStartBorder(IncludeBorderC
 
 CollapsedBorderValue RenderTableCell::collapsedEndBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!table() || !section())
         return emptyBorder();
 
@@ -726,6 +764,7 @@ CollapsedBorderValue RenderTableCell::collapsedEndBorder(IncludeBorderColorOrNot
 
 CollapsedBorderValue RenderTableCell::computeCollapsedEndBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For end border, we need to check, in order of precedence:
     // (1) Our end border.
     CSSPropertyID startColorProperty = includeColor ? CSSProperty::resolveDirectionAwareProperty(CSSPropertyBorderInlineStartColor, styleForCellFlow().direction(), styleForCellFlow().writingMode()) : CSSPropertyInvalid;
@@ -821,6 +860,7 @@ CollapsedBorderValue RenderTableCell::computeCollapsedEndBorder(IncludeBorderCol
 
 CollapsedBorderValue RenderTableCell::collapsedBeforeBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!table() || !section())
         return emptyBorder();
 
@@ -839,6 +879,7 @@ CollapsedBorderValue RenderTableCell::collapsedBeforeBorder(IncludeBorderColorOr
 
 CollapsedBorderValue RenderTableCell::computeCollapsedBeforeBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For before border, we need to check, in order of precedence:
     // (1) Our before border.
     CSSPropertyID beforeColorProperty = includeColor ? CSSProperty::resolveDirectionAwareProperty(CSSPropertyBorderBlockStartColor, styleForCellFlow().direction(), styleForCellFlow().writingMode()) : CSSPropertyInvalid;
@@ -918,6 +959,7 @@ CollapsedBorderValue RenderTableCell::computeCollapsedBeforeBorder(IncludeBorder
 
 CollapsedBorderValue RenderTableCell::collapsedAfterBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!table() || !section())
         return emptyBorder();
 
@@ -936,6 +978,7 @@ CollapsedBorderValue RenderTableCell::collapsedAfterBorder(IncludeBorderColorOrN
 
 CollapsedBorderValue RenderTableCell::computeCollapsedAfterBorder(IncludeBorderColorOrNot includeColor) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // For after border, we need to check, in order of precedence:
     // (1) Our after border.
     CSSPropertyID beforeColorProperty = includeColor ? CSSProperty::resolveDirectionAwareProperty(CSSPropertyBorderBlockStartColor, styleForCellFlow().direction(), styleForCellFlow().writingMode()) : CSSPropertyInvalid;
@@ -1006,6 +1049,7 @@ CollapsedBorderValue RenderTableCell::computeCollapsedAfterBorder(IncludeBorderC
 
 inline CollapsedBorderValue RenderTableCell::cachedCollapsedLeftBorder(const RenderStyle& styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isLeftToRightDirection() ? section()->cachedCollapsedBorder(*this, CBSStart) : section()->cachedCollapsedBorder(*this, CBSEnd);
     return styleForCellFlow.isFlippedBlocksWritingMode() ? section()->cachedCollapsedBorder(*this, CBSAfter) : section()->cachedCollapsedBorder(*this, CBSBefore);
@@ -1013,6 +1057,7 @@ inline CollapsedBorderValue RenderTableCell::cachedCollapsedLeftBorder(const Ren
 
 inline CollapsedBorderValue RenderTableCell::cachedCollapsedRightBorder(const RenderStyle& styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isLeftToRightDirection() ? section()->cachedCollapsedBorder(*this, CBSEnd) : section()->cachedCollapsedBorder(*this, CBSStart);
     return styleForCellFlow.isFlippedBlocksWritingMode() ? section()->cachedCollapsedBorder(*this, CBSBefore) : section()->cachedCollapsedBorder(*this, CBSAfter);
@@ -1020,6 +1065,7 @@ inline CollapsedBorderValue RenderTableCell::cachedCollapsedRightBorder(const Re
 
 inline CollapsedBorderValue RenderTableCell::cachedCollapsedTopBorder(const RenderStyle& styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isFlippedBlocksWritingMode() ? section()->cachedCollapsedBorder(*this, CBSAfter) : section()->cachedCollapsedBorder(*this, CBSBefore);
     return styleForCellFlow.isLeftToRightDirection() ? section()->cachedCollapsedBorder(*this, CBSStart) : section()->cachedCollapsedBorder(*this, CBSEnd);
@@ -1027,6 +1073,7 @@ inline CollapsedBorderValue RenderTableCell::cachedCollapsedTopBorder(const Rend
 
 inline CollapsedBorderValue RenderTableCell::cachedCollapsedBottomBorder(const RenderStyle& styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isFlippedBlocksWritingMode() ? section()->cachedCollapsedBorder(*this, CBSBefore) : section()->cachedCollapsedBorder(*this, CBSAfter);
     return styleForCellFlow.isLeftToRightDirection() ? section()->cachedCollapsedBorder(*this, CBSEnd) : section()->cachedCollapsedBorder(*this, CBSStart);
@@ -1034,6 +1081,7 @@ inline CollapsedBorderValue RenderTableCell::cachedCollapsedBottomBorder(const R
 
 RectEdges<LayoutUnit> RenderTableCell::borderWidths() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderWidths();
@@ -1051,6 +1099,7 @@ RectEdges<LayoutUnit> RenderTableCell::borderWidths() const
 
 LayoutUnit RenderTableCell::borderLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderLeft();
@@ -1059,6 +1108,7 @@ LayoutUnit RenderTableCell::borderLeft() const
 
 LayoutUnit RenderTableCell::borderRight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderRight();
@@ -1067,6 +1117,7 @@ LayoutUnit RenderTableCell::borderRight() const
 
 LayoutUnit RenderTableCell::borderTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderTop();
@@ -1075,6 +1126,7 @@ LayoutUnit RenderTableCell::borderTop() const
 
 LayoutUnit RenderTableCell::borderBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderBottom();
@@ -1085,6 +1137,7 @@ LayoutUnit RenderTableCell::borderBottom() const
 // work with different block flow values instead of being hard-coded to top-to-bottom.
 LayoutUnit RenderTableCell::borderStart() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderStart();
@@ -1093,6 +1146,7 @@ LayoutUnit RenderTableCell::borderStart() const
 
 LayoutUnit RenderTableCell::borderEnd() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderEnd();
@@ -1101,6 +1155,7 @@ LayoutUnit RenderTableCell::borderEnd() const
 
 LayoutUnit RenderTableCell::borderBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderBefore();
@@ -1109,6 +1164,7 @@ LayoutUnit RenderTableCell::borderBefore() const
 
 LayoutUnit RenderTableCell::borderAfter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderAfter();
@@ -1117,6 +1173,7 @@ LayoutUnit RenderTableCell::borderAfter() const
 
 LayoutUnit RenderTableCell::borderHalfLeft(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle& styleForCellFlow = this->styleForCellFlow();
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isLeftToRightDirection() ? borderHalfStart(outer) : borderHalfEnd(outer);
@@ -1125,6 +1182,7 @@ LayoutUnit RenderTableCell::borderHalfLeft(bool outer) const
 
 LayoutUnit RenderTableCell::borderHalfRight(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle& styleForCellFlow = this->styleForCellFlow();
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isLeftToRightDirection() ? borderHalfEnd(outer) : borderHalfStart(outer);
@@ -1133,6 +1191,7 @@ LayoutUnit RenderTableCell::borderHalfRight(bool outer) const
 
 LayoutUnit RenderTableCell::borderHalfTop(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle& styleForCellFlow = this->styleForCellFlow();
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isFlippedBlocksWritingMode() ? borderHalfAfter(outer) : borderHalfBefore(outer);
@@ -1141,6 +1200,7 @@ LayoutUnit RenderTableCell::borderHalfTop(bool outer) const
 
 LayoutUnit RenderTableCell::borderHalfBottom(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const RenderStyle& styleForCellFlow = this->styleForCellFlow();
     if (styleForCellFlow.isHorizontalWritingMode())
         return styleForCellFlow.isFlippedBlocksWritingMode() ? borderHalfBefore(outer) : borderHalfAfter(outer);
@@ -1149,6 +1209,7 @@ LayoutUnit RenderTableCell::borderHalfBottom(bool outer) const
 
 LayoutUnit RenderTableCell::borderHalfStart(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CollapsedBorderValue border = collapsedStartBorder(DoNotIncludeBorderColor);
     if (border.exists())
         return CollapsedBorderValue::adjustedCollapsedBorderWidth(border.width(), document().deviceScaleFactor(), styleForCellFlow().isLeftToRightDirection() ^ outer);
@@ -1157,6 +1218,7 @@ LayoutUnit RenderTableCell::borderHalfStart(bool outer) const
     
 LayoutUnit RenderTableCell::borderHalfEnd(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CollapsedBorderValue border = collapsedEndBorder(DoNotIncludeBorderColor);
     if (border.exists())
         return CollapsedBorderValue::adjustedCollapsedBorderWidth(border.width(), document().deviceScaleFactor(), !(styleForCellFlow().isLeftToRightDirection() ^ outer));
@@ -1165,6 +1227,7 @@ LayoutUnit RenderTableCell::borderHalfEnd(bool outer) const
 
 LayoutUnit RenderTableCell::borderHalfBefore(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CollapsedBorderValue border = collapsedBeforeBorder(DoNotIncludeBorderColor);
     if (border.exists())
         return CollapsedBorderValue::adjustedCollapsedBorderWidth(border.width(), document().deviceScaleFactor(), !(styleForCellFlow().isFlippedBlocksWritingMode() ^ outer));
@@ -1173,6 +1236,7 @@ LayoutUnit RenderTableCell::borderHalfBefore(bool outer) const
 
 LayoutUnit RenderTableCell::borderHalfAfter(bool outer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     CollapsedBorderValue border = collapsedAfterBorder(DoNotIncludeBorderColor);
     if (border.exists())
         return CollapsedBorderValue::adjustedCollapsedBorderWidth(border.width(), document().deviceScaleFactor(), styleForCellFlow().isFlippedBlocksWritingMode() ^ outer);
@@ -1181,6 +1245,7 @@ LayoutUnit RenderTableCell::borderHalfAfter(bool outer) const
 
 void RenderTableCell::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(paintInfo.phase != PaintPhase::CollapsedTableBorders);
     RenderBlockFlow::paint(paintInfo, paintOffset);
 }
@@ -1249,6 +1314,7 @@ static void addBorderStyle(RenderTable::CollapsedBorderValues& borderValues,
 
 void RenderTableCell::collectBorderValues(RenderTable::CollapsedBorderValues& borderValues) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     addBorderStyle(borderValues, collapsedStartBorder());
     addBorderStyle(borderValues, collapsedEndBorder());
     addBorderStyle(borderValues, collapsedBeforeBorder());
@@ -1272,6 +1338,7 @@ void RenderTableCell::sortBorderValues(RenderTable::CollapsedBorderValues& borde
 
 void RenderTableCell::paintCollapsedBorders(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(paintInfo.phase == PaintPhase::CollapsedTableBorders);
 
     if (!paintInfo.shouldPaintWithinRoot(*this) || style().usedVisibility() != Visibility::Visible)
@@ -1377,6 +1444,7 @@ static LayoutRect backgroundRectForSection(const RenderTableSection& tableSectio
 
 void RenderTableCell::paintBackgroundsBehindCell(PaintInfo& paintInfo, LayoutPoint paintOffset, RenderBox* backgroundObject, LayoutPoint backgroundPaintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(backgroundObject);
 
     if (!paintInfo.shouldPaintWithinRoot(*this))
@@ -1438,6 +1506,7 @@ void RenderTableCell::paintBackgroundsBehindCell(PaintInfo& paintInfo, LayoutPoi
 
 void RenderTableCell::paintBoxDecorations(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!paintInfo.shouldPaintWithinRoot(*this))
         return;
 
@@ -1465,6 +1534,7 @@ void RenderTableCell::paintBoxDecorations(PaintInfo& paintInfo, const LayoutPoin
 
 void RenderTableCell::paintMask(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().usedVisibility() != Visibility::Visible || paintInfo.phase != PaintPhase::Mask)
         return;
 
@@ -1480,6 +1550,7 @@ void RenderTableCell::paintMask(PaintInfo& paintInfo, const LayoutPoint& paintOf
 
 void RenderTableCell::scrollbarsChanged(bool horizontalScrollbarChanged, bool verticalScrollbarChanged)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit scrollbarHeight = scrollbarLogicalHeight();
     if (!scrollbarHeight)
         return; // Not sure if we should be doing something when a scrollbar goes away or not.
@@ -1517,6 +1588,7 @@ RenderPtr<RenderTableCell> RenderTableCell::createAnonymousWithParentRenderer(co
 
 bool RenderTableCell::hasLineIfEmpty() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (element() && element()->hasEditableStyle())
         return true;
 

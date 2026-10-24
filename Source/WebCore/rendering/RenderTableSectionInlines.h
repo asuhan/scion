@@ -29,6 +29,7 @@ inline const BorderValue& RenderTableSection::borderAdjoiningTableStart() const 
 
 inline LayoutUnit RenderTableSection::outerBorderBottom(const RenderStyle* styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow->isHorizontalWritingMode())
         return styleForCellFlow->isFlippedBlocksWritingMode() ? outerBorderBefore() : outerBorderAfter();
     return styleForCellFlow->isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart();
@@ -36,6 +37,7 @@ inline LayoutUnit RenderTableSection::outerBorderBottom(const RenderStyle* style
 
 inline LayoutUnit RenderTableSection::outerBorderLeft(const RenderStyle* styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow->isHorizontalWritingMode())
         return styleForCellFlow->isLeftToRightDirection() ? outerBorderStart() : outerBorderEnd();
     return styleForCellFlow->isFlippedBlocksWritingMode() ? outerBorderAfter() : outerBorderBefore();
@@ -43,6 +45,7 @@ inline LayoutUnit RenderTableSection::outerBorderLeft(const RenderStyle* styleFo
 
 inline LayoutUnit RenderTableSection::outerBorderRight(const RenderStyle* styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow->isHorizontalWritingMode())
         return styleForCellFlow->isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart();
     return styleForCellFlow->isFlippedBlocksWritingMode() ? outerBorderBefore() : outerBorderAfter();
@@ -50,6 +53,7 @@ inline LayoutUnit RenderTableSection::outerBorderRight(const RenderStyle* styleF
 
 inline LayoutUnit RenderTableSection::outerBorderTop(const RenderStyle* styleForCellFlow) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (styleForCellFlow->isHorizontalWritingMode())
         return styleForCellFlow->isFlippedBlocksWritingMode() ? outerBorderAfter() : outerBorderBefore();
     return styleForCellFlow->isLeftToRightDirection() ? outerBorderStart() : outerBorderEnd();

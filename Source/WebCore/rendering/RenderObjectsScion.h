@@ -1412,6 +1412,72 @@ private:
     mutable IntRect m_printRect;
 };
 
+class RenderTableScion final {
+public:
+    RenderTableScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTableSectionScion final {
+public:
+    RenderTableSectionScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTableRowScion final {
+public:
+    RenderTableRowScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTableColScion final {
+public:
+    RenderTableColScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTableCellScion final {
+public:
+    RenderTableCellScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTableCaptionScion final {
+public:
+    RenderTableCaptionScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderListItemScion final {
 public:
     RenderListItemScion(void* handle)

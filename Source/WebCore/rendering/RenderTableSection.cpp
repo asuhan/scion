@@ -26,6 +26,7 @@
 #include "config.h"
 #include "RenderTableSection.h"
 
+#include "RenderObjectsScion.h"
 #include "BorderPainter.h"
 #include "Document.h"
 #include "HitTestResult.h"
@@ -106,8 +107,19 @@ RenderTableSection::RenderTableSection(Document& document, RenderStyle&& style)
 
 RenderTableSection::~RenderTableSection() = default;
 
+void RenderTableSection::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTableSectionScion>(handle);
+}
+
 void RenderTableSection::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::styleDidChange(diff, oldStyle);
     propagateStyleToAnonymousChildren(StylePropagationType::AllChildren);
 
@@ -119,6 +131,7 @@ void RenderTableSection::styleDidChange(StyleDifference diff, const RenderStyle*
 
 void RenderTableSection::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBox::willBeRemovedFromTree();
 
     // Preventively invalidate our cells as we may be re-inserted into
@@ -128,6 +141,7 @@ void RenderTableSection::willBeRemovedFromTree()
 
 void RenderTableSection::willInsertTableRow(RenderTableRow& child, RenderObject* beforeChild)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (beforeChild)
         setNeedsCellRecalc();
 
@@ -146,6 +160,7 @@ void RenderTableSection::willInsertTableRow(RenderTableRow& child, RenderObject*
 
 void RenderTableSection::ensureRows(unsigned numRows)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (numRows <= m_grid.size())
         return;
 
@@ -159,6 +174,7 @@ void RenderTableSection::ensureRows(unsigned numRows)
 
 void RenderTableSection::addCell(RenderTableCell* cell, RenderTableRow* row)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We don't insert the cell if we need cell recalc as our internal columns' representation
     // will have drifted from the table's representation. Also recalcCells will call addCell
     // at a later time after sync'ing our columns' with the table's.
@@ -227,6 +243,7 @@ static LayoutUnit resolveLogicalHeightForRow(const Length& rowLogicalHeight)
 
 LayoutUnit RenderTableSection::calcRowLogicalHeight()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     SetLayoutNeededForbiddenScope layoutForbiddenScope(*this);
 
     ASSERT(!needsLayout());
@@ -337,6 +354,7 @@ LayoutUnit RenderTableSection::calcRowLogicalHeight()
 
 void RenderTableSection::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     ASSERT(needsLayout());
     ASSERT(!needsCellRecalc());
@@ -386,6 +404,7 @@ void RenderTableSection::layout()
 
 void RenderTableSection::distributeExtraLogicalHeightToPercentRows(LayoutUnit& extraLogicalHeight, int totalPercent)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!totalPercent)
         return;
 
@@ -413,6 +432,7 @@ void RenderTableSection::distributeExtraLogicalHeightToPercentRows(LayoutUnit& e
 
 void RenderTableSection::distributeExtraLogicalHeightToAutoRows(LayoutUnit& extraLogicalHeight, unsigned autoRowsCount)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!autoRowsCount)
         return;
 
@@ -431,6 +451,7 @@ void RenderTableSection::distributeExtraLogicalHeightToAutoRows(LayoutUnit& extr
 
 void RenderTableSection::distributeRemainingExtraLogicalHeight(LayoutUnit& extraLogicalHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned totalRows = m_grid.size();
 
     if (extraLogicalHeight <= 0 || !m_rowPos[totalRows])
@@ -452,6 +473,7 @@ void RenderTableSection::distributeRemainingExtraLogicalHeight(LayoutUnit& extra
 
 LayoutUnit RenderTableSection::distributeExtraLogicalHeightToRows(LayoutUnit extraLogicalHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!extraLogicalHeight)
         return extraLogicalHeight;
 
@@ -489,6 +511,7 @@ static bool shouldFlexCellChild(const RenderTableCell& cell, const RenderBox& ce
 
 void RenderTableSection::relayoutCellIfFlexed(RenderTableCell& cell, int rowIndex, int rowHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Force percent height children to lay themselves out again.
     // This will cause these children to grow to fill the cell.
     // FIXME: There is still more work to do here to fully match WinIE (should
@@ -547,6 +570,7 @@ void RenderTableSection::relayoutCellIfFlexed(RenderTableCell& cell, int rowInde
 
 void RenderTableSection::layoutRows()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     SetLayoutNeededForbiddenScope layoutForbiddenScope(*this);
 
     ASSERT(!needsLayout());
@@ -645,6 +669,7 @@ void RenderTableSection::layoutRows()
 
 void RenderTableSection::computeOverflowFromCells()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned totalRows = m_grid.size();
     unsigned nEffCols = table()->numEffCols();
     computeOverflowFromCells(totalRows, nEffCols);
@@ -652,6 +677,7 @@ void RenderTableSection::computeOverflowFromCells()
 
 void RenderTableSection::computeOverflowFromCells(unsigned totalRows, unsigned nEffCols)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     clearOverflow();
     m_overflowingCells.clear();
     unsigned totalCellsCount = nEffCols * totalRows;
@@ -689,6 +715,7 @@ void RenderTableSection::computeOverflowFromCells(unsigned totalRows, unsigned n
 
 LayoutUnit RenderTableSection::calcOuterBorderBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned totalCols = table()->numEffCols();
     if (!m_grid.size() || !totalCols)
         return 0;
@@ -739,6 +766,7 @@ LayoutUnit RenderTableSection::calcOuterBorderBefore() const
 
 LayoutUnit RenderTableSection::calcOuterBorderAfter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned totalCols = table()->numEffCols();
     if (!m_grid.size() || !totalCols)
         return 0;
@@ -789,6 +817,7 @@ LayoutUnit RenderTableSection::calcOuterBorderAfter() const
 
 LayoutUnit RenderTableSection::calcOuterBorderStart() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned totalCols = table()->numEffCols();
     if (!m_grid.size() || !totalCols)
         return 0;
@@ -832,6 +861,7 @@ LayoutUnit RenderTableSection::calcOuterBorderStart() const
 
 LayoutUnit RenderTableSection::calcOuterBorderEnd() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned totalCols = table()->numEffCols();
     if (!m_grid.size() || !totalCols)
         return 0;
@@ -875,6 +905,7 @@ LayoutUnit RenderTableSection::calcOuterBorderEnd() const
 
 void RenderTableSection::recalcOuterBorder()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_outerBorderBefore = calcOuterBorderBefore();
     m_outerBorderAfter = calcOuterBorderAfter();
     m_outerBorderStart = calcOuterBorderStart();
@@ -883,6 +914,7 @@ void RenderTableSection::recalcOuterBorder()
 
 std::optional<LayoutUnit> RenderTableSection::firstLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_grid.size())
         return std::optional<LayoutUnit>();
 
@@ -895,6 +927,7 @@ std::optional<LayoutUnit> RenderTableSection::firstLineBaseline() const
 
 std::optional<LayoutUnit> RenderTableSection::lastLineBaseline() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_grid.size())
         return  { };
     
@@ -906,6 +939,7 @@ std::optional<LayoutUnit> RenderTableSection::lastLineBaseline() const
 
 std::optional<LayoutUnit> RenderTableSection::baselineFromCellContentEdges(ItemPosition alignment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(alignment == ItemPosition::Baseline || alignment == ItemPosition::LastBaseline);
     auto row = alignment == ItemPosition::Baseline ? m_grid[0].row : m_grid[m_grid.size() - 1].row;
     
@@ -924,6 +958,7 @@ std::optional<LayoutUnit> RenderTableSection::baselineFromCellContentEdges(ItemP
 
 void RenderTableSection::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!needsLayout());
     // avoid crashing on bugs that cause us to paint with dirty layout
     if (needsLayout())
@@ -964,6 +999,7 @@ static inline bool compareCellPositionsWithOverflowingCells(const SingleThreadWe
 
 void RenderTableSection::paintCell(RenderTableCell* cell, PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutPoint cellPoint = flipForWritingModeForChild(*cell, paintOffset);
     PaintPhase paintPhase = paintInfo.phase;
     RenderTableRow& row = downcast<RenderTableRow>(*cell->parent());
@@ -997,6 +1033,7 @@ void RenderTableSection::paintCell(RenderTableCell* cell, PaintInfo& paintInfo, 
 
 LayoutRect RenderTableSection::logicalRectForWritingModeAndDirection(const LayoutRect& rect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect tableAlignedRect(rect);
 
     flipForWritingMode(tableAlignedRect);
@@ -1014,6 +1051,7 @@ LayoutRect RenderTableSection::logicalRectForWritingModeAndDirection(const Layou
 
 CellSpan RenderTableSection::dirtiedRows(const LayoutRect& damageRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_forceSlowPaintPathWithOverflowingCell) 
         return fullTableRowSpan();
 
@@ -1031,6 +1069,7 @@ CellSpan RenderTableSection::dirtiedRows(const LayoutRect& damageRect) const
 
 CellSpan RenderTableSection::dirtiedColumns(const LayoutRect& damageRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_forceSlowPaintPathWithOverflowingCell) 
         return fullTableColumnSpan();
 
@@ -1049,6 +1088,7 @@ CellSpan RenderTableSection::dirtiedColumns(const LayoutRect& damageRect) const
 
 CellSpan RenderTableSection::spannedRows(const LayoutRect& flippedRect, ShouldIncludeAllIntersectingCells shouldIncludeAllIntersectionCells) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Find the first row that starts after rect top.
     unsigned nextRow = std::upper_bound(m_rowPos.begin(), m_rowPos.end(), flippedRect.y()) - m_rowPos.begin();
     if (shouldIncludeAllIntersectionCells == IncludeAllIntersectingCells && nextRow && m_rowPos[nextRow - 1] == flippedRect.y())
@@ -1074,6 +1114,7 @@ CellSpan RenderTableSection::spannedRows(const LayoutRect& flippedRect, ShouldIn
 
 CellSpan RenderTableSection::spannedColumns(const LayoutRect& flippedRect, ShouldIncludeAllIntersectingCells shouldIncludeAllIntersectionCells) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     const Vector<LayoutUnit>& columnPos = table()->columnPositions();
 
     // Find the first column that starts after rect left.
@@ -1105,6 +1146,7 @@ CellSpan RenderTableSection::spannedColumns(const LayoutRect& flippedRect, Shoul
 
 void RenderTableSection::paintRowGroupBorder(const PaintInfo& paintInfo, bool antialias, LayoutRect rect, BoxSide side, CSSPropertyID borderColor, BorderStyle borderStyle, BorderStyle tableBorderStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (tableBorderStyle == BorderStyle::Hidden)
         return;
     rect.intersect(paintInfo.rect);
@@ -1115,6 +1157,7 @@ void RenderTableSection::paintRowGroupBorder(const PaintInfo& paintInfo, bool an
 
 LayoutUnit RenderTableSection::offsetLeftForRowGroupBorder(RenderTableCell* cell, const LayoutRect& rowGroupRect, unsigned row)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (table()->style().isHorizontalWritingMode()) {
         if (table()->style().isLeftToRightDirection())
             return cell ? cell->x() + cell->width() : 0_lu;
@@ -1126,6 +1169,7 @@ LayoutUnit RenderTableSection::offsetLeftForRowGroupBorder(RenderTableCell* cell
 
 LayoutUnit RenderTableSection::offsetTopForRowGroupBorder(RenderTableCell* cell, BoxSide borderSide, unsigned row)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool isLastRow = row + 1 == m_grid.size();
     if (table()->style().isHorizontalWritingMode())
         return m_rowPos[row] + (!row && borderSide == BoxSide::Right ? -outerBorderTop(&style()) : isLastRow && borderSide == BoxSide::Left ? outerBorderTop(&style()) : 0_lu);
@@ -1136,6 +1180,7 @@ LayoutUnit RenderTableSection::offsetTopForRowGroupBorder(RenderTableCell* cell,
 
 LayoutUnit RenderTableSection::verticalRowGroupBorderHeight(RenderTableCell* cell, const LayoutRect& rowGroupRect, unsigned row)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool isLastRow = row + 1 == m_grid.size();
     if (table()->style().isHorizontalWritingMode())
         return m_rowPos[row + 1] - m_rowPos[row] + (!row ? outerBorderTop(&style()) : isLastRow ? outerBorderBottom(&style()) : 0_lu);
@@ -1146,6 +1191,7 @@ LayoutUnit RenderTableSection::verticalRowGroupBorderHeight(RenderTableCell* cel
 
 LayoutUnit RenderTableSection::horizontalRowGroupBorderWidth(RenderTableCell* cell, const LayoutRect& rowGroupRect, unsigned row, unsigned column)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (table()->style().isHorizontalWritingMode()) {
         if (table()->style().isLeftToRightDirection())
             return rowGroupRect.width() - (cell ? cell->x() + cell->width() : 0_lu) + (!column ? outerBorderLeft(&style()) : column == table()->numEffCols() ? outerBorderRight(&style()) : 0_lu);
@@ -1157,6 +1203,7 @@ LayoutUnit RenderTableSection::horizontalRowGroupBorderWidth(RenderTableCell* ce
 
 void RenderTableSection::paintRowGroupBorderIfRequired(const PaintInfo& paintInfo, const LayoutPoint& paintOffset, unsigned row, unsigned column, BoxSide borderSide, RenderTableCell* cell)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (table()->currentBorderValue()->precedence() > BorderPrecedence::RowGroup)
         return;
     if (paintInfo.context().paintingDisabled())
@@ -1218,6 +1265,7 @@ static BoxSide physicalBorderForDirection(const RenderStyle* styleForCellFlow, C
 
 void RenderTableSection::paintObject(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect localRepaintRect = paintInfo.rect;
     localRepaintRect.moveBy(-paintOffset);
 
@@ -1336,6 +1384,7 @@ void RenderTableSection::paintObject(PaintInfo& paintInfo, const LayoutPoint& pa
 
 void RenderTableSection::imageChanged(WrappedImagePtr, const IntRect*)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Examine cells and repaint only the rect the image paints in.
     if (!parent())
         return;
@@ -1344,6 +1393,7 @@ void RenderTableSection::imageChanged(WrappedImagePtr, const IntRect*)
 
 void RenderTableSection::recalcCells()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_needsCellRecalc);
     // We reset the flag here to ensure that addCell() works. This is safe to do because we clear the grid
     // and update its dimensions to be consistent with the table's column representation before we rebuild
@@ -1374,6 +1424,7 @@ void RenderTableSection::recalcCells()
 
 void RenderTableSection::removeRedundantColumns()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto maximumNumberOfColumns = table()->numEffCols();
     for (auto& rowItem : m_grid) {
         if (rowItem.row.size() <= maximumNumberOfColumns)
@@ -1385,6 +1436,7 @@ void RenderTableSection::removeRedundantColumns()
 // FIXME: This function could be made O(1) in certain cases (like for the non-most-constrainive cells' case).
 void RenderTableSection::rowLogicalHeightChanged(unsigned rowIndex)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (needsCellRecalc())
         return;
 
@@ -1396,6 +1448,7 @@ void RenderTableSection::rowLogicalHeightChanged(unsigned rowIndex)
 
 void RenderTableSection::setNeedsCellRecalc()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_needsCellRecalc = true;
 
     // Clear the grid now to ensure that we don't hold onto any stale pointers (e.g. a cell renderer that is being removed).
@@ -1407,6 +1460,7 @@ void RenderTableSection::setNeedsCellRecalc()
 
 unsigned RenderTableSection::numColumns() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
     unsigned result = 0;
     
@@ -1423,18 +1477,21 @@ unsigned RenderTableSection::numColumns() const
 
 const BorderValue& RenderTableSection::borderAdjoiningStartCell(const RenderTableCell& cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, cell.isFirstOrLastCellInRow());
     return style().borderStart(table()->style());
 }
 
 const BorderValue& RenderTableSection::borderAdjoiningEndCell(const RenderTableCell& cell) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, cell.isFirstOrLastCellInRow());
     return style().borderEnd(table()->style());
 }
 
 void RenderTableSection::appendColumn(unsigned pos)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
 
     for (unsigned row = 0; row < m_grid.size(); ++row)
@@ -1443,6 +1500,7 @@ void RenderTableSection::appendColumn(unsigned pos)
 
 void RenderTableSection::splitColumn(unsigned pos, unsigned first)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
 
     if (m_cCol > pos)
@@ -1469,6 +1527,7 @@ void RenderTableSection::splitColumn(unsigned pos, unsigned first)
 // Hit Testing
 bool RenderTableSection::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction action)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // If we have no children then we have nothing to do.
     if (!firstRow())
         return false;
@@ -1533,6 +1592,7 @@ bool RenderTableSection::nodeAtPoint(const HitTestRequest& request, HitTestResul
 
 void RenderTableSection::clearCachedCollapsedBorders()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!table()->collapseBorders())
         return;
     m_cellsCollapsedBorders.clear();
@@ -1540,6 +1600,7 @@ void RenderTableSection::clearCachedCollapsedBorders()
 
 void RenderTableSection::removeCachedCollapsedBorders(const RenderTableCell& cell)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!table()->collapseBorders())
         return;
     
@@ -1549,6 +1610,7 @@ void RenderTableSection::removeCachedCollapsedBorders(const RenderTableCell& cel
 
 void RenderTableSection::setCachedCollapsedBorder(const RenderTableCell& cell, CollapsedBorderSide side, CollapsedBorderValue border)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(table()->collapseBorders());
     ASSERT(border.width());
     m_cellsCollapsedBorders.set(std::make_pair(&cell, side), border);
@@ -1556,6 +1618,7 @@ void RenderTableSection::setCachedCollapsedBorder(const RenderTableCell& cell, C
 
 CollapsedBorderValue RenderTableSection::cachedCollapsedBorder(const RenderTableCell& cell, CollapsedBorderSide side)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(table()->collapseBorders() && table()->collapsedBordersAreValid());
     auto it = m_cellsCollapsedBorders.find(std::make_pair(&cell, side));
     // Only non-empty collapsed borders are in the hashmap.
@@ -1578,6 +1641,7 @@ RenderPtr<RenderTableSection> RenderTableSection::createAnonymousWithParentRende
 
 void RenderTableSection::setLogicalPositionForCell(RenderTableCell* cell, unsigned effectiveColumn) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutPoint oldCellLocation = cell->location();
 
     LayoutPoint cellLocation(0_lu, m_rowPos[cell->rowIndex()]);

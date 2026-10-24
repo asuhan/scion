@@ -32,6 +32,8 @@ namespace WebCore {
 class RenderTable;
 class RenderTableCell;
 
+class RenderTableColScion;
+
 class RenderTableCol final : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTableCol);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTableCol);
@@ -40,14 +42,36 @@ public:
     RenderTableCol(Document&, RenderStyle&&);
     virtual ~RenderTableCol();
 
+    void setScionHandle(void* handle);
+
     void clearPreferredLogicalWidthsDirtyBits();
 
-    unsigned span() const { return m_span; }
-    void setSpan(unsigned span) { m_span = span; }
+    unsigned span() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_span;
+    }
+    void setSpan(unsigned span)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_span = span;
+    }
 
-    bool isTableColumnGroupWithColumnChildren() const { return firstChild(); }
-    bool isTableColumn() const { return style().display() == DisplayType::TableColumn; }
-    bool isTableColumnGroup() const { return style().display() == DisplayType::TableColumnGroup; }
+    bool isTableColumnGroupWithColumnChildren() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return firstChild();
+    }
+    bool isTableColumn() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return style().display() == DisplayType::TableColumn;
+    }
+    bool isTableColumnGroup() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return style().display() == DisplayType::TableColumnGroup;
+    }
 
     RenderTableCol* enclosingColumnGroup() const;
     RenderTableCol* enclosingColumnGroupIfAdjacentBefore() const;
@@ -68,14 +92,20 @@ public:
     void updateFromElement() override;
 
 private:
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     ASCIILiteral renderName() const override { return "RenderTableCol"_s; }
-    void computePreferredLogicalWidths() override { ASSERT_NOT_REACHED(); }
+    void computePreferredLogicalWidths() override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        ASSERT_NOT_REACHED();
+    }
 
     void insertedIntoTree() override;
     void willBeRemovedFromTree() override;
 
     bool isChildAllowed(const RenderObject&, const RenderStyle&) const override;
     bool canHaveChildren() const override;
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool requiresLayer() const override { return false; }
 
     LayoutRect clippedOverflowRect(const RenderLayerModelObject* repaintContainer, VisibleRectContext) const override;
@@ -89,10 +119,12 @@ private:
     RenderTable* table() const;
 
     unsigned m_span { 1 };
+    std::unique_ptr<RenderTableColScion> m_scion;
 };
 
 inline RenderTableCol* RenderTableCol::enclosingColumnGroupIfAdjacentBefore() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (previousSibling())
         return nullptr;
     return enclosingColumnGroup();
@@ -100,6 +132,7 @@ inline RenderTableCol* RenderTableCol::enclosingColumnGroupIfAdjacentBefore() co
 
 inline RenderTableCol* RenderTableCol::enclosingColumnGroupIfAdjacentAfter() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (nextSibling())
         return nullptr;
     return enclosingColumnGroup();

@@ -20,6 +20,7 @@
 #include "config.h"
 #include "RenderTableCaption.h"
 
+#include "RenderObjectsScion.h"
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderTable.h"
@@ -37,25 +38,35 @@ RenderTableCaption::RenderTableCaption(Element& element, RenderStyle&& style)
 
 RenderTableCaption::~RenderTableCaption() = default;
 
+void RenderTableCaption::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTableCaptionScion>(handle);
+}
+
 void RenderTableCaption::insertedIntoTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::insertedIntoTree();
     table()->addCaption(*this);
 }
 
 void RenderTableCaption::willBeRemovedFromTree()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::willBeRemovedFromTree();
     table()->removeCaption(*this);
 }
 
 RenderTable* RenderTableCaption::table() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<RenderTable>(parent());
 }
 
 LayoutUnit RenderTableCaption::containingBlockLogicalWidthForContent() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* containingBlock = this->containingBlock())
         return containingBlock->logicalWidth();
     return { };

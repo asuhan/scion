@@ -26,30 +26,35 @@ namespace WebCore {
 
 inline const BorderValue& RenderTableCell::borderAdjoiningCellAfter(const RenderTableCell& cell)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, table()->cellBefore(&cell) == this);
     return style().borderEnd(table()->style());
 }
 
 inline const BorderValue& RenderTableCell::borderAdjoiningCellBefore(const RenderTableCell& cell)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_UNUSED(cell, table()->cellAfter(&cell) == this);
     return style().borderStart(table()->style());
 }
 
 inline const BorderValue& RenderTableCell::borderAdjoiningTableEnd() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isFirstOrLastCellInRow());
     return style().borderEnd(table()->style());
 }
 
 inline const BorderValue& RenderTableCell::borderAdjoiningTableStart() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isFirstOrLastCellInRow());
     return style().borderStart(table()->style());
 }
 
 inline LayoutUnit RenderTableCell::logicalHeightForRowSizing() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: This function does too much work, and is very hot during table layout!
     LayoutUnit adjustedLogicalHeight = logicalHeight() - (intrinsicPaddingBefore() + intrinsicPaddingAfter());
     if (!style().logicalHeight().isSpecified())
@@ -64,6 +69,7 @@ inline LayoutUnit RenderTableCell::logicalHeightForRowSizing() const
 
 inline Length RenderTableCell::styleOrColLogicalWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     Length styleWidth = style().logicalWidth();
     if (!styleWidth.isAuto())
         return styleWidth;

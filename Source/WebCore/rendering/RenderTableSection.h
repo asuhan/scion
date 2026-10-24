@@ -52,6 +52,8 @@ public:
     unsigned end;
 };
 
+class RenderTableSectionScion;
+
 class RenderTableSection final : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTableSection);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTableSection);
@@ -59,6 +61,8 @@ public:
     RenderTableSection(Element&, RenderStyle&&);
     RenderTableSection(Document&, RenderStyle&&);
     virtual ~RenderTableSection();
+
+    void setScionHandle(void* handle);
 
     RenderTableRow* firstRow() const;
     RenderTableRow* lastRow() const;
@@ -73,7 +77,11 @@ public:
     void layoutRows();
     void computeOverflowFromCells();
 
-    RenderTable* table() const { return downcast<RenderTable>(parent()); }
+    RenderTable* table() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<RenderTable>(parent());
+    }
 
     struct CellStruct {
         Vector<RenderTableCell*, 1> cells; 
@@ -111,10 +119,26 @@ public:
     LayoutUnit calcOuterBorderEnd() const;
     void recalcOuterBorder();
 
-    LayoutUnit outerBorderBefore() const { return m_outerBorderBefore; }
-    LayoutUnit outerBorderAfter() const { return m_outerBorderAfter; }
-    LayoutUnit outerBorderStart() const { return m_outerBorderStart; }
-    LayoutUnit outerBorderEnd() const { return m_outerBorderEnd; }
+    LayoutUnit outerBorderBefore() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_outerBorderBefore;
+    }
+    LayoutUnit outerBorderAfter() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_outerBorderAfter;
+    }
+    LayoutUnit outerBorderStart() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_outerBorderStart;
+    }
+    LayoutUnit outerBorderEnd() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_outerBorderEnd;
+    }
 
     inline LayoutUnit outerBorderLeft(const RenderStyle* styleForCellFlow) const;
     inline LayoutUnit outerBorderRight(const RenderStyle* styleForCellFlow) const;
@@ -127,7 +151,11 @@ public:
     void recalcCellsIfNeeded();
     void removeRedundantColumns();
 
-    bool needsCellRecalc() const { return m_needsCellRecalc; }
+    bool needsCellRecalc() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_needsCellRecalc;
+    }
     void setNeedsCellRecalc();
 
     LayoutUnit rowBaseline(unsigned row);
@@ -159,8 +187,13 @@ private:
         DoNotIncludeAllIntersectingCells
     };
 
-    ASCIILiteral renderName() const override { return (isAnonymous() || isPseudoElement()) ? "RenderTableSection (anonymous)"_s : "RenderTableSection"_s; }
+    ASCIILiteral renderName() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return (isAnonymous() || isPseudoElement()) ? "RenderTableSection (anonymous)"_s : "RenderTableSection"_s;
+    }
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canHaveChildren() const override { return true; }
 
     void willBeRemovedFromTree() override;
@@ -189,11 +222,19 @@ private:
     void distributeExtraLogicalHeightToAutoRows(LayoutUnit& extraLogicalHeight, unsigned autoRowsCount);
     void distributeRemainingExtraLogicalHeight(LayoutUnit& extraLogicalHeight);
 
-    bool hasOverflowingCell() const { return m_overflowingCells.computeSize() || m_forceSlowPaintPathWithOverflowingCell; }
+    bool hasOverflowingCell() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_overflowingCells.computeSize() || m_forceSlowPaintPathWithOverflowingCell;
+    }
     void computeOverflowFromCells(unsigned totalRows, unsigned nEffCols);
 
     CellSpan fullTableRowSpan() const;
-    CellSpan fullTableColumnSpan() const { return CellSpan(0, table()->columns().size()); }
+    CellSpan fullTableColumnSpan() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return CellSpan(0, table()->columns().size());
+    }
 
     // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
     LayoutRect logicalRectForWritingModeAndDirection(const LayoutRect&) const;
@@ -239,22 +280,26 @@ private:
     bool m_forceSlowPaintPathWithOverflowingCell { false };
     bool m_hasMultipleCellLevels { false };
     bool m_needsCellRecalc  { false };
+    std::unique_ptr<RenderTableSectionScion> m_scion;
 };
 
 inline RenderTableSection::CellStruct& RenderTableSection::cellAt(unsigned row,  unsigned col)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcCellsIfNeeded();
     return m_grid[row].row[col];
 }
 
 inline const RenderTableSection::CellStruct& RenderTableSection::cellAt(unsigned row, unsigned col) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
     return m_grid[row].row[col];
 }
 
 inline RenderTableCell* RenderTableSection::primaryCellAt(unsigned row, unsigned col)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcCellsIfNeeded();
     CellStruct& c = m_grid[row].row[col];
     return c.primaryCell();
@@ -262,36 +307,42 @@ inline RenderTableCell* RenderTableSection::primaryCellAt(unsigned row, unsigned
 
 inline RenderTableRow* RenderTableSection::rowRendererAt(unsigned row) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
     return m_grid[row].rowRenderer;
 }
 
 inline unsigned RenderTableSection::numRows() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
     return m_grid.size();
 }
 
 inline void RenderTableSection::recalcCellsIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_needsCellRecalc)
         recalcCells();
 }
 
 inline LayoutUnit RenderTableSection::rowBaseline(unsigned row)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     recalcCellsIfNeeded();
     return m_grid[row].baseline;
 }
 
 inline CellSpan RenderTableSection::fullTableRowSpan() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_needsCellRecalc);
     return CellSpan(0, m_grid.size());
 }
 
 inline RenderPtr<RenderBox> RenderTableSection::createAnonymousBoxWithSameTypeAs(const RenderBox& renderer) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderTableSection::createTableSectionWithStyle(renderer.document(), renderer.style());
 }
 

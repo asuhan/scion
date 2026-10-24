@@ -26,6 +26,7 @@ namespace WebCore {
 
 inline LayoutUnit RenderTable::borderBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter();
     return style().isLeftToRightDirection() ? borderEnd() : borderStart();
@@ -33,6 +34,7 @@ inline LayoutUnit RenderTable::borderBottom() const
 
 inline LayoutUnit RenderTable::borderLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isLeftToRightDirection() ? borderStart() : borderEnd();
     return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore();
@@ -40,6 +42,7 @@ inline LayoutUnit RenderTable::borderLeft() const
 
 inline LayoutUnit RenderTable::borderRight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isLeftToRightDirection() ? borderEnd() : borderStart();
     return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter();
@@ -47,6 +50,7 @@ inline LayoutUnit RenderTable::borderRight() const
 
 inline LayoutUnit RenderTable::borderTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore();
     return style().isLeftToRightDirection() ? borderStart() : borderEnd();
@@ -54,6 +58,7 @@ inline LayoutUnit RenderTable::borderTop() const
 
 inline RectEdges<LayoutUnit> RenderTable::borderWidths() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return {
         borderTop(),
         borderRight(),
@@ -64,12 +69,14 @@ inline RectEdges<LayoutUnit> RenderTable::borderWidths() const
 
 inline LayoutUnit RenderTable::bordersPaddingAndSpacingInRowDirection() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // 'border-spacing' only applies to separate borders (see 17.6.1 The separated borders model).
     return borderStart() + borderEnd() + (collapseBorders() ? 0_lu : (paddingStart() + paddingEnd() + borderSpacingInRowDirection()));
 }
 
 inline LayoutUnit RenderTable::outerBorderBottom() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isFlippedBlocksWritingMode() ? outerBorderBefore() : outerBorderAfter();
     return style().isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart();
@@ -77,6 +84,7 @@ inline LayoutUnit RenderTable::outerBorderBottom() const
 
 inline LayoutUnit RenderTable::outerBorderLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isLeftToRightDirection() ? outerBorderStart() : outerBorderEnd();
     return style().isFlippedBlocksWritingMode() ? outerBorderAfter() : outerBorderBefore();
@@ -84,6 +92,7 @@ inline LayoutUnit RenderTable::outerBorderLeft() const
 
 inline LayoutUnit RenderTable::outerBorderRight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart();
     return style().isFlippedBlocksWritingMode() ? outerBorderBefore() : outerBorderAfter();
@@ -91,6 +100,7 @@ inline LayoutUnit RenderTable::outerBorderRight() const
 
 inline LayoutUnit RenderTable::outerBorderTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (style().isHorizontalWritingMode())
         return style().isFlippedBlocksWritingMode() ? outerBorderAfter() : outerBorderBefore();
     return style().isLeftToRightDirection() ? outerBorderStart() : outerBorderEnd();
