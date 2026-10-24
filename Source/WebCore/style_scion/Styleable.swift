@@ -42,7 +42,19 @@ class StyleableWrapper {
 
   static func fromRenderer(_ renderer: RenderElementWrapper) -> StyleableWrapper? {
     switch renderer.style().pseudoElementType() {
-    case .Backdrop, .Marker, .ViewTransitionGroup, .ViewTransitionImagePair, .ViewTransitionNew,
+    case .Marker:
+      var ancestor = renderer.parent()
+      while let current = ancestor {
+        if let renderListItem = current as? RenderListItemWrapper, let element = current.element(),
+          renderListItem.markerRenderer() === renderer
+        {
+          return StyleableWrapper(
+            element: element,
+            pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .Marker))
+        }
+        ancestor = current.parent()
+      }
+    case .Backdrop, .ViewTransitionGroup, .ViewTransitionImagePair, .ViewTransitionNew,
       .ViewTransitionOld, .ViewTransition:
       // TODO(asuhan): implement this
       fatalError("Not implemented")
