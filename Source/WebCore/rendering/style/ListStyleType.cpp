@@ -63,3 +63,18 @@ WTF::TextStream& operator<<(WTF::TextStream& ts, ListStyleType listStyle)
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT bool ListStyleType_isCircle(uint8_t type, const void* identifier)
+{
+    return WebCore::ListStyleType { static_cast<WebCore::ListStyleType::Type>(type), *static_cast<const AtomString*>(identifier) }.isCircle();
+}
+
+extern "C" WEBCORE_EXPORT bool ListStyleType_isSquare(uint8_t type, const void* identifier)
+{
+    return WebCore::ListStyleType { static_cast<WebCore::ListStyleType::Type>(type), *static_cast<const AtomString*>(identifier) }.isSquare();
+}
+
+extern "C" WEBCORE_EXPORT bool ListStyleType_isDisc(uint8_t type, const void* identifier)
+{
+    return WebCore::ListStyleType { static_cast<WebCore::ListStyleType::Type>(type), *static_cast<const AtomString*>(identifier) }.isDisc();
+}

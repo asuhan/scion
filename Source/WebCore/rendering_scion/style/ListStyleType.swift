@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 struct ListStyleType: Equatable {
   enum `Type`: UInt8 {
     case CounterStyle
@@ -30,20 +32,11 @@ struct ListStyleType: Equatable {
     case None
   }
 
-  func isCircle() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isCircle() -> Bool { return wk_interop.ListStyleType_isCircle(type.rawValue, identifier.p) }
 
-  func isSquare() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isSquare() -> Bool { return wk_interop.ListStyleType_isSquare(type.rawValue, identifier.p) }
 
-  func isDisc() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isDisc() -> Bool { return wk_interop.ListStyleType_isDisc(type.rawValue, identifier.p) }
 
   let type: `Type`
   // The identifier is the string when the type is String and is the @counter-style name when the type is CounterStyle.
