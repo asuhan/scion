@@ -289,6 +289,11 @@ struct ListStyleTypeRaw {
     const void* identifier;
 };
 
+struct CounterStyleSymbolRaw {
+    bool isCustomIdent;
+    const void* text;
+};
+
 struct CounterDirectivesRaw {
     int32_t resetValue;
     int32_t incrementValue;
@@ -1249,6 +1254,10 @@ uint8_t RenderStyle_emptyCells(const void*);
 uint8_t RenderStyle_captionSide(const void*);
 struct ListStyleTypeRaw RenderStyle_listStyleType(const void*);
 bool ListStyleType_isCircle(uint8_t, const void*);
+const void* CSSCounterStyle_text(void*, int32_t, uint8_t, bool);
+struct CounterStyleSymbolRaw CSSCounterStyle_prefix(const void*);
+struct CounterStyleSymbolRaw CSSCounterStyle_suffix(const void*);
+void CSSCounterStyle_deref(void*);
 bool ListStyleType_isSquare(uint8_t, const void*);
 bool ListStyleType_isDisc(uint8_t, const void*);
 void* RenderStyle_listStyleImage(const void*);

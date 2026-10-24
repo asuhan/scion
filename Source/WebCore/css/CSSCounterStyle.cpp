@@ -32,6 +32,35 @@
 #include <wtf/Assertions.h>
 #include <wtf/text/MakeString.h>
 #include <wtf/text/StringBuilder.h>
+
+struct CounterStyleSymbolRaw {
+    bool isCustomIdent;
+    const void* text;
+};
+
+extern "C" WEBCORE_EXPORT const void* CSSCounterStyle_text(void* p, int32_t value, uint8_t blockDirection, bool isRightToLeft)
+{
+    WebCore::TextFlow textFlow { static_cast<WebCore::FlowDirection>(blockDirection), isRightToLeft ? WebCore::TextDirection::RTL : WebCore::TextDirection::LTR };
+    return new String(static_cast<WebCore::CSSCounterStyle*>(p)->text(value, textFlow));
+}
+
+// The symbol text is handed over as a heap-allocated String owned by the caller.
+extern "C" WEBCORE_EXPORT CounterStyleSymbolRaw CSSCounterStyle_prefix(const void* p)
+{
+    const auto& prefix = static_cast<const WebCore::CSSCounterStyle*>(p)->prefix();
+    return { prefix.isCustomIdent, new String(prefix.text) };
+}
+
+extern "C" WEBCORE_EXPORT CounterStyleSymbolRaw CSSCounterStyle_suffix(const void* p)
+{
+    const auto& suffix = static_cast<const WebCore::CSSCounterStyle*>(p)->suffix();
+    return { suffix.isCustomIdent, new String(suffix.text) };
+}
+
+extern "C" WEBCORE_EXPORT void CSSCounterStyle_deref(void* p)
+{
+    static_cast<WebCore::CSSCounterStyle*>(p)->deref();
+}
 #include <wtf/text/TextBreakIterator.h>
 #include <wtf/unicode/CharacterNames.h>
 

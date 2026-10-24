@@ -23,19 +23,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class CSSCounterStyleWrapper {
+  // Adopts a reference to the C++ counter style, like RefPtr::adoptRef.
+  init(adoptRef p: UnsafeMutableRawPointer) { self.p = p }
+
+  deinit { wk_interop.CSSCounterStyle_deref(p) }
+
   func text(_ value: Int32, _ textFlow: TextFlow) -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StringWrapper(
+      p: wk_interop.CSSCounterStyle_text(
+        p, value, textFlow.blockDirection.rawValue, textFlow.textDirection == .RTL), owner: true)
   }
 
   func prefix() -> CSSCounterStyleDescriptors.Symbol {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.CSSCounterStyle_prefix(p)
+    return CSSCounterStyleDescriptors.Symbol(
+      isCustomIdent: raw.isCustomIdent, text: StringWrapper(p: raw.text, owner: true))
   }
 
   func suffix() -> CSSCounterStyleDescriptors.Symbol {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.CSSCounterStyle_suffix(p)
+    return CSSCounterStyleDescriptors.Symbol(
+      isCustomIdent: raw.isCustomIdent, text: StringWrapper(p: raw.text, owner: true))
   }
+
+  let p: UnsafeMutableRawPointer
 }
