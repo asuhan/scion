@@ -834,6 +834,10 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" const void* RenderListMarkerScion_textWithSuffix(const void*);
+
+extern "C" const void* RenderListMarkerScion_textWithoutSuffix(const void*);
+
 extern "C" void* RenderListMarkerScion_listItem(const void*);
 
 extern "C" bool RenderListMarkerScion_isInside(const void*);
@@ -2835,6 +2839,23 @@ bool RenderListMarkerScion::isInside() const
 const RenderListItem* RenderListMarkerScion::listItem() const
 {
     return static_cast<const RenderListItem*>(RenderListMarkerScion_listItem(m_handle));
+}
+
+// The Swift side hands over a heap-allocated view into the marker's own text.
+static StringView adoptStringView(const void* raw)
+{
+    std::unique_ptr<const StringView> view(static_cast<const StringView*>(raw));
+    return *view;
+}
+
+StringView RenderListMarkerScion::textWithSuffix() const
+{
+    return adoptStringView(RenderListMarkerScion_textWithSuffix(m_handle));
+}
+
+StringView RenderListMarkerScion::textWithoutSuffix() const
+{
+    return adoptStringView(RenderListMarkerScion_textWithoutSuffix(m_handle));
 }
 
 void RenderListMarkerScion::setWk(void* wk)

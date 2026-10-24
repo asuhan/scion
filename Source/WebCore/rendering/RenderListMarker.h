@@ -44,11 +44,7 @@ public:
     void setScionHandle(void* handle);
 
     StringView textWithoutSuffix() const;
-    StringView textWithSuffix() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_textWithSuffix;
-    }
+    StringView textWithSuffix() const;
 
     bool isInside() const;
 

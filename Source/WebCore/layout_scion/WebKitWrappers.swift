@@ -3971,6 +3971,18 @@ func RenderListMarkerScion_listItem(_ markerRaw: UnsafeRawPointer) -> UnsafeMuta
   return wkRenderObject(marker.listItem())
 }
 
+@_cdecl("RenderListMarkerScion_textWithSuffix")
+func RenderListMarkerScion_textWithSuffix(_ markerRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let marker = Unmanaged<RenderListMarkerWrapper>.fromOpaque(markerRaw).takeUnretainedValue()
+  return wk_interop.StringView_new_copy(marker.textWithSuffix().p)
+}
+
+@_cdecl("RenderListMarkerScion_textWithoutSuffix")
+func RenderListMarkerScion_textWithoutSuffix(_ markerRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let marker = Unmanaged<RenderListMarkerWrapper>.fromOpaque(markerRaw).takeUnretainedValue()
+  return wk_interop.StringView_new_copy(marker.textWithoutSuffix().p)
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

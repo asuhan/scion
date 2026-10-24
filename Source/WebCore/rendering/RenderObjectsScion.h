@@ -1437,6 +1437,9 @@ public:
 
     void setWk(void*);
 
+    StringView textWithSuffix() const;
+    StringView textWithoutSuffix() const;
+
     bool isImage() const;
 
     bool isInside() const;

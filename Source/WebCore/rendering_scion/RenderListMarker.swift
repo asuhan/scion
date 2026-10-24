@@ -54,6 +54,16 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  func textWithoutSuffix() -> StringWrapperView {
+    assert(isNativeImpl())
+    return StringWrapperView(s: m_textWithSuffix).left(length: UInt32(textWithoutSuffixLength))
+  }
+
+  func textWithSuffix() -> StringWrapperView {
+    assert(isNativeImpl())
+    return StringWrapperView(s: m_textWithSuffix)
+  }
+
   func isInside() -> Bool {
     if !isNativeImpl() {
       return wk_interop.RenderListMarker_isInside(id())

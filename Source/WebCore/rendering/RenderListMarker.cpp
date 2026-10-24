@@ -513,9 +513,17 @@ LayoutRect RenderListMarker::selectionRectForRepaint(const RenderLayerModelObjec
     return LayoutRect();
 }
 
+StringView RenderListMarker::textWithSuffix() const
+{
+    if (m_scion)
+        return m_scion->textWithSuffix();
+    return m_textWithSuffix;
+}
+
 StringView RenderListMarker::textWithoutSuffix() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->textWithoutSuffix();
     return StringView { m_textWithSuffix }.left(m_textWithoutSuffixLength);
 }
 
