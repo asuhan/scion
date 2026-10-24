@@ -23,4 +23,10 @@
  *
  */
 
-final class HTMLTableCellElementWrapper: HTMLTablePartElementWrapper {}
+import wk_interop
+
+final class HTMLTableCellElementWrapper: HTMLTablePartElementWrapper {
+  func colSpan() -> UInt32 { return wk_interop.HTMLTableCellElement_colSpan(p) }
+
+  func rowSpan() -> UInt32 { return wk_interop.HTMLTableCellElement_rowSpan(p) }
+}

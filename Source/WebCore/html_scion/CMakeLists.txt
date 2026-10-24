@@ -23,6 +23,7 @@ target_sources(layout_scion PRIVATE
     HTMLSelectElement.swift
     HTMLSlotElement.swift
     HTMLTableCellElement.swift
+    HTMLTableColElement.swift
     HTMLTableElement.swift
     HTMLTablePartElement.swift
     HTMLTextAreaElement.swift

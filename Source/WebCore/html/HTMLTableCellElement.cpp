@@ -35,6 +35,16 @@
 #include "RenderTableCell.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT uint32_t HTMLTableCellElement_colSpan(const void* p)
+{
+    return static_cast<const WebCore::HTMLTableCellElement*>(p)->colSpan();
+}
+
+extern "C" WEBCORE_EXPORT uint32_t HTMLTableCellElement_rowSpan(const void* p)
+{
+    return static_cast<const WebCore::HTMLTableCellElement*>(p)->rowSpan();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTableCellElement);

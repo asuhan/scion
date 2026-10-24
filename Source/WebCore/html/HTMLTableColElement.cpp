@@ -34,6 +34,11 @@
 #include "Text.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT uint32_t HTMLTableColElement_span(const void* p)
+{
+    return static_cast<const WebCore::HTMLTableColElement*>(p)->span();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTableColElement);
