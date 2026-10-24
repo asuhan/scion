@@ -2765,6 +2765,13 @@ bool RenderElement::isContinuation() const
     return m_isContinuation;
 }
 
+Element* RenderElement::generatingElement() const
+{
+    if (m_scion)
+        return m_scion->generatingElement();
+    return downcast<Element>(RenderObject::generatingNode());
+}
+
 bool RenderElement::hasCounterNodeMap() const
 {
     if (m_scion)

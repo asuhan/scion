@@ -1498,6 +1498,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func generatingElement() -> ElementWrapper? {
+    assert(isNativeImpl())
+    guard let node = generatingNode() else { return nil }
+    return ElementWrapper(p: node.p)
+  }
+
   func hasCounterNodeMap() -> Bool {
     assert(isNativeImpl())
     return m_hasCounterNodeMap

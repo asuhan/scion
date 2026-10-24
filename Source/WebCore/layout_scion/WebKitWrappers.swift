@@ -3364,6 +3364,14 @@ func RenderElementScion_setIsFirstLetter(_ elementRaw: UnsafeRawPointer) {
   element.setIsFirstLetter()
 }
 
+@_cdecl("RenderElementScion_generatingElement")
+func RenderElementScion_generatingElement(_ elementRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.generatingElement()?.p
+}
+
 @_cdecl("RenderElementScion_hasCounterNodeMap")
 func RenderElementScion_hasCounterNodeMap(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

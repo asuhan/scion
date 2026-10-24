@@ -554,11 +554,6 @@ inline int adjustForAbsoluteZoom(int, const RenderElement&);
 inline LayoutUnit adjustLayoutUnitForAbsoluteZoom(LayoutUnit, const RenderElement&);
 inline LayoutSize adjustLayoutSizeForAbsoluteZoom(LayoutSize, const RenderElement&);
 
-inline Element* RenderElement::generatingElement() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return downcast<Element>(RenderObject::generatingNode());
-}
 
 inline bool RenderElement::canEstablishContainingBlockWithTransform() const
 {

@@ -562,6 +562,8 @@ public:
 
     void setIsFirstLetter();
 
+    Element* generatingElement() const;
+
     bool hasCounterNodeMap() const;
     void setHasCounterNodeMap(bool);
 
