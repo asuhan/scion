@@ -1960,6 +1960,7 @@ bool Node_hasBodyTagName(const void*);
 void InspectorInstrumentation_didAddOrRemoveScrollbars(void*);
 bool Node_hasHRTagName(const void*);
 bool Node_hasTDTagName(const void*);
+bool Node_hasMtdTagName(const void*);
 bool Node_hasTHTagName(const void*);
 bool Node_hasColTagName(const void*);
 bool Node_hasColgroupTagName(const void*);
