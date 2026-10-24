@@ -2118,6 +2118,30 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return willCreateColumns(desiredColumnCount: UInt32(desiredColumnCount))
   }
 
+  override func logicalLeftFloatOffsetForLine(
+    _ logicalTop: LayoutUnit, _ fixedOffset: LayoutUnit, _ logicalHeight: LayoutUnit
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
+    if let floatingObjects, floatingObjects.hasLeftObjects() {
+      return floatingObjects.logicalLeftOffset(
+        fixedOffset: fixedOffset, logicalTop: logicalTop, logicalHeight: logicalHeight)
+    }
+
+    return fixedOffset
+  }
+
+  override func logicalRightFloatOffsetForLine(
+    _ logicalTop: LayoutUnit, _ fixedOffset: LayoutUnit, _ logicalHeight: LayoutUnit
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
+    if let floatingObjects, floatingObjects.hasRightObjects() {
+      return floatingObjects.logicalRightOffset(
+        fixedOffset: fixedOffset, logicalTop: logicalTop, logicalHeight: logicalHeight)
+    }
+
+    return fixedOffset
+  }
+
   override func containsFloats() -> Bool {
     if !isNativeImpl() { return wk_interop.RenderBlockFlow_containsFloats(id()) }
     return floatingObjects != nil && !floatingObjects!.set().isEmpty()

@@ -759,16 +759,19 @@ class RenderBlockWrapper: RenderBoxWrapper {
     _ position: LayoutUnit, _ fragment: RenderFragmentContainerWrapper?,
     _ logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return adjustLogicalRightOffsetForLine(
+      logicalRightFloatOffsetForLine(
+        position, logicalRightOffsetForContent(fragment), logicalHeight))
   }
 
   private func logicalLeftOffsetForLineInFragment(
     _ position: LayoutUnit, _ fragment: RenderFragmentContainerWrapper?,
     _ logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return adjustLogicalLeftOffsetForLine(
+      logicalLeftFloatOffsetForLine(position, logicalLeftOffsetForContent(fragment), logicalHeight))
   }
 
   func startOffsetForLineInFragment(
@@ -803,15 +806,35 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func logicalRightOffsetForLine(
     position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return adjustLogicalRightOffsetForLine(
+      logicalRightFloatOffsetForLine(
+        position, logicalRightOffsetForContent(blockOffset: position), logicalHeight))
   }
 
   func logicalLeftOffsetForLine(
     position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return adjustLogicalLeftOffsetForLine(
+      logicalLeftFloatOffsetForLine(
+        position, logicalLeftOffsetForContent(blockOffset: position), logicalHeight))
+  }
+
+  // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
+  func logicalRightFloatOffsetForLine(
+    _ position: LayoutUnit, _ fixedOffset: LayoutUnit, _ logicalHeight: LayoutUnit
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
+    return fixedOffset
+  }
+
+  // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
+  func logicalLeftFloatOffsetForLine(
+    _ position: LayoutUnit, _ fixedOffset: LayoutUnit, _ logicalHeight: LayoutUnit
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
+    return fixedOffset
   }
 
   func startOffsetForLine(
