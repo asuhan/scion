@@ -3364,6 +3364,18 @@ func RenderElementScion_setIsFirstLetter(_ elementRaw: UnsafeRawPointer) {
   element.setIsFirstLetter()
 }
 
+@_cdecl("RenderElementScion_hasCounterNodeMap")
+func RenderElementScion_hasCounterNodeMap(_ elementRaw: UnsafeRawPointer) -> Bool {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.hasCounterNodeMap()
+}
+
+@_cdecl("RenderElementScion_setHasCounterNodeMap")
+func RenderElementScion_setHasCounterNodeMap(_ elementRaw: UnsafeRawPointer, _ f: Bool) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.setHasCounterNodeMap(f)
+}
+
 @_cdecl("RenderElementScion_hasContinuationChainNode")
 func RenderElementScion_hasContinuationChainNode(_ elementRaw: UnsafeRawPointer) -> Bool {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()

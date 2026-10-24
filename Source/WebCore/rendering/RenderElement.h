@@ -265,16 +265,8 @@ public:
         m_hasPausedImageAnimations = b;
     }
 
-    bool hasCounterNodeMap() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_hasCounterNodeMap;
-    }
-    void setHasCounterNodeMap(bool f)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_hasCounterNodeMap = f;
-    }
+    bool hasCounterNodeMap() const;
+    void setHasCounterNodeMap(bool);
 
 #if ENABLE(TEXT_AUTOSIZING)
     void adjustComputedFontSizesOnBlocks(float size, float visibleWidth);

@@ -562,6 +562,9 @@ public:
 
     void setIsFirstLetter();
 
+    bool hasCounterNodeMap() const;
+    void setHasCounterNodeMap(bool);
+
     const RenderStyle& style() const;
 
     const RenderStyle& firstLineStyle() const;

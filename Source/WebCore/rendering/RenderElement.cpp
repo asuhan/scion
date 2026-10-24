@@ -2765,6 +2765,22 @@ bool RenderElement::isContinuation() const
     return m_isContinuation;
 }
 
+bool RenderElement::hasCounterNodeMap() const
+{
+    if (m_scion)
+        return m_scion->hasCounterNodeMap();
+    return m_hasCounterNodeMap;
+}
+
+void RenderElement::setHasCounterNodeMap(bool f)
+{
+    if (m_scion) {
+        m_scion->setHasCounterNodeMap(f);
+        return;
+    }
+    m_hasCounterNodeMap = f;
+}
+
 void RenderElement::setIsFirstLetter()
 {
     if (m_scion) {

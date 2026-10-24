@@ -718,6 +718,10 @@ extern "C" void RenderElementScion_setIsContinuation(void*);
 
 extern "C" void RenderElementScion_setIsFirstLetter(void*);
 
+extern "C" bool RenderElementScion_hasCounterNodeMap(const void*);
+
+extern "C" void RenderElementScion_setHasCounterNodeMap(void*, bool);
+
 extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
 
 extern "C" void* RenderElementScion_detachRendererInternal(void*, void*);
@@ -2348,6 +2352,16 @@ void RenderElementScion::setIsContinuation()
 void RenderElementScion::setIsFirstLetter()
 {
     RenderElementScion_setIsFirstLetter(m_handle);
+}
+
+bool RenderElementScion::hasCounterNodeMap() const
+{
+    return RenderElementScion_hasCounterNodeMap(m_handle);
+}
+
+void RenderElementScion::setHasCounterNodeMap(bool f)
+{
+    RenderElementScion_setHasCounterNodeMap(m_handle, f);
 }
 
 bool RenderElementScion::hasContinuationChainNode() const

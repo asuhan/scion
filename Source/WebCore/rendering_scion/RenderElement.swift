@@ -1498,7 +1498,15 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func hasCounterNodeMap() -> Bool { return m_hasCounterNodeMap }
+  func hasCounterNodeMap() -> Bool {
+    assert(isNativeImpl())
+    return m_hasCounterNodeMap
+  }
+
+  func setHasCounterNodeMap(_ f: Bool) {
+    assert(isNativeImpl())
+    m_hasCounterNodeMap = f
+  }
 
   func imageOrientation() -> ImageOrientation {
     // TODO(asuhan): implement this
@@ -3020,7 +3028,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   var hasInitializedStyle: Bool
 
   private let m_hasPausedImageAnimations: Bool
-  private let m_hasCounterNodeMap: Bool
+  private var m_hasCounterNodeMap: Bool
   private var m_hasContinuationChainNode: Bool
 
   private var m_isContinuation: Bool
