@@ -1433,6 +1433,8 @@ public:
 
     void setWk(void*);
 
+    bool isImage() const;
+
 private:
     void* m_handle;
 };

@@ -124,7 +124,8 @@ void RenderListMarker::styleDidChange(StyleDifference diff, const RenderStyle* o
 
 bool RenderListMarker::isImage() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->isImage();
     return m_image && !m_image->errorOccurred();
 }
 

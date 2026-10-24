@@ -834,6 +834,8 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" bool RenderListMarkerScion_isImage(const void*);
+
 extern "C" void RenderListItemScion_updateListMarkerNumbers(void*);
 
 extern "C" void* RenderListItemScion_computeMarkerStyle(const void*);
@@ -2800,6 +2802,11 @@ RenderListMarker* RenderListItemScion::markerRenderer() const
 void RenderListItemScion::setMarkerRenderer(RenderListMarker& marker)
 {
     RenderListItemScion_setMarkerRenderer(m_handle, &marker);
+}
+
+bool RenderListMarkerScion::isImage() const
+{
+    return RenderListMarkerScion_isImage(m_handle);
 }
 
 void RenderListMarkerScion::setWk(void* wk)
