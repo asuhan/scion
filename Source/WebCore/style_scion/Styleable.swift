@@ -27,8 +27,9 @@ import wk_interop
 
 class StyleableWrapper {
   init(element: ElementWrapper, pseudoElementIdentifier: Style.PseudoElementIdentifier?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.Styleable_create(
+      element.p, pseudoElementIdentifier != nil, pseudoElementIdentifier?.pseudoId.rawValue ?? 0,
+      pseudoElementIdentifier?.nameArgument.p)
   }
 
   private init(_ p: UnsafeMutableRawPointer) { self.p = p }

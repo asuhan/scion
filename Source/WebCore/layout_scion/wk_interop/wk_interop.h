@@ -2367,6 +2367,7 @@ bool TransformationMatrix_isIntegerTranslation(const void*);
 void* TransformationMatrix_copy(const void*);
 void TransformationMatrix_destroy(const void*);
 void RenderCounterSet_add(void* set, void* counter);
+void* Styleable_create(void*, bool, uint32_t, const void*);
 void* Styleable_fromElement(void*);
 void Styleable_destroy(void*);
 bool Styleable_hasRunningAcceleratedAnimations(const void*);

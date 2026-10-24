@@ -60,6 +60,15 @@
 #include "WebAnimationUtilities.h"
 #include "WillChangeData.h"
 
+extern "C" WEBCORE_EXPORT void* Styleable_create(void* element_raw, bool has_identifier, uint32_t pseudo_id_raw, const void* name_argument_raw)
+{
+    auto& element = *static_cast<WebCore::Element*>(element_raw);
+    if (!has_identifier)
+        return new WebCore::Styleable(element, std::nullopt);
+    const auto& nameArgument = *static_cast<const AtomString*>(name_argument_raw);
+    return new WebCore::Styleable(element, WebCore::Style::PseudoElementIdentifier { static_cast<WebCore::PseudoId>(pseudo_id_raw), nameArgument });
+}
+
 extern "C" WEBCORE_EXPORT void* Styleable_fromElement(void* element_raw)
 {
     auto& element = *static_cast<WebCore::Element*>(element_raw);
