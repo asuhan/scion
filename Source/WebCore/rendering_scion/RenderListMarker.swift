@@ -477,8 +477,8 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func counterStyle() -> CSSCounterStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return document().counterStyleRegistry().resolvedCounterStyle(style().listStyleType())
   }
 
   private func widthUsesMetricsOfPrimaryFont() -> Bool {
