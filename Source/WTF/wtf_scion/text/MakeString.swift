@@ -24,7 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 func makeString(_ string1: StringWrapper, _ string2: StringWrapper) -> StringWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return StringWrapper(p: wk_interop.String_makeString(string1.p, string2.p), owner: true)
 }

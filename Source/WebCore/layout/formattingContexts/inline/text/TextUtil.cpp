@@ -523,6 +523,11 @@ extern "C" WEBCORE_EXPORT const void* String_new()
     return new String();
 }
 
+extern "C" WEBCORE_EXPORT const void* String_makeString(const void* string1, const void* string2)
+{
+    return new String(makeString(*static_cast<const String*>(string1), *static_cast<const String*>(string2)));
+}
+
 extern "C" WEBCORE_EXPORT const void* String_new_latin1(const char* characters)
 {
     return new String(String::fromLatin1(characters));
