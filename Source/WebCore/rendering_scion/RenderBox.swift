@@ -1102,7 +1102,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstChildBox() -> RenderBoxWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let firstChildBox = wk_interop.RenderBox_firstChildBox(id()) else {
+        return nil
+      }
+      return createRenderObjectWrapperOrNative(firstChildBox) as! RenderBoxWrapper?
+    }
     if let box = firstChild() as? RenderBoxWrapper {
       return box
     }
