@@ -80,6 +80,7 @@ class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
+class RenderListItem;
 class RenderListMarker;
 class RenderMultiColumnFlow;
 class RenderObject;
@@ -1436,6 +1437,8 @@ public:
     bool isImage() const;
 
     bool isInside() const;
+
+    const RenderListItem* listItem() const;
 
 private:
     void* m_handle;

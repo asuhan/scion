@@ -77,7 +77,9 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   func listItem() -> RenderListItemWrapper? {
-    assert(!isNativeImpl())
+    if isNativeImpl() {
+      return m_listItem
+    }
     if let unwrapped = wk_interop.RenderListMarker_listItem(id()) {
       return RenderListItemWrapper(p: unwrapped)
     }

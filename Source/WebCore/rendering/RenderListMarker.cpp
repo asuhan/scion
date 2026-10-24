@@ -472,7 +472,8 @@ bool RenderListMarker::isInside() const
 
 const RenderListItem* RenderListMarker::listItem() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->listItem();
     return m_listItem.get();
 }
 
