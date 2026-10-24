@@ -196,6 +196,16 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
     return markerStyle
   }
 
+  func setNotInList(_ notInList: Bool) {
+    assert(isNativeImpl())
+    m_notInList = notInList
+  }
+
+  func notInList() -> Bool {
+    assert(isNativeImpl())
+    return m_notInList
+  }
+
   func markerRenderer() -> RenderListMarkerWrapper? {
     assert(isNativeImpl())
     return m_marker
@@ -252,6 +262,7 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
 
   private var m_marker: RenderListMarkerWrapper?
   private var m_value: Int32? = nil
+  private var m_notInList = false
 }
 
 private let listItemCounterName = StringWrapper(ASCIILiteral("list-item"))

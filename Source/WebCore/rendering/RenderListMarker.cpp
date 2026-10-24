@@ -465,7 +465,8 @@ LayoutUnit RenderListMarker::baselinePosition(FontBaseline baselineType, bool fi
 
 bool RenderListMarker::isInside() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->isInside();
     return m_listItem->notInList() || style().listStylePosition() == ListStylePosition::Inside;
 }
 

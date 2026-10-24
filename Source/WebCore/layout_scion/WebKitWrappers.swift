@@ -3947,6 +3947,12 @@ func RenderListMarkerScion_isImage(_ markerRaw: UnsafeRawPointer) -> Bool {
   return marker.isImage()
 }
 
+@_cdecl("RenderListMarkerScion_isInside")
+func RenderListMarkerScion_isInside(_ markerRaw: UnsafeRawPointer) -> Bool {
+  let marker = Unmanaged<RenderListMarkerWrapper>.fromOpaque(markerRaw).takeUnretainedValue()
+  return marker.isInside()
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

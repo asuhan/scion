@@ -834,6 +834,8 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" bool RenderListMarkerScion_isInside(const void*);
+
 extern "C" bool RenderListMarkerScion_isImage(const void*);
 
 extern "C" void RenderListItemScion_updateListMarkerNumbers(void*);
@@ -2807,6 +2809,11 @@ void RenderListItemScion::setMarkerRenderer(RenderListMarker& marker)
 bool RenderListMarkerScion::isImage() const
 {
     return RenderListMarkerScion_isImage(m_handle);
+}
+
+bool RenderListMarkerScion::isInside() const
+{
+    return RenderListMarkerScion_isInside(m_handle);
 }
 
 void RenderListMarkerScion::setWk(void* wk)

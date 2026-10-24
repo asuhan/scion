@@ -1435,6 +1435,8 @@ public:
 
     bool isImage() const;
 
+    bool isInside() const;
+
 private:
     void* m_handle;
 };

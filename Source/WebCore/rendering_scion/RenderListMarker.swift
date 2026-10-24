@@ -55,8 +55,10 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   func isInside() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderListMarker_isInside(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderListMarker_isInside(id())
+    }
+    return m_listItem!.notInList() || style().listStylePosition() == .Inside
   }
 
   func updateMarginsAndContent() {
