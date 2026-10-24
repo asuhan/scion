@@ -842,6 +842,10 @@ extern "C" bool RenderListMarkerScion_isImage(const void*);
 
 extern "C" void RenderListItemScion_updateListMarkerNumbers(void*);
 
+extern "C" void RenderListItemScion_setNotInList(void*, bool);
+
+extern "C" bool RenderListItemScion_notInList(const void*);
+
 extern "C" void* RenderListItemScion_computeMarkerStyle(const void*);
 
 extern "C" void* RenderListItemScion_markerRenderer(const void*);
@@ -2791,6 +2795,16 @@ RenderStyle RenderListItemScion::computeMarkerStyle() const
     // The Swift side hands over ownership of the style.
     std::unique_ptr<RenderStyle> style(static_cast<RenderStyle*>(RenderListItemScion_computeMarkerStyle(m_handle)));
     return WTFMove(*style);
+}
+
+void RenderListItemScion::setNotInList(bool notInList)
+{
+    RenderListItemScion_setNotInList(m_handle, notInList);
+}
+
+bool RenderListItemScion::notInList() const
+{
+    return RenderListItemScion_notInList(m_handle);
 }
 
 void RenderListItemScion::updateListMarkerNumbers()

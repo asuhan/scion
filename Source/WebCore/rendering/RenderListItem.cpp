@@ -346,6 +346,22 @@ void RenderListItem::counterDirectivesChanged()
         item->updateValue();
 }
 
+void RenderListItem::setNotInList(bool notInList)
+{
+    if (m_scion) {
+        m_scion->setNotInList(notInList);
+        return;
+    }
+    m_notInList = notInList;
+}
+
+bool RenderListItem::notInList() const
+{
+    if (m_scion)
+        return m_scion->notInList();
+    return m_notInList;
+}
+
 RenderListMarker* RenderListItem::markerRenderer() const
 {
     if (m_scion)

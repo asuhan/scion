@@ -3919,6 +3919,18 @@ func RenderListItemScion_computeMarkerStyle(_ listItemRaw: UnsafeRawPointer)
   return UnsafeMutableRawPointer(mutating: style.p!)
 }
 
+@_cdecl("RenderListItemScion_setNotInList")
+func RenderListItemScion_setNotInList(_ listItemRaw: UnsafeMutableRawPointer, _ notInList: Bool) {
+  let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
+  listItem.setNotInList(notInList)
+}
+
+@_cdecl("RenderListItemScion_notInList")
+func RenderListItemScion_notInList(_ listItemRaw: UnsafeRawPointer) -> Bool {
+  let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()
+  return listItem.notInList()
+}
+
 @_cdecl("RenderListItemScion_updateListMarkerNumbers")
 func RenderListItemScion_updateListMarkerNumbers(_ listItemRaw: UnsafeMutableRawPointer) {
   let listItem = Unmanaged<RenderListItemWrapper>.fromOpaque(listItemRaw).takeUnretainedValue()

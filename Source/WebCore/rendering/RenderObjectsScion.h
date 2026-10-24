@@ -1414,6 +1414,9 @@ public:
     {
     }
 
+    void setNotInList(bool);
+    bool notInList() const;
+
     void updateListMarkerNumbers();
 
     RenderStyle computeMarkerStyle() const;

@@ -48,16 +48,8 @@ public:
     int value() const;
     void updateValue();
 
-    void setNotInList(bool notInList)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_notInList = notInList;
-    }
-    bool notInList() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_notInList;
-    }
+    void setNotInList(bool);
+    bool notInList() const;
 
     WEBCORE_EXPORT StringView markerTextWithoutSuffix() const;
     StringView markerTextWithSuffix() const;
