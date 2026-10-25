@@ -180,11 +180,9 @@ private:
 
     static RenderPtr<RenderTableCell> createTableCellWithStyle(Document&, const RenderStyle&);
 
-    ASCIILiteral renderName() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return (isAnonymous() || isPseudoElement()) ? "RenderTableCell (anonymous)"_s : "RenderTableCell"_s;
-    }
+    // NB(asuhan): this returns one of two literals, picked by predicates that route to Scion
+    // themselves, we can skip the Scion check
+    ASCIILiteral renderName() const override { return (isAnonymous() || isPseudoElement()) ? "RenderTableCell (anonymous)"_s : "RenderTableCell"_s; }
 
     void willBeRemovedFromTree() override;
 

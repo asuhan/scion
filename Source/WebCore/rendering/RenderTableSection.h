@@ -187,11 +187,9 @@ private:
         DoNotIncludeAllIntersectingCells
     };
 
-    ASCIILiteral renderName() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return (isAnonymous() || isPseudoElement()) ? "RenderTableSection (anonymous)"_s : "RenderTableSection"_s;
-    }
+    // NB(asuhan): this returns one of two literals, picked by predicates that route to Scion
+    // themselves, we can skip the Scion check
+    ASCIILiteral renderName() const override { return (isAnonymous() || isPseudoElement()) ? "RenderTableSection (anonymous)"_s : "RenderTableSection"_s; }
 
     // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canHaveChildren() const override { return true; }

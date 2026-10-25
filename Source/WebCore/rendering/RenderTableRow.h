@@ -82,11 +82,9 @@ public:
 private:
     static RenderPtr<RenderTableRow> createTableRowWithStyle(Document&, const RenderStyle&);
 
-    ASCIILiteral renderName() const override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return (isAnonymous() || isPseudoElement()) ? "RenderTableRow (anonymous)"_s : "RenderTableRow"_s;
-    }
+    // NB(asuhan): this returns one of two literals, picked by predicates that route to Scion
+    // themselves, we can skip the Scion check
+    ASCIILiteral renderName() const override { return (isAnonymous() || isPseudoElement()) ? "RenderTableRow (anonymous)"_s : "RenderTableRow"_s; }
     // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canHaveChildren() const override { return true; }
     void willBeRemovedFromTree() override;
