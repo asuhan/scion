@@ -102,6 +102,7 @@ class RenderFragmentContainer;
 class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
+class RenderTableSection;
 class RenderListItem;
 class RenderListMarker;
 class RenderMultiColumnFlow;
@@ -1440,6 +1441,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void willInsertTableSection(RenderTableSection&, RenderObject*);
 
     void setWk(void*);
 

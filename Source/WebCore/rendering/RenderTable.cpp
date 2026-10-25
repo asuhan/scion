@@ -196,7 +196,10 @@ void RenderTable::willInsertTableColumn(RenderTableCol&, RenderObject*)
 
 void RenderTable::willInsertTableSection(RenderTableSection& child, RenderObject* beforeChild)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willInsertTableSection(child, beforeChild);
+        return;
+    }
     switch (child.style().display()) {
     case DisplayType::TableHeaderGroup:
         resetSectionPointerIfNotBefore(m_head, beforeChild);
