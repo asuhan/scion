@@ -24,6 +24,10 @@
 
 // TODO(asuhan): does this make sense, since we're not packing the fields yet?
 private let unsetColumnIndex: UInt32 = 0x1FFFFFF
+// 33554430
+private let maxColumnIndex: UInt32 = 0x1FFFFFE
+// 2,147,483,646
+private let maxRowIndex: UInt32 = 0x7FFF_FFFE
 
 private struct CollapsedBorder {
   var borderValue = CollapsedBorderValue()
@@ -219,13 +223,53 @@ private enum IncludeBorderColorOrNot {
 
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   func colSpan() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !m_hasColSpan {
+      return 1
+    }
+    return parseColSpanFromDOM()
   }
 
   func rowSpan() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !m_hasRowSpan {
+      return 1
+    }
+    return parseRowSpanFromDOM()
+  }
+
+  private func parseColSpanFromDOM() -> UInt32 {
+    assert(isNativeImpl())
+    let element = self.element()!
+    if element.hasTDTagName() || element.hasTHTagName() {
+      return min(HTMLTableCellElementWrapper(p: element.p).colSpan(), maxColumnIndex)
+    }
+    if element.hasMtdTagName() {
+      // TODO(asuhan): implement this for MathML table cells
+      fatalError("Not implemented")
+    }
+    return 1
+  }
+
+  private func parseRowSpanFromDOM() -> UInt32 {
+    assert(isNativeImpl())
+    let element = self.element()!
+    if element.hasTDTagName() || element.hasTHTagName() {
+      return min(HTMLTableCellElementWrapper(p: element.p).rowSpan(), maxRowIndex)
+    }
+    if element.hasMtdTagName() {
+      // TODO(asuhan): implement this for MathML table cells
+      fatalError("Not implemented")
+    }
+    return 1
+  }
+
+  private func updateColAndRowSpanFlags() {
+    assert(isNativeImpl())
+    // The vast majority of table cells do not have a colspan or rowspan,
+    // so we keep a bool to know if we need to bother reading from the DOM.
+    m_hasColSpan = element() != nil && parseColSpanFromDOM() != 1
+    m_hasRowSpan = element() != nil && parseRowSpanFromDOM() != 1
   }
 
   func setCol(column: UInt32) {
@@ -1940,6 +1984,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   // TODO(asuhan): pack these better using bitwise operations
   private var m_column = unsetColumnIndex
   private var m_cellWidthChanged = false
+  private var m_hasColSpan = false
+  private var m_hasRowSpan = false
   private let hasEmptyCollapsedBeforeBorder = false
   private let hasEmptyCollapsedAfterBorder = false
   private let hasEmptyCollapsedStartBorder = false
