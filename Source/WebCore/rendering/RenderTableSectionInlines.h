@@ -24,8 +24,16 @@
 
 namespace WebCore {
 
-inline const BorderValue& RenderTableSection::borderAdjoiningTableEnd() const { return style().borderEnd(table()->style()); }
-inline const BorderValue& RenderTableSection::borderAdjoiningTableStart() const { return style().borderStart(table()->style()); }
+inline const BorderValue& RenderTableSection::borderAdjoiningTableEnd() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().borderEnd(table()->style());
+}
+inline const BorderValue& RenderTableSection::borderAdjoiningTableStart() const
+{
+    if (m_scion) { ASSERT_NOT_REACHED(); }
+    return style().borderStart(table()->style());
+}
 
 inline LayoutUnit RenderTableSection::outerBorderBottom(const RenderStyle* styleForCellFlow) const
 {
