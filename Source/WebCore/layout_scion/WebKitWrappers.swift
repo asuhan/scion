@@ -3461,12 +3461,113 @@ func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrap
   return RenderObjectWrapper(p: p)
 }
 
-func createHTMLElementWrapper(_ p: UnsafeMutableRawPointer) -> HTMLElementWrapper {
-  if wk_interop.is_HTMLFrameSetElement(p) {
+// Keep in sync with ScionElementWrapperType in Element.cpp.
+enum ElementWrapperType: UInt8 {
+  case Element
+  case PseudoElement
+  case TextControlInnerTextElement
+  case HTMLDivElement
+  case HTMLAreaElement
+  case HTMLAnchorElement
+  case HTMLBRElement
+  case HTMLWBRElement
+  case HTMLCanvasElement
+  case HTMLIFrameElement
+  case HTMLFrameOwnerElement
+  case HTMLFrameSetElement
+  case HTMLImageElement
+  case HTMLInputElement
+  case HTMLTextAreaElement
+  case HTMLButtonElement
+  case HTMLSelectElement
+  case HTMLFormControlElement
+  case HTMLLegendElement
+  case HTMLMapElement
+  case HTMLOListElement
+  case HTMLUListElement
+  case HTMLOptGroupElement
+  case HTMLOptionElement
+  case HTMLSlotElement
+  case HTMLTableCellElement
+  case HTMLTableColElement
+  case HTMLTableElement
+  case HTMLTablePartElement
+  case HTMLElement
+}
+
+// Wraps a C++ element in the Swift wrapper of its most derived class, so that as? and is work like
+// dynamicDowncast and is<> upstream.
+func createElementWrapper(_ p: UnsafeMutableRawPointer) -> ElementWrapper {
+  switch ElementWrapperType(rawValue: wk_interop.Element_wrapperType(p))! {
+  case .Element:
+    return ElementWrapper(p: p)
+  case .PseudoElement:
+    return PseudoElementWrapper(p: p)
+  case .TextControlInnerTextElement:
+    return TextControlInnerTextElementWrapper(p: p)
+  case .HTMLDivElement:
+    return HTMLDivElementWrapper(p: p)
+  case .HTMLAreaElement:
+    return HTMLAreaElementWrapper(p: p)
+  case .HTMLAnchorElement:
+    return HTMLAnchorElementWrapper(p: p)
+  case .HTMLBRElement:
+    return HTMLBRElementWrapper(p: p)
+  case .HTMLWBRElement:
+    return HTMLWBRElementWrapper(p: p)
+  case .HTMLCanvasElement:
+    return HTMLCanvasElementWrapper(p: p)
+  case .HTMLIFrameElement:
+    return HTMLIFrameElementWrapper(p: p)
+  case .HTMLFrameOwnerElement:
+    return HTMLFrameOwnerElementWrapper(p: p)
+  case .HTMLFrameSetElement:
     return HTMLFrameSetElementWrapper(p: p)
+  case .HTMLImageElement:
+    return HTMLImageElementWrapper(p: p)
+  case .HTMLInputElement:
+    return HTMLInputElementWrapper(p: p)
+  case .HTMLTextAreaElement:
+    return HTMLTextAreaElementWrapper(p: p)
+  case .HTMLButtonElement:
+    return HTMLButtonElementWrapper(p: p)
+  case .HTMLSelectElement:
+    return HTMLSelectElementWrapper(p: p)
+  case .HTMLFormControlElement:
+    return HTMLFormControlElementWrapper(p: p)
+  case .HTMLLegendElement:
+    return HTMLLegendElementWrapper(p: p)
+  case .HTMLMapElement:
+    return HTMLMapElementWrapper(p: p)
+  case .HTMLOListElement:
+    return HTMLOListElementWrapper(p: p)
+  case .HTMLUListElement:
+    return HTMLUListElementWrapper(p: p)
+  case .HTMLOptGroupElement:
+    return HTMLOptGroupElementWrapper(p: p)
+  case .HTMLOptionElement:
+    return HTMLOptionElementWrapper(p: p)
+  case .HTMLSlotElement:
+    return HTMLSlotElementWrapper(p: p)
+  case .HTMLTableCellElement:
+    return HTMLTableCellElementWrapper(p: p)
+  case .HTMLTableColElement:
+    return HTMLTableColElementWrapper(p: p)
+  case .HTMLTableElement:
+    return HTMLTableElementWrapper(p: p)
+  case .HTMLTablePartElement:
+    return HTMLTablePartElementWrapper(p: p)
+  case .HTMLElement:
+    return HTMLElementWrapper(p: p)
   }
-  // TODO(asuhan): exhaustively handle the entire hierarchy
-  return HTMLElementWrapper(p: p)
+}
+
+func createNodeWrapper(_ p: UnsafeMutableRawPointer) -> NodeWrapper {
+  return wk_interop.Node_isElementNode(p) ? createElementWrapper(p) : NodeWrapper(p: p)
+}
+
+func createHTMLElementWrapper(_ p: UnsafeMutableRawPointer) -> HTMLElementWrapper {
+  return createElementWrapper(p) as! HTMLElementWrapper
 }
 
 @_cdecl("RenderElementScion_attachRendererInternal")

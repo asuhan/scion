@@ -67,25 +67,43 @@
 #include "FullscreenOptions.h"
 #include "GetAnimationsOptions.h"
 #include "GetHTMLOptions.h"
+#include "HTMLAnchorElement.h"
+#include "HTMLAreaElement.h"
 #include "HTMLBDIElement.h"
+#include "HTMLBRElement.h"
 #include "HTMLBodyElement.h"
+#include "HTMLButtonElement.h"
 #include "HTMLCanvasElement.h"
 #include "HTMLDialogElement.h"
+#include "HTMLDivElement.h"
 #include "HTMLDocument.h"
+#include "HTMLFormControlElement.h"
 #include "HTMLFrameOwnerElement.h"
+#include "HTMLFrameSetElement.h"
 #include "HTMLHtmlElement.h"
+#include "HTMLIFrameElement.h"
 #include "HTMLImageElement.h"
 #include "HTMLInputElement.h"
 #include "HTMLLabelElement.h"
+#include "HTMLLegendElement.h"
+#include "HTMLMapElement.h"
 #include "HTMLNameCollection.h"
+#include "HTMLOListElement.h"
 #include "HTMLObjectElement.h"
 #include "HTMLOptGroupElement.h"
 #include "HTMLOptionElement.h"
 #include "HTMLParserIdioms.h"
 #include "HTMLScriptElement.h"
 #include "HTMLSelectElement.h"
+#include "HTMLSlotElement.h"
+#include "HTMLTableCellElement.h"
+#include "HTMLTableColElement.h"
+#include "HTMLTableElement.h"
+#include "HTMLTablePartElement.h"
 #include "HTMLTemplateElement.h"
 #include "HTMLTextAreaElement.h"
+#include "HTMLUListElement.h"
+#include "HTMLWBRElement.h"
 #include "IdChangeInvalidation.h"
 #include "IdTargetObserverRegistry.h"
 #include "InputType.h"
@@ -111,6 +129,7 @@
 #include "PointerLockOptions.h"
 #include "PopoverData.h"
 #include "PseudoClassChangeInvalidation.h"
+#include "PseudoElement.h"
 #include "Quirks.h"
 #include "RenderBoxInlines.h"
 #include "RenderElementInlines.h"
@@ -146,6 +165,7 @@
 #include "StyleResolver.h"
 #include "StyleScope.h"
 #include "StyleTreeResolver.h"
+#include "TextControlInnerElements.h"
 #include "TextIterator.h"
 #include "TouchAction.h"
 #include "TrustedType.h"
@@ -179,6 +199,107 @@ extern "C" WEBCORE_EXPORT bool Element_hasAltAttr(const void* p)
 extern "C" WEBCORE_EXPORT bool Element_hasFontTag(const void* p)
 {
     return static_cast<const WebCore::Element*>(p)->hasTagName(WebCore::HTMLNames::fontTag);
+}
+
+// The most derived C++ class that has a Swift wrapper, so that the Swift side can build the wrapper
+// object of the right class and downcast it with as? and is, like dynamicDowncast and is<> upstream.
+// Keep in sync with ElementWrapperType in WebKitWrappers.swift.
+enum class ScionElementWrapperType : uint8_t {
+    Element,
+    PseudoElement,
+    TextControlInnerTextElement,
+    HTMLDivElement,
+    HTMLAreaElement,
+    HTMLAnchorElement,
+    HTMLBRElement,
+    HTMLWBRElement,
+    HTMLCanvasElement,
+    HTMLIFrameElement,
+    HTMLFrameOwnerElement,
+    HTMLFrameSetElement,
+    HTMLImageElement,
+    HTMLInputElement,
+    HTMLTextAreaElement,
+    HTMLButtonElement,
+    HTMLSelectElement,
+    HTMLFormControlElement,
+    HTMLLegendElement,
+    HTMLMapElement,
+    HTMLOListElement,
+    HTMLUListElement,
+    HTMLOptGroupElement,
+    HTMLOptionElement,
+    HTMLSlotElement,
+    HTMLTableCellElement,
+    HTMLTableColElement,
+    HTMLTableElement,
+    HTMLTablePartElement,
+    HTMLElement,
+};
+
+extern "C" WEBCORE_EXPORT uint8_t Element_wrapperType(const void* p)
+{
+    const auto& element = *static_cast<const WebCore::Element*>(p);
+    if (is<WebCore::PseudoElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::PseudoElement);
+    if (is<WebCore::TextControlInnerTextElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::TextControlInnerTextElement);
+    if (is<WebCore::HTMLDivElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLDivElement);
+    if (is<WebCore::HTMLAreaElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLAreaElement);
+    if (is<WebCore::HTMLAnchorElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLAnchorElement);
+    if (is<WebCore::HTMLBRElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLBRElement);
+    if (is<WebCore::HTMLWBRElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLWBRElement);
+    if (is<WebCore::HTMLCanvasElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLCanvasElement);
+    if (is<WebCore::HTMLIFrameElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLIFrameElement);
+    if (is<WebCore::HTMLFrameOwnerElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLFrameOwnerElement);
+    if (is<WebCore::HTMLFrameSetElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLFrameSetElement);
+    if (is<WebCore::HTMLImageElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLImageElement);
+    if (is<WebCore::HTMLInputElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLInputElement);
+    if (is<WebCore::HTMLTextAreaElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLTextAreaElement);
+    if (is<WebCore::HTMLButtonElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLButtonElement);
+    if (is<WebCore::HTMLSelectElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLSelectElement);
+    if (is<WebCore::HTMLFormControlElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLFormControlElement);
+    if (is<WebCore::HTMLLegendElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLLegendElement);
+    if (is<WebCore::HTMLMapElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLMapElement);
+    if (is<WebCore::HTMLOListElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLOListElement);
+    if (is<WebCore::HTMLUListElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLUListElement);
+    if (is<WebCore::HTMLOptGroupElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLOptGroupElement);
+    if (is<WebCore::HTMLOptionElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLOptionElement);
+    if (is<WebCore::HTMLSlotElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLSlotElement);
+    if (is<WebCore::HTMLTableCellElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLTableCellElement);
+    // HTMLTableColElement serves two tags, so it has no type traits; upstream checks the tags too.
+    if (element.hasTagName(WebCore::HTMLNames::colTag) || element.hasTagName(WebCore::HTMLNames::colgroupTag))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLTableColElement);
+    if (is<WebCore::HTMLTableElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLTableElement);
+    if (is<WebCore::HTMLTablePartElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLTablePartElement);
+    if (is<WebCore::HTMLElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::HTMLElement);
+    return static_cast<uint8_t>(ScionElementWrapperType::Element);
 }
 
 extern "C" WEBCORE_EXPORT const void* Element_renderOrDisplayContentsStyle(const void* p)
