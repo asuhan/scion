@@ -994,8 +994,14 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func willBeRemovedFromTree() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    super.willBeRemovedFromTree()
+    guard let table = table(), let section = section() else {
+      return
+    }
+    table.invalidateCollapsedBorders()
+    section.removeCachedCollapsedBorders(cell: self)
+    section.setNeedsCellRecalc()
   }
 
   override func updateLogicalWidth() {}

@@ -986,6 +986,15 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  func removeCachedCollapsedBorders(cell: RenderTableCellWrapper) {
+    assert(isNativeImpl())
+    if !table()!.collapseBorders() {
+      return
+    }
+
+    cellsCollapsedBorders.removeValue(forKey: ObjectIdentifier(cell))
+  }
+
   func clearCachedCollapsedBorders() {
     assert(isNativeImpl())
     if !table()!.collapseBorders() {
