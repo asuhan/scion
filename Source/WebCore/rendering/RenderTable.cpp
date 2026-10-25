@@ -118,6 +118,7 @@ void RenderTable::setScionHandle(void* handle)
     RenderBox::setScionHandle(handle);
     RenderBlock::setScionHandle(handle);
     m_scion = std::make_unique<RenderTableScion>(handle);
+    m_scion->setWk(this);
 }
 
 RenderTableSection* RenderTable::header() const
@@ -1742,7 +1743,15 @@ bool RenderTable::nodeAtPoint(const HitTestRequest& request, HitTestResult& resu
 
 RenderPtr<RenderTable> RenderTable::createTableWithStyle(Document& document, const RenderStyle& style)
 {
-    auto table = createRenderer<RenderTable>(Type::Table, document, RenderStyle::createAnonymousStyleWithDisplay(style, style.display() == DisplayType::Inline ? DisplayType::InlineTable : DisplayType::Table));
+    auto anonymousStyle = RenderStyle::createAnonymousStyleWithDisplay(style, style.display() == DisplayType::Inline ? DisplayType::InlineTable : DisplayType::Table);
+    if (Document::s_useScionRendering >= 14) {
+        auto clonedStyle = RenderStyle::clonePtr(anonymousStyle);
+        auto table = createRenderer<RenderTable>(Type::Table, document, WTFMove(anonymousStyle));
+        table->setScionHandle(RenderTableScion_createFromDocument(&document, clonedStyle.release()));
+        table->initializeStyle();
+        return table;
+    }
+    auto table = createRenderer<RenderTable>(Type::Table, document, WTFMove(anonymousStyle));
     table->initializeStyle();
     return table;
 }

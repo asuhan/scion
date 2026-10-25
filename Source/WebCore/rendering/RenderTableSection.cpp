@@ -115,6 +115,7 @@ void RenderTableSection::setScionHandle(void* handle)
     RenderBoxModelObject::setScionHandle(handle);
     RenderBox::setScionHandle(handle);
     m_scion = std::make_unique<RenderTableSectionScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderTableSection::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
@@ -1629,7 +1630,15 @@ CollapsedBorderValue RenderTableSection::cachedCollapsedBorder(const RenderTable
 
 RenderPtr<RenderTableSection> RenderTableSection::createTableSectionWithStyle(Document& document, const RenderStyle& style)
 {
-    auto section = createRenderer<RenderTableSection>(document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::TableRowGroup));
+    auto anonymousStyle = RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::TableRowGroup);
+    if (Document::s_useScionRendering >= 14) {
+        auto clonedStyle = RenderStyle::clonePtr(anonymousStyle);
+        auto section = createRenderer<RenderTableSection>(document, WTFMove(anonymousStyle));
+        section->setScionHandle(RenderTableSectionScion_createFromDocument(&document, clonedStyle.release()));
+        section->initializeStyle();
+        return section;
+    }
+    auto section = createRenderer<RenderTableSection>(document, WTFMove(anonymousStyle));
     section->initializeStyle();
     return section;
 }

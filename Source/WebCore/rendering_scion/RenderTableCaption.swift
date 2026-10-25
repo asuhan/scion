@@ -18,6 +18,10 @@
  */
 
 final class RenderTableCaptionWrapper: RenderBlockFlowWrapper {
+  init(element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(type: .TableCaption, element: element, style: style)
+    assert(isRenderTableCaption())
+  }
   override final func insertedIntoTree() {
     assert(isNativeImpl())
     super.insertedIntoTree()

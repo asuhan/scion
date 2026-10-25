@@ -1576,7 +1576,15 @@ void RenderTableCell::scrollbarsChanged(bool horizontalScrollbarChanged, bool ve
 
 RenderPtr<RenderTableCell> RenderTableCell::createTableCellWithStyle(Document& document, const RenderStyle& style)
 {
-    auto cell = createRenderer<RenderTableCell>(document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::TableCell));
+    auto anonymousStyle = RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::TableCell);
+    if (Document::s_useScionRendering >= 14) {
+        auto clonedStyle = RenderStyle::clonePtr(anonymousStyle);
+        auto cell = createRenderer<RenderTableCell>(document, WTFMove(anonymousStyle));
+        cell->setScionHandle(RenderTableCellScion_createFromDocument(&document, clonedStyle.release()));
+        cell->initializeStyle();
+        return cell;
+    }
+    auto cell = createRenderer<RenderTableCell>(document, WTFMove(anonymousStyle));
     cell->initializeStyle();
     return cell;
 }

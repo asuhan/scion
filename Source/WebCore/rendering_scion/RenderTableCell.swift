@@ -222,6 +222,18 @@ private enum IncludeBorderColorOrNot {
 }
 
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {
+  init(element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(type: .TableCell, element: element, style: style)
+    // We only update the flags when notified of DOM changes in colSpanOrRowSpanChanged()
+    // so we need to set their initial values here in case something asks for colSpan()/rowSpan() before then.
+    updateColAndRowSpanFlags()
+    assert(isRenderTableCell())
+  }
+
+  init(document: Document, style: RenderStyleWrapper) {
+    super.init(type: .TableCell, document: document, style: style)
+    assert(isRenderTableCell())
+  }
   func colSpan() -> UInt32 {
     assert(isNativeImpl())
     if !m_hasColSpan {

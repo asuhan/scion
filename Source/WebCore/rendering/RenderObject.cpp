@@ -125,6 +125,26 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderElement(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderElement();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTable(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTable();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableSection(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTableSection();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableRow(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTableRow();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableCol(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTableCol();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableCell(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderTableCell();

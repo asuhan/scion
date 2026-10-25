@@ -72,6 +72,7 @@ void RenderTableCol::setScionHandle(void* handle)
     RenderBoxModelObject::setScionHandle(handle);
     RenderBox::setScionHandle(handle);
     m_scion = std::make_unique<RenderTableColScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderTableCol::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)

@@ -2453,6 +2453,26 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderHTMLCanvasWrapper>.fromOpaque(canvasRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderTable(raw),
+    let tableRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderTableWrapper>.fromOpaque(tableRaw).takeUnretainedValue()
+  }
+  if wk_interop.RenderObject_isRenderTableSection(raw),
+    let sectionRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderTableSectionWrapper>.fromOpaque(sectionRaw).takeUnretainedValue()
+  }
+  if wk_interop.RenderObject_isRenderTableRow(raw),
+    let rowRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderTableRowWrapper>.fromOpaque(rowRaw).takeUnretainedValue()
+  }
+  if wk_interop.RenderObject_isRenderTableCol(raw),
+    let colRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderTableColWrapper>.fromOpaque(colRaw).takeUnretainedValue()
+  }
   if wk_interop.RenderObject_isRenderListMarker(raw),
     let markerRaw = wk_interop.RenderElement_scion(raw)
   {
@@ -3662,6 +3682,123 @@ func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderTableScion_create")
+func RenderTableScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableWrapper(
+    type: .Table, element: ElementWrapper(p: elementRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableScion_createFromDocument")
+func RenderTableScion_createFromDocument(
+  _ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableWrapper(type: .Table, document: Document(documentRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableSectionScion_create")
+func RenderTableSectionScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableSectionWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableSectionScion_createFromDocument")
+func RenderTableSectionScion_createFromDocument(
+  _ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableSectionWrapper(document: Document(documentRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableRowScion_create")
+func RenderTableRowScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableRowWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableRowScion_createFromDocument")
+func RenderTableRowScion_createFromDocument(
+  _ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableRowWrapper(document: Document(documentRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableCellScion_create")
+func RenderTableCellScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableCellWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableCellScion_createFromDocument")
+func RenderTableCellScion_createFromDocument(
+  _ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableCellWrapper(document: Document(documentRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableColScion_create")
+func RenderTableColScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableColWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableColScion_createFromDocument")
+func RenderTableColScion_createFromDocument(
+  _ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableColWrapper(document: Document(documentRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTableCaptionScion_create")
+func RenderTableCaptionScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTableCaptionWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
 @_cdecl("RenderListItemScion_create")
 func RenderListItemScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer
@@ -4001,6 +4138,30 @@ func RenderListMarkerScion_textWithSuffix(_ markerRaw: UnsafeRawPointer) -> Unsa
 func RenderListMarkerScion_textWithoutSuffix(_ markerRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let marker = Unmanaged<RenderListMarkerWrapper>.fromOpaque(markerRaw).takeUnretainedValue()
   return wk_interop.StringView_new_copy(marker.textWithoutSuffix().p)
+}
+
+@_cdecl("RenderTableScion_setWk")
+func RenderTableScion_setWk(_ wk: UnsafeMutableRawPointer, _ raw: UnsafeMutableRawPointer) {
+  let renderer = Unmanaged<RenderTableWrapper>.fromOpaque(raw).takeUnretainedValue()
+  renderer.setWk(wk)
+}
+
+@_cdecl("RenderTableSectionScion_setWk")
+func RenderTableSectionScion_setWk(_ wk: UnsafeMutableRawPointer, _ raw: UnsafeMutableRawPointer) {
+  let renderer = Unmanaged<RenderTableSectionWrapper>.fromOpaque(raw).takeUnretainedValue()
+  renderer.setWk(wk)
+}
+
+@_cdecl("RenderTableRowScion_setWk")
+func RenderTableRowScion_setWk(_ wk: UnsafeMutableRawPointer, _ raw: UnsafeMutableRawPointer) {
+  let renderer = Unmanaged<RenderTableRowWrapper>.fromOpaque(raw).takeUnretainedValue()
+  renderer.setWk(wk)
+}
+
+@_cdecl("RenderTableColScion_setWk")
+func RenderTableColScion_setWk(_ wk: UnsafeMutableRawPointer, _ raw: UnsafeMutableRawPointer) {
+  let renderer = Unmanaged<RenderTableColWrapper>.fromOpaque(raw).takeUnretainedValue()
+  renderer.setWk(wk)
 }
 
 @_cdecl("RenderListMarkerScion_setWk")

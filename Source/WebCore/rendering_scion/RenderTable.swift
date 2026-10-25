@@ -50,6 +50,32 @@ private func resetSectionPointerIfNotBefore(
 }
 
 class RenderTableWrapper: RenderBlockWrapper {
+  init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(type, element, style, [])
+    columnPos = [LayoutUnit()]
+    columnOffsetTop = LayoutUnit(value: Int32(-1))
+    columnOffsetHeight = LayoutUnit(value: Int32(-1))
+    setChildrenInline(b: false)
+    assert(isRenderTable())
+  }
+
+  init(type: `Type`, document: Document, style: RenderStyleWrapper) {
+    super.init(type, document, style, [])
+    columnPos = [LayoutUnit()]
+    columnOffsetTop = LayoutUnit(value: Int32(-1))
+    columnOffsetHeight = LayoutUnit(value: Int32(-1))
+    setChildrenInline(b: false)
+    assert(isRenderTable())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
   // Per CSS 3 writing-mode: "The first and second values of the 'border-spacing' property represent spacing between columns
   // and rows respectively, not necessarily the horizontal and vertical spacing respectively".
   func hBorderSpacing() -> LayoutUnit { return hSpacing }

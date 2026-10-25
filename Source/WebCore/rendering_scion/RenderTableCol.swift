@@ -24,11 +24,26 @@
  */
 
 final class RenderTableColWrapper: RenderBoxWrapper {
+  init(element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(.TableCol, element, style)
+    // init RenderObject attributes
+    setInline(true)  // our object is not Inline
+    updateFromElement()
+    assert(isRenderTableCol())
+  }
+
   init(document: Document, style: RenderStyleWrapper) {
     super.init(.TableCol, document, style)
     setInline(true)
     assert(isRenderTableCol())
   }
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 
   func clearPreferredLogicalWidthsDirtyBits() {
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)

@@ -840,6 +840,14 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" void RenderTableColScion_setWk(void*, void*);
+
+extern "C" void RenderTableRowScion_setWk(void*, void*);
+
+extern "C" void RenderTableSectionScion_setWk(void*, void*);
+
+extern "C" void RenderTableScion_setWk(void*, void*);
+
 extern "C" const void* RenderListMarkerScion_textWithSuffix(const void*);
 
 extern "C" const void* RenderListMarkerScion_textWithoutSuffix(const void*);
@@ -2877,6 +2885,26 @@ StringView RenderListMarkerScion::textWithSuffix() const
 StringView RenderListMarkerScion::textWithoutSuffix() const
 {
     return adoptStringView(RenderListMarkerScion_textWithoutSuffix(m_handle));
+}
+
+void RenderTableScion::setWk(void* wk)
+{
+    RenderTableScion_setWk(wk, m_handle);
+}
+
+void RenderTableSectionScion::setWk(void* wk)
+{
+    RenderTableSectionScion_setWk(wk, m_handle);
+}
+
+void RenderTableRowScion::setWk(void* wk)
+{
+    RenderTableRowScion_setWk(wk, m_handle);
+}
+
+void RenderTableColScion::setWk(void* wk)
+{
+    RenderTableColScion_setWk(wk, m_handle);
 }
 
 void RenderListMarkerScion::setWk(void* wk)

@@ -38,6 +38,24 @@ private func borderWidthChanged(_ oldStyle: RenderStyleWrapper, _ newStyle: Rend
 }
 
 final class RenderTableRowWrapper: RenderBoxWrapper {
+  init(element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(.TableRow, element, style)
+    setInline(false)
+    assert(isRenderTableRow())
+  }
+
+  init(document: Document, style: RenderStyleWrapper) {
+    super.init(.TableRow, document, style)
+    setInline(false)
+    assert(isRenderTableRow())
+  }
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
   func nextRow() -> RenderTableRowWrapper? {
     assert(isNativeImpl())
     return super.nextSibling() as! RenderTableRowWrapper?

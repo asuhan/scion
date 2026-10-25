@@ -431,19 +431,55 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
         switch (style.display()) {
         case DisplayType::Table:
         case DisplayType::InlineTable:
+        if (Document::s_useScionRendering >= 14) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderTable>(RenderObject::Type::Table, element, WTFMove(style));
+            renderer->setScionHandle(RenderTableScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
             return createRenderer<RenderTable>(RenderObject::Type::Table, element, WTFMove(style));
         case DisplayType::TableCell:
+        if (Document::s_useScionRendering >= 14) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderTableCell>(element, WTFMove(style));
+            renderer->setScionHandle(RenderTableCellScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
             return createRenderer<RenderTableCell>(element, WTFMove(style));
         case DisplayType::TableCaption:
+        if (Document::s_useScionRendering >= 14) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderTableCaption>(element, WTFMove(style));
+            renderer->setScionHandle(RenderTableCaptionScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
             return createRenderer<RenderTableCaption>(element, WTFMove(style));
         case DisplayType::TableRowGroup:
         case DisplayType::TableHeaderGroup:
         case DisplayType::TableFooterGroup:
+        if (Document::s_useScionRendering >= 14) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderTableSection>(element, WTFMove(style));
+            renderer->setScionHandle(RenderTableSectionScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
             return createRenderer<RenderTableSection>(element, WTFMove(style));
         case DisplayType::TableRow:
+        if (Document::s_useScionRendering >= 14) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderTableRow>(element, WTFMove(style));
+            renderer->setScionHandle(RenderTableRowScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
             return createRenderer<RenderTableRow>(element, WTFMove(style));
         case DisplayType::TableColumnGroup:
         case DisplayType::TableColumn:
+        if (Document::s_useScionRendering >= 14) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderTableCol>(element, WTFMove(style));
+            renderer->setScionHandle(RenderTableColScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
             return createRenderer<RenderTableCol>(element, WTFMove(style));
         default:
             break;

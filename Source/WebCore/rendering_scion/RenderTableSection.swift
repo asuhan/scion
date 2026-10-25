@@ -143,6 +143,24 @@ private func physicalBorderForDirection(
 }
 
 final class RenderTableSectionWrapper: RenderBoxWrapper {
+  init(element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(.TableSection, element, style)
+    setInline(false)
+    assert(isRenderTableSection())
+  }
+
+  init(document: Document, style: RenderStyleWrapper) {
+    super.init(.TableSection, document, style)
+    setInline(false)
+    assert(isRenderTableSection())
+  }
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
   func firstRow() -> RenderTableRowWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

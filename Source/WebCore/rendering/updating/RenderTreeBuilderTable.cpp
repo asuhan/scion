@@ -26,6 +26,7 @@
 #include "config.h"
 #include "RenderTreeBuilderTable.h"
 
+#include "RenderObjectsScion.h"
 #include "RenderTableCaption.h"
 #include "RenderTableCell.h"
 #include "RenderTableCol.h"
@@ -134,7 +135,11 @@ RenderElement& RenderTreeBuilder::Table::findOrCreateParentForChild(RenderTable&
             // COLGROUPs and anonymous RenderTableCols (generated wrappers for COLs) are direct children of the table renderer.
             return parent;
         }
-        auto newColGroup = createRenderer<RenderTableCol>(parent.document(), RenderStyle::createAnonymousStyleWithDisplay(parent.style(), DisplayType::TableColumnGroup));
+        auto colGroupStyle = RenderStyle::createAnonymousStyleWithDisplay(parent.style(), DisplayType::TableColumnGroup);
+        auto clonedColGroupStyle = Document::s_useScionRendering >= 14 ? RenderStyle::clonePtr(colGroupStyle) : nullptr;
+        auto newColGroup = createRenderer<RenderTableCol>(parent.document(), WTFMove(colGroupStyle));
+        if (clonedColGroupStyle)
+            newColGroup->setScionHandle(RenderTableColScion_createFromDocument(&parent.document(), clonedColGroupStyle.release()));
         newColGroup->initializeStyle();
         auto& colGroup = *newColGroup;
         m_builder.attach(parent, WTFMove(newColGroup), beforeChild);

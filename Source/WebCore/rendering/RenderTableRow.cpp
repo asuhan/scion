@@ -74,6 +74,7 @@ void RenderTableRow::setScionHandle(void* handle)
     RenderBoxModelObject::setScionHandle(handle);
     RenderBox::setScionHandle(handle);
     m_scion = std::make_unique<RenderTableRowScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderTableRow::willBeRemovedFromTree()
@@ -278,7 +279,15 @@ void RenderTableRow::imageChanged(WrappedImagePtr, const IntRect*)
 
 RenderPtr<RenderTableRow> RenderTableRow::createTableRowWithStyle(Document& document, const RenderStyle& style)
 {
-    auto row = createRenderer<RenderTableRow>(document, RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::TableRow));
+    auto anonymousStyle = RenderStyle::createAnonymousStyleWithDisplay(style, DisplayType::TableRow);
+    if (Document::s_useScionRendering >= 14) {
+        auto clonedStyle = RenderStyle::clonePtr(anonymousStyle);
+        auto row = createRenderer<RenderTableRow>(document, WTFMove(anonymousStyle));
+        row->setScionHandle(RenderTableRowScion_createFromDocument(&document, clonedStyle.release()));
+        row->initializeStyle();
+        return row;
+    }
+    auto row = createRenderer<RenderTableRow>(document, WTFMove(anonymousStyle));
     row->initializeStyle();
     return row;
 }

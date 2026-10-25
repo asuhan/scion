@@ -60,6 +60,28 @@ extern "C" void* RenderFileUploadControlScion_create(void*, const void*);
 
 extern "C" void* RenderListItemScion_create(void*, const void*);
 
+extern "C" void* RenderTableScion_create(void*, const void*);
+
+extern "C" void* RenderTableScion_createFromDocument(void*, const void*);
+
+extern "C" void* RenderTableSectionScion_create(void*, const void*);
+
+extern "C" void* RenderTableSectionScion_createFromDocument(void*, const void*);
+
+extern "C" void* RenderTableRowScion_create(void*, const void*);
+
+extern "C" void* RenderTableRowScion_createFromDocument(void*, const void*);
+
+extern "C" void* RenderTableCellScion_create(void*, const void*);
+
+extern "C" void* RenderTableCellScion_createFromDocument(void*, const void*);
+
+extern "C" void* RenderTableColScion_create(void*, const void*);
+
+extern "C" void* RenderTableColScion_createFromDocument(void*, const void*);
+
+extern "C" void* RenderTableCaptionScion_create(void*, const void*);
+
 extern "C" void* RenderListMarkerScion_create(void*, const void*);
 
 extern "C" void* RenderCombineTextScion_create(void*, const void*);
@@ -1419,6 +1441,8 @@ public:
     {
     }
 
+    void setWk(void*);
+
 private:
     void* m_handle;
 };
@@ -1429,6 +1453,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setWk(void*);
 
 private:
     void* m_handle;
@@ -1441,6 +1467,8 @@ public:
     {
     }
 
+    void setWk(void*);
+
 private:
     void* m_handle;
 };
@@ -1451,6 +1479,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void setWk(void*);
 
 private:
     void* m_handle;
