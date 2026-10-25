@@ -253,8 +253,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private func parseColSpanFromDOM() -> UInt32 {
     assert(isNativeImpl())
     let element = self.element()!
-    if element.hasTDTagName() || element.hasTHTagName() {
-      return min(HTMLTableCellElementWrapper(p: element.p).colSpan(), maxColumnIndex)
+    if let cell = element as? HTMLTableCellElementWrapper {
+      return min(cell.colSpan(), maxColumnIndex)
     }
     if element.hasMtdTagName() {
       // TODO(asuhan): implement this for MathML table cells
@@ -266,8 +266,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private func parseRowSpanFromDOM() -> UInt32 {
     assert(isNativeImpl())
     let element = self.element()!
-    if element.hasTDTagName() || element.hasTHTagName() {
-      return min(HTMLTableCellElementWrapper(p: element.p).rowSpan(), maxRowIndex)
+    if let cell = element as? HTMLTableCellElementWrapper {
+      return min(cell.rowSpan(), maxRowIndex)
     }
     if element.hasMtdTagName() {
       // TODO(asuhan): implement this for MathML table cells
