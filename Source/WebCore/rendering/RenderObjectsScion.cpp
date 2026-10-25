@@ -840,6 +840,22 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" int32_t RenderTableCellScion_borderAfter(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderBefore(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderEnd(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderStart(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderBottom(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderTop(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderRight(const void*);
+
+extern "C" int32_t RenderTableCellScion_borderLeft(const void*);
+
 extern "C" int32_t RenderTableCellScion_paddingAfter(const void*);
 
 extern "C" int32_t RenderTableCellScion_paddingBefore(const void*);
@@ -3045,6 +3061,46 @@ LayoutUnit RenderTableCellScion::paddingBefore() const
 LayoutUnit RenderTableCellScion::paddingAfter() const
 {
     return LayoutUnit::fromRawValue(RenderTableCellScion_paddingAfter(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderLeft(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderRight() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderRight(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderTop() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderTop(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderBottom(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderStart() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderStart(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderEnd() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderEnd(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderBefore(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::borderAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_borderAfter(m_handle));
 }
 
 void RenderListMarkerScion::setWk(void* wk)

@@ -1513,6 +1513,22 @@ public:
     {
     }
 
+    LayoutUnit borderAfter() const;
+
+    LayoutUnit borderBefore() const;
+
+    LayoutUnit borderEnd() const;
+
+    LayoutUnit borderStart() const;
+
+    LayoutUnit borderBottom() const;
+
+    LayoutUnit borderTop() const;
+
+    LayoutUnit borderRight() const;
+
+    LayoutUnit borderLeft() const;
+
     LayoutUnit paddingAfter() const;
 
     LayoutUnit paddingBefore() const;

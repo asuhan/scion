@@ -1154,7 +1154,8 @@ RectEdges<LayoutUnit> RenderTableCell::borderWidths() const
 
 LayoutUnit RenderTableCell::borderLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderLeft();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderLeft();
@@ -1163,7 +1164,8 @@ LayoutUnit RenderTableCell::borderLeft() const
 
 LayoutUnit RenderTableCell::borderRight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderRight();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderRight();
@@ -1172,7 +1174,8 @@ LayoutUnit RenderTableCell::borderRight() const
 
 LayoutUnit RenderTableCell::borderTop() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderTop();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderTop();
@@ -1181,7 +1184,8 @@ LayoutUnit RenderTableCell::borderTop() const
 
 LayoutUnit RenderTableCell::borderBottom() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderBottom();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderBottom();
@@ -1192,7 +1196,8 @@ LayoutUnit RenderTableCell::borderBottom() const
 // work with different block flow values instead of being hard-coded to top-to-bottom.
 LayoutUnit RenderTableCell::borderStart() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderStart();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderStart();
@@ -1201,7 +1206,8 @@ LayoutUnit RenderTableCell::borderStart() const
 
 LayoutUnit RenderTableCell::borderEnd() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderEnd();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderEnd();
@@ -1210,7 +1216,8 @@ LayoutUnit RenderTableCell::borderEnd() const
 
 LayoutUnit RenderTableCell::borderBefore() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderBefore();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderBefore();
@@ -1219,7 +1226,8 @@ LayoutUnit RenderTableCell::borderBefore() const
 
 LayoutUnit RenderTableCell::borderAfter() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->borderAfter();
     RenderTable* table = this->table();
     if (!table)
         return RenderBlockFlow::borderAfter();
