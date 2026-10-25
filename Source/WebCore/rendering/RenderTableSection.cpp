@@ -142,7 +142,10 @@ void RenderTableSection::willBeRemovedFromTree()
 
 void RenderTableSection::willInsertTableRow(RenderTableRow& child, RenderObject* beforeChild)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willInsertTableRow(child, beforeChild);
+        return;
+    }
     if (beforeChild)
         setNeedsCellRecalc();
 
