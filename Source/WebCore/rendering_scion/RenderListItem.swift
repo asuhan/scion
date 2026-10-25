@@ -57,8 +57,7 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
     }
 
     var isInReversedOrderedList = false
-    if list.hasOLTagName() {
-      let orderedList = HTMLOListElementWrapper(p: list.p)
+    if let orderedList = list as? HTMLOListElementWrapper {
       orderedList.itemCountChanged()
       isInReversedOrderedList = orderedList.isReversed()
     }
@@ -78,16 +77,16 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
 
   func isInReversedOrderedList() -> Bool {
     assert(isNativeImpl())
-    guard let list = enclosingList(self), list.hasOLTagName() else {
+    guard let list = enclosingList(self) as? HTMLOListElementWrapper else {
       return false
     }
-    return HTMLOListElementWrapper(p: list.p).isReversed()
+    return list.isReversed()
   }
 
   private func updateValueNow() {
     assert(isNativeImpl())
     let list = enclosingList(self)
-    let orderedList = list.flatMap { $0.hasOLTagName() ? HTMLOListElementWrapper(p: $0.p) : nil }
+    let orderedList = list as? HTMLOListElementWrapper
 
     // The start item is either the closest item before this one in the list that already has a value,
     // or the first item in the list if none have before this have values yet.
@@ -268,15 +267,14 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
 private let listItemCounterName = StringWrapper(ASCIILiteral("list-item"))
 
 func isHTMLListElement(node: NodeWrapper) -> Bool {
-  return node.hasULTagName() || node.hasOLTagName()
+  return node is HTMLUListElementWrapper || node is HTMLOListElementWrapper
 }
 
 // Returns the enclosing list with respect to the DOM order.
 private func enclosingList(_ listItem: RenderListItemWrapper) -> ElementWrapper? {
   let element = listItem.element()!
-  let parent =
-    element.isPseudoElement()
-    ? PseudoElementWrapper(p: element.p).hostElement() : element.parentElement()
+  let pseudoElement = element as? PseudoElementWrapper
+  let parent = pseudoElement != nil ? pseudoElement!.hostElement() : element.parentElement()
   var ancestor = parent
   while let current = ancestor {
     if isHTMLListElement(node: current)
