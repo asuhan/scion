@@ -738,8 +738,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
   func containsFloats() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderBlock_containsFloats(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderBlock_containsFloats(id())
+    }
+    return false
   }
 
   // Versions that can compute line offsets with the fragment and page offset passed in. Used for speed to avoid having to
