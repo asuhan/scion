@@ -182,8 +182,8 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func section() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return parent() as! RenderTableSectionWrapper?
   }
 
   func didInsertTableCell(child: RenderTableCellWrapper, beforeChild: RenderObjectWrapper?) {
