@@ -87,10 +87,10 @@ public:
     LayoutUnit borderAfter() const final;
 
     RectEdges<LayoutUnit> borderWidths() const final;
-    inline LayoutUnit borderLeft() const final;
-    inline LayoutUnit borderRight() const final;
-    inline LayoutUnit borderTop() const final;
-    inline LayoutUnit borderBottom() const final;
+    LayoutUnit borderLeft() const final;
+    LayoutUnit borderRight() const final;
+    LayoutUnit borderTop() const final;
+    LayoutUnit borderBottom() const final;
 
     Color bgColor() const
     {

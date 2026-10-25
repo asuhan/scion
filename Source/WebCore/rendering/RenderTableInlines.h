@@ -24,38 +24,6 @@
 
 namespace WebCore {
 
-inline LayoutUnit RenderTable::borderBottom() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (style().isHorizontalWritingMode())
-        return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter();
-    return style().isLeftToRightDirection() ? borderEnd() : borderStart();
-}
-
-inline LayoutUnit RenderTable::borderLeft() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (style().isHorizontalWritingMode())
-        return style().isLeftToRightDirection() ? borderStart() : borderEnd();
-    return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore();
-}
-
-inline LayoutUnit RenderTable::borderRight() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (style().isHorizontalWritingMode())
-        return style().isLeftToRightDirection() ? borderEnd() : borderStart();
-    return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter();
-}
-
-inline LayoutUnit RenderTable::borderTop() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (style().isHorizontalWritingMode())
-        return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore();
-    return style().isLeftToRightDirection() ? borderStart() : borderEnd();
-}
-
 inline RectEdges<LayoutUnit> RenderTable::borderWidths() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

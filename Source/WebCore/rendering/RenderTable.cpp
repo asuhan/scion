@@ -188,6 +188,42 @@ static inline void resetSectionPointerIfNotBefore(SingleThreadWeakPtr<RenderTabl
         section.clear();
 }
 
+LayoutUnit RenderTable::borderBottom() const
+{
+    if (m_scion)
+        return m_scion->borderBottom();
+    if (style().isHorizontalWritingMode())
+        return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter();
+    return style().isLeftToRightDirection() ? borderEnd() : borderStart();
+}
+
+LayoutUnit RenderTable::borderLeft() const
+{
+    if (m_scion)
+        return m_scion->borderLeft();
+    if (style().isHorizontalWritingMode())
+        return style().isLeftToRightDirection() ? borderStart() : borderEnd();
+    return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore();
+}
+
+LayoutUnit RenderTable::borderRight() const
+{
+    if (m_scion)
+        return m_scion->borderRight();
+    if (style().isHorizontalWritingMode())
+        return style().isLeftToRightDirection() ? borderEnd() : borderStart();
+    return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter();
+}
+
+LayoutUnit RenderTable::borderTop() const
+{
+    if (m_scion)
+        return m_scion->borderTop();
+    if (style().isHorizontalWritingMode())
+        return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore();
+    return style().isLeftToRightDirection() ? borderStart() : borderEnd();
+}
+
 void RenderTable::willInsertTableColumn(RenderTableCol& child, RenderObject* beforeChild)
 {
     if (m_scion) {

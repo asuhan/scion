@@ -840,6 +840,14 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" int32_t RenderTableScion_borderTop(const void*);
+
+extern "C" int32_t RenderTableScion_borderRight(const void*);
+
+extern "C" int32_t RenderTableScion_borderLeft(const void*);
+
+extern "C" int32_t RenderTableScion_borderBottom(const void*);
+
 extern "C" void RenderTableRowScion_didInsertTableCell(void*, void*, void*);
 
 extern "C" void RenderTableSectionScion_willInsertTableRow(void*, void*, void*);
@@ -2933,6 +2941,26 @@ void RenderTableSectionScion::willInsertTableRow(RenderTableRow& child, RenderOb
 void RenderTableRowScion::didInsertTableCell(RenderTableCell& child, RenderObject* beforeChild)
 {
     RenderTableRowScion_didInsertTableCell(m_handle, &child, beforeChild);
+}
+
+LayoutUnit RenderTableScion::borderBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderTableScion_borderBottom(m_handle));
+}
+
+LayoutUnit RenderTableScion::borderLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderTableScion_borderLeft(m_handle));
+}
+
+LayoutUnit RenderTableScion::borderRight() const
+{
+    return LayoutUnit::fromRawValue(RenderTableScion_borderRight(m_handle));
+}
+
+LayoutUnit RenderTableScion::borderTop() const
+{
+    return LayoutUnit::fromRawValue(RenderTableScion_borderTop(m_handle));
 }
 
 void RenderListMarkerScion::setWk(void* wk)

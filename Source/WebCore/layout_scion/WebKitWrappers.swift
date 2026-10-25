@@ -4208,6 +4208,30 @@ func RenderTableRowScion_didInsertTableCell(
     beforeChild: beforeChildRaw.map { createRenderObjectWrapperOrNative($0) })
 }
 
+@_cdecl("RenderTableScion_borderBottom")
+func RenderTableScion_borderBottom(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.borderBottom().rawValue()
+}
+
+@_cdecl("RenderTableScion_borderLeft")
+func RenderTableScion_borderLeft(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.borderLeft().rawValue()
+}
+
+@_cdecl("RenderTableScion_borderRight")
+func RenderTableScion_borderRight(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.borderRight().rawValue()
+}
+
+@_cdecl("RenderTableScion_borderTop")
+func RenderTableScion_borderTop(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.borderTop().rawValue()
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

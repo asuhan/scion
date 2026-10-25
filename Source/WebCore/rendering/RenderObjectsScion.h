@@ -1445,6 +1445,14 @@ public:
     {
     }
 
+    LayoutUnit borderTop() const;
+
+    LayoutUnit borderRight() const;
+
+    LayoutUnit borderLeft() const;
+
+    LayoutUnit borderBottom() const;
+
     void willInsertTableColumn(RenderTableCol&, RenderObject*);
 
     void willInsertTableSection(RenderTableSection&, RenderObject*);
