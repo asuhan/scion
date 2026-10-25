@@ -983,23 +983,19 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderLeft() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderValue(raw: wk_interop.RenderStyle_borderLeft(p!))
   }
 
   func borderRight() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderValue(raw: wk_interop.RenderStyle_borderRight(p!))
   }
 
   func borderTop() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderValue(raw: wk_interop.RenderStyle_borderTop(p!))
   }
 
   func borderBottom() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderValue(raw: wk_interop.RenderStyle_borderBottom(p!))
   }
 
   func borderBefore() -> BorderValue { return borderBefore(styleForFlow: self) }

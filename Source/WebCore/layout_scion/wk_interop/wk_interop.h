@@ -289,6 +289,12 @@ struct ListStyleTypeRaw {
     const void* identifier;
 };
 
+struct BorderValueRaw {
+    float width;
+    uint8_t style;
+    bool isTransparent;
+};
+
 struct CounterStyleSymbolRaw {
     bool isCustomIdent;
     const void* text;
@@ -1570,6 +1576,10 @@ struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_justifyContent(const void*);
 struct StyleSelfAlignmentDataRaw RenderStyle_alignItems(const void*);
 const void* RenderStyle_counterDirectives(const void*);
+struct BorderValueRaw RenderStyle_borderLeft(const void*);
+struct BorderValueRaw RenderStyle_borderRight(const void*);
+struct BorderValueRaw RenderStyle_borderTop(const void*);
+struct BorderValueRaw RenderStyle_borderBottom(const void*);
 struct CounterDirectivesRaw CounterDirectiveMap_get(const void*, const void*);
 void RenderStyle_setAlignContent(const void*, struct StyleContentAlignmentDataRaw);
 void RenderStyle_setAlignItems(const void*, struct StyleSelfAlignmentDataRaw);

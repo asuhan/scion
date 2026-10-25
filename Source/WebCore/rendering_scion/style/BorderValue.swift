@@ -22,16 +22,25 @@
  *
  */
 
+import wk_interop
+
 struct BorderValue {
+  init() {}
+
+  // Snapshot of a C++ BorderValue. The color is not mirrored yet, only whether it is transparent.
+  init(raw: BorderValueRaw) {
+    width = raw.width
+    style = BorderStyle(rawValue: raw.style)!
+    m_isTransparent = raw.isTransparent
+  }
+
   func nonZero() -> Bool {
     return width != 0 && style != .None
   }
 
-  func isTransparent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isTransparent() -> Bool { return m_isTransparent }
 
-  let width: Float32 = 3
-  let style: BorderStyle = .None
+  private(set) var width: Float32 = 3
+  private(set) var style: BorderStyle = .None
+  private var m_isTransparent = false
 }

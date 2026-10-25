@@ -2253,6 +2253,37 @@ extern "C" WEBCORE_EXPORT StyleContentAlignmentDataRaw RenderStyle_alignContent(
     return { static_cast<uint8_t>(align_content.position()), static_cast<uint8_t>(align_content.distribution()), static_cast<uint8_t>(align_content.overflow()) };
 }
 
+struct BorderValueRaw {
+    float width;
+    uint8_t style;
+    bool isTransparent;
+};
+
+static BorderValueRaw convertBorderValue(const WebCore::BorderValue& border)
+{
+    return { border.width(), static_cast<uint8_t>(border.style()), border.isTransparent() };
+}
+
+extern "C" WEBCORE_EXPORT BorderValueRaw RenderStyle_borderLeft(const void* p)
+{
+    return convertBorderValue(static_cast<const WebCore::RenderStyle*>(p)->borderLeft());
+}
+
+extern "C" WEBCORE_EXPORT BorderValueRaw RenderStyle_borderRight(const void* p)
+{
+    return convertBorderValue(static_cast<const WebCore::RenderStyle*>(p)->borderRight());
+}
+
+extern "C" WEBCORE_EXPORT BorderValueRaw RenderStyle_borderTop(const void* p)
+{
+    return convertBorderValue(static_cast<const WebCore::RenderStyle*>(p)->borderTop());
+}
+
+extern "C" WEBCORE_EXPORT BorderValueRaw RenderStyle_borderBottom(const void* p)
+{
+    return convertBorderValue(static_cast<const WebCore::RenderStyle*>(p)->borderBottom());
+}
+
 struct CounterDirectivesRaw {
     int32_t resetValue;
     int32_t incrementValue;
