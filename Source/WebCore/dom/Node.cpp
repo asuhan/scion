@@ -117,16 +117,6 @@ extern "C" WEBCORE_EXPORT bool Node_hasHRTagName(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::hrTag);
 }
 
-extern "C" WEBCORE_EXPORT bool Node_hasTDTagName(const void* raw)
-{
-    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::tdTag);
-}
-
-extern "C" WEBCORE_EXPORT bool Node_hasTHTagName(const void* raw)
-{
-    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::thTag);
-}
-
 extern "C" WEBCORE_EXPORT bool Node_hasColTagName(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::colTag);
@@ -135,21 +125,6 @@ extern "C" WEBCORE_EXPORT bool Node_hasColTagName(const void* raw)
 extern "C" WEBCORE_EXPORT bool Node_hasColgroupTagName(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::colgroupTag);
-}
-
-extern "C" WEBCORE_EXPORT bool Node_hasULTagName(const void* raw)
-{
-    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::ulTag);
-}
-
-extern "C" WEBCORE_EXPORT bool Node_hasOLTagName(const void* raw)
-{
-    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::olTag);
-}
-
-extern "C" WEBCORE_EXPORT bool Node_hasInputTagName(const void* raw)
-{
-    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::inputTag);
 }
 
 extern "C" WEBCORE_EXPORT bool Node_hasLegendTagName(const void* raw)
