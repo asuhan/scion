@@ -19,11 +19,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class CSSProperty {
   static func resolveDirectionAwareProperty(
     id: CSSPropertyID, direction: TextDirection, writingMode: WritingMode
   ) -> CSSPropertyID {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CSSPropertyID(
+      rawValue: wk_interop.CSSProperty_resolveDirectionAwareProperty(
+        id.rawValue, direction == .RTL, writingMode.rawValue))!
   }
 }

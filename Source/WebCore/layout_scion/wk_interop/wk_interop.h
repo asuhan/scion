@@ -1268,6 +1268,7 @@ uint8_t RenderStyle_captionSide(const void*);
 struct ListStyleTypeRaw RenderStyle_listStyleType(const void*);
 bool ListStyleType_isCircle(uint8_t, const void*);
 const void* CSSCounterStyle_text(void*, int32_t, uint8_t, bool);
+uint16_t CSSProperty_resolveDirectionAwareProperty(uint16_t, bool, uint8_t);
 struct CounterStyleSymbolRaw CSSCounterStyle_prefix(const void*);
 struct CounterStyleSymbolRaw CSSCounterStyle_suffix(const void*);
 void CSSCounterStyle_deref(void*);

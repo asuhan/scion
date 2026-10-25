@@ -25,6 +25,11 @@
 #include "StylePropertyShorthand.h"
 #include <wtf/NeverDestroyed.h>
 
+extern "C" WEBCORE_EXPORT uint16_t CSSProperty_resolveDirectionAwareProperty(uint16_t propertyID, bool isRightToLeft, uint8_t writingMode)
+{
+    return static_cast<uint16_t>(WebCore::CSSProperty::resolveDirectionAwareProperty(static_cast<WebCore::CSSPropertyID>(propertyID), isRightToLeft ? WebCore::TextDirection::RTL : WebCore::TextDirection::LTR, static_cast<WebCore::WritingMode>(writingMode)));
+}
+
 namespace WebCore {
 
 struct SameSizeAsCSSProperty {
