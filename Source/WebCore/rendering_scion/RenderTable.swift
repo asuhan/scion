@@ -596,14 +596,91 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func colElement(col: UInt32) -> RenderTableColWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var startEdge = false
+    var endEdge = false
+    return colElement(col: col, startEdge: &startEdge, endEdge: &endEdge)
   }
 
   func colElement(col: UInt32, startEdge: inout Bool, endEdge: inout Bool) -> RenderTableColWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // The common case is to not have columns, make that case fast.
+    if !hasColElements {
+      return nil
+    }
+    return slowColElement(col: col, startEdge: &startEdge, endEdge: &endEdge)
+  }
+
+  private func slowColElement(col: UInt32, startEdge: inout Bool, endEdge: inout Bool)
+    -> RenderTableColWrapper?
+  {
+    assert(isNativeImpl())
+    assert(hasColElements)
+
+    if !m_columnRenderersValid {
+      updateColumnCache()
+    }
+
+    var columnCount: UInt32 = 0
+    for columnRenderer in m_columnRenderers {
+      if !columnRenderer.bool() {
+        continue
+      }
+      let span = (*columnRenderer).span
+      let startCol = columnCount
+      assert(span >= 1)
+      let endCol = columnCount + span - 1
+      columnCount += span
+      if columnCount > col {
+        startEdge = startCol == col
+        endEdge = endCol == col
+        return *columnRenderer
+      }
+    }
+    return nil
+  }
+
+  private func updateColumnCache() {
+    assert(isNativeImpl())
+    assert(hasColElements)
+    assert(m_columnRenderers.isEmpty)
+    assert(m_effectiveColumnIndexMap.isEmpty)
+    assert(!m_columnRenderersValid)
+
+    var columnIndex: UInt32 = 0
+    var columnRenderer = firstColumn()
+    while let current = columnRenderer {
+      defer { columnRenderer = current.nextColumn() }
+      if current.isTableColumnGroupWithColumnChildren() {
+        continue
+      }
+      m_columnRenderers.append(WeakPtr(current))
+      // FIXME: We should look to compute the effective column index successively from previous values instead of
+      // calling colToEffCol(), which is in O(numEffCols()). Although it's unlikely that this is a hot function.
+      if m_effectiveColumnIndexMap[ObjectIdentifier(current)] == nil {
+        m_effectiveColumnIndexMap[ObjectIdentifier(current)] = colToEffCol(column: columnIndex)
+      }
+      columnIndex += current.span
+    }
+    m_columnRenderersValid = true
+  }
+
+  func effectiveIndexOfColumn(_ column: RenderTableColWrapper) -> UInt32 {
+    assert(isNativeImpl())
+    if !m_columnRenderersValid {
+      updateColumnCache()
+    }
+    var columnToUse: RenderTableColWrapper? = column
+    if column.isTableColumnGroupWithColumnChildren() {
+      columnToUse = column.nextColumn()  // First column in column-group
+    }
+    guard let columnToUse, let index = m_effectiveColumnIndexMap[ObjectIdentifier(columnToUse)]
+    else {
+      assertionFailure()
+      return UInt32.max
+    }
+    return index
   }
 
   func setNeedsSectionRecalc() {
