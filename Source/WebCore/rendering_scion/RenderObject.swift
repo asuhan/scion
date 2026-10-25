@@ -1906,7 +1906,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func generatingPseudoHostElement() -> NodeWrapper? {
     assert(isNativeImpl())
-    return PseudoElementWrapper(p: node()!.p).hostElement()
+    return (node() as! PseudoElementWrapper).hostElement()
   }
 
   func nonPseudoNode() -> NodeWrapper? {

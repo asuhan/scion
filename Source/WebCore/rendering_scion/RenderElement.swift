@@ -1500,8 +1500,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func generatingElement() -> ElementWrapper? {
     assert(isNativeImpl())
-    guard let node = generatingNode() else { return nil }
-    return ElementWrapper(p: node.p)
+    return generatingNode().map { $0 as! ElementWrapper }
   }
 
   func hasCounterNodeMap() -> Bool {
