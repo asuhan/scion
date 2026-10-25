@@ -4352,6 +4352,48 @@ func RenderTableCellScion_borderAfter(_ objectRaw: UnsafeRawPointer) -> Int32 {
   return object.borderAfter().rawValue()
 }
 
+@_cdecl("RenderTableCaptionScion_insertedIntoTree")
+func RenderTableCaptionScion_insertedIntoTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableCaptionWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.insertedIntoTree()
+}
+
+@_cdecl("RenderTableCaptionScion_willBeRemovedFromTree")
+func RenderTableCaptionScion_willBeRemovedFromTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableCaptionWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.willBeRemovedFromTree()
+}
+
+@_cdecl("RenderTableCellScion_willBeRemovedFromTree")
+func RenderTableCellScion_willBeRemovedFromTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.willBeRemovedFromTree()
+}
+
+@_cdecl("RenderTableColScion_insertedIntoTree")
+func RenderTableColScion_insertedIntoTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableColWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.insertedIntoTree()
+}
+
+@_cdecl("RenderTableColScion_willBeRemovedFromTree")
+func RenderTableColScion_willBeRemovedFromTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableColWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.willBeRemovedFromTree()
+}
+
+@_cdecl("RenderTableRowScion_willBeRemovedFromTree")
+func RenderTableRowScion_willBeRemovedFromTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableRowWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.willBeRemovedFromTree()
+}
+
+@_cdecl("RenderTableSectionScion_willBeRemovedFromTree")
+func RenderTableSectionScion_willBeRemovedFromTree(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<RenderTableSectionWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.willBeRemovedFromTree()
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

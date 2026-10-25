@@ -1470,6 +1470,8 @@ public:
     {
     }
 
+    void willBeRemovedFromTree();
+
     void willInsertTableRow(RenderTableRow&, RenderObject*);
 
     void setWk(void*);
@@ -1484,6 +1486,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void willBeRemovedFromTree();
 
     void didInsertTableCell(RenderTableCell&, RenderObject*);
 
@@ -1500,6 +1504,10 @@ public:
     {
     }
 
+    void willBeRemovedFromTree();
+
+    void insertedIntoTree();
+
     void setWk(void*);
 
 private:
@@ -1512,6 +1520,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void willBeRemovedFromTree();
 
     LayoutUnit borderAfter() const;
 
@@ -1563,6 +1573,10 @@ public:
         : m_handle(handle)
     {
     }
+
+    void willBeRemovedFromTree();
+
+    void insertedIntoTree();
 
 private:
     void* m_handle;

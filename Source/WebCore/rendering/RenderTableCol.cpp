@@ -126,14 +126,20 @@ void RenderTableCol::updateFromElement()
 
 void RenderTableCol::insertedIntoTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->insertedIntoTree();
+        return;
+    }
     RenderBox::insertedIntoTree();
     table()->addColumn(this);
 }
 
 void RenderTableCol::willBeRemovedFromTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willBeRemovedFromTree();
+        return;
+    }
     RenderBox::willBeRemovedFromTree();
     if (auto* table = this->table()) {
         // We only need to invalidate the column cache when only individual columns are being removed (as opposed to when the entire table is being collapsed).

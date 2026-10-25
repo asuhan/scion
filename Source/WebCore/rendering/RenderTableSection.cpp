@@ -132,7 +132,10 @@ void RenderTableSection::styleDidChange(StyleDifference diff, const RenderStyle*
 
 void RenderTableSection::willBeRemovedFromTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willBeRemovedFromTree();
+        return;
+    }
     RenderBox::willBeRemovedFromTree();
 
     // Preventively invalidate our cells as we may be re-inserted into

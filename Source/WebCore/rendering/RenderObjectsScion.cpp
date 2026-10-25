@@ -840,6 +840,20 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" void RenderTableSectionScion_willBeRemovedFromTree(void*);
+
+extern "C" void RenderTableRowScion_willBeRemovedFromTree(void*);
+
+extern "C" void RenderTableColScion_willBeRemovedFromTree(void*);
+
+extern "C" void RenderTableColScion_insertedIntoTree(void*);
+
+extern "C" void RenderTableCellScion_willBeRemovedFromTree(void*);
+
+extern "C" void RenderTableCaptionScion_willBeRemovedFromTree(void*);
+
+extern "C" void RenderTableCaptionScion_insertedIntoTree(void*);
+
 extern "C" int32_t RenderTableCellScion_borderAfter(const void*);
 
 extern "C" int32_t RenderTableCellScion_borderBefore(const void*);
@@ -3101,6 +3115,41 @@ LayoutUnit RenderTableCellScion::borderBefore() const
 LayoutUnit RenderTableCellScion::borderAfter() const
 {
     return LayoutUnit::fromRawValue(RenderTableCellScion_borderAfter(m_handle));
+}
+
+void RenderTableCaptionScion::insertedIntoTree()
+{
+    RenderTableCaptionScion_insertedIntoTree(m_handle);
+}
+
+void RenderTableCaptionScion::willBeRemovedFromTree()
+{
+    RenderTableCaptionScion_willBeRemovedFromTree(m_handle);
+}
+
+void RenderTableCellScion::willBeRemovedFromTree()
+{
+    RenderTableCellScion_willBeRemovedFromTree(m_handle);
+}
+
+void RenderTableColScion::insertedIntoTree()
+{
+    RenderTableColScion_insertedIntoTree(m_handle);
+}
+
+void RenderTableColScion::willBeRemovedFromTree()
+{
+    RenderTableColScion_willBeRemovedFromTree(m_handle);
+}
+
+void RenderTableRowScion::willBeRemovedFromTree()
+{
+    RenderTableRowScion_willBeRemovedFromTree(m_handle);
+}
+
+void RenderTableSectionScion::willBeRemovedFromTree()
+{
+    RenderTableSectionScion_willBeRemovedFromTree(m_handle);
 }
 
 void RenderListMarkerScion::setWk(void* wk)

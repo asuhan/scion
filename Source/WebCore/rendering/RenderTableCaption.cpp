@@ -46,14 +46,20 @@ void RenderTableCaption::setScionHandle(void* handle)
 
 void RenderTableCaption::insertedIntoTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->insertedIntoTree();
+        return;
+    }
     RenderBlockFlow::insertedIntoTree();
     table()->addCaption(*this);
 }
 
 void RenderTableCaption::willBeRemovedFromTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willBeRemovedFromTree();
+        return;
+    }
     RenderBlockFlow::willBeRemovedFromTree();
     table()->removeCaption(*this);
 }
