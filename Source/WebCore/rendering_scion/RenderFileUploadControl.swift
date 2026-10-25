@@ -348,11 +348,7 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   private func uploadButton() -> HTMLInputElementWrapper? {
     assert(isNativeImpl())
     assert(inputElement().shadowRoot() != nil)
-    guard let firstChild = inputElement().shadowRoot()!.firstChild(), firstChild.hasInputTagName()
-    else {
-      return nil
-    }
-    return HTMLInputElementWrapper(p: firstChild.p)
+    return inputElement().shadowRoot()!.firstChild() as? HTMLInputElementWrapper
   }
 
   private var m_canReceiveDroppedFiles: Bool
