@@ -606,7 +606,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func setNeedsSectionRecalc() {
+  func setNeedsSectionRecalc() {
     if renderTreeBeingDestroyed() {
       return
     }

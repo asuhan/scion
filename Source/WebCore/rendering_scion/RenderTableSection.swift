@@ -161,14 +161,15 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   override func getWk() -> UnsafeMutableRawPointer { return wk! }
 
   private var wk: UnsafeMutableRawPointer? = nil
+
   func firstRow() -> RenderTableRowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.firstChild() as! RenderTableRowWrapper?
   }
 
   func lastRow() -> RenderTableRowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.lastChild() as! RenderTableRowWrapper?
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
@@ -522,13 +523,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     var inColSpan = false  // true for columns after the first in a colspan
 
     func primaryCell() -> RenderTableCellWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return hasCells() ? cells[cells.count - 1] : nil
     }
 
     func hasCells() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return cells.count > 0
     }
   }
 
@@ -573,8 +572,17 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func appendColumn(pos: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!needsCellRecalc)
+
+    for row in 0..<grid.count {
+      while grid[row].row.count < Int(pos) + 1 {
+        grid[row].row.append(CellStruct())
+      }
+      if grid[row].row.count > Int(pos) + 1 {
+        grid[row].row.removeLast(grid[row].row.count - (Int(pos) + 1))
+      }
+    }
   }
 
   func splitColumn(pos: UInt32, first: UInt32) {
@@ -873,8 +881,9 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func numRows() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!needsCellRecalc)
+    return UInt32(grid.count)
   }
 
   func numColumns() -> UInt32 {
@@ -945,37 +954,69 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func setNeedsCellRecalc() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    needsCellRecalc = true
+
+    // Clear the grid now to ensure that we don't hold onto any stale pointers (e.g. a cell renderer that is being removed).
+    grid.removeAll()
+
+    if let t = table() {
+      t.setNeedsSectionRecalc()
+    }
   }
 
   func rowBaseline(row: UInt32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    recalcCellsIfNeeded()
+    return grid[Int(row)].baseline
   }
 
   func rowLogicalHeightChanged(_ rowIndex: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if needsCellRecalc {
+      return
+    }
+
+    setRowLogicalHeightToRowStyleLogicalHeight(row: &grid[Int(rowIndex)])
+
+    var cell = grid[Int(rowIndex)].rowRenderer!.firstCell()
+    while let current = cell {
+      updateLogicalHeightForCell(row: &grid[Int(rowIndex)], cell: current)
+      cell = current.nextCell()
+    }
   }
 
   func clearCachedCollapsedBorders() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !table()!.collapseBorders() {
+      return
+    }
+    cellsCollapsedBorders.removeAll()
   }
 
   func setCachedCollapsedBorder(
     cell: RenderTableCellWrapper, side: CollapsedBorderSide, border: CollapsedBorderValue
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(table()!.collapseBorders())
+    assert(border.width().bool())
+    var sides = cellsCollapsedBorders[ObjectIdentifier(cell)] ?? [nil, nil, nil, nil]
+    sides[collapsedBorderSideIndex(side)] = border
+    cellsCollapsedBorders[ObjectIdentifier(cell)] = sides
   }
 
   func cachedCollapsedBorder(cell: RenderTableCellWrapper, side: CollapsedBorderSide)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(table()!.collapseBorders() && table()!.collapsedBordersAreValid())
+    // Only non-empty collapsed borders are in the map.
+    guard
+      let border = cellsCollapsedBorders[ObjectIdentifier(cell)]?[collapsedBorderSideIndex(side)]
+    else {
+      return CollapsedBorderValue(border: BorderValue(), color: ColorWrapper(), precedence: .Cell)
+    }
+    return border
   }
 
   // distributeExtraLogicalHeightToRows methods return the *consumed* extra logical height.
@@ -1814,13 +1855,14 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func fullTableRowSpan() -> CellSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!needsCellRecalc)
+    return CellSpan(start: 0, end: UInt32(grid.count))
   }
 
   private func fullTableColumnSpan() -> CellSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return CellSpan(start: 0, end: UInt32(table()!.columns().count))
   }
 
   // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
@@ -2006,4 +2048,20 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private var forceSlowPaintPathWithOverflowingCell = false
   private var hasMultipleCellLevels = false
   var needsCellRecalc = false
+
+  // Keyed by cell, then indexed by CollapsedBorderSide. Only non-empty collapsed borders are stored.
+  private var cellsCollapsedBorders: [ObjectIdentifier: [CollapsedBorderValue?]] = [:]
+}
+
+private func collapsedBorderSideIndex(_ side: CollapsedBorderSide) -> Int {
+  switch side {
+  case .CBSBefore:
+    return 0
+  case .CBSAfter:
+    return 1
+  case .CBSStart:
+    return 2
+  case .CBSEnd:
+    return 3
+  }
 }
