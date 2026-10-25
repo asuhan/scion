@@ -841,23 +841,27 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   func styleForCellFlow() -> RenderStyleWrapper { return table()!.style() }
 
   func borderAdjoiningTableStart() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isFirstOrLastCellInRow())
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningTableEnd() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isFirstOrLastCellInRow())
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   private func borderAdjoiningCellBefore(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(table()!.cellAfter(cell: cell) === self)
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   private func borderAdjoiningCellAfter(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(table()!.cellBefore(cell: cell) === self)
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   func isFirstOrLastCellInRow() -> Bool {
