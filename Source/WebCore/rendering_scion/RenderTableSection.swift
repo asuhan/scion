@@ -286,7 +286,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     // We ignore the border-spacing on any non-top section as it is already included in the previous section's last row position.
     var spacing =
       CPtrToInt(table()!.topSection()?.id()) == CPtrToInt(id())
-      ? LayoutUnit() : table()!.vBorderSpacing()
+      ? table()!.vBorderSpacing() : LayoutUnit()
 
     let unused = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
