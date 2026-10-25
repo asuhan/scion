@@ -285,8 +285,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func setCol(column: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_column = column > maxColumnIndex ? maxColumnIndex : column
   }
 
   func col() -> UInt32 {
