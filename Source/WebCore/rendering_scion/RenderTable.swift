@@ -761,6 +761,11 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func collapsedBordersAreValid() -> Bool { return collapsedBordersValid }
 
+  func collapsedEmptyBorderIsPresent() {
+    assert(isNativeImpl())
+    m_collapsedEmptyBorderIsPresent = true
+  }
+
   func invalidateCollapsedBorders(cellWithStyleChange: RenderTableCellWrapper? = nil) {
     collapsedBordersValid = false
     collapsedBorders.removeAll()
@@ -769,7 +774,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       section.clearCachedCollapsedBorders()
     }
 
-    if !collapsedEmptyBorderIsPresent {
+    if !m_collapsedEmptyBorderIsPresent {
       return
     }
 
@@ -803,7 +808,7 @@ class RenderTableWrapper: RenderBlockWrapper {
         row = row!.nextRow()
       }
     }
-    collapsedEmptyBorderIsPresent = false
+    m_collapsedEmptyBorderIsPresent = false
   }
 
   func currentBorderValue() -> CollapsedBorderValue? { return currentBorder }
@@ -2007,7 +2012,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil
   private var collapsedBordersValid = false
-  private var collapsedEmptyBorderIsPresent = false
+  private var m_collapsedEmptyBorderIsPresent = false
 
   private var hasColElements = false
   var needsSectionRecalc = false

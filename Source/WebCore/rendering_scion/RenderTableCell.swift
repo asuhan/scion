@@ -903,13 +903,28 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func invalidateHasEmptyCollapsedBorders() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    hasEmptyCollapsedBeforeBorder = false
+    hasEmptyCollapsedAfterBorder = false
+    hasEmptyCollapsedStartBorder = false
+    hasEmptyCollapsedEndBorder = false
   }
 
   private func setHasEmptyCollapsedBorder(side: CollapsedBorderSide, empty: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    switch side {
+    case .CBSAfter:
+      hasEmptyCollapsedAfterBorder = empty
+    case .CBSBefore:
+      hasEmptyCollapsedBeforeBorder = empty
+    case .CBSStart:
+      hasEmptyCollapsedStartBorder = empty
+    case .CBSEnd:
+      hasEmptyCollapsedEndBorder = empty
+    }
+    if empty {
+      table()!.collapsedEmptyBorderIsPresent()
+    }
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -1998,10 +2013,10 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private var m_cellWidthChanged = false
   private var m_hasColSpan = false
   private var m_hasRowSpan = false
-  private let hasEmptyCollapsedBeforeBorder = false
-  private let hasEmptyCollapsedAfterBorder = false
-  private let hasEmptyCollapsedStartBorder = false
-  private let hasEmptyCollapsedEndBorder = false
+  private var hasEmptyCollapsedBeforeBorder = false
+  private var hasEmptyCollapsedAfterBorder = false
+  private var hasEmptyCollapsedStartBorder = false
+  private var hasEmptyCollapsedEndBorder = false
   private var m_intrinsicPaddingBefore = LayoutUnit(value: 0)
   private var m_intrinsicPaddingAfter = LayoutUnit(value: 0)
 }
