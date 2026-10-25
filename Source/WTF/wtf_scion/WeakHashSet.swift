@@ -49,8 +49,12 @@ final class WeakHashSet<KeyType: AnyObject>: Sequence, IteratorProtocol {
   }
 
   func isEmptyIgnoringNullReferences() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_set.size() == 0 {
+      return true
+    }
+    // All null references compare equal, so the set holds only null references exactly when its
+    // single element is a null reference.
+    return m_set.size() == 1 && m_set.contains(value: WeakPtr<KeyType>(nil))
   }
 
   func computeSize() -> UInt32 {
