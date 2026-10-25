@@ -188,9 +188,14 @@ static inline void resetSectionPointerIfNotBefore(SingleThreadWeakPtr<RenderTabl
         section.clear();
 }
 
-void RenderTable::willInsertTableColumn(RenderTableCol&, RenderObject*)
+void RenderTable::willInsertTableColumn(RenderTableCol& child, RenderObject* beforeChild)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->willInsertTableColumn(child, beforeChild);
+        return;
+    }
+    UNUSED_PARAM(child);
+    UNUSED_PARAM(beforeChild);
     m_hasColElements = true;
 }
 

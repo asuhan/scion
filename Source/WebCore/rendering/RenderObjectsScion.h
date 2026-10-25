@@ -103,6 +103,7 @@ class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
 class RenderTableSection;
+class RenderTableCol;
 class RenderListItem;
 class RenderListMarker;
 class RenderMultiColumnFlow;
@@ -1441,6 +1442,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void willInsertTableColumn(RenderTableCol&, RenderObject*);
 
     void willInsertTableSection(RenderTableSection&, RenderObject*);
 

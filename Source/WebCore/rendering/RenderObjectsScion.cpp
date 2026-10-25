@@ -840,6 +840,8 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" void RenderTableScion_willInsertTableColumn(void*, void*, void*);
+
 extern "C" void RenderTableScion_willInsertTableSection(void*, void*, void*);
 
 extern "C" void RenderTableColScion_setWk(void*, void*);
@@ -2912,6 +2914,11 @@ void RenderTableColScion::setWk(void* wk)
 void RenderTableScion::willInsertTableSection(RenderTableSection& child, RenderObject* beforeChild)
 {
     RenderTableScion_willInsertTableSection(m_handle, &child, beforeChild);
+}
+
+void RenderTableScion::willInsertTableColumn(RenderTableCol& child, RenderObject* beforeChild)
+{
+    RenderTableScion_willInsertTableColumn(m_handle, &child, beforeChild);
 }
 
 void RenderListMarkerScion::setWk(void* wk)
