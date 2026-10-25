@@ -4187,9 +4187,25 @@ func RenderTableScion_willInsertTableColumn(
 }
 
 @_cdecl("RenderTableSectionScion_willInsertTableRow")
-func RenderTableSectionScion_willInsertTableRow(_ objectRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer, _ beforeChildRaw: UnsafeMutableRawPointer?) {
+func RenderTableSectionScion_willInsertTableRow(
+  _ objectRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer,
+  _ beforeChildRaw: UnsafeMutableRawPointer?
+) {
   let object = Unmanaged<RenderTableSectionWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  object.willInsertTableRow(child: createRenderObjectWrapperOrNative(childRaw) as! RenderTableRowWrapper, beforeChild: beforeChildRaw.map { createRenderObjectWrapperOrNative($0) })
+  object.willInsertTableRow(
+    child: createRenderObjectWrapperOrNative(childRaw) as! RenderTableRowWrapper,
+    beforeChild: beforeChildRaw.map { createRenderObjectWrapperOrNative($0) })
+}
+
+@_cdecl("RenderTableRowScion_didInsertTableCell")
+func RenderTableRowScion_didInsertTableCell(
+  _ objectRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer,
+  _ beforeChildRaw: UnsafeMutableRawPointer?
+) {
+  let object = Unmanaged<RenderTableRowWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.didInsertTableCell(
+    child: createRenderObjectWrapperOrNative(childRaw) as! RenderTableCellWrapper,
+    beforeChild: beforeChildRaw.map { createRenderObjectWrapperOrNative($0) })
 }
 
 @_cdecl("RenderListMarkerScion_setWk")

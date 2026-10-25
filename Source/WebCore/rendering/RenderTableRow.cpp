@@ -144,7 +144,10 @@ const BorderValue& RenderTableRow::borderAdjoiningEndCell(const RenderTableCell&
 
 void RenderTableRow::didInsertTableCell(RenderTableCell& child, RenderObject* beforeChild)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->didInsertTableCell(child, beforeChild);
+        return;
+    }
     // Generated content can result in us having a null section so make sure to null check our parent.
     if (auto* section = this->section()) {
         section->addCell(&child, this);
