@@ -542,7 +542,7 @@ func RenderBlockFlowScion_create(
   style.pOwner = true
   assert(typeRaw == 0)
   let renderBlockFlow = RenderBlockFlowWrapper(
-    type: .BlockFlow, element: ElementWrapper(p: element),
+    type: .BlockFlow, element: createElementWrapper(element),
     style: style, flags: RenderObjectWrapper.BlockFlowFlag(rawValue: flagsRaw))
   let unmanaged = Unmanaged.passRetained(renderBlockFlow)
   return unmanaged.toOpaque()
@@ -2225,8 +2225,8 @@ private func convertHitTestLocation(_ r: HitTestLocationRaw) -> HitTestLocationW
 private func convertHitTestResult(_ raw: HitTestResultRaw) -> HitTestResultWrapper {
   return HitTestResultWrapper(
     convertHitTestLocation(raw.hitTestLocation),
-    raw.innerNode != nil ? NodeWrapper(p: raw.innerNode!) : nil,
-    raw.innerNonSharedNode != nil ? NodeWrapper(p: raw.innerNonSharedNode!) : nil,
+    raw.innerNode != nil ? createNodeWrapper(raw.innerNode!) : nil,
+    raw.innerNonSharedNode != nil ? createNodeWrapper(raw.innerNonSharedNode!) : nil,
     convertLayoutPointRaw(raw.localPoint))
 }
 
@@ -3695,7 +3695,7 @@ func RenderInlineScion_create(
   style.pOwner = true
   assert(typeRaw == 15)
   let renderBlockFlow = RenderInlineWrapper(
-    type: .Inline, element: ElementWrapper(p: element), style: style)
+    type: .Inline, element: createElementWrapper(element), style: style)
   let unmanaged = Unmanaged.passRetained(renderBlockFlow)
   return unmanaged.toOpaque()
 }
@@ -3718,7 +3718,8 @@ func RenderLineBreakScion_create(
 ) -> UnsafeMutableRawPointer {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let element = isWBR ? HTMLWBRElementWrapper(p: elementRaw) : HTMLBRElementWrapper(p: elementRaw)
+  let element = createElementWrapper(elementRaw) as! HTMLElementWrapper
+  assert(isWBR ? element is HTMLWBRElementWrapper : element is HTMLBRElementWrapper)
   let lineBreak = RenderLineBreakWrapper(element, style)
   let unmanaged = Unmanaged.passRetained(lineBreak)
   return unmanaged.toOpaque()
@@ -3775,9 +3776,7 @@ func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let element: HTMLFormControlElementWrapper =
-    NodeWrapper(p: elementRaw).hasInputTagName()
-    ? HTMLInputElementWrapper(p: elementRaw) : HTMLButtonElementWrapper(p: elementRaw)
+  let element = createElementWrapper(elementRaw) as! HTMLFormControlElementWrapper
   let button = RenderButtonWrapper(element, style)
   let unmanaged = Unmanaged.passRetained(button)
   return unmanaged.toOpaque()
@@ -3790,7 +3789,7 @@ func RenderTableScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: 
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
   let renderer = RenderTableWrapper(
-    type: .Table, element: ElementWrapper(p: elementRaw), style: style)
+    type: .Table, element: createElementWrapper(elementRaw), style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
@@ -3812,7 +3811,7 @@ func RenderTableSectionScion_create(
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let renderer = RenderTableSectionWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  let renderer = RenderTableSectionWrapper(element: createElementWrapper(elementRaw), style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
@@ -3832,7 +3831,7 @@ func RenderTableRowScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRa
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let renderer = RenderTableRowWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  let renderer = RenderTableRowWrapper(element: createElementWrapper(elementRaw), style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
@@ -3854,7 +3853,7 @@ func RenderTableCellScion_create(
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let renderer = RenderTableCellWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  let renderer = RenderTableCellWrapper(element: createElementWrapper(elementRaw), style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
@@ -3874,7 +3873,7 @@ func RenderTableColScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRa
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let renderer = RenderTableColWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  let renderer = RenderTableColWrapper(element: createElementWrapper(elementRaw), style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
@@ -3896,7 +3895,7 @@ func RenderTableCaptionScion_create(
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let renderer = RenderTableCaptionWrapper(element: ElementWrapper(p: elementRaw), style: style)
+  let renderer = RenderTableCaptionWrapper(element: createElementWrapper(elementRaw), style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
@@ -3906,7 +3905,7 @@ func RenderListItemScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRa
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let listItem = RenderListItemWrapper(ElementWrapper(p: elementRaw), style)
+  let listItem = RenderListItemWrapper(createElementWrapper(elementRaw), style)
   let unmanaged = Unmanaged.passRetained(listItem)
   return unmanaged.toOpaque()
 }
@@ -3931,7 +3930,7 @@ func RenderFileUploadControlScion_create(
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
   let fileUploadControl = RenderFileUploadControlWrapper(
-    HTMLInputElementWrapper(p: elementRaw), style)
+    createElementWrapper(elementRaw) as! HTMLInputElementWrapper, style)
   let unmanaged = Unmanaged.passRetained(fileUploadControl)
   return unmanaged.toOpaque()
 }
@@ -3945,7 +3944,7 @@ func RenderFlexibleBoxScion_create(
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
   let flexibleBox = RenderFlexibleBoxWrapper(
-    type: .FlexibleBox, element: ElementWrapper(p: elementRaw), style: style)
+    type: .FlexibleBox, element: createElementWrapper(elementRaw), style: style)
   let unmanaged = Unmanaged.passRetained(flexibleBox)
   return unmanaged.toOpaque()
 }
@@ -3958,7 +3957,8 @@ func RenderHTMLCanvasScion_create(
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let canvas = RenderHTMLCanvasWrapper(HTMLCanvasElementWrapper(p: elementRaw), style)
+  let canvas = RenderHTMLCanvasWrapper(
+    createElementWrapper(elementRaw) as! HTMLCanvasElementWrapper, style)
   let unmanaged = Unmanaged.passRetained(canvas)
   return unmanaged.toOpaque()
 }
@@ -3969,7 +3969,8 @@ func RenderIFrameScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
 {
   let style = convert_render_style(p: styleRaw)
   style.pOwner = true
-  let iframe = RenderIFrameWrapper(HTMLIFrameElementWrapper(p: elementRaw), style)
+  let iframe = RenderIFrameWrapper(
+    createElementWrapper(elementRaw) as! HTMLIFrameElementWrapper, style)
   let unmanaged = Unmanaged.passRetained(iframe)
   return unmanaged.toOpaque()
 }

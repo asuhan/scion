@@ -34,7 +34,7 @@ final class ShadowRootWrapper: TreeScopeWrapper {
   // TODO(asuhan): inherit this from ContainerNode
   func firstChild() -> NodeWrapper? {
     guard let firstChild = wk_interop.ContainerNode_firstChild(p) else { return nil }
-    return NodeWrapper(p: firstChild)
+    return createNodeWrapper(firstChild)
   }
 
   func host() -> ElementWrapper? {

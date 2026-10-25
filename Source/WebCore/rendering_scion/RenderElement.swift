@@ -472,7 +472,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func element() -> ElementWrapper? {
     if !isNativeImpl() {
       if let elementRaw = wk_interop.RenderElement_element(id()) {
-        return ElementWrapper(p: elementRaw)
+        return createElementWrapper(elementRaw)
       }
       return nil
     }

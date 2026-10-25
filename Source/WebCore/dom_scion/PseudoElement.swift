@@ -30,6 +30,6 @@ import wk_interop
 final class PseudoElementWrapper: ElementWrapper {
   func hostElement() -> ElementWrapper? {
     guard let hostElement = wk_interop.PseudoElement_hostElement(p) else { return nil }
-    return ElementWrapper(p: hostElement)
+    return createElementWrapper(hostElement)
   }
 }

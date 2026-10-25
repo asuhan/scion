@@ -38,7 +38,7 @@ class Document: TreeScopeWrapper {
 
   func documentElement() -> ElementWrapper? {
     let raw = wk_interop.Document_documentElement(p)
-    return raw != nil ? ElementWrapper(p: raw!) : nil
+    return raw != nil ? createElementWrapper(raw!) : nil
   }
 
   func isImageDocument() -> Bool { return wk_interop.Document_isImageDocument(p) }
@@ -136,7 +136,7 @@ class Document: TreeScopeWrapper {
   // Returns nullptr if this is the top level document.
   func ownerElement() -> HTMLFrameOwnerElementWrapper? {
     guard let raw = wk_interop.Document_ownerElement(p) else { return nil }
-    return HTMLFrameOwnerElementWrapper(p: raw)
+    return (createElementWrapper(raw) as! HTMLFrameOwnerElementWrapper)
   }
 
   // This is the "HTML body element" as defined by CSSOM View spec, the first body child of the

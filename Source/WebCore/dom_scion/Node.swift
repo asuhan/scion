@@ -58,7 +58,7 @@ class NodeWrapper {
 
   func parentElement() -> ElementWrapper? {
     guard let parentElement = wk_interop.Node_parentElement(p) else { return nil }
-    return ElementWrapper(p: parentElement)
+    return createElementWrapper(parentElement)
   }
 
   func nextSibling() -> NodeWrapper? {
@@ -93,7 +93,7 @@ class NodeWrapper {
   // If this node is in a shadow tree, returns its shadow host. Otherwise, returns null.
   func shadowHost() -> ElementWrapper? {
     guard let shadowHost = wk_interop.Node_shadowHost(p) else { return nil }
-    return ElementWrapper(p: shadowHost)
+    return createElementWrapper(shadowHost)
   }
 
   func containingShadowRoot() -> ShadowRootWrapper? {
@@ -114,7 +114,7 @@ class NodeWrapper {
 
   func parentOrShadowHostElement() -> ElementWrapper? {
     guard let raw = wk_interop.Node_parentOrShadowHostElement(p) else { return nil }
-    return ElementWrapper(p: raw)
+    return createElementWrapper(raw)
   }
 
   // Returns the enclosing event parent Element (or self) that, when clicked, would trigger a navigation.

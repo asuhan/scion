@@ -30,7 +30,7 @@ enum ElementTraversal {
   {
     guard let next = wk_interop.ElementTraversal_nextIncludingPseudo(current.p, stayWithin?.p)
     else { return nil }
-    return ElementWrapper(p: next)
+    return createElementWrapper(next)
   }
 
   static func nextIncludingPseudoSkippingChildren(
@@ -40,7 +40,7 @@ enum ElementTraversal {
       let next = wk_interop.ElementTraversal_nextIncludingPseudoSkippingChildren(
         current.p, stayWithin?.p)
     else { return nil }
-    return ElementWrapper(p: next)
+    return createElementWrapper(next)
   }
 
   static func previousIncludingPseudo(_ current: NodeWrapper, _ stayWithin: NodeWrapper? = nil)
@@ -49,6 +49,6 @@ enum ElementTraversal {
     guard
       let previous = wk_interop.ElementTraversal_previousIncludingPseudo(current.p, stayWithin?.p)
     else { return nil }
-    return ElementWrapper(p: previous)
+    return createElementWrapper(previous)
   }
 }
