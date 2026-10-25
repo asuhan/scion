@@ -28,6 +28,7 @@ target_sources(layout_scion PRIVATE
     HTMLTablePartElement.swift
     HTMLTextAreaElement.swift
     HTMLTextFormControlElement.swift
+    HTMLUListElement.swift
     HTMLWBRElement.swift
 )
 add_subdirectory(canvas)
