@@ -541,23 +541,25 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func borderAdjoiningTableStart() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningTableEnd() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningStartCell(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(cell.isFirstOrLastCellInRow())
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningEndCell(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(cell.isFirstOrLastCellInRow())
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   func cellAt(row: UInt32, col: UInt32) -> CellStruct {
