@@ -1538,7 +1538,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     assert(isNativeImpl())
     m_columnRenderersValid = false
     m_columnRenderers.removeAll()
-    m_effectiveColumnIndexMap!.clear()
+    m_effectiveColumnIndexMap.removeAll()
   }
 
   private func invalidateCachedColumnOffsets() {
@@ -1999,9 +1999,10 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var captions: [RenderTableCaptionWrapper?] = []
   private var m_columnRenderers: [WeakPtr<RenderTableColWrapper>] = []
 
-  private typealias EffectiveColumnIndexMap = HashMap<WeakRef<RenderTableColWrapper>, UInt32>
+  // Keyed by the column renderer; HashMap<WeakRef> is not available in Swift yet.
+  private typealias EffectiveColumnIndexMap = [ObjectIdentifier: UInt32]
   // TODO(asuhan): make it not nil when HashMap is implemented.
-  private let m_effectiveColumnIndexMap: EffectiveColumnIndexMap? = nil
+  private var m_effectiveColumnIndexMap = EffectiveColumnIndexMap()
 
   private var head: RenderTableSectionWrapper? = nil
   private var foot: RenderTableSectionWrapper? = nil
