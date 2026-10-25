@@ -434,8 +434,13 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   static func sortBorderValues(borderValues: inout RenderTableWrapper.CollapsedBorderValues) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    borderValues.sort { a, b in
+      // Mirrors compareBorderValuesForQSort.
+      if a.isSameIgnoringColor(o: b) {
+        return false
+      }
+      return compareBorders(border1: a, border2: b) < 0
+    }
   }
 
   override func layout() {
