@@ -4232,6 +4232,42 @@ func RenderTableScion_borderTop(_ objectRaw: UnsafeRawPointer) -> Int32 {
   return object.borderTop().rawValue()
 }
 
+@_cdecl("RenderTableCellScion_intrinsicPaddingBefore")
+func RenderTableCellScion_intrinsicPaddingBefore(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.intrinsicPaddingBefore().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_intrinsicPaddingAfter")
+func RenderTableCellScion_intrinsicPaddingAfter(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.intrinsicPaddingAfter().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_colSpan")
+func RenderTableCellScion_colSpan(_ objectRaw: UnsafeRawPointer) -> UInt32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.colSpan()
+}
+
+@_cdecl("RenderTableCellScion_rowSpan")
+func RenderTableCellScion_rowSpan(_ objectRaw: UnsafeRawPointer) -> UInt32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.rowSpan()
+}
+
+@_cdecl("RenderTableCellScion_col")
+func RenderTableCellScion_col(_ objectRaw: UnsafeRawPointer) -> UInt32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.col()
+}
+
+@_cdecl("RenderTableCellScion_rowIndex")
+func RenderTableCellScion_rowIndex(_ objectRaw: UnsafeRawPointer) -> UInt32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.rowIndex()
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer

@@ -1513,6 +1513,18 @@ public:
     {
     }
 
+    unsigned rowIndex() const;
+
+    unsigned col() const;
+
+    unsigned rowSpan() const;
+
+    unsigned colSpan() const;
+
+    LayoutUnit intrinsicPaddingAfter() const;
+
+    LayoutUnit intrinsicPaddingBefore() const;
+
 private:
     void* m_handle;
 };

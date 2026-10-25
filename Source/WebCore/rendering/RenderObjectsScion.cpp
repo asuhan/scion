@@ -840,6 +840,18 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" uint32_t RenderTableCellScion_rowIndex(const void*);
+
+extern "C" uint32_t RenderTableCellScion_col(const void*);
+
+extern "C" uint32_t RenderTableCellScion_rowSpan(const void*);
+
+extern "C" uint32_t RenderTableCellScion_colSpan(const void*);
+
+extern "C" int32_t RenderTableCellScion_intrinsicPaddingAfter(const void*);
+
+extern "C" int32_t RenderTableCellScion_intrinsicPaddingBefore(const void*);
+
 extern "C" int32_t RenderTableScion_borderTop(const void*);
 
 extern "C" int32_t RenderTableScion_borderRight(const void*);
@@ -2961,6 +2973,36 @@ LayoutUnit RenderTableScion::borderRight() const
 LayoutUnit RenderTableScion::borderTop() const
 {
     return LayoutUnit::fromRawValue(RenderTableScion_borderTop(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::intrinsicPaddingBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_intrinsicPaddingBefore(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::intrinsicPaddingAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_intrinsicPaddingAfter(m_handle));
+}
+
+unsigned RenderTableCellScion::colSpan() const
+{
+    return RenderTableCellScion_colSpan(m_handle);
+}
+
+unsigned RenderTableCellScion::rowSpan() const
+{
+    return RenderTableCellScion_rowSpan(m_handle);
+}
+
+unsigned RenderTableCellScion::col() const
+{
+    return RenderTableCellScion_col(m_handle);
+}
+
+unsigned RenderTableCellScion::rowIndex() const
+{
+    return RenderTableCellScion_rowIndex(m_handle);
 }
 
 void RenderListMarkerScion::setWk(void* wk)

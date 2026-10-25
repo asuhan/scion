@@ -103,16 +103,8 @@ public:
         setIntrinsicPadding(0, 0);
     }
 
-    LayoutUnit intrinsicPaddingBefore() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_intrinsicPaddingBefore;
-    }
-    LayoutUnit intrinsicPaddingAfter() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_intrinsicPaddingAfter;
-    }
+    LayoutUnit intrinsicPaddingBefore() const;
+    LayoutUnit intrinsicPaddingAfter() const;
 
     RectEdges<LayoutUnit> padding() const override;
     LayoutUnit paddingTop() const override;
@@ -276,35 +268,12 @@ inline RenderTableCell* RenderTableCell::previousCell() const
     return downcast<RenderTableCell>(RenderBlockFlow::previousSibling());
 }
 
-inline unsigned RenderTableCell::colSpan() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (!m_hasColSpan)
-        return 1;
-    return parseColSpanFromDOM();
-}
-
-inline unsigned RenderTableCell::rowSpan() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (!m_hasRowSpan)
-        return 1;
-    return parseRowSpanFromDOM();
-}
-
 inline void RenderTableCell::setCol(unsigned column)
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
     if (UNLIKELY(column > maxColumnIndex))
         column = maxColumnIndex;
     m_column = column;
-}
-
-inline unsigned RenderTableCell::col() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    ASSERT(m_column != unsetColumnIndex);
-    return m_column;
 }
 
 inline RenderTableSection* RenderTableCell::section() const
@@ -323,14 +292,6 @@ inline RenderTable* RenderTableCell::table() const
     if (!section)
         return nullptr;
     return downcast<RenderTable>(section->parent());
-}
-
-inline unsigned RenderTableCell::rowIndex() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    // This function shouldn't be called on a detached cell.
-    ASSERT(row());
-    return row()->rowIndex();
 }
 
 inline bool RenderTableCell::isBaselineAligned() const

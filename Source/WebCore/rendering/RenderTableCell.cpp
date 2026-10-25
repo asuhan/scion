@@ -108,6 +108,55 @@ void RenderTableCell::setScionHandle(void* handle)
     m_scion = std::make_unique<RenderTableCellScion>(handle);
 }
 
+LayoutUnit RenderTableCell::intrinsicPaddingBefore() const
+{
+    if (m_scion)
+        return m_scion->intrinsicPaddingBefore();
+    return m_intrinsicPaddingBefore;
+}
+
+LayoutUnit RenderTableCell::intrinsicPaddingAfter() const
+{
+    if (m_scion)
+        return m_scion->intrinsicPaddingAfter();
+    return m_intrinsicPaddingAfter;
+}
+
+unsigned RenderTableCell::colSpan() const
+{
+    if (m_scion)
+        return m_scion->colSpan();
+    if (!m_hasColSpan)
+        return 1;
+    return parseColSpanFromDOM();
+}
+
+unsigned RenderTableCell::rowSpan() const
+{
+    if (m_scion)
+        return m_scion->rowSpan();
+    if (!m_hasRowSpan)
+        return 1;
+    return parseRowSpanFromDOM();
+}
+
+unsigned RenderTableCell::col() const
+{
+    if (m_scion)
+        return m_scion->col();
+    ASSERT(m_column != unsetColumnIndex);
+    return m_column;
+}
+
+unsigned RenderTableCell::rowIndex() const
+{
+    if (m_scion)
+        return m_scion->rowIndex();
+    // This function shouldn't be called on a detached cell.
+    ASSERT(row());
+    return row()->rowIndex();
+}
+
 void RenderTableCell::willBeRemovedFromTree()
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
