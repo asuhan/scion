@@ -421,7 +421,8 @@ RectEdges<LayoutUnit> RenderTableCell::padding() const
 
 LayoutUnit RenderTableCell::paddingTop() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->paddingTop();
     LayoutUnit result = computedCSSPaddingTop();
     if (!isHorizontalWritingMode())
         return result;
@@ -430,7 +431,8 @@ LayoutUnit RenderTableCell::paddingTop() const
 
 LayoutUnit RenderTableCell::paddingBottom() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->paddingBottom();
     LayoutUnit result = computedCSSPaddingBottom();
     if (!isHorizontalWritingMode())
         return result;
@@ -439,7 +441,8 @@ LayoutUnit RenderTableCell::paddingBottom() const
 
 LayoutUnit RenderTableCell::paddingLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->paddingLeft();
     LayoutUnit result = computedCSSPaddingLeft();
     if (isHorizontalWritingMode())
         return result;
@@ -447,8 +450,9 @@ LayoutUnit RenderTableCell::paddingLeft() const
 }
 
 LayoutUnit RenderTableCell::paddingRight() const
-{   
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+{
+    if (m_scion)
+        return m_scion->paddingRight();
     LayoutUnit result = computedCSSPaddingRight();
     if (isHorizontalWritingMode())
         return result;
@@ -457,13 +461,15 @@ LayoutUnit RenderTableCell::paddingRight() const
 
 LayoutUnit RenderTableCell::paddingBefore() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->paddingBefore();
     return computedCSSPaddingBefore() + intrinsicPaddingBefore();
 }
 
 LayoutUnit RenderTableCell::paddingAfter() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->paddingAfter();
     return computedCSSPaddingAfter() + intrinsicPaddingAfter();
 }
 

@@ -1513,6 +1513,18 @@ public:
     {
     }
 
+    LayoutUnit paddingAfter() const;
+
+    LayoutUnit paddingBefore() const;
+
+    LayoutUnit paddingRight() const;
+
+    LayoutUnit paddingLeft() const;
+
+    LayoutUnit paddingBottom() const;
+
+    LayoutUnit paddingTop() const;
+
     unsigned rowIndex() const;
 
     unsigned col() const;

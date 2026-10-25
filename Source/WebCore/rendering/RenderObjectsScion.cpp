@@ -840,6 +840,18 @@ extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
+extern "C" int32_t RenderTableCellScion_paddingAfter(const void*);
+
+extern "C" int32_t RenderTableCellScion_paddingBefore(const void*);
+
+extern "C" int32_t RenderTableCellScion_paddingRight(const void*);
+
+extern "C" int32_t RenderTableCellScion_paddingLeft(const void*);
+
+extern "C" int32_t RenderTableCellScion_paddingBottom(const void*);
+
+extern "C" int32_t RenderTableCellScion_paddingTop(const void*);
+
 extern "C" uint32_t RenderTableCellScion_rowIndex(const void*);
 
 extern "C" uint32_t RenderTableCellScion_col(const void*);
@@ -3003,6 +3015,36 @@ unsigned RenderTableCellScion::col() const
 unsigned RenderTableCellScion::rowIndex() const
 {
     return RenderTableCellScion_rowIndex(m_handle);
+}
+
+LayoutUnit RenderTableCellScion::paddingTop() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_paddingTop(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::paddingBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_paddingBottom(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::paddingLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_paddingLeft(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::paddingRight() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_paddingRight(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::paddingBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_paddingBefore(m_handle));
+}
+
+LayoutUnit RenderTableCellScion::paddingAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderTableCellScion_paddingAfter(m_handle));
 }
 
 void RenderListMarkerScion::setWk(void* wk)

@@ -4268,6 +4268,42 @@ func RenderTableCellScion_rowIndex(_ objectRaw: UnsafeRawPointer) -> UInt32 {
   return object.rowIndex()
 }
 
+@_cdecl("RenderTableCellScion_paddingTop")
+func RenderTableCellScion_paddingTop(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.paddingTop().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_paddingBottom")
+func RenderTableCellScion_paddingBottom(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.paddingBottom().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_paddingLeft")
+func RenderTableCellScion_paddingLeft(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.paddingLeft().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_paddingRight")
+func RenderTableCellScion_paddingRight(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.paddingRight().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_paddingBefore")
+func RenderTableCellScion_paddingBefore(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.paddingBefore().rawValue()
+}
+
+@_cdecl("RenderTableCellScion_paddingAfter")
+func RenderTableCellScion_paddingAfter(_ objectRaw: UnsafeRawPointer) -> Int32 {
+  let object = Unmanaged<RenderTableCellWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.paddingAfter().rawValue()
+}
+
 @_cdecl("RenderListMarkerScion_setWk")
 func RenderListMarkerScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ markerRaw: UnsafeMutableRawPointer
