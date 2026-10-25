@@ -232,6 +232,23 @@ final class RenderTableColWrapper: RenderBoxWrapper {
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
 
+  func updateFromElement() {
+    assert(isNativeImpl())
+    let element = self.element()!
+    let oldSpan = span
+    if element.hasColTagName() || element.hasColgroupTagName() {
+      span = HTMLTableColElementWrapper(p: element.p).span()
+    } else {
+      span = 1
+    }
+    if span != oldSpan && parent() != nil {
+      if hasInitializedStyle {
+        setNeedsLayoutAndPrefWidthsRecalc()
+      }
+      table()?.invalidateColumns()
+    }
+  }
+
   private func table() -> RenderTableWrapper? {
     var table = parent()
     if table != nil && !(table is RenderTableWrapper) {
@@ -240,5 +257,5 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     return table as? RenderTableWrapper
   }
 
-  let span: UInt32 = 1
+  private(set) var span: UInt32 = 1
 }
