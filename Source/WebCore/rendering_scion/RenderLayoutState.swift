@@ -220,8 +220,7 @@ class LayoutStateMaintainer {
     didPushLayoutState = context.pushLayoutState(
       renderer: root, offset: offset, pageHeight: pageHeight, pageHeightChanged: pageHeightChanged)
     if didPushLayoutState && paintOffsetCacheIsDisabled {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      context.disablePaintOffsetCache()
     }
   }
 
