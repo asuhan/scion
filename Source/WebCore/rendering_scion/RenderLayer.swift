@@ -592,7 +592,10 @@ class RenderLayerWrapper {
   }
 
   func removeChild(oldChild: RenderLayerWrapper) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_removeChild(layerId(), oldChild.layerId())
+      return
+    }
     if !renderer().renderTreeBeingDestroyed() {
       compositor().layerWillBeRemoved(parent: self, child: oldChild)
     }

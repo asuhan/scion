@@ -194,6 +194,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_addChild(void* p, void* childRaw, voi
     static_cast<WebCore::RenderLayer*>(p)->addChild(child, beforeChild);
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_removeChild(void* p, void* oldChildRaw)
+{
+    static_cast<WebCore::RenderLayer*>(p)->removeChild(*static_cast<WebCore::RenderLayer*>(oldChildRaw));
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool timing_raw)
 {
     auto timing = timing_raw ? WebCore::RenderLayer::LayerChangeTiming::RenderTreeConstruction : WebCore::RenderLayer::LayerChangeTiming::StyleChange;
