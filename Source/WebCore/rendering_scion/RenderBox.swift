@@ -1968,7 +1968,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func maxPreferredLogicalWidth() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_maxPreferredLogicalWidth(id()))
+    }
     if preferredLogicalWidthsDirty() {
       // TODO(asuhan): SetLayoutNeededForbiddenScope
       self.computePreferredLogicalWidths()

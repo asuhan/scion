@@ -184,6 +184,12 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_minPreferredLogicalWidth(const void*
     return width.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_maxPreferredLogicalWidth(const void* p)
+{
+    const auto width = static_cast<const WebCore::RenderBox*>(p)->maxPreferredLogicalWidth();
+    return width.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingContainingBlockContentSize(void* box_raw_ptr)
 {
     static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingContainingBlockContentSize();
