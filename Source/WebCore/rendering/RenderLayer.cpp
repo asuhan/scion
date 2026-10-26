@@ -205,6 +205,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool tim
     static_cast<WebCore::RenderLayer*>(p)->insertOnlyThisLayer(timing);
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_hasTransformedAncestor(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->hasTransformedAncestor();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderLayer_paintOrderParent(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->paintOrderParent();

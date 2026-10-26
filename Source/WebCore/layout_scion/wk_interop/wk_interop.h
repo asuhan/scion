@@ -1866,6 +1866,7 @@ void* RenderLayer_commonAncestorWithLayer(const void*, void*);
 void RenderLayer_addChild(void*, void*, void*);
 void RenderLayer_removeChild(void*, void*);
 void RenderLayer_insertOnlyThisLayer(void*, bool);
+bool RenderLayer_hasTransformedAncestor(const void*);
 void* RenderLayer_paintOrderParent(const void*);
 void RenderLayer_setBackingNeedsRepaint(void*, bool);
 void RenderLayer_setBackingNeedsRepaintInRect(void*, struct LayoutRectRaw, bool);

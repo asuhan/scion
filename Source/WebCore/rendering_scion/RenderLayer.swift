@@ -3203,7 +3203,9 @@ class RenderLayerWrapper {
   }
 
   func hasTransformedAncestor() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_hasTransformedAncestor(layerId())
+    }
     return m_hasTransformedAncestor
   }
 
