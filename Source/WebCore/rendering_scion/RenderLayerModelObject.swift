@@ -69,7 +69,9 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func checkedLayer() -> RenderLayerWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return layer()
+    }
     return m_layer
   }
 
