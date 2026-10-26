@@ -41,6 +41,14 @@ class StringWrapper: Hashable {
     owner = true
   }
 
+  // Construct a string with UTF-16 data.
+  init(characters: [UChar]) {
+    p = characters.withUnsafeBufferPointer {
+      wk_interop.String_new_utf16($0.baseAddress, UInt32($0.count))
+    }
+    owner = true
+  }
+
   // Construct a string from a constant string literal.
   init(_ characters: ASCIILiteral) {
     p = characters.string.withCString { wk_interop.String_new_latin1($0) }

@@ -2011,8 +2011,19 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   private func secureText(_ maskingCharacter: UChar) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This hides the text by replacing all the characters with the masking character.
+    // Offsets within the hidden text have to match offsets within the original text
+    // to handle things like carets and selection, so this won't work right if any
+    // of the characters are surrogate pairs or combining marks. Thus, this function
+    // does not attempt to handle either of those.
+
+    let length = text().length()
+    if length == 0 {
+      return
+    }
+
+    // TODO(asuhan): reveal the last typed character once the secure text timer is ported.
+    m_text = StringWrapper(characters: [UChar](repeating: maskingCharacter, count: Int(length)))
   }
 
   private func maxWordFragmentWidth(
