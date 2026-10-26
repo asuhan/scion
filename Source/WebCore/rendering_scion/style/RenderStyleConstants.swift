@@ -546,6 +546,14 @@ struct TextDecorationLine: OptionSet {
   static let Blink = TextDecorationLine(rawValue: 1 << 3)
 }
 
+struct TextUnderlinePosition: OptionSet {
+  let rawValue: UInt8
+  static let Under = TextUnderlinePosition(rawValue: 1 << 0)
+  static let FromFont = TextUnderlinePosition(rawValue: 1 << 1)
+  static let Left = TextUnderlinePosition(rawValue: 1 << 2)
+  static let Right = TextUnderlinePosition(rawValue: 1 << 3)
+}
+
 enum TextDecorationStyle: UInt8 {
   case Solid
   case Double

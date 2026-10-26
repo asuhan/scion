@@ -1648,6 +1648,12 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationLine(const void* p)
     return textDecorationLine.toRaw();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textUnderlinePosition(const void* p)
+{
+    const auto textUnderlinePosition = static_cast<const WebCore::RenderStyle*>(p)->textUnderlinePosition();
+    return textUnderlinePosition.toRaw();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationStyle(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textDecorationStyle());

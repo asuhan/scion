@@ -1459,6 +1459,7 @@ uint8_t RenderStyle_lineBoxContain(const void*);
 uint8_t RenderStyle_textDecorationsInEffect(const void*);
 uint8_t RenderStyle_textDecorationLine(const void*);
 uint8_t RenderStyle_textDecorationStyle(const void*);
+uint8_t RenderStyle_textUnderlinePosition(const void*);
 float RenderStyle_borderLeftWidth(const void*);
 uint8_t RenderStyle_borderLeftStyle(const void*);
 bool RenderStyle_borderLeftIsTransparent(const void*);

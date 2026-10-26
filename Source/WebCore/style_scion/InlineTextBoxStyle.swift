@@ -193,9 +193,27 @@ func underlineOffsetForTextBoxPainting(
     style.p, true, inlineBoxContentBoxHeight(inlineBox), textRunOffset)
 }
 
+private func defaultGap(_ style: RenderStyleWrapper) -> Float32 {
+  // This represents the gap between the baseline and the closest edge of the underline.
+  let textDecorationBaseFontSize: Float32 = 16
+  return max(1, (style.computedFontSize() / textDecorationBaseFontSize / 2).rounded(.up))
+}
+
 func overlineOffsetForTextBoxPainting(
   inlineBox: InlineIterator.InlineBox, style: RenderStyleWrapper
 ) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if style.typographicMode() == .Horizontal || style.textOrientation() == .Sideways {
+    return 0
+  }
+
+  let underlinePosition = style.textUnderlinePosition()
+  let overBecomesUnder = { () -> Bool in
+    // If 'right' causes the underline to be drawn on the "over" side of the text, then an overline also switches sides and is drawn on the "under" side.
+    if underlinePosition.contains(.Right) {
+      return style.typographicMode() == .Vertical || style.blockFlowDirection() == .RightToLeft
+    }
+    return false
+  }
+  return overBecomesUnder()
+    ? inlineBoxContentBoxHeight(inlineBox) + defaultGap(style) : (0 - defaultGap(style))
 }

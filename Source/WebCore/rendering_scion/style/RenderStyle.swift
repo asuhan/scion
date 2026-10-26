@@ -1592,6 +1592,10 @@ class RenderStyleWrapper: Equatable {
     return TextDecorationLine(rawValue: wk_interop.RenderStyle_textDecorationLine(p!))
   }
 
+  func textUnderlinePosition() -> TextUnderlinePosition {
+    return TextUnderlinePosition(rawValue: wk_interop.RenderStyle_textUnderlinePosition(p!))
+  }
+
   func textDecorationStyle() -> TextDecorationStyle {
     return TextDecorationStyle(rawValue: wk_interop.RenderStyle_textDecorationStyle(p!))!
   }
