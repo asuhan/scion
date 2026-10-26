@@ -134,6 +134,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxNegativeMarginAfter(const v
     return margin.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBlockFlow_dirtyLineFromChangedChild(void* p)
+{
+    static_cast<WebCore::RenderElement*>(p)->dirtyLineFromChangedChild();
+}
+
 extern "C" WEBCORE_EXPORT void* PaintInfo_deepCopy(const void* p)
 {
     return new WebCore::PaintInfo(*static_cast<const WebCore::PaintInfo*>(p));

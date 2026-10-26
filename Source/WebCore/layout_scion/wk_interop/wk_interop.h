@@ -1753,6 +1753,7 @@ int32_t RenderBlockFlow_maxPositiveMarginBefore(const void*);
 int32_t RenderBlockFlow_maxNegativeMarginBefore(const void*);
 int32_t RenderBlockFlow_maxPositiveMarginAfter(const void*);
 int32_t RenderBlockFlow_maxNegativeMarginAfter(const void*);
+void RenderBlockFlow_dirtyLineFromChangedChild(void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
 struct LayoutRectRaw PaintInfo_rect(const void*);

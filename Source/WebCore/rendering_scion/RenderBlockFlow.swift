@@ -1012,7 +1012,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override final func dirtyLineFromChangedChild() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlockFlow_dirtyLineFromChangedChild(id())
+      return
+    }
     svgTextLayout()?.lineBoxes.dirtyLineFromChangedChild(self)
   }
 
