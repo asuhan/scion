@@ -816,6 +816,8 @@ extern "C" int32_t RenderInlineScion_offsetWidth(const void*);
 
 extern "C" int32_t RenderInlineScion_offsetHeight(const void*);
 
+extern "C" void RenderInlineScion_paint(void*, void*, LayoutPointRaw);
+
 extern "C" RepaintRectsRaw RenderInlineScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
 
 extern "C" void RenderInlineScion_setWk(void*, void*);
@@ -2844,6 +2846,11 @@ LayoutUnit RenderInlineScion::offsetWidth() const
 LayoutUnit RenderInlineScion::offsetHeight() const
 {
     return LayoutUnit::fromRawValue(RenderInlineScion_offsetHeight(m_handle));
+}
+
+void RenderInlineScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
+{
+    RenderInlineScion_paint(m_handle, &paintInfo, convertLayoutPoint(paintOffset));
 }
 
 void RenderInlineScion::setWk(void* wk)

@@ -257,7 +257,10 @@ bool RenderInline::mayAffectLayout() const
 
 void RenderInline::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->paint(paintInfo, paintOffset);
+        return;
+    }
     if (auto* lineLayout = LayoutIntegration::LineLayout::containing(*this)) {
         lineLayout->paint(paintInfo, paintOffset, this);
         return;

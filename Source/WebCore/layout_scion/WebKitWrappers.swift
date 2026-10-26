@@ -4016,6 +4016,16 @@ func RenderInlineScion_offsetHeight(_ inlineRaw: UnsafeRawPointer) -> Int32 {
   return inline.offsetHeight().rawValue()
 }
 
+@_cdecl("RenderInlineScion_paint")
+func RenderInlineScion_paint(
+  _ inlineRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,
+  _ paintOffset: LayoutPointRaw
+) {
+  var paintInfo = PaintInfoWrapper(p: paintInfoRaw)
+  let inline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  inline.paint(paintInfo: &paintInfo, paintOffset: convertLayoutPointRaw(paintOffset))
+}
+
 @_cdecl("RenderInlineScion_rectsForRepaintingAfterLayout")
 func RenderInlineScion_rectsForRepaintingAfterLayout(
   _ inlineRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
