@@ -480,10 +480,19 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   ) -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_baselinePosition(
-        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_baselinePosition(
+          id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    }
+    guard let baseline = firstLineBaseline() else {
+      return synthesizedBaseline(
+        box: self, parentStyle: parentStyle()!, direction: direction, edge: .BorderBox)
+        + marginLogicalHeight()
+    }
+
+    return baseline
+      + LayoutUnit(value: (direction == .HorizontalLine ? marginTop() : marginRight()).toInt())
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
