@@ -131,8 +131,10 @@ class StringWrapper: Hashable {
   }
 
   func containsOnly(_ isSpecialCharacter: (UChar) -> Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if is8Bit() {
+      return WTF.containsOnly(isSpecialCharacter, span8())
+    }
+    return WTF.containsOnly(isSpecialCharacter, span16())
   }
 
   func containsOnlyASCII() -> Bool { return wk_interop.String_containsOnlyASCII(p) }
