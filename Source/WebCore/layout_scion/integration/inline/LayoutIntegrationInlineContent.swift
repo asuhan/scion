@@ -94,7 +94,13 @@ extension LayoutIntegration {
     private static func approximateLine(
       y: LayoutUnit, averageLineHeight: Float32, lines: ArraySlice<InlineDisplay.Line>
     ) -> UInt64 {
-      return UInt64(min(Int(max(y, LayoutUnit(value: 0)) / averageLineHeight), lines.count - 1))
+      let line = max(y, LayoutUnit(value: 0)) / averageLineHeight
+      // Lines with zero height make the quotient infinite or NaN, which the C++ cast doesn't trap
+      // on; saturate to the last line instead.
+      if !line.isFinite {
+        return UInt64(lines.count - 1)
+      }
+      return UInt64(min(Int(line), lines.count - 1))
     }
 
     func shrinkToFit() {
