@@ -79,15 +79,14 @@ class FillLayerWrapper {
   var blendMode: BlendMode { return BlendMode(rawValue: wk_interop.FillLayer_blendMode(p))! }
 
   var sizeLength: LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.FillLayer_sizeLength(p)
+    return LengthSize(width: LengthWrapper(p: raw.width), height: LengthWrapper(p: raw.height))
   }
 
   var sizeType: FillSizeType { return FillSizeType(rawValue: wk_interop.FillLayer_sizeType(p))! }
 
   func size() -> FillSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FillSize(type: sizeType, size: sizeLength)
   }
 
   var maskMode: MaskMode { return MaskMode(rawValue: wk_interop.FillLayer_maskMode(p))! }

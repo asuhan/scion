@@ -1557,6 +1557,13 @@ extern "C" WEBCORE_EXPORT LengthSizeRaw RenderStyle_backgroundSizeLength(const v
     return { &length.width, &length.height };
 }
 
+// Lives here rather than in FillLayer.cpp, which would need its own LengthSizeRaw.
+extern "C" WEBCORE_EXPORT LengthSizeRaw FillLayer_sizeLength(const void* p)
+{
+    const auto& length = static_cast<const WebCore::FillLayer*>(p)->sizeLength();
+    return { &length.width, &length.height };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransformRelatedProperty(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransformRelatedProperty();
