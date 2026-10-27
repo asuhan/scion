@@ -28,12 +28,16 @@ namespace WebCore {
 
 class TextControlInnerTextElement;
 class HTMLTextFormControlElement;
+class RenderTextControlInnerContainerScion;
+class RenderTextControlScion;
 
 class RenderTextControl : public RenderBlockFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTextControl);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTextControl);
 public:
     virtual ~RenderTextControl();
+
+    void setScionHandle(void* handle);
 
     WEBCORE_EXPORT HTMLTextFormControlElement& textFormControlElement() const;
 
@@ -68,15 +72,21 @@ protected:
 private:
     void element() const = delete;
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     ASCIILiteral renderName() const override { return "RenderTextControl"_s; }
     void computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const override;
     void computePreferredLogicalWidths() override;
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool avoidsFloats() const override { return true; }
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canHaveGeneratedChildren() const override { return false; }
     
     void addFocusRingRects(Vector<LayoutRect>&, const LayoutPoint& additionalOffset, const RenderLayerModelObject* paintContainer = 0) const override;
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canBeProgramaticallyScrolled() const override { return true; }
+
+    std::unique_ptr<RenderTextControlScion> m_scion;
 };
 
 // Renderer for our inner container, for <search> and others.
@@ -90,15 +100,29 @@ public:
     RenderTextControlInnerContainer(Element&, RenderStyle&&);
     virtual ~RenderTextControlInnerContainer();
 
+    void setScionHandle(void* handle);
+
     LayoutUnit baselinePosition(FontBaseline baseline, bool firstLine, LineDirectionMode direction, LinePositionMode position) const override
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         return RenderBlock::baselinePosition(baseline, firstLine, direction, position);
     }
-    std::optional<LayoutUnit> firstLineBaseline() const override { return RenderBlock::firstLineBaseline(); }
-    std::optional<LayoutUnit> inlineBlockBaseline(LineDirectionMode direction) const override { return RenderBlock::inlineBlockBaseline(direction); }
+    std::optional<LayoutUnit> firstLineBaseline() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return RenderBlock::firstLineBaseline();
+    }
+    std::optional<LayoutUnit> inlineBlockBaseline(LineDirectionMode direction) const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return RenderBlock::inlineBlockBaseline(direction);
+    }
 
 private:
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool isFlexibleBoxImpl() const override { return true; }
+
+    std::unique_ptr<RenderTextControlInnerContainerScion> m_scion;
 };
 
 } // namespace WebCore

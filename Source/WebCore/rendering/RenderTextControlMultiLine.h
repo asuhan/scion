@@ -26,12 +26,16 @@
 
 namespace WebCore {
 
+class RenderTextControlMultiLineScion;
+
 class RenderTextControlMultiLine final : public RenderTextControl {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTextControlMultiLine);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTextControlMultiLine);
 public:
     RenderTextControlMultiLine(HTMLTextAreaElement&, RenderStyle&&);
     virtual ~RenderTextControlMultiLine();
+
+    void setScionHandle(void* handle);
 
     HTMLTextAreaElement& textAreaElement() const;
 
@@ -46,6 +50,8 @@ private:
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;
 
     void layoutExcludedChildren(bool relayoutChildren) override;
+
+    std::unique_ptr<RenderTextControlMultiLineScion> m_scion;
 };
 
 inline RenderTextControlMultiLine* HTMLTextAreaElement::renderer() const

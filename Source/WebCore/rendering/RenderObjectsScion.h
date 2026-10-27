@@ -1584,6 +1584,61 @@ private:
     void* m_handle;
 };
 
+class RenderTextControlScion final {
+public:
+    RenderTextControlScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTextControlSingleLineScion final {
+public:
+    RenderTextControlSingleLineScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTextControlMultiLineScion final {
+public:
+    RenderTextControlMultiLineScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTextControlInnerBlockScion final {
+public:
+    RenderTextControlInnerBlockScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderTextControlInnerContainerScion final {
+public:
+    RenderTextControlInnerContainerScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
 class RenderListItemScion final {
 public:
     RenderListItemScion(void* handle)

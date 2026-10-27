@@ -28,6 +28,7 @@
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderLayerScrollableArea.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleSetters.h"
 #include "ShadowRoot.h"
 #include "StyleInheritedData.h"
@@ -47,13 +48,21 @@ RenderTextControlMultiLine::RenderTextControlMultiLine(HTMLTextAreaElement& elem
 // Do not add any code in below destructor. Add it to willBeDestroyed() instead.
 RenderTextControlMultiLine::~RenderTextControlMultiLine() = default;
 
+void RenderTextControlMultiLine::setScionHandle(void* handle)
+{
+    RenderTextControl::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextControlMultiLineScion>(handle);
+}
+
 HTMLTextAreaElement& RenderTextControlMultiLine::textAreaElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLTextAreaElement>(RenderTextControl::textFormControlElement());
 }
 
 bool RenderTextControlMultiLine::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!RenderTextControl::nodeAtPoint(request, result, locationInContainer, accumulatedOffset, hitTestAction))
         return false;
 
@@ -69,6 +78,7 @@ bool RenderTextControlMultiLine::nodeAtPoint(const HitTestRequest& request, HitT
 
 float RenderTextControlMultiLine::getAverageCharWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #if !PLATFORM(IOS_FAMILY)
     // Since Lucida Grande is the default font, we want this to match the width
     // of Courier New, the default font for textareas in IE, Firefox and Safari Win.
@@ -82,6 +92,7 @@ float RenderTextControlMultiLine::getAverageCharWidth()
 
 LayoutUnit RenderTextControlMultiLine::preferredContentLogicalWidth(float charWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     float width = ceilf(charWidth * textAreaElement().cols());
 
     auto overflow = style().isHorizontalWritingMode() ? style().overflowY() : style().overflowX();
@@ -95,16 +106,19 @@ LayoutUnit RenderTextControlMultiLine::preferredContentLogicalWidth(float charWi
 
 LayoutUnit RenderTextControlMultiLine::computeControlLogicalHeight(LayoutUnit lineHeight, LayoutUnit nonContentHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return lineHeight * textAreaElement().rows() + nonContentHeight;
 }
 
 LayoutUnit RenderTextControlMultiLine::baselinePosition(FontBaseline baselineType, bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return RenderBox::baselinePosition(baselineType, firstLine, direction, linePositionMode);
 }
 
 void RenderTextControlMultiLine::layoutExcludedChildren(bool relayoutChildren)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTextControl::layoutExcludedChildren(relayoutChildren);
     HTMLElement* placeholder = textFormControlElement().placeholderElement();
     RenderElement* placeholderRenderer = placeholder ? placeholder->renderer() : 0;

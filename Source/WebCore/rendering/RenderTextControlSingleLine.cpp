@@ -40,6 +40,7 @@
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderLayer.h"
 #include "RenderLayerScrollableArea.h"
+#include "RenderObjectsScion.h"
 #include "RenderScrollbar.h"
 #include "RenderStyleSetters.h"
 #include "RenderTheme.h"
@@ -68,8 +69,15 @@ RenderTextControlSingleLine::RenderTextControlSingleLine(Type type, HTMLInputEle
 
 RenderTextControlSingleLine::~RenderTextControlSingleLine() = default;
 
+void RenderTextControlSingleLine::setScionHandle(void* handle)
+{
+    RenderTextControl::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextControlSingleLineScion>(handle);
+}
+
 inline HTMLElement* RenderTextControlSingleLine::innerSpinButtonElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return inputElement().innerSpinButtonElement();
 }
 
@@ -87,6 +95,7 @@ static void resetOverriddenHeight(RenderBox* box, const RenderObject* ancestor)
 
 void RenderTextControlSingleLine::layout()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     StackStats::LayoutCheckPoint layoutCheckPoint;
 
     // FIXME: We should remove the height-related hacks in layout() and
@@ -275,6 +284,7 @@ void RenderTextControlSingleLine::layout()
 
 bool RenderTextControlSingleLine::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!RenderTextControl::nodeAtPoint(request, result, locationInContainer, accumulatedOffset, hitTestAction))
         return false;
 
@@ -298,6 +308,7 @@ bool RenderTextControlSingleLine::nodeAtPoint(const HitTestRequest& request, Hit
 
 void RenderTextControlSingleLine::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTextControl::styleDidChange(diff, oldStyle);
 
     // We may have set the width and the height in the old style in layout().
@@ -325,6 +336,7 @@ void RenderTextControlSingleLine::styleDidChange(StyleDifference diff, const Ren
 
 bool RenderTextControlSingleLine::hasControlClip() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto shouldClipInnerContent = [&] {
         // Apply control clip for text fields with decorations.
         RenderBox* innerRenderBox = nullptr;
@@ -344,6 +356,7 @@ bool RenderTextControlSingleLine::hasControlClip() const
 
 LayoutRect RenderTextControlSingleLine::controlClipRect(const LayoutPoint& additionalOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasControlClip());
     auto clipRect = paddingBoxRect();
     if (auto* containerElementRenderer = containerElement() ? containerElement()->renderBox() : nullptr)
@@ -354,6 +367,7 @@ LayoutRect RenderTextControlSingleLine::controlClipRect(const LayoutPoint& addit
 
 float RenderTextControlSingleLine::getAverageCharWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #if !PLATFORM(IOS_FAMILY)
     // Since Lucida Grande is the default font, we want this to match the width
     // of MS Shell Dlg, the default font for textareas in Firefox, Safari Win and
@@ -368,6 +382,7 @@ float RenderTextControlSingleLine::getAverageCharWidth()
 
 LayoutUnit RenderTextControlSingleLine::preferredContentLogicalWidth(float charWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     int factor = 0;
     bool includesDecoration = inputElement().sizeShouldIncludeDecoration(factor);
     if (factor <= 0)
@@ -404,11 +419,13 @@ LayoutUnit RenderTextControlSingleLine::preferredContentLogicalWidth(float charW
 
 LayoutUnit RenderTextControlSingleLine::computeControlLogicalHeight(LayoutUnit lineHeight, LayoutUnit nonContentHeight) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return lineHeight + nonContentHeight;
 }
 
 void RenderTextControlSingleLine::autoscroll(const IntPoint& position)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderTextControlInnerBlock* renderer = innerTextElement()->renderer();
     if (!renderer)
         return;
@@ -419,6 +436,7 @@ void RenderTextControlSingleLine::autoscroll(const IntPoint& position)
 
 int RenderTextControlSingleLine::scrollWidth() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* innerTextRenderer = innerTextElement() ? innerTextElement()->renderer() : nullptr) {
         // Adjust scrollWidth to inculde input element horizontal paddings and decoration width.
         auto adjustment = clientWidth() - innerTextRenderer->clientWidth();
@@ -429,6 +447,7 @@ int RenderTextControlSingleLine::scrollWidth() const
 
 int RenderTextControlSingleLine::scrollHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto* innerTextRenderer = innerTextElement() ? innerTextElement()->renderer() : nullptr) {
         // Adjust scrollHeight to inculde input element vertical paddings and decoration height.
         auto adjustment = clientHeight() - innerTextRenderer->clientHeight();
@@ -439,6 +458,7 @@ int RenderTextControlSingleLine::scrollHeight() const
 
 int RenderTextControlSingleLine::scrollLeft() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto innerTextElement = this->innerTextElement(); innerTextElement && innerTextElement->renderer())
         return innerTextElement->renderer()->scrollLeft();
     return RenderBlockFlow::scrollLeft();
@@ -446,6 +466,7 @@ int RenderTextControlSingleLine::scrollLeft() const
 
 int RenderTextControlSingleLine::scrollTop() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (auto innerTextElement = this->innerTextElement(); innerTextElement && innerTextElement->renderer())
         return innerTextElement->renderer()->scrollTop();
     return RenderBlockFlow::scrollTop();
@@ -453,18 +474,21 @@ int RenderTextControlSingleLine::scrollTop() const
 
 void RenderTextControlSingleLine::setScrollLeft(int newLeft, const ScrollPositionChangeOptions&)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (innerTextElement())
         innerTextElement()->setScrollLeft(newLeft);
 }
 
 void RenderTextControlSingleLine::setScrollTop(int newTop, const ScrollPositionChangeOptions&)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (innerTextElement())
         innerTextElement()->setScrollTop(newTop);
 }
 
 bool RenderTextControlSingleLine::scroll(ScrollDirection direction, ScrollGranularity granularity, unsigned stepCount, Element** stopElement, RenderBox* startBox, const IntPoint& wheelEventAbsolutePoint)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* renderer = innerTextElement()->renderer();
     if (!renderer)
         return false;
@@ -476,6 +500,7 @@ bool RenderTextControlSingleLine::scroll(ScrollDirection direction, ScrollGranul
 
 bool RenderTextControlSingleLine::logicalScroll(ScrollLogicalDirection direction, ScrollGranularity granularity, unsigned stepCount, Element** stopElement)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto* layer = innerTextElement()->renderer()->layer();
     auto* scrollableArea = layer ? layer->scrollableArea() : nullptr;
     if (scrollableArea && scrollableArea->scroll(logicalToPhysical(direction, style().isHorizontalWritingMode(), style().isFlippedBlocksWritingMode()), granularity, stepCount))
@@ -485,11 +510,13 @@ bool RenderTextControlSingleLine::logicalScroll(ScrollLogicalDirection direction
 
 HTMLInputElement& RenderTextControlSingleLine::inputElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLInputElement>(RenderTextControl::textFormControlElement());
 }
 
 Ref<HTMLInputElement> RenderTextControlSingleLine::protectedInputElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLInputElement>(RenderTextControl::textFormControlElement());
 }
 
@@ -500,5 +527,11 @@ RenderTextControlInnerBlock::RenderTextControlInnerBlock(Element& element, Rende
 }
 
 RenderTextControlInnerBlock::~RenderTextControlInnerBlock() = default;
+
+void RenderTextControlInnerBlock::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextControlInnerBlockScion>(handle);
+}
 
 }

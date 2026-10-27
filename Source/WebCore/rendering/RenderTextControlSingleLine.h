@@ -27,12 +27,17 @@
 
 namespace WebCore {
 
+class RenderTextControlInnerBlockScion;
+class RenderTextControlSingleLineScion;
+
 class RenderTextControlSingleLine : public RenderTextControl {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderTextControlSingleLine);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderTextControlSingleLine);
 public:
     RenderTextControlSingleLine(Type, HTMLInputElement&, RenderStyle&&);
     virtual ~RenderTextControlSingleLine();
+
+    void setScionHandle(void* handle);
 
 protected:
     HTMLElement* containerElement() const;
@@ -70,15 +75,19 @@ private:
     void styleDidChange(StyleDifference, const RenderStyle* oldStyle) override;
 
     HTMLElement* innerSpinButtonElement() const;
+
+    std::unique_ptr<RenderTextControlSingleLineScion> m_scion;
 };
 
 inline HTMLElement* RenderTextControlSingleLine::containerElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return inputElement().containerElement();
 }
 
 inline HTMLElement* RenderTextControlSingleLine::innerBlockElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return inputElement().innerBlockElement();
 }
 
@@ -91,14 +100,20 @@ public:
     RenderTextControlInnerBlock(Element&, RenderStyle&&);
     virtual ~RenderTextControlInnerBlock();
 
+    void setScionHandle(void* handle);
+
 private:
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool hasLineIfEmpty() const override { return true; }
     bool canBeProgramaticallyScrolled() const override
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (auto* shadowHost = dynamicDowncast<HTMLInputElement>(element()->shadowHost()))
             return !shadowHost->hasAutoFillStrongPasswordButton();
         return true;
     }
+
+    std::unique_ptr<RenderTextControlInnerBlockScion> m_scion;
 };
 
 } // namespace WebCore

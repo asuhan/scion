@@ -27,6 +27,7 @@
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderElementInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderText.h"
 #include "RenderTextControlSingleLine.h"
 #include "RenderTheme.h"
@@ -51,18 +52,27 @@ RenderTextControl::RenderTextControl(Type type, HTMLTextFormControlElement& elem
 
 RenderTextControl::~RenderTextControl() = default;
 
+void RenderTextControl::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextControlScion>(handle);
+}
+
 HTMLTextFormControlElement& RenderTextControl::textFormControlElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return downcast<HTMLTextFormControlElement>(nodeForNonAnonymous());
 }
 
 RefPtr<TextControlInnerTextElement> RenderTextControl::innerTextElement() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return textFormControlElement().innerTextElement();
 }
 
 void RenderTextControl::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::styleDidChange(diff, oldStyle);
     auto innerText = innerTextElement();
     if (!innerText)
@@ -86,12 +96,14 @@ void RenderTextControl::styleDidChange(StyleDifference diff, const RenderStyle* 
 
 int RenderTextControl::scrollbarThickness() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: We should get the size of the scrollbar from the RenderTheme instead.
     return ScrollbarTheme::theme().scrollbarThickness(this->style().scrollbarWidth());
 }
 
 RenderBox::LogicalExtentComputedValues RenderTextControl::computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto innerText = innerTextElement();
     if (!innerText)
         return RenderBox::computeLogicalHeight(LayoutUnit(), LayoutUnit());
@@ -124,6 +136,7 @@ RenderBox::LogicalExtentComputedValues RenderTextControl::computeLogicalHeight(L
 
 void RenderTextControl::hitInnerTextElement(HitTestResult& result, const LayoutPoint& pointInContainer, const LayoutPoint& accumulatedOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto innerText = innerTextElement();
     if (!innerText->renderer())
         return;
@@ -137,6 +150,7 @@ void RenderTextControl::hitInnerTextElement(HitTestResult& result, const LayoutP
 
 float RenderTextControl::getAverageCharWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     float width;
     if (style().fontCascade().fastAverageCharWidthIfAvailable(width))
         return width;
@@ -150,6 +164,7 @@ float RenderTextControl::getAverageCharWidth()
 
 float RenderTextControl::scaleEmToUnits(int x) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // This matches the unitsPerEm value for MS Shell Dlg and Courier New from the "head" font table.
     float unitsPerEm = 2048.0f;
     return roundf(style().fontCascade().size() * x / unitsPerEm);
@@ -157,6 +172,7 @@ float RenderTextControl::scaleEmToUnits(int x) const
 
 void RenderTextControl::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Fix field-sizing: content with size containment
     // https://bugs.webkit.org/show_bug.cgi?id=269169
     if (style().fieldSizing() == FieldSizing::Content)
@@ -182,6 +198,7 @@ void RenderTextControl::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidt
 
 void RenderTextControl::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
     if (style().fieldSizing() == FieldSizing::Content) {
         RenderBlockFlow::computePreferredLogicalWidths();
@@ -203,12 +220,14 @@ void RenderTextControl::computePreferredLogicalWidths()
 
 void RenderTextControl::addFocusRingRects(Vector<LayoutRect>& rects, const LayoutPoint& additionalOffset, const RenderLayerModelObject*) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!size().isEmpty())
         rects.append(LayoutRect(additionalOffset, size()));
 }
 
 void RenderTextControl::layoutExcludedChildren(bool relayoutChildren)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::layoutExcludedChildren(relayoutChildren);
 
     HTMLElement* placeholder = textFormControlElement().placeholderElement();
@@ -228,12 +247,14 @@ void RenderTextControl::layoutExcludedChildren(bool relayoutChildren)
 #if PLATFORM(IOS_FAMILY)
 bool RenderTextControl::canScroll() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto innerText = innerTextElement();
     return innerText && innerText->renderer() && innerText->renderer()->hasNonVisibleOverflow();
 }
 
 int RenderTextControl::innerLineHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto innerText = innerTextElement();
     if (innerText && innerText->renderer())
         return innerText->renderer()->style().computedLineHeight();
@@ -248,5 +269,11 @@ RenderTextControlInnerContainer::RenderTextControlInnerContainer(Element& elemen
 }
 
 RenderTextControlInnerContainer::~RenderTextControlInnerContainer() = default;
+
+void RenderTextControlInnerContainer::setScionHandle(void* handle)
+{
+    RenderFlexibleBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderTextControlInnerContainerScion>(handle);
+}
 
 } // namespace WebCore
