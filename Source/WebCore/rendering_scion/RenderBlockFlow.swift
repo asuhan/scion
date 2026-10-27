@@ -2458,7 +2458,9 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func hasLines() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBlockFlow_hasLines(id())
+    }
     return childrenInline() ? lineCount() != 0 : false
   }
 

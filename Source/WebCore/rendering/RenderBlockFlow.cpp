@@ -139,6 +139,11 @@ extern "C" WEBCORE_EXPORT void RenderBlockFlow_dirtyLineFromChangedChild(void* p
     static_cast<WebCore::RenderElement*>(p)->dirtyLineFromChangedChild();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBlockFlow_hasLines(const void* p)
+{
+    return static_cast<const WebCore::RenderBlockFlow*>(p)->hasLines();
+}
+
 extern "C" WEBCORE_EXPORT void* PaintInfo_deepCopy(const void* p)
 {
     return new WebCore::PaintInfo(*static_cast<const WebCore::PaintInfo*>(p));
