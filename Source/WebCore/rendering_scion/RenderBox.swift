@@ -1831,7 +1831,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func layout() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_layout(id())
+      return
+    }
     // TODO(asuhan): add stack stats
     assert(needsLayout())
 

@@ -178,6 +178,11 @@ extern "C" WEBCORE_EXPORT void RenderBox_setMarginAfter(void* p, int32_t value_r
     static_cast<WebCore::RenderBox*>(p)->setMarginAfter(value, override_style);
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_layout(void* p)
+{
+    static_cast<WebCore::RenderBox*>(p)->layout();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBox_minPreferredLogicalWidth(const void* p)
 {
     const auto width = static_cast<const WebCore::RenderBox*>(p)->minPreferredLogicalWidth();
