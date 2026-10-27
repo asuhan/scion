@@ -64,8 +64,14 @@ class CharSpanWrapper<CharacterType> {
   }
 
   func subspan(_ offset: UInt32, _ count: UInt32) -> CharSpanWrapper<CharacterType> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch MemoryLayout<CharacterType>.size {
+    case 1:
+      return CharSpanWrapper(p: wk_interop.span8_subspan(p, offset, count))
+    case 2:
+      return CharSpanWrapper(p: wk_interop.span16_subspan(p, offset, count))
+    default:
+      fatalError("Not reached")
+    }
   }
 
   func data() -> UnsafeBufferPointer<CharacterType> {

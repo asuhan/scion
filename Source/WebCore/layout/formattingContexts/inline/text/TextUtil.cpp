@@ -402,6 +402,16 @@ extern "C" WEBCORE_EXPORT uint64_t span16_size(const void* p)
     return static_cast<const std::span<const UChar>*>(p)->size();
 }
 
+extern "C" WEBCORE_EXPORT const void* span8_subspan(const void* p, uint32_t offset, uint32_t count)
+{
+    return new std::span<const LChar>(static_cast<const std::span<const LChar>*>(p)->subspan(offset, count));
+}
+
+extern "C" WEBCORE_EXPORT const void* span16_subspan(const void* p, uint32_t offset, uint32_t count)
+{
+    return new std::span<const UChar>(static_cast<const std::span<const UChar>*>(p)->subspan(offset, count));
+}
+
 extern "C" WEBCORE_EXPORT uint16_t span8_subscript(const void* p, uint64_t index)
 {
     return (*static_cast<const std::span<const LChar>*>(p))[index];
