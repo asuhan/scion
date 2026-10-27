@@ -1752,7 +1752,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isSelfCollapsingBlock() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_isSelfCollapsingBlock(id())
+    }
     return false
   }
 

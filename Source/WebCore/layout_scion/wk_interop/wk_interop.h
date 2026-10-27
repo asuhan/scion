@@ -1090,6 +1090,7 @@ void RenderBox_setMarginBefore(void*, int32_t, const void*);
 void RenderBox_setMarginAfter(void*, int32_t, const void*);
 void RenderBox_layout(void*);
 int32_t RenderBox_minPreferredLogicalWidth(const void*);
+bool RenderBox_isSelfCollapsingBlock(const void*);
 int32_t RenderBox_maxPreferredLogicalWidth(const void*);
 void RenderBox_clearOverridingContainingBlockContentSize(void*);
 void RenderBox_clearOverridingContentSize(void*);

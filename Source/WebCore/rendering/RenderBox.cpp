@@ -189,6 +189,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_minPreferredLogicalWidth(const void*
     return width.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_isSelfCollapsingBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->isSelfCollapsingBlock();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBox_maxPreferredLogicalWidth(const void* p)
 {
     const auto width = static_cast<const WebCore::RenderBox*>(p)->maxPreferredLogicalWidth();
