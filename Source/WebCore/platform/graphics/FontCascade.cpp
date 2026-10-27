@@ -260,6 +260,21 @@ extern "C" WEBCORE_EXPORT void FontCascade_update(const void* p, void* fontSelec
     static_cast<const WebCore::FontCascade*>(p)->update(static_cast<WebCore::FontSelector*>(fontSelector));
 }
 
+extern "C" WEBCORE_EXPORT const void* FontCascade_firstFamily(const void* p)
+{
+    return &static_cast<const WebCore::FontCascade*>(p)->firstFamily();
+}
+
+extern "C" WEBCORE_EXPORT bool FontCascade_hasValidAverageCharWidth(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->hasValidAverageCharWidth();
+}
+
+extern "C" WEBCORE_EXPORT bool FontCascade_fastAverageCharWidthIfAvailable(const void* p, float* width)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->fastAverageCharWidthIfAvailable(*width);
+}
+
 extern "C" WEBCORE_EXPORT bool FontCascade_isLoadingCustomFonts(const void* p)
 {
     return static_cast<const WebCore::FontCascade*>(p)->isLoadingCustomFonts();

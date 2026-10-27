@@ -37,6 +37,11 @@ extern "C" WEBCORE_EXPORT bool ScrollbarTheme_usesOverlayScrollbars(const void* 
     return static_cast<const WebCore::ScrollbarTheme*>(p)->usesOverlayScrollbars();
 }
 
+extern "C" WEBCORE_EXPORT int ScrollbarTheme_scrollbarThickness(void* p, uint8_t scrollbarWidth, uint8_t expansionState)
+{
+    return static_cast<WebCore::ScrollbarTheme*>(p)->scrollbarThickness(static_cast<WebCore::ScrollbarWidth>(scrollbarWidth), static_cast<WebCore::ScrollbarExpansionState>(expansionState));
+}
+
 extern "C" WEBCORE_EXPORT void* ScrollbarTheme_theme()
 {
     return &WebCore::ScrollbarTheme::theme();

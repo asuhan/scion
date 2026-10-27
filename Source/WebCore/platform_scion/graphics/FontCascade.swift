@@ -338,6 +338,19 @@ class FontCascadeWrapper: Equatable {
   }
 
   func isLoadingCustomFonts() -> Bool { return wk_interop.FontCascade_isLoadingCustomFonts(p!) }
+
+  func firstFamily() -> AtomStringWrapper {
+    return AtomStringWrapper(p: wk_interop.FontCascade_firstFamily(p!))
+  }
+
+  func hasValidAverageCharWidth() -> Bool {
+    return wk_interop.FontCascade_hasValidAverageCharWidth(p!)
+  }
+
+  // returns true on success
+  func fastAverageCharWidthIfAvailable(_ width: inout Float32) -> Bool {
+    return wk_interop.FontCascade_fastAverageCharWidthIfAvailable(p!, &width)
+  }
 }
 
 struct GlyphOverflow {
