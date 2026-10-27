@@ -26,6 +26,9 @@
 
 class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T>, IteratorProtocol {
   func next() -> T? {
+    if !bool() {
+      return nil
+    }
     let value = *self
     ++self
     return value
