@@ -122,6 +122,42 @@ class FontCascadeWrapper: Equatable {
       glyphOverflow!.bottom = LayoutUnit.fromRawValue(value: raw.bottom)
       return result
     }
+    if p != nil && run.p != nil {
+      var raw = GlyphOverflowRaw(left: 0, right: 0, top: 0, bottom: 0)
+      if let glyphOverflow {
+        raw = GlyphOverflowRaw(
+          left: glyphOverflow.left.rawValue(), right: glyphOverflow.right.rawValue(),
+          top: glyphOverflow.top.rawValue(), bottom: glyphOverflow.bottom.rawValue())
+      }
+      let computeBounds = glyphOverflow?.computeBounds ?? false
+      var fonts = [UnsafeRawPointer?](repeating: nil, count: 8)
+      var count: UInt32 = 0
+      var result: Float32 = 0
+      while true {
+        let capacity = UInt32(fonts.count)
+        result = fonts.withUnsafeMutableBufferPointer { buffer in
+          withUnsafeMutablePointer(to: &raw) { rawPtr in
+            wk_interop.FontCascade_widthWithFallbackFonts(
+              p!, run.p!, buffer.baseAddress, capacity, &count,
+              glyphOverflow != nil ? rawPtr : nil, computeBounds)
+          }
+        }
+        if count <= capacity {
+          break
+        }
+        fonts = [UnsafeRawPointer?](repeating: nil, count: Int(count))
+      }
+      if glyphOverflow != nil {
+        glyphOverflow!.left = LayoutUnit.fromRawValue(value: raw.left)
+        glyphOverflow!.right = LayoutUnit.fromRawValue(value: raw.right)
+        glyphOverflow!.top = LayoutUnit.fromRawValue(value: raw.top)
+        glyphOverflow!.bottom = LayoutUnit.fromRawValue(value: raw.bottom)
+      }
+      for i in 0..<Int(count) {
+        fallbackFonts!.add(value: FontWrapper(p: fonts[i]!))
+      }
+      return result
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

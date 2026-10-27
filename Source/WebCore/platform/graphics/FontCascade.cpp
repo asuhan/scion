@@ -215,6 +215,31 @@ extern "C" WEBCORE_EXPORT float FontCascade_widthWithGlyphOverflow(const void* p
     return result;
 }
 
+extern "C" WEBCORE_EXPORT float FontCascade_widthWithFallbackFonts(const void* p, const void* run, const void** fallbackFontsRaw, uint32_t fallbackFontsCapacity, uint32_t* fallbackFontsCount, GlyphOverflowRaw* glyphOverflowRaw, bool computeBounds)
+{
+    std::optional<WebCore::GlyphOverflow> glyphOverflow;
+    if (glyphOverflowRaw) {
+        glyphOverflow = WebCore::GlyphOverflow { };
+        glyphOverflow->left = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->left);
+        glyphOverflow->right = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->right);
+        glyphOverflow->top = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->top);
+        glyphOverflow->bottom = WebCore::LayoutUnit::fromRawValue(glyphOverflowRaw->bottom);
+        glyphOverflow->computeBounds = computeBounds;
+    }
+    SingleThreadWeakHashSet<const WebCore::Font> fallbackFonts;
+    const auto result = static_cast<const WebCore::FontCascade*>(p)->width(*static_cast<const WebCore::TextRun*>(run), &fallbackFonts, glyphOverflow ? &*glyphOverflow : nullptr);
+    if (glyphOverflow)
+        *glyphOverflowRaw = { glyphOverflow->left.rawValue(), glyphOverflow->right.rawValue(), glyphOverflow->top.rawValue(), glyphOverflow->bottom.rawValue() };
+    uint32_t count = 0;
+    for (auto& font : fallbackFonts) {
+        if (count < fallbackFontsCapacity)
+            fallbackFontsRaw[count] = &font;
+        ++count;
+    }
+    *fallbackFontsCount = count;
+    return result;
+}
+
 extern "C" WEBCORE_EXPORT void* FontCascade_createWithDescription(const void* description, const void* other)
 {
     return new WebCore::FontCascade(WebCore::FontCascadeDescription { *static_cast<const WebCore::FontCascadeDescription*>(description) }, *static_cast<const WebCore::FontCascade*>(other));
