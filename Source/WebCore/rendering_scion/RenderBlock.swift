@@ -1039,8 +1039,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     _ characters: CharSpanWrapper<UChar>, _ style: RenderStyleWrapper,
     _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior()
   ) -> TextRunWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return constructTextRun(StringWrapperView(characters: characters), style, expansion)
   }
 
   func paginationStrut() -> LayoutUnit {
