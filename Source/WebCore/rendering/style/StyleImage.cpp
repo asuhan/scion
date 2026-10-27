@@ -41,3 +41,60 @@ extern "C" WEBCORE_EXPORT bool StyleImage_hasClient(const void* p, void* rendere
 {
     return static_cast<const WebCore::StyleImage*>(p)->hasClient(*static_cast<WebCore::RenderElement*>(renderer_raw));
 }
+
+extern "C" WEBCORE_EXPORT bool StyleImage_isLoaded(const void* p, const void* renderer_raw)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->isLoaded(static_cast<const WebCore::RenderElement*>(renderer_raw));
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_errorOccurred(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->errorOccurred();
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_usesDataProtocol(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->usesDataProtocol();
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_hasImage(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->hasImage();
+}
+
+extern "C" WEBCORE_EXPORT void StyleImage_imageSize(const void* p, const void* renderer_raw, float multiplier, float* width, float* height)
+{
+    auto size = static_cast<const WebCore::StyleImage*>(p)->imageSize(static_cast<const WebCore::RenderElement*>(renderer_raw), multiplier);
+    *width = size.width();
+    *height = size.height();
+}
+
+extern "C" WEBCORE_EXPORT float StyleImage_imageScaleFactor(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->imageScaleFactor();
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_imageHasNaturalDimensions(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->imageHasNaturalDimensions();
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_canRender(const void* p, const void* renderer_raw, float multiplier)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->canRender(static_cast<const WebCore::RenderElement*>(renderer_raw), multiplier);
+}
+
+extern "C" WEBCORE_EXPORT void StyleImage_setContainerContextForRenderer(void* p, const void* renderer_raw, float width, float height, float containerZoom)
+{
+    static_cast<WebCore::StyleImage*>(p)->setContainerContextForRenderer(*static_cast<const WebCore::RenderElement*>(renderer_raw), { width, height }, containerZoom);
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_isGeneratedImage(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->isGeneratedImage();
+}
+
+extern "C" WEBCORE_EXPORT bool StyleImage_hasCachedImage(const void* p)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->hasCachedImage();
+}

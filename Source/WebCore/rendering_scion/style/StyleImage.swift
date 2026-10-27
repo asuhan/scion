@@ -37,23 +37,19 @@ class StyleImage: Equatable {
   }
 
   func isLoaded(renderer: RenderElementWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_isLoaded(p, wkRenderObject(renderer))
   }
 
   func errorOccurred() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_errorOccurred(p)
   }
 
   func usesDataProtocol() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_usesDataProtocol(p)
   }
 
   func hasImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_hasImage(p)
   }
 
   func addClient(_ renderer: RenderElementWrapper) {
@@ -70,8 +66,10 @@ class StyleImage: Equatable {
 
   // Size / scale.
   func imageSize(_ renderer: RenderElementWrapper?, _ multiplier: Float32) -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var width: Float32 = 0
+    var height: Float32 = 0
+    wk_interop.StyleImage_imageSize(p, wkRenderObject(renderer), multiplier, &width, &height)
+    return FloatSize(width: width, height: height)
   }
 
   func usesImageContainerSize() -> Bool { fatalError("Not reached") }
@@ -85,13 +83,11 @@ class StyleImage: Equatable {
   }
 
   func imageScaleFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_imageScaleFactor(p)
   }
 
   func imageHasNaturalDimensions() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_imageHasNaturalDimensions(p)
   }
 
   // Image.
@@ -109,25 +105,22 @@ class StyleImage: Equatable {
 
   // Rendering.
   func canRender(renderer: RenderElementWrapper, multiplier: Float32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_canRender(p, wkRenderObject(renderer), multiplier)
   }
 
   func setContainerContextForRenderer(
     renderer: RenderElementWrapper, containerSize: FloatSize, containerZoom: Float32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.StyleImage_setContainerContextForRenderer(
+      p, wkRenderObject(renderer), containerSize.width, containerSize.height, containerZoom)
   }
 
   func isGeneratedImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_isGeneratedImage(p)
   }
 
   func hasCachedImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StyleImage_hasCachedImage(p)
   }
 
   private let p: UnsafeMutableRawPointer
