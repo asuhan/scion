@@ -1860,7 +1860,15 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, positiveMarginBefore: inout LayoutUnit,
     negativeMarginBefore: inout LayoutUnit
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var positiveMarginBeforeRaw = positiveMarginBefore.rawValue()
+      var negativeMarginBeforeRaw = negativeMarginBefore.rawValue()
+      wk_interop.RenderBlockFlow_marginBeforeEstimateForChild(
+        id(), wkRenderObject(child), &positiveMarginBeforeRaw, &negativeMarginBeforeRaw)
+      positiveMarginBefore = LayoutUnit.fromRawValue(value: positiveMarginBeforeRaw)
+      negativeMarginBefore = LayoutUnit.fromRawValue(value: negativeMarginBeforeRaw)
+      return
+    }
     // Give up if in quirks mode and we're a body/table cell and the top margin of the child box is quirky.
     // Give up if the child specified -webkit-margin-collapse: separate that prevents collapsing.
     if document().inQuirksMode() && hasMarginBeforeQuirk(child: child)

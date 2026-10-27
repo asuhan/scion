@@ -144,6 +144,15 @@ extern "C" WEBCORE_EXPORT bool RenderBlockFlow_hasLines(const void* p)
     return static_cast<const WebCore::RenderBlockFlow*>(p)->hasLines();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBlockFlow_marginBeforeEstimateForChild(const void* p, void* childRaw, int32_t* positiveMarginBeforeRaw, int32_t* negativeMarginBeforeRaw)
+{
+    auto positiveMarginBefore = WebCore::LayoutUnit::fromRawValue(*positiveMarginBeforeRaw);
+    auto negativeMarginBefore = WebCore::LayoutUnit::fromRawValue(*negativeMarginBeforeRaw);
+    static_cast<const WebCore::RenderBlockFlow*>(p)->marginBeforeEstimateForChild(*static_cast<WebCore::RenderBox*>(childRaw), positiveMarginBefore, negativeMarginBefore);
+    *positiveMarginBeforeRaw = positiveMarginBefore.rawValue();
+    *negativeMarginBeforeRaw = negativeMarginBefore.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void* PaintInfo_deepCopy(const void* p)
 {
     return new WebCore::PaintInfo(*static_cast<const WebCore::PaintInfo*>(p));
