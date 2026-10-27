@@ -49,15 +49,9 @@ class FillLayerWrapper {
   // TODO(asuhan): remove this, it's not needed in Swift
   func protectedImage() -> StyleImage? { return image() }
 
-  var xPosition: LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var xPosition: LengthWrapper { return LengthWrapper(p: wk_interop.FillLayer_xPosition(p)) }
 
-  var yPosition: LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var yPosition: LengthWrapper { return LengthWrapper(p: wk_interop.FillLayer_yPosition(p)) }
 
   var backgroundXOrigin: Edge { return Edge(rawValue: wk_interop.FillLayer_backgroundXOrigin(p))! }
 

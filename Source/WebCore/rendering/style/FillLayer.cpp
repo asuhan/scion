@@ -31,6 +31,16 @@ extern "C" WEBCORE_EXPORT void* FillLayer_image(const void* p)
     return static_cast<const WebCore::FillLayer*>(p)->image();
 }
 
+extern "C" WEBCORE_EXPORT const void* FillLayer_xPosition(const void* p)
+{
+    return &static_cast<const WebCore::FillLayer*>(p)->xPosition();
+}
+
+extern "C" WEBCORE_EXPORT const void* FillLayer_yPosition(const void* p)
+{
+    return &static_cast<const WebCore::FillLayer*>(p)->yPosition();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t FillLayer_backgroundXOrigin(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::FillLayer*>(p)->backgroundXOrigin());
