@@ -26,7 +26,7 @@
 
 final class TextControlInnerTextElementWrapper: HTMLDivElementWrapper {
   override func renderer() -> RenderTextControlInnerBlockWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let renderer = super.renderer() else { return nil }
+    return (renderer as! RenderTextControlInnerBlockWrapper)
   }
 }

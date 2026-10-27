@@ -77,6 +77,21 @@ extern "C" WEBCORE_EXPORT bool HTMLTextFormControlElement_isInnerTextElementEdit
     return static_cast<const WebCore::HTMLTextFormControlElement*>(p)->isInnerTextElementEditable();
 }
 
+extern "C" WEBCORE_EXPORT void* HTMLTextFormControlElement_innerTextElement(const void* p)
+{
+    return static_cast<const WebCore::HTMLTextFormControlElement*>(p)->innerTextElement().get();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLTextFormControlElement_placeholderElement(const void* p)
+{
+    return static_cast<const WebCore::HTMLTextFormControlElement*>(p)->placeholderElement();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLTextFormControlElement_createInnerTextStyle(void* p, const void* style)
+{
+    return new WebCore::RenderStyle(static_cast<WebCore::HTMLTextFormControlElement*>(p)->createInnerTextStyle(*static_cast<const WebCore::RenderStyle*>(style)));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTextFormControlElement);

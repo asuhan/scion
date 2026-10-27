@@ -29,14 +29,34 @@
 import wk_interop
 
 final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
+  func sizeShouldIncludeDecoration(_ preferredSize: inout Int32) -> Bool {
+    return wk_interop.HTMLInputElement_sizeShouldIncludeDecoration(p, &preferredSize)
+  }
+
+  func decorationWidth() -> Float32 { return wk_interop.HTMLInputElement_decorationWidth(p) }
+
+  func containerElement() -> HTMLElementWrapper? {
+    guard let raw = wk_interop.HTMLInputElement_containerElement(p) else { return nil }
+    return createHTMLElementWrapper(raw)
+  }
+
+  func innerBlockElement() -> HTMLElementWrapper? {
+    guard let raw = wk_interop.HTMLInputElement_innerBlockElement(p) else { return nil }
+    return createHTMLElementWrapper(raw)
+  }
+
+  func innerSpinButtonElement() -> HTMLElementWrapper? {
+    guard let raw = wk_interop.HTMLInputElement_innerSpinButtonElement(p) else { return nil }
+    return createHTMLElementWrapper(raw)
+  }
+
   override func placeholderElement() -> HTMLElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return super.placeholderElement()
   }
 
   func autoFillButtonElement() -> HTMLElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.HTMLInputElement_autoFillButtonElement(p) else { return nil }
+    return createHTMLElementWrapper(raw)
   }
 
   func displayString() -> StringWrapper {

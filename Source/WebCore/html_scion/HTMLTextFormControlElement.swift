@@ -26,15 +26,24 @@ import wk_interop
 
 class HTMLTextFormControlElementWrapper: HTMLFormControlElementWrapper {
   func placeholderElement() -> HTMLElementWrapper? {
-    fatalError("Not reached")
+    guard let raw = wk_interop.HTMLTextFormControlElement_placeholderElement(p) else { return nil }
+    return createHTMLElementWrapper(raw)
   }
 
   func updatePlaceholderVisibility() {
     wk_interop.HTMLTextFormControlElement_updatePlaceholderVisibility(p)
   }
 
+  func innerTextElement() -> TextControlInnerTextElementWrapper? {
+    guard let raw = wk_interop.HTMLTextFormControlElement_innerTextElement(p) else { return nil }
+    return (createElementWrapper(raw) as! TextControlInnerTextElementWrapper)
+  }
+
   func createInnerTextStyle(_ style: RenderStyleWrapper) -> RenderStyleWrapper {
-    fatalError("Not reached")
+    let innerTextStyle = convert_render_style(
+      p: wk_interop.HTMLTextFormControlElement_createInnerTextStyle(p, style.p!))
+    innerTextStyle.pOwner = true
+    return innerTextStyle
   }
 
   func isInnerTextElementEditable() -> Bool {

@@ -96,6 +96,36 @@ extern "C" WEBCORE_EXPORT bool HTMLInputElement_hasAutoFillStrongPasswordButton(
     return static_cast<const WebCore::HTMLInputElement*>(p)->hasAutoFillStrongPasswordButton();
 }
 
+extern "C" WEBCORE_EXPORT bool HTMLInputElement_sizeShouldIncludeDecoration(const void* p, int* preferredSize)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->sizeShouldIncludeDecoration(*preferredSize);
+}
+
+extern "C" WEBCORE_EXPORT float HTMLInputElement_decorationWidth(const void* p)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->decorationWidth();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLInputElement_containerElement(const void* p)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->containerElement();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLInputElement_innerBlockElement(const void* p)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->innerBlockElement();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLInputElement_innerSpinButtonElement(const void* p)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->innerSpinButtonElement();
+}
+
+extern "C" WEBCORE_EXPORT void* HTMLInputElement_autoFillButtonElement(const void* p)
+{
+    return static_cast<const WebCore::HTMLInputElement*>(p)->autoFillButtonElement();
+}
+
 extern "C" WEBCORE_EXPORT const void* HTMLInputElement_displayString(const void* p)
 {
     return new String(static_cast<const WebCore::HTMLInputElement*>(p)->displayString());

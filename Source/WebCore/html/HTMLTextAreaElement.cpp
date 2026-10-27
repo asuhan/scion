@@ -57,6 +57,11 @@ extern "C" WEBCORE_EXPORT unsigned HTMLTextAreaElement_cols(const void* p)
     return static_cast<const WebCore::HTMLTextAreaElement*>(p)->cols();
 }
 
+extern "C" WEBCORE_EXPORT unsigned HTMLTextAreaElement_rows(const void* p)
+{
+    return static_cast<const WebCore::HTMLTextAreaElement*>(p)->rows();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(HTMLTextAreaElement);
