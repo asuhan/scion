@@ -831,6 +831,17 @@ struct OptionalBorderDataRadiiRaw {
     bool is_valid;
 };
 
+extern "C" WEBCORE_EXPORT BorderDataRadiiRaw RenderStyle_borderRadii(const void* p)
+{
+    const auto& radii = static_cast<const WebCore::RenderStyle*>(p)->borderRadii();
+    return {
+        { &radii.topLeft.width, &radii.topLeft.height },
+        { &radii.topRight.width, &radii.topRight.height },
+        { &radii.bottomLeft.width, &radii.bottomLeft.height },
+        { &radii.bottomRight.width, &radii.bottomRight.height },
+    };
+}
+
 namespace {
 
 LayoutRectRaw convertLayoutRect(const WebCore::LayoutRect& r)
@@ -949,6 +960,26 @@ extern "C" WEBCORE_EXPORT void RenderStyle_setMinWidth(const void* p, const void
 extern "C" WEBCORE_EXPORT void RenderStyle_setMinHeight(const void* p, const void* length)
 {
     static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setMinHeight(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setWidth(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setWidth(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setHeight(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setHeight(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setLogicalWidth(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setLogicalWidth(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
+}
+
+extern "C" WEBCORE_EXPORT void RenderStyle_setLogicalHeight(const void* p, const void* length)
+{
+    static_cast<WebCore::RenderStyle*>(const_cast<void*>(p))->setLogicalHeight(WebCore::Length(*static_cast<const WebCore::Length*>(length)));
 }
 
 extern "C" WEBCORE_EXPORT void RenderStyle_setMarginTop(const void* p, const void* length)
@@ -1653,6 +1684,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationLine(const void* p)
 {
     const auto textDecorationLine = static_cast<const WebCore::RenderStyle*>(p)->textDecorationLine();
     return textDecorationLine.toRaw();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_equal(const void* p, const void* other)
+{
+    return *static_cast<const WebCore::RenderStyle*>(p) == *static_cast<const WebCore::RenderStyle*>(other);
 }
 
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textUnderlinePosition(const void* p)

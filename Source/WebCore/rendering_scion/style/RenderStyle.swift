@@ -793,8 +793,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func == (this: RenderStyleWrapper, other: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_equal(this.p!, other.p!)
   }
 
   func inheritFrom(inheritParent: RenderStyleWrapper) {
@@ -1215,8 +1214,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderRadii() -> BorderDataRadii {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_borderRadii(p!)
+    return BorderDataRadii(
+      topLeft: convertLengthSizeRaw(raw.topLeft), topRight: convertLengthSizeRaw(raw.topRight),
+      bottomLeft: convertLengthSizeRaw(raw.bottomLeft),
+      bottomRight: convertLengthSizeRaw(raw.bottomRight))
   }
 
   func hasBorderRadius() -> Bool { return wk_interop.RenderStyle_hasBorderRadius(p!) }
@@ -2655,23 +2657,19 @@ class RenderStyleWrapper: Equatable {
   func setPosition(v: PositionType) { wk_interop.RenderStyle_setPosition(p!, v.rawValue) }
 
   func setWidth(length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setWidth(p!, length.p)
   }
 
   func setHeight(length: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setHeight(p!, length.p)
   }
 
   func setLogicalWidth(_ width: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setLogicalWidth(p!, width.p)
   }
 
   func setLogicalHeight(_ height: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderStyle_setLogicalHeight(p!, height.p)
   }
 
   func setMinWidth(_ length: LengthWrapper) { wk_interop.RenderStyle_setMinWidth(p!, length.p) }
