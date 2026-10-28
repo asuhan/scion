@@ -128,8 +128,8 @@ class Document: TreeScopeWrapper {
   func inNoQuirksMode() -> Bool { return wk_interop.Document_inNoQuirksMode(p) }
 
   func focusedElement() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Document_focusedElement(p) else { return nil }
+    return createElementWrapper(raw)
   }
 
   // Returns the owning element in the parent document.
