@@ -993,6 +993,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(.IsTextControl)
   }
 
+  func isRenderTextControlMultiLine() -> Bool {
+    assert(isNativeImpl())
+    return type() == .TextControlMultiLine
+  }
+
+  func isRenderTextControlSingleLine() -> Bool {
+    assert(isNativeImpl())
+    return isRenderTextControl() && !isRenderTextControlMultiLine()
+  }
+
+  func isRenderSearchField() -> Bool {
+    assert(isNativeImpl())
+    return type() == .SearchField
+  }
+
   func isRenderVideo() -> Bool {
     assert(isNativeImpl())
     return type() == .Video

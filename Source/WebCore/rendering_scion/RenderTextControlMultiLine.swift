@@ -22,6 +22,13 @@
 import Foundation
 
 final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
+  init(_ element: HTMLTextAreaElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(type: .TextControlMultiLine, element: element, style: style)
+    assert(isRenderTextControlMultiLine())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   private func textAreaElement() -> HTMLTextAreaElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

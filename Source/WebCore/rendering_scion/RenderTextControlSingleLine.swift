@@ -36,6 +36,13 @@ private func resetOverriddenHeight(_ box: RenderBoxWrapper?, _ ancestor: RenderO
 }
 
 class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
+  init(type: `Type`, element: HTMLInputElementWrapper, style: RenderStyleWrapper) {
+    super.init(type: type, element: element, style: style)
+    assert(isRenderTextControlSingleLine())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   private func containerElement() -> HTMLElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -372,6 +379,13 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
 }
 
 final class RenderTextControlInnerBlockWrapper: RenderBlockFlowWrapper {
+  init(_ element: ElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(type: .TextControlInnerBlock, element: element, style: style)
+    assert(isRenderTextControlInnerBlock())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override func hasLineIfEmpty() -> Bool {
     assert(isNativeImpl())
     return true

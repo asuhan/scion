@@ -22,6 +22,13 @@
 import wk_interop
 
 class RenderTextControlWrapper: RenderBlockFlowWrapper {
+  init(type: `Type`, element: HTMLTextFormControlElementWrapper, style: RenderStyleWrapper) {
+    super.init(type: type, element: element, style: style, flags: .IsTextControl)
+    assert(isRenderTextControl())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func textFormControlElement() -> HTMLTextFormControlElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -220,6 +227,12 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
 // baseline definition, and then inputs of different types wouldn't line up
 // anymore.
 final class RenderTextControlInnerContainerWrapper: RenderFlexibleBoxWrapper {
+  init(_ element: ElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(type: .TextControlInnerContainer, element: element, style: style)
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override final func baselinePosition(
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode
