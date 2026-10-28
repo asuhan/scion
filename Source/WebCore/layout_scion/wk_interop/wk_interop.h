@@ -2331,6 +2331,7 @@ void GraphicsLayer_setShouldPaintUsingCompositeCopy(void*, bool);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
 const void* FrameSelection_selection(const void*);
 void FrameSelection_setNeedsSelectionUpdate(void* p, bool);
+void FrameSelection_paintCaret(void*, void*, int32_t, int32_t);
 bool FrameSelection_isCaret(const void*);
 bool FrameSelection_isFocusedAndActive(const void*);
 bool FrameSelection_shouldShowBlockCursor(const void*);

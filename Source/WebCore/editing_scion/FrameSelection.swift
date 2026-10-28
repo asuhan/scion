@@ -77,8 +77,8 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
   func isCaret() -> Bool { return wk_interop.FrameSelection_isCaret(p) }
 
   func paintCaret(context: GraphicsContextWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FrameSelection_paintCaret(
+      p, context.p, paintOffset.x.rawValue(), paintOffset.y.rawValue())
   }
 
   func isFocusedAndActive() -> Bool { return wk_interop.FrameSelection_isFocusedAndActive(p) }

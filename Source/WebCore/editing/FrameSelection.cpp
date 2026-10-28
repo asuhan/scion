@@ -115,6 +115,12 @@ extern "C" WEBCORE_EXPORT void FrameSelection_setNeedsSelectionUpdate(void* p, b
             : WebCore::FrameSelection::RevealSelectionAfterUpdate::NotForced);
 }
 
+extern "C" WEBCORE_EXPORT void FrameSelection_paintCaret(void* p, void* context, int32_t paintOffsetX, int32_t paintOffsetY)
+{
+    auto paintOffset = WebCore::LayoutPoint(WebCore::LayoutUnit::fromRawValue(paintOffsetX), WebCore::LayoutUnit::fromRawValue(paintOffsetY));
+    static_cast<WebCore::FrameSelection*>(p)->paintCaret(*static_cast<WebCore::GraphicsContext*>(context), paintOffset);
+}
+
 extern "C" WEBCORE_EXPORT bool FrameSelection_isCaret(const void* p)
 {
     return static_cast<const WebCore::FrameSelection*>(p)->isCaret();
