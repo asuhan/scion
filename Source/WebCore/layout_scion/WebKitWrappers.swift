@@ -1533,6 +1533,30 @@ func RenderObjectScion_isRenderTextControl(_ objectRaw: UnsafeRawPointer) -> Boo
   return object.isRenderTextControl()
 }
 
+@_cdecl("RenderObjectScion_isRenderTextControlMultiLine")
+func RenderObjectScion_isRenderTextControlMultiLine(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTextControlMultiLine()
+}
+
+@_cdecl("RenderObjectScion_isRenderTextControlSingleLine")
+func RenderObjectScion_isRenderTextControlSingleLine(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTextControlSingleLine()
+}
+
+@_cdecl("RenderObjectScion_isRenderSearchField")
+func RenderObjectScion_isRenderSearchField(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderSearchField()
+}
+
+@_cdecl("RenderObjectScion_isRenderTextControlInnerBlock")
+func RenderObjectScion_isRenderTextControlInnerBlock(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderTextControlInnerBlock()
+}
+
 @_cdecl("RenderObjectScion_isRenderVideo")
 func RenderObjectScion_isRenderVideo(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

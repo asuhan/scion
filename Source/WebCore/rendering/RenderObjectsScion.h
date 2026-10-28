@@ -238,6 +238,14 @@ public:
 
     bool isRenderTextControl() const;
 
+    bool isRenderTextControlMultiLine() const;
+
+    bool isRenderTextControlSingleLine() const;
+
+    bool isRenderSearchField() const;
+
+    bool isRenderTextControlInnerBlock() const;
+
     bool isRenderVideo() const;
 
     bool isRenderViewTransitionCapture() const;

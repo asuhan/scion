@@ -3885,6 +3885,30 @@ bool RenderObject::isRenderTextControl() const
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsTextControl);
 }
 
+bool RenderObject::isRenderTextControlMultiLine() const
+{
+    if (m_scion) { return m_scion->isRenderTextControlMultiLine(); }
+    return type() == Type::TextControlMultiLine;
+}
+
+bool RenderObject::isRenderTextControlSingleLine() const
+{
+    if (m_scion) { return m_scion->isRenderTextControlSingleLine(); }
+    return isRenderTextControl() && !isRenderTextControlMultiLine();
+}
+
+bool RenderObject::isRenderSearchField() const
+{
+    if (m_scion) { return m_scion->isRenderSearchField(); }
+    return type() == Type::SearchField;
+}
+
+bool RenderObject::isRenderTextControlInnerBlock() const
+{
+    if (m_scion) { return m_scion->isRenderTextControlInnerBlock(); }
+    return type() == Type::TextControlInnerBlock;
+}
+
 bool RenderObject::isRenderVideo() const
 {
     if (m_scion) { return m_scion->isRenderVideo(); }

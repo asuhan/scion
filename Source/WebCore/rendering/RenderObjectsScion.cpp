@@ -159,6 +159,14 @@ extern "C" bool RenderObjectScion_isRenderTableSection(const void*);
 
 extern "C" bool RenderObjectScion_isRenderTextControl(const void*);
 
+extern "C" bool RenderObjectScion_isRenderTextControlMultiLine(const void*);
+
+extern "C" bool RenderObjectScion_isRenderTextControlSingleLine(const void*);
+
+extern "C" bool RenderObjectScion_isRenderSearchField(const void*);
+
+extern "C" bool RenderObjectScion_isRenderTextControlInnerBlock(const void*);
+
 extern "C" bool RenderObjectScion_isRenderVideo(const void*);
 
 extern "C" bool RenderObjectScion_isRenderViewTransitionCapture(const void*);
@@ -1581,6 +1589,14 @@ bool RenderObjectScion::isRenderTableCaption() const { return RenderObjectScion_
 bool RenderObjectScion::isRenderTableSection() const { return RenderObjectScion_isRenderTableSection(m_handle); }
 
 bool RenderObjectScion::isRenderTextControl() const { return RenderObjectScion_isRenderTextControl(m_handle); }
+
+bool RenderObjectScion::isRenderTextControlMultiLine() const { return RenderObjectScion_isRenderTextControlMultiLine(m_handle); }
+
+bool RenderObjectScion::isRenderTextControlSingleLine() const { return RenderObjectScion_isRenderTextControlSingleLine(m_handle); }
+
+bool RenderObjectScion::isRenderSearchField() const { return RenderObjectScion_isRenderSearchField(m_handle); }
+
+bool RenderObjectScion::isRenderTextControlInnerBlock() const { return RenderObjectScion_isRenderTextControlInnerBlock(m_handle); }
 
 bool RenderObjectScion::isRenderVideo() const { return RenderObjectScion_isRenderVideo(m_handle); }
 

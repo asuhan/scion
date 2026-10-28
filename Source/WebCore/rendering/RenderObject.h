@@ -512,26 +512,10 @@ public:
     bool isRenderTableCaption() const;
     bool isRenderTableSection() const;
     bool isRenderTextControl() const;
-    bool isRenderTextControlMultiLine() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TextControlMultiLine;
-    }
-    bool isRenderTextControlSingleLine() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderTextControl() && !isRenderTextControlMultiLine();
-    }
-    bool isRenderSearchField() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::SearchField;
-    }
-    bool isRenderTextControlInnerBlock() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::TextControlInnerBlock;
-    }
+    WEBCORE_EXPORT bool isRenderTextControlMultiLine() const;
+    WEBCORE_EXPORT bool isRenderTextControlSingleLine() const;
+    WEBCORE_EXPORT bool isRenderSearchField() const;
+    WEBCORE_EXPORT bool isRenderTextControlInnerBlock() const;
     bool isRenderVideo() const;
     bool isRenderViewTransitionCapture() const;
     bool isRenderWidget() const;
