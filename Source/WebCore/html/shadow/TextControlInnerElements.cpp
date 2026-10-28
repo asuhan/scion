@@ -40,6 +40,7 @@
 #include "MouseEvent.h"
 #include "PlatformMouseEvent.h"
 #include "Quirks.h"
+#include "RenderObjectsScion.h"
 #include "RenderSearchField.h"
 #include "RenderStyleSetters.h"
 #include "RenderTextControl.h"
@@ -79,6 +80,12 @@ Ref<TextControlInnerContainer> TextControlInnerContainer::create(Document& docum
     
 RenderPtr<RenderElement> TextControlInnerContainer::createElementRenderer(RenderStyle&& style, const RenderTreePosition&)
 {
+    if (Document::s_useScionRendering >= 15) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderTextControlInnerContainer>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderTextControlInnerContainerScion_create(this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderTextControlInnerContainer>(*this, WTFMove(style));
 }
 
@@ -189,6 +196,12 @@ void TextControlInnerTextElement::defaultEventHandler(Event& event)
 
 RenderPtr<RenderElement> TextControlInnerTextElement::createElementRenderer(RenderStyle&& style, const RenderTreePosition&)
 {
+    if (Document::s_useScionRendering >= 15) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderTextControlInnerBlock>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderTextControlInnerBlockScion_create(this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderTextControlInnerBlock>(*this, WTFMove(style));
 }
 

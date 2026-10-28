@@ -36,6 +36,7 @@
 #include "Chrome.h"
 #include "ChromeClient.h"
 #include "DOMFormData.h"
+#include "Document.h"
 #include "Editor.h"
 #include "ElementRareData.h"
 #include "EventLoop.h"
@@ -52,6 +53,7 @@
 #include "PlatformKeyboardEvent.h"
 #include "RenderLayer.h"
 #include "RenderLayerScrollableArea.h"
+#include "RenderObjectsScion.h"
 #include "RenderTextControlSingleLine.h"
 #include "RenderTheme.h"
 #include "ScriptDisallowedScope.h"
@@ -308,6 +310,12 @@ bool TextFieldInputType::shouldSubmitImplicitly(Event& event)
 RenderPtr<RenderElement> TextFieldInputType::createInputRenderer(RenderStyle&& style)
 {
     ASSERT(element());
+    if (Document::s_useScionRendering >= 15) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderTextControlSingleLine>(RenderObject::Type::TextControlSingleLine, *element(), WTFMove(style));
+        renderer->setScionHandle(RenderTextControlSingleLineScion_create(element(), clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderTextControlSingleLine>(RenderObject::Type::TextControlSingleLine, *element(), WTFMove(style));
 }
 

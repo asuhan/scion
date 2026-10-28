@@ -3806,6 +3806,49 @@ func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderTextControlSingleLineScion_create")
+func RenderTextControlSingleLineScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let element = createElementWrapper(elementRaw) as! HTMLInputElementWrapper
+  let renderer = RenderTextControlSingleLineWrapper(
+    type: .TextControlSingleLine, element: element, style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTextControlMultiLineScion_create")
+func RenderTextControlMultiLineScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let element = createElementWrapper(elementRaw) as! HTMLTextAreaElementWrapper
+  let renderer = RenderTextControlMultiLineWrapper(element, style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTextControlInnerBlockScion_create")
+func RenderTextControlInnerBlockScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTextControlInnerBlockWrapper(createElementWrapper(elementRaw), style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderTextControlInnerContainerScion_create")
+func RenderTextControlInnerContainerScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderTextControlInnerContainerWrapper(createElementWrapper(elementRaw), style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
 @_cdecl("RenderTableScion_create")
 func RenderTableScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer

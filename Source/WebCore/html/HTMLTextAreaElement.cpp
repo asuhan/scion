@@ -42,6 +42,7 @@
 #include "LocalFrame.h"
 #include "LocalizedStrings.h"
 #include "NodeName.h"
+#include "RenderObjectsScion.h"
 #include "RenderTextControlMultiLine.h"
 #include "ShadowRoot.h"
 #include "Text.h"
@@ -211,6 +212,12 @@ void HTMLTextAreaElement::attributeChanged(const QualifiedName& name, const Atom
 
 RenderPtr<RenderElement> HTMLTextAreaElement::createElementRenderer(RenderStyle&& style, const RenderTreePosition&)
 {
+    if (Document::s_useScionRendering >= 15) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderTextControlMultiLine>(*this, WTFMove(style));
+        renderer->setScionHandle(RenderTextControlMultiLineScion_create(this, clonedStyle.release()));
+        return renderer;
+    }
     return createRenderer<RenderTextControlMultiLine>(*this, WTFMove(style));
 }
 
