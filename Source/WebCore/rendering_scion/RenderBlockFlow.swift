@@ -2826,8 +2826,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     if (element()?.isRootEditableElement() ?? false) && hasNonVisibleOverflow()
       && style().isLeftToRightDirection() && !paddingEnd().bool()
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return LayoutUnit(value: wk_interop.CaretRectComputation_caretWidth())
     }
     return LayoutUnit()
   }

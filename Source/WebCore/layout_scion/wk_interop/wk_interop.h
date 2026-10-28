@@ -1763,6 +1763,7 @@ void RenderBlockFlow_setStaticInlinePositionForChild(void* p, void* child_raw, i
 bool RenderBlockFlow_containsFloats(const void*);
 int32_t RenderBlockFlow_lowestFloatLogicalBottom(const void* p, uint8_t float_type_raw);
 int32_t RenderBlockFlow_endPaddingWidthForCaret(const void*);
+int CaretRectComputation_caretWidth(void);
 struct OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void*);
 int32_t RenderBlockFlow_maxPositiveMarginBefore(const void*);
 int32_t RenderBlockFlow_maxNegativeMarginBefore(const void*);

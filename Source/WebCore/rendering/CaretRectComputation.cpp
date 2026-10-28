@@ -41,6 +41,11 @@
 #include "RenderSVGInlineText.h"
 #include "RenderText.h"
 
+extern "C" WEBCORE_EXPORT int CaretRectComputation_caretWidth()
+{
+    return WebCore::caretWidth();
+}
+
 namespace WebCore {
 
 int caretWidth()
