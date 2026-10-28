@@ -2944,6 +2944,7 @@ class RenderStyleWrapper: Equatable {
     }
     let type = PathOperation.Type_(rawValue: clipPathRaw.type)!
     let referenceBox = CSSBoxType(rawValue: clipPathRaw.referenceBox)!
+    // TODO(asuhan): use the right concrete type for returned PathOperation
     return PathOperation(type, referenceBox)
   }
 

@@ -32,7 +32,7 @@ class ReferencedSVGResources {
     -> SVGElementIdentifierAndTagPairs
   {
     let referencedResources: SVGElementIdentifierAndTagPairs = []
-    if style.clipPath() != nil {
+    if let clipPath = style.clipPath(), clipPath.type == .Reference {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
