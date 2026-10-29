@@ -23,19 +23,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ElementAncestorRange<T>: Sequence, IteratorProtocol {
+// Range for iterating a node's element ancestors.
+class ElementAncestorRange<T: ElementWrapper>: Sequence, IteratorProtocol {
+  init(first: T?) {
+    m_first = first
+    m_current = first
+  }
+
   func makeIterator() -> ElementAncestorRange<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ElementAncestorRange<T>(first: m_first)
   }
 
   func next() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let current = m_current else { return nil }
+    m_current = findElementAncestorOfType(current)
+    return current
   }
+
+  func first() -> T? { return m_first }
+
+  private let m_first: T?
+  private var m_current: T?
 }
 
-func ancestorsOfType<ElementType>(descendant: NodeWrapper) -> ElementAncestorRange<ElementType> {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+func findElementAncestorOfType<ElementType: ElementWrapper>(_ node: NodeWrapper) -> ElementType? {
+  var ancestor = node.parentElement()
+  while let current = ancestor {
+    if let element = current as? ElementType {
+      return element
+    }
+    ancestor = current.parentElement()
+  }
+  return nil
+}
+
+func ancestorsOfType<ElementType: ElementWrapper>(descendant: NodeWrapper)
+  -> ElementAncestorRange<ElementType>
+{
+  return ElementAncestorRange<ElementType>(first: findElementAncestorOfType(descendant))
 }
