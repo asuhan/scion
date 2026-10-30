@@ -37,7 +37,7 @@
 // Once the BaselineGroup is instantiated, defined by a 'block flow direction' and a 'baseline-preference'
 // (first/last baseline), it's ready to collect the items that will participate in the Baseline Alignment logic.
 //
-class BaselineGroup: Sequence, IteratorProtocol {
+class BaselineGroup: Sequence {
   // It stores an item (if not already present) and update the max_ascent associated to this
   // baseline-sharing group.
   func update(_ child: RenderBoxWrapper, _ ascent: LayoutUnit) {
@@ -55,7 +55,7 @@ class BaselineGroup: Sequence, IteratorProtocol {
 
   func computeSize() -> Int32 { return Int32(m_items.computeSize()) }
 
-  func next() -> RenderBoxWrapper? { return m_items.next() }
+  func makeIterator() -> IndexingIterator<[RenderBoxWrapper]> { return m_items.makeIterator() }
 
   // Determines whether a baseline-sharing group is compatible with an item, based on its 'block-flow' and
   // 'baseline-preference'

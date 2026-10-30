@@ -38,5 +38,16 @@ class HashSet<KeyType: Equatable & Hashable> {
 
   func clear() { m_impl.removeAll() }
 
+  // Like iterating the C++ HashSet, in no particular order. A plain loop rather than Array(m_impl),
+  // which needs a generic conformance that gets null metadata in this build.
+  func values() -> [KeyType] {
+    var result: [KeyType] = []
+    result.reserveCapacity(m_impl.count)
+    for value in m_impl {
+      result.append(value)
+    }
+    return result
+  }
+
   private var m_impl = Set<KeyType>()
 }

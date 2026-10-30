@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class WeakHashSet<KeyType: AnyObject>: Sequence, IteratorProtocol {
+final class WeakHashSet<KeyType: AnyObject>: Sequence {
   typealias WeakPtrImplSet = HashSet<WeakPtr<KeyType>>
   typealias AddResult = WeakPtrImplSet.AddResult
 
@@ -62,9 +62,14 @@ final class WeakHashSet<KeyType: AnyObject>: Sequence, IteratorProtocol {
     return m_set.size()
   }
 
-  func next() -> KeyType? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  // Iterates the live references, skipping the null ones like the C++ iterator does.
+  func makeIterator() -> IndexingIterator<[KeyType]> {
+    increaseOperationCountSinceLastCleanup()
+    var values: [KeyType] = []
+    for weakPtr in m_set.values() where weakPtr.bool() {
+      values.append(*weakPtr)
+    }
+    return values.makeIterator()
   }
 
   private func cleanupHappened() {
