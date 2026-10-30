@@ -333,7 +333,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override func localToParentTransform() -> AffineTransform {
     assert(isNativeImpl())
     // Slightly optimized version of m_localToParentTransform = AffineTransform::makeTranslation(x(), y()) * m_localToBorderBoxTransform;
-    m_localToParentTransform = m_localToBorderBoxTransform
+    // AffineTransform is a class here, so copy it like the C++ assignment does instead of aliasing it.
+    let borderBoxTransform = localToBorderBoxTransform
+    m_localToParentTransform = AffineTransform(
+      a: borderBoxTransform.a(), b: borderBoxTransform.b(), c: borderBoxTransform.c(),
+      d: borderBoxTransform.d(), e: borderBoxTransform.e(), f: borderBoxTransform.f())
     if x().bool() {
       m_localToParentTransform.setE(m_localToParentTransform.e() + Float64(roundToInt(value: x())))
     }
@@ -492,7 +496,6 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   private var m_repaintBoundingBox = FloatRectWrapper()
   private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
   private var m_localToParentTransform = AffineTransform()
-  private let m_localToBorderBoxTransform = AffineTransform()
   var localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
   var isLayoutSizeChanged = false
