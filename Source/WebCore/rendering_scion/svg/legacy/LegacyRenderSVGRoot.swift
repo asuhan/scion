@@ -456,6 +456,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     accurateRepaintBoundingBox = nil
     let bbs = SVGRenderSupport.computeContainerBoundingBoxes(self)
     var repaintBoundingBox = bbs.repaint
+    m_objectBoundingBox = bbs.object
     objectBoundingBoxValid = bbs.objectIsValid
     SVGRenderSupport.intersectRepaintRectWithResources(self, &repaintBoundingBox)
     repaintBoundingBox.inflate(d: horizontalBorderAndPaddingExtent().float())
@@ -499,7 +500,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   var localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
   var isLayoutSizeChanged = false
-  private var needsBoundariesOrTransformUpdate = false
+  private var needsBoundariesOrTransformUpdate = true
   private var hasBoxDecorations = false
 
   // TODO(asuhan): remove
