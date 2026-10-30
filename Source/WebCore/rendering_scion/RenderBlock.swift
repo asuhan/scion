@@ -371,6 +371,17 @@ class RenderBlockWrapper: RenderBoxWrapper {
         value: wk_interop.RenderBoxModelObject_baselinePosition(
           id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
     }
+    return blockBaselinePosition(
+      baselineType: baselineType, firstLine: firstLine, direction: direction,
+      linePositionMode: linePositionMode)
+  }
+
+  // RenderBlock::baselinePosition, for subclasses which skip their parents' overrides.
+  func blockBaselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
     // Inline blocks are replaced elements. Otherwise, just pass off to
     // the base class.  If we're being queried as though we're the root line
     // box, then the fact that we're an inline-block is irrelevant, and we behave
@@ -2322,6 +2333,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   override func firstLineBaseline() -> LayoutUnit? {
     assert(isNativeImpl())
+    return blockFirstLineBaseline()
+  }
+
+  // RenderBlock::firstLineBaseline, for subclasses which skip their parents' overrides.
+  func blockFirstLineBaseline() -> LayoutUnit? {
+    assert(isNativeImpl())
     if shouldApplyLayoutContainment() {
       return nil
     }
@@ -2371,6 +2388,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
       let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), lineDirection == .VerticalLine)
       return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
     }
+    return blockInlineBlockBaseline(lineDirection)
+  }
+
+  // RenderBlock::inlineBlockBaseline, for subclasses which skip their parents' overrides.
+  func blockInlineBlockBaseline(_ lineDirection: LineDirectionMode) -> LayoutUnit? {
+    assert(isNativeImpl())
     if shouldApplyLayoutContainment() {
       return synthesizedBaseline(
         box: self, parentStyle: parentStyle()!, direction: lineDirection, edge: .BorderBox)

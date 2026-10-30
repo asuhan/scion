@@ -30,19 +30,20 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   func textFormControlElement() -> HTMLTextFormControlElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nodeForNonAnonymous() as! HTMLTextFormControlElementWrapper
   }
 
   // This convenience function should not be made public because innerTextElement may outlive the render tree.
   func innerTextElement() -> TextControlInnerTextElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return textFormControlElement().innerTextElement()
   }
 
   func scrollbarThickness() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // FIXME: We should get the size of the scrollbar from the RenderTheme instead.
+    return ScrollbarTheme.theme().scrollbarThickness(scrollbarWidth: style().scrollbarWidth())
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -65,21 +66,49 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   }
 
   func hitInnerTextElement(
-    _ result: HitTestResultWrapper, _ pointInContainer: LayoutPointWrapper,
+    _ result: inout HitTestResultWrapper, _ pointInContainer: LayoutPointWrapper,
     _ accumulatedOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let innerText = innerTextElement()!
+    if innerText.renderer() == nil {
+      return
+    }
+
+    let adjustedLocation = accumulatedOffset + location()
+    let localPoint =
+      pointInContainer
+      - toLayoutSize(point: adjustedLocation + innerText.renderBox()!.location())
+      + toLayoutSize(point: LayoutPointWrapper(point: scrollPosition()))
+    result.setInnerNode(innerText)
+    result.setInnerNonSharedNode(innerText)
+    result.setLocalPoint(localPoint)
+  }
+
+  func scaleEmToUnits(_ x: Int32) -> Float32 {
+    assert(isNativeImpl())
+    // This matches the unitsPerEm value for MS Shell Dlg and Courier New from the "head" font table.
+    let unitsPerEm: Float32 = 2048
+    return (style().fontCascade().size() * Float32(x) / unitsPerEm).rounded()
   }
 
   func getAverageCharWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var width: Float32 = 0
+    if style().fontCascade().fastAverageCharWidthIfAvailable(&width) {
+      return width
+    }
+
+    let ch = UChar(Character("0").asciiValue!)
+    let str = StringWrapper(characters: WTF.span(character: ch))
+    let font = style().fontCascade()
+    let textRun = RenderBlockWrapper.constructTextRun(
+      str, style(), ExpansionBehaviorWrapper.allowRightOnly())
+    return font.width(run: textRun)
   }
 
   func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func computeControlLogicalHeight(lineHeight: LayoutUnit, nonContentHeight: LayoutUnit)
@@ -204,16 +233,18 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   }
 
   override func avoidsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   override func addFocusRingRects(
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !size().isEmpty() {
+      rects.append(LayoutRectWrapper(location: additionalOffset, size: size()))
+    }
   }
 
   override final func canBeProgramaticallyScrolled() -> Bool {
@@ -237,16 +268,27 @@ final class RenderTextControlInnerContainerWrapper: RenderFlexibleBoxWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode
   ) -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_baselinePosition(
-        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_baselinePosition(
+          id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+    }
+    return blockBaselinePosition(
+      baselineType: baselineType, firstLine: firstLine, direction: direction,
+      linePositionMode: linePositionMode)
+  }
+
+  override final func firstLineBaseline() -> LayoutUnit? {
+    assert(isNativeImpl())
+    return blockFirstLineBaseline()
   }
 
   override final func inlineBlockBaseline(_ direction: LineDirectionMode) -> LayoutUnit? {
-    assert(!isNativeImpl())
-    let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
-    return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+    if !isNativeImpl() {
+      let baseline = wk_interop.RenderBox_inlineBlockBaseline(id(), direction == .VerticalLine)
+      return baseline.is_valid ? LayoutUnit.fromRawValue(value: baseline.value) : nil
+    }
+    return blockInlineBlockBaseline(direction)
   }
 
   override func isFlexibleBoxImpl() -> Bool {

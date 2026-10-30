@@ -44,28 +44,51 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   private func containerElement() -> HTMLElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return inputElement().containerElement()
   }
 
   private func innerBlockElement() -> HTMLElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return inputElement().innerBlockElement()
   }
 
   private func inputElement() -> HTMLInputElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return textFormControlElement() as! HTMLInputElementWrapper
   }
 
   override func hasControlClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let shouldClipInnerContent = { [self] () -> Bool in
+      // Apply control clip for text fields with decorations.
+      var innerRenderBox: RenderBoxWrapper? = nil
+      if let containerElement = inputElement().containerElement() {
+        innerRenderBox = containerElement.renderBox()
+      }
+
+      if innerRenderBox == nil, let placeholderElement = inputElement().placeholderElement() {
+        innerRenderBox = placeholderElement.renderBox()
+      }
+
+      if innerRenderBox == nil, let innerTextElement = inputElement().innerTextElement() {
+        innerRenderBox = innerTextElement.renderBox()
+      }
+
+      return innerRenderBox != nil
+    }
+    return shouldClipInnerContent()
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasControlClip())
+    var clipRect = paddingBoxRect()
+    if let containerElementRenderer = containerElement()?.renderBox() {
+      clipRect = unionRect(a: clipRect, b: containerElementRenderer.frameRect())
+    }
+    clipRect.moveBy(offset: additionalOffset)
+    return clipRect
   }
 
   override func layout() {
@@ -307,7 +330,7 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
           pointInParent -= toLayoutSize(point: container!.renderBox()!.location())
         }
       }
-      hitInnerTextElement(result, pointInParent, accumulatedOffset)
+      hitInnerTextElement(&result, pointInParent, accumulatedOffset)
     }
     return true
   }
@@ -333,13 +356,58 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
   }
 
   override final func getAverageCharWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // TODO(asuhan): add iOS support
+    // Since Lucida Grande is the default font, we want this to match the width
+    // of MS Shell Dlg, the default font for textareas in Firefox, Safari Win and
+    // IE for some encodings (in IE, the default font is encoding specific).
+    // 901 is the avgCharWidth value in the OS/2 table for MS Shell Dlg.
+    if style().fontCascade().firstFamily().string() == StringWrapper(ASCIILiteral("Lucida Grande"))
+    {
+      return scaleEmToUnits(901)
+    }
+
+    return super.getAverageCharWidth()
   }
 
   override final func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var factor: Int32 = 0
+    let includesDecoration = inputElement().sizeShouldIncludeDecoration(&factor)
+    if factor <= 0 {
+      factor = 20
+    }
+
+    var result = LayoutUnit.fromFloatCeil(value: charWidth * Float32(factor))
+
+    var maxCharWidth: Float32 = 0
+
+    // TODO(asuhan): add iOS support
+    let family = style().fontCascade().firstFamily()
+    // Since Lucida Grande is the default font, we want this to match the width
+    // of MS Shell Dlg, the default font for textareas in Firefox, Safari Win and
+    // IE for some encodings (in IE, the default font is encoding specific).
+    // 4027 is the (xMax - xMin) value in the "head" font table for MS Shell Dlg.
+    if family.string() == StringWrapper(ASCIILiteral("Lucida Grande")) {
+      maxCharWidth = scaleEmToUnits(4027)
+    } else if style().fontCascade().hasValidAverageCharWidth() {
+      maxCharWidth = style().fontCascade().primaryFont().maxCharWidth().rounded()
+    }
+
+    // For text inputs, IE adds some extra width.
+    if maxCharWidth > 0 {
+      result += LayoutUnit(value: maxCharWidth - charWidth)
+    }
+
+    if includesDecoration {
+      result += LayoutUnit(value: inputElement().decorationWidth())
+    }
+
+    if let innerRenderer = innerTextElement()?.renderer() {
+      result += innerRenderer.endPaddingWidthForCaret()
+    }
+
+    return result
   }
 
   override func computeControlLogicalHeight(
@@ -347,8 +415,8 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return lineHeight + nonContentHeight
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

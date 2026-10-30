@@ -30,8 +30,8 @@ final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   private func textAreaElement() -> HTMLTextAreaElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return textFormControlElement() as! HTMLTextAreaElementWrapper
   }
 
   override func nodeAtPoint(
@@ -52,15 +52,24 @@ final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
 
     if optEq(result.innerNode(), textAreaElement()) || optEq(result.innerNode(), innerTextElement())
     {
-      hitInnerTextElement(result, locationInContainer.point(), accumulatedOffset)
+      hitInnerTextElement(&result, locationInContainer.point(), accumulatedOffset)
     }
 
     return true
   }
 
   override final func getAverageCharWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // TODO(asuhan): add iOS support
+    // Since Lucida Grande is the default font, we want this to match the width
+    // of Courier New, the default font for textareas in IE, Firefox and Safari Win.
+    // 1229 is the avgCharWidth value in the OS/2 table for Courier New.
+    if style().fontCascade().firstFamily().string() == StringWrapper(ASCIILiteral("Lucida Grande"))
+    {
+      return scaleEmToUnits(1229)
+    }
+
+    return super.getAverageCharWidth()
   }
 
   override final func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
@@ -81,8 +90,18 @@ final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return lineHeight * textAreaElement().rows() + nonContentHeight
+  }
+
+  override final func baselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
+    return boxBaselinePosition(
+      baselineType: baselineType, firstLine: firstLine, direction: direction,
+      linePositionMode: linePositionMode)
   }
 
   override func layoutExcludedChildren(relayoutChildren: Bool) {

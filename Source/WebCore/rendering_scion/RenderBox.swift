@@ -5123,6 +5123,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         value: wk_interop.RenderBoxModelObject_baselinePosition(
           id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
     }
+    return boxBaselinePosition(
+      baselineType: baselineType, firstLine: firstLine, direction: direction,
+      linePositionMode: linePositionMode)
+  }
+
+  func boxBaselinePosition(
+    baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  ) -> LayoutUnit {
+    assert(isNativeImpl())
     if isReplacedOrInlineBlock() {
       let result = roundToInt(
         value:
