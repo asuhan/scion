@@ -481,4 +481,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   var isLayoutSizeChanged = false
   private var needsBoundariesOrTransformUpdate = false
   private var hasBoxDecorations = false
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }

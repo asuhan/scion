@@ -4581,6 +4581,14 @@ func RenderListMarkerScion_setWk(
   marker.setWk(wk)
 }
 
+@_cdecl("LegacyRenderSVGRootScion_setWk")
+func LegacyRenderSVGRootScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ rootRaw: UnsafeMutableRawPointer
+) {
+  let root = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  root.setWk(wk)
+}
+
 @_cdecl("RenderHTMLCanvasScion_setWk")
 func RenderHTMLCanvasScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ canvasRaw: UnsafeMutableRawPointer

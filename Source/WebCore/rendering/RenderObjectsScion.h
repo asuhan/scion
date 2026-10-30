@@ -1655,6 +1655,19 @@ private:
     void* m_handle;
 };
 
+class LegacyRenderSVGRootScion final {
+public:
+    LegacyRenderSVGRootScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void setWk(void*);
+
+private:
+    void* m_handle;
+};
+
 class RenderListItemScion final {
 public:
     RenderListItemScion(void* handle)

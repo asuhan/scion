@@ -31,6 +31,7 @@ namespace WebCore {
 
 class AffineTransform;
 class LegacyRenderSVGResourceContainer;
+class LegacyRenderSVGRootScion;
 class SVGSVGElement;
 
 class LegacyRenderSVGRoot final : public RenderReplaced {
@@ -39,6 +40,8 @@ class LegacyRenderSVGRoot final : public RenderReplaced {
 public:
     LegacyRenderSVGRoot(SVGSVGElement&, RenderStyle&&);
     virtual ~LegacyRenderSVGRoot();
+
+    void setScionHandle(void* handle);
 
     SVGSVGElement& svgSVGElement() const;
     Ref<SVGSVGElement> protectedSVGSVGElement() const;
@@ -49,18 +52,46 @@ public:
     void computeIntrinsicRatioInformation(FloatSize& intrinsicSize, FloatSize& intrinsicRatio) const override;
     bool hasIntrinsicAspectRatio() const final;
 
-    bool isLayoutSizeChanged() const { return m_isLayoutSizeChanged; }
-    bool isInLayout() const { return m_inLayout; }
-    void setNeedsBoundariesUpdate() override { m_needsBoundariesOrTransformUpdate = true; }
-    void setNeedsTransformUpdate() override { m_needsBoundariesOrTransformUpdate = true; }
+    bool isLayoutSizeChanged() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_isLayoutSizeChanged;
+    }
+    bool isInLayout() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_inLayout;
+    }
+    void setNeedsBoundariesUpdate() override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_needsBoundariesOrTransformUpdate = true;
+    }
+    void setNeedsTransformUpdate() override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_needsBoundariesOrTransformUpdate = true;
+    }
 
-    IntSize containerSize() const { return m_containerSize; }
-    void setContainerSize(const IntSize& containerSize) { m_containerSize = containerSize; }
+    IntSize containerSize() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_containerSize;
+    }
+    void setContainerSize(const IntSize& containerSize)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_containerSize = containerSize;
+    }
 
     bool hasRelativeDimensions() const override;
 
     // localToBorderBoxTransform maps local SVG viewport coordinates to local CSS box coordinates.  
-    const AffineTransform& localToBorderBoxTransform() const { return m_localToBorderBoxTransform; }
+    const AffineTransform& localToBorderBoxTransform() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_localToBorderBoxTransform;
+    }
 
     // The flag is cleared at the beginning of each layout() pass. Elements then call this
     // method during layout when they are invalidated by a filter.
@@ -70,6 +101,7 @@ private:
     void element() const = delete;
 
     // Intentially left 'RenderSVGRoot' instead of 'LegacyRenderSVGRoot', to avoid breaking layout tests.
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     ASCIILiteral renderName() const override { return "RenderSVGRoot"_s; }
 
     LayoutUnit computeReplacedLogicalWidth(ShouldComputePreferred  = ComputeActual) const override;
@@ -86,7 +118,11 @@ private:
 
     const AffineTransform& localToParentTransform() const override;
 
-    FloatRect objectBoundingBox() const override { return m_objectBoundingBox; }
+    FloatRect objectBoundingBox() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_objectBoundingBox;
+    }
     FloatRect strokeBoundingBox() const override;
     FloatRect repaintRectInLocalCoordinates(RepaintRectCalculation = RepaintRectCalculation::Fast) const override;
 
@@ -102,7 +138,9 @@ private:
     void mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const override;
     const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const override;
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canBeSelectionLeaf() const override { return false; }
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool canHaveChildren() const override { return true; }
 
     bool shouldApplyViewportClip() const;
@@ -124,6 +162,7 @@ private:
     bool m_isLayoutSizeChanged : 1;
     bool m_needsBoundariesOrTransformUpdate : 1;
     bool m_hasBoxDecorations : 1;
+    std::unique_ptr<LegacyRenderSVGRootScion> m_scion;
 };
 
 } // namespace WebCore

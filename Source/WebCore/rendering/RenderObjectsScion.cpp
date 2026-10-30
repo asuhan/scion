@@ -846,6 +846,8 @@ extern "C" LayoutRectRaw RenderReplacedScion_replacedContentRect(const void*);
 
 extern "C" void RenderHTMLCanvasScion_setWk(void*, void*);
 
+extern "C" void LegacyRenderSVGRootScion_setWk(void*, void*);
+
 extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
@@ -2914,6 +2916,11 @@ LayoutRect RenderReplacedScion::replacedContentRect() const
 void RenderHTMLCanvasScion::setWk(void* wk)
 {
     RenderHTMLCanvasScion_setWk(wk, m_handle);
+}
+
+void LegacyRenderSVGRootScion::setWk(void* wk)
+{
+    LegacyRenderSVGRootScion_setWk(wk, m_handle);
 }
 
 RenderStyle RenderListItemScion::computeMarkerStyle() const
