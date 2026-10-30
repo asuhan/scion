@@ -35,6 +35,7 @@
 #include "LocalFrame.h"
 #include "NodeName.h"
 #include "RenderBoxInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderSVGRoot.h"
 #include "RenderSVGViewportContainer.h"
 #include "RenderView.h"
@@ -54,6 +55,63 @@
 #include "TreeScopeInlines.h"
 #include "TypedElementDescendantIteratorInlines.h"
 #include <wtf/TZoneMallocInlines.h>
+
+extern "C" WEBCORE_EXPORT void SVGSVGElement_viewBox(const void* p, float* rect)
+{
+    const auto& viewBox = static_cast<const WebCore::SVGSVGElement*>(p)->viewBox();
+    rect[0] = viewBox.x();
+    rect[1] = viewBox.y();
+    rect[2] = viewBox.width();
+    rect[3] = viewBox.height();
+}
+
+extern "C" WEBCORE_EXPORT bool SVGSVGElement_hasEmptyViewBox(const void* p)
+{
+    return static_cast<const WebCore::SVGSVGElement*>(p)->hasEmptyViewBox();
+}
+
+extern "C" WEBCORE_EXPORT void SVGSVGElement_currentTranslateValue(const void* p, float* point)
+{
+    auto translate = static_cast<const WebCore::SVGSVGElement*>(p)->currentTranslateValue();
+    point[0] = translate.x();
+    point[1] = translate.y();
+}
+
+extern "C" WEBCORE_EXPORT bool SVGSVGElement_resumePausedAnimationsIfNeeded(void* p, int x, int y, int width, int height)
+{
+    return static_cast<WebCore::SVGSVGElement*>(p)->resumePausedAnimationsIfNeeded({ x, y, width, height });
+}
+
+extern "C" WEBCORE_EXPORT bool SVGSVGElement_hasIntrinsicWidth(const void* p)
+{
+    return static_cast<const WebCore::SVGSVGElement*>(p)->hasIntrinsicWidth();
+}
+
+extern "C" WEBCORE_EXPORT bool SVGSVGElement_hasIntrinsicHeight(const void* p)
+{
+    return static_cast<const WebCore::SVGSVGElement*>(p)->hasIntrinsicHeight();
+}
+
+extern "C" WEBCORE_EXPORT void* SVGSVGElement_intrinsicWidth(const void* p)
+{
+    return new WebCore::Length(static_cast<const WebCore::SVGSVGElement*>(p)->intrinsicWidth());
+}
+
+extern "C" WEBCORE_EXPORT void* SVGSVGElement_intrinsicHeight(const void* p)
+{
+    return new WebCore::Length(static_cast<const WebCore::SVGSVGElement*>(p)->intrinsicHeight());
+}
+
+extern "C" WEBCORE_EXPORT void SVGSVGElement_viewBoxToViewTransform(const void* p, float viewWidth, float viewHeight, double* transform)
+{
+    auto t = static_cast<const WebCore::SVGSVGElement*>(p)->viewBoxToViewTransform(viewWidth, viewHeight);
+    transform[0] = t.a();
+    transform[1] = t.b();
+    transform[2] = t.c();
+    transform[3] = t.d();
+    transform[4] = t.e();
+    transform[5] = t.f();
+}
 
 namespace WebCore {
 
@@ -470,6 +528,12 @@ RenderPtr<RenderElement> SVGSVGElement::createElementRenderer(RenderStyle&& styl
         if (document().settings().layerBasedSVGEngineEnabled()) {
             protectedDocument()->setMayHaveRenderedSVGRootElements();
             return createRenderer<RenderSVGRoot>(*this, WTFMove(style));
+        }
+        if (Document::s_useScionRendering >= 16) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<LegacyRenderSVGRoot>(*this, WTFMove(style));
+            renderer->setScionHandle(LegacyRenderSVGRootScion_create(this, clonedStyle.release()));
+            return renderer;
         }
         return createRenderer<LegacyRenderSVGRoot>(*this, WTFMove(style));
     }

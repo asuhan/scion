@@ -2472,6 +2472,11 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isLegacyRenderSVGRoot(raw),
+    let rootRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  }
   if wk_interop.RenderObject_isRenderHTMLCanvas(raw),
     let canvasRaw = wk_interop.RenderElement_scion(raw)
   {
@@ -3517,6 +3522,9 @@ enum ElementWrapperType: UInt8 {
   case HTMLTableElement
   case HTMLTablePartElement
   case HTMLElement
+  case SVGSVGElement
+  case SVGGraphicsElement
+  case SVGElement
 }
 
 // Wraps a C++ element in the Swift wrapper of its most derived class, so that as? and is work like
@@ -3583,6 +3591,12 @@ func createElementWrapper(_ p: UnsafeMutableRawPointer) -> ElementWrapper {
     return HTMLTablePartElementWrapper(p: p)
   case .HTMLElement:
     return HTMLElementWrapper(p: p)
+  case .SVGSVGElement:
+    return SVGSVGElementWrapper(p: p)
+  case .SVGGraphicsElement:
+    return SVGGraphicsElementWrapper(p: p)
+  case .SVGElement:
+    return SVGElementWrapper(p: p)
   }
 }
 
@@ -3804,6 +3818,17 @@ func RenderButtonScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw:
   let button = RenderButtonWrapper(element, style)
   let unmanaged = Unmanaged.passRetained(button)
   return unmanaged.toOpaque()
+}
+
+@_cdecl("LegacyRenderSVGRootScion_create")
+func LegacyRenderSVGRootScion_create(
+  _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let element = createElementWrapper(elementRaw) as! SVGSVGElementWrapper
+  let renderer = LegacyRenderSVGRootWrapper(element, style)
+  return Unmanaged.passRetained(renderer).toOpaque()
 }
 
 @_cdecl("RenderTextControlSingleLineScion_create")

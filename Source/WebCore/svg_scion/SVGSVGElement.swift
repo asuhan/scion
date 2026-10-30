@@ -21,50 +21,50 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 // TODO(asuhan): also inherit from SVGZoomAndPan
 final class SVGSVGElementWrapper: SVGGraphicsElementWrapper, SVGFitToViewBox {
   func viewBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var rect = [Float32](repeating: 0, count: 4)
+    wk_interop.SVGSVGElement_viewBox(p, &rect)
+    return FloatRectWrapper(x: rect[0], y: rect[1], width: rect[2], height: rect[3])
   }
 
   func hasEmptyViewBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGSVGElement_hasEmptyViewBox(p)
   }
 
   func currentTranslateValue() -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var point = [Float32](repeating: 0, count: 2)
+    wk_interop.SVGSVGElement_currentTranslateValue(p, &point)
+    return FloatPoint(x: point[0], y: point[1])
   }
 
   func resumePausedAnimationsIfNeeded(_ visibleRect: IntRect) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGSVGElement_resumePausedAnimationsIfNeeded(
+      p, visibleRect.x(), visibleRect.y(), visibleRect.width(), visibleRect.height())
   }
 
   func hasIntrinsicWidth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGSVGElement_hasIntrinsicWidth(p)
   }
 
   func hasIntrinsicHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGSVGElement_hasIntrinsicHeight(p)
   }
 
   func intrinsicWidth() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.SVGSVGElement_intrinsicWidth(p), owner: true)
   }
 
   func intrinsicHeight() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.SVGSVGElement_intrinsicHeight(p), owner: true)
   }
 
   func viewBoxToViewTransform(_ viewWidth: Float32, _ viewHeight: Float32) -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var t = [Float64](repeating: 0, count: 6)
+    wk_interop.SVGSVGElement_viewBoxToViewTransform(p, viewWidth, viewHeight, &t)
+    return AffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], e: t[4], f: t[5])
   }
 }

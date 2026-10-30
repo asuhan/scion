@@ -56,6 +56,8 @@ extern "C" void* RenderFlexibleBoxScion_create(void*, const void*);
 
 extern "C" void* RenderButtonScion_create(void*, const void*);
 
+extern "C" void* LegacyRenderSVGRootScion_create(void*, const void*);
+
 extern "C" void* RenderTextControlSingleLineScion_create(void*, const void*);
 
 extern "C" void* RenderTextControlMultiLineScion_create(void*, const void*);

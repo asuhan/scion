@@ -235,6 +235,9 @@ enum class ScionElementWrapperType : uint8_t {
     HTMLTableElement,
     HTMLTablePartElement,
     HTMLElement,
+    SVGSVGElement,
+    SVGGraphicsElement,
+    SVGElement,
 };
 
 extern "C" WEBCORE_EXPORT uint8_t Element_wrapperType(const void* p)
@@ -299,6 +302,12 @@ extern "C" WEBCORE_EXPORT uint8_t Element_wrapperType(const void* p)
         return static_cast<uint8_t>(ScionElementWrapperType::HTMLTablePartElement);
     if (is<WebCore::HTMLElement>(element))
         return static_cast<uint8_t>(ScionElementWrapperType::HTMLElement);
+    if (is<WebCore::SVGSVGElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::SVGSVGElement);
+    if (is<WebCore::SVGGraphicsElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::SVGGraphicsElement);
+    if (is<WebCore::SVGElement>(element))
+        return static_cast<uint8_t>(ScionElementWrapperType::SVGElement);
     return static_cast<uint8_t>(ScionElementWrapperType::Element);
 }
 

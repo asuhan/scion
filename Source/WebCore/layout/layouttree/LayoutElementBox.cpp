@@ -96,6 +96,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderLineBreak(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderLineBreak();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isLegacyRenderSVGRoot(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isLegacyRenderSVGRoot();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderHTMLCanvas(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderHTMLCanvas();

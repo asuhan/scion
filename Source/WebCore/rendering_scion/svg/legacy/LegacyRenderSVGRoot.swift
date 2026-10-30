@@ -23,9 +23,24 @@
  */
 
 final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
+  init(_ element: SVGSVGElementWrapper, _ style: RenderStyleWrapper) {
+    super.init(.LegacySVGRoot, element, style, [.UsesBoundaryCaching])
+    assert(isLegacyRenderSVGRoot())
+    var intrinsicSize = LayoutSizeWrapper(size: calculateIntrinsicSize())
+    if !intrinsicSize.width().bool() {
+      intrinsicSize.setWidth(width: LayoutUnit(value: cDefaultWidth))
+    }
+    if !intrinsicSize.height().bool() {
+      intrinsicSize.setHeight(height: LayoutUnit(value: cDefaultHeight))
+    }
+    setIntrinsicSize(intrinsicSize)
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   private func svgSVGElement() -> SVGSVGElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nodeForNonAnonymous() as! SVGSVGElementWrapper
   }
 
   private func isEmbeddedThroughFrameContainingSVGDocument() -> Bool {
@@ -463,8 +478,10 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func calculateIntrinsicSize() -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return FloatSize(
+      width: floatValueForLength(svgSVGElement().intrinsicWidth(), 0),
+      height: floatValueForLength(svgSVGElement().intrinsicHeight(), 0))
   }
 
   private let m_containerSize = IntSize()

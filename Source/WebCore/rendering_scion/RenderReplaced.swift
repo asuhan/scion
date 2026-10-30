@@ -22,8 +22,8 @@
  *
  */
 
-private let cDefaultWidth: Int32 = 300
-private let cDefaultHeight: Int32 = 150
+let cDefaultWidth: Int32 = 300
+let cDefaultHeight: Int32 = 150
 
 private func contentContainsReplacedElement(
   _ markers: ArraySlice<RenderedDocumentMarker>, _ element: ElementWrapper
