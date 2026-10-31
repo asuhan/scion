@@ -17,6 +17,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 private func resourcesCacheFromRenderer(_ renderer: RenderElementWrapper) -> SVGResourcesCache {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -29,26 +31,27 @@ private func rendererCanHaveResources(_ renderer: RenderObjectWrapper) -> Bool {
 
 class SVGResourcesCache {
   static func cachedResourcesForRenderer(_ renderer: RenderElementWrapper) -> SVGResources? {
+    // The cache lives in C++, since the C++ SVG renderers register with it too.
+    if !wk_interop.SVGResourcesCache_hasCachedResourcesForRenderer(wkRenderObject(renderer)) {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   // Called from all SVG renderers addChild() methods.
   static func clientWasAddedToTree(renderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.SVGResourcesCache_clientWasAddedToTree(wkRenderObject(renderer))
   }
 
   // Called from all SVG renderers addChild() methods.
   static func clientWillBeRemovedFromTree(renderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.SVGResourcesCache_clientWillBeRemovedFromTree(wkRenderObject(renderer))
   }
 
   // Called from all SVG renderers layout() methods.
   static func clientLayoutChanged(_ renderer: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.SVGResourcesCache_clientLayoutChanged(wkRenderObject(renderer))
   }
 
   // Called from all SVG renderers styleDidChange() methods.
@@ -56,8 +59,8 @@ class SVGResourcesCache {
     _ renderer: RenderElementWrapper, _ diff: StyleDifference, oldStyle: RenderStyleWrapper?,
     newStyle: RenderStyleWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.SVGResourcesCache_clientStyleChanged(
+      wkRenderObject(renderer), diff.rawValue, oldStyle?.p, newStyle.p!)
   }
 
   static func use(_ x: borrowing SetStyleForScope) {}

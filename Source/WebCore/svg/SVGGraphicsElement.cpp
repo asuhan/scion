@@ -43,6 +43,27 @@
 #include <wtf/NeverDestroyed.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void SVGGraphicsElement_animatedLocalTransform(const void* p, double* transform)
+{
+    auto t = static_cast<const WebCore::SVGGraphicsElement*>(p)->animatedLocalTransform();
+    transform[0] = t.a();
+    transform[1] = t.b();
+    transform[2] = t.c();
+    transform[3] = t.d();
+    transform[4] = t.e();
+    transform[5] = t.f();
+}
+
+extern "C" WEBCORE_EXPORT bool SVGGraphicsElement_shouldIsolateBlending(const void* p)
+{
+    return static_cast<const WebCore::SVGGraphicsElement*>(p)->shouldIsolateBlending();
+}
+
+extern "C" WEBCORE_EXPORT void SVGGraphicsElement_setShouldIsolateBlending(void* p, bool isolate)
+{
+    static_cast<WebCore::SVGGraphicsElement*>(p)->setShouldIsolateBlending(isolate);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(SVGGraphicsElement);

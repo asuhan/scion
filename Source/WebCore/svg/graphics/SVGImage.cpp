@@ -66,6 +66,11 @@
 #include "LocalDefaultSystemAppearance.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool SVGImage_isInSVGImage(const void* element)
+{
+    return WebCore::isInSVGImage(static_cast<const WebCore::Element*>(element));
+}
+
 namespace WebCore {
 
 SVGImage::SVGImage(ImageObserver& observer)

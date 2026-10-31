@@ -23,15 +23,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 // TODO(asuhan): Inherit from SVGPropertyOwner as well.
 class SVGElementWrapper: StyledElementWrapper {
   func supportsMarkers() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGElement_supportsMarkers(p)
   }
 
   func hasRelativeLengths() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGElement_hasRelativeLengths(p)
   }
 }

@@ -19,21 +19,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 // TODO(asuhan): also inherit from SVGTransformable, SVGTests
 class SVGGraphicsElementWrapper: SVGElementWrapper {
   func animatedLocalTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var t = [Float64](repeating: 0, count: 6)
+    wk_interop.SVGGraphicsElement_animatedLocalTransform(p, &t)
+    return AffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], e: t[4], f: t[5])
   }
 
   func shouldIsolateBlending() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.SVGGraphicsElement_shouldIsolateBlending(p)
   }
 
   func setShouldIsolateBlending(_ isolate: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.SVGGraphicsElement_setShouldIsolateBlending(p, isolate)
   }
 
   // "base class" methods for all the elements which render as paths

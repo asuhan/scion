@@ -55,6 +55,16 @@ extern "C" WEBCORE_EXPORT bool Frame_isMainFrame(const void* raw)
     return static_cast<const WebCore::Frame*>(raw)->isMainFrame();
 }
 
+extern "C" WEBCORE_EXPORT void* Frame_ownerElement(const void* p)
+{
+    return static_cast<const WebCore::Frame*>(p)->ownerElement();
+}
+
+extern "C" WEBCORE_EXPORT void* Frame_ownerRenderer(const void* p)
+{
+    return static_cast<const WebCore::Frame*>(p)->ownerRenderer();
+}
+
 extern "C" WEBCORE_EXPORT bool Frame_isRootFrame(const void* raw)
 {
     return static_cast<const WebCore::Frame*>(raw)->isRootFrame();

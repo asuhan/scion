@@ -49,10 +49,7 @@ class StringWrapperView {
   // Construct a view of UTF-16 data.
   init(characters: CharSpanWrapper<UChar>) { self.p = wk_interop.StringView_new_span16(characters.p) }
 
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init() { self.p = wk_interop.StringView_new() }
 
   deinit { wk_interop.StringView_destroy(p) }
 

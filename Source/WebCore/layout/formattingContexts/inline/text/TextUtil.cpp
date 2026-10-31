@@ -477,6 +477,11 @@ extern "C" WEBCORE_EXPORT const void* StringView_fromString(const void* p)
     return new StringView(*static_cast<const String*>(p));
 }
 
+extern "C" WEBCORE_EXPORT const void* StringView_new()
+{
+    return new StringView();
+}
+
 extern "C" WEBCORE_EXPORT const void* StringView_new_copy(const void* p)
 {
     return new StringView(*static_cast<const StringView*>(p));

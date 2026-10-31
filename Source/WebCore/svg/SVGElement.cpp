@@ -67,6 +67,16 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT bool SVGElement_supportsMarkers(const void* p)
+{
+    return static_cast<const WebCore::SVGElement*>(p)->supportsMarkers();
+}
+
+extern "C" WEBCORE_EXPORT bool SVGElement_hasRelativeLengths(const void* p)
+{
+    return static_cast<const WebCore::SVGElement*>(p)->hasRelativeLengths();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(SVGElement);

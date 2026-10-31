@@ -50,13 +50,13 @@ class FrameWrapper {
   func isRootFrame() -> Bool { return wk_interop.Frame_isRootFrame(p) }
 
   func ownerElement() -> HTMLFrameOwnerElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Frame_ownerElement(p) else { return nil }
+    return createElementWrapper(raw) as! HTMLFrameOwnerElementWrapper?
   }
 
   func ownerRenderer() -> RenderWidgetWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Frame_ownerRenderer(p) else { return nil }
+    return createRenderObjectWrapperOrNative(raw) as! RenderWidgetWrapper?
   }
 
   let p: UnsafeMutableRawPointer

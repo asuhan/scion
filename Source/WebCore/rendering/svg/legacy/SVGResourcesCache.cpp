@@ -27,6 +27,31 @@
 #include "SVGResourcesCycleSolver.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool SVGResourcesCache_hasCachedResourcesForRenderer(const void* renderer)
+{
+    return WebCore::SVGResourcesCache::cachedResourcesForRenderer(*static_cast<const WebCore::RenderElement*>(renderer));
+}
+
+extern "C" WEBCORE_EXPORT void SVGResourcesCache_clientWasAddedToTree(void* renderer)
+{
+    WebCore::SVGResourcesCache::clientWasAddedToTree(*static_cast<WebCore::RenderObject*>(renderer));
+}
+
+extern "C" WEBCORE_EXPORT void SVGResourcesCache_clientWillBeRemovedFromTree(void* renderer)
+{
+    WebCore::SVGResourcesCache::clientWillBeRemovedFromTree(*static_cast<WebCore::RenderObject*>(renderer));
+}
+
+extern "C" WEBCORE_EXPORT void SVGResourcesCache_clientLayoutChanged(void* renderer)
+{
+    WebCore::SVGResourcesCache::clientLayoutChanged(*static_cast<WebCore::RenderElement*>(renderer));
+}
+
+extern "C" WEBCORE_EXPORT void SVGResourcesCache_clientStyleChanged(void* renderer, uint8_t diff, const void* oldStyle, const void* newStyle)
+{
+    WebCore::SVGResourcesCache::clientStyleChanged(*static_cast<WebCore::RenderElement*>(renderer), static_cast<WebCore::StyleDifference>(diff), static_cast<const WebCore::RenderStyle*>(oldStyle), *static_cast<const WebCore::RenderStyle*>(newStyle));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(SVGResourcesCache);

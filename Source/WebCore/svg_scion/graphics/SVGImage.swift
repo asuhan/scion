@@ -25,9 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 final class SVGImageWrapper: ImageWrapper {
   func embeddedContentBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+}
+
+func isInSVGImage(_ element: ElementWrapper?) -> Bool {
+  assert(element != nil)
+  return wk_interop.SVGImage_isInSVGImage(element!.p)
 }
