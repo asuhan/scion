@@ -1450,7 +1450,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func setNeedsBoundariesUpdate() {}
 
-  func setNeedsTransformUpdate() {}
+  func setNeedsTransformUpdate() {
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setNeedsTransformUpdate(id())
+    }
+  }
 
   // Per SVG 1.1 objectBoundingBox ignores clipping, masking, filter effects, opacity and stroke-width.
   // This is used for all computation of objectBoundingBox relative units and by SVGLocatable::getBBox().
@@ -1458,28 +1462,58 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // since stroke-width is ignored (and marker size can depend on stroke-width).
   // objectBoundingBox is returned local coordinates.
   // The name objectBoundingBox is taken from the SVG 1.1 spec.
-  func objectBoundingBox() -> FloatRectWrapper { fatalError("Not reached") }
+  func objectBoundingBox() -> FloatRectWrapper {
+    if !isNativeImpl() {
+      var r = [Float32](repeating: 0, count: 4)
+      wk_interop.RenderObject_objectBoundingBox(id(), &r)
+      return FloatRectWrapper(x: r[0], y: r[1], width: r[2], height: r[3])
+    }
+    fatalError("Not reached")
+  }
 
-  func strokeBoundingBox() -> FloatRectWrapper { fatalError("Not reached") }
+  func strokeBoundingBox() -> FloatRectWrapper {
+    if !isNativeImpl() {
+      var r = [Float32](repeating: 0, count: 4)
+      wk_interop.RenderObject_strokeBoundingBox(id(), &r)
+      return FloatRectWrapper(x: r[0], y: r[1], width: r[2], height: r[3])
+    }
+    fatalError("Not reached")
+  }
 
   // Returns the smallest rectangle enclosing all of the painted content
   // respecting clipping, masking, filters, opacity, stroke-width and markers
   // This returns approximate rectangle for SVG renderers when RepaintRectCalculation.Fast is specified.
   func repaintRectInLocalCoordinates(_ repaintRectCalculation: RepaintRectCalculation = .Fast)
     -> FloatRectWrapper
-  { fatalError("Not reached") }
+  {
+    if !isNativeImpl() {
+      var r = [Float32](repeating: 0, count: 4)
+      wk_interop.RenderObject_repaintRectInLocalCoordinates(
+        id(), repaintRectCalculation == .Accurate, &r)
+      return FloatRectWrapper(x: r[0], y: r[1], width: r[2], height: r[3])
+    }
+    fatalError("Not reached")
+  }
 
   // This only returns the transform="" value from the element
   // most callsites want localToParentTransform() instead.
   func localTransform() -> AffineTransform {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var t = [Float64](repeating: 0, count: 6)
+      wk_interop.RenderObject_localTransform(id(), &t)
+      return AffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], e: t[4], f: t[5])
+    }
     return AffineTransform()
   }
 
   // Returns the full transform mapping from local coordinates to local coords for the parent SVG renderer
   // This includes any viewport transforms and x/y offsets as well as the transform="" value off the element.
   func localToParentTransform() -> AffineTransform {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var t = [Float64](repeating: 0, count: 6)
+      wk_interop.RenderObject_localToParentTransform(id(), &t)
+      return AffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], e: t[4], f: t[5])
+    }
     return AffineTransform.identity
   }
 
@@ -1899,7 +1933,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func node() -> NodeWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let raw = wk_interop.RenderObject_node(id()) else { return nil }
+      return createNodeWrapper(raw)
+    }
     if isAnonymous() {
       return nil
     }
@@ -2861,7 +2898,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func repaint(forceRepaint: ForceRepaint = .No) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_repaint(id(), forceRepaint == .Yes)
+      return
+    }
     assert(
       isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper
         || self is RenderReplicaWrapper)

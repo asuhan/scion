@@ -107,6 +107,11 @@
 #include "ContentChangeObserver.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void RenderElement_layout(void* p)
+{
+    static_cast<WebCore::RenderElement*>(p)->layout();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderElement_element(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->element();
@@ -157,6 +162,11 @@ namespace {
 WebCore::LayoutPoint convertLayoutPoint(const LayoutPointRaw& point) { return { WebCore::LayoutUnit::fromRawValue(point.x), WebCore::LayoutUnit::fromRawValue(point.y) }; }
 
 } // namespace
+
+extern "C" WEBCORE_EXPORT void RenderElement_paint(void* p, void* paintInfoRaw, LayoutPointRaw paintOffsetRaw)
+{
+    static_cast<WebCore::RenderElement*>(p)->paint(*static_cast<WebCore::PaintInfo*>(paintInfoRaw), convertLayoutPoint(paintOffsetRaw));
+}
 
 extern "C" WEBCORE_EXPORT void RenderElement_paintAsInlineBlock(void* p, void* paintInfoRaw, LayoutPointRaw childPointRaw)
 {

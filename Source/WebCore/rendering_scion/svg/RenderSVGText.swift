@@ -24,6 +24,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 private func collectLayoutAttributes(
   _ text: RenderObjectWrapper?, _ attributes: inout [SVGTextLayoutAttributes]
 ) {
@@ -92,17 +94,29 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   func setNeedsPositioningValuesUpdate() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderSVGText_setNeedsPositioningValuesUpdate(id())
+      return
+    }
+    needsPositioningValuesUpdate = true
   }
 
   func setNeedsTextMetricsUpdate() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderSVGText_setNeedsTextMetricsUpdate(id())
+      return
+    }
+    needsTextMetricsUpdate = true
   }
 
   // FIXME: [LBSE] Only needed for legacy SVG engine.
-  override func setNeedsTransformUpdate() { needsTransformUpdate = true }
+  override func setNeedsTransformUpdate() {
+    if !isNativeImpl() {
+      super.setNeedsTransformUpdate()
+      return
+    }
+    needsTransformUpdate = true
+  }
 
   static func locateRenderSVGTextAncestor(start: RenderObjectWrapper) -> RenderSVGTextWrapper? {
     // TODO(asuhan): implement this
@@ -221,6 +235,9 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override final func objectBoundingBox() -> FloatRectWrapper {
+    if !isNativeImpl() {
+      return super.objectBoundingBox()
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -228,6 +245,9 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   override final func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
+    if !isNativeImpl() {
+      return super.repaintRectInLocalCoordinates(repaintRectCalculation)
+    }
     if document().settings().layerBasedSVGEngineEnabled() {
       var repaintRect = SVGBoundingBoxComputation.computeRepaintBoundingBox(self)
 
@@ -379,6 +399,10 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func layout() {
+    if !isNativeImpl() {
+      super.layout()
+      return
+    }
     let isLayerBasedSVGEngineEnabled = { [self] () in
       return document().settings().layerBasedSVGEngineEnabled()
     }
@@ -550,12 +574,16 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func localToParentTransform() -> AffineTransform {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return super.localToParentTransform()
+    }
     return m_localTransform
   }
 
   override func localTransform() -> AffineTransform {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return super.localTransform()
+    }
     return m_localTransform
   }
 

@@ -56,6 +56,16 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void RenderSVGText_setNeedsPositioningValuesUpdate(void* p)
+{
+    static_cast<WebCore::RenderSVGText*>(p)->setNeedsPositioningValuesUpdate();
+}
+
+extern "C" WEBCORE_EXPORT void RenderSVGText_setNeedsTextMetricsUpdate(void* p)
+{
+    static_cast<WebCore::RenderSVGText*>(p)->setNeedsTextMetricsUpdate();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderSVGText);

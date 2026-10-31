@@ -111,6 +111,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderIFrame(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderIFrame();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGText(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGText();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderListBox(const void* p) {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderListBox();
 }

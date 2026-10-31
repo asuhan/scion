@@ -90,6 +90,64 @@
 #include "SelectionGeometry.h"
 #endif
 
+static void exportAffineTransform(const WebCore::AffineTransform& t, double* transform)
+{
+    transform[0] = t.a();
+    transform[1] = t.b();
+    transform[2] = t.c();
+    transform[3] = t.d();
+    transform[4] = t.e();
+    transform[5] = t.f();
+}
+
+static void exportFloatRect(const WebCore::FloatRect& r, float* rect)
+{
+    rect[0] = r.x();
+    rect[1] = r.y();
+    rect[2] = r.width();
+    rect[3] = r.height();
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_localTransform(const void* p, double* transform)
+{
+    exportAffineTransform(static_cast<const WebCore::RenderObject*>(p)->localTransform(), transform);
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_localToParentTransform(const void* p, double* transform)
+{
+    exportAffineTransform(static_cast<const WebCore::RenderObject*>(p)->localToParentTransform(), transform);
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_objectBoundingBox(const void* p, float* rect)
+{
+    exportFloatRect(static_cast<const WebCore::RenderObject*>(p)->objectBoundingBox(), rect);
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_strokeBoundingBox(const void* p, float* rect)
+{
+    exportFloatRect(static_cast<const WebCore::RenderObject*>(p)->strokeBoundingBox(), rect);
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_repaintRectInLocalCoordinates(const void* p, bool accurate, float* rect)
+{
+    exportFloatRect(static_cast<const WebCore::RenderObject*>(p)->repaintRectInLocalCoordinates(accurate ? WebCore::RepaintRectCalculation::Accurate : WebCore::RepaintRectCalculation::Fast), rect);
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_setNeedsTransformUpdate(void* p)
+{
+    static_cast<WebCore::RenderObject*>(p)->setNeedsTransformUpdate();
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_repaint(const void* p, bool forceRepaint)
+{
+    static_cast<const WebCore::RenderObject*>(p)->repaint(forceRepaint ? WebCore::RenderObject::ForceRepaint::Yes : WebCore::RenderObject::ForceRepaint::No);
+}
+
+extern "C" WEBCORE_EXPORT void* RenderObject_node(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->node();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_previousSibling(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->previousSibling();

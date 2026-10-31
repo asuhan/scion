@@ -3453,6 +3453,10 @@ func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrap
   if wk_interop.RenderObject_isRenderListItem(p) {
     return RenderListItemWrapper(p: p)
   }
+  if wk_interop.RenderObject_isRenderSVGText(p) {
+    assert(wk_interop.RenderBlockFlow_scion(p) == nil)
+    return RenderSVGTextWrapper(p: p)
+  }
   if wk_interop.RenderObject_isRenderFragmentedFlow(p) {
     assert(wk_interop.RenderBlockFlow_scion(p) == nil)
     return RenderFragmentedFlowWrapper(p: p)

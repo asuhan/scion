@@ -864,6 +864,12 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // paintOffset is the offset from the origin of the GraphicsContext at which to paint the current object.
   func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if !isNativeImpl() {
+      wk_interop.RenderElement_paint(
+        id(), paintInfo.interop(),
+        LayoutPointRaw(x: paintOffset.x.rawValue(), y: paintOffset.y.rawValue()))
+      return
+    }
     fatalError("Not reached")
   }
 
@@ -900,7 +906,10 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Recursive function that computes the size and position of this object and all its descendants.
   func layout() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderElement_layout(id())
+      return
+    }
     // TODO(asuhan): add stack stats
     assert(needsLayout())
     var child = firstChild()

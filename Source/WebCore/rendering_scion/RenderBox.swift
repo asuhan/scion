@@ -1081,12 +1081,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return super.repaintRectInLocalCoordinates(repaintRectCalculation)
+    }
     return borderBoxRect().FloatRect()
   }
 
   override func objectBoundingBox() -> FloatRectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return super.objectBoundingBox()
+    }
     return borderBoxRect().FloatRect()
   }
 
