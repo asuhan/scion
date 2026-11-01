@@ -187,6 +187,28 @@ struct FloatRectWrapper: Equatable {
     setLocationAndSizeFromEdges(left: l, top: t, right: r, bottom: b)
   }
 
+  @discardableResult
+  mutating func edgeInclusiveIntersect(other: FloatRectWrapper) -> Bool {
+    var l = max(x(), other.x())
+    var t = max(y(), other.y())
+    var r = min(maxX(), other.maxX())
+    var b = min(maxY(), other.maxY())
+
+    var intersects = true
+
+    // Return a clean empty rectangle for non-intersecting cases.
+    if l > r || t > b {
+      l = 0
+      t = 0
+      r = 0
+      b = 0
+      intersects = false
+    }
+
+    setLocationAndSizeFromEdges(left: l, top: t, right: r, bottom: b)
+    return intersects
+  }
+
   mutating func unite(other: FloatRectWrapper) {
     // Handle empty special cases first.
     if other.isEmpty() {

@@ -153,8 +153,21 @@ class PaintInfoWrapper {
   }
 
   func applyTransform(_ localToAncestorTransform: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if localToAncestorTransform.isIdentity() {
+      return
+    }
+
+    context().concatCTM(transform: localToAncestorTransform)
+
+    if rect.isInfinite() {
+      return
+    }
+
+    let tranformedRect = (localToAncestorTransform.inverse() ?? AffineTransform()).mapRect(
+      rect: rect.FloatRect())
+    rect = LayoutRectWrapper(
+      location: LayoutPointWrapper(size: tranformedRect.location()),
+      size: LayoutSizeWrapper(size: tranformedRect.size()))
   }
 
   func eventRegionContext() -> EventRegionContext? {
@@ -195,8 +208,7 @@ class PaintInfoWrapper {
         n!.rect = newValue
         return
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      PaintInfo_setRect(p!, convertLayoutRect(newValue))
     }
   }
 

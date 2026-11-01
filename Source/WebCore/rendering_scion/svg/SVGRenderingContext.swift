@@ -39,17 +39,13 @@ class SVGRenderingContext {
   }
 
   // Does not start rendering.
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init() {}
 
   init(
     _ object: RenderElementWrapper, _ paintinfo: PaintInfoWrapper,
     _ needsGraphicsContextSave: NeedsGraphicsContextSave = .DontSaveGraphicsContext
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    prepareToRenderSVGContent(object, paintinfo, needsGraphicsContextSave)
   }
 
   // Automatically finishes context rendering.
@@ -201,13 +197,11 @@ class SVGRenderingContext {
   }
 
   func isRenderingPrepared() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_renderingFlags.contains(.RenderingPrepared)
   }
 
   func pathClippingIsEntirelyWithinRendererContents() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_pathClippingIsEntirelyWithinRendererContents
   }
 
   static func renderSubtreeToContext(

@@ -43,6 +43,53 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     return nodeForNonAnonymous() as! SVGSVGElementWrapper
   }
 
+  func isInLayout() -> Bool {
+    assert(isNativeImpl())
+    return inLayout
+  }
+
+  func isEmbeddedThroughSVGImage() -> Bool {
+    assert(isNativeImpl())
+    return isInSVGImage(svgSVGElement())
+  }
+
+  override func computeFloatVisibleRectInContainer(
+    _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> FloatRectWrapper? {
+    assert(isNativeImpl())
+    // Apply our local transforms (except for x/y translation) and then call
+    // RenderBox's method to handle all the normal CSS Box model bits
+    var adjustedRect = localToBorderBoxTransform.mapRect(rect: rect)
+
+    // Apply initial viewport clip
+    if shouldApplyViewportClip() {
+      let viewportRect = FloatRectWrapper(r: snappedIntRect(rect: borderBoxRect()))
+      if context.options.contains(.UseEdgeInclusiveIntersection) {
+        if !adjustedRect.edgeInclusiveIntersect(other: viewportRect) {
+          return nil
+        }
+      } else {
+        adjustedRect.intersect(other: viewportRect)
+      }
+    }
+
+    if hasBoxDecorations || hasRenderOverflow() {
+      // The selectionRect can project outside of the overflowRect, so take their union
+      // for repainting to avoid selection painting glitches.
+      let decoratedRepaintRect = unionRect(a: localSelectionRect(false), b: visualOverflowRect())
+      adjustedRect.unite(other: decoratedRepaintRect.FloatRect())
+    }
+
+    let rects = RepaintRects(rect: LayoutRectWrapper(rect: enclosingIntRect(rect: adjustedRect)))
+    guard let rectsInContainer = super.computeVisibleRectsInContainer(rects, container, context)
+    else {
+      return nil
+    }
+
+    return rectsInContainer.clippedOverflowRect.FloatRect()
+  }
+
   private func isEmbeddedThroughFrameContainingSVGDocument() -> Bool {
     // If our frame has an owner renderer, we're embedded through eg. object/embed/iframe,
     // but we only negotiate if we're in an SVG document inside object/embed, not iframe.
@@ -97,7 +144,13 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     needsBoundariesOrTransformUpdate = true
   }
 
-  override func setNeedsTransformUpdate() { needsBoundariesOrTransformUpdate = true }
+  override func setNeedsTransformUpdate() {
+    if !isNativeImpl() {
+      super.setNeedsTransformUpdate()
+      return
+    }
+    needsBoundariesOrTransformUpdate = true
+  }
 
   // The flag is cleared at the beginning of each layout() pass. Elements then call this
   // method during layout when they are invalidated by a filter.
@@ -139,8 +192,10 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
-    let unused = SetForScope(scopedVariable: &inLayout, newValue: true)
-    use(unused)
+    // SetForScope can't hold on to an inout, so save and restore by hand.
+    let oldInLayout = inLayout
+    inLayout = true
+    defer { inLayout = oldInLayout }
     // TODO(asuhan): add stack stats
     assert(needsLayout())
 
@@ -421,20 +476,21 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    super.mapLocalToContainer(
+      ancestorContainer, transformState, mode.union(.ApplyContainerFlip), &wasFixed)
   }
 
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.pushMappingToContainer(ancestorToStopAt, geometryMap)
   }
 
   override func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   override func canHaveChildren() -> Bool {
