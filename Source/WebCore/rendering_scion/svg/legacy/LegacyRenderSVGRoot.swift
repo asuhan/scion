@@ -91,6 +91,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func isEmbeddedThroughFrameContainingSVGDocument() -> Bool {
+    assert(isNativeImpl())
     // If our frame has an owner renderer, we're embedded through eg. object/embed/iframe,
     // but we only negotiate if we're in an SVG document inside object/embed, not iframe.
     if frame().ownerRenderer() == nil || frame().ownerRenderer()!.isRenderEmbeddedObject()
@@ -102,6 +103,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    assert(isNativeImpl())
     assert(!shouldApplySizeContainment())
 
     // https://www.w3.org/TR/SVG/coords.html#IntrinsicSizing
@@ -164,6 +166,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   )
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     // When we're embedded through SVGImage (border-image/background-image/<html:img>/...) we're forced to resize to a specific size.
     if !m_containerSize.isEmpty() {
       return LayoutUnit(value: m_containerSize.width)
@@ -178,6 +181,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
+    assert(isNativeImpl())
     // When we're embedded through SVGImage (border-image/background-image/<html:img>/...) we're forced to resize to a specific size.
     if !m_containerSize.isEmpty() {
       return LayoutUnit(value: m_containerSize.height)
@@ -192,6 +196,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
+    assert(isNativeImpl())
     // SetForScope can't hold on to an inout, so save and restore by hand.
     let oldInLayout = inLayout
     inLayout = true
@@ -258,6 +263,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override final func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
+    assert(isNativeImpl())
     // An empty viewport disables rendering.
     let clipViewport = shouldApplyViewportClip()
     if clipViewport && contentSize().isEmpty() {
@@ -372,6 +378,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     if diff == .Layout {
       invalidateCachedBoundaries()
     }
@@ -405,6 +412,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
+    assert(isNativeImpl())
     if repaintRectCalculation == .Fast {
       return m_repaintBoundingBox
     }
@@ -433,6 +441,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if isInsideEntirelyHiddenLayer() {
       return LayoutRectWrapper()
     }
@@ -444,6 +453,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
+    assert(isNativeImpl())
     if isInsideEntirelyHiddenLayer() {
       return RepaintRects()
     }
@@ -460,6 +470,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   private func localClippedOverflowRect(_ repaintRectCalculation: RepaintRectCalculation)
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     var contentRepaintRect = localToBorderBoxTransform.mapRect(
       rect: repaintRectInLocalCoordinates(repaintRectCalculation))
     contentRepaintRect.intersect(other: FloatRectWrapper(r: snappedIntRect(rect: borderBoxRect())))
@@ -499,6 +510,8 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func shouldApplyViewportClip() -> Bool {
+    // TODO(asuhan): enable the assertion
+    // assert(isNativeImpl())
     // the outermost svg is clipped if auto, and svg document roots are always clipped
     // When the svg is stand-alone (isDocumentElement() == true) the viewport clipping should always
     // be applied, noting that the window scrollbars should be hidden if overflow=hidden.
@@ -507,6 +520,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func updateCachedBoundaries() {
+    assert(isNativeImpl())
     strokeBoundingBox = nil
     m_repaintBoundingBox = FloatRectWrapper()
     accurateRepaintBoundingBox = nil
@@ -522,6 +536,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   // RenderBox methods will expect coordinates w/o any transforms in coordinates
   // relative to our borderBox origin. This method gives us exactly that.
   private func buildLocalToBorderBoxTransform() {
+    assert(isNativeImpl())
     let scale = style().usedZoom()
     let translate = svgSVGElement().currentTranslateValue()
     let borderAndPadding = LayoutSizeWrapper(
