@@ -686,10 +686,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGPath;
     }
-    bool isRenderSVGShape() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape);
-    }
+    WEBCORE_EXPORT bool isRenderSVGShape() const;
     bool isLegacyRenderSVGShape() const;
     bool isLegacyRenderSVGRect() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -757,10 +754,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGResourceClipper;
     }
-    bool isLegacyRenderSVGResourceFilterPrimitive() const {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::LegacySVGResourceFilterPrimitive;
-    }
+    WEBCORE_EXPORT bool isLegacyRenderSVGResourceFilterPrimitive() const;
     bool isRenderSVGResourceFilterPrimitive() const {
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return type() == Type::SVGResourceFilterPrimitive;
@@ -1317,11 +1311,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return clippedOverflowRect(nullptr, visibleRectContextForSpatialNavigation());
     }
-    LayoutRect absoluteClippedOverflowRectForRenderTreeAsText() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return clippedOverflowRect(nullptr, visibleRectContextForRenderTreeAsText());
-    }
+    LayoutRect absoluteClippedOverflowRectForRenderTreeAsText() const;
 
     WEBCORE_EXPORT IntRect pixelSnappedAbsoluteClippedOverflowRect() const;
 
@@ -1782,15 +1772,6 @@ inline bool RenderObject::isRenderMathMLRow() const
     return false;
 }
 #endif
-
-inline bool RenderObject::usesBoundaryCaching() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    // Use the same bit for UsesBoundaryCaching so that clang collapse two comparisons into one.
-    ASSERT(enumToUnderlyingType(ReplacedFlag::UsesBoundaryCaching) == enumToUnderlyingType(SVGModelObjectFlag::UsesBoundaryCaching));
-    return (m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::UsesBoundaryCaching))
-        || (m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::SVGModelObject && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::UsesBoundaryCaching));
-}
 
 WTF::TextStream& operator<<(WTF::TextStream&, const RenderObject&);
 

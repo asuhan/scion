@@ -1557,6 +1557,20 @@ func RenderObjectScion_isRenderTextControlInnerBlock(_ objectRaw: UnsafeRawPoint
   return object.isRenderTextControlInnerBlock()
 }
 
+@_cdecl("RenderObjectScion_isLegacyRenderSVGResourceFilterPrimitive")
+func RenderObjectScion_isLegacyRenderSVGResourceFilterPrimitive(_ objectRaw: UnsafeRawPointer)
+  -> Bool
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLegacyRenderSVGResourceFilterPrimitive()
+}
+
+@_cdecl("RenderObjectScion_isRenderSVGShape")
+func RenderObjectScion_isRenderSVGShape(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isRenderSVGShape()
+}
+
 @_cdecl("RenderObjectScion_isRenderVideo")
 func RenderObjectScion_isRenderVideo(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -4618,6 +4632,70 @@ func LegacyRenderSVGRootScion_setWk(
   root.setWk(wk)
 }
 
+@_cdecl("LegacyRenderSVGRootScion_computeFloatVisibleRectInContainer")
+func LegacyRenderSVGRootScion_computeFloatVisibleRectInContainer(
+  _ rootRaw: UnsafeRawPointer, _ rectRaw: UnsafeMutablePointer<FloatRectRaw>,
+  _ containerRaw: UnsafeRawPointer?, _ contextRaw: VisibleRectContextRaw
+) -> Bool {
+  let root = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  let container =
+    containerRaw.map {
+      createRenderObjectWrapperOrNative(UnsafeMutableRawPointer(mutating: $0))
+        as! RenderLayerModelObjectWrapper
+    }
+  let r = rectRaw.pointee
+  guard
+    let result = root.computeFloatVisibleRectInContainer(
+      FloatRectWrapper(x: r.x, y: r.y, width: r.width, height: r.height), container,
+      convertVisibleRectContext(contextRaw))
+  else {
+    return false
+  }
+  rectRaw.pointee = FloatRectRaw(
+    x: result.x(), y: result.y(), width: result.width(), height: result.height())
+  return true
+}
+
+@_cdecl("LegacyRenderSVGRootScion_isLayoutSizeChanged")
+func LegacyRenderSVGRootScion_isLayoutSizeChanged(_ rootRaw: UnsafeRawPointer) -> Bool {
+  let root = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  return root.isLayoutSizeChanged
+}
+
+@_cdecl("LegacyRenderSVGRootScion_isInLayout")
+func LegacyRenderSVGRootScion_isInLayout(_ rootRaw: UnsafeRawPointer) -> Bool {
+  let root = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  return root.isInLayout()
+}
+
+@_cdecl("LegacyRenderSVGRootScion_localToBorderBoxTransform")
+func LegacyRenderSVGRootScion_localToBorderBoxTransform(
+  _ rootRaw: UnsafeRawPointer, _ transform: UnsafeMutablePointer<Float64>
+) {
+  let root = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  let t = root.localToBorderBoxTransform
+  transform[0] = t.a()
+  transform[1] = t.b()
+  transform[2] = t.c()
+  transform[3] = t.d()
+  transform[4] = t.e()
+  transform[5] = t.f()
+}
+
+@_cdecl("LegacyRenderSVGRootScion_localToParentTransform")
+func LegacyRenderSVGRootScion_localToParentTransform(
+  _ rootRaw: UnsafeRawPointer, _ transform: UnsafeMutablePointer<Float64>
+) {
+  let root = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(rootRaw).takeUnretainedValue()
+  let t = root.localToParentTransform()
+  transform[0] = t.a()
+  transform[1] = t.b()
+  transform[2] = t.c()
+  transform[3] = t.d()
+  transform[4] = t.e()
+  transform[5] = t.f()
+}
+
 @_cdecl("RenderHTMLCanvasScion_setWk")
 func RenderHTMLCanvasScion_setWk(
   _ wk: UnsafeMutableRawPointer, _ canvasRaw: UnsafeMutableRawPointer
@@ -6253,6 +6331,12 @@ func RenderObjectScion_previousOffsetForBackwardDeletion(
   return object.previousOffsetForBackwardDeletion(current)
 }
 
+@_cdecl("RenderObjectScion_usesBoundaryCaching")
+func RenderObjectScion_usesBoundaryCaching(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.usesBoundaryCaching()
+}
+
 @_cdecl("RenderObjectScion_nextOffset")
 func RenderObjectScion_nextOffset(_ objectRaw: UnsafeRawPointer, _ current: Int32) -> Int32 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -6285,4 +6369,22 @@ func RenderTextScion_containsOnlyCollapsibleWhitespace(_ renderTextRaw: UnsafeRa
 func RenderTreeBuilderScion_removeFloatingObjects(_ blockRaw: UnsafeMutableRawPointer) {
   let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
   RenderTreeBuilder.removeFloatingObjects(renderer: block)
+}
+
+@_cdecl("LegacyRenderSVGRootScion_isEmbeddedThroughSVGImage")
+func LegacyRenderSVGRootScion_isEmbeddedThroughSVGImage(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isEmbeddedThroughSVGImage()
+}
+
+@_cdecl("LegacyRenderSVGRootScion_setNeedsBoundariesUpdate")
+func LegacyRenderSVGRootScion_setNeedsBoundariesUpdate(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setNeedsBoundariesUpdate()
+}
+
+@_cdecl("LegacyRenderSVGRootScion_setNeedsTransformUpdate")
+func LegacyRenderSVGRootScion_setNeedsTransformUpdate(_ objectRaw: UnsafeMutableRawPointer) {
+  let object = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setNeedsTransformUpdate()
 }

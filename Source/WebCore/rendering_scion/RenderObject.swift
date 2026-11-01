@@ -1304,7 +1304,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .SVGViewportContainer
   }
 
-  private func isRenderSVGShape() -> Bool {
+  func isRenderSVGShape() -> Bool {
     assert(isNativeImpl())
     return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsShape)
   }
@@ -1358,6 +1358,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isRenderSVGGradientStop() -> Bool {
     assert(isNativeImpl())
     return type() == .SVGGradientStop
+  }
+
+  func isLegacyRenderSVGResourceFilterPrimitive() -> Bool {
+    assert(isNativeImpl())
+    return type() == .LegacySVGResourceFilterPrimitive
   }
 
   func isLegacyRenderSVGHiddenContainer() -> Bool {
@@ -1436,7 +1441,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
   }
 
-  private func usesBoundaryCaching() -> Bool {
+  func usesBoundaryCaching() -> Bool {
     assert(isNativeImpl())
     // Use the same bit for UsesBoundaryCaching so that compiler can collapse two comparisons into one.
     assert(

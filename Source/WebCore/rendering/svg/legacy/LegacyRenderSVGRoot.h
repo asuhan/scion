@@ -52,26 +52,10 @@ public:
     void computeIntrinsicRatioInformation(FloatSize& intrinsicSize, FloatSize& intrinsicRatio) const override;
     bool hasIntrinsicAspectRatio() const final;
 
-    bool isLayoutSizeChanged() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_isLayoutSizeChanged;
-    }
-    bool isInLayout() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_inLayout;
-    }
-    void setNeedsBoundariesUpdate() override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_needsBoundariesOrTransformUpdate = true;
-    }
-    void setNeedsTransformUpdate() override
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_needsBoundariesOrTransformUpdate = true;
-    }
+    bool isLayoutSizeChanged() const;
+    bool isInLayout() const;
+    void setNeedsBoundariesUpdate() override;
+    void setNeedsTransformUpdate() override;
 
     IntSize containerSize() const
     {
@@ -87,11 +71,7 @@ public:
     bool hasRelativeDimensions() const override;
 
     // localToBorderBoxTransform maps local SVG viewport coordinates to local CSS box coordinates.  
-    const AffineTransform& localToBorderBoxTransform() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_localToBorderBoxTransform;
-    }
+    const AffineTransform& localToBorderBoxTransform() const;
 
     // The flag is cleared at the beginning of each layout() pass. Elements then call this
     // method during layout when they are invalidated by a filter.

@@ -61,6 +61,8 @@ extern "C" int32_t RenderObjectScion_previousOffsetForBackwardDeletion(const voi
 
 extern "C" int32_t RenderObjectScion_nextOffset(const void*, int32_t);
 
+extern "C" bool RenderObjectScion_usesBoundaryCaching(const void*);
+
 extern "C" void* RenderObjectScion_firstChildSlow(const void*);
 
 extern "C" bool RenderObjectScion_canUpdateSelectionOnRootLineBoxes(const void*);
@@ -158,6 +160,10 @@ extern "C" bool RenderObjectScion_isRenderTableCaption(const void*);
 extern "C" bool RenderObjectScion_isRenderTableSection(const void*);
 
 extern "C" bool RenderObjectScion_isRenderTextControl(const void*);
+
+extern "C" bool RenderObjectScion_isRenderSVGShape(const void*);
+
+extern "C" bool RenderObjectScion_isLegacyRenderSVGResourceFilterPrimitive(const void*);
 
 extern "C" bool RenderObjectScion_isRenderTextControlMultiLine(const void*);
 
@@ -848,6 +854,16 @@ extern "C" void RenderHTMLCanvasScion_setWk(void*, void*);
 
 extern "C" void LegacyRenderSVGRootScion_setWk(void*, void*);
 
+extern "C" void LegacyRenderSVGRootScion_localToParentTransform(const void*, double*);
+
+extern "C" void LegacyRenderSVGRootScion_localToBorderBoxTransform(const void*, double*);
+
+extern "C" bool LegacyRenderSVGRootScion_isLayoutSizeChanged(const void*);
+
+extern "C" bool LegacyRenderSVGRootScion_isInLayout(const void*);
+
+extern "C" bool LegacyRenderSVGRootScion_isEmbeddedThroughSVGImage(const void*);
+
 extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
@@ -1077,6 +1093,12 @@ struct VisibleRectContextRaw {
 extern "C" OptionalRepaintRectsRaw RenderBoxScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
 
 extern "C" OptionalRepaintRectsRaw RenderObjectScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
+
+extern "C" bool LegacyRenderSVGRootScion_computeFloatVisibleRectInContainer(const void*, FloatRectRaw*, const void*, VisibleRectContextRaw);
+
+extern "C" void LegacyRenderSVGRootScion_setNeedsBoundariesUpdate(void*);
+
+extern "C" void LegacyRenderSVGRootScion_setNeedsTransformUpdate(void*);
 
 extern "C" RepaintRectsRaw RenderObjectScion_computeRects(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
 
@@ -1506,6 +1528,8 @@ int RenderObjectScion::previousOffsetForBackwardDeletion(int current) const { re
 
 int RenderObjectScion::nextOffset(int current) const { return RenderObjectScion_nextOffset(m_handle, current); }
 
+bool RenderObjectScion::usesBoundaryCaching() const { return RenderObjectScion_usesBoundaryCaching(m_handle); }
+
 RenderObject* RenderObjectScion::firstChildSlow() const { return static_cast<RenderObject*>(RenderObjectScion_firstChildSlow(m_handle)); }
 
 RenderObject* RenderObjectScion::lastChildSlow() const { return static_cast<RenderObject*>(RenderObjectScion_lastChildSlow(m_handle)); }
@@ -1591,6 +1615,10 @@ bool RenderObjectScion::isRenderTableCaption() const { return RenderObjectScion_
 bool RenderObjectScion::isRenderTableSection() const { return RenderObjectScion_isRenderTableSection(m_handle); }
 
 bool RenderObjectScion::isRenderTextControl() const { return RenderObjectScion_isRenderTextControl(m_handle); }
+
+bool RenderObjectScion::isRenderSVGShape() const { return RenderObjectScion_isRenderSVGShape(m_handle); }
+
+bool RenderObjectScion::isLegacyRenderSVGResourceFilterPrimitive() const { return RenderObjectScion_isLegacyRenderSVGResourceFilterPrimitive(m_handle); }
 
 bool RenderObjectScion::isRenderTextControlMultiLine() const { return RenderObjectScion_isRenderTextControlMultiLine(m_handle); }
 
@@ -2921,6 +2949,30 @@ void RenderHTMLCanvasScion::setWk(void* wk)
 void LegacyRenderSVGRootScion::setWk(void* wk)
 {
     LegacyRenderSVGRootScion_setWk(wk, m_handle);
+}
+
+bool LegacyRenderSVGRootScion::isLayoutSizeChanged() const
+{
+    return LegacyRenderSVGRootScion_isLayoutSizeChanged(m_handle);
+}
+
+bool LegacyRenderSVGRootScion::isInLayout() const
+{
+    return LegacyRenderSVGRootScion_isInLayout(m_handle);
+}
+
+AffineTransform LegacyRenderSVGRootScion::localToBorderBoxTransform() const
+{
+    double t[6];
+    LegacyRenderSVGRootScion_localToBorderBoxTransform(m_handle, t);
+    return { t[0], t[1], t[2], t[3], t[4], t[5] };
+}
+
+AffineTransform LegacyRenderSVGRootScion::localToParentTransform() const
+{
+    double t[6];
+    LegacyRenderSVGRootScion_localToParentTransform(m_handle, t);
+    return { t[0], t[1], t[2], t[3], t[4], t[5] };
 }
 
 RenderStyle RenderListItemScion::computeMarkerStyle() const
@@ -4521,6 +4573,29 @@ bool RenderViewScion::boxesWithScrollSnapPositionsIsEmpty() const
 bool RenderViewScion::containerQueryBoxesIsEmpty() const
 {
     return RenderViewScion_containerQueryBoxesIsEmpty(m_handle);
+}
+
+bool LegacyRenderSVGRootScion::isEmbeddedThroughSVGImage() const
+{
+    return LegacyRenderSVGRootScion_isEmbeddedThroughSVGImage(m_handle);
+}
+
+std::optional<FloatRect> LegacyRenderSVGRootScion::computeFloatVisibleRectInContainer(const FloatRect& rect, const RenderLayerModelObject* container, RenderObject::VisibleRectContext context) const
+{
+    auto rectRaw = toFloatRectRaw(rect);
+    if (!LegacyRenderSVGRootScion_computeFloatVisibleRectInContainer(m_handle, &rectRaw, container, convertVisibleRectContext(context)))
+        return std::nullopt;
+    return toFloatRect(rectRaw);
+}
+
+void LegacyRenderSVGRootScion::setNeedsBoundariesUpdate()
+{
+    LegacyRenderSVGRootScion_setNeedsBoundariesUpdate(m_handle);
+}
+
+void LegacyRenderSVGRootScion::setNeedsTransformUpdate()
+{
+    LegacyRenderSVGRootScion_setNeedsTransformUpdate(m_handle);
 }
 
 }

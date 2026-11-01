@@ -109,6 +109,7 @@ class HitTestRequest;
 class HitTestResult;
 class RenderCounter;
 class RenderFragmentContainer;
+class AffineTransform;
 class RenderLayer;
 class RenderLayerCompositor;
 class RenderLayerModelObject;
@@ -165,6 +166,8 @@ public:
     int previousOffsetForBackwardDeletion(int) const;
 
     int nextOffset(int) const;
+
+    bool usesBoundaryCaching() const;
 
     RenderObject* previousInPreOrder() const;
 
@@ -247,6 +250,10 @@ public:
     bool isRenderTableSection() const;
 
     bool isRenderTextControl() const;
+
+    bool isRenderSVGShape() const;
+
+    bool isLegacyRenderSVGResourceFilterPrimitive() const;
 
     bool isRenderTextControlMultiLine() const;
 
@@ -1664,7 +1671,22 @@ public:
     {
     }
 
+    void setNeedsTransformUpdate();
+
+    void setNeedsBoundariesUpdate();
+
+    bool isEmbeddedThroughSVGImage() const;
+
     void setWk(void*);
+
+    AffineTransform localToParentTransform() const;
+
+    AffineTransform localToBorderBoxTransform() const;
+
+    bool isLayoutSizeChanged() const;
+    bool isInLayout() const;
+
+    std::optional<FloatRect> computeFloatVisibleRectInContainer(const FloatRect&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
 
 private:
     void* m_handle;

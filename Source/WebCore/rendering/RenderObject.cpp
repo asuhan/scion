@@ -2973,6 +2973,21 @@ void RenderObject::setNeedsBoundariesUpdate()
 {
 }
 
+LayoutRect RenderObject::absoluteClippedOverflowRectForRenderTreeAsText() const
+{
+    if (m_scion) { return m_scion->clippedOverflowRect(nullptr, visibleRectContextForRenderTreeAsText()); }
+    return clippedOverflowRect(nullptr, visibleRectContextForRenderTreeAsText());
+}
+
+bool RenderObject::usesBoundaryCaching() const
+{
+    if (m_scion) { return m_scion->usesBoundaryCaching(); }
+    // Use the same bit for UsesBoundaryCaching so that clang collapse two comparisons into one.
+    ASSERT(enumToUnderlyingType(ReplacedFlag::UsesBoundaryCaching) == enumToUnderlyingType(SVGModelObjectFlag::UsesBoundaryCaching));
+    return (m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::Replaced && m_typeSpecificFlags.replacedFlags().contains(ReplacedFlag::UsesBoundaryCaching))
+        || (m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::SVGModelObject && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::UsesBoundaryCaching));
+}
+
 void RenderObject::invalidateCachedBoundaries()
 {
     if (m_scion) {
@@ -3965,6 +3980,18 @@ bool RenderObject::isRenderTextControlInnerBlock() const
 {
     if (m_scion) { return m_scion->isRenderTextControlInnerBlock(); }
     return type() == Type::TextControlInnerBlock;
+}
+
+bool RenderObject::isLegacyRenderSVGResourceFilterPrimitive() const
+{
+    if (m_scion) { return m_scion->isLegacyRenderSVGResourceFilterPrimitive(); }
+    return type() == Type::LegacySVGResourceFilterPrimitive;
+}
+
+bool RenderObject::isRenderSVGShape() const
+{
+    if (m_scion) { return m_scion->isRenderSVGShape(); }
+    return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsShape);
 }
 
 bool RenderObject::isRenderVideo() const

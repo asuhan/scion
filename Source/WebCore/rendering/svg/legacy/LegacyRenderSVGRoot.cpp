@@ -88,6 +88,47 @@ void LegacyRenderSVGRoot::setScionHandle(void* handle)
     m_scion->setWk(this);
 }
 
+bool LegacyRenderSVGRoot::isLayoutSizeChanged() const
+{
+    if (m_scion)
+        return m_scion->isLayoutSizeChanged();
+    return m_isLayoutSizeChanged;
+}
+
+bool LegacyRenderSVGRoot::isInLayout() const
+{
+    if (m_scion)
+        return m_scion->isInLayout();
+    return m_inLayout;
+}
+
+const AffineTransform& LegacyRenderSVGRoot::localToBorderBoxTransform() const
+{
+    if (m_scion) {
+        // Callers get a reference, and our own transform is unused while the Swift twin drives.
+        const_cast<AffineTransform&>(m_localToBorderBoxTransform) = m_scion->localToBorderBoxTransform();
+    }
+    return m_localToBorderBoxTransform;
+}
+
+void LegacyRenderSVGRoot::setNeedsBoundariesUpdate()
+{
+    if (m_scion) {
+        m_scion->setNeedsBoundariesUpdate();
+        return;
+    }
+    m_needsBoundariesOrTransformUpdate = true;
+}
+
+void LegacyRenderSVGRoot::setNeedsTransformUpdate()
+{
+    if (m_scion) {
+        m_scion->setNeedsTransformUpdate();
+        return;
+    }
+    m_needsBoundariesOrTransformUpdate = true;
+}
+
 SVGSVGElement& LegacyRenderSVGRoot::svgSVGElement() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -144,7 +185,8 @@ void LegacyRenderSVGRoot::computeIntrinsicRatioInformation(FloatSize& intrinsicS
 
 bool LegacyRenderSVGRoot::isEmbeddedThroughSVGImage() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->isEmbeddedThroughSVGImage();
     return isInSVGImage(protectedSVGSVGElement().ptr());
 }
 
@@ -354,14 +396,22 @@ void LegacyRenderSVGRoot::willBeDestroyed()
 
 void LegacyRenderSVGRoot::insertedIntoTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        // Forwards to the Swift twin, which dispatches to its own override.
+        RenderElement::insertedIntoTree();
+        return;
+    }
     RenderReplaced::insertedIntoTree();
     SVGResourcesCache::clientWasAddedToTree(*this);
 }
 
 void LegacyRenderSVGRoot::willBeRemovedFromTree()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        // Forwards to the Swift twin, which dispatches to its own override.
+        RenderElement::willBeRemovedFromTree();
+        return;
+    }
     SVGResourcesCache::clientWillBeRemovedFromTree(*this);
     RenderReplaced::willBeRemovedFromTree();
 }
@@ -396,7 +446,11 @@ void LegacyRenderSVGRoot::buildLocalToBorderBoxTransform()
 
 const AffineTransform& LegacyRenderSVGRoot::localToParentTransform() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        // Callers get a reference, so keep the Swift twin's value in our own cache.
+        m_localToParentTransform = m_scion->localToParentTransform();
+        return m_localToParentTransform;
+    }
     // Slightly optimized version of m_localToParentTransform = AffineTransform::makeTranslation(x(), y()) * m_localToBorderBoxTransform;
     m_localToParentTransform = m_localToBorderBoxTransform;
     if (x())
@@ -444,7 +498,8 @@ auto LegacyRenderSVGRoot::rectsForRepaintingAfterLayout(const RenderLayerModelOb
 
 std::optional<FloatRect> LegacyRenderSVGRoot::computeFloatVisibleRectInContainer(const FloatRect& rect, const RenderLayerModelObject* container, VisibleRectContext context) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->computeFloatVisibleRectInContainer(rect, container, context);
     // Apply our local transforms (except for x/y translation) and then call
     // RenderBox's method to handle all the normal CSS Box model bits
     FloatRect adjustedRect = m_localToBorderBoxTransform.mapRect(rect);
@@ -478,13 +533,20 @@ std::optional<FloatRect> LegacyRenderSVGRoot::computeFloatVisibleRectInContainer
 // to convert from SVG viewport coordinates to local CSS box coordinates.
 void LegacyRenderSVGRoot::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        // Forwards to the Swift twin, which dispatches to its own override.
+        RenderReplaced::mapLocalToContainer(ancestorContainer, transformState, mode, wasFixed);
+        return;
+    }
     RenderReplaced::mapLocalToContainer(ancestorContainer, transformState, mode | ApplyContainerFlip, wasFixed);
 }
 
 const RenderObject* LegacyRenderSVGRoot::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        // Forwards to the Swift twin, which dispatches to its own override.
+        return RenderReplaced::pushMappingToContainer(ancestorToStopAt, geometryMap);
+    }
     return RenderReplaced::pushMappingToContainer(ancestorToStopAt, geometryMap);
 }
 
