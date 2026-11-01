@@ -182,6 +182,11 @@ struct PaintInfoRaw {
 
 extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
 extern "C" struct LayoutRectRaw LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool, struct OptionalIntRaw);
+extern "C" void PaintInfo_applyTransform(void* p, const double* transform)
+{
+    static_cast<WebCore::PaintInfo*>(p)->applyTransform({ transform[0], transform[1], transform[2], transform[3], transform[4], transform[5] });
+}
+
 extern "C" void PaintInfo_setRect(void* p, struct LayoutRectRaw rect)
 {
     static_cast<WebCore::PaintInfo*>(p)->rect = { WebCore::LayoutUnit::fromRawValue(rect.x), WebCore::LayoutUnit::fromRawValue(rect.y), WebCore::LayoutUnit::fromRawValue(rect.width), WebCore::LayoutUnit::fromRawValue(rect.height) };

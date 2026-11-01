@@ -153,21 +153,28 @@ class PaintInfoWrapper {
   }
 
   func applyTransform(_ localToAncestorTransform: AffineTransform) {
+    if n == nil {
+      let t = [
+        localToAncestorTransform.a(), localToAncestorTransform.b(), localToAncestorTransform.c(),
+        localToAncestorTransform.d(), localToAncestorTransform.e(), localToAncestorTransform.f(),
+      ]
+      wk_interop.PaintInfo_applyTransform(p!, t)
+      return
+    }
     if localToAncestorTransform.isIdentity() {
       return
     }
 
-    context().concatCTM(transform: localToAncestorTransform)
+    n!.context.concatCTM(transform: localToAncestorTransform)
 
-    if rect.isInfinite() {
+    if n!.rect.isInfinite() {
       return
     }
 
     let tranformedRect = (localToAncestorTransform.inverse() ?? AffineTransform()).mapRect(
-      rect: rect.FloatRect())
-    rect = LayoutRectWrapper(
-      location: LayoutPointWrapper(size: tranformedRect.location()),
-      size: LayoutSizeWrapper(size: tranformedRect.size()))
+      rect: n!.rect.FloatRect())
+    n!.rect.setLocation(location: LayoutPointWrapper(size: tranformedRect.location()))
+    n!.rect.setSize(size: LayoutSizeWrapper(size: tranformedRect.size()))
   }
 
   func eventRegionContext() -> EventRegionContext? {

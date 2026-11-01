@@ -1790,6 +1790,7 @@ void RenderBlockFlow_marginBeforeEstimateForChild(const void*, void*, int32_t*, 
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
 struct LayoutRectRaw PaintInfo_rect(const void*);
+void PaintInfo_applyTransform(void*, const double*);
 void PaintInfo_setRect(void*, struct LayoutRectRaw);
 void* PaintInfo_deepCopy(const void*);
 void PaintInfo_destroy(const void*);
