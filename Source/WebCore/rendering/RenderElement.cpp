@@ -426,12 +426,36 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
     case DisplayType::InlineBox:
         return createRenderer<RenderDeprecatedFlexibleBox>(element, WTFMove(style));
     case DisplayType::RubyBase:
+        if (Document::s_useScionRendering >= 17) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderInline>(RenderObject::Type::Inline, element, WTFMove(style));
+            renderer->setScionHandle(RenderInlineScion_create(static_cast<uint8_t>(RenderObject::Type::Inline), &element, clonedStyle.release()));
+            return renderer;
+        }
         return createRenderer<RenderInline>(RenderObject::Type::Inline, element, WTFMove(style));
     case DisplayType::RubyAnnotation:
+        if (Document::s_useScionRendering >= 17) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
+            renderer->setScionHandle(RenderBlockFlowScion_create(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &element, clonedStyle.release(), 0));
+            return renderer;
+        }
         return createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
     case DisplayType::Ruby:
+        if (Document::s_useScionRendering >= 17) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderInline>(RenderObject::Type::Inline, element, WTFMove(style));
+            renderer->setScionHandle(RenderInlineScion_create(static_cast<uint8_t>(RenderObject::Type::Inline), &element, clonedStyle.release()));
+            return renderer;
+        }
         return createRenderer<RenderInline>(RenderObject::Type::Inline, element, WTFMove(style));
     case DisplayType::RubyBlock:
+        if (Document::s_useScionRendering >= 17) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
+            renderer->setScionHandle(RenderBlockFlowScion_create(static_cast<uint8_t>(RenderObject::Type::BlockFlow), &element, clonedStyle.release(), 0));
+            return renderer;
+        }
         return createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, element, WTFMove(style));
 
     default: {

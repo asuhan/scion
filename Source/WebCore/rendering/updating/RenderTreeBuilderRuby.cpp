@@ -27,7 +27,9 @@
 #include "RenderTreeBuilderRuby.h"
 
 #include "RenderAncestorIterator.h"
+#include "Document.h"
 #include "RenderInline.h"
+#include "RenderObjectsScion.h"
 #include "RenderTreeBuilder.h"
 #include "RenderTreeBuilderBlock.h"
 #include "RenderTreeBuilderBlockFlow.h"
@@ -58,6 +60,13 @@ RenderStyle createAnonymousStyleForRuby(const RenderStyle& parentStyle, DisplayT
 static RenderPtr<RenderElement> createAnonymousRendererForRuby(RenderElement& parent, DisplayType display)
 {
     auto style = createAnonymousStyleForRuby(parent.style(), display);
+    if (Document::s_useScionRendering >= 17) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto ruby = createRenderer<RenderInline>(RenderObject::Type::Inline, parent.document(), WTFMove(style));
+        ruby->setScionHandle(RenderInlineScion_createFromDocument(static_cast<uint8_t>(RenderObject::Type::Inline), &parent.document(), clonedStyle.release()));
+        ruby->initializeStyle();
+        return ruby;
+    }
     auto ruby = createRenderer<RenderInline>(RenderObject::Type::Inline, parent.document(), WTFMove(style));
     ruby->initializeStyle();
     return ruby;
