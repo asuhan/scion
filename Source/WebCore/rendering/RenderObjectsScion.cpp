@@ -218,6 +218,7 @@ extern "C" bool RenderObjectScion_childrenInline(const void*);
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
 extern "C" void RenderObjectScion_setFragmentedFlowState(void*, bool);
+extern "C" void RenderObjectScion_setFragmentedFlowStateIncludingDescendants(void*, bool, bool);
 
 extern "C" void RenderObjectScion_setHasOutlineAutoAncestor(void*, bool);
 
@@ -1676,6 +1677,11 @@ void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildre
 void RenderObjectScion::setFragmentedFlowState(RenderObject::FragmentedFlowState state)
 {
     RenderObjectScion_setFragmentedFlowState(m_handle, state == RenderObject::FragmentedFlowState::InsideFlow);
+}
+
+void RenderObjectScion::setFragmentedFlowStateIncludingDescendants(RenderObject::FragmentedFlowState state, RenderObject::SkipDescendentFragmentedFlow skipDescendentFragmentedFlow)
+{
+    RenderObjectScion_setFragmentedFlowStateIncludingDescendants(m_handle, state == RenderObject::FragmentedFlowState::InsideFlow, skipDescendentFragmentedFlow == RenderObject::SkipDescendentFragmentedFlow::Yes);
 }
 
 void RenderObjectScion::setHasOutlineAutoAncestor(bool hasOutlineAutoAncestor)

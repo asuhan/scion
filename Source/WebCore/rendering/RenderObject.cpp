@@ -248,6 +248,13 @@ extern "C" WEBCORE_EXPORT bool RenderObject_fragmentedFlowState(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->fragmentedFlowState() == WebCore::RenderObject::FragmentedFlowState::InsideFlow;
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setFragmentedFlowStateIncludingDescendants(void* p, bool insideFlow, bool skipDescendentFragmentedFlow)
+{
+    static_cast<WebCore::RenderObject*>(p)->setFragmentedFlowStateIncludingDescendants(
+        insideFlow ? WebCore::RenderObject::FragmentedFlowState::InsideFlow : WebCore::RenderObject::FragmentedFlowState::NotInsideFlow,
+        skipDescendentFragmentedFlow ? WebCore::RenderObject::SkipDescendentFragmentedFlow::Yes : WebCore::RenderObject::SkipDescendentFragmentedFlow::No);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isLegacyRenderSVGHiddenContainer(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isLegacyRenderSVGHiddenContainer();
@@ -814,7 +821,10 @@ bool RenderObject::isFloating() const
 
 void RenderObject::setFragmentedFlowStateIncludingDescendants(FragmentedFlowState state, SkipDescendentFragmentedFlow skipDescendentFragmentedFlow)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setFragmentedFlowStateIncludingDescendants(state, skipDescendentFragmentedFlow);
+        return;
+    }
     setFragmentedFlowState(state);
 
     auto* renderElement = dynamicDowncast<RenderElement>(*this);

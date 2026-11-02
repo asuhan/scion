@@ -1712,6 +1712,16 @@ func RenderObjectScion_setFragmentedFlowState(_ objectRaw: UnsafeRawPointer, _ i
   object.setFragmentedFlowState(insideFlow ? .InsideFlow : .NotInsideFlow)
 }
 
+@_cdecl("RenderObjectScion_setFragmentedFlowStateIncludingDescendants")
+func RenderObjectScion_setFragmentedFlowStateIncludingDescendants(
+  _ objectRaw: UnsafeRawPointer, _ insideFlow: Bool, _ skipDescendentFragmentedFlow: Bool
+) {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  object.setFragmentedFlowStateIncludingDescendants(
+    state: insideFlow ? .InsideFlow : .NotInsideFlow,
+    skipDescendentFragmentedFlow: skipDescendentFragmentedFlow ? .Yes : .No)
+}
+
 @_cdecl("RenderObjectScion_setHasOutlineAutoAncestor")
 func RenderObjectScion_setHasOutlineAutoAncestor(
   _ objectRaw: UnsafeRawPointer, _ hasOutlineAutoAncestor: Bool

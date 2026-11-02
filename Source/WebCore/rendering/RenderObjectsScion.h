@@ -310,6 +310,7 @@ public:
     RenderObject::FragmentedFlowState fragmentedFlowState() const;
 
     void setFragmentedFlowState(RenderObject::FragmentedFlowState);
+    void setFragmentedFlowStateIncludingDescendants(RenderObject::FragmentedFlowState, RenderObject::SkipDescendentFragmentedFlow);
 
     void setHasOutlineAutoAncestor(bool);
 

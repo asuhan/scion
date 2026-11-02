@@ -1185,15 +1185,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case InsideFlow
   }
 
-  private enum SkipDescendentFragmentedFlow {
+  enum SkipDescendentFragmentedFlow {
     case No
     case Yes
   }
 
-  private func setFragmentedFlowStateIncludingDescendants(
+  func setFragmentedFlowStateIncludingDescendants(
     state: FragmentedFlowState, skipDescendentFragmentedFlow: SkipDescendentFragmentedFlow = .Yes
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setFragmentedFlowStateIncludingDescendants(
+        id(), state == .InsideFlow, skipDescendentFragmentedFlow == .Yes)
+      return
+    }
     setFragmentedFlowState(state)
 
     guard let renderElement = self as? RenderElementWrapper else { return }
