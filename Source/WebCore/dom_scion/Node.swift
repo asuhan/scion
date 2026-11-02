@@ -168,8 +168,9 @@ class NodeWrapper {
   }
 
   func computedStyle() -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Owned by the node or its renderer, like the C++ pointer.
+    guard let raw = wk_interop.Node_computedStyle(p) else { return nil }
+    return convert_render_style(p: raw)
   }
 
   func hasTextPathTagName() -> Bool { return wk_interop.Node_hasTextPathTagName(p) }
