@@ -233,7 +233,7 @@ inline LayoutRect RenderBox::paddingBoxRectIncludingScrollbar() const
 
 inline LayoutRect RenderBox::contentBoxRect() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->contentBoxRect(); }
     auto verticalScrollbarWidth = 0_lu;
     auto horizontalScrollbarHeight = 0_lu;
     auto leftScrollbarSpace = 0_lu;

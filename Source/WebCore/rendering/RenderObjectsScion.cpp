@@ -1043,6 +1043,7 @@ extern "C" void RenderBoxScion_applyTransform(const void*, void*, const void*, F
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRect(const void*);
 
 extern "C" LayoutRectRaw RenderBoxScion_paddingBoxRectIncludingScrollbar(const void*);
+extern "C" LayoutRectRaw RenderBoxScion_contentBoxRect(const void*);
 
 extern "C" int32_t RenderBoxScion_offsetWidth(const void*);
 
@@ -3438,6 +3439,11 @@ LayoutRect RenderBoxScion::paddingBoxRect() const
 LayoutRect RenderBoxScion::paddingBoxRectIncludingScrollbar() const
 {
     return convertLayoutRectRaw(RenderBoxScion_paddingBoxRectIncludingScrollbar(m_handle));
+}
+
+LayoutRect RenderBoxScion::contentBoxRect() const
+{
+    return convertLayoutRectRaw(RenderBoxScion_contentBoxRect(m_handle));
 }
 
 LayoutUnit RenderBoxScion::offsetWidth() const
