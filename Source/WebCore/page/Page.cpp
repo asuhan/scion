@@ -294,6 +294,13 @@ WebCore::LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 
 } // namespace
 
+extern "C" WEBCORE_EXPORT void Page_addRelevantUnpaintedObject(void* raw, const void* objectRaw, LayoutRectRaw objectPaintRectRaw)
+{
+    const auto& object = *static_cast<const WebCore::RenderObject*>(objectRaw);
+    const auto objectPaintRect = convertLayoutRectRaw(objectPaintRectRaw);
+    static_cast<WebCore::Page*>(raw)->addRelevantUnpaintedObject(object, objectPaintRect);
+}
+
 extern "C" WEBCORE_EXPORT void Page_addRelevantRepaintedObject(void* raw, const void* objectRaw, LayoutRectRaw objectPaintRectRaw)
 {
     const auto& object = *static_cast<const WebCore::RenderObject*>(objectRaw);

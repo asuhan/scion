@@ -2112,6 +2112,7 @@ bool Page_useSystemAppearance(const void*);
 uint8_t Page_preferredFilterRenderingModes(const void*);
 bool Page_isVisible(const void*);
 bool Page_isInWindow(const void*);
+void Page_addRelevantUnpaintedObject(void*, const void*, struct LayoutRectRaw);
 void Page_addRelevantRepaintedObject(void*, const void*, struct LayoutRectRaw);
 bool Page_hasEverSetVisibilityAdjustment(const void*);
 const void* FilterOperations_create();

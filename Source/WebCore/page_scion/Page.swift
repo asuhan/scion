@@ -78,8 +78,8 @@ class PageWrapper {
   }
 
   func addRelevantUnpaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Page_addRelevantUnpaintedObject(
+      p, wkRenderObject(object), convertLayoutRect(objectPaintRect))
   }
 
   func compositingPolicyOverride() -> CompositingPolicy? {
