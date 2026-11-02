@@ -288,8 +288,8 @@ class PaintInfoWrapper {
   // the layer object that originates the current painting
   var paintContainer: RenderLayerModelObjectWrapper? {
     if n == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      guard let raw = wk_interop.PaintInfo_paintContainer(p!) else { return nil }
+      return createRenderObjectWrapperOrNative(raw) as! RenderLayerModelObjectWrapper?
     }
     return n!.paintContainer
   }
