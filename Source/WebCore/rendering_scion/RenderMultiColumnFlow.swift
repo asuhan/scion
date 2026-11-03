@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   init(document: Document, style: RenderStyleWrapper) {
     super.init(.MultiColumnFlow, document, style)
@@ -92,8 +94,12 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   func findColumnSpannerPlaceholder(spanner: RenderBoxWrapper)
     -> RenderMultiColumnSpannerPlaceholderWrapper?
   {
-    assert(isNativeImpl())
-    return spannerMap[CPtrToInt(spanner.id())]
+    // The spanner map is maintained by the C++ tree builder, on the WebKit twin for Scion objects.
+    guard
+      let placeholderRaw = wk_interop.RenderMultiColumnFlow_findColumnSpannerPlaceholder(
+        wkRenderObject(self), wkRenderObject(spanner))
+    else { return nil }
+    return RenderMultiColumnSpannerPlaceholderWrapper(p: placeholderRaw)
   }
 
   override func layout() {

@@ -871,6 +871,7 @@ bool RenderObject_isHTMLMarquee(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
 bool RenderObject_fragmentedFlowState(const void*);
+void* RenderMultiColumnFlow_findColumnSpannerPlaceholder(const void*, const void*);
 unsigned LayerFragments_size(const void*);
 void LayerFragments_append(void*, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t);
 void RenderObject_setFragmentedFlowStateIncludingDescendants(void*, bool, bool);
