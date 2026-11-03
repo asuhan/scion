@@ -98,8 +98,9 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isValid)
+    return m_renderBoxFragmentInfo[CPtrToInt(box.id())]
   }
 
   @discardableResult
@@ -107,23 +108,32 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     _ box: RenderBoxWrapper, _ logicalLeftInset: LayoutUnit, _ logicalRightInset: LayoutUnit,
     _ containingBlockChainIsInset: Bool
   ) -> RenderBoxFragmentInfo? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isValid)
+
+    let key = CPtrToInt(box.id())
+    if let boxInfo = m_renderBoxFragmentInfo[key] {
+      return boxInfo
+    }
+    let boxInfo = RenderBoxFragmentInfo(
+      logicalLeftInset, logicalRightInset, containingBlockChainIsInset)
+    m_renderBoxFragmentInfo[key] = boxInfo
+    return boxInfo
   }
 
   func takeRenderBoxFragmentInfo(_ box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_renderBoxFragmentInfo.removeValue(forKey: CPtrToInt(box.id()))
   }
 
   func removeRenderBoxFragmentInfo(_ box: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_renderBoxFragmentInfo.removeValue(forKey: CPtrToInt(box.id()))
   }
 
   func deleteAllRenderBoxFragmentInfo() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_renderBoxFragmentInfo.removeAll()
   }
 
   func isFirstFragment() -> Bool {
@@ -160,13 +170,13 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return m_fragmentedFlow!.isHorizontalWritingMode() ? contentHeight() : contentWidth()
   }
 
-  private func logicalTopOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
+  func logicalTopOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     assert(isValid)
     return fragmentedFlow()!.isHorizontalWritingMode() ? rect.y() : rect.x()
   }
 
-  private func logicalBottomOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
+  func logicalBottomOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     assert(isValid)
     return fragmentedFlow()!.isHorizontalWritingMode() ? rect.maxY() : rect.maxX()
@@ -563,6 +573,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
   var m_fragmentedFlow: RenderFragmentedFlowWrapper? = nil
 
+  private var m_renderBoxFragmentInfo: [UInt: RenderBoxFragmentInfo] = [:]
+
   private var m_fragmentedFlowPortionRect = LayoutRectWrapper()
 
   var isValid = false
@@ -584,5 +596,5 @@ class CurrentRenderFragmentContainerMaintainer {
     fragmentedFlow.currentFragmentMaintainer = nil
   }
 
-  private let fragment: RenderFragmentContainerWrapper
+  let fragment: RenderFragmentContainerWrapper
 }

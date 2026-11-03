@@ -37,6 +37,32 @@ private func clamp(fragment: RenderFragmentContainerWrapper?, clampBox: RenderBo
   return clampBox != nil ? clampBox!.clampToStartAndEndFragments(fragment: fragment) : fragment
 }
 
+// The subset of WTF's HashMap keyed by a box that the fragmented flow needs. The generic HashMap
+// is not available in Swift yet; key by the renderer identity, like the other Scion maps.
+private final class RenderBoxMap<MappedType> {
+  struct AddResult {
+    let isNewEntry: Bool
+    let value: MappedType?
+  }
+
+  func contains(_ box: RenderBoxWrapper) -> Bool { return m_impl[CPtrToInt(box.id())] != nil }
+
+  func get(_ box: RenderBoxWrapper) -> MappedType { return m_impl[CPtrToInt(box.id())]! }
+
+  // Like HashMap::set, the result refers to the stored (new) value.
+  @discardableResult
+  func set(_ box: RenderBoxWrapper, _ mapped: MappedType) -> AddResult {
+    let isNewEntry = m_impl.updateValue(mapped, forKey: CPtrToInt(box.id())) == nil
+    return AddResult(isNewEntry: isNewEntry, value: mapped)
+  }
+
+  func remove(_ box: RenderBoxWrapper) { m_impl.removeValue(forKey: CPtrToInt(box.id())) }
+
+  func clear() { m_impl.removeAll() }
+
+  private var m_impl: [UInt: MappedType] = [:]
+}
+
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   init(_ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper) {
     super.init(type: type, document: document, style: style, flags: .IsFragmentedFlow)
@@ -61,13 +87,58 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func removeFlowChildInfo(_ child: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let blockFlow = child as? RenderBlockFlowWrapper {
+      removeLineFragmentInfo(blockFlow: blockFlow)
+    }
+    if let box = child as? RenderBoxWrapper {
+      removeRenderBoxFragmentInfo(box: box)
+    }
   }
 
   override func deleteLines() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    clearLinesToFragmentMap()
+    super.deleteLines()
+  }
+
+  private func removeLineFragmentInfo(blockFlow: RenderBlockFlowWrapper) {
+    assert(isNativeImpl())
+    // The map is only populated by legacy line layout, which Scion doesn't use.
+    assert(lineToFragmentMap == nil)
+  }
+
+  private func clearLinesToFragmentMap() {
+    assert(isNativeImpl())
+    lineToFragmentMap?.clear()
+  }
+
+  func removeRenderBoxFragmentInfo(box: RenderBoxWrapper) {
+    assert(isNativeImpl())
+    if !hasFragments() {
+      return
+    }
+
+    // If the fragment chain was invalidated the next layout will clear the box information from all the fragments.
+    if fragmentsInvalidated {
+      assert(selfNeedsLayout())
+      return
+    }
+
+    if let (startFragment, endFragment) = getFragmentRangeForBox(box: box) {
+      let iter = fragmentList.find(value: startFragment)
+      let end = fragmentList.end()
+      while iter != end {
+        let fragment = *iter
+        fragment.removeRenderBoxFragmentInfo(box)
+        if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
+          break
+        }
+        ++iter
+      }
+    }
+
+    fragmentRangeMap.remove(box)
   }
 
   func removeFragmentFromThread(_ renderFragmentContainer: RenderFragmentContainerWrapper) {
@@ -76,8 +147,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func renderFragmentContainerList() -> RenderFragmentContainerList {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return fragmentList
   }
 
   override func updateLogicalWidth() {
@@ -853,8 +924,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func currentFragment() -> RenderFragmentContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return currentFragmentMaintainer?.fragment
   }
 
   // FIXME: Eventually as column and fragment flow threads start nesting, this may end up changing.
@@ -1024,15 +1095,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private let lineToFragmentMap: ContainingFragmentMap? = nil
 
   // Map a box to the list of fragments in which the box is rendered.
-  private typealias RenderFragmentContainerRangeMap = HashMap<
-    RenderBoxWrapper, RenderFragmentContainerRange
-  >
+  private typealias RenderFragmentContainerRangeMap = RenderBoxMap<RenderFragmentContainerRange>
   private lazy var fragmentRangeMap = RenderFragmentContainerRangeMap()
 
   // Map a box with a fragment break to the auto height fragment affected by that break.
-  private typealias RenderBoxToFragmentMap = HashMap<
-    RenderBoxWrapper, RenderFragmentContainerWrapper
-  >
+  private typealias RenderBoxToFragmentMap = RenderBoxMap<RenderFragmentContainerWrapper>
   private lazy var breakBeforeToFragmentMap = RenderBoxToFragmentMap()
   private lazy var breakAfterToFragmentMap = RenderBoxToFragmentMap()
 
