@@ -26,10 +26,12 @@
 #pragma once
 
 #include "RenderFragmentedFlow.h"
+#include "RenderObjectsScion.h"
 #include <wtf/HashMap.h>
 
 namespace WebCore {
 
+class RenderMultiColumnFlowScion;
 class RenderMultiColumnSet;
 class RenderMultiColumnSpannerPlaceholder;
 
@@ -37,15 +39,26 @@ class RenderMultiColumnFlow final : public RenderFragmentedFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderMultiColumnFlow);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderMultiColumnFlow);
 public:
+    void setScionHandle(void* handle);
+
     RenderMultiColumnFlow(Document&, RenderStyle&&);
     virtual ~RenderMultiColumnFlow();
 
-    RenderBlockFlow* multiColumnBlockFlow() const { return downcast<RenderBlockFlow>(parent()); }
+    RenderBlockFlow* multiColumnBlockFlow() const
+    {
+        if (m_scion) { return m_scion->multiColumnBlockFlow(); }
+        return downcast<RenderBlockFlow>(parent());
+    }
 
     RenderMultiColumnSet* firstMultiColumnSet() const;
     RenderMultiColumnSet* lastMultiColumnSet() const;
     RenderBox* firstColumnSetOrSpanner() const;
-    bool hasColumnSpanner() const { return !m_spannerMap.isEmpty(); }
+    bool hasColumnSpanner() const
+    {
+        // NB(asuhan): the spanner map is maintained by the C++ tree builder on the WebKit twin of
+        // Scion objects too, so there's nothing to route here.
+        return !m_spannerMap.isEmpty();
+    }
     static RenderBox* nextColumnSetOrSpannerSiblingOf(const RenderBox*);
     static RenderBox* previousColumnSetOrSpannerSiblingOf(const RenderBox*);
 
@@ -53,28 +66,81 @@ public:
 
     void layout() override;
 
-    unsigned columnCount() const { return m_columnCount; }
-    LayoutUnit columnWidth() const { return m_columnWidth; }
-    LayoutUnit columnHeightAvailable() const { return m_columnHeightAvailable; }
-    void setColumnHeightAvailable(LayoutUnit available) { m_columnHeightAvailable = available; }
-    bool inBalancingPass() const { return m_inBalancingPass; }
-    void setInBalancingPass(bool balancing) { m_inBalancingPass = balancing; }
-    bool needsHeightsRecalculation() const { return m_needsHeightsRecalculation; }
-    void setNeedsHeightsRecalculation(bool recalculate) { m_needsHeightsRecalculation = recalculate; }
+    unsigned columnCount() const
+    {
+        if (m_scion) { return m_scion->columnCount(); }
+        return m_columnCount;
+    }
+    LayoutUnit columnWidth() const
+    {
+        if (m_scion) { return m_scion->columnWidth(); }
+        return m_columnWidth;
+    }
+    LayoutUnit columnHeightAvailable() const
+    {
+        if (m_scion) { return m_scion->columnHeightAvailable(); }
+        return m_columnHeightAvailable;
+    }
+    void setColumnHeightAvailable(LayoutUnit available)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_columnHeightAvailable = available;
+    }
+    bool inBalancingPass() const
+    {
+        if (m_scion) { return m_scion->inBalancingPass(); }
+        return m_inBalancingPass;
+    }
+    void setInBalancingPass(bool balancing)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_inBalancingPass = balancing;
+    }
+    bool needsHeightsRecalculation() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_needsHeightsRecalculation;
+    }
+    void setNeedsHeightsRecalculation(bool recalculate)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_needsHeightsRecalculation = recalculate;
+    }
 
-    bool shouldRelayoutForPagination() const { return !m_inBalancingPass && m_needsHeightsRecalculation; }
+    bool shouldRelayoutForPagination() const
+    {
+        if (m_scion) { return m_scion->shouldRelayoutForPagination(); }
+        return !m_inBalancingPass && m_needsHeightsRecalculation;
+    }
 
     void setColumnCountAndWidth(unsigned count, LayoutUnit width)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         m_columnCount = count;
         m_columnWidth = width;
     }
 
-    bool progressionIsInline() const { return m_progressionIsInline; }
-    void setProgressionIsInline(bool progressionIsInline) { m_progressionIsInline = progressionIsInline; }
+    bool progressionIsInline() const
+    {
+        if (m_scion) { return m_scion->progressionIsInline(); }
+        return m_progressionIsInline;
+    }
+    void setProgressionIsInline(bool progressionIsInline)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_progressionIsInline = progressionIsInline;
+    }
 
-    bool progressionIsReversed() const { return m_progressionIsReversed; }
-    void setProgressionIsReversed(bool reversed) { m_progressionIsReversed = reversed; }
+    bool progressionIsReversed() const
+    {
+        if (m_scion) { return m_scion->progressionIsReversed(); }
+        return m_progressionIsReversed;
+    }
+    void setProgressionIsReversed(bool reversed)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_progressionIsReversed = reversed;
+    }
 
     RenderFragmentContainer* mapFromFlowToFragment(TransformState&) const final;
 
@@ -97,7 +163,12 @@ public:
     bool shouldCheckColumnBreaks() const override;
 
     using SpannerMap = HashMap<SingleThreadWeakRef<const RenderBox>, SingleThreadWeakPtr<RenderMultiColumnSpannerPlaceholder>>;
-    SpannerMap& spannerMap() { return m_spannerMap; }
+    SpannerMap& spannerMap()
+    {
+        // NB(asuhan): the spanner map is maintained by the C++ tree builder on the WebKit twin of
+        // Scion objects too, so there's nothing to route here.
+        return m_spannerMap;
+    }
 
 private:
     ASCIILiteral renderName() const override;
@@ -132,6 +203,8 @@ private:
     
     bool m_progressionIsInline { false };
     bool m_progressionIsReversed { false };
+
+    std::unique_ptr<RenderMultiColumnFlowScion> m_scion;
 };
 
 } // namespace WebCore

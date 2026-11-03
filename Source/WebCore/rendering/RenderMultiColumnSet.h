@@ -28,10 +28,12 @@
 #include "LayerFragment.h"
 #include "RenderFragmentContainerSet.h"
 #include "RenderMultiColumnFlow.h"
+#include "RenderObjectsScion.h"
 #include <wtf/Vector.h>
 
 namespace WebCore {
 
+class RenderMultiColumnSetScion;
 // RenderMultiColumnSet represents a set of columns that all have the same width and height. By combining runs of same-size columns into a single
 // object, we significantly reduce the number of unique RenderObjects required to represent columns.
 //
@@ -46,11 +48,21 @@ class RenderMultiColumnSet final : public RenderFragmentContainerSet {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderMultiColumnSet);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderMultiColumnSet);
 public:
+    void setScionHandle(void* handle);
+
     RenderMultiColumnSet(RenderFragmentedFlow&, RenderStyle&&);
     virtual ~RenderMultiColumnSet();
 
-    RenderBlockFlow* multiColumnBlockFlow() const { return downcast<RenderBlockFlow>(parent()); }
-    RenderMultiColumnFlow* multiColumnFlow() const { return static_cast<RenderMultiColumnFlow*>(fragmentedFlow()); }
+    RenderBlockFlow* multiColumnBlockFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return downcast<RenderBlockFlow>(parent());
+    }
+    RenderMultiColumnFlow* multiColumnFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return static_cast<RenderMultiColumnFlow*>(fragmentedFlow());
+    }
 
     RenderMultiColumnSet* nextSiblingMultiColumnSet() const;
     RenderMultiColumnSet* previousSiblingMultiColumnSet() const;
@@ -64,29 +76,67 @@ public:
     bool containsRendererInFragmentedFlow(const RenderObject&) const;
 
     void setLogicalTopInFragmentedFlow(LayoutUnit);
-    LayoutUnit logicalTopInFragmentedFlow() const { return isHorizontalWritingMode() ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x(); }
+    LayoutUnit logicalTopInFragmentedFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x();
+    }
     void setLogicalBottomInFragmentedFlow(LayoutUnit);
-    LayoutUnit logicalBottomInFragmentedFlow() const { return isHorizontalWritingMode() ? fragmentedFlowPortionRect().maxY() : fragmentedFlowPortionRect().maxX(); }
-    LayoutUnit logicalHeightInFragmentedFlow() const { return isHorizontalWritingMode() ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width(); }
+    LayoutUnit logicalBottomInFragmentedFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? fragmentedFlowPortionRect().maxY() : fragmentedFlowPortionRect().maxX();
+    }
+    LayoutUnit logicalHeightInFragmentedFlow() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return isHorizontalWritingMode() ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width();
+    }
 
-    unsigned computedColumnCount() const { return m_computedColumnCount; }
-    LayoutUnit computedColumnWidth() const { return m_computedColumnWidth; }
-    LayoutUnit computedColumnHeight() const { return m_computedColumnHeight; }
-    bool columnHeightComputed() const { return m_columnHeightComputed; }
+    unsigned computedColumnCount() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_computedColumnCount;
+    }
+    LayoutUnit computedColumnWidth() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_computedColumnWidth;
+    }
+    LayoutUnit computedColumnHeight() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_computedColumnHeight;
+    }
+    bool columnHeightComputed() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_columnHeightComputed;
+    }
 
     void setComputedColumnWidthAndCount(LayoutUnit width, unsigned count)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         m_computedColumnWidth = width;
         m_computedColumnCount = count;
     }
 
     LayoutUnit heightAdjustedForSetOffset(LayoutUnit height) const;
 
-    void updateMinimumColumnHeight(LayoutUnit height) { m_minimumColumnHeight = std::max(height, m_minimumColumnHeight); }
-    LayoutUnit minimumColumnHeight() const { return m_minimumColumnHeight; }
+    void updateMinimumColumnHeight(LayoutUnit height)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_minimumColumnHeight = std::max(height, m_minimumColumnHeight);
+    }
+    LayoutUnit minimumColumnHeight() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_minimumColumnHeight;
+    }
 
     void updateSpaceShortageForSizeContainment(LayoutUnit shortage)
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         if (m_spaceShortageForSizeContainment <= 0) {
             m_spaceShortageForSizeContainment = shortage;
             return;
@@ -94,7 +144,11 @@ public:
         m_spaceShortageForSizeContainment = std::min(shortage, m_spaceShortageForSizeContainment);
     }
 
-    unsigned forcedBreaksCount() const { return m_contentRuns.size(); }
+    unsigned forcedBreaksCount() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_contentRuns.size();
+    }
     void clearForcedBreaks();
     void addForcedBreak(LayoutUnit offsetFromFirstPage);
 
@@ -121,7 +175,11 @@ public:
     // when advancing to the next column set or spanner.
     void endFlow(RenderBlock* container, LayoutUnit bottomInContainer);
     // Has this set been flowed in this layout pass?
-    bool hasBeenFlowed() const { return logicalBottomInFragmentedFlow() != RenderFragmentedFlow::maxLogicalHeight(); }
+    bool hasBeenFlowed() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return logicalBottomInFragmentedFlow() != RenderFragmentedFlow::maxLogicalHeight();
+    }
 
     bool requiresBalancing() const;
 
@@ -151,14 +209,29 @@ private:
 
     LogicalExtentComputedValues computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const override;
 
-    void paintObject(PaintInfo&, const LayoutPoint&) override { }
+    void paintObject(PaintInfo&, const LayoutPoint&) override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
-    LayoutUnit pageLogicalWidth() const override { return m_computedColumnWidth; }
-    LayoutUnit pageLogicalHeight() const override { return m_computedColumnHeight; }
+    LayoutUnit pageLogicalWidth() const override
+    {
+        if (m_scion) { return m_scion->pageLogicalWidth(); }
+        return m_computedColumnWidth;
+    }
+    LayoutUnit pageLogicalHeight() const override
+    {
+        if (m_scion) { return m_scion->pageLogicalHeight(); }
+        return m_computedColumnHeight;
+    }
 
     LayoutUnit pageLogicalTopForOffset(LayoutUnit offset) const override;
 
-    LayoutUnit logicalHeightOfAllFragmentedFlowContent() const override { return logicalHeightInFragmentedFlow(); }
+    LayoutUnit logicalHeightOfAllFragmentedFlowContent() const override
+    {
+        if (m_scion) { return m_scion->logicalHeightOfAllFragmentedFlowContent(); }
+        return logicalHeightInFragmentedFlow();
+    }
 
     void repaintFragmentedFlowContent(const LayoutRect& repaintRect) const override;
 
@@ -239,6 +312,8 @@ private:
         unsigned m_assumedImplicitBreaks { 0 }; // Number of implicit breaks in this run assumed so far.
     };
     Vector<ContentRun, 1> m_contentRuns;
+
+    std::unique_ptr<RenderMultiColumnSetScion> m_scion;
 };
 
 } // namespace WebCore

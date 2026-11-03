@@ -44,6 +44,7 @@
 #include "RenderIterator.h"
 #include "RenderLayer.h"
 #include "RenderObjectInlines.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderView.h"
 #include "StyleResolver.h"
@@ -68,8 +69,15 @@ RenderFragmentContainer::RenderFragmentContainer(Type type, Document& document, 
 
 RenderFragmentContainer::~RenderFragmentContainer() = default;
 
+void RenderFragmentContainer::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderFragmentContainerScion>(handle);
+}
+
 LayoutPoint RenderFragmentContainer::mapFragmentPointIntoFragmentedFlowCoordinates(const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Assuming the point is relative to the fragment block, 3 cases will be considered:
     // a) top margin, padding or border.
     // b) bottom margin, padding or border.
@@ -118,28 +126,33 @@ VisiblePosition RenderFragmentContainer::positionForPoint(const LayoutPoint& poi
 
 LayoutUnit RenderFragmentContainer::pageLogicalWidth() const
 {
+    if (m_scion) { return m_scion->pageLogicalWidth(); }
     ASSERT(isValid());
     return m_fragmentedFlow->isHorizontalWritingMode() ? contentWidth() : contentHeight();
 }
 
 LayoutUnit RenderFragmentContainer::pageLogicalHeight() const
 {
+    if (m_scion) { return m_scion->pageLogicalHeight(); }
     ASSERT(isValid());
     return m_fragmentedFlow->isHorizontalWritingMode() ? contentHeight() : contentWidth();
 }
 
 LayoutUnit RenderFragmentContainer::logicalHeightOfAllFragmentedFlowContent() const
 {
+    if (m_scion) { return m_scion->logicalHeightOfAllFragmentedFlowContent(); }
     return pageLogicalHeight();
 }
 
 LayoutRect RenderFragmentContainer::fragmentedFlowPortionOverflowRect() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return overflowRectForFragmentedFlowPortion(fragmentedFlowPortionRect(), isFirstFragment(), isLastFragment());
 }
 
 LayoutPoint RenderFragmentContainer::fragmentedFlowPortionLocation() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutPoint portionLocation;
     LayoutRect portionRect = fragmentedFlowPortionRect();
 
@@ -155,6 +168,7 @@ LayoutPoint RenderFragmentContainer::fragmentedFlowPortionLocation() const
 
 LayoutRect RenderFragmentContainer::overflowRectForFragmentedFlowPortion(const LayoutRect& fragmentedFlowPortionRect, bool isFirstPortion, bool isLastPortion) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isValid());
     if (shouldClipFragmentedFlowContent())
         return fragmentedFlowPortionRect;
@@ -181,11 +195,13 @@ LayoutRect RenderFragmentContainer::overflowRectForFragmentedFlowPortion(const L
 
 LayoutUnit RenderFragmentContainer::pageLogicalTopForOffset(LayoutUnit /* offset */) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return fragmentedFlow()->isHorizontalWritingMode() ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x();
 }
 
 bool RenderFragmentContainer::isFirstFragment() const
 {
+    if (m_scion) { return m_scion->isFirstFragment(); }
     ASSERT(isValid());
 
     return m_fragmentedFlow->firstFragment() == this;
@@ -193,6 +209,7 @@ bool RenderFragmentContainer::isFirstFragment() const
 
 bool RenderFragmentContainer::isLastFragment() const
 {
+    if (m_scion) { return m_scion->isLastFragment(); }
     ASSERT(isValid());
 
     return m_fragmentedFlow->lastFragment() == this;
@@ -200,11 +217,13 @@ bool RenderFragmentContainer::isLastFragment() const
 
 bool RenderFragmentContainer::shouldClipFragmentedFlowContent() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return hasNonVisibleOverflow();
 }
 
 void RenderFragmentContainer::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::styleDidChange(diff, oldStyle);
 
     if (!isValid())
@@ -216,11 +235,13 @@ void RenderFragmentContainer::styleDidChange(StyleDifference diff, const RenderS
 
 void RenderFragmentContainer::repaintFragmentedFlowContent(const LayoutRect& repaintRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     repaintFragmentedFlowContentRectangle(repaintRect, fragmentedFlowPortionRect(), contentBoxRect().location());
 }
 
 void RenderFragmentContainer::repaintFragmentedFlowContentRectangle(const LayoutRect& repaintRect, const LayoutRect& fragmentedFlowPortionRect, const LayoutPoint& fragmentLocation, const LayoutRect* fragmentedFlowPortionClipRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isValid());
 
     // We only have to issue a repaint in this fragment if the fragment rect intersects the repaint rect.
@@ -250,6 +271,7 @@ void RenderFragmentContainer::repaintFragmentedFlowContentRectangle(const Layout
 
 LayoutRect RenderFragmentContainer::fragmentedFlowContentRectangle(const LayoutRect& rect, const LayoutRect& fragmentedFlowPortionRect, const LayoutPoint& fragmentLocation, const LayoutRect* fragmentedFlowPortionClipRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto clippedRect = rect;
 
     if (fragmentedFlowPortionClipRect) {
@@ -272,6 +294,7 @@ LayoutRect RenderFragmentContainer::fragmentedFlowContentRectangle(const LayoutR
 
 Vector<LayoutRect> RenderFragmentContainer::fragmentRectsForFlowContentRect(const LayoutRect& contentRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto portionRect = fragmentedFlowPortionRect();
     auto fragmentLocation = contentBoxRect().location();
     
@@ -288,11 +311,13 @@ Vector<LayoutRect> RenderFragmentContainer::fragmentRectsForFlowContentRect(cons
 
 void RenderFragmentContainer::installFragmentedFlow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT_NOT_REACHED();
 }
 
 void RenderFragmentContainer::attachFragment()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (renderTreeBeingDestroyed())
         return;
     
@@ -313,6 +338,7 @@ void RenderFragmentContainer::attachFragment()
 
 void RenderFragmentContainer::detachFragment()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_fragmentedFlow)
         m_fragmentedFlow->removeFragmentFromThread(*this);
     m_fragmentedFlow = nullptr;
@@ -320,6 +346,7 @@ void RenderFragmentContainer::detachFragment()
 
 RenderBoxFragmentInfo* RenderFragmentContainer::renderBoxFragmentInfo(const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isValid());
     return m_renderBoxFragmentInfo.get(box);
 }
@@ -327,6 +354,7 @@ RenderBoxFragmentInfo* RenderFragmentContainer::renderBoxFragmentInfo(const Rend
 RenderBoxFragmentInfo* RenderFragmentContainer::setRenderBoxFragmentInfo(const RenderBox& box, LayoutUnit logicalLeftInset, LayoutUnit logicalRightInset,
     bool containingBlockChainIsInset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(isValid());
 
     std::unique_ptr<RenderBoxFragmentInfo>& boxInfo = m_renderBoxFragmentInfo.add(box, makeUnique<RenderBoxFragmentInfo>(logicalLeftInset, logicalRightInset, containingBlockChainIsInset)).iterator->value;
@@ -335,33 +363,42 @@ RenderBoxFragmentInfo* RenderFragmentContainer::setRenderBoxFragmentInfo(const R
 
 std::unique_ptr<RenderBoxFragmentInfo> RenderFragmentContainer::takeRenderBoxFragmentInfo(const RenderBox* box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_renderBoxFragmentInfo.take(*box);
 }
 
 void RenderFragmentContainer::removeRenderBoxFragmentInfo(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_renderBoxFragmentInfo.remove(box);
 }
 
 void RenderFragmentContainer::deleteAllRenderBoxFragmentInfo()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_renderBoxFragmentInfo.clear();
 }
 
 LayoutUnit RenderFragmentContainer::logicalTopOfFragmentedFlowContentRect(const LayoutRect& rect) const
 {
+    if (m_scion) { return m_scion->logicalTopOfFragmentedFlowContentRect(rect); }
     ASSERT(isValid());
     return fragmentedFlow()->isHorizontalWritingMode() ? rect.y() : rect.x();
 }
 
 LayoutUnit RenderFragmentContainer::logicalBottomOfFragmentedFlowContentRect(const LayoutRect& rect) const
 {
+    if (m_scion) { return m_scion->logicalBottomOfFragmentedFlowContentRect(rect); }
     ASSERT(isValid());
     return fragmentedFlow()->isHorizontalWritingMode() ? rect.maxY() : rect.maxX();
 }
 
 void RenderFragmentContainer::insertedIntoTree()
 {
+    if (m_scion) {
+        RenderElement::insertedIntoTree();
+        return;
+    }
     attachFragment();
     if (isValid())
         RenderBlockFlow::insertedIntoTree();
@@ -369,6 +406,10 @@ void RenderFragmentContainer::insertedIntoTree()
 
 void RenderFragmentContainer::willBeRemovedFromTree()
 {
+    if (m_scion) {
+        RenderElement::willBeRemovedFromTree();
+        return;
+    }
     RenderBlockFlow::willBeRemovedFromTree();
 
     detachFragment();
@@ -376,6 +417,7 @@ void RenderFragmentContainer::willBeRemovedFromTree()
 
 void RenderFragmentContainer::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!isValid()) {
         RenderBlockFlow::computeIntrinsicLogicalWidths(minLogicalWidth, maxLogicalWidth);
         return;
@@ -386,6 +428,7 @@ void RenderFragmentContainer::computeIntrinsicLogicalWidths(LayoutUnit& minLogic
 
 void RenderFragmentContainer::computePreferredLogicalWidths()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(preferredLogicalWidthsDirty());
 
     if (!isValid()) {
@@ -410,6 +453,7 @@ void RenderFragmentContainer::computePreferredLogicalWidths()
 
 void RenderFragmentContainer::ensureOverflowForBox(const RenderBox& box, RefPtr<RenderOverflow>& overflow, bool forceCreation) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(m_fragmentedFlow->renderFragmentContainerList().contains(*this));
     ASSERT(isValid());
 
@@ -445,6 +489,7 @@ void RenderFragmentContainer::ensureOverflowForBox(const RenderBox& box, RefPtr<
 
 LayoutRect RenderFragmentContainer::rectFlowPortionForBox(const RenderBox& box, const LayoutRect& rect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect mappedRect = m_fragmentedFlow->mapFromLocalToFragmentedFlow(&box, rect);
 
     RenderFragmentContainer* startFragment = nullptr;
@@ -468,6 +513,7 @@ LayoutRect RenderFragmentContainer::rectFlowPortionForBox(const RenderBox& box, 
 
 void RenderFragmentContainer::addLayoutOverflowForBox(const RenderBox& box, const LayoutRect& rect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (rect.isEmpty())
         return;
 
@@ -482,6 +528,7 @@ void RenderFragmentContainer::addLayoutOverflowForBox(const RenderBox& box, cons
 
 void RenderFragmentContainer::addVisualOverflowForBox(const RenderBox& box, const LayoutRect& rect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (rect.isEmpty())
         return;
 
@@ -498,6 +545,7 @@ void RenderFragmentContainer::addVisualOverflowForBox(const RenderBox& box, cons
 
 LayoutRect RenderFragmentContainer::visualOverflowRectForBox(const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RefPtr<RenderOverflow> overflow;
     ensureOverflowForBox(box, overflow, true);
 
@@ -508,6 +556,7 @@ LayoutRect RenderFragmentContainer::visualOverflowRectForBox(const RenderBox& bo
 // FIXME: This doesn't work for writing modes.
 LayoutRect RenderFragmentContainer::layoutOverflowRectForBoxForPropagation(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Only propagate interior layout overflow if we don't clip it.
     LayoutRect rect = box.borderBoxRectInFragment(this);
     rect = rectFlowPortionForBox(box, rect);
@@ -532,6 +581,7 @@ LayoutRect RenderFragmentContainer::layoutOverflowRectForBoxForPropagation(const
 
 LayoutRect RenderFragmentContainer::visualOverflowRectForBoxForPropagation(const RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect rect = visualOverflowRectForBox(box);
     fragmentedFlow()->flipForWritingModeLocalCoordinates(rect);
 

@@ -41,6 +41,7 @@
 #include "RenderLayer.h"
 #include "RenderLayerCompositor.h"
 #include "RenderLayoutState.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderTableCell.h"
 #include "RenderTableSection.h"
@@ -68,8 +69,29 @@ RenderFragmentedFlow::RenderFragmentedFlow(Type type, Document& document, Render
 
 RenderFragmentedFlow::~RenderFragmentedFlow() = default;
 
+extern "C" WEBCORE_EXPORT unsigned LayerFragments_size(const void* p)
+{
+    return static_cast<const LayerFragments*>(p)->size();
+}
+
+// Fragmentation only provides the pagination offset and clip, RenderLayer sets the rects afterwards.
+extern "C" WEBCORE_EXPORT void LayerFragments_append(void* p, int32_t paginationOffsetWidth, int32_t paginationOffsetHeight, int32_t paginationClipX, int32_t paginationClipY, int32_t paginationClipWidth, int32_t paginationClipHeight)
+{
+    LayerFragment fragment;
+    fragment.paginationOffset = LayoutSize(LayoutUnit::fromRawValue(paginationOffsetWidth), LayoutUnit::fromRawValue(paginationOffsetHeight));
+    fragment.paginationClip = LayoutRect(LayoutUnit::fromRawValue(paginationClipX), LayoutUnit::fromRawValue(paginationClipY), LayoutUnit::fromRawValue(paginationClipWidth), LayoutUnit::fromRawValue(paginationClipHeight));
+    static_cast<LayerFragments*>(p)->append(fragment);
+}
+
+void RenderFragmentedFlow::setScionHandle(void* handle)
+{
+    RenderBlockFlow::setScionHandle(handle);
+    m_scion = std::make_unique<RenderFragmentedFlowScion>(handle);
+}
+
 void RenderFragmentedFlow::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow::styleDidChange(diff, oldStyle);
 
     if (oldStyle && oldStyle->writingMode() != style().writingMode())
@@ -78,6 +100,10 @@ void RenderFragmentedFlow::styleDidChange(StyleDifference diff, const RenderStyl
 
 void RenderFragmentedFlow::removeFlowChildInfo(RenderElement& child)
 {
+    if (m_scion) {
+        m_scion->removeFlowChildInfo(child);
+        return;
+    }
     if (CheckedPtr blockFlow = dynamicDowncast<RenderBlockFlow>(child))
         removeLineFragmentInfo(*blockFlow);
     if (CheckedPtr box = dynamicDowncast<RenderBox>(child))
@@ -86,11 +112,16 @@ void RenderFragmentedFlow::removeFlowChildInfo(RenderElement& child)
 
 void RenderFragmentedFlow::removeFragmentFromThread(RenderFragmentContainer& renderFragmentContainer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_fragmentList.remove(renderFragmentContainer);
 }
 
 void RenderFragmentedFlow::invalidateFragments(MarkingBehavior markingParents)
 {
+    if (m_scion) {
+        m_scion->invalidateFragments(markingParents);
+        return;
+    }
     if (m_fragmentsInvalidated) {
         ASSERT(selfNeedsLayout());
         return;
@@ -108,6 +139,7 @@ void RenderFragmentedFlow::invalidateFragments(MarkingBehavior markingParents)
 
 void RenderFragmentedFlow::validateFragments()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_fragmentsInvalidated) {
         m_fragmentsInvalidated = false;
         m_fragmentsHaveUniformLogicalWidth = true;
@@ -148,6 +180,10 @@ void RenderFragmentedFlow::validateFragments()
 
 void RenderFragmentedFlow::layout()
 {
+    if (m_scion) {
+        RenderBlock::layout();
+        return;
+    }
     StackStats::LayoutCheckPoint layoutCheckPoint;
 
     m_pageLogicalSizeChanged = m_fragmentsInvalidated && everHadLayout();
@@ -161,6 +197,7 @@ void RenderFragmentedFlow::layout()
 
 void RenderFragmentedFlow::updateLogicalWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalWidth = initialLogicalWidth();
     for (auto& fragment : m_fragmentList) {
         ASSERT(!fragment.needsLayout() || fragment.isRenderFragmentContainerSet());
@@ -178,6 +215,7 @@ void RenderFragmentedFlow::updateLogicalWidth()
 
 RenderBox::LogicalExtentComputedValues RenderFragmentedFlow::computeLogicalHeight(LayoutUnit, LayoutUnit logicalTop) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LogicalExtentComputedValues computedValues;
     computedValues.m_position = logicalTop;
     computedValues.m_extent = 0;
@@ -198,6 +236,7 @@ RenderBox::LogicalExtentComputedValues RenderFragmentedFlow::computeLogicalHeigh
 
 bool RenderFragmentedFlow::nodeAtPoint(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction hitTestAction)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (hitTestAction == HitTestBlockBackground)
         return false;
     return RenderBlockFlow::nodeAtPoint(request, result, locationInContainer, accumulatedOffset, hitTestAction);
@@ -205,6 +244,7 @@ bool RenderFragmentedFlow::nodeAtPoint(const HitTestRequest& request, HitTestRes
 
 bool RenderFragmentedFlow::shouldRepaint(const LayoutRect& r) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (view().printing() || r.isEmpty())
         return false;
 
@@ -213,6 +253,10 @@ bool RenderFragmentedFlow::shouldRepaint(const LayoutRect& r) const
 
 void RenderFragmentedFlow::repaintRectangleInFragments(const LayoutRect& repaintRect) const
 {
+    if (m_scion) {
+        m_scion->repaintRectangleInFragments(repaintRect);
+        return;
+    }
     if (!shouldRepaint(repaintRect) || !hasValidFragmentInfo())
         return;
 
@@ -224,6 +268,7 @@ void RenderFragmentedFlow::repaintRectangleInFragments(const LayoutRect& repaint
 
 bool RenderFragmentedFlow::absoluteQuadsForBox(Vector<FloatQuad>& quads, bool* wasFixed, const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasValidFragmentInfo())
         return false;
 
@@ -277,6 +322,7 @@ private:
 
 RenderFragmentContainer* RenderFragmentedFlow::fragmentAtBlockOffset(const RenderBox* clampBox, LayoutUnit offset, bool extendLastFragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(!m_fragmentsInvalidated);
 
     if (m_fragmentList.isEmptyIgnoringNullReferences())
@@ -307,18 +353,21 @@ RenderFragmentContainer* RenderFragmentedFlow::fragmentAtBlockOffset(const Rende
 
 LayoutUnit RenderFragmentedFlow::pageLogicalTopForOffset(LayoutUnit offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentContainer* fragment = fragmentAtBlockOffset(0, offset, false);
     return fragment ? fragment->pageLogicalTopForOffset(offset) : 0_lu;
 }
 
 LayoutUnit RenderFragmentedFlow::pageLogicalWidthForOffset(LayoutUnit offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentContainer* fragment = fragmentAtBlockOffset(0, offset, true);
     return fragment ? fragment->pageLogicalWidth() : contentLogicalWidth();
 }
 
 LayoutUnit RenderFragmentedFlow::pageLogicalHeightForOffset(LayoutUnit offset) const
 {
+    if (m_scion) { return m_scion->pageLogicalHeightForOffset(offset); }
     RenderFragmentContainer* fragment = fragmentAtBlockOffset(0, offset, false);
     if (!fragment)
         return 0;
@@ -328,6 +377,7 @@ LayoutUnit RenderFragmentedFlow::pageLogicalHeightForOffset(LayoutUnit offset) c
 
 LayoutUnit RenderFragmentedFlow::pageRemainingLogicalHeightForOffset(LayoutUnit offset, PageBoundaryRule pageBoundaryRule) const
 {
+    if (m_scion) { return m_scion->pageRemainingLogicalHeightForOffset(offset, pageBoundaryRule == RenderBlockFlow::IncludePageBoundary); }
     RenderFragmentContainer* fragment = fragmentAtBlockOffset(0, offset, false);
     if (!fragment)
         return 0;
@@ -352,6 +402,7 @@ LayoutUnit RenderFragmentedFlow::pageRemainingLogicalHeightForOffset(LayoutUnit 
 
 RenderFragmentContainer* RenderFragmentedFlow::mapFromFlowToFragment(TransformState& transformState) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasValidFragmentInfo())
         return nullptr;
 
@@ -376,6 +427,7 @@ RenderFragmentContainer* RenderFragmentedFlow::mapFromFlowToFragment(TransformSt
 
 void RenderFragmentedFlow::removeRenderBoxFragmentInfo(RenderBox& box)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasFragments())
         return;
 
@@ -407,6 +459,7 @@ void RenderFragmentedFlow::removeRenderBoxFragmentInfo(RenderBox& box)
 
 void RenderFragmentedFlow::removeLineFragmentInfo(const RenderBlockFlow& blockFlow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_lineToFragmentMap)
         return;
 
@@ -418,6 +471,10 @@ void RenderFragmentedFlow::removeLineFragmentInfo(const RenderBlockFlow& blockFl
 
 void RenderFragmentedFlow::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren)
 {
+    if (m_scion) {
+        m_scion->logicalWidthChangedInFragmentsForBlock(block, relayoutChildren);
+        return;
+    }
     if (!hasValidFragmentInfo())
         return;
 
@@ -471,6 +528,7 @@ void RenderFragmentedFlow::logicalWidthChangedInFragmentsForBlock(const RenderBl
 
 LayoutUnit RenderFragmentedFlow::contentLogicalWidthOfFirstFragment() const
 {
+    if (m_scion) { return m_scion->contentLogicalWidthOfFirstFragment(); }
     RenderFragmentContainer* firstValidFragmentInFlow = firstFragment();
     if (!firstValidFragmentInFlow)
         return 0;
@@ -479,6 +537,7 @@ LayoutUnit RenderFragmentedFlow::contentLogicalWidthOfFirstFragment() const
 
 LayoutUnit RenderFragmentedFlow::contentLogicalHeightOfFirstFragment() const
 {
+    if (m_scion) { return m_scion->contentLogicalHeightOfFirstFragment(); }
     RenderFragmentContainer* firstValidFragmentInFlow = firstFragment();
     if (!firstValidFragmentInFlow)
         return 0;
@@ -487,6 +546,7 @@ LayoutUnit RenderFragmentedFlow::contentLogicalHeightOfFirstFragment() const
 
 LayoutUnit RenderFragmentedFlow::contentLogicalLeftOfFirstFragment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentContainer* firstValidFragmentInFlow = firstFragment();
     if (!firstValidFragmentInFlow)
         return 0;
@@ -495,6 +555,7 @@ LayoutUnit RenderFragmentedFlow::contentLogicalLeftOfFirstFragment() const
 
 RenderFragmentContainer* RenderFragmentedFlow::firstFragment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasFragments())
         return nullptr;
     return const_cast<RenderFragmentContainer*>(&m_fragmentList.first());
@@ -502,6 +563,7 @@ RenderFragmentContainer* RenderFragmentedFlow::firstFragment() const
 
 RenderFragmentContainer* RenderFragmentedFlow::lastFragment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasFragments())
         return nullptr;
     return const_cast<RenderFragmentContainer*>(&m_fragmentList.last());
@@ -511,6 +573,7 @@ void RenderFragmentedFlow::clearRenderBoxFragmentInfoAndCustomStyle(const Render
     const RenderFragmentContainer* newStartFragment, const RenderFragmentContainer* newEndFragment,
     const RenderFragmentContainer* oldStartFragment, const RenderFragmentContainer* oldEndFragment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(newStartFragment && newEndFragment && oldStartFragment && oldEndFragment);
 
     bool insideOldFragmentRange = false;
@@ -535,6 +598,7 @@ void RenderFragmentedFlow::clearRenderBoxFragmentInfoAndCustomStyle(const Render
 
 void RenderFragmentedFlow::setFragmentRangeForBox(const RenderBox& box, RenderFragmentContainer* startFragment, RenderFragmentContainer* endFragment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasFragments());
     ASSERT(startFragment && endFragment && startFragment->fragmentedFlow() == this && endFragment->fragmentedFlow() == this);
     auto result = m_fragmentRangeMap.set(box, RenderFragmentContainerRange(startFragment, endFragment));
@@ -550,11 +614,13 @@ void RenderFragmentedFlow::setFragmentRangeForBox(const RenderBox& box, RenderFr
 
 bool RenderFragmentedFlow::hasCachedFragmentRangeForBox(const RenderBox& box) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_fragmentRangeMap.contains(&box);
 }
 
 bool RenderFragmentedFlow::getFragmentRangeForBoxFromCachedInfo(const RenderBox& box, RenderFragmentContainer*& startFragment, RenderFragmentContainer*& endFragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(hasValidFragmentInfo());
     ASSERT((startFragment == nullptr) && (endFragment == nullptr));
 
@@ -572,6 +638,7 @@ bool RenderFragmentedFlow::getFragmentRangeForBoxFromCachedInfo(const RenderBox&
 
 bool RenderFragmentedFlow::getFragmentRangeForBox(const RenderBox& box, RenderFragmentContainer*& startFragment, RenderFragmentContainer*& endFragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     startFragment = endFragment = nullptr;
     if (!hasValidFragmentInfo()) // We clear the ranges when we invalidate the fragments.
         return false;
@@ -589,6 +656,7 @@ bool RenderFragmentedFlow::getFragmentRangeForBox(const RenderBox& box, RenderFr
 
 bool RenderFragmentedFlow::computedFragmentRangeForBox(const RenderBox& box, RenderFragmentContainer*& startFragment, RenderFragmentContainer*& endFragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     startFragment = endFragment = nullptr;
     if (!hasValidFragmentInfo()) // We clear the ranges when we invalidate the fragments.
         return false;
@@ -619,6 +687,7 @@ bool RenderFragmentedFlow::computedFragmentRangeForBox(const RenderBox& box, Ren
 
 bool RenderFragmentedFlow::fragmentInRange(const RenderFragmentContainer* targetFragment, const RenderFragmentContainer* startFragment, const RenderFragmentContainer* endFragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(targetFragment);
 
     for (auto it = m_fragmentList.find(*startFragment), end = m_fragmentList.end(); it != end; ++it) {
@@ -634,6 +703,7 @@ bool RenderFragmentedFlow::fragmentInRange(const RenderFragmentContainer* target
 
 bool RenderFragmentedFlow::objectShouldFragmentInFlowFragment(const RenderObject* object, const RenderFragmentContainer* fragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(object);
     ASSERT(fragment);
     
@@ -657,6 +727,7 @@ bool RenderFragmentedFlow::objectShouldFragmentInFlowFragment(const RenderObject
 
 bool RenderFragmentedFlow::objectInFlowFragment(const RenderObject* object, const RenderFragmentContainer* fragment) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     ASSERT(object);
     ASSERT(fragment);
 
@@ -705,6 +776,7 @@ bool RenderFragmentedFlow::objectInFlowFragment(const RenderObject* object, cons
 #if !ASSERT_WITH_SECURITY_IMPLICATION_DISABLED
 bool RenderFragmentedFlow::checkLinesConsistency(const RenderBlockFlow& removedBlock) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_lineToFragmentMap)
         return true;
 
@@ -725,24 +797,34 @@ bool RenderFragmentedFlow::checkLinesConsistency(const RenderBlockFlow& removedB
 
 void RenderFragmentedFlow::clearLinesToFragmentMap()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (m_lineToFragmentMap)
         m_lineToFragmentMap->clear();
 }
 
 void RenderFragmentedFlow::deleteLines()
 {
+    if (m_scion) {
+        RenderBlockFlow::deleteLines();
+        return;
+    }
     clearLinesToFragmentMap();
     RenderBlockFlow::deleteLines();
 }
 
 void RenderFragmentedFlow::willBeDestroyed()
 {
+    if (m_scion) {
+        RenderBlockFlow::willBeDestroyed();
+        return;
+    }
     clearLinesToFragmentMap();
     RenderBlockFlow::willBeDestroyed();
 }
 
 void RenderFragmentedFlow::markFragmentsForOverflowLayoutIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!hasFragments())
         return;
 
@@ -752,6 +834,7 @@ void RenderFragmentedFlow::markFragmentsForOverflowLayoutIfNeeded()
 
 void RenderFragmentedFlow::updateFragmentsFragmentedFlowPortionRect()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit logicalHeight;
     // FIXME: Optimize not to clear the interval tree all the time. This would involve manually managing the tree nodes' lifecycle.
     m_fragmentIntervalTree.clear();
@@ -774,6 +857,7 @@ void RenderFragmentedFlow::updateFragmentsFragmentedFlowPortionRect()
 // offsetBreakAdjustment measures the different between the requested break offset and the current break offset.
 bool RenderFragmentedFlow::addForcedFragmentBreak(const RenderBlock* block, LayoutUnit offsetBreakInFragmentedFlow, RenderBox*, bool, LayoutUnit* offsetBreakAdjustment)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We need to update the fragments flow thread portion rect because we are going to process
     // a break on these fragments.
     updateFragmentsFragmentedFlowPortionRect();
@@ -796,6 +880,10 @@ bool RenderFragmentedFlow::addForcedFragmentBreak(const RenderBlock* block, Layo
 
 void RenderFragmentedFlow::collectLayerFragments(LayerFragments& layerFragments, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect)
 {
+    if (m_scion) {
+        m_scion->collectLayerFragments(&layerFragments, layerBoundingBox, dirtyRect);
+        return;
+    }
     ASSERT(!m_fragmentsInvalidated);
     
     for (auto& fragment : m_fragmentList)
@@ -804,6 +892,7 @@ void RenderFragmentedFlow::collectLayerFragments(LayerFragments& layerFragments,
 
 LayoutRect RenderFragmentedFlow::fragmentsBoundingBox(const LayoutRect& layerBoundingBox)
 {
+    if (m_scion) { return m_scion->fragmentsBoundingBox(layerBoundingBox); }
     ASSERT(!m_fragmentsInvalidated);
     
     LayoutRect result;
@@ -823,6 +912,7 @@ LayoutRect RenderFragmentedFlow::fragmentsBoundingBox(const LayoutRect& layerBou
 
 LayoutUnit RenderFragmentedFlow::offsetFromLogicalTopOfFirstFragment(const RenderBlock* currentBlock) const
 {
+    if (m_scion) { return m_scion->offsetFromLogicalTopOfFirstFragment(currentBlock); }
     // As a last resort, take the slow path.
     LayoutRect blockRect(0_lu, 0_lu, currentBlock->width(), currentBlock->height());
     while (currentBlock && !is<RenderView>(*currentBlock) && !currentBlock->isRenderFragmentedFlow()) {
@@ -856,6 +946,10 @@ LayoutUnit RenderFragmentedFlow::offsetFromLogicalTopOfFirstFragment(const Rende
 
 void RenderFragmentedFlow::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) {
+        RenderBox::mapLocalToContainer(ancestorContainer, transformState, mode, wasFixed);
+        return;
+    }
     if (this == ancestorContainer)
         return;
 
@@ -884,6 +978,7 @@ void RenderFragmentedFlow::mapLocalToContainer(const RenderLayerModelObject* anc
 // FIXME: Make this function faster. Walking the render tree is slow, better use a caching mechanism (e.g. |cachedOffsetFromLogicalTopOfFirstFragment|).
 LayoutRect RenderFragmentedFlow::mapFromLocalToFragmentedFlow(const RenderBox* box, const LayoutRect& localRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect boxRect = localRect;
 
     while (box && box != this) {
@@ -906,6 +1001,7 @@ LayoutRect RenderFragmentedFlow::mapFromLocalToFragmentedFlow(const RenderBox* b
 // FIXME: Make this function faster. Walking the render tree is slow, better use a caching mechanism (e.g. |cachedOffsetFromLogicalTopOfFirstFragment|).
 LayoutRect RenderFragmentedFlow::mapFromFragmentedFlowToLocal(const RenderBox* box, const LayoutRect& rect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect localRect = rect;
     if (box == this)
         return localRect;
@@ -927,6 +1023,7 @@ LayoutRect RenderFragmentedFlow::mapFromFragmentedFlowToLocal(const RenderBox* b
 
 void RenderFragmentedFlow::flipForWritingModeLocalCoordinates(LayoutRect& rect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!style().isFlippedBlocksWritingMode())
         return;
     
@@ -938,6 +1035,10 @@ void RenderFragmentedFlow::flipForWritingModeLocalCoordinates(LayoutRect& rect) 
 
 void RenderFragmentedFlow::addFragmentsVisualEffectOverflow(const RenderBox& box)
 {
+    if (m_scion) {
+        m_scion->addFragmentsVisualEffectOverflow(box);
+        return;
+    }
     RenderFragmentContainer* startFragment = nullptr;
     RenderFragmentContainer* endFragment = nullptr;
     if (!getFragmentRangeForBox(box, startFragment, endFragment))
@@ -958,6 +1059,10 @@ void RenderFragmentedFlow::addFragmentsVisualEffectOverflow(const RenderBox& box
 
 void RenderFragmentedFlow::addFragmentsVisualOverflowFromTheme(const RenderBlock& block)
 {
+    if (m_scion) {
+        m_scion->addFragmentsVisualOverflowFromTheme(block);
+        return;
+    }
     RenderFragmentContainer* startFragment = nullptr;
     RenderFragmentContainer* endFragment = nullptr;
     if (!getFragmentRangeForBox(block, startFragment, endFragment))
@@ -980,6 +1085,7 @@ void RenderFragmentedFlow::addFragmentsVisualOverflowFromTheme(const RenderBlock
 
 void RenderFragmentedFlow::addFragmentsOverflowFromChild(const RenderBox& box, const RenderBox& child, const LayoutSize& delta)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentContainer* startFragment = nullptr;
     RenderFragmentContainer* endFragment = nullptr;
     if (!getFragmentRangeForBox(child, startFragment, endFragment))
@@ -1019,6 +1125,7 @@ void RenderFragmentedFlow::addFragmentsOverflowFromChild(const RenderBox& box, c
     
 void RenderFragmentedFlow::addFragmentsLayoutOverflow(const RenderBox& box, const LayoutRect& layoutOverflow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentContainer* startFragment = nullptr;
     RenderFragmentContainer* endFragment = nullptr;
     if (!getFragmentRangeForBox(box, startFragment, endFragment))
@@ -1037,6 +1144,7 @@ void RenderFragmentedFlow::addFragmentsLayoutOverflow(const RenderBox& box, cons
 
 void RenderFragmentedFlow::addFragmentsVisualOverflow(const RenderBox& box, const LayoutRect& visualOverflow)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderFragmentContainer* startFragment = nullptr;
     RenderFragmentContainer* endFragment = nullptr;
     if (!getFragmentRangeForBox(box, startFragment, endFragment))
@@ -1055,6 +1163,10 @@ void RenderFragmentedFlow::addFragmentsVisualOverflow(const RenderBox& box, cons
 
 void RenderFragmentedFlow::clearFragmentsOverflow(const RenderBox& box)
 {
+    if (m_scion) {
+        m_scion->clearFragmentsOverflow(box);
+        return;
+    }
     RenderFragmentContainer* startFragment = nullptr;
     RenderFragmentContainer* endFragment = nullptr;
     if (!getFragmentRangeForBox(box, startFragment, endFragment))
@@ -1073,11 +1185,13 @@ void RenderFragmentedFlow::clearFragmentsOverflow(const RenderBox& box)
 
 RenderFragmentContainer* RenderFragmentedFlow::currentFragment() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return m_currentFragmentMaintainer ? &m_currentFragmentMaintainer->fragment() : nullptr;
 }
 
 ContainingFragmentMap& RenderFragmentedFlow::containingFragmentMap()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!m_lineToFragmentMap)
         m_lineToFragmentMap = makeUnique<ContainingFragmentMap>();
 

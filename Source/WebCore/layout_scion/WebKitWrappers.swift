@@ -4584,6 +4584,459 @@ func RenderTableCellScion_borderAfter(_ objectRaw: UnsafeRawPointer) -> Int32 {
   return object.borderAfter().rawValue()
 }
 
+@_cdecl("RenderMultiColumnFlowScion_multiColumnBlockFlow")
+func RenderMultiColumnFlowScion_multiColumnBlockFlow(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.multiColumnBlockFlow())
+}
+
+@_cdecl("RenderMultiColumnFlowScion_firstMultiColumnSet")
+func RenderMultiColumnFlowScion_firstMultiColumnSet(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.firstMultiColumnSet())
+}
+
+@_cdecl("RenderMultiColumnFlowScion_lastMultiColumnSet")
+func RenderMultiColumnFlowScion_lastMultiColumnSet(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.lastMultiColumnSet())
+}
+
+@_cdecl("RenderMultiColumnFlowScion_columnCount")
+func RenderMultiColumnFlowScion_columnCount(_ objRaw: UnsafeRawPointer) -> UInt32 {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.columnCount()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_columnWidth")
+func RenderMultiColumnFlowScion_columnWidth(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.columnWidth().rawValue()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_columnHeightAvailable")
+func RenderMultiColumnFlowScion_columnHeightAvailable(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.columnHeightAvailable.rawValue()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_inBalancingPass")
+func RenderMultiColumnFlowScion_inBalancingPass(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.inBalancingPass
+}
+
+@_cdecl("RenderMultiColumnFlowScion_shouldRelayoutForPagination")
+func RenderMultiColumnFlowScion_shouldRelayoutForPagination(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.shouldRelayoutForPagination()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_progressionIsInline")
+func RenderMultiColumnFlowScion_progressionIsInline(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.progressionIsInline()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_progressionIsReversed")
+func RenderMultiColumnFlowScion_progressionIsReversed(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.progressionIsReversed()
+}
+
+@_cdecl("RenderFragmentedFlowScion_invalidateFragments")
+func RenderFragmentedFlowScion_invalidateFragments(
+  _ objRaw: UnsafeMutableRawPointer, _ markingParents: UInt8
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  obj.invalidateFragments(markingParents: MarkingBehavior(rawValue: markingParents)!)
+}
+
+@_cdecl("RenderFragmentedFlowScion_hasFragments")
+func RenderFragmentedFlowScion_hasFragments(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.hasFragments()
+}
+
+@_cdecl("RenderFragmentedFlowScion_hasValidFragmentInfo")
+func RenderFragmentedFlowScion_hasValidFragmentInfo(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.hasValidFragmentInfo()
+}
+
+@_cdecl("RenderFragmentedFlowScion_fragmentsHaveUniformLogicalHeight")
+func RenderFragmentedFlowScion_fragmentsHaveUniformLogicalHeight(_ objRaw: UnsafeRawPointer) -> Bool
+{
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.fragmentsHaveUniformLogicalHeight
+}
+
+@_cdecl("RenderFragmentedFlowScion_pageLogicalSizeChanged")
+func RenderFragmentedFlowScion_pageLogicalSizeChanged(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalSizeChanged
+}
+
+@_cdecl("RenderFragmentedFlowScion_removeFlowChildInfo")
+func RenderFragmentedFlowScion_removeFlowChildInfo(
+  _ objRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let child = createRenderObjectWrapperOrNative(childRaw) as! RenderElementWrapper
+  obj.removeFlowChildInfo(child)
+}
+
+@_cdecl("RenderFragmentedFlowScion_repaintRectangleInFragments")
+func RenderFragmentedFlowScion_repaintRectangleInFragments(
+  _ objRaw: UnsafeRawPointer, _ repaintRect: LayoutRectRaw
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  obj.repaintRectangleInFragments(convertLayoutRect(repaintRect))
+}
+
+@_cdecl("RenderMultiColumnSetScion_nextSiblingMultiColumnSet")
+func RenderMultiColumnSetScion_nextSiblingMultiColumnSet(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.nextSiblingMultiColumnSet())
+}
+
+@_cdecl("RenderMultiColumnSetScion_previousSiblingMultiColumnSet")
+func RenderMultiColumnSetScion_previousSiblingMultiColumnSet(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.previousSiblingMultiColumnSet())
+}
+
+@_cdecl("RenderMultiColumnSetScion_containsRendererInFragmentedFlow")
+func RenderMultiColumnSetScion_containsRendererInFragmentedFlow(
+  _ objRaw: UnsafeRawPointer, _ rendererRaw: UnsafeMutableRawPointer
+) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let renderer = createRenderObjectWrapperOrNative(rendererRaw)
+  return obj.containsRendererInFragmentedFlow(renderer: renderer)
+}
+
+@_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
+func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
+  _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,
+  _ relayoutChildren: UnsafeMutablePointer<Bool>
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let block = createRenderObjectWrapperOrNative(blockRaw) as! RenderBlockWrapper
+  obj.logicalWidthChangedInFragmentsForBlock(
+    block: block, relayoutChildren: &relayoutChildren.pointee)
+}
+
+@_cdecl("RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment")
+func RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(
+  _ objRaw: UnsafeRawPointer, _ currentBlockRaw: UnsafeMutableRawPointer?
+) -> Int32 {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let currentBlock =
+    currentBlockRaw != nil
+    ? (createRenderObjectWrapperOrNative(currentBlockRaw!) as! RenderBlockWrapper) : nil
+  return obj.offsetFromLogicalTopOfFirstFragment(currentBlock: currentBlock).rawValue()
+}
+
+@_cdecl("RenderFragmentedFlowScion_pageLogicalHeightForOffset")
+func RenderFragmentedFlowScion_pageLogicalHeightForOffset(
+  _ objRaw: UnsafeRawPointer, _ offset: Int32
+) -> Int32 {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalHeightForOffsetFromFragmentedFlow(
+    offset: LayoutUnit.fromRawValue(value: offset)
+  ).rawValue()
+}
+
+@_cdecl("RenderFragmentedFlowScion_pageRemainingLogicalHeightForOffset")
+func RenderFragmentedFlowScion_pageRemainingLogicalHeightForOffset(
+  _ objRaw: UnsafeRawPointer, _ offset: Int32, _ includePageBoundary: Bool
+) -> Int32 {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageRemainingLogicalHeightForOffsetFromFragmentedFlow(
+    offset: LayoutUnit.fromRawValue(value: offset),
+    pageBoundaryRule: includePageBoundary ? .IncludePageBoundary : .ExcludePageBoundary
+  ).rawValue()
+}
+
+@_cdecl("RenderFragmentedFlowScion_contentLogicalWidthOfFirstFragment")
+func RenderFragmentedFlowScion_contentLogicalWidthOfFirstFragment(_ objRaw: UnsafeRawPointer)
+  -> Int32
+{
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.contentLogicalWidthOfFirstFragment().rawValue()
+}
+
+@_cdecl("RenderFragmentedFlowScion_contentLogicalHeightOfFirstFragment")
+func RenderFragmentedFlowScion_contentLogicalHeightOfFirstFragment(_ objRaw: UnsafeRawPointer)
+  -> Int32
+{
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.contentLogicalHeightOfFirstFragment().rawValue()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_setPageBreak")
+func RenderMultiColumnFlowScion_setPageBreak(
+  _ objRaw: UnsafeMutableRawPointer, _ blockRaw: UnsafeMutableRawPointer?, _ offset: Int32,
+  _ spaceShortage: Int32
+) {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let block =
+    blockRaw != nil ? (createRenderObjectWrapperOrNative(blockRaw!) as! RenderBlockWrapper) : nil
+  obj.setPageBreak(
+    block!, offset: LayoutUnit.fromRawValue(value: offset),
+    spaceShortage: LayoutUnit.fromRawValue(value: spaceShortage))
+}
+
+@_cdecl("RenderMultiColumnFlowScion_updateMinimumPageHeight")
+func RenderMultiColumnFlowScion_updateMinimumPageHeight(
+  _ objRaw: UnsafeMutableRawPointer, _ blockRaw: UnsafeMutableRawPointer?, _ offset: Int32,
+  _ minHeight: Int32
+) {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let block =
+    blockRaw != nil ? (createRenderObjectWrapperOrNative(blockRaw!) as! RenderBlockWrapper) : nil
+  obj.updateMinimumPageHeight(
+    block!, offset: LayoutUnit.fromRawValue(value: offset),
+    minHeight: LayoutUnit.fromRawValue(value: minHeight))
+}
+
+@_cdecl("RenderMultiColumnFlowScion_updateSpaceShortageForSizeContainment")
+func RenderMultiColumnFlowScion_updateSpaceShortageForSizeContainment(
+  _ objRaw: UnsafeMutableRawPointer, _ blockRaw: UnsafeMutableRawPointer?, _ offset: Int32,
+  _ shortage: Int32
+) {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let block =
+    blockRaw != nil ? (createRenderObjectWrapperOrNative(blockRaw!) as! RenderBlockWrapper) : nil
+  obj.updateSpaceShortageForSizeContainment(
+    block: block!, offset: LayoutUnit.fromRawValue(value: offset),
+    shortage: LayoutUnit.fromRawValue(value: shortage))
+}
+
+@_cdecl("RenderMultiColumnFlowScion_fragmentedFlowDescendantBoxLaidOut")
+func RenderMultiColumnFlowScion_fragmentedFlowDescendantBoxLaidOut(
+  _ objRaw: UnsafeMutableRawPointer, _ descendantRaw: UnsafeMutableRawPointer?
+) {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let descendant =
+    descendantRaw != nil
+    ? (createRenderObjectWrapperOrNative(descendantRaw!) as! RenderBoxWrapper) : nil
+  obj.fragmentedFlowDescendantBoxLaidOut(descendant: descendant!)
+}
+
+@_cdecl("RenderMultiColumnFlowScion_fragmentAtBlockOffset")
+func RenderMultiColumnFlowScion_fragmentAtBlockOffset(
+  _ objRaw: UnsafeRawPointer, _ boxRaw: UnsafeMutableRawPointer?, _ offset: Int32,
+  _ extendLastFragment: Bool
+) -> UnsafeMutableRawPointer? {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let box = boxRaw != nil ? (createRenderObjectWrapperOrNative(boxRaw!) as! RenderBoxWrapper) : nil
+  return wkRenderObject(
+    obj.fragmentAtBlockOffset(
+      clampBox: box, offset: LayoutUnit.fromRawValue(value: offset),
+      extendLastFragment: extendLastFragment))
+}
+
+@_cdecl("RenderMultiColumnFlowScion_isPageLogicalHeightKnown")
+func RenderMultiColumnFlowScion_isPageLogicalHeightKnown(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isPageLogicalHeightKnown()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_shouldCheckColumnBreaks")
+func RenderMultiColumnFlowScion_shouldCheckColumnBreaks(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.shouldCheckColumnBreaks()
+}
+
+@_cdecl("RenderMultiColumnFlowScion_setFragmentRangeForBox")
+func RenderMultiColumnFlowScion_setFragmentRangeForBox(
+  _ objRaw: UnsafeMutableRawPointer, _ boxRaw: UnsafeMutableRawPointer,
+  _ startFragmentRaw: UnsafeMutableRawPointer?, _ endFragmentRaw: UnsafeMutableRawPointer?
+) {
+  let obj = Unmanaged<RenderMultiColumnFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let box = createRenderObjectWrapperOrNative(boxRaw) as! RenderBoxWrapper
+  let startFragment =
+    startFragmentRaw != nil
+    ? (createRenderObjectWrapperOrNative(startFragmentRaw!) as! RenderFragmentContainerWrapper)
+    : nil
+  let endFragment =
+    endFragmentRaw != nil
+    ? (createRenderObjectWrapperOrNative(endFragmentRaw!) as! RenderFragmentContainerWrapper) : nil
+  obj.setFragmentRangeForBox(box: box, startFragment: startFragment!, endFragment: endFragment!)
+}
+
+@_cdecl("RenderFragmentContainerScion_isFirstFragment")
+func RenderFragmentContainerScion_isFirstFragment(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isFirstFragment()
+}
+
+@_cdecl("RenderFragmentContainerScion_isLastFragment")
+func RenderFragmentContainerScion_isLastFragment(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isLastFragment()
+}
+
+@_cdecl("RenderFragmentContainerScion_fragmentedFlowPortionRect")
+func RenderFragmentContainerScion_fragmentedFlowPortionRect(_ objRaw: UnsafeRawPointer)
+  -> LayoutRectRaw
+{
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return convertLayoutRect(obj.fragmentedFlowPortionRect())
+}
+
+@_cdecl("RenderFragmentContainerScion_fragmentedFlow")
+func RenderFragmentContainerScion_fragmentedFlow(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.fragmentedFlow())
+}
+
+@_cdecl("RenderFragmentContainerScion_isValid")
+func RenderFragmentContainerScion_isValid(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isValid
+}
+
+@_cdecl("RenderFragmentContainerScion_logicalTopOfFragmentedFlowContentRect")
+func RenderFragmentContainerScion_logicalTopOfFragmentedFlowContentRect(
+  _ objRaw: UnsafeRawPointer, _ rect: LayoutRectRaw
+) -> Int32 {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.logicalTopOfFragmentedFlowContentRect(convertLayoutRect(rect)).rawValue()
+}
+
+@_cdecl("RenderFragmentContainerScion_logicalBottomOfFragmentedFlowContentRect")
+func RenderFragmentContainerScion_logicalBottomOfFragmentedFlowContentRect(
+  _ objRaw: UnsafeRawPointer, _ rect: LayoutRectRaw
+) -> Int32 {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.logicalBottomOfFragmentedFlowContentRect(convertLayoutRect(rect)).rawValue()
+}
+
+@_cdecl("RenderFragmentContainerScion_pageLogicalWidth")
+func RenderFragmentContainerScion_pageLogicalWidth(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalWidth().rawValue()
+}
+
+@_cdecl("RenderFragmentContainerScion_pageLogicalHeight")
+func RenderFragmentContainerScion_pageLogicalHeight(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalHeight().rawValue()
+}
+
+@_cdecl("RenderFragmentContainerScion_logicalHeightOfAllFragmentedFlowContent")
+func RenderFragmentContainerScion_logicalHeightOfAllFragmentedFlowContent(
+  _ objRaw: UnsafeRawPointer
+) -> Int32 {
+  let obj = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.logicalHeightOfAllFragmentedFlowContent().rawValue()
+}
+
+@_cdecl("RenderMultiColumnSetScion_pageLogicalWidth")
+func RenderMultiColumnSetScion_pageLogicalWidth(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalWidth().rawValue()
+}
+
+@_cdecl("RenderMultiColumnSetScion_pageLogicalHeight")
+func RenderMultiColumnSetScion_pageLogicalHeight(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalHeight().rawValue()
+}
+
+@_cdecl("RenderMultiColumnSetScion_logicalHeightOfAllFragmentedFlowContent")
+func RenderMultiColumnSetScion_logicalHeightOfAllFragmentedFlowContent(_ objRaw: UnsafeRawPointer)
+  -> Int32
+{
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.logicalHeightOfAllFragmentedFlowContent().rawValue()
+}
+
+@_cdecl("RenderMultiColumnSetScion_pageLogicalTopForOffset")
+func RenderMultiColumnSetScion_pageLogicalTopForOffset(_ objRaw: UnsafeRawPointer, _ offset: Int32)
+  -> Int32
+{
+  let obj = Unmanaged<RenderMultiColumnSetWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.pageLogicalTopForOffset(offset: LayoutUnit.fromRawValue(value: offset)).rawValue()
+}
+
+@_cdecl("RenderFragmentedFlowScion_clearFragmentsOverflow")
+func RenderFragmentedFlowScion_clearFragmentsOverflow(
+  _ objRaw: UnsafeMutableRawPointer, _ boxRaw: UnsafeMutableRawPointer
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let box = createRenderObjectWrapperOrNative(boxRaw) as! RenderBoxWrapper
+  obj.clearFragmentsOverflow(box)
+}
+
+@_cdecl("RenderFragmentedFlowScion_addFragmentsVisualEffectOverflow")
+func RenderFragmentedFlowScion_addFragmentsVisualEffectOverflow(
+  _ objRaw: UnsafeMutableRawPointer, _ boxRaw: UnsafeMutableRawPointer
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let box = createRenderObjectWrapperOrNative(boxRaw) as! RenderBoxWrapper
+  obj.addFragmentsVisualEffectOverflow(box: box)
+}
+
+@_cdecl("RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme")
+func RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(
+  _ objRaw: UnsafeMutableRawPointer, _ blockRaw: UnsafeMutableRawPointer
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let block = createRenderObjectWrapperOrNative(blockRaw) as! RenderBlockWrapper
+  obj.addFragmentsVisualOverflowFromTheme(block: block)
+}
+
+@_cdecl("RenderFragmentedFlowScion_collectLayerFragments")
+func RenderFragmentedFlowScion_collectLayerFragments(
+  _ objRaw: UnsafeRawPointer, _ layerFragmentsRaw: UnsafeMutableRawPointer,
+  _ layerBoundingBox: LayoutRectRaw, _ dirtyRect: LayoutRectRaw
+) {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  // Start from the fragments already collected, so that the maximum fragment count applies.
+  let existingCount = Int(wk_interop.LayerFragments_size(layerFragmentsRaw))
+  var layerFragments: LayerFragments = []
+  for _ in 0..<existingCount {
+    layerFragments.append(LayerFragment())
+  }
+  obj.collectLayerFragments(
+    &layerFragments, layerBoundingBox: convertLayoutRect(layerBoundingBox),
+    dirtyRect: convertLayoutRect(dirtyRect))
+  var index = existingCount
+  while index < layerFragments.count {
+    let fragment = layerFragments[index]
+    wk_interop.LayerFragments_append(
+      layerFragmentsRaw, fragment.paginationOffset.width().rawValue(),
+      fragment.paginationOffset.height().rawValue(), fragment.paginationClip.x().rawValue(),
+      fragment.paginationClip.y().rawValue(), fragment.paginationClip.width().rawValue(),
+      fragment.paginationClip.height().rawValue())
+    index += 1
+  }
+}
+
+@_cdecl("RenderFragmentedFlowScion_fragmentsBoundingBox")
+func RenderFragmentedFlowScion_fragmentsBoundingBox(
+  _ objRaw: UnsafeMutableRawPointer, _ layerBoundingBox: LayoutRectRaw
+) -> LayoutRectRaw {
+  let obj = Unmanaged<RenderFragmentedFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return convertLayoutRect(
+    obj.fragmentsBoundingBox(layerBoundingBox: convertLayoutRect(layerBoundingBox)))
+}
+
 @_cdecl("RenderTableCaptionScion_insertedIntoTree")
 func RenderTableCaptionScion_insertedIntoTree(_ objectRaw: UnsafeMutableRawPointer) {
   let object = Unmanaged<RenderTableCaptionWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

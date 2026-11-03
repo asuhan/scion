@@ -37,6 +37,7 @@
 #include "RenderLayer.h"
 #include "RenderMultiColumnFlow.h"
 #include "RenderMultiColumnSpannerPlaceholder.h"
+#include "RenderObjectsScion.h"
 #include "RenderView.h"
 #include <wtf/TZoneMallocInlines.h>
 
@@ -54,8 +55,15 @@ RenderMultiColumnSet::RenderMultiColumnSet(RenderFragmentedFlow& fragmentedFlow,
 
 RenderMultiColumnSet::~RenderMultiColumnSet() = default;
 
+void RenderMultiColumnSet::setScionHandle(void* handle)
+{
+    RenderFragmentContainerSet::setScionHandle(handle);
+    m_scion = std::make_unique<RenderMultiColumnSetScion>(handle);
+}
+
 RenderMultiColumnSet* RenderMultiColumnSet::nextSiblingMultiColumnSet() const
 {
+    if (m_scion) { return m_scion->nextSiblingMultiColumnSet(); }
     for (RenderObject* sibling = nextSibling(); sibling; sibling = sibling->nextSibling()) {
         if (auto multiColumnSet = dynamicDowncast<RenderMultiColumnSet>(*sibling))
             return multiColumnSet;
@@ -65,6 +73,7 @@ RenderMultiColumnSet* RenderMultiColumnSet::nextSiblingMultiColumnSet() const
 
 RenderMultiColumnSet* RenderMultiColumnSet::previousSiblingMultiColumnSet() const
 {
+    if (m_scion) { return m_scion->previousSiblingMultiColumnSet(); }
     for (RenderObject* sibling = previousSibling(); sibling; sibling = sibling->previousSibling()) {
         if (auto* multiColumnSet = dynamicDowncast<RenderMultiColumnSet>(*sibling))
             return multiColumnSet;
@@ -74,6 +83,7 @@ RenderMultiColumnSet* RenderMultiColumnSet::previousSiblingMultiColumnSet() cons
 
 RenderObject* RenderMultiColumnSet::firstRendererInFragmentedFlow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderBox* sibling = RenderMultiColumnFlow::previousColumnSetOrSpannerSiblingOf(this)) {
         // Adjacent sets should not occur. Currently we would have no way of figuring out what each
         // of them contains then.
@@ -87,6 +97,7 @@ RenderObject* RenderMultiColumnSet::firstRendererInFragmentedFlow() const
 
 RenderObject* RenderMultiColumnSet::lastRendererInFragmentedFlow() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (RenderBox* sibling = RenderMultiColumnFlow::nextColumnSetOrSpannerSiblingOf(this)) {
         // Adjacent sets should not occur. Currently we would have no way of figuring out what each
         // of them contains then.
@@ -109,6 +120,7 @@ static bool precedesRenderer(const RenderObject* renderer, const RenderObject* b
 
 bool RenderMultiColumnSet::containsRendererInFragmentedFlow(const RenderObject& renderer) const
 {
+    if (m_scion) { return m_scion->containsRendererInFragmentedFlow(renderer); }
     if (!previousSiblingMultiColumnSet() && !nextSiblingMultiColumnSet()) {
         // There is only one set. This is easy, then.
         return renderer.isDescendantOf(m_fragmentedFlow.get());
@@ -125,6 +137,7 @@ bool RenderMultiColumnSet::containsRendererInFragmentedFlow(const RenderObject& 
 
 void RenderMultiColumnSet::setLogicalTopInFragmentedFlow(LayoutUnit logicalTop)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect rect = fragmentedFlowPortionRect();
     if (isHorizontalWritingMode())
         rect.setY(logicalTop);
@@ -135,6 +148,7 @@ void RenderMultiColumnSet::setLogicalTopInFragmentedFlow(LayoutUnit logicalTop)
 
 void RenderMultiColumnSet::setLogicalBottomInFragmentedFlow(LayoutUnit logicalBottom)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect rect = fragmentedFlowPortionRect();
     if (isHorizontalWritingMode())
         rect.shiftMaxYEdgeTo(logicalBottom);
@@ -145,6 +159,7 @@ void RenderMultiColumnSet::setLogicalBottomInFragmentedFlow(LayoutUnit logicalBo
 
 LayoutUnit RenderMultiColumnSet::heightAdjustedForSetOffset(LayoutUnit height) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow& multicolBlock = downcast<RenderBlockFlow>(*parent());
     LayoutUnit contentLogicalTop = logicalTop() - multicolBlock.borderAndPaddingBefore();
 
@@ -154,12 +169,14 @@ LayoutUnit RenderMultiColumnSet::heightAdjustedForSetOffset(LayoutUnit height) c
 
 LayoutUnit RenderMultiColumnSet::pageLogicalTopForOffset(LayoutUnit offset) const
 {
+    if (m_scion) { return m_scion->pageLogicalTopForOffset(offset); }
     unsigned columnIndex = columnIndexAtOffset(offset, AssumeNewColumns);
     return logicalTopInFragmentedFlow() + columnIndex * computedColumnHeight();
 }
 
 void RenderMultiColumnSet::setAndConstrainColumnHeight(LayoutUnit newHeight)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_computedColumnHeight = newHeight;
     if (m_computedColumnHeight > m_maxColumnHeight)
         m_computedColumnHeight = m_maxColumnHeight;
@@ -184,6 +201,7 @@ void RenderMultiColumnSet::setAndConstrainColumnHeight(LayoutUnit newHeight)
 
 unsigned RenderMultiColumnSet::findRunWithTallestColumns() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned indexWithLargestHeight = 0;
     LayoutUnit largestHeight;
     LayoutUnit previousOffset;
@@ -203,6 +221,7 @@ unsigned RenderMultiColumnSet::findRunWithTallestColumns() const
 
 void RenderMultiColumnSet::distributeImplicitBreaks()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
 #ifndef NDEBUG
     // There should be no implicit breaks assumed at this point.
     for (unsigned i = 0; i < forcedBreaksCount(); i++)
@@ -229,6 +248,7 @@ void RenderMultiColumnSet::distributeImplicitBreaks()
 
 LayoutUnit RenderMultiColumnSet::calculateBalancedHeight(bool initial) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (initial) {
         // Start with the lowest imaginable column height.
         unsigned index = findRunWithTallestColumns();
@@ -269,11 +289,13 @@ LayoutUnit RenderMultiColumnSet::calculateBalancedHeight(bool initial) const
 
 void RenderMultiColumnSet::clearForcedBreaks()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     m_contentRuns.clear();
 }
 
 void RenderMultiColumnSet::addForcedBreak(LayoutUnit offsetFromFirstPage)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!requiresBalancing())
         return;
     if (!m_contentRuns.isEmpty() && offsetFromFirstPage <= m_contentRuns.last().breakOffset())
@@ -286,6 +308,7 @@ void RenderMultiColumnSet::addForcedBreak(LayoutUnit offsetFromFirstPage)
 
 bool RenderMultiColumnSet::recalculateColumnHeight(bool initial)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit oldColumnHeight = m_computedColumnHeight;
     if (requiresBalancing()) {
         if (initial)
@@ -311,6 +334,7 @@ bool RenderMultiColumnSet::recalculateColumnHeight(bool initial)
 
 void RenderMultiColumnSet::recordSpaceShortage(LayoutUnit spaceShortage)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (spaceShortage >= m_minSpaceShortage)
         return;
 
@@ -322,6 +346,7 @@ void RenderMultiColumnSet::recordSpaceShortage(LayoutUnit spaceShortage)
 
 void RenderMultiColumnSet::updateLogicalWidth()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     setComputedColumnWidthAndCount(multiColumnFlow()->columnWidth(), multiColumnFlow()->columnCount()); // FIXME: This will eventually vary if we are contained inside fragments.
     
     // FIXME: When we add fragments support, we'll start it off at the width of the multi-column
@@ -331,6 +356,7 @@ void RenderMultiColumnSet::updateLogicalWidth()
 
 bool RenderMultiColumnSet::requiresBalancing() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (!multiColumnFlow()->progressionIsInline())
         return false;
 
@@ -349,6 +375,7 @@ bool RenderMultiColumnSet::requiresBalancing() const
 
 void RenderMultiColumnSet::prepareForLayout(bool initial)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Guess box logical top. This might eliminate the need for another layout pass.
     if (RenderBox* previous = RenderMultiColumnFlow::previousColumnSetOrSpannerSiblingOf(this))
         setLogicalTop(previous->logicalBottom() + previous->marginAfter());
@@ -385,6 +412,7 @@ void RenderMultiColumnSet::prepareForLayout(bool initial)
 
 void RenderMultiColumnSet::beginFlow(RenderBlock* container)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderMultiColumnFlow* fragmentedFlow = multiColumnFlow();
 
     // At this point layout is exactly at the beginning of this set. Store block offset from flow
@@ -395,6 +423,7 @@ void RenderMultiColumnSet::beginFlow(RenderBlock* container)
 
 void RenderMultiColumnSet::endFlow(RenderBlock* container, LayoutUnit bottomInContainer)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderMultiColumnFlow* fragmentedFlow = multiColumnFlow();
 
     // At this point layout is exactly at the end of this set. Store block offset from flow thread
@@ -408,6 +437,10 @@ void RenderMultiColumnSet::endFlow(RenderBlock* container, LayoutUnit bottomInCo
 
 void RenderMultiColumnSet::layout()
 {
+    if (m_scion) {
+        RenderBlock::layout();
+        return;
+    }
     RenderBlockFlow::layout();
 
     // At this point the logical top and bottom of the column set are known. Update maximum column
@@ -422,11 +455,13 @@ void RenderMultiColumnSet::layout()
 
 RenderBox::LogicalExtentComputedValues RenderMultiColumnSet::computeLogicalHeight(LayoutUnit, LayoutUnit logicalTop) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return { m_availableColumnHeight, logicalTop, ComputedMarginValues() };
 }
 
 LayoutUnit RenderMultiColumnSet::calculateMaxColumnHeight() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     RenderBlockFlow* multicolBlock = multiColumnBlockFlow();
     const RenderStyle& multicolStyle = multicolBlock->style();
     LayoutUnit availableHeight = multiColumnFlow()->columnHeightAvailable();
@@ -438,6 +473,7 @@ LayoutUnit RenderMultiColumnSet::calculateMaxColumnHeight() const
 
 LayoutUnit RenderMultiColumnSet::columnGap() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Eventually we will cache the column gap when the widths of columns start varying, but for now we just
     // go to the parent block to get the gap.
     RenderBlockFlow& parentBlock = downcast<RenderBlockFlow>(*parent());
@@ -448,6 +484,7 @@ LayoutUnit RenderMultiColumnSet::columnGap() const
 
 unsigned RenderMultiColumnSet::columnCount() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We must always return a value of 1 or greater. Column count = 0 is a meaningless situation,
     // and will confuse and cause problems in other parts of the code.
     auto computedColumnHeight = this->computedColumnHeight();
@@ -469,6 +506,7 @@ unsigned RenderMultiColumnSet::columnCount() const
 
 LayoutUnit RenderMultiColumnSet::columnLogicalLeft(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit colLogicalWidth = computedColumnWidth();
     LayoutUnit colLogicalLeft = borderAndPaddingLogicalLeft();
     LayoutUnit colGap = columnGap();
@@ -488,6 +526,7 @@ LayoutUnit RenderMultiColumnSet::columnLogicalLeft(unsigned index) const
 
 LayoutUnit RenderMultiColumnSet::columnLogicalTop(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit colLogicalHeight = computedColumnHeight();
     LayoutUnit colLogicalTop = borderAndPaddingBefore();
     LayoutUnit colGap = columnGap();
@@ -507,6 +546,7 @@ LayoutUnit RenderMultiColumnSet::columnLogicalTop(unsigned index) const
 
 LayoutRect RenderMultiColumnSet::columnRectAt(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutUnit colLogicalWidth = computedColumnWidth();
     LayoutUnit colLogicalHeight = computedColumnHeight();
 
@@ -517,6 +557,7 @@ LayoutRect RenderMultiColumnSet::columnRectAt(unsigned index) const
 
 unsigned RenderMultiColumnSet::columnIndexAtOffset(LayoutUnit offset, ColumnIndexCalculationMode mode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect portionRect(fragmentedFlowPortionRect());
 
     // Handle the offset being out of range.
@@ -541,6 +582,7 @@ unsigned RenderMultiColumnSet::columnIndexAtOffset(LayoutUnit offset, ColumnInde
 
 std::pair<unsigned, unsigned> RenderMultiColumnSet::firstAndLastColumnsFromOffsets(LayoutUnit topOffset, LayoutUnit bottomOffset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto portionRect = fragmentedFlowPortionRect();
 
     // Handle the offset being out of range.
@@ -571,6 +613,7 @@ std::pair<unsigned, unsigned> RenderMultiColumnSet::firstAndLastColumnsFromOffse
 
 LayoutRect RenderMultiColumnSet::fragmentedFlowPortionRectAt(unsigned index) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     LayoutRect portionRect = fragmentedFlowPortionRect();
     if (isHorizontalWritingMode())
         portionRect = LayoutRect(portionRect.x(), portionRect.y() + index * computedColumnHeight(), portionRect.width(), computedColumnHeight());
@@ -581,6 +624,7 @@ LayoutRect RenderMultiColumnSet::fragmentedFlowPortionRectAt(unsigned index) con
 
 LayoutRect RenderMultiColumnSet::fragmentedFlowPortionOverflowRect(const LayoutRect& portionRect, unsigned index, unsigned colCount, LayoutUnit colGap) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // This function determines the portion of the flow thread that paints for the column. Along the inline axis, columns are
     // unclipped at outside edges (i.e., the first and last column in the set), and they clip to half the column
     // gap along interior edges.
@@ -622,6 +666,7 @@ LayoutRect RenderMultiColumnSet::fragmentedFlowPortionOverflowRect(const LayoutR
 
 void RenderMultiColumnSet::paintColumnRules(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (paintInfo.context().paintingDisabled())
         return;
 
@@ -707,6 +752,7 @@ void RenderMultiColumnSet::paintColumnRules(PaintInfo& paintInfo, const LayoutPo
 
 void RenderMultiColumnSet::repaintFragmentedFlowContent(const LayoutRect& repaintRect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Figure out the start and end columns and only check within that range so that we don't walk the
     // entire column set. Put the repaint rect into flow thread coordinates by flipping it first.
     LayoutRect fragmentedFlowRepaintRect(repaintRect);
@@ -747,6 +793,7 @@ void RenderMultiColumnSet::repaintFragmentedFlowContent(const LayoutRect& repain
 
 Vector<LayoutRect> RenderMultiColumnSet::fragmentRectsForFlowContentRect(const LayoutRect& rect) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     auto fragmentedFlowRect = rect;
     fragmentedFlow()->flipForWritingMode(fragmentedFlowRect);
 
@@ -776,6 +823,7 @@ Vector<LayoutRect> RenderMultiColumnSet::fragmentRectsForFlowContentRect(const L
 
 LayoutUnit RenderMultiColumnSet::initialBlockOffsetForPainting() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     bool progressionReversed = multiColumnFlow()->progressionIsReversed();
     bool progressionIsInline = multiColumnFlow()->progressionIsInline();
     
@@ -789,6 +837,7 @@ LayoutUnit RenderMultiColumnSet::initialBlockOffsetForPainting() const
 
 void RenderMultiColumnSet::collectLayerFragments(LayerFragments& fragments, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     static constexpr size_t maximumNumberOfFragments = 2500000;
     // Let's start by introducing the different coordinate systems involved here. They are different
     // in how they deal with writing modes and columns. RenderLayer rectangles tend to be more
@@ -914,6 +963,7 @@ void RenderMultiColumnSet::collectLayerFragments(LayerFragments& fragments, cons
 
 LayoutPoint RenderMultiColumnSet::columnTranslationForOffset(const LayoutUnit& offset) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     unsigned startColumn = columnIndexAtOffset(offset);
     
     LayoutUnit colGap = columnGap();
@@ -947,6 +997,7 @@ LayoutPoint RenderMultiColumnSet::columnTranslationForOffset(const LayoutUnit& o
 
 void RenderMultiColumnSet::addOverflowFromChildren()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // FIXME: Need to do much better here.
     unsigned colCount = columnCount();
     if (!colCount)
@@ -965,6 +1016,7 @@ VisiblePosition RenderMultiColumnSet::positionForPoint(const LayoutPoint& logica
 
 LayoutPoint RenderMultiColumnSet::translateFragmentPointToFragmentedFlow(const LayoutPoint & logicalPoint, ColumnHitTestTranslationMode clampMode) const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Determine which columns we intersect.
     LayoutUnit colGap = columnGap();
     LayoutUnit halfColGap = colGap / 2;
@@ -1041,11 +1093,13 @@ LayoutPoint RenderMultiColumnSet::translateFragmentPointToFragmentedFlow(const L
 
 Node* RenderMultiColumnSet::nodeForHitTest() const
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     return document().documentElement();
 }
 
 void RenderMultiColumnSet::updateHitTestResult(HitTestResult& result, const LayoutPoint& point)
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     if (result.innerNode() || !parent()->isRenderView())
         return;
     
@@ -1062,7 +1116,8 @@ void RenderMultiColumnSet::updateHitTestResult(HitTestResult& result, const Layo
 }
 
 ASCIILiteral RenderMultiColumnSet::renderName() const
-{    
+{     // NB(asuhan): this returns a literal, we can skip the Scion check
+   
     return "RenderMultiColumnSet"_s;
 }
 

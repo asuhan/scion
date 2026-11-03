@@ -29,6 +29,7 @@
 
 namespace WebCore {
 
+class RenderFragmentContainerSetScion;
 class RenderFragmentedFlow;
 
 // RenderFragmentContainerSet represents a set of regions that all have the same width and height. It is a "composite region box" that
@@ -46,6 +47,8 @@ class RenderFragmentContainerSet : public RenderFragmentContainer {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderFragmentContainerSet);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderFragmentContainerSet);
 public:
+    void setScionHandle(void* handle);
+
     void expandToEncompassFragmentedFlowContentsIfNeeded();
 
 protected:
@@ -57,7 +60,13 @@ private:
 
     ASCIILiteral renderName() const override = 0;
     
-    bool isRenderFragmentContainerSet() const final { return true; }
+    bool isRenderFragmentContainerSet() const final
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return true;
+    }
+
+    std::unique_ptr<RenderFragmentContainerSetScion> m_scion;
 };
 
 } // namespace WebCore

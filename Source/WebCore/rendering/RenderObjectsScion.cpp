@@ -879,6 +879,59 @@ extern "C" void RenderTableColScion_insertedIntoTree(void*);
 
 extern "C" void RenderTableCellScion_willBeRemovedFromTree(void*);
 
+extern "C" void* RenderMultiColumnFlowScion_multiColumnBlockFlow(const void*);
+extern "C" void* RenderMultiColumnFlowScion_firstMultiColumnSet(const void*);
+extern "C" void* RenderMultiColumnFlowScion_lastMultiColumnSet(const void*);
+extern "C" unsigned RenderMultiColumnFlowScion_columnCount(const void*);
+extern "C" int32_t RenderMultiColumnFlowScion_columnWidth(const void*);
+extern "C" int32_t RenderMultiColumnFlowScion_columnHeightAvailable(const void*);
+extern "C" bool RenderMultiColumnFlowScion_inBalancingPass(const void*);
+extern "C" bool RenderMultiColumnFlowScion_shouldRelayoutForPagination(const void*);
+extern "C" bool RenderMultiColumnFlowScion_progressionIsInline(const void*);
+extern "C" bool RenderMultiColumnFlowScion_progressionIsReversed(const void*);
+extern "C" void RenderFragmentedFlowScion_invalidateFragments(void*, uint8_t);
+extern "C" bool RenderFragmentedFlowScion_hasFragments(const void*);
+extern "C" bool RenderFragmentedFlowScion_hasValidFragmentInfo(const void*);
+extern "C" bool RenderFragmentedFlowScion_fragmentsHaveUniformLogicalHeight(const void*);
+extern "C" bool RenderFragmentedFlowScion_pageLogicalSizeChanged(const void*);
+extern "C" void RenderFragmentedFlowScion_removeFlowChildInfo(void*, void*);
+extern "C" void RenderFragmentedFlowScion_repaintRectangleInFragments(const void*, LayoutRectRaw);
+extern "C" void* RenderMultiColumnSetScion_nextSiblingMultiColumnSet(const void*);
+extern "C" void* RenderMultiColumnSetScion_previousSiblingMultiColumnSet(const void*);
+extern "C" bool RenderMultiColumnSetScion_containsRendererInFragmentedFlow(const void*, void*);
+extern "C" void RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(const void*, void*, bool*);
+extern "C" int32_t RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(const void*, void*);
+extern "C" int32_t RenderFragmentedFlowScion_pageLogicalHeightForOffset(const void*, int32_t);
+extern "C" int32_t RenderFragmentedFlowScion_pageRemainingLogicalHeightForOffset(const void*, int32_t, bool);
+extern "C" int32_t RenderFragmentedFlowScion_contentLogicalWidthOfFirstFragment(const void*);
+extern "C" int32_t RenderFragmentedFlowScion_contentLogicalHeightOfFirstFragment(const void*);
+extern "C" void RenderMultiColumnFlowScion_setPageBreak(void*, void*, int32_t, int32_t);
+extern "C" void RenderMultiColumnFlowScion_updateMinimumPageHeight(void*, void*, int32_t, int32_t);
+extern "C" void RenderMultiColumnFlowScion_updateSpaceShortageForSizeContainment(void*, void*, int32_t, int32_t);
+extern "C" void RenderMultiColumnFlowScion_fragmentedFlowDescendantBoxLaidOut(void*, void*);
+extern "C" void* RenderMultiColumnFlowScion_fragmentAtBlockOffset(const void*, void*, int32_t, bool);
+extern "C" bool RenderMultiColumnFlowScion_isPageLogicalHeightKnown(const void*);
+extern "C" bool RenderMultiColumnFlowScion_shouldCheckColumnBreaks(const void*);
+extern "C" void RenderMultiColumnFlowScion_setFragmentRangeForBox(void*, void*, void*, void*);
+extern "C" bool RenderFragmentContainerScion_isFirstFragment(const void*);
+extern "C" bool RenderFragmentContainerScion_isLastFragment(const void*);
+extern "C" LayoutRectRaw RenderFragmentContainerScion_fragmentedFlowPortionRect(const void*);
+extern "C" void* RenderFragmentContainerScion_fragmentedFlow(const void*);
+extern "C" bool RenderFragmentContainerScion_isValid(const void*);
+extern "C" int32_t RenderFragmentContainerScion_logicalTopOfFragmentedFlowContentRect(const void*, LayoutRectRaw);
+extern "C" int32_t RenderFragmentContainerScion_logicalBottomOfFragmentedFlowContentRect(const void*, LayoutRectRaw);
+extern "C" int32_t RenderFragmentContainerScion_pageLogicalWidth(const void*);
+extern "C" int32_t RenderFragmentContainerScion_pageLogicalHeight(const void*);
+extern "C" int32_t RenderFragmentContainerScion_logicalHeightOfAllFragmentedFlowContent(const void*);
+extern "C" int32_t RenderMultiColumnSetScion_pageLogicalWidth(const void*);
+extern "C" int32_t RenderMultiColumnSetScion_pageLogicalHeight(const void*);
+extern "C" int32_t RenderMultiColumnSetScion_logicalHeightOfAllFragmentedFlowContent(const void*);
+extern "C" int32_t RenderMultiColumnSetScion_pageLogicalTopForOffset(const void*, int32_t);
+extern "C" void RenderFragmentedFlowScion_clearFragmentsOverflow(void*, void*);
+extern "C" void RenderFragmentedFlowScion_addFragmentsVisualEffectOverflow(void*, void*);
+extern "C" void RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(void*, void*);
+extern "C" void RenderFragmentedFlowScion_collectLayerFragments(const void*, void*, LayoutRectRaw, LayoutRectRaw);
+extern "C" LayoutRectRaw RenderFragmentedFlowScion_fragmentsBoundingBox(void*, LayoutRectRaw);
 extern "C" void RenderTableCaptionScion_willBeRemovedFromTree(void*);
 
 extern "C" void RenderTableCaptionScion_insertedIntoTree(void*);
@@ -3204,6 +3257,271 @@ LayoutUnit RenderTableCellScion::borderBefore() const
 LayoutUnit RenderTableCellScion::borderAfter() const
 {
     return LayoutUnit::fromRawValue(RenderTableCellScion_borderAfter(m_handle));
+}
+
+RenderBlockFlow* RenderMultiColumnFlowScion::multiColumnBlockFlow() const
+{
+    return static_cast<RenderBlockFlow*>(RenderMultiColumnFlowScion_multiColumnBlockFlow(m_handle));
+}
+
+RenderMultiColumnSet* RenderMultiColumnFlowScion::firstMultiColumnSet() const
+{
+    return static_cast<RenderMultiColumnSet*>(RenderMultiColumnFlowScion_firstMultiColumnSet(m_handle));
+}
+
+RenderMultiColumnSet* RenderMultiColumnFlowScion::lastMultiColumnSet() const
+{
+    return static_cast<RenderMultiColumnSet*>(RenderMultiColumnFlowScion_lastMultiColumnSet(m_handle));
+}
+
+unsigned RenderMultiColumnFlowScion::columnCount() const
+{
+    return RenderMultiColumnFlowScion_columnCount(m_handle);
+}
+
+LayoutUnit RenderMultiColumnFlowScion::columnWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderMultiColumnFlowScion_columnWidth(m_handle));
+}
+
+LayoutUnit RenderMultiColumnFlowScion::columnHeightAvailable() const
+{
+    return LayoutUnit::fromRawValue(RenderMultiColumnFlowScion_columnHeightAvailable(m_handle));
+}
+
+bool RenderMultiColumnFlowScion::inBalancingPass() const
+{
+    return RenderMultiColumnFlowScion_inBalancingPass(m_handle);
+}
+
+bool RenderMultiColumnFlowScion::shouldRelayoutForPagination() const
+{
+    return RenderMultiColumnFlowScion_shouldRelayoutForPagination(m_handle);
+}
+
+bool RenderMultiColumnFlowScion::progressionIsInline() const
+{
+    return RenderMultiColumnFlowScion_progressionIsInline(m_handle);
+}
+
+bool RenderMultiColumnFlowScion::progressionIsReversed() const
+{
+    return RenderMultiColumnFlowScion_progressionIsReversed(m_handle);
+}
+
+void RenderFragmentedFlowScion::invalidateFragments(MarkingBehavior markingParents)
+{
+    RenderFragmentedFlowScion_invalidateFragments(m_handle, static_cast<uint8_t>(markingParents));
+}
+
+bool RenderFragmentedFlowScion::hasFragments() const
+{
+    return RenderFragmentedFlowScion_hasFragments(m_handle);
+}
+
+bool RenderFragmentedFlowScion::hasValidFragmentInfo() const
+{
+    return RenderFragmentedFlowScion_hasValidFragmentInfo(m_handle);
+}
+
+bool RenderFragmentedFlowScion::fragmentsHaveUniformLogicalHeight() const
+{
+    return RenderFragmentedFlowScion_fragmentsHaveUniformLogicalHeight(m_handle);
+}
+
+bool RenderFragmentedFlowScion::pageLogicalSizeChanged() const
+{
+    return RenderFragmentedFlowScion_pageLogicalSizeChanged(m_handle);
+}
+
+void RenderFragmentedFlowScion::removeFlowChildInfo(RenderElement& child)
+{
+    RenderFragmentedFlowScion_removeFlowChildInfo(m_handle, const_cast<void*>(static_cast<const void*>(&child)));
+}
+
+void RenderFragmentedFlowScion::repaintRectangleInFragments(const LayoutRect& repaintRect) const
+{
+    RenderFragmentedFlowScion_repaintRectangleInFragments(m_handle, convertLayoutRect(repaintRect));
+}
+
+RenderMultiColumnSet* RenderMultiColumnSetScion::nextSiblingMultiColumnSet() const
+{
+    return static_cast<RenderMultiColumnSet*>(RenderMultiColumnSetScion_nextSiblingMultiColumnSet(m_handle));
+}
+
+RenderMultiColumnSet* RenderMultiColumnSetScion::previousSiblingMultiColumnSet() const
+{
+    return static_cast<RenderMultiColumnSet*>(RenderMultiColumnSetScion_previousSiblingMultiColumnSet(m_handle));
+}
+
+bool RenderMultiColumnSetScion::containsRendererInFragmentedFlow(const RenderObject& renderer) const
+{
+    return RenderMultiColumnSetScion_containsRendererInFragmentedFlow(m_handle, const_cast<void*>(static_cast<const void*>(&renderer)));
+}
+
+void RenderFragmentedFlowScion::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren) const
+{
+    RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(m_handle, const_cast<void*>(static_cast<const void*>(&block)), &relayoutChildren);
+}
+
+LayoutUnit RenderFragmentedFlowScion::offsetFromLogicalTopOfFirstFragment(const RenderBlock* currentBlock) const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(m_handle, const_cast<void*>(static_cast<const void*>(currentBlock))));
+}
+
+LayoutUnit RenderFragmentedFlowScion::pageLogicalHeightForOffset(LayoutUnit offset) const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentedFlowScion_pageLogicalHeightForOffset(m_handle, offset.rawValue()));
+}
+
+LayoutUnit RenderFragmentedFlowScion::pageRemainingLogicalHeightForOffset(LayoutUnit offset, bool includePageBoundary) const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentedFlowScion_pageRemainingLogicalHeightForOffset(m_handle, offset.rawValue(), includePageBoundary));
+}
+
+LayoutUnit RenderFragmentedFlowScion::contentLogicalWidthOfFirstFragment() const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentedFlowScion_contentLogicalWidthOfFirstFragment(m_handle));
+}
+
+LayoutUnit RenderFragmentedFlowScion::contentLogicalHeightOfFirstFragment() const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentedFlowScion_contentLogicalHeightOfFirstFragment(m_handle));
+}
+
+void RenderMultiColumnFlowScion::setPageBreak(const RenderBlock* block, LayoutUnit offset, LayoutUnit spaceShortage)
+{
+    RenderMultiColumnFlowScion_setPageBreak(m_handle, const_cast<void*>(static_cast<const void*>(block)), offset.rawValue(), spaceShortage.rawValue());
+}
+
+void RenderMultiColumnFlowScion::updateMinimumPageHeight(const RenderBlock* block, LayoutUnit offset, LayoutUnit minHeight)
+{
+    RenderMultiColumnFlowScion_updateMinimumPageHeight(m_handle, const_cast<void*>(static_cast<const void*>(block)), offset.rawValue(), minHeight.rawValue());
+}
+
+void RenderMultiColumnFlowScion::updateSpaceShortageForSizeContainment(const RenderBlock* block, LayoutUnit offset, LayoutUnit shortage)
+{
+    RenderMultiColumnFlowScion_updateSpaceShortageForSizeContainment(m_handle, const_cast<void*>(static_cast<const void*>(block)), offset.rawValue(), shortage.rawValue());
+}
+
+void RenderMultiColumnFlowScion::fragmentedFlowDescendantBoxLaidOut(RenderBox* descendant)
+{
+    RenderMultiColumnFlowScion_fragmentedFlowDescendantBoxLaidOut(m_handle, const_cast<void*>(static_cast<const void*>(descendant)));
+}
+
+RenderFragmentContainer* RenderMultiColumnFlowScion::fragmentAtBlockOffset(const RenderBox* box, LayoutUnit offset, bool extendLastFragment) const
+{
+    return static_cast<RenderFragmentContainer*>(RenderMultiColumnFlowScion_fragmentAtBlockOffset(m_handle, const_cast<void*>(static_cast<const void*>(box)), offset.rawValue(), extendLastFragment));
+}
+
+bool RenderMultiColumnFlowScion::isPageLogicalHeightKnown() const
+{
+    return RenderMultiColumnFlowScion_isPageLogicalHeightKnown(m_handle);
+}
+
+bool RenderMultiColumnFlowScion::shouldCheckColumnBreaks() const
+{
+    return RenderMultiColumnFlowScion_shouldCheckColumnBreaks(m_handle);
+}
+
+void RenderMultiColumnFlowScion::setFragmentRangeForBox(const RenderBox& box, RenderFragmentContainer* startFragment, RenderFragmentContainer* endFragment)
+{
+    RenderMultiColumnFlowScion_setFragmentRangeForBox(m_handle, const_cast<void*>(static_cast<const void*>(&box)), const_cast<void*>(static_cast<const void*>(startFragment)), const_cast<void*>(static_cast<const void*>(endFragment)));
+}
+
+bool RenderFragmentContainerScion::isFirstFragment() const
+{
+    return RenderFragmentContainerScion_isFirstFragment(m_handle);
+}
+
+bool RenderFragmentContainerScion::isLastFragment() const
+{
+    return RenderFragmentContainerScion_isLastFragment(m_handle);
+}
+
+LayoutRect RenderFragmentContainerScion::fragmentedFlowPortionRect() const
+{
+    return convertLayoutRect(RenderFragmentContainerScion_fragmentedFlowPortionRect(m_handle));
+}
+
+RenderFragmentedFlow* RenderFragmentContainerScion::fragmentedFlow() const
+{
+    return static_cast<RenderFragmentedFlow*>(RenderFragmentContainerScion_fragmentedFlow(m_handle));
+}
+
+bool RenderFragmentContainerScion::isValid() const
+{
+    return RenderFragmentContainerScion_isValid(m_handle);
+}
+
+LayoutUnit RenderFragmentContainerScion::logicalTopOfFragmentedFlowContentRect(const LayoutRect& rect) const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentContainerScion_logicalTopOfFragmentedFlowContentRect(m_handle, convertLayoutRect(rect)));
+}
+
+LayoutUnit RenderFragmentContainerScion::logicalBottomOfFragmentedFlowContentRect(const LayoutRect& rect) const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentContainerScion_logicalBottomOfFragmentedFlowContentRect(m_handle, convertLayoutRect(rect)));
+}
+
+LayoutUnit RenderFragmentContainerScion::pageLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentContainerScion_pageLogicalWidth(m_handle));
+}
+
+LayoutUnit RenderFragmentContainerScion::pageLogicalHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentContainerScion_pageLogicalHeight(m_handle));
+}
+
+LayoutUnit RenderFragmentContainerScion::logicalHeightOfAllFragmentedFlowContent() const
+{
+    return LayoutUnit::fromRawValue(RenderFragmentContainerScion_logicalHeightOfAllFragmentedFlowContent(m_handle));
+}
+
+LayoutUnit RenderMultiColumnSetScion::pageLogicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderMultiColumnSetScion_pageLogicalWidth(m_handle));
+}
+
+LayoutUnit RenderMultiColumnSetScion::pageLogicalHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderMultiColumnSetScion_pageLogicalHeight(m_handle));
+}
+
+LayoutUnit RenderMultiColumnSetScion::logicalHeightOfAllFragmentedFlowContent() const
+{
+    return LayoutUnit::fromRawValue(RenderMultiColumnSetScion_logicalHeightOfAllFragmentedFlowContent(m_handle));
+}
+
+LayoutUnit RenderMultiColumnSetScion::pageLogicalTopForOffset(LayoutUnit offset) const
+{
+    return LayoutUnit::fromRawValue(RenderMultiColumnSetScion_pageLogicalTopForOffset(m_handle, offset.rawValue()));
+}
+
+void RenderFragmentedFlowScion::clearFragmentsOverflow(const RenderBox& box)
+{
+    RenderFragmentedFlowScion_clearFragmentsOverflow(m_handle, const_cast<void*>(static_cast<const void*>(&box)));
+}
+
+void RenderFragmentedFlowScion::addFragmentsVisualEffectOverflow(const RenderBox& box)
+{
+    RenderFragmentedFlowScion_addFragmentsVisualEffectOverflow(m_handle, const_cast<void*>(static_cast<const void*>(&box)));
+}
+
+void RenderFragmentedFlowScion::addFragmentsVisualOverflowFromTheme(const RenderBlock& block)
+{
+    RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(m_handle, const_cast<void*>(static_cast<const void*>(&block)));
+}
+
+void RenderFragmentedFlowScion::collectLayerFragments(void* layerFragments, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect) const
+{
+    RenderFragmentedFlowScion_collectLayerFragments(m_handle, layerFragments, convertLayoutRect(layerBoundingBox), convertLayoutRect(dirtyRect));
+}
+
+LayoutRect RenderFragmentedFlowScion::fragmentsBoundingBox(const LayoutRect& layerBoundingBox)
+{
+    return convertLayoutRect(RenderFragmentedFlowScion_fragmentsBoundingBox(m_handle, convertLayoutRect(layerBoundingBox)));
 }
 
 void RenderTableCaptionScion::insertedIntoTree()

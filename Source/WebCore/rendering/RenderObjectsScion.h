@@ -120,6 +120,8 @@ class RenderTableCell;
 class RenderListItem;
 class RenderListMarker;
 class RenderMultiColumnFlow;
+class RenderMultiColumnSet;
+class RenderMultiColumnSpannerPlaceholder;
 class RenderObject;
 class RenderSelection;
 class RenderTextFragment;
@@ -1591,6 +1593,167 @@ public:
     LayoutUnit intrinsicPaddingAfter() const;
 
     LayoutUnit intrinsicPaddingBefore() const;
+
+private:
+    void* m_handle;
+};
+
+class RenderFragmentedFlowScion final {
+public:
+    RenderFragmentedFlowScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    LayoutRect fragmentsBoundingBox(const LayoutRect&);
+
+    void collectLayerFragments(void* layerFragments, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect) const;
+
+    void addFragmentsVisualOverflowFromTheme(const RenderBlock&);
+
+    void addFragmentsVisualEffectOverflow(const RenderBox&);
+
+    void clearFragmentsOverflow(const RenderBox&);
+
+    LayoutUnit contentLogicalHeightOfFirstFragment() const;
+
+    LayoutUnit contentLogicalWidthOfFirstFragment() const;
+
+    LayoutUnit pageRemainingLogicalHeightForOffset(LayoutUnit, bool includePageBoundary) const;
+
+    LayoutUnit pageLogicalHeightForOffset(LayoutUnit) const;
+
+    LayoutUnit offsetFromLogicalTopOfFirstFragment(const RenderBlock*) const;
+
+    void logicalWidthChangedInFragmentsForBlock(const RenderBlock&, bool&) const;
+
+    void repaintRectangleInFragments(const LayoutRect&) const;
+
+    void removeFlowChildInfo(RenderElement&);
+
+    bool pageLogicalSizeChanged() const;
+
+    bool fragmentsHaveUniformLogicalHeight() const;
+
+    bool hasValidFragmentInfo() const;
+
+    bool hasFragments() const;
+
+    void invalidateFragments(MarkingBehavior);
+
+private:
+    void* m_handle;
+};
+
+class RenderMultiColumnFlowScion final {
+public:
+    RenderMultiColumnFlowScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void setFragmentRangeForBox(const RenderBox&, RenderFragmentContainer*, RenderFragmentContainer*);
+
+    bool shouldCheckColumnBreaks() const;
+
+    bool isPageLogicalHeightKnown() const;
+
+    RenderFragmentContainer* fragmentAtBlockOffset(const RenderBox*, LayoutUnit, bool) const;
+
+    void fragmentedFlowDescendantBoxLaidOut(RenderBox*);
+
+    void updateSpaceShortageForSizeContainment(const RenderBlock*, LayoutUnit, LayoutUnit);
+
+    void updateMinimumPageHeight(const RenderBlock*, LayoutUnit, LayoutUnit);
+
+    void setPageBreak(const RenderBlock*, LayoutUnit, LayoutUnit);
+
+    bool progressionIsReversed() const;
+
+    bool progressionIsInline() const;
+
+    bool shouldRelayoutForPagination() const;
+
+    bool inBalancingPass() const;
+
+    LayoutUnit columnHeightAvailable() const;
+
+    LayoutUnit columnWidth() const;
+
+    unsigned columnCount() const;
+
+    RenderMultiColumnSet* lastMultiColumnSet() const;
+
+    RenderMultiColumnSet* firstMultiColumnSet() const;
+
+    RenderBlockFlow* multiColumnBlockFlow() const;
+
+private:
+    void* m_handle;
+};
+
+class RenderFragmentContainerScion final {
+public:
+    RenderFragmentContainerScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    LayoutUnit logicalHeightOfAllFragmentedFlowContent() const;
+
+    LayoutUnit pageLogicalHeight() const;
+
+    LayoutUnit pageLogicalWidth() const;
+
+    LayoutUnit logicalBottomOfFragmentedFlowContentRect(const LayoutRect&) const;
+
+    LayoutUnit logicalTopOfFragmentedFlowContentRect(const LayoutRect&) const;
+
+    bool isValid() const;
+
+    RenderFragmentedFlow* fragmentedFlow() const;
+
+    LayoutRect fragmentedFlowPortionRect() const;
+
+    bool isLastFragment() const;
+
+    bool isFirstFragment() const;
+
+private:
+    void* m_handle;
+};
+
+class RenderFragmentContainerSetScion final {
+public:
+    RenderFragmentContainerSetScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+private:
+    void* m_handle;
+};
+
+class RenderMultiColumnSetScion final {
+public:
+    RenderMultiColumnSetScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    LayoutUnit pageLogicalTopForOffset(LayoutUnit) const;
+
+    LayoutUnit logicalHeightOfAllFragmentedFlowContent() const;
+
+    LayoutUnit pageLogicalHeight() const;
+
+    LayoutUnit pageLogicalWidth() const;
+
+    bool containsRendererInFragmentedFlow(const RenderObject&) const;
+
+    RenderMultiColumnSet* previousSiblingMultiColumnSet() const;
+
+    RenderMultiColumnSet* nextSiblingMultiColumnSet() const;
 
 private:
     void* m_handle;

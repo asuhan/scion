@@ -32,11 +32,13 @@
 #include "LayerFragment.h"
 #include "RenderBlockFlow.h"
 #include "RenderFragmentedFlow.h"
+#include "RenderObjectsScion.h"
 #include "VisiblePosition.h"
 #include <memory>
 
 namespace WebCore {
 
+class RenderFragmentContainerScion;
 class Element;
 class RenderBox;
 class RenderBoxFragmentInfo;
@@ -46,10 +48,20 @@ class RenderFragmentContainer : public RenderBlockFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderFragmentContainer);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderFragmentContainer);
 public:
+    void setScionHandle(void* handle);
+
     void styleDidChange(StyleDifference, const RenderStyle* oldStyle) override;
 
-    void setFragmentedFlowPortionRect(const LayoutRect& rect) { m_fragmentedFlowPortionRect = rect; }
-    LayoutRect fragmentedFlowPortionRect() const { return m_fragmentedFlowPortionRect; }
+    void setFragmentedFlowPortionRect(const LayoutRect& rect)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_fragmentedFlowPortionRect = rect;
+    }
+    LayoutRect fragmentedFlowPortionRect() const
+    {
+        if (m_scion) { return m_scion->fragmentedFlowPortionRect(); }
+        return m_fragmentedFlowPortionRect;
+    }
     LayoutRect fragmentedFlowPortionOverflowRect() const;
 
     LayoutPoint fragmentedFlowPortionLocation() const;
@@ -57,11 +69,23 @@ public:
     virtual void attachFragment();
     virtual void detachFragment();
 
-    RenderFragmentedFlow* fragmentedFlow() const { return m_fragmentedFlow.get(); }
+    RenderFragmentedFlow* fragmentedFlow() const
+    {
+        if (m_scion) { return m_scion->fragmentedFlow(); }
+        return m_fragmentedFlow.get();
+    }
 
     // Valid fragments do not create circular dependencies with other flows.
-    bool isValid() const { return m_isValid; }
-    void setIsValid(bool valid) { m_isValid = valid; }
+    bool isValid() const
+    {
+        if (m_scion) { return m_scion->isValid(); }
+        return m_isValid;
+    }
+    void setIsValid(bool valid)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_isValid = valid;
+    }
 
     RenderBoxFragmentInfo* renderBoxFragmentInfo(const RenderBox&) const;
     RenderBoxFragmentInfo* setRenderBoxFragmentInfo(const RenderBox&, LayoutUnit logicalLeftInset, LayoutUnit logicalRightInset,
@@ -97,11 +121,18 @@ public:
     virtual LayoutUnit pageLogicalTopForOffset(LayoutUnit offset) const;
 
     // Whether or not this fragment is a set.
-    virtual bool isRenderFragmentContainerSet() const { return false; }
+    virtual bool isRenderFragmentContainerSet() const
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return false;
+    }
     
     virtual void repaintFragmentedFlowContent(const LayoutRect& repaintRect) const;
 
-    virtual void collectLayerFragments(LayerFragments&, const LayoutRect&, const LayoutRect&) { }
+    virtual void collectLayerFragments(LayerFragments&, const LayoutRect&, const LayoutRect&)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
     void addLayoutOverflowForBox(const RenderBox&, const LayoutRect&);
     void addVisualOverflowForBox(const RenderBox&, const LayoutRect&);
@@ -114,8 +145,16 @@ public:
     void setFragmentObjectsFragmentStyle();
     void restoreFragmentObjectsOriginalStyle();
 
-    bool canHaveChildren() const override { return false; }
-    bool canHaveGeneratedChildren() const override { return true; }
+    bool canHaveChildren() const override
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return false;
+    }
+    bool canHaveGeneratedChildren() const override
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return true;
+    }
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*) override;
 
     virtual Vector<LayoutRect> fragmentRectsForFlowContentRect(const LayoutRect&) const;
@@ -136,7 +175,11 @@ protected:
     LayoutRect fragmentedFlowContentRectangle(const LayoutRect&, const LayoutRect& fragmentedFlowPortionRect, const LayoutPoint& fragmentLocation, const LayoutRect* fragmentedFlowPortionClipRect = 0) const;
 
 private:
-    ASCIILiteral renderName() const override { return "RenderFragmentContainer"_s; }
+    ASCIILiteral renderName() const override
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return "RenderFragmentContainer"_s;
+    }
 
     void insertedIntoTree() override;
     void willBeRemovedFromTree() override;
@@ -159,6 +202,8 @@ private:
     RenderBoxFragmentInfoMap m_renderBoxFragmentInfo;
 
     bool m_isValid { false };
+
+    std::unique_ptr<RenderFragmentContainerScion> m_scion;
 };
 
 class CurrentRenderFragmentContainerMaintainer {

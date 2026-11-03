@@ -33,10 +33,12 @@
 #include "PODIntervalTree.h"
 #include "RenderBlockFlow.h"
 #include "RenderFragmentContainer.h"
+#include "RenderObjectsScion.h"
 #include <wtf/WeakListHashSet.h>
 
 namespace WebCore {
 
+class RenderFragmentedFlowScion;
 class CurrentRenderFragmentContainerMaintainer;
 class RenderFragmentedFlow;
 class RenderStyle;
@@ -58,12 +60,15 @@ class RenderFragmentedFlow : public RenderBlockFlow {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderFragmentedFlow);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderFragmentedFlow);
 public:
+    void setScionHandle(void* handle);
+
     virtual ~RenderFragmentedFlow();
 
     virtual void removeFlowChildInfo(RenderElement&);
 #ifndef NDEBUG
     bool hasChildInfo(RenderObject* child) const
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         auto* renderBox = dynamicDowncast<RenderBox>(child);
         return renderBox && m_fragmentRangeMap.contains(*renderBox);
     }
@@ -77,22 +82,40 @@ public:
 
     virtual void addFragmentToThread(RenderFragmentContainer*) = 0;
     void removeFragmentFromThread(RenderFragmentContainer&);
-    const RenderFragmentContainerList& renderFragmentContainerList() const { return m_fragmentList; }
+    const RenderFragmentContainerList& renderFragmentContainerList() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_fragmentList;
+    }
 
     void updateLogicalWidth() final;
     LogicalExtentComputedValues computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const override;
 
     bool nodeAtPoint(const HitTestRequest&, HitTestResult&, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestAction) override;
 
-    bool hasFragments() const { return !m_fragmentList.isEmptyIgnoringNullReferences(); }
-    virtual void fragmentChangedWritingMode(RenderFragmentContainer*) { }
+    bool hasFragments() const
+    {
+        if (m_scion) { return m_scion->hasFragments(); }
+        return !m_fragmentList.isEmptyIgnoringNullReferences();
+    }
+    virtual void fragmentChangedWritingMode(RenderFragmentContainer*)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
     void validateFragments();
     void invalidateFragments(MarkingBehavior = MarkContainingBlockChain);
-    bool hasValidFragmentInfo() const { return !m_fragmentsInvalidated && !m_fragmentList.isEmptyIgnoringNullReferences(); }
+    bool hasValidFragmentInfo() const
+    {
+        if (m_scion) { return m_scion->hasValidFragmentInfo(); }
+        return !m_fragmentsInvalidated && !m_fragmentList.isEmptyIgnoringNullReferences();
+    }
     
     // Called when a descendant box's layout is finished and it has been positioned within its container.
-    virtual void fragmentedFlowDescendantBoxLaidOut(RenderBox*) { }
+    virtual void fragmentedFlowDescendantBoxLaidOut(RenderBox*)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
     void styleDidChange(StyleDifference, const RenderStyle* oldStyle) override;
 
@@ -103,15 +126,32 @@ public:
     LayoutUnit pageLogicalHeightForOffset(LayoutUnit) const;
     LayoutUnit pageRemainingLogicalHeightForOffset(LayoutUnit, PageBoundaryRule = IncludePageBoundary) const;
 
-    virtual void setPageBreak(const RenderBlock*, LayoutUnit /*offset*/, LayoutUnit /*spaceShortage*/) { }
-    virtual void updateMinimumPageHeight(const RenderBlock*, LayoutUnit /*offset*/, LayoutUnit /*minHeight*/) { }
+    virtual void setPageBreak(const RenderBlock*, LayoutUnit /*offset*/, LayoutUnit /*spaceShortage*/)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
+    virtual void updateMinimumPageHeight(const RenderBlock*, LayoutUnit /*offset*/, LayoutUnit /*minHeight*/)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
-    virtual void updateSpaceShortageForSizeContainment(const RenderBlock*, LayoutUnit /*offset*/, LayoutUnit /*shortage*/) { }
+    virtual void updateSpaceShortageForSizeContainment(const RenderBlock*, LayoutUnit /*offset*/, LayoutUnit /*shortage*/)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
     virtual RenderFragmentContainer* fragmentAtBlockOffset(const RenderBox*, LayoutUnit, bool extendLastFragment = false) const;
 
-    bool fragmentsHaveUniformLogicalWidth() const { return m_fragmentsHaveUniformLogicalWidth; }
-    bool fragmentsHaveUniformLogicalHeight() const { return m_fragmentsHaveUniformLogicalHeight; }
+    bool fragmentsHaveUniformLogicalWidth() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_fragmentsHaveUniformLogicalWidth;
+    }
+    bool fragmentsHaveUniformLogicalHeight() const
+    {
+        if (m_scion) { return m_scion->fragmentsHaveUniformLogicalHeight(); }
+        return m_fragmentsHaveUniformLogicalHeight;
+    }
 
     virtual RenderFragmentContainer* mapFromFlowToFragment(TransformState&) const;
 
@@ -138,10 +178,21 @@ public:
     void markFragmentsForOverflowLayoutIfNeeded();
 
     virtual bool addForcedFragmentBreak(const RenderBlock*, LayoutUnit, RenderBox* breakChild, bool isBefore, LayoutUnit* offsetBreakAdjustment = 0);
-    virtual void applyBreakAfterContent(LayoutUnit) { }
+    virtual void applyBreakAfterContent(LayoutUnit)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+    }
 
-    virtual bool isPageLogicalHeightKnown() const { return true; }
-    bool pageLogicalSizeChanged() const { return m_pageLogicalSizeChanged; }
+    virtual bool isPageLogicalHeightKnown() const
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return true;
+    }
+    bool pageLogicalSizeChanged() const
+    {
+        if (m_scion) { return m_scion->pageLogicalSizeChanged(); }
+        return m_pageLogicalSizeChanged;
+    }
 
     void collectLayerFragments(LayerFragments&, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect);
     LayoutRect fragmentsBoundingBox(const LayoutRect& layerBoundingBox);
@@ -170,25 +221,45 @@ public:
 
     void layout() override;
 
-    void setCurrentFragmentMaintainer(CurrentRenderFragmentContainerMaintainer* currentFragmentMaintainer) { m_currentFragmentMaintainer = currentFragmentMaintainer; }
+    void setCurrentFragmentMaintainer(CurrentRenderFragmentContainerMaintainer* currentFragmentMaintainer)
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        m_currentFragmentMaintainer = currentFragmentMaintainer;
+    }
     RenderFragmentContainer* currentFragment() const;
 
     ContainingFragmentMap& containingFragmentMap();
 
-    bool cachedEnclosingFragmentedFlowNeedsUpdate() const override { return false; }
+    bool cachedEnclosingFragmentedFlowNeedsUpdate() const override
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return false;
+    }
 
     // FIXME: Eventually as column and fragment flow threads start nesting, this may end up changing.
-    virtual bool shouldCheckColumnBreaks() const { return false; }
+    virtual bool shouldCheckColumnBreaks() const
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return false;
+    }
 
 private:
     // Always create a RenderLayer for the RenderFragmentedFlow so that we
     // can easily avoid drawing the children directly.
-    bool requiresLayer() const final { return true; }
+    bool requiresLayer() const final
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return true;
+    }
 
 protected:
     RenderFragmentedFlow(Type, Document&, RenderStyle&&);
 
-    RenderFragmentedFlow* locateEnclosingFragmentedFlow() const override { return const_cast<RenderFragmentedFlow*>(this); }
+    RenderFragmentedFlow* locateEnclosingFragmentedFlow() const override
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return const_cast<RenderFragmentedFlow*>(this);
+    }
 
     ASCIILiteral renderName() const override = 0;
 
@@ -259,6 +330,8 @@ protected:
     bool m_fragmentsHaveUniformLogicalWidth : 1;
     bool m_fragmentsHaveUniformLogicalHeight : 1;
     bool m_pageLogicalSizeChanged : 1;
+
+    std::unique_ptr<RenderFragmentedFlowScion> m_scion;
 };
 
 } // namespace WebCore

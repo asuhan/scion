@@ -29,6 +29,7 @@
 #include "RenderBoxFragmentInfo.h"
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderFragmentedFlow.h"
+#include "RenderObjectsScion.h"
 #include <wtf/TZoneMallocInlines.h>
 
 namespace WebCore {
@@ -43,14 +44,22 @@ RenderFragmentContainerSet::RenderFragmentContainerSet(Type type, Document& docu
 
 RenderFragmentContainerSet::~RenderFragmentContainerSet() = default;
 
+void RenderFragmentContainerSet::setScionHandle(void* handle)
+{
+    RenderFragmentContainer::setScionHandle(handle);
+    m_scion = std::make_unique<RenderFragmentContainerSetScion>(handle);
+}
+
 void RenderFragmentContainerSet::installFragmentedFlow()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // We don't have to do anything, since we were able to connect the flow thread
     // in the constructor.
 }
 
 void RenderFragmentContainerSet::expandToEncompassFragmentedFlowContentsIfNeeded()
 {
+    if (m_scion) { ASSERT_NOT_REACHED(); }
     // Whenever the last region is a set, it always expands its region rect to consume all
     // of the flow thread content. This is because it is always capable of generating an
     // infinite number of boxes in order to hold all of the remaining content.
