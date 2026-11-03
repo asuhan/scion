@@ -1081,12 +1081,24 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       self.offset = offset
     }
 
+    func lowValue() -> LayoutUnit { return offset }
+    func highValue() -> LayoutUnit { return offset }
+
+    func collectIfNeeded(low: LayoutUnit, high: LayoutUnit, data: RenderFragmentContainerWrapper) {
+      if m_result != nil {
+        return
+      }
+      if low <= offset && high > offset {
+        m_result = data
+      }
+    }
+
     func result() -> RenderFragmentContainerWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return m_result
     }
 
     private let offset: LayoutUnit
+    private weak var m_result: RenderFragmentContainerWrapper? = nil
   }
 
   let fragmentList = RenderFragmentContainerList()
@@ -1103,7 +1115,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private lazy var breakBeforeToFragmentMap = RenderBoxToFragmentMap()
   private lazy var breakAfterToFragmentMap = RenderBoxToFragmentMap()
 
-  private let fragmentIntervalTree = FragmentIntervalTree()
+  private let fragmentIntervalTree = FragmentIntervalTree(less: { $0 < $1 })
 
   var currentFragmentMaintainer: CurrentRenderFragmentContainerMaintainer? = nil
 
