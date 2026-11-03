@@ -1241,6 +1241,10 @@ public:
     {
     }
 
+    void clearMultiColumnFlow();
+
+    void setMultiColumnFlow(RenderMultiColumnFlow&);
+
     void layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight);
 
     void willBeDestroyed();

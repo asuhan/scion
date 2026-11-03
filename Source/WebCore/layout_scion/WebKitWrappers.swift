@@ -4750,6 +4750,22 @@ func RenderMultiColumnSetScion_containsRendererInFragmentedFlow(
   return obj.containsRendererInFragmentedFlow(renderer: renderer)
 }
 
+@_cdecl("RenderBlockFlowScion_setMultiColumnFlow")
+func RenderBlockFlowScion_setMultiColumnFlow(
+  _ objRaw: UnsafeMutableRawPointer, _ fragmentedFlowRaw: UnsafeMutableRawPointer
+) {
+  let obj = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  let fragmentedFlow =
+    createRenderObjectWrapperOrNative(fragmentedFlowRaw) as! RenderMultiColumnFlowWrapper
+  obj.setMultiColumnFlow(fragmentedFlow: fragmentedFlow)
+}
+
+@_cdecl("RenderBlockFlowScion_clearMultiColumnFlow")
+func RenderBlockFlowScion_clearMultiColumnFlow(_ objRaw: UnsafeMutableRawPointer) {
+  let obj = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  obj.clearMultiColumnFlow()
+}
+
 @_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
 func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
   _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,

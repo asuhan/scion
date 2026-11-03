@@ -899,6 +899,8 @@ extern "C" void RenderFragmentedFlowScion_repaintRectangleInFragments(const void
 extern "C" void* RenderMultiColumnSetScion_nextSiblingMultiColumnSet(const void*);
 extern "C" void* RenderMultiColumnSetScion_previousSiblingMultiColumnSet(const void*);
 extern "C" bool RenderMultiColumnSetScion_containsRendererInFragmentedFlow(const void*, void*);
+extern "C" void RenderBlockFlowScion_setMultiColumnFlow(void*, void*);
+extern "C" void RenderBlockFlowScion_clearMultiColumnFlow(void*);
 extern "C" void RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(const void*, void*, bool*);
 extern "C" int32_t RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(const void*, void*);
 extern "C" int32_t RenderFragmentedFlowScion_pageLogicalHeightForOffset(const void*, int32_t);
@@ -3357,6 +3359,16 @@ RenderMultiColumnSet* RenderMultiColumnSetScion::previousSiblingMultiColumnSet()
 bool RenderMultiColumnSetScion::containsRendererInFragmentedFlow(const RenderObject& renderer) const
 {
     return RenderMultiColumnSetScion_containsRendererInFragmentedFlow(m_handle, const_cast<void*>(static_cast<const void*>(&renderer)));
+}
+
+void RenderBlockFlowScion::setMultiColumnFlow(RenderMultiColumnFlow& fragmentedFlow)
+{
+    RenderBlockFlowScion_setMultiColumnFlow(m_handle, const_cast<void*>(static_cast<const void*>(&fragmentedFlow)));
+}
+
+void RenderBlockFlowScion::clearMultiColumnFlow()
+{
+    RenderBlockFlowScion_clearMultiColumnFlow(m_handle);
 }
 
 void RenderFragmentedFlowScion::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren) const
