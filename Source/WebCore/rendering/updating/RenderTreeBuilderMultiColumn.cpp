@@ -24,11 +24,13 @@
 #include "config.h"
 #include "RenderTreeBuilderMultiColumn.h"
 
+#include "Document.h"
 #include "RenderBlockFlow.h"
 #include "RenderChildIterator.h"
 #include "RenderMultiColumnFlow.h"
 #include "RenderMultiColumnSet.h"
 #include "RenderMultiColumnSpannerPlaceholder.h"
+#include "RenderObjectsScion.h"
 #include "RenderStyleInlines.h"
 #include "RenderTextControl.h"
 #include "RenderTreeBuilder.h"
@@ -163,7 +165,14 @@ void RenderTreeBuilder::MultiColumn::createFragmentedFlow(RenderBlockFlow& flow)
     if (auto* enclosingflow = dynamicDowncast<RenderMultiColumnFlow>(flow.enclosingFragmentedFlow()))
         restoreColumnSpannersForContainer(flow, *enclosingflow);
 
-    auto newFragmentedFlow = WebCore::createRenderer<RenderMultiColumnFlow>(flow.document(), RenderStyle::createAnonymousStyleWithDisplay(flow.style(), DisplayType::Block));
+    auto newFragmentedFlowStyle = RenderStyle::createAnonymousStyleWithDisplay(flow.style(), DisplayType::Block);
+    RenderPtr<RenderMultiColumnFlow> newFragmentedFlow;
+    if (Document::s_useScionRendering >= 18) {
+        auto clonedStyle = RenderStyle::clonePtr(newFragmentedFlowStyle);
+        newFragmentedFlow = WebCore::createRenderer<RenderMultiColumnFlow>(flow.document(), WTFMove(newFragmentedFlowStyle));
+        newFragmentedFlow->setScionHandle(RenderMultiColumnFlowScion_create(&flow.document(), clonedStyle.release()));
+    } else
+        newFragmentedFlow = WebCore::createRenderer<RenderMultiColumnFlow>(flow.document(), WTFMove(newFragmentedFlowStyle));
     newFragmentedFlow->initializeStyle();
     auto& fragmentedFlow = *newFragmentedFlow;
     m_builder.blockBuilder().attach(flow, WTFMove(newFragmentedFlow), nullptr);
@@ -385,7 +394,14 @@ RenderObject* RenderTreeBuilder::MultiColumn::processPossibleSpannerDescendant(R
     // Need to create a new column set when there's no set already created. We also always insert
     // another column set after a spanner. Even if it turns out that there are no renderers
     // following the spanner, there may be bottom margins there, which take up space.
-    auto newSet = createRenderer<RenderMultiColumnSet>(flow, RenderStyle::createAnonymousStyleWithDisplay(multicolContainer->style(), DisplayType::Block));
+    auto newSetStyle = RenderStyle::createAnonymousStyleWithDisplay(multicolContainer->style(), DisplayType::Block);
+    RenderPtr<RenderMultiColumnSet> newSet;
+    if (Document::s_useScionRendering >= 18) {
+        auto clonedStyle = RenderStyle::clonePtr(newSetStyle);
+        newSet = createRenderer<RenderMultiColumnSet>(flow, WTFMove(newSetStyle));
+        newSet->setScionHandle(RenderMultiColumnSetScion_create(&flow, clonedStyle.release()));
+    } else
+        newSet = createRenderer<RenderMultiColumnSet>(flow, WTFMove(newSetStyle));
     newSet->initializeStyle();
     auto& set = *newSet;
     m_builder.blockBuilder().attach(*multicolContainer, WTFMove(newSet), insertBeforeMulticolChild);

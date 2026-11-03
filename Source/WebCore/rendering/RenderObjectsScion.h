@@ -92,6 +92,10 @@ extern "C" void* RenderTableColScion_createFromDocument(void*, const void*);
 
 extern "C" void* RenderTableCaptionScion_create(void*, const void*);
 
+extern "C" void* RenderMultiColumnFlowScion_create(void*, const void*);
+
+extern "C" void* RenderMultiColumnSetScion_create(void*, const void*);
+
 extern "C" void* RenderListMarkerScion_create(void*, const void*);
 
 extern "C" void* RenderCombineTextScion_create(void*, const void*);

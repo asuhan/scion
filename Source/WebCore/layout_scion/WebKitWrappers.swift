@@ -4019,6 +4019,32 @@ func RenderTableCaptionScion_create(
   return Unmanaged.passRetained(renderer).toOpaque()
 }
 
+@_cdecl("RenderMultiColumnFlowScion_create")
+func RenderMultiColumnFlowScion_create(
+  _ document: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let renderer = RenderMultiColumnFlowWrapper(document: Document(document), style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderMultiColumnSetScion_create")
+func RenderMultiColumnSetScion_create(
+  _ fragmentedFlowRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let fragmentedFlow =
+    createRenderObjectWrapperOrNative(fragmentedFlowRaw) as! RenderFragmentedFlowWrapper
+  let renderer = RenderMultiColumnSetWrapper(fragmentedFlow: fragmentedFlow, style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
 @_cdecl("RenderListItemScion_create")
 func RenderListItemScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer
