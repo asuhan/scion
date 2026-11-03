@@ -1337,8 +1337,7 @@ func RenderObjectScion_enclosingFragmentedFlow(_ objectRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?
 {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
-  assert(object.enclosingFragmentedFlow() == nil)
-  return nil
+  return wkRenderObject(object.enclosingFragmentedFlow())
 }
 
 @_cdecl("RenderObjectScion_canHaveGeneratedChildren")
@@ -6228,8 +6227,7 @@ func RenderBlockFlowScion_multiColumnFlow(_ blockFlowRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer?
 {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
-  assert(blockFlow.multiColumnFlowForBlockFlow() == nil)
-  return nil
+  return wkRenderObject(blockFlow.multiColumnFlowForBlockFlow())
 }
 
 @_cdecl("RenderBlockFlowScion_requiresColumns")
