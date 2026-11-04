@@ -80,12 +80,18 @@ public:
 
     template<typename T> void setX(T x)
     {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
+        if (m_scion) {
+            setXLayoutUnit(LayoutUnit(x));
+            return;
+        }
         m_frameRect.setX(x);
     }
     template<typename T> void setY(T y)
     {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
+        if (m_scion) {
+            setYLayoutUnit(LayoutUnit(y));
+            return;
+        }
         m_frameRect.setY(y);
     }
 
