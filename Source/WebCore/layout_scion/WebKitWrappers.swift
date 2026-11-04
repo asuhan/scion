@@ -4785,6 +4785,12 @@ func RenderLayerModelObjectScion_destroyLayer(_ objRaw: UnsafeMutableRawPointer)
   obj.destroyLayer()
 }
 
+@_cdecl("RenderBoxScion_shrinkToAvoidFloats")
+func RenderBoxScion_shrinkToAvoidFloats(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderBoxWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.shrinkToAvoidFloats()
+}
+
 @_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
 func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
   _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,

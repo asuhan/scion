@@ -914,6 +914,8 @@ public:
     {
     }
 
+    bool shrinkToAvoidFloats() const;
+
     RenderBox* previousInFlowSiblingBox() const;
 
     RenderBox* previousSiblingBox() const;
