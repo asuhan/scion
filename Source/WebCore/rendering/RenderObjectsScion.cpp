@@ -899,6 +899,8 @@ extern "C" void RenderFragmentedFlowScion_repaintRectangleInFragments(const void
 extern "C" void* RenderMultiColumnSetScion_nextSiblingMultiColumnSet(const void*);
 extern "C" void* RenderMultiColumnSetScion_previousSiblingMultiColumnSet(const void*);
 extern "C" bool RenderMultiColumnSetScion_containsRendererInFragmentedFlow(const void*, void*);
+extern "C" void* RenderBoxScion_previousSiblingBox(const void*);
+extern "C" void* RenderBoxScion_previousInFlowSiblingBox(const void*);
 extern "C" void RenderBlockFlowScion_setMultiColumnFlow(void*, void*);
 extern "C" void RenderBlockFlowScion_clearMultiColumnFlow(void*);
 extern "C" void RenderLayerModelObjectScion_destroyLayer(void*);
@@ -3360,6 +3362,16 @@ RenderMultiColumnSet* RenderMultiColumnSetScion::previousSiblingMultiColumnSet()
 bool RenderMultiColumnSetScion::containsRendererInFragmentedFlow(const RenderObject& renderer) const
 {
     return RenderMultiColumnSetScion_containsRendererInFragmentedFlow(m_handle, const_cast<void*>(static_cast<const void*>(&renderer)));
+}
+
+RenderBox* RenderBoxScion::previousSiblingBox() const
+{
+    return static_cast<RenderBox*>(RenderBoxScion_previousSiblingBox(m_handle));
+}
+
+RenderBox* RenderBoxScion::previousInFlowSiblingBox() const
+{
+    return static_cast<RenderBox*>(RenderBoxScion_previousInFlowSiblingBox(m_handle));
 }
 
 void RenderBlockFlowScion::setMultiColumnFlow(RenderMultiColumnFlow& fragmentedFlow)

@@ -1020,26 +1020,6 @@ inline RenderBox* RenderBox::lastInFlowChildBox() const
     return dynamicDowncast<RenderBox>(lastInFlowChild());
 }
 
-inline RenderBox* RenderBox::previousSiblingBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    if (auto* box = dynamicDowncast<RenderBox>(previousSibling()))
-        return box;
-
-    ASSERT(!previousSibling());
-    return nullptr;
-}
-
-inline RenderBox* RenderBox::previousInFlowSiblingBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    for (RenderBox* curr = previousSiblingBox(); curr; curr = curr->previousSiblingBox()) {
-        if (!curr->isFloatingOrOutOfFlowPositioned())
-            return curr;
-    }
-    return nullptr;
-}
-
 LayoutUnit synthesizedBaseline(const RenderBox&, const RenderStyle& parentStyle, LineDirectionMode, BaselineSynthesisEdge);
 
 } // namespace WebCore

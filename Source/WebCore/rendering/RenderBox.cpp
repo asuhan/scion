@@ -1438,6 +1438,26 @@ RenderBox* RenderBox::firstChildBox() const
     return nullptr;
 }
 
+RenderBox* RenderBox::previousSiblingBox() const
+{
+    if (m_scion) { return m_scion->previousSiblingBox(); }
+    if (auto* box = dynamicDowncast<RenderBox>(previousSibling()))
+        return box;
+
+    ASSERT(!previousSibling());
+    return nullptr;
+}
+
+RenderBox* RenderBox::previousInFlowSiblingBox() const
+{
+    if (m_scion) { return m_scion->previousInFlowSiblingBox(); }
+    for (RenderBox* curr = previousSiblingBox(); curr; curr = curr->previousSiblingBox()) {
+        if (!curr->isFloatingOrOutOfFlowPositioned())
+            return curr;
+    }
+    return nullptr;
+}
+
 RenderBox* RenderBox::nextSiblingBox() const
 {
     if (m_scion) { return m_scion->nextSiblingBox(); }

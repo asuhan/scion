@@ -914,6 +914,10 @@ public:
     {
     }
 
+    RenderBox* previousInFlowSiblingBox() const;
+
+    RenderBox* previousSiblingBox() const;
+
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     bool requiresLayerWithScrollableArea() const;

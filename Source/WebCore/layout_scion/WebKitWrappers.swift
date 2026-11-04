@@ -4750,6 +4750,19 @@ func RenderMultiColumnSetScion_containsRendererInFragmentedFlow(
   return obj.containsRendererInFragmentedFlow(renderer: renderer)
 }
 
+@_cdecl("RenderBoxScion_previousSiblingBox")
+func RenderBoxScion_previousSiblingBox(_ objRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let obj = Unmanaged<RenderBoxWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.previousSiblingBox())
+}
+
+@_cdecl("RenderBoxScion_previousInFlowSiblingBox")
+func RenderBoxScion_previousInFlowSiblingBox(_ objRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderBoxWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.previousInFlowSiblingBox())
+}
+
 @_cdecl("RenderBlockFlowScion_setMultiColumnFlow")
 func RenderBlockFlowScion_setMultiColumnFlow(
   _ objRaw: UnsafeMutableRawPointer, _ fragmentedFlowRaw: UnsafeMutableRawPointer
