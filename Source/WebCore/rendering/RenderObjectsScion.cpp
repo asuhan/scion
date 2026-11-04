@@ -905,6 +905,7 @@ extern "C" void RenderBlockFlowScion_setMultiColumnFlow(void*, void*);
 extern "C" void RenderBlockFlowScion_clearMultiColumnFlow(void*);
 extern "C" void RenderLayerModelObjectScion_destroyLayer(void*);
 extern "C" bool RenderBoxScion_shrinkToAvoidFloats(const void*);
+extern "C" bool RenderElementScion_isFirstLetter(const void*);
 extern "C" void RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(const void*, void*, bool*);
 extern "C" int32_t RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(const void*, void*);
 extern "C" int32_t RenderFragmentedFlowScion_pageLogicalHeightForOffset(const void*, int32_t);
@@ -3393,6 +3394,11 @@ void RenderLayerModelObjectScion::destroyLayer()
 bool RenderBoxScion::shrinkToAvoidFloats() const
 {
     return RenderBoxScion_shrinkToAvoidFloats(m_handle);
+}
+
+bool RenderElementScion::isFirstLetter() const
+{
+    return RenderElementScion_isFirstLetter(m_handle);
 }
 
 void RenderFragmentedFlowScion::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren) const

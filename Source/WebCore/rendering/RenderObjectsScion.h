@@ -616,6 +616,8 @@ public:
     {
     }
 
+    bool isFirstLetter() const;
+
     void setIsContinuation();
 
     void setIsFirstLetter();

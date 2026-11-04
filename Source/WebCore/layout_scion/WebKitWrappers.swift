@@ -4791,6 +4791,12 @@ func RenderBoxScion_shrinkToAvoidFloats(_ objRaw: UnsafeRawPointer) -> Bool {
   return obj.shrinkToAvoidFloats()
 }
 
+@_cdecl("RenderElementScion_isFirstLetter")
+func RenderElementScion_isFirstLetter(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderElementWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isFirstLetter()
+}
+
 @_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
 func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
   _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,

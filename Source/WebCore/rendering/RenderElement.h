@@ -285,11 +285,7 @@ public:
     bool hasContinuationChainNode() const;
     bool isContinuation() const;
     void setIsContinuation();
-    bool isFirstLetter() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_isFirstLetter;
-    }
+    WEBCORE_EXPORT bool isFirstLetter() const;
     void setIsFirstLetter();
 
     RenderObject* attachRendererInternal(RenderPtr<RenderObject> child, RenderObject* beforeChild);

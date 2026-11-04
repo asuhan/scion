@@ -303,6 +303,12 @@ void RenderElement::setScionHandle(void* handle) {
     m_scion = std::make_unique<RenderElementScion>(handle);
 }
 
+bool RenderElement::isFirstLetter() const
+{
+    if (m_scion) { return m_scion->isFirstLetter(); }
+    return m_isFirstLetter;
+}
+
 const RenderStyle& RenderElement::style() const
 {
     if (m_scion) { return m_scion->style(); }
