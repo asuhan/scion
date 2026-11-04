@@ -524,7 +524,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       if CPtrToInt(renderer!.id()) == CPtrToInt(ancestor?.id()) {
         return true
       }
-      renderer = renderer!.m_parent
+      // Interop ancestors don't maintain m_parent, parent() routes for them.
+      renderer = renderer!.parent()
     }
     return false
   }
