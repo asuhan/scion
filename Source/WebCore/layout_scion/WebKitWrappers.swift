@@ -4766,6 +4766,12 @@ func RenderBlockFlowScion_clearMultiColumnFlow(_ objRaw: UnsafeMutableRawPointer
   obj.clearMultiColumnFlow()
 }
 
+@_cdecl("RenderLayerModelObjectScion_destroyLayer")
+func RenderLayerModelObjectScion_destroyLayer(_ objRaw: UnsafeMutableRawPointer) {
+  let obj = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  obj.destroyLayer()
+}
+
 @_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
 func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
   _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,

@@ -847,6 +847,8 @@ public:
     {
     }
 
+    void destroyLayer();
+
     bool hasSelfPaintingLayer() const;
 
     RenderLayer* layer() const;

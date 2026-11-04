@@ -116,7 +116,10 @@ void RenderLayerModelObject::willBeDestroyed()
 
 void RenderLayerModelObject::destroyLayer()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->destroyLayer();
+        return;
+    }
     setHasLayer(false);
     m_layer = nullptr;
 }
