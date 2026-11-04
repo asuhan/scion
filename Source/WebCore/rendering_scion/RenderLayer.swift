@@ -680,7 +680,10 @@ class RenderLayerWrapper {
   }
 
   func removeOnlyThisLayer(timing: LayerChangeTiming) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_removeOnlyThisLayer(pInterop!, timing == .RenderTreeConstruction)
+      return
+    }
     if m_parent == nil {
       return
     }

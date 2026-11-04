@@ -205,6 +205,12 @@ extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool tim
     static_cast<WebCore::RenderLayer*>(p)->insertOnlyThisLayer(timing);
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_removeOnlyThisLayer(void* p, bool timing_raw)
+{
+    auto timing = timing_raw ? WebCore::RenderLayer::LayerChangeTiming::RenderTreeConstruction : WebCore::RenderLayer::LayerChangeTiming::StyleChange;
+    static_cast<WebCore::RenderLayer*>(p)->removeOnlyThisLayer(timing);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_hasTransformedAncestor(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->hasTransformedAncestor();
