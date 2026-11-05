@@ -920,6 +920,7 @@ extern "C" int32_t RenderBoxModelObjectScion_borderStart(const void*);
 extern "C" int32_t RenderBoxModelObjectScion_borderEnd(const void*);
 extern "C" void* RenderBoxModelObjectScion_firstLetterRemainingText(const void*);
 extern "C" void RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(const void*, void*, bool*);
+extern "C" void RenderBoxScion_removeFloatingOrPositionedChildFromBlockLists(void*);
 extern "C" int32_t RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(const void*, void*);
 extern "C" int32_t RenderFragmentedFlowScion_pageLogicalHeightForOffset(const void*, int32_t);
 extern "C" int32_t RenderFragmentedFlowScion_pageRemainingLogicalHeightForOffset(const void*, int32_t, bool);
@@ -3482,6 +3483,11 @@ RenderTextFragment* RenderBoxModelObjectScion::firstLetterRemainingText() const
 void RenderFragmentedFlowScion::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren) const
 {
     RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(m_handle, const_cast<void*>(static_cast<const void*>(&block)), &relayoutChildren);
+}
+
+void RenderBoxScion::removeFloatingOrPositionedChildFromBlockLists()
+{
+    RenderBoxScion_removeFloatingOrPositionedChildFromBlockLists(m_handle);
 }
 
 LayoutUnit RenderFragmentedFlowScion::offsetFromLogicalTopOfFirstFragment(const RenderBlock* currentBlock) const

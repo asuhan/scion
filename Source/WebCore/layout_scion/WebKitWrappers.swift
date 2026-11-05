@@ -4888,6 +4888,13 @@ func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
     block: block, relayoutChildren: &relayoutChildren.pointee)
 }
 
+@_cdecl("RenderBoxScion_removeFloatingOrPositionedChildFromBlockLists")
+func RenderBoxScion_removeFloatingOrPositionedChildFromBlockLists(_ objRaw: UnsafeMutableRawPointer)
+{
+  let obj = Unmanaged<RenderBoxWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  obj.removeFloatingOrPositionedChildFromBlockLists()
+}
+
 @_cdecl("RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment")
 func RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(
   _ objRaw: UnsafeRawPointer, _ currentBlockRaw: UnsafeMutableRawPointer?

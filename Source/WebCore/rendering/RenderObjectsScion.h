@@ -942,6 +942,8 @@ public:
     {
     }
 
+    void removeFloatingOrPositionedChildFromBlockLists();
+
     bool shrinkToAvoidFloats() const;
 
     RenderBox* previousInFlowSiblingBox() const;

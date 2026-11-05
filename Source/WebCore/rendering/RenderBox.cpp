@@ -615,7 +615,10 @@ void RenderBox::removeFloatingAndInvalidateForLayout()
 
 void RenderBox::removeFloatingOrPositionedChildFromBlockLists()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->removeFloatingOrPositionedChildFromBlockLists();
+        return;
+    }
     ASSERT(!renderTreeBeingDestroyed());
 
     if (isFloating())
