@@ -906,6 +906,18 @@ extern "C" void RenderBlockFlowScion_clearMultiColumnFlow(void*);
 extern "C" void RenderLayerModelObjectScion_destroyLayer(void*);
 extern "C" bool RenderBoxScion_shrinkToAvoidFloats(const void*);
 extern "C" bool RenderElementScion_isFirstLetter(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingTop(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingBottom(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingLeft(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingRight(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingBefore(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingAfter(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingStart(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_paddingEnd(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_borderBefore(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_borderAfter(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_borderStart(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_borderEnd(const void*);
 extern "C" void RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(const void*, void*, bool*);
 extern "C" int32_t RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(const void*, void*);
 extern "C" int32_t RenderFragmentedFlowScion_pageLogicalHeightForOffset(const void*, int32_t);
@@ -3399,6 +3411,66 @@ bool RenderBoxScion::shrinkToAvoidFloats() const
 bool RenderElementScion::isFirstLetter() const
 {
     return RenderElementScion_isFirstLetter(m_handle);
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingTop() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingTop(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingBottom(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingLeft(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingRight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingRight(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingBefore(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingAfter(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingStart() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingStart(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::paddingEnd() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingEnd(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderBefore() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderBefore(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderAfter() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderAfter(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderStart() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderStart(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderEnd() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderEnd(m_handle));
 }
 
 void RenderFragmentedFlowScion::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren) const

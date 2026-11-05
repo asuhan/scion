@@ -28,7 +28,7 @@ namespace WebCore {
 
 inline LayoutUnit RenderBoxModelObject::borderAfter() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderAfter(); }
     return LayoutUnit(style().borderAfterWidth());
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalHeight() const
@@ -63,12 +63,12 @@ inline LayoutUnit RenderBoxModelObject::borderAndPaddingEnd() const
 }
 inline LayoutUnit RenderBoxModelObject::borderBefore() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderBefore(); }
     return LayoutUnit(style().borderBeforeWidth());
 }
 inline LayoutUnit RenderBoxModelObject::borderEnd() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderEnd(); }
     return LayoutUnit(style().borderEndWidth());
 }
 inline LayoutUnit RenderBoxModelObject::borderLogicalHeight() const
@@ -88,7 +88,7 @@ inline LayoutUnit RenderBoxModelObject::borderLogicalWidth() const
 }
 inline LayoutUnit RenderBoxModelObject::borderStart() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderStart(); }
     return LayoutUnit(style().borderStartWidth());
 }
 inline LayoutUnit RenderBoxModelObject::computedCSSPaddingAfter() const
@@ -173,27 +173,27 @@ inline LayoutUnit RenderBoxModelObject::marginAndBorderAndPaddingStart() const
 }
 inline LayoutUnit RenderBoxModelObject::paddingAfter() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingAfter(); }
     return computedCSSPaddingAfter();
 }
 inline LayoutUnit RenderBoxModelObject::paddingBefore() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingBefore(); }
     return computedCSSPaddingBefore();
 }
 inline LayoutUnit RenderBoxModelObject::paddingBottom() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingBottom(); }
     return computedCSSPaddingBottom();
 }
 inline LayoutUnit RenderBoxModelObject::paddingEnd() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingEnd(); }
     return computedCSSPaddingEnd();
 }
 inline LayoutUnit RenderBoxModelObject::paddingLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingLeft(); }
     return computedCSSPaddingLeft();
 }
 inline LayoutUnit RenderBoxModelObject::paddingLogicalHeight() const
@@ -218,17 +218,17 @@ inline LayoutUnit RenderBoxModelObject::paddingLogicalWidth() const
 }
 inline LayoutUnit RenderBoxModelObject::paddingRight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingRight(); }
     return computedCSSPaddingRight();
 }
 inline LayoutUnit RenderBoxModelObject::paddingStart() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingStart(); }
     return computedCSSPaddingStart();
 }
 inline LayoutUnit RenderBoxModelObject::paddingTop() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingTop(); }
     return computedCSSPaddingTop();
 }
 inline LayoutSize RenderBoxModelObject::relativePositionLogicalOffset() const

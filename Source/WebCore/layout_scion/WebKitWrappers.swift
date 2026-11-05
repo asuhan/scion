@@ -4797,6 +4797,78 @@ func RenderElementScion_isFirstLetter(_ objRaw: UnsafeRawPointer) -> Bool {
   return obj.isFirstLetter()
 }
 
+@_cdecl("RenderBoxModelObjectScion_paddingTop")
+func RenderBoxModelObjectScion_paddingTop(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingTop().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingBottom")
+func RenderBoxModelObjectScion_paddingBottom(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingBottom().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingLeft")
+func RenderBoxModelObjectScion_paddingLeft(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingLeft().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingRight")
+func RenderBoxModelObjectScion_paddingRight(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingRight().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingBefore")
+func RenderBoxModelObjectScion_paddingBefore(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingBefore().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingAfter")
+func RenderBoxModelObjectScion_paddingAfter(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingAfter().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingStart")
+func RenderBoxModelObjectScion_paddingStart(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingStart().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_paddingEnd")
+func RenderBoxModelObjectScion_paddingEnd(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.paddingEnd().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderBefore")
+func RenderBoxModelObjectScion_borderBefore(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.borderBefore().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderAfter")
+func RenderBoxModelObjectScion_borderAfter(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.borderAfter().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderStart")
+func RenderBoxModelObjectScion_borderStart(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.borderStart().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderEnd")
+func RenderBoxModelObjectScion_borderEnd(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.borderEnd().rawValue()
+}
+
 @_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
 func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
   _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,

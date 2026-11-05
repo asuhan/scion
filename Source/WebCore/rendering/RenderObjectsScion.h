@@ -872,6 +872,30 @@ public:
     {
     }
 
+    LayoutUnit borderEnd() const;
+
+    LayoutUnit borderStart() const;
+
+    LayoutUnit borderAfter() const;
+
+    LayoutUnit borderBefore() const;
+
+    LayoutUnit paddingEnd() const;
+
+    LayoutUnit paddingStart() const;
+
+    LayoutUnit paddingAfter() const;
+
+    LayoutUnit paddingBefore() const;
+
+    LayoutUnit paddingRight() const;
+
+    LayoutUnit paddingLeft() const;
+
+    LayoutUnit paddingBottom() const;
+
+    LayoutUnit paddingTop() const;
+
     LayoutSize offsetForInFlowPosition() const;
 
     bool hasAcceleratedCompositing() const;
