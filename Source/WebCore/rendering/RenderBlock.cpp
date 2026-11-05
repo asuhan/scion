@@ -3096,7 +3096,7 @@ RenderPtr<RenderBlock> RenderBlock::createAnonymousBlockWithStyleAndDisplay(Docu
 
 LayoutUnit RenderBlock::offsetFromLogicalTopOfFirstPage() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->offsetFromLogicalTopOfFirstPage(); }
     auto* layoutState = view().frameView().layoutContext().layoutState();
     if (layoutState && !layoutState->isPaginated())
         return 0;

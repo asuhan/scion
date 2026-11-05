@@ -5160,6 +5160,12 @@ func RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(
   obj.addFragmentsVisualOverflowFromTheme(block: block)
 }
 
+@_cdecl("RenderBlockScion_offsetFromLogicalTopOfFirstPage")
+func RenderBlockScion_offsetFromLogicalTopOfFirstPage(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBlockWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.offsetFromLogicalTopOfFirstPage().rawValue()
+}
+
 @_cdecl("RenderFragmentedFlowScion_collectLayerFragments")
 func RenderFragmentedFlowScion_collectLayerFragments(
   _ objRaw: UnsafeRawPointer, _ layerFragmentsRaw: UnsafeMutableRawPointer,

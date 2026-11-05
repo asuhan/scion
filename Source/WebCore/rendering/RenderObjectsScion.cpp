@@ -951,6 +951,7 @@ extern "C" int32_t RenderMultiColumnSetScion_pageLogicalTopForOffset(const void*
 extern "C" void RenderFragmentedFlowScion_clearFragmentsOverflow(void*, void*);
 extern "C" void RenderFragmentedFlowScion_addFragmentsVisualEffectOverflow(void*, void*);
 extern "C" void RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(void*, void*);
+extern "C" int32_t RenderBlockScion_offsetFromLogicalTopOfFirstPage(const void*);
 extern "C" void RenderFragmentedFlowScion_collectLayerFragments(const void*, void*, LayoutRectRaw, LayoutRectRaw);
 extern "C" LayoutRectRaw RenderFragmentedFlowScion_fragmentsBoundingBox(void*, LayoutRectRaw);
 extern "C" void RenderTableCaptionScion_willBeRemovedFromTree(void*);
@@ -3639,6 +3640,11 @@ void RenderFragmentedFlowScion::addFragmentsVisualEffectOverflow(const RenderBox
 void RenderFragmentedFlowScion::addFragmentsVisualOverflowFromTheme(const RenderBlock& block)
 {
     RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(m_handle, const_cast<void*>(static_cast<const void*>(&block)));
+}
+
+LayoutUnit RenderBlockScion::offsetFromLogicalTopOfFirstPage() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_offsetFromLogicalTopOfFirstPage(m_handle));
 }
 
 void RenderFragmentedFlowScion::collectLayerFragments(void* layerFragments, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect) const
