@@ -1156,6 +1156,8 @@ public:
     {
     }
 
+    const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
+
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     IntRect linesBoundingBox() const;

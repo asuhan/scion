@@ -6322,6 +6322,15 @@ func RenderBoxScion_pushMappingToContainer(
   return pushMappingToContainerImpl(box, ancestorToStopAtRaw, geometryMapRaw)
 }
 
+@_cdecl("RenderInlineScion_pushMappingToContainer")
+func RenderInlineScion_pushMappingToContainer(
+  _ inlineRaw: UnsafeRawPointer, _ ancestorToStopAtRaw: UnsafeRawPointer?,
+  _ geometryMapRaw: UnsafeMutableRawPointer
+) -> UnsafeRawPointer? {
+  let renderInline = Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+  return pushMappingToContainerImpl(renderInline, ancestorToStopAtRaw, geometryMapRaw)
+}
+
 @_cdecl("RenderBlockFlowScion_willBeDestroyed")
 func RenderBlockFlowScion_willBeDestroyed(_ blockFlowRaw: UnsafeMutableRawPointer) {
   let box = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()

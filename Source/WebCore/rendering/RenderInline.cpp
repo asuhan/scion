@@ -852,7 +852,7 @@ void RenderInline::mapLocalToContainer(const RenderLayerModelObject* ancestorCon
 
 const RenderObject* RenderInline::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->pushMappingToContainer(ancestorToStopAt, geometryMap); }
     ASSERT(ancestorToStopAt != this);
 
     bool ancestorSkipped;

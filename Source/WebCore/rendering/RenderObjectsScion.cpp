@@ -1306,6 +1306,7 @@ extern "C" void RenderObjectScion_mapLocalToContainer(const void*, void*, void*,
 extern "C" void RenderBoxScion_mapAbsoluteToLocalPoint(const void*, uint8_t, void*);
 
 extern "C" const void* RenderBoxScion_pushMappingToContainer(const void*, const void*, void*);
+extern "C" const void* RenderInlineScion_pushMappingToContainer(const void*, const void*, void*);
 
 extern "C" void RenderBlockScion_insertPositionedObject(void*, void*);
 
@@ -4337,6 +4338,11 @@ void RenderBoxScion::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode,
 const RenderObject* RenderBoxScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
     return static_cast<const RenderObject*>(RenderBoxScion_pushMappingToContainer(m_handle, ancestorToStopAt ? ancestorToStopAt->scion() : nullptr, &geometryMap));
+}
+
+const RenderObject* RenderInlineScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
+{
+    return static_cast<const RenderObject*>(RenderInlineScion_pushMappingToContainer(m_handle, ancestorToStopAt ? ancestorToStopAt->scion() : nullptr, &geometryMap));
 }
 
 void RenderBlockScion::insertPositionedObject(RenderBox& positioned)
