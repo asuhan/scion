@@ -675,12 +675,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func logicalWidth() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalWidth(id()))
+    }
     return style().isHorizontalWritingMode() ? width() : height()
   }
 
   func logicalHeight() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalHeight(id()))
+    }
     return style().isHorizontalWritingMode() ? height() : width()
   }
 
@@ -2555,7 +2559,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fragment: RenderFragmentContainerWrapper?,
     flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> LayoutRectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var rect = [Int32](repeating: 0, count: 4)
+      wk_interop.RenderBox_borderBoxRectInFragment(
+        id(), wkRenderObject(fragment), flags == .CacheRenderBoxFragmentInfo, &rect)
+      return LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: rect[0]), y: LayoutUnit.fromRawValue(value: rect[1]),
+        width: LayoutUnit.fromRawValue(value: rect[2]),
+        height: LayoutUnit.fromRawValue(value: rect[3]))
+    }
     return borderBoxRect()
   }
 
@@ -2612,7 +2624,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBox_offsetFromLogicalTopOfFirstPage(id()))
+    }
     let layoutState = view().frameView().layoutContext().layoutState()
     if (layoutState != nil && !layoutState!.isPaginated())
       || (layoutState == nil && enclosingFragmentedFlow() == nil)
@@ -3052,7 +3067,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var values = [Int32](repeating: 0, count: 6)
+      wk_interop.RenderBox_computeLogicalHeight(
+        id(), logicalHeight.rawValue(), logicalTop.rawValue(), &values)
+      return LogicalExtentComputedValues(
+        extent: LayoutUnit.fromRawValue(value: values[0]),
+        position: LayoutUnit.fromRawValue(value: values[1]),
+        margins: ComputedMarginValues(
+          before: LayoutUnit.fromRawValue(value: values[2]),
+          after: LayoutUnit.fromRawValue(value: values[3]),
+          start: LayoutUnit.fromRawValue(value: values[4]),
+          end: LayoutUnit.fromRawValue(value: values[5])))
+    }
     return boxComputeLogicalHeight(logicalHeight: logicalHeight, logicalTop: logicalTop)
   }
 
@@ -4536,7 +4563,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isUnsplittableForPagination() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBox_isUnsplittableForPagination(id()) }
     return isReplacedOrInlineBlock()
       || hasUnsplittableScrollingOverflow()
       || (parent() != nil && isWritingModeRoot())
@@ -5165,7 +5192,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var x: Int32 = 0
+      var y: Int32 = 0
+      wk_interop.RenderBox_flipForWritingModeForChild(
+        id(), wkRenderObject(child), point.x.rawValue(), point.y.rawValue(), &x, &y)
+      return LayoutPointWrapper(
+        x: LayoutUnit.fromRawValue(value: x), y: LayoutUnit.fromRawValue(value: y))
+    }
     if !style().isFlippedBlocksWritingMode() {
       return point
     }
@@ -5200,8 +5234,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
     if !isNativeImpl() {
-      wk_interop.RenderBox_flipForWritingMode(
-        id(), LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
+      var values = [
+        rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue(),
+      ]
+      wk_interop.RenderBox_flipForWritingMode(id(), &values)
+      rect = LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: values[0]), y: LayoutUnit.fromRawValue(value: values[1]),
+        width: LayoutUnit.fromRawValue(value: values[2]),
+        height: LayoutUnit.fromRawValue(value: values[3]))
       return
     }
     if !style().isFlippedBlocksWritingMode() {
@@ -5409,7 +5449,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func scrollPosition() -> ScrollPosition {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var x: Int32 = 0
+      var y: Int32 = 0
+      wk_interop.RenderBox_scrollPosition(id(), &x, &y)
+      return ScrollPosition(x: x, y: y)
+    }
     if !hasPotentiallyScrollableOverflow() {
       return ScrollPosition(x: 0, y: 0)
     }
@@ -5525,12 +5570,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // True if this box can have a range in an outside fragmentation context.
   func canHaveOutsideFragmentRange() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBox_canHaveOutsideFragmentRange(id()) }
     return !isRenderFragmentedFlow()
   }
 
   func needsLayoutAfterFragmentRangeChange() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBox_needsLayoutAfterFragmentRangeChange(id()) }
     return false
   }
 

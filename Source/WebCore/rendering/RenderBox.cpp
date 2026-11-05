@@ -394,15 +394,88 @@ extern "C" WEBCORE_EXPORT bool RenderBox_avoidsFloats(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->avoidsFloats();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_isUnsplittableForPagination(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->isUnsplittableForPagination();
+}
+
+// Writes extent, position and the before, after, start and end margins.
+extern "C" WEBCORE_EXPORT void RenderBox_computeLogicalHeight(const void* p, int32_t logicalHeightRaw, int32_t logicalTopRaw, int32_t* values)
+{
+    auto computedValues = static_cast<const WebCore::RenderBox*>(p)->computeLogicalHeight(WebCore::LayoutUnit::fromRawValue(logicalHeightRaw), WebCore::LayoutUnit::fromRawValue(logicalTopRaw));
+    values[0] = computedValues.m_extent.rawValue();
+    values[1] = computedValues.m_position.rawValue();
+    values[2] = computedValues.m_margins.m_before.rawValue();
+    values[3] = computedValues.m_margins.m_after.rawValue();
+    values[4] = computedValues.m_margins.m_start.rawValue();
+    values[5] = computedValues.m_margins.m_end.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_offsetFromLogicalTopOfFirstPage(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->offsetFromLogicalTopOfFirstPage().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingModeForChild(const void* p, const void* childRaw, int32_t xRaw, int32_t yRaw, int32_t* resultXRaw, int32_t* resultYRaw)
+{
+    auto& child = *static_cast<const WebCore::RenderBox*>(childRaw);
+    auto result = static_cast<const WebCore::RenderBox*>(p)->flipForWritingModeForChild(child, WebCore::LayoutPoint(WebCore::LayoutUnit::fromRawValue(xRaw), WebCore::LayoutUnit::fromRawValue(yRaw)));
+    *resultXRaw = result.x().rawValue();
+    *resultYRaw = result.y().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_logicalWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->logicalWidth().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_logicalHeight(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->logicalHeight().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderBox_needsLayoutAfterFragmentRangeChange(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->needsLayoutAfterFragmentRangeChange();
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_scrollPosition(const void* p, int32_t* x, int32_t* y)
+{
+    auto scrollPosition = static_cast<const WebCore::RenderBox*>(p)->scrollPosition();
+    *x = scrollPosition.x();
+    *y = scrollPosition.y();
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_borderBoxRectInFragment(const void* p, const void* fragmentRaw, bool cacheRenderBoxFragmentInfo, int32_t* rect)
+{
+    auto flags = cacheRenderBoxFragmentInfo ? WebCore::RenderBox::CacheRenderBoxFragmentInfo : WebCore::RenderBox::DoNotCacheRenderBoxFragmentInfo;
+    auto result = static_cast<const WebCore::RenderBox*>(p)->borderBoxRectInFragment(static_cast<const WebCore::RenderFragmentContainer*>(fragmentRaw), flags);
+    rect[0] = result.x().rawValue();
+    rect[1] = result.y().rawValue();
+    rect[2] = result.width().rawValue();
+    rect[3] = result.height().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderBox_canHaveOutsideFragmentRange(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->canHaveOutsideFragmentRange();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_markForPaginationRelayoutIfNeeded(void* p)
 {
     static_cast<WebCore::RenderBox*>(p)->markForPaginationRelayoutIfNeeded();
 }
 
-extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(void* p, LayoutPointRaw position)
+// Flips the x, y, width and height of rect in place.
+extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(const void* p, int32_t* rect)
 {
-    static_cast<WebCore::RenderBox*>(p)->flipForWritingMode(WebCore::LayoutPoint(
-        WebCore::LayoutUnit::fromRawValue(position.x), WebCore::LayoutUnit::fromRawValue(position.y)));
+    WebCore::LayoutRect layoutRect(WebCore::LayoutUnit::fromRawValue(rect[0]), WebCore::LayoutUnit::fromRawValue(rect[1]),
+        WebCore::LayoutUnit::fromRawValue(rect[2]), WebCore::LayoutUnit::fromRawValue(rect[3]));
+    static_cast<const WebCore::RenderBox*>(p)->flipForWritingMode(layoutRect);
+    rect[0] = layoutRect.x().rawValue();
+    rect[1] = layoutRect.y().rawValue();
+    rect[2] = layoutRect.width().rawValue();
+    rect[3] = layoutRect.height().rawValue();
 }
 
 extern "C" WEBCORE_EXPORT LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw)
