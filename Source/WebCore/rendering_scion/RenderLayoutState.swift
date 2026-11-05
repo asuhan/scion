@@ -56,7 +56,7 @@ class RenderLayoutStateWrapper {
   func pageLogicalOffset(child: RenderBoxWrapper, childLogicalOffset: LayoutUnit) -> LayoutUnit {
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderLayoutState_pageLogicalOffset(
-        p, child.id(), childLogicalOffset.rawValue())
+        p, wkRenderObject(child), childLogicalOffset.rawValue())
     )
   }
 
@@ -187,7 +187,7 @@ class RenderLayoutStateWrapper {
   }
 
   func hasTextBoxTrimEnd(candidate: RenderBlockFlowWrapper) -> Bool {
-    return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, candidate.id())
+    return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, wkRenderObject(candidate))
   }
 
   func pushBlockStartTrimming(blockStartTrimming: Bool) {
