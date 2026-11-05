@@ -4869,6 +4869,14 @@ func RenderBoxModelObjectScion_borderEnd(_ objRaw: UnsafeRawPointer) -> Int32 {
   return obj.borderEnd().rawValue()
 }
 
+@_cdecl("RenderBoxModelObjectScion_firstLetterRemainingText")
+func RenderBoxModelObjectScion_firstLetterRemainingText(_ objRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return wkRenderObject(obj.firstLetterRemainingText())
+}
+
 @_cdecl("RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock")
 func RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(
   _ objRaw: UnsafeRawPointer, _ blockRaw: UnsafeMutableRawPointer,

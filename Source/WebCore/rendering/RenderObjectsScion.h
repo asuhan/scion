@@ -872,6 +872,8 @@ public:
     {
     }
 
+    RenderTextFragment* firstLetterRemainingText() const;
+
     LayoutUnit borderEnd() const;
 
     LayoutUnit borderStart() const;

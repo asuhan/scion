@@ -1410,8 +1410,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   // For RenderBlocks and RenderInlines with m_style->pseudoElementType() == PseudoId::FirstLetter, this tracks their remaining text fragments
   func firstLetterRemainingText() -> RenderTextFragmentWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !isFirstLetter() {
+      return nil
+    }
+    let remainingText = firstLetterRemainingTextMap.get(self, WeakPtr(nil))
+    return remainingText.bool() ? *remainingText : nil
   }
 
   func setFirstLetterRemainingText(remainingText: RenderTextFragmentWrapper) {

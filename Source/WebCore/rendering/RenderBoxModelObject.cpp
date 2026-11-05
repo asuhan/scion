@@ -1067,7 +1067,7 @@ auto RenderBoxModelObject::ensureContinuationChainNode() -> ContinuationChainNod
 
 RenderTextFragment* RenderBoxModelObject::firstLetterRemainingText() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->firstLetterRemainingText(); }
     if (!isFirstLetter())
         return nullptr;
     return firstLetterRemainingTextMap().get(*this).get();

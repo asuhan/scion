@@ -918,6 +918,7 @@ extern "C" int32_t RenderBoxModelObjectScion_borderBefore(const void*);
 extern "C" int32_t RenderBoxModelObjectScion_borderAfter(const void*);
 extern "C" int32_t RenderBoxModelObjectScion_borderStart(const void*);
 extern "C" int32_t RenderBoxModelObjectScion_borderEnd(const void*);
+extern "C" void* RenderBoxModelObjectScion_firstLetterRemainingText(const void*);
 extern "C" void RenderFragmentedFlowScion_logicalWidthChangedInFragmentsForBlock(const void*, void*, bool*);
 extern "C" int32_t RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(const void*, void*);
 extern "C" int32_t RenderFragmentedFlowScion_pageLogicalHeightForOffset(const void*, int32_t);
@@ -3471,6 +3472,11 @@ LayoutUnit RenderBoxModelObjectScion::borderStart() const
 LayoutUnit RenderBoxModelObjectScion::borderEnd() const
 {
     return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderEnd(m_handle));
+}
+
+RenderTextFragment* RenderBoxModelObjectScion::firstLetterRemainingText() const
+{
+    return static_cast<RenderTextFragment*>(RenderBoxModelObjectScion_firstLetterRemainingText(m_handle));
 }
 
 void RenderFragmentedFlowScion::logicalWidthChangedInFragmentsForBlock(const RenderBlock& block, bool& relayoutChildren) const
