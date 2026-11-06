@@ -2651,6 +2651,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func containingBlock() -> RenderBlockWrapper? {
     if !isNativeImpl() {
       if let unwrapped = wk_interop.RenderObject_containingBlock(id()) {
+        if let nativeBlock = createRenderObjectWrapperOrNative(unwrapped) as? RenderBlockWrapper,
+          nativeBlock.isNativeImpl()
+        {
+          return nativeBlock
+        }
         // TODO(asuhan): decide the type correctly
         if wk_interop.RenderObject_isRenderListItem(unwrapped) {
           return RenderListItemWrapper(p: unwrapped)
