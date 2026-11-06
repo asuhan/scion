@@ -151,6 +151,10 @@ public:
     {
     }
 
+    bool isRenderMultiColumnSet() const;
+
+    bool isRenderFragmentContainer() const;
+
     Layout::Box* layoutBox();
 
     void setLayoutBox(Layout::Box&);

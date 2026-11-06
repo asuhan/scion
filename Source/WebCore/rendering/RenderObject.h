@@ -489,11 +489,7 @@ public:
         return type() == Type::Model;
     }
 #endif
-    bool isRenderFragmentContainer() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsFragmentContainer);
-    }
+    WEBCORE_EXPORT bool isRenderFragmentContainer() const;
     bool isRenderViewTransitionContainer() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -529,11 +525,7 @@ public:
 #endif
     bool isRenderGrid() const;
 
-    bool isRenderMultiColumnSet() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return type() == Type::MultiColumnSet;
-    }
+    WEBCORE_EXPORT bool isRenderMultiColumnSet() const;
     bool isRenderMultiColumnFlow() const;
     bool isRenderMultiColumnSpannerPlaceholder() const;
 

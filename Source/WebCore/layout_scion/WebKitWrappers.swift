@@ -4906,6 +4906,18 @@ func RenderFragmentedFlowScion_offsetFromLogicalTopOfFirstFragment(
   return obj.offsetFromLogicalTopOfFirstFragment(currentBlock: currentBlock).rawValue()
 }
 
+@_cdecl("RenderObjectScion_isRenderFragmentContainer")
+func RenderObjectScion_isRenderFragmentContainer(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isRenderFragmentContainer()
+}
+
+@_cdecl("RenderObjectScion_isRenderMultiColumnSet")
+func RenderObjectScion_isRenderMultiColumnSet(_ objRaw: UnsafeRawPointer) -> Bool {
+  let obj = Unmanaged<RenderObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.isRenderMultiColumnSet()
+}
+
 @_cdecl("RenderFragmentedFlowScion_pageLogicalHeightForOffset")
 func RenderFragmentedFlowScion_pageLogicalHeightForOffset(
   _ objRaw: UnsafeRawPointer, _ offset: Int32

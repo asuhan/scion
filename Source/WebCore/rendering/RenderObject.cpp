@@ -4040,6 +4040,18 @@ bool RenderObject::isRenderMultiColumnSpannerPlaceholder() const
     return type() == Type::MultiColumnSpannerPlaceholder;
 }
 
+bool RenderObject::isRenderFragmentContainer() const
+{
+    if (m_scion) { return m_scion->isRenderFragmentContainer(); }
+    return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsFragmentContainer);
+}
+
+bool RenderObject::isRenderMultiColumnSet() const
+{
+    if (m_scion) { return m_scion->isRenderMultiColumnSet(); }
+    return type() == Type::MultiColumnSet;
+}
+
 bool RenderObject::isRenderMultiColumnFlow() const
 {
     if (m_scion) { return m_scion->isRenderMultiColumnFlow(); }
