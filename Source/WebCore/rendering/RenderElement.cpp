@@ -132,6 +132,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_shouldApplyLayoutContainment(const 
     return static_cast<const WebCore::RenderElement*>(p)->shouldApplyLayoutContainment();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_shouldApplySizeContainment(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->shouldApplySizeContainment();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderElement_spellingErrorPseudoStyle(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->spellingErrorPseudoStyle();

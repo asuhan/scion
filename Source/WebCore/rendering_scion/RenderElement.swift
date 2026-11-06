@@ -563,7 +563,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplySizeContainment() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderElement_shouldApplySizeContainment(id()) }
     return layout_scion.isSkippedContentRoot(style: style(), element: element())
       || shouldApplySizeOrStyleContainment(style().containsSize())
   }
