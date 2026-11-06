@@ -3295,7 +3295,7 @@ func RenderElementScion_repaintAfterLayoutIfNeeded(
       .takeUnretainedValue()
   } else if repaintContainerRaw != nil {
     repaintContainer =
-      createRenderObjectWrapper(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
+      createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
   }
   let oldRects = convertRepaintRects(oldRectsRaw)
   let newRects = convertRepaintRects(newRectsRaw)

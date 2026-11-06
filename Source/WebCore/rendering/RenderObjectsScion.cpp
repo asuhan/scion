@@ -2443,8 +2443,7 @@ void RenderElementScion::layoutIfNeeded() { RenderElementScion_layoutIfNeeded(m_
 
 bool RenderElementScion::repaintAfterLayoutIfNeeded(SingleThreadWeakPtr<const RenderLayerModelObject>&& repaintContainer, RequiresFullRepaint requiresFullRepaint, const RenderObject::RepaintRects& oldRects, const RenderObject::RepaintRects& newRects)
 {
-    if (repaintContainer && repaintContainer->scion()) {
-        assert(is<RenderView>(repaintContainer.get()));
+    if (repaintContainer && repaintContainer->scion() && is<RenderView>(repaintContainer.get())) {
         return RenderElementScion_repaintAfterLayoutIfNeeded(
             m_handle,
             repaintContainer->scion(),
