@@ -870,6 +870,8 @@ bool RenderObject_isBody(const void*);
 bool RenderObject_isHTMLMarquee(const void*);
 bool RenderObject_everHadLayout(const void*);
 bool RenderObject_childrenInline(const void*);
+void* RenderObject_enclosingBox(const void*);
+void* RenderObject_enclosingBoxModelObject(const void*);
 bool RenderObject_fragmentedFlowState(const void*);
 void* RenderMultiColumnFlow_findColumnSpannerPlaceholder(const void*, const void*);
 unsigned LayerFragments_size(const void*);

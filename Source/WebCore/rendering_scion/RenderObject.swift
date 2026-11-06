@@ -718,12 +718,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingBox() -> RenderBoxWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return createRenderObjectWrapperOrNative(wk_interop.RenderObject_enclosingBox(id()))
+        as! RenderBoxWrapper
+    }
     return RenderAncestorIteratorAdapter<RenderBoxWrapper>.lineageOfType(first: self).first()!
   }
 
   func enclosingBoxModelObject() -> RenderBoxModelObjectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return createRenderObjectWrapperOrNative(
+        wk_interop.RenderObject_enclosingBoxModelObject(id()))
+        as! RenderBoxModelObjectWrapper
+    }
     return RenderAncestorIteratorAdapter<RenderBoxModelObjectWrapper>.lineageOfType(first: self)
       .first()!
   }

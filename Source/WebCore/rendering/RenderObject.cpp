@@ -243,6 +243,16 @@ extern "C" WEBCORE_EXPORT bool RenderObject_childrenInline(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->childrenInline();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_enclosingBox(const void* p)
+{
+    return &static_cast<const WebCore::RenderObject*>(p)->enclosingBox();
+}
+
+extern "C" WEBCORE_EXPORT void* RenderObject_enclosingBoxModelObject(const void* p)
+{
+    return &static_cast<const WebCore::RenderObject*>(p)->enclosingBoxModelObject();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_fragmentedFlowState(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->fragmentedFlowState() == WebCore::RenderObject::FragmentedFlowState::InsideFlow;
