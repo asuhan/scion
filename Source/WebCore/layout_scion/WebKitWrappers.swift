@@ -5178,6 +5178,12 @@ func RenderBlockScion_offsetFromLogicalTopOfFirstPage(_ objRaw: UnsafeRawPointer
   return obj.offsetFromLogicalTopOfFirstPage().rawValue()
 }
 
+@_cdecl("LegacyRenderSVGRootScion_layout")
+func LegacyRenderSVGRootScion_layout(_ objRaw: UnsafeMutableRawPointer) {
+  let obj = Unmanaged<LegacyRenderSVGRootWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  obj.layout()
+}
+
 @_cdecl("RenderFragmentedFlowScion_collectLayerFragments")
 func RenderFragmentedFlowScion_collectLayerFragments(
   _ objRaw: UnsafeRawPointer, _ layerFragmentsRaw: UnsafeMutableRawPointer,

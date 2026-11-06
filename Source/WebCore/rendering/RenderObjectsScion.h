@@ -1890,6 +1890,8 @@ public:
     {
     }
 
+    void layout();
+
     void setNeedsTransformUpdate();
 
     void setNeedsBoundariesUpdate();

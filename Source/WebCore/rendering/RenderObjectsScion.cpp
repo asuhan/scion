@@ -954,6 +954,7 @@ extern "C" void RenderFragmentedFlowScion_clearFragmentsOverflow(void*, void*);
 extern "C" void RenderFragmentedFlowScion_addFragmentsVisualEffectOverflow(void*, void*);
 extern "C" void RenderFragmentedFlowScion_addFragmentsVisualOverflowFromTheme(void*, void*);
 extern "C" int32_t RenderBlockScion_offsetFromLogicalTopOfFirstPage(const void*);
+extern "C" void LegacyRenderSVGRootScion_layout(void*);
 extern "C" void RenderFragmentedFlowScion_collectLayerFragments(const void*, void*, LayoutRectRaw, LayoutRectRaw);
 extern "C" LayoutRectRaw RenderFragmentedFlowScion_fragmentsBoundingBox(void*, LayoutRectRaw);
 extern "C" void RenderTableCaptionScion_willBeRemovedFromTree(void*);
@@ -3657,6 +3658,11 @@ void RenderFragmentedFlowScion::addFragmentsVisualOverflowFromTheme(const Render
 LayoutUnit RenderBlockScion::offsetFromLogicalTopOfFirstPage() const
 {
     return LayoutUnit::fromRawValue(RenderBlockScion_offsetFromLogicalTopOfFirstPage(m_handle));
+}
+
+void LegacyRenderSVGRootScion::layout()
+{
+    LegacyRenderSVGRootScion_layout(m_handle);
 }
 
 void RenderFragmentedFlowScion::collectLayerFragments(void* layerFragments, const LayoutRect& layerBoundingBox, const LayoutRect& dirtyRect) const
