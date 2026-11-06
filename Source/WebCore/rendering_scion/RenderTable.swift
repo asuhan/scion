@@ -1564,7 +1564,14 @@ class RenderTableWrapper: RenderBlockWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   ) -> LayoutUnit {
-    assert(!isNativeImpl())
+    if isNativeImpl() {
+      if let baselinePos = firstLineBaseline() {
+        return (direction == .HorizontalLine ? marginTop() : marginRight()) + baselinePos
+      }
+      return super.baselinePosition(
+        baselineType: baselineType, firstLine: firstLine, direction: direction,
+        linePositionMode: linePositionMode)
+    }
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderBoxModelObject_baselinePosition(
         id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
