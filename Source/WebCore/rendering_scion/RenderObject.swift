@@ -845,7 +845,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAtomicInlineLevelBox() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isAtomicInlineLevelBox(id()) }
     return style().isDisplayInlineType()
       && !(style().display() == .Inline && !isReplacedOrInlineBlock())
   }
@@ -1136,7 +1136,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func beingDestroyed() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_beingDestroyed(id()) }
     return m_stateBitfields.hasFlag(.BeingDestroyed)
   }
 
@@ -1546,7 +1546,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymousBlock() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isAnonymousBlock(id()) }
     // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().
     // FIXME: That seems difficult. Can we come up with a simpler way to make behavior correct?
     // FIXME: Does this relatively long function benefit from being inlined?
@@ -1561,23 +1561,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymousForPercentageResolution() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isAnonymousForPercentageResolution(id()) }
     return isAnonymous() && !isViewTransitionPseudo()
   }
 
   func isBlockBox() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isBlockBox(id()) }
     // A block-level box that is also a block container.
     return isBlockLevelBox() && isBlockContainer()
   }
 
   func isBlockLevelBox() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isBlockLevelBox(id()) }
     return style().isDisplayBlockLevel()
   }
 
   func isBlockContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isBlockContainer(id()) }
     let display = style().display()
     return
       (display == .Block
@@ -1596,12 +1596,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isPositioned(id()) }
     return m_stateBitfields.isPositioned()
   }
 
   func isInFlowPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isInFlowPositioned(id()) }
     return m_stateBitfields.isRelativelyPositioned() || m_stateBitfields.isStickilyPositioned()
   }
 
@@ -1620,22 +1620,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAbsolutelyPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isAbsolutelyPositioned(id()) }
     return isOutOfFlowPositioned() && style().position() == .Absolute
   }
 
   func isRelativelyPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRelativelyPositioned(id()) }
     return m_stateBitfields.isRelativelyPositioned()
   }
 
   func isStickilyPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isStickilyPositioned(id()) }
     return m_stateBitfields.isStickilyPositioned()
   }
 
   func shouldUsePositionedClipping() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_shouldUsePositionedClipping(id()) }
     return isAbsolutelyPositioned() || isRenderSVGForeignObject()
   }
 
@@ -1706,7 +1706,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasReflection() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasReflection(id()) }
     return hasRareData() && rareData().hasReflection
   }
 
@@ -1716,17 +1716,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasOutlineAutoAncestor() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasOutlineAutoAncestor(id()) }
     return hasRareData() && rareData().hasOutlineAutoAncestor
   }
 
   func paintContainmentApplies() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_paintContainmentApplies(id()) }
     return m_stateBitfields.hasFlag(.PaintContainmentApplies)
   }
 
   func hasSVGTransform() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasSVGTransform(id()) }
     return m_stateBitfields.hasFlag(.HasSVGTransform)
   }
 
@@ -1795,7 +1795,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsPositionedMovementLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_needsPositionedMovementLayout(id()) }
     return m_stateBitfields.hasFlag(.NeedsPositionedMovementLayout)
   }
 
@@ -1821,7 +1821,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsSimplifiedNormalFlowLayoutOnly() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_needsSimplifiedNormalFlowLayoutOnly(id()) }
     return needsSimplifiedNormalFlowLayout() && !selfNeedsLayout() && !normalChildNeedsLayout()
       && !posChildNeedsLayout() && !needsPositionedMovementLayout()
   }
@@ -1834,7 +1834,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func outOfFlowChildNeedsStaticPositionLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_outOfFlowChildNeedsStaticPositionLayout(id())
+    }
     return m_stateBitfields.hasFlag(.OutOfFlowChildNeedsStaticPositionLayout)
   }
 
@@ -1863,7 +1865,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasPotentiallyScrollableOverflow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasPotentiallyScrollableOverflow(id()) }
     // We only need to test one overflow dimension since 'visible' and 'clip' always get accompanied
     // with 'clip' or 'visible' in the other dimension (see Style::Adjuster::adjust).
     return hasNonVisibleOverflow() && style().overflowX() != .Clip
@@ -1871,22 +1873,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasTransformRelatedProperty() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasTransformRelatedProperty(id()) }
     return m_stateBitfields.hasFlag(.HasTransformRelatedProperty)  // Transform, perspective or transform-style: preserve-3d.
   }
 
   func isTransformed() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isTransformed(id()) }
     return hasTransformRelatedProperty() && (style().affectsTransform() || hasSVGTransform())
   }
 
   func hasTransformOrPerspective() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_hasTransformOrPerspective(id()) }
     return hasTransformRelatedProperty() && (isTransformed() || style().hasPerspective())
   }
 
   func capturedInViewTransition() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_capturedInViewTransition(id()) }
     return m_stateBitfields.hasFlag(.CapturedInViewTransition)
   }
 
@@ -1912,7 +1914,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // When the document element is captured, the captured contents uses the RenderView
   // instead. Returns the capture state with this adjustment applied.
   func effectiveCapturedInViewTransition() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_effectiveCapturedInViewTransition(id()) }
     if isDocumentElementRenderer() {
       return false
     }
@@ -1923,7 +1925,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func preservesNewline() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_preservesNewline(id()) }
     return !isRenderSVGInlineText() && style().preserveNewline()
   }
 
@@ -1945,7 +1947,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Returns true if this renderer is rooted.
   func isRooted() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRooted(id()) }
     return isDescendantOf(ancestor: view())
   }
 
@@ -3254,7 +3256,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // When performing a global document tear-down, or when going into the back/forward cache, the renderer of the document is cleared.
   func renderTreeBeingDestroyed() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_renderTreeBeingDestroyed(id()) }
     return document().renderTreeBeingDestroyed()
   }
 
@@ -3492,7 +3494,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func participatesInPreserve3D() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_participatesInPreserve3D(id()) }
     return hasLayer()
       && (self as! RenderLayerModelObjectWrapper).layer()!.participatesInPreserve3D()
   }
@@ -3585,7 +3587,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSkippedContent() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isSkippedContent(id()) }
     return parent()?.style().hasSkippedContent() ?? false
   }
 

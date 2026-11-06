@@ -243,6 +243,161 @@ extern "C" WEBCORE_EXPORT bool RenderObject_childrenInline(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->childrenInline();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isPositioned(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isInFlowPositioned(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isInFlowPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isAbsolutelyPositioned(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isAbsolutelyPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRelativelyPositioned(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRelativelyPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isStickilyPositioned(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isStickilyPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_shouldUsePositionedClipping(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->shouldUsePositionedClipping();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_hasReflection(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasReflection();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_hasOutlineAutoAncestor(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasOutlineAutoAncestor();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_paintContainmentApplies(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->paintContainmentApplies();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_hasSVGTransform(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasSVGTransform();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_needsPositionedMovementLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->needsPositionedMovementLayout();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_needsSimplifiedNormalFlowLayoutOnly(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->needsSimplifiedNormalFlowLayoutOnly();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_outOfFlowChildNeedsStaticPositionLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->outOfFlowChildNeedsStaticPositionLayout();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_hasPotentiallyScrollableOverflow(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasPotentiallyScrollableOverflow();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isAnonymousBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isAnonymousBlock();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isBlockBox(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isBlockBox();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isBlockLevelBox(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isBlockLevelBox();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isBlockContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isBlockContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isAtomicInlineLevelBox(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isAtomicInlineLevelBox();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_beingDestroyed(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->beingDestroyed();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isSkippedContent(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isSkippedContent();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_renderTreeBeingDestroyed(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->renderTreeBeingDestroyed();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRooted(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRooted();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_preservesNewline(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->preservesNewline();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_capturedInViewTransition(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->capturedInViewTransition();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_effectiveCapturedInViewTransition(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->effectiveCapturedInViewTransition();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_participatesInPreserve3D(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->participatesInPreserve3D();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isAnonymousForPercentageResolution(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isAnonymousForPercentageResolution();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_hasTransformRelatedProperty(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasTransformRelatedProperty();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isTransformed(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isTransformed();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_hasTransformOrPerspective(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->hasTransformOrPerspective();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_enclosingBox(const void* p)
 {
     return &static_cast<const WebCore::RenderObject*>(p)->enclosingBox();
