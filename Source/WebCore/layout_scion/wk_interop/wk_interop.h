@@ -1011,6 +1011,7 @@ void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineCla
 void RenderLayoutState_setLegacyLineClamp(void* p, struct OptionalLegacyLineClampRaw legacyLineClamp);
 struct OptionalRepaintRectsRaw RenderObject_computeVisibleRectsInContainer(const void*, struct RepaintRectsRaw, const void*, struct VisibleRectContextRaw);
 void GlyphDisplayListCacheInlineDisplay_remove(const void*);
+bool RenderBox_hasRelativeLogicalWidth(const void*);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
 struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);

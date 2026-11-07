@@ -4107,6 +4107,18 @@ bool RenderBoxScion::sizesLogicalWidthToFitContent(uint8_t widthType) const
     return RenderBoxScion_sizesLogicalWidthToFitContent(m_handle, widthType);
 }
 
+extern "C" bool RenderBoxScion_hasRelativeLogicalWidth(const void*);
+
+bool RenderBoxScion::hasRelativeLogicalWidth() const
+{
+    return RenderBoxScion_hasRelativeLogicalWidth(m_handle);
+}
+
+extern "C" WEBCORE_EXPORT bool RenderBox_hasRelativeLogicalWidth(const void* box)
+{
+    return static_cast<const RenderBox*>(box)->hasRelativeLogicalWidth();
+}
+
 extern "C" bool RenderBoxScion_hasHorizontalOverflow(const void*);
 
 bool RenderBoxScion::hasHorizontalOverflow() const

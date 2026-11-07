@@ -1055,6 +1055,7 @@ public:
     bool foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const;
     bool applyCachedClipAndScrollPosition(RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
     bool sizesLogicalWidthToFitContent(uint8_t widthType) const;
+    bool hasRelativeLogicalWidth() const;
     bool hasHorizontalOverflow() const;
     bool hasVerticalOverflow() const;
     std::optional<std::optional<LayoutUnit>> overridingContainingBlockContentLogicalWidth() const;

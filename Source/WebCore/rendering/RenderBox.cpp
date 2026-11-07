@@ -6768,7 +6768,7 @@ bool RenderBox::hasRelativeLogicalHeight() const
 
 bool RenderBox::hasRelativeLogicalWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->hasRelativeLogicalWidth(); }
     return style().logicalWidth().isPercentOrCalculated()
         || style().logicalMinWidth().isPercentOrCalculated()
         || style().logicalMaxWidth().isPercentOrCalculated();

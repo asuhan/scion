@@ -5959,6 +5959,12 @@ func RenderBoxScion_sizesLogicalWidthToFitContent(_ boxRaw: UnsafeRawPointer, _ 
     widthType: RenderBoxWrapper.SizeType(rawValue: widthType)!)
 }
 
+@_cdecl("RenderBoxScion_hasRelativeLogicalWidth")
+func RenderBoxScion_hasRelativeLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.hasRelativeLogicalWidth()
+}
+
 @_cdecl("RenderBoxScion_hasHorizontalOverflow")
 func RenderBoxScion_hasHorizontalOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

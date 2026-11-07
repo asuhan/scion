@@ -5547,7 +5547,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRelativeLogicalWidth() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_hasRelativeLogicalWidth(id())
+    }
     return style().logicalWidth().isPercentOrCalculated()
       || style().logicalMinWidth().isPercentOrCalculated()
       || style().logicalMaxWidth().isPercentOrCalculated()
