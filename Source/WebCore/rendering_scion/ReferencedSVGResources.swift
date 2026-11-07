@@ -37,7 +37,7 @@ class ReferencedSVGResources {
       fatalError("Not implemented")
     }
 
-    if style.hasFilter() {
+    if style.hasFilter() && style.filter().hasReferenceFilter() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
