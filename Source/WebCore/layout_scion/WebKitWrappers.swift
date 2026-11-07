@@ -6052,6 +6052,14 @@ func RenderBlockScion_textIndentOffset(_ blockRaw: UnsafeRawPointer) -> Int32 {
   return block.textIndentOffset().rawValue()
 }
 
+@_cdecl("RenderBoxScion_foregroundIsKnownToBeOpaqueInRect")
+func RenderBoxScion_foregroundIsKnownToBeOpaqueInRect(
+  _ boxRaw: UnsafeRawPointer, _ localRect: LayoutRectRaw, _ maxDepthToTest: UInt32
+) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.foregroundIsKnownToBeOpaqueInRect(convertLayoutRect(localRect), maxDepthToTest)
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -2669,7 +2669,7 @@ static bool isCandidateForOpaquenessTest(const RenderBox& childBox)
 
 bool RenderBox::foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->foregroundIsKnownToBeOpaqueInRect(localRect, maxDepthToTest); }
     if (!maxDepthToTest)
         return false;
 

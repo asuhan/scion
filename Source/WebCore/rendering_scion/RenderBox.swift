@@ -6100,7 +6100,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func foregroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32)
     -> Bool
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_foregroundIsKnownToBeOpaqueInRect(
+        id(), convertLayoutRect(localRect), maxDepthToTest)
+    }
     if maxDepthToTest == 0 {
       return false
     }

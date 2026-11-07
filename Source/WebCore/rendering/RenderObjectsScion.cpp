@@ -4615,6 +4615,18 @@ LayoutUnit RenderBlockScion::textIndentOffset() const
     return LayoutUnit::fromRawValue(RenderBlockScion_textIndentOffset(m_handle));
 }
 
+extern "C" bool RenderBoxScion_foregroundIsKnownToBeOpaqueInRect(const void*, LayoutRectRaw, unsigned);
+
+bool RenderBoxScion::foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const
+{
+    return RenderBoxScion_foregroundIsKnownToBeOpaqueInRect(m_handle, convertLayoutRect(localRect), maxDepthToTest);
+}
+
+extern "C" WEBCORE_EXPORT bool RenderBox_foregroundIsKnownToBeOpaqueInRect(const void* box, LayoutRectRaw localRect, unsigned maxDepthToTest)
+{
+    return static_cast<const RenderBox*>(box)->foregroundIsKnownToBeOpaqueInRect(convertLayoutRectRaw(localRect), maxDepthToTest);
+}
+
 String RenderBlockScion::debugDescription() const
 {
     const auto original = static_cast<const String*>(RenderBlockScion_debugDescription(m_handle));

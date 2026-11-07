@@ -1050,6 +1050,7 @@ public:
 
     std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
 
+    bool foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const;
     bool applyCachedClipAndScrollPosition(RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
     bool sizesLogicalWidthToFitContent(uint8_t widthType) const;
     bool hasHorizontalOverflow() const;

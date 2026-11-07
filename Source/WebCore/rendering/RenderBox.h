@@ -584,6 +584,8 @@ public:
     bool scrollsOverflowX() const;
     bool scrollsOverflowY() const;
 
+    // NB(asuhan): public for the interop bridge, native boxes can have C++ children.
+    virtual bool foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const;
     bool hasHorizontalOverflow() const;
     bool hasVerticalOverflow() const;
     inline bool hasScrollableOverflowX() const;
@@ -849,7 +851,6 @@ protected:
 
     // Returns false if it could not cheaply compute the extent (e.g. fixed background), in which case the returned rect may be incorrect.
     bool getBackgroundPaintedExtent(const LayoutPoint& paintOffset, LayoutRect&) const;
-    virtual bool foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const;
     bool computeBackgroundIsKnownToBeObscured(const LayoutPoint& paintOffset) override;
 
     void paintMaskImages(const PaintInfo&, const LayoutRect&);
