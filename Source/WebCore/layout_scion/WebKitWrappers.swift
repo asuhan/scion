@@ -5914,6 +5914,36 @@ func RenderBoxScion_computeVisibleRectsInContainer(
   return computeVisibleRectsInContainerImpl(box, rectsRaw, containerRaw, contextRaw)
 }
 
+@_cdecl("RenderBoxScion_applyCachedClipAndScrollPosition")
+func RenderBoxScion_applyCachedClipAndScrollPosition(
+  _ boxRaw: UnsafeRawPointer, _ rectsRaw: UnsafeMutablePointer<RepaintRectsRaw>,
+  _ containerRaw: UnsafeMutableRawPointer?, _ contextRaw: VisibleRectContextRaw
+) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let container =
+    containerRaw != nil
+    ? createRenderObjectWrapperOrNative(containerRaw!) as? RenderLayerModelObjectWrapper : nil
+  var rects = convertRepaintRects(rectsRaw.pointee)
+  let intersects = box.applyCachedClipAndScrollPosition(
+    &rects, container, convertVisibleRectContext(contextRaw))
+  rectsRaw.pointee = convertRepaintRects(rects)
+  return intersects
+}
+
+func computeVisibleRectsInContainerInterop(
+  _ renderer: RenderObjectWrapper, _ rects: RenderObjectWrapper.RepaintRects,
+  _ container: RenderLayerModelObjectWrapper?, _ context: RenderObjectWrapper.VisibleRectContext
+) -> RenderObjectWrapper.RepaintRects? {
+  let contextRaw = VisibleRectContextRaw(
+    hasPositionFixedDescendant: context.hasPositionFixedDescendant,
+    dirtyRectIsFlipped: context.dirtyRectIsFlipped,
+    descendantNeedsEnclosingIntRect: context.descendantNeedsEnclosingIntRect,
+    options: context.options.rawValue)
+  let raw = wk_interop.RenderObject_computeVisibleRectsInContainer(
+    renderer.id(), convertRepaintRects(rects), wkRenderObject(container), contextRaw)
+  return raw.is_valid ? convertRepaintRects(raw.rects) : nil
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

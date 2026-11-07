@@ -4072,6 +4072,26 @@ std::optional<WebCore::RenderObject::RepaintRects> RenderBoxScion::computeVisibl
     return convertRepaintRectsRaw(raw.rects);
 }
 
+extern "C" bool RenderBoxScion_applyCachedClipAndScrollPosition(const void*, RepaintRectsRaw*, void*, VisibleRectContextRaw);
+
+bool RenderBoxScion::applyCachedClipAndScrollPosition(RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, RenderObject::VisibleRectContext context) const
+{
+    auto rectsRaw = convertRepaintRects(rects);
+    const bool intersects = RenderBoxScion_applyCachedClipAndScrollPosition(m_handle, &rectsRaw, const_cast<RenderLayerModelObject*>(container), convertVisibleRectContext(context));
+    rects = convertRepaintRectsRaw(rectsRaw);
+    return intersects;
+}
+
+extern "C" WEBCORE_EXPORT OptionalRepaintRectsRaw RenderObject_computeVisibleRectsInContainer(const void* objectRaw, RepaintRectsRaw rectsRaw, const void* containerRaw, VisibleRectContextRaw contextRaw)
+{
+    RenderObject::VisibleRectContext context { contextRaw.hasPositionFixedDescendant, contextRaw.dirtyRectIsFlipped, OptionSet<RenderObject::VisibleRectContextOption>::fromRaw(contextRaw.options) };
+    context.descendantNeedsEnclosingIntRect = contextRaw.descendantNeedsEnclosingIntRect;
+    const auto result = static_cast<const RenderObject*>(objectRaw)->computeVisibleRectsInContainer(convertRepaintRectsRaw(rectsRaw), static_cast<const RenderLayerModelObject*>(containerRaw), context);
+    if (!result)
+        return { {}, false };
+    return { convertRepaintRects(*result), true };
+}
+
 bool RenderBoxScion::stretchesToViewport() const
 {
     return RenderBoxScion_stretchesToViewport(m_handle);

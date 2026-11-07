@@ -2662,7 +2662,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return computeVisibleRectsInContainerInterop(self, rects, container, context)
+    }
     // The rect we compute at each step is shifted by our x/y offset in the parent container's coordinate space.
     // Only when we cross a writing mode boundary will we have to possibly flipForWritingMode (to convert into a more appropriate
     // offset corner for the enclosing container).  This allows for a fully RL or BT document to repaint

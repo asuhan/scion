@@ -3185,7 +3185,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return computeVisibleRectsInContainerInterop(self, rects, container, context)
+    }
     if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       return rects
     }

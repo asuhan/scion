@@ -1920,7 +1920,7 @@ LayoutSize RenderBox::cachedSizeForOverflowClip() const
 
 bool RenderBox::applyCachedClipAndScrollPosition(RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->applyCachedClipAndScrollPosition(rects, container, context); }
     flipForWritingMode(rects);
 
     if (context.options.contains(VisibleRectContextOption::ApplyCompositedContainerScrolls) || this != container || !usesCompositedScrolling())

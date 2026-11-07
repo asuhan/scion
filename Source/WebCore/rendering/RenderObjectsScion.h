@@ -1047,6 +1047,7 @@ public:
 
     std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
 
+    bool applyCachedClipAndScrollPosition(RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
     bool stretchesToViewport() const;
 
     LayoutUnit availableLogicalWidth() const;
