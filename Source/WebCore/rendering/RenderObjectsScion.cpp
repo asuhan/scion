@@ -4113,6 +4113,61 @@ bool RenderBoxScion::hasVerticalOverflow() const
     return RenderBoxScion_hasVerticalOverflow(m_handle);
 }
 
+// values[0]: the entry exists, values[1]: the entry holds a value, values[2]: the raw value.
+extern "C" void RenderBoxScion_overridingContainingBlockContentLogicalWidth(const void*, int32_t*);
+extern "C" void RenderBoxScion_overridingContainingBlockContentLogicalHeight(const void*, int32_t*);
+extern "C" void RenderBoxScion_setOverridingContainingBlockContentLogicalWidth(void*, bool, int32_t);
+extern "C" void RenderBoxScion_setOverridingContainingBlockContentLogicalHeight(void*, bool, int32_t);
+extern "C" void RenderBoxScion_clearOverridingContainingBlockContentSize(void*);
+extern "C" void RenderBoxScion_clearOverridingContainingBlockContentLogicalHeight(void*);
+
+namespace {
+
+std::optional<std::optional<LayoutUnit>> convertContainingBlockOverride(const int32_t values[3])
+{
+    if (!values[0])
+        return {};
+    if (!values[1])
+        return std::optional<LayoutUnit> {};
+    return std::optional<LayoutUnit> { LayoutUnit::fromRawValue(values[2]) };
+}
+
+} // namespace
+
+std::optional<std::optional<LayoutUnit>> RenderBoxScion::overridingContainingBlockContentLogicalWidth() const
+{
+    int32_t values[3] = {};
+    RenderBoxScion_overridingContainingBlockContentLogicalWidth(m_handle, values);
+    return convertContainingBlockOverride(values);
+}
+
+std::optional<std::optional<LayoutUnit>> RenderBoxScion::overridingContainingBlockContentLogicalHeight() const
+{
+    int32_t values[3] = {};
+    RenderBoxScion_overridingContainingBlockContentLogicalHeight(m_handle, values);
+    return convertContainingBlockOverride(values);
+}
+
+void RenderBoxScion::setOverridingContainingBlockContentLogicalWidth(std::optional<LayoutUnit> logicalWidth)
+{
+    RenderBoxScion_setOverridingContainingBlockContentLogicalWidth(m_handle, !!logicalWidth, logicalWidth ? logicalWidth->rawValue() : 0);
+}
+
+void RenderBoxScion::setOverridingContainingBlockContentLogicalHeight(std::optional<LayoutUnit> logicalHeight)
+{
+    RenderBoxScion_setOverridingContainingBlockContentLogicalHeight(m_handle, !!logicalHeight, logicalHeight ? logicalHeight->rawValue() : 0);
+}
+
+void RenderBoxScion::clearOverridingContainingBlockContentSize()
+{
+    RenderBoxScion_clearOverridingContainingBlockContentSize(m_handle);
+}
+
+void RenderBoxScion::clearOverridingContainingBlockContentLogicalHeight()
+{
+    RenderBoxScion_clearOverridingContainingBlockContentLogicalHeight(m_handle);
+}
+
 bool RenderBoxScion::stretchesToViewport() const
 {
     return RenderBoxScion_stretchesToViewport(m_handle);

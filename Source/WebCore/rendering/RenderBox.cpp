@@ -2063,7 +2063,7 @@ std::optional<RenderBox::ContainingBlockOverrideValue> RenderBox::overridingCont
 
 std::optional<RenderBox::ContainingBlockOverrideValue> RenderBox::overridingContainingBlockContentLogicalWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->overridingContainingBlockContentLogicalWidth(); }
     if (!gOverridingContainingBlockContentLogicalWidthMap)
         return { };
     if (auto result = gOverridingContainingBlockContentLogicalWidthMap->find(*this); result != gOverridingContainingBlockContentLogicalWidthMap->end())
@@ -2073,7 +2073,7 @@ std::optional<RenderBox::ContainingBlockOverrideValue> RenderBox::overridingCont
 
 std::optional<RenderBox::ContainingBlockOverrideValue> RenderBox::overridingContainingBlockContentLogicalHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->overridingContainingBlockContentLogicalHeight(); }
     if (!gOverridingContainingBlockContentLogicalHeightMap)
         return { };
     if (auto result = gOverridingContainingBlockContentLogicalHeightMap->find(*this); result != gOverridingContainingBlockContentLogicalHeightMap->end())
@@ -2083,7 +2083,10 @@ std::optional<RenderBox::ContainingBlockOverrideValue> RenderBox::overridingCont
 
 void RenderBox::setOverridingContainingBlockContentLogicalWidth(ContainingBlockOverrideValue logicalWidth)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOverridingContainingBlockContentLogicalWidth(logicalWidth);
+        return;
+    }
     if (!gOverridingContainingBlockContentLogicalWidthMap)
         gOverridingContainingBlockContentLogicalWidthMap = new OverrideOptionalSizeMap;
     gOverridingContainingBlockContentLogicalWidthMap->set(*this, logicalWidth);
@@ -2091,7 +2094,10 @@ void RenderBox::setOverridingContainingBlockContentLogicalWidth(ContainingBlockO
 
 void RenderBox::setOverridingContainingBlockContentLogicalHeight(ContainingBlockOverrideValue logicalHeight)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOverridingContainingBlockContentLogicalHeight(logicalHeight);
+        return;
+    }
     if (!gOverridingContainingBlockContentLogicalHeightMap)
         gOverridingContainingBlockContentLogicalHeightMap = new OverrideOptionalSizeMap;
     gOverridingContainingBlockContentLogicalHeightMap->set(*this, logicalHeight);
@@ -2099,7 +2105,10 @@ void RenderBox::setOverridingContainingBlockContentLogicalHeight(ContainingBlock
 
 void RenderBox::clearOverridingContainingBlockContentSize()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingContainingBlockContentSize();
+        return;
+    }
     if (gOverridingContainingBlockContentLogicalWidthMap)
         gOverridingContainingBlockContentLogicalWidthMap->remove(*this);
     clearOverridingContainingBlockContentLogicalHeight();
@@ -2107,7 +2116,10 @@ void RenderBox::clearOverridingContainingBlockContentSize()
 
 void RenderBox::clearOverridingContainingBlockContentLogicalHeight()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingContainingBlockContentLogicalHeight();
+        return;
+    }
     if (gOverridingContainingBlockContentLogicalHeightMap)
         gOverridingContainingBlockContentLogicalHeightMap->remove(*this);
 }

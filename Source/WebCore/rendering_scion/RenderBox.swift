@@ -34,8 +34,8 @@ private var gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
 private typealias OverrideOptionalSizeMap = WeakHashMap<
   RenderBoxWrapper, RenderBoxWrapper.ContainingBlockOverrideValue
 >
-private let gOverridingContainingBlockContentLogicalHeightMap: OverrideOptionalSizeMap? = nil
-private let gOverridingContainingBlockContentLogicalWidthMap: OverrideOptionalSizeMap? = nil
+private var gOverridingContainingBlockContentLogicalHeightMap: OverrideOptionalSizeMap? = nil
+private var gOverridingContainingBlockContentLogicalWidthMap: OverrideOptionalSizeMap? = nil
 
 private let backgroundObscurationTestMaxDepth: UInt32 = 4
 
@@ -2129,14 +2129,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setOverridingContainingBlockContentLogicalWidth(logicalWidth: ContainingBlockOverrideValue) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if gOverridingContainingBlockContentLogicalWidthMap == nil {
+      gOverridingContainingBlockContentLogicalWidthMap = OverrideOptionalSizeMap()
+    }
+    gOverridingContainingBlockContentLogicalWidthMap!.set(self, logicalWidth)
   }
 
   func setOverridingContainingBlockContentLogicalHeight(logicalHeight: ContainingBlockOverrideValue)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if gOverridingContainingBlockContentLogicalHeightMap == nil {
+      gOverridingContainingBlockContentLogicalHeightMap = OverrideOptionalSizeMap()
+    }
+    gOverridingContainingBlockContentLogicalHeightMap!.set(self, logicalHeight)
   }
 
   func clearOverridingContainingBlockContentSize() {

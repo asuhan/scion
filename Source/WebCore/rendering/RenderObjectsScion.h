@@ -1051,6 +1051,12 @@ public:
     bool sizesLogicalWidthToFitContent(uint8_t widthType) const;
     bool hasHorizontalOverflow() const;
     bool hasVerticalOverflow() const;
+    std::optional<std::optional<LayoutUnit>> overridingContainingBlockContentLogicalWidth() const;
+    std::optional<std::optional<LayoutUnit>> overridingContainingBlockContentLogicalHeight() const;
+    void setOverridingContainingBlockContentLogicalWidth(std::optional<LayoutUnit>);
+    void setOverridingContainingBlockContentLogicalHeight(std::optional<LayoutUnit>);
+    void clearOverridingContainingBlockContentSize();
+    void clearOverridingContainingBlockContentLogicalHeight();
     bool stretchesToViewport() const;
 
     LayoutUnit availableLogicalWidth() const;

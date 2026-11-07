@@ -5965,6 +5965,63 @@ func RenderBoxScion_hasVerticalOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.hasVerticalOverflow()
 }
 
+private func writeContainingBlockOverride(
+  _ value: RenderBoxWrapper.ContainingBlockOverrideValue?, _ values: UnsafeMutablePointer<Int32>
+) {
+  values[0] = value != nil ? 1 : 0
+  guard let value = value, let logicalSize = value else { return }
+  values[1] = 1
+  values[2] = logicalSize.rawValue()
+}
+
+@_cdecl("RenderBoxScion_overridingContainingBlockContentLogicalWidth")
+func RenderBoxScion_overridingContainingBlockContentLogicalWidth(
+  _ boxRaw: UnsafeRawPointer, _ values: UnsafeMutablePointer<Int32>
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  writeContainingBlockOverride(box.overridingContainingBlockContentLogicalWidth(), values)
+}
+
+@_cdecl("RenderBoxScion_overridingContainingBlockContentLogicalHeight")
+func RenderBoxScion_overridingContainingBlockContentLogicalHeight(
+  _ boxRaw: UnsafeRawPointer, _ values: UnsafeMutablePointer<Int32>
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  writeContainingBlockOverride(box.overridingContainingBlockContentLogicalHeight(), values)
+}
+
+@_cdecl("RenderBoxScion_setOverridingContainingBlockContentLogicalWidth")
+func RenderBoxScion_setOverridingContainingBlockContentLogicalWidth(
+  _ boxRaw: UnsafeMutableRawPointer, _ hasValue: Bool, _ rawValue: Int32
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setOverridingContainingBlockContentLogicalWidth(
+    logicalWidth: hasValue ? LayoutUnit.fromRawValue(value: rawValue) : nil)
+}
+
+@_cdecl("RenderBoxScion_setOverridingContainingBlockContentLogicalHeight")
+func RenderBoxScion_setOverridingContainingBlockContentLogicalHeight(
+  _ boxRaw: UnsafeMutableRawPointer, _ hasValue: Bool, _ rawValue: Int32
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setOverridingContainingBlockContentLogicalHeight(
+    logicalHeight: hasValue ? LayoutUnit.fromRawValue(value: rawValue) : nil)
+}
+
+@_cdecl("RenderBoxScion_clearOverridingContainingBlockContentSize")
+func RenderBoxScion_clearOverridingContainingBlockContentSize(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingContainingBlockContentSize()
+}
+
+@_cdecl("RenderBoxScion_clearOverridingContainingBlockContentLogicalHeight")
+func RenderBoxScion_clearOverridingContainingBlockContentLogicalHeight(
+  _ boxRaw: UnsafeMutableRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingContainingBlockContentLogicalHeight()
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
