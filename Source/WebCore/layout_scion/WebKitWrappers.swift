@@ -6046,6 +6046,12 @@ func RenderElementScion_effectiveOverflowInlineDirection(_ elementRaw: UnsafeRaw
   return element.effectiveOverflowInlineDirection().rawValue
 }
 
+@_cdecl("RenderBlockScion_textIndentOffset")
+func RenderBlockScion_textIndentOffset(_ blockRaw: UnsafeRawPointer) -> Int32 {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.textIndentOffset().rawValue()
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -2031,7 +2031,7 @@ void RenderBlock::setHasMarginAfterQuirk(bool b)
 
 LayoutUnit RenderBlock::textIndentOffset() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->textIndentOffset(); }
     LayoutUnit cw;
     if (style().textIndent().isPercentOrCalculated())
         cw = availableLogicalWidth();

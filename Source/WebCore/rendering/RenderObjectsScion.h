@@ -1251,6 +1251,8 @@ public:
 
     void markForPaginationRelayoutIfNeeded();
 
+    LayoutUnit textIndentOffset() const;
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;

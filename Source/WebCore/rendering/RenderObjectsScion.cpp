@@ -4608,6 +4608,13 @@ Overflow RenderElementScion::effectiveOverflowInlineDirection() const
     return static_cast<Overflow>(RenderElementScion_effectiveOverflowInlineDirection(m_handle));
 }
 
+extern "C" int32_t RenderBlockScion_textIndentOffset(const void*);
+
+LayoutUnit RenderBlockScion::textIndentOffset() const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_textIndentOffset(m_handle));
+}
+
 String RenderBlockScion::debugDescription() const
 {
     const auto original = static_cast<const String*>(RenderBlockScion_debugDescription(m_handle));
