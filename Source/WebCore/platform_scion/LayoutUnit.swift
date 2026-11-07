@@ -102,9 +102,16 @@ struct LayoutUnit: Comparable {
 
   static func - (lhs: LayoutUnit, rhs: LayoutUnit) -> LayoutUnit {
     var returnVal = LayoutUnit()
-    // TODO(asuhan): implement this correctly
-    returnVal.value = lhs.rawValue() - rhs.rawValue()
+    returnVal.value = saturatedDifference(lhs.rawValue(), rhs.rawValue())
     return returnVal
+  }
+
+  private static func saturatedDifference(_ a: Int32, _ b: Int32) -> Int32 {
+    let (result, overflow) = a.subtractingReportingOverflow(b)
+    if overflow {
+      return a < 0 ? Int32.min : Int32.max
+    }
+    return result
   }
 
   static func - (a: Float32, b: LayoutUnit) -> Float32 {
@@ -494,8 +501,7 @@ struct LayoutUnit: Comparable {
 
   @discardableResult
   static func -= (a: inout LayoutUnit, b: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this correctly
-    a.value = a.rawValue() - b.rawValue()
+    a = a - b
     return a
   }
 
