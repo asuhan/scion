@@ -127,7 +127,8 @@ class LayoutIntegration {
     let layoutState = rootRenderer.view().frameView().layoutContext().layoutState()!
     if let legacyLineClamp = layoutState.legacyLineClamp() {
       return BlockLayoutState.LineClamp(
-        maximumLines: max(legacyLineClamp.maximumLineCount - legacyLineClamp.currentLineCount, 0),
+        // Wraps around like the size_t subtraction upstream.
+        maximumLines: max(legacyLineClamp.maximumLineCount &- legacyLineClamp.currentLineCount, 0),
         shouldDiscardOverflow: false, isLegacy: true)
     }
     if let lineClamp = layoutState.lineClamp() {
