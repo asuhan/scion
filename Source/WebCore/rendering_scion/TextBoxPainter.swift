@@ -1317,6 +1317,9 @@ class TextBoxPainter {
     if !renderer.settings().legacyLineLayoutVisualCoverageEnabled() {
       return nil
     }
+    if textBox is InlineIterator.BoxModernPath {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
