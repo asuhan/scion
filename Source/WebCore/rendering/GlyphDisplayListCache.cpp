@@ -81,6 +81,10 @@ extern "C" WEBCORE_EXPORT void* InlineDisplayBoxScion_create(void* handle) {
     return new InlineDisplayBoxScion(handle);
 }
 
+extern "C" WEBCORE_EXPORT void GlyphDisplayListCacheInlineDisplay_remove(const void* runRaw) {
+    WebCore::GlyphDisplayListCache::singleton().remove(*static_cast<const InlineDisplayBoxScion*>(runRaw));
+}
+
 extern "C" WEBCORE_EXPORT void InlineDisplayBoxScion_destroy(void* handle) {
     delete static_cast<InlineDisplayBoxScion*>(handle);
 }

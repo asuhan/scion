@@ -275,8 +275,8 @@ extension InlineDisplay {
 
     func removeFromGlyphDisplayListCache() {
       if isInGlyphDisplayListCache {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        wk_interop.GlyphDisplayListCacheInlineDisplay_remove(getWkHandle())
+        isInGlyphDisplayListCache = false
       }
     }
 
