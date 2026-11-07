@@ -853,6 +853,7 @@ extern "C" LayoutSizeRaw RenderReplacedScion_intrinsicSize(const void*);
 extern "C" LayoutRectRaw RenderReplacedScion_replacedContentRect(const void*);
 
 extern "C" void RenderHTMLCanvasScion_setWk(void*, void*);
+extern "C" void* RenderHTMLCanvasScion_canvasElement(const void*);
 
 extern "C" void LegacyRenderSVGRootScion_setWk(void*, void*);
 
@@ -3026,6 +3027,11 @@ LayoutSize RenderReplacedScion::intrinsicSize() const
 LayoutRect RenderReplacedScion::replacedContentRect() const
 {
     return convertLayoutRectRaw(RenderReplacedScion_replacedContentRect(m_handle));
+}
+
+HTMLCanvasElement& RenderHTMLCanvasScion::canvasElement() const
+{
+    return *static_cast<HTMLCanvasElement*>(RenderHTMLCanvasScion_canvasElement(m_handle));
 }
 
 void RenderHTMLCanvasScion::setWk(void* wk)

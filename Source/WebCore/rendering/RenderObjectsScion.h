@@ -2036,6 +2036,8 @@ public:
 
     void setWk(void*);
 
+    HTMLCanvasElement& canvasElement() const;
+
 private:
     void* m_handle;
 };

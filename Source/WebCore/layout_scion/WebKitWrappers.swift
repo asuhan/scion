@@ -6028,6 +6028,12 @@ func RenderBoxScion_clearOverridingContainingBlockContentLogicalHeight(
   box.clearOverridingContainingBlockContentLogicalHeight()
 }
 
+@_cdecl("RenderHTMLCanvasScion_canvasElement")
+func RenderHTMLCanvasScion_canvasElement(_ canvasRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let canvas = Unmanaged<RenderHTMLCanvasWrapper>.fromOpaque(canvasRaw).takeUnretainedValue()
+  return canvas.canvasElement().p
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

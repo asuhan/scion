@@ -31,6 +31,8 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  override func renderName() -> String { return "RenderHTMLCanvas" }
+
   func canvasElement() -> HTMLCanvasElementWrapper {
     return nodeForNonAnonymous() as! HTMLCanvasElementWrapper
   }
