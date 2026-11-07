@@ -1947,8 +1947,13 @@ void RenderBlock::addPercentHeightDescendant(RenderBox& descendant)
     insertIntoTrackedRendererMaps(*this, descendant);
 }
 
+extern "C" void RenderBlockScion_removePercentHeightDescendant(const void*);
+
 void RenderBlock::removePercentHeightDescendant(RenderBox& descendant)
 {
+    // NB(asuhan): native blocks and native descendants are tracked by the Swift maps.
+    if (Document::s_useScionRendering)
+        RenderBlockScion_removePercentHeightDescendant(&descendant);
     removeFromTrackedRendererMaps(descendant);
 }
 
@@ -1977,6 +1982,9 @@ void RenderBlock::removePercentHeightDescendantIfNeeded(RenderBox& descendant)
     // We query the map directly, rather than looking at style's
     // logicalHeight()/logicalMinHeight()/logicalMaxHeight() since those
     // can change with writing mode/directional changes.
+    // NB(asuhan): native blocks and native descendants are tracked by the Swift maps.
+    if (Document::s_useScionRendering)
+        RenderBlockScion_removePercentHeightDescendant(&descendant);
     if (!hasPercentHeightContainerMap())
         return;
 

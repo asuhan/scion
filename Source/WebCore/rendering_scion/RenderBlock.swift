@@ -28,9 +28,14 @@ typealias TrackedRendererListHashSet = WeakListHashSet<RenderBoxWrapper>
 private typealias TrackedDescendantsMap = WeakHashMap<
   RenderBlockWrapper, TrackedRendererListHashSet?
 >
-private typealias TrackedContainerMap = WeakHashMap<
-  RenderBoxWrapper, WeakHashSet<RenderBlockWrapper>
->
+// Keyed by the C++ pointer: a C++ descendant gets a new wrapper every time it crosses the bridge.
+private final class TrackedContainers {
+  init(_ descendant: RenderBoxWrapper) { self.descendant = descendant }
+
+  let descendant: RenderBoxWrapper
+  var containers: [RenderBlockWrapper] = []
+}
+private typealias TrackedContainerMap = [UInt: TrackedContainers]
 
 private var percentHeightDescendantsMap: TrackedDescendantsMap? = nil
 private var percentHeightContainerMap: TrackedContainerMap? = nil
@@ -47,15 +52,37 @@ private func insertIntoTrackedRendererMaps(
     container, { () in return TrackedRendererListHashSet() }
   ).value!
 
-  let added = descendantSet.add(value: descendant).isNewEntry
+  let key = CPtrToInt(wkRenderObject(descendant))
+  var tracked = percentHeightContainerMap![key]
+  if tracked == nil {
+    tracked = TrackedContainers(descendant)
+    percentHeightContainerMap![key] = tracked
+  }
+
+  let added = descendantSet.add(value: tracked!.descendant).isNewEntry
   if !added {
     return
   }
 
-  let containerSet = percentHeightContainerMap!.add(descendant, WeakHashSet<RenderBlockWrapper>())
-    .value
-  assert(!containerSet.contains(value: container))
-  containerSet.add(value: container)
+  assert(!tracked!.containers.contains { $0 === container })
+  tracked!.containers.append(container)
+}
+
+private func removeFromTrackedRendererMaps(_ key: UInt) {
+  guard let tracked = percentHeightContainerMap?.removeValue(forKey: key) else { return }
+  for container in tracked.containers {
+    guard let descendantSet = percentHeightDescendantsMap!.get(container, nil) else { continue }
+    _ = descendantSet.remove(value: tracked.descendant)
+    if descendantSet.isEmptyIgnoringNullReferences() {
+      percentHeightDescendantsMap!.remove(container)
+    }
+  }
+}
+
+// The C++ tree builder and C++ boxes remove themselves through the C++ static functions.
+@_cdecl("RenderBlockScion_removePercentHeightDescendant")
+func RenderBlockScion_removePercentHeightDescendant(_ descendantRaw: UnsafeRawPointer) {
+  removeFromTrackedRendererMaps(CPtrToInt(descendantRaw))
 }
 
 enum CaretType {
@@ -564,8 +591,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   static func removePercentHeightDescendant(descendant: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    removeFromTrackedRendererMaps(CPtrToInt(wkRenderObject(descendant)))
   }
 
   func percentHeightDescendants() -> TrackedRendererListHashSet? {
@@ -585,21 +611,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     // We don't null check percentHeightContainerMap since the caller
     // already ensures this and we need to call this function on every
     // descendant in clearPercentHeightDescendantsFrom().
-    return percentHeightContainerMap!.contains(descendant)
+    return percentHeightContainerMap![CPtrToInt(wkRenderObject(descendant))] != nil
   }
 
   static func clearPercentHeightDescendantsFrom(parent: RenderBoxWrapper) {
     assert(percentHeightContainerMap != nil)
     var child = parent.firstChild()
     while child != nil {
-      guard let box = child as? RenderBoxWrapper else { continue }
-
-      if !hasPercentHeightDescendant(descendant: box) {
-        continue
+      if let box = child as? RenderBoxWrapper, hasPercentHeightDescendant(descendant: box) {
+        removePercentHeightDescendant(descendant: box)
       }
-
-      removePercentHeightDescendant(descendant: box)
-
       child = child!.nextInPreOrder(stayWithin: parent)
     }
   }
