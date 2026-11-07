@@ -182,6 +182,9 @@ struct OptionalLineClampRaw {
 struct OptionalLegacyLineClampRaw {
     uint64_t maximumLineCount;
     uint64_t currentLineCount;
+    int32_t clampedContentLogicalHeight;
+    bool hasClampedContentLogicalHeight;
+    const void* clampedRenderer;
     bool isValid;
 };
 
@@ -1005,6 +1008,7 @@ bool RenderLayoutState_needsBlockDirectionLocationSetBeforeLayout(const void*);
 struct LayoutRectRaw RenderLayoutState_clipRect(const void*);
 bool RenderLayoutState_isClipped(const void*);
 void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineClamp);
+void RenderLayoutState_setLegacyLineClamp(void* p, struct OptionalLegacyLineClampRaw legacyLineClamp);
 struct OptionalRepaintRectsRaw RenderObject_computeVisibleRectsInContainer(const void*, struct RepaintRectsRaw, const void*, struct VisibleRectContextRaw);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);

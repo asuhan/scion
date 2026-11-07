@@ -154,16 +154,41 @@ extern "C" WEBCORE_EXPORT OptionalLineClampRaw RenderLayoutState_lineClamp(const
 struct OptionalLegacyLineClampRaw {
     uint64_t maximumLineCount;
     uint64_t currentLineCount;
+    int32_t clampedContentLogicalHeight;
+    bool hasClampedContentLogicalHeight;
+    const void* clampedRenderer;
     bool isValid;
 };
+
+extern "C" WEBCORE_EXPORT void RenderLayoutState_setLegacyLineClamp(void* p, OptionalLegacyLineClampRaw raw)
+{
+    std::optional<WebCore::RenderLayoutState::LegacyLineClamp> legacyLineClamp;
+    if (raw.isValid) {
+        legacyLineClamp = WebCore::RenderLayoutState::LegacyLineClamp {
+            raw.maximumLineCount,
+            raw.currentLineCount,
+            raw.hasClampedContentLogicalHeight ? std::make_optional(WebCore::LayoutUnit::fromRawValue(raw.clampedContentLogicalHeight)) : std::nullopt,
+            static_cast<const WebCore::RenderBlockFlow*>(raw.clampedRenderer)
+        };
+    }
+    static_cast<WebCore::RenderLayoutState*>(p)->setLegacyLineClamp(legacyLineClamp);
+}
 
 extern "C" WEBCORE_EXPORT OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void* p)
 {
     auto legacyLineClamp = static_cast<const WebCore::RenderLayoutState*>(p)->legacyLineClamp();
     if (!legacyLineClamp) {
-        return { 0, 0, false };
+        return { 0, 0, 0, false, nullptr, false };
     }
-    return { legacyLineClamp->maximumLineCount, legacyLineClamp->currentLineCount, true };
+    const auto clampedContentLogicalHeight = legacyLineClamp->clampedContentLogicalHeight;
+    return {
+        legacyLineClamp->maximumLineCount,
+        legacyLineClamp->currentLineCount,
+        clampedContentLogicalHeight ? clampedContentLogicalHeight->rawValue() : 0,
+        !!clampedContentLogicalHeight,
+        legacyLineClamp->clampedRenderer.get(),
+        true
+    };
 }
 
 struct TextEdgeRaw {

@@ -135,8 +135,14 @@ class RenderLayoutStateWrapper {
   }
 
   func setLegacyLineClamp(legacyLineClamp: LegacyLineClamp?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = OptionalLegacyLineClampRaw(
+      maximumLineCount: legacyLineClamp?.maximumLineCount ?? 0,
+      currentLineCount: legacyLineClamp?.currentLineCount ?? 0,
+      clampedContentLogicalHeight: legacyLineClamp?.clampedContentLogicalHeight?.rawValue() ?? 0,
+      hasClampedContentLogicalHeight: legacyLineClamp?.clampedContentLogicalHeight != nil,
+      clampedRenderer: UnsafeRawPointer(wkRenderObject(legacyLineClamp?.clampedRenderer)),
+      isValid: legacyLineClamp != nil)
+    wk_interop.RenderLayoutState_setLegacyLineClamp(p, raw)
   }
 
   func legacyLineClamp() -> LegacyLineClamp? {
@@ -146,7 +152,11 @@ class RenderLayoutStateWrapper {
     }
     return LegacyLineClamp(
       maximumLineCount: raw.maximumLineCount, currentLineCount: raw.currentLineCount,
-      clampedContentLogicalHeight: nil, clampedRenderer: nil)
+      clampedContentLogicalHeight: raw.hasClampedContentLogicalHeight
+        ? LayoutUnit.fromRawValue(value: raw.clampedContentLogicalHeight) : nil,
+      clampedRenderer: raw.clampedRenderer != nil
+        ? createRenderObjectWrapperOrNative(UnsafeMutableRawPointer(mutating: raw.clampedRenderer!))
+          as? RenderBlockFlowWrapper : nil)
   }
 
   func textBoxTrim() -> TextBoxTrim? {
