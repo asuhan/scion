@@ -1049,6 +1049,8 @@ public:
 
     bool applyCachedClipAndScrollPosition(RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
     bool sizesLogicalWidthToFitContent(uint8_t widthType) const;
+    bool hasHorizontalOverflow() const;
+    bool hasVerticalOverflow() const;
     bool stretchesToViewport() const;
 
     LayoutUnit availableLogicalWidth() const;

@@ -3768,6 +3768,18 @@ bool RenderBox::hasStretchedLogicalWidth(StretchingMode stretchingMode) const
     return style.resolvedJustifySelf(&containingBlock->style(), normalItemPosition).position() == ItemPosition::Stretch;
 }
 
+bool RenderBox::hasHorizontalOverflow() const
+{
+    if (m_scion) { return m_scion->hasHorizontalOverflow(); }
+    return scrollWidth() != roundToInt(paddingBoxWidth());
+}
+
+bool RenderBox::hasVerticalOverflow() const
+{
+    if (m_scion) { return m_scion->hasVerticalOverflow(); }
+    return scrollHeight() != roundToInt(paddingBoxHeight());
+}
+
 bool RenderBox::sizesLogicalWidthToFitContent(SizeType widthType) const
 {
     if (m_scion) { return m_scion->sizesLogicalWidthToFitContent(static_cast<uint8_t>(widthType)); }

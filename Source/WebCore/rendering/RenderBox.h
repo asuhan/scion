@@ -584,8 +584,8 @@ public:
     bool scrollsOverflowX() const;
     bool scrollsOverflowY() const;
 
-    inline bool hasHorizontalOverflow() const;
-    inline bool hasVerticalOverflow() const;
+    bool hasHorizontalOverflow() const;
+    bool hasVerticalOverflow() const;
     inline bool hasScrollableOverflowX() const;
     inline bool hasScrollableOverflowY() const;
 

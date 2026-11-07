@@ -105,11 +105,6 @@ inline std::optional<LayoutUnit> RenderBox::explicitIntrinsicInnerLogicalWidth()
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isHorizontalWritingMode() ? explicitIntrinsicInnerWidth() : explicitIntrinsicInnerHeight();
 }
-inline bool RenderBox::hasHorizontalOverflow() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return scrollWidth() != roundToInt(paddingBoxWidth());
-}
 inline bool RenderBox::hasScrollableOverflowX() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -119,11 +114,6 @@ inline bool RenderBox::hasScrollableOverflowY() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return scrollsOverflowY() && hasVerticalOverflow();
-}
-inline bool RenderBox::hasVerticalOverflow() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return scrollHeight() != roundToInt(paddingBoxHeight());
 }
 inline LayoutUnit RenderBox::intrinsicLogicalHeight() const
 {

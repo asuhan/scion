@@ -4099,6 +4099,20 @@ bool RenderBoxScion::sizesLogicalWidthToFitContent(uint8_t widthType) const
     return RenderBoxScion_sizesLogicalWidthToFitContent(m_handle, widthType);
 }
 
+extern "C" bool RenderBoxScion_hasHorizontalOverflow(const void*);
+
+bool RenderBoxScion::hasHorizontalOverflow() const
+{
+    return RenderBoxScion_hasHorizontalOverflow(m_handle);
+}
+
+extern "C" bool RenderBoxScion_hasVerticalOverflow(const void*);
+
+bool RenderBoxScion::hasVerticalOverflow() const
+{
+    return RenderBoxScion_hasVerticalOverflow(m_handle);
+}
+
 bool RenderBoxScion::stretchesToViewport() const
 {
     return RenderBoxScion_stretchesToViewport(m_handle);
