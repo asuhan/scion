@@ -1376,7 +1376,9 @@ class RenderLayerWrapper {
   }
 
   func scrollWidth() -> Int32 {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_scrollWidth(pInterop!)
+    }
     if let scrollableArea = m_scrollableArea {
       return scrollableArea.scrollWidth()
     }
@@ -1388,7 +1390,9 @@ class RenderLayerWrapper {
   }
 
   func scrollHeight() -> Int32 {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_scrollHeight(pInterop!)
+    }
     if let scrollableArea = m_scrollableArea {
       return scrollableArea.scrollHeight()
     }

@@ -1963,6 +1963,8 @@ bool RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(const void*);
 void* RenderLayer_create(void*);
 void RenderLayer_destroy(const void*);
 void* RenderLayer_scrollableArea(const void*);
+int32_t RenderLayer_scrollWidth(const void*);
+int32_t RenderLayer_scrollHeight(const void*);
 void* RenderLayer_renderer(const void*);
 void* RenderLayer_parent(const void*);
 void* RenderLayer_commonAncestorWithLayer(const void*, void*);

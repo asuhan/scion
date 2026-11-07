@@ -3040,6 +3040,16 @@ IntSize RenderLayer::offsetFromResizeCorner(const IntPoint& localPoint) const
     return localPoint - resizeCorner;
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderLayer_scrollWidth(const void* layer)
+{
+    return static_cast<const RenderLayer*>(layer)->scrollWidth();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderLayer_scrollHeight(const void* layer)
+{
+    return static_cast<const RenderLayer*>(layer)->scrollHeight();
+}
+
 int RenderLayer::scrollWidth() const
 {
     if (m_scrollableArea)
