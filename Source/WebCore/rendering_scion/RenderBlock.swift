@@ -122,7 +122,9 @@ private class PositionedDescendantsMap {
   }
 
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
-    guard let containingBlock = containerMap[positionedDescendant.id()] else { return }
+    guard let containingBlock = containerMap.removeValue(forKey: positionedDescendant.id()) else {
+      return
+    }
 
     let descendants = descendantsMap[(*containingBlock).id()]!
     assert(descendants.contains(value: positionedDescendant))
