@@ -1126,7 +1126,7 @@ extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_colorResolvingCurrentColor(const 
 extern "C" WEBCORE_EXPORT SRGBARaw RenderStyle_visitedDependentColorWithColorFilter(const void* p, uint16_t colorPropertyRaw, uint32_t paintBehaviorRaw)
 {
     const auto colorProperty = static_cast<WebCore::CSSPropertyID>(colorPropertyRaw);
-    const auto paintBehavior = static_cast<WebCore::PaintBehavior>(paintBehaviorRaw);
+    const auto paintBehavior = OptionSet<WebCore::PaintBehavior>::fromRaw(paintBehaviorRaw);
     const auto color = static_cast<const WebCore::RenderStyle*>(p)->visitedDependentColorWithColorFilter(colorProperty, paintBehavior);
     const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
     return { r, g, b, a };
