@@ -329,6 +329,7 @@ public:
     bool isRenderSVGModelObject() const;
 
     bool isLegacyRenderSVGRoot() const;
+    bool isRenderSVGBlock() const;
 
     bool isRenderSVGRoot() const;
 

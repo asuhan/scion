@@ -4205,6 +4205,12 @@ bool RenderObject::isRenderMultiColumnSpannerPlaceholder() const
     return type() == Type::MultiColumnSpannerPlaceholder;
 }
 
+bool RenderObject::isRenderSVGBlock() const
+{
+    if (m_scion) { return m_scion->isRenderSVGBlock(); }
+    return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsSVGBlock);
+}
+
 bool RenderObject::isRenderFragmentContainer() const
 {
     if (m_scion) { return m_scion->isRenderFragmentContainer(); }

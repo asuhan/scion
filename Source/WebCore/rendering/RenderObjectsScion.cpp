@@ -229,6 +229,7 @@ extern "C" bool RenderObjectScion_isRenderMathMLFenced(const void*);
 extern "C" bool RenderObjectScion_isRenderSVGModelObject(const void*);
 
 extern "C" bool RenderObjectScion_isLegacyRenderSVGRoot(const void*);
+extern "C" bool RenderObjectScion_isRenderSVGBlock(const void*);
 
 extern "C" bool RenderObjectScion_isRenderSVGRoot(const void*);
 
@@ -1780,6 +1781,7 @@ bool RenderObjectScion::isRenderMathMLFenced() const { return RenderObjectScion_
 bool RenderObjectScion::isRenderSVGModelObject() const { return RenderObjectScion_isRenderSVGModelObject(m_handle); }
 
 bool RenderObjectScion::isLegacyRenderSVGRoot() const { return RenderObjectScion_isLegacyRenderSVGRoot(m_handle); }
+bool RenderObjectScion::isRenderSVGBlock() const { return RenderObjectScion_isRenderSVGBlock(m_handle); }
 
 bool RenderObjectScion::isRenderSVGRoot() const { return RenderObjectScion_isRenderSVGRoot(m_handle); }
 

@@ -644,11 +644,7 @@ public:
         return m_typeSpecificFlags.kind() == TypeSpecificFlags::Kind::SVGModelObject && m_typeSpecificFlags.svgFlags().contains(SVGModelObjectFlag::IsLegacy);
     }
     bool isRenderSVGModelObject() const;
-    bool isRenderSVGBlock() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(BlockFlowFlag::IsSVGBlock);
-    }
+    WEBCORE_EXPORT bool isRenderSVGBlock() const;
     bool isLegacyRenderSVGRoot() const;
     bool isRenderSVGRoot() const;
     bool isRenderSVGContainer() const;
