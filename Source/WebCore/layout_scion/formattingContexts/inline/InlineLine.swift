@@ -955,8 +955,8 @@ struct Line {
 
     let isHardLineBreakWithTrailingTextRun =
       lastRun.isHardLineBreak() && runs.count > 1 && runs[runs.count - 2].isText()
-    var trailingRun = runs[runs.count - 2]
     if isHardLineBreakWithTrailingTextRun {
+      var trailingRun = runs[runs.count - 2]
       if !restoreTrailingRun(
         trailingRun: &trailingRun,
         trimmedTrailingWhitespaceWidth: trimmedTrailingWhitespaceWidth)
