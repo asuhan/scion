@@ -3526,12 +3526,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Whether or not the element shrinks to its intrinsic width (rather than filling the width
   // of a containing block).  HTML4 buttons, <select>s, <input>s, legends, and floating/compact elements do this.
-  enum SizeType {
+  enum SizeType: UInt8 {
     case MainOrPreferredSize
     case MinSize
     case MaxSize
   }
-  private func sizesLogicalWidthToFitContent(widthType: SizeType) -> Bool {
+  func sizesLogicalWidthToFitContent(widthType: SizeType) -> Bool {
     assert(isNativeImpl())
     // Marquees in WinIE are like a mixture of blocks and inline-blocks.  They size as though they're blocks,
     // but they allow text to sit on the same line as the marquee.

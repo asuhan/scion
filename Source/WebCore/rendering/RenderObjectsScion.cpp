@@ -4092,6 +4092,13 @@ extern "C" WEBCORE_EXPORT OptionalRepaintRectsRaw RenderObject_computeVisibleRec
     return { convertRepaintRects(*result), true };
 }
 
+extern "C" bool RenderBoxScion_sizesLogicalWidthToFitContent(const void*, uint8_t);
+
+bool RenderBoxScion::sizesLogicalWidthToFitContent(uint8_t widthType) const
+{
+    return RenderBoxScion_sizesLogicalWidthToFitContent(m_handle, widthType);
+}
+
 bool RenderBoxScion::stretchesToViewport() const
 {
     return RenderBoxScion_stretchesToViewport(m_handle);

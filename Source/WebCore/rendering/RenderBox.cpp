@@ -3770,7 +3770,7 @@ bool RenderBox::hasStretchedLogicalWidth(StretchingMode stretchingMode) const
 
 bool RenderBox::sizesLogicalWidthToFitContent(SizeType widthType) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->sizesLogicalWidthToFitContent(static_cast<uint8_t>(widthType)); }
     // Marquees in WinIE are like a mixture of blocks and inline-blocks.  They size as though they're blocks,
     // but they allow text to sit on the same line as the marquee.
     if (isFloating() || (isInlineBlockOrInlineTable() && !isHTMLMarquee()))

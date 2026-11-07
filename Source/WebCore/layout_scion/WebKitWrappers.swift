@@ -5944,6 +5944,15 @@ func computeVisibleRectsInContainerInterop(
   return raw.is_valid ? convertRepaintRects(raw.rects) : nil
 }
 
+@_cdecl("RenderBoxScion_sizesLogicalWidthToFitContent")
+func RenderBoxScion_sizesLogicalWidthToFitContent(_ boxRaw: UnsafeRawPointer, _ widthType: UInt8)
+  -> Bool
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.sizesLogicalWidthToFitContent(
+    widthType: RenderBoxWrapper.SizeType(rawValue: widthType)!)
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
