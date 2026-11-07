@@ -4627,6 +4627,16 @@ extern "C" WEBCORE_EXPORT bool RenderBox_foregroundIsKnownToBeOpaqueInRect(const
     return static_cast<const RenderBox*>(box)->foregroundIsKnownToBeOpaqueInRect(convertLayoutRectRaw(localRect), maxDepthToTest);
 }
 
+extern "C" const void* RenderObjectScion_debugDescription(const void*);
+
+String RenderObjectScion::debugDescription() const
+{
+    const auto original = static_cast<const String*>(RenderObjectScion_debugDescription(m_handle));
+    const auto copy = *original;
+    delete original;
+    return copy;
+}
+
 String RenderBlockScion::debugDescription() const
 {
     const auto original = static_cast<const String*>(RenderBlockScion_debugDescription(m_handle));

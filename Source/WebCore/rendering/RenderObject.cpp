@@ -3865,7 +3865,7 @@ String RenderObject::description() const
 
 String RenderObject::debugDescription() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->debugDescription(); }
     StringBuilder builder;
 
     builder.append(renderName(), " 0x"_s, hex(reinterpret_cast<uintptr_t>(this), Lowercase));

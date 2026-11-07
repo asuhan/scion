@@ -584,6 +584,8 @@ public:
 
     void initializeFragmentedFlowStateOnInsertion();
 
+    String debugDescription() const;
+
     bool isSkippedContent() const;
 
     bool isSkippedContentRoot() const;

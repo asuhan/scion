@@ -6060,6 +6060,12 @@ func RenderBoxScion_foregroundIsKnownToBeOpaqueInRect(
   return box.foregroundIsKnownToBeOpaqueInRect(convertLayoutRect(localRect), maxDepthToTest)
 }
 
+@_cdecl("RenderObjectScion_debugDescription")
+func RenderObjectScion_debugDescription(_ objectRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.debugDescription().p
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
