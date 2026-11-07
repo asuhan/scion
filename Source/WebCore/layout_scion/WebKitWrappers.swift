@@ -6034,6 +6034,18 @@ func RenderHTMLCanvasScion_canvasElement(_ canvasRaw: UnsafeRawPointer) -> Unsaf
   return canvas.canvasElement().p
 }
 
+@_cdecl("RenderElementScion_effectiveOverflowBlockDirection")
+func RenderElementScion_effectiveOverflowBlockDirection(_ elementRaw: UnsafeRawPointer) -> UInt8 {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.effectiveOverflowBlockDirection().rawValue
+}
+
+@_cdecl("RenderElementScion_effectiveOverflowInlineDirection")
+func RenderElementScion_effectiveOverflowInlineDirection(_ elementRaw: UnsafeRawPointer) -> UInt8 {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  return element.effectiveOverflowInlineDirection().rawValue
+}
+
 @_cdecl("RenderBoxScion_stretchesToViewport")
 func RenderBoxScion_stretchesToViewport(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -616,6 +616,8 @@ private:
 
 class RenderElementScion final {
 public:
+    Overflow effectiveOverflowBlockDirection() const;
+    Overflow effectiveOverflowInlineDirection() const;
     RenderElementScion(void* handle)
         : m_handle(handle)
     {

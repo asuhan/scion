@@ -3286,4 +3286,16 @@ bool RenderObject::isSkippedContentRoot() const
     return downcast<RenderElement>(*this).isSkippedContentRoot();
 }
 
+Overflow RenderElement::effectiveOverflowBlockDirection() const
+{
+    if (m_scion) { return m_scion->effectiveOverflowBlockDirection(); }
+    return style().isHorizontalWritingMode() ? effectiveOverflowY() : effectiveOverflowX();
+}
+
+Overflow RenderElement::effectiveOverflowInlineDirection() const
+{
+    if (m_scion) { return m_scion->effectiveOverflowInlineDirection(); }
+    return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY();
+}
+
 }

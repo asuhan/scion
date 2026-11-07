@@ -4595,6 +4595,19 @@ void RenderBlockScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffse
     RenderBlockScion_paint(m_handle, &paintInfo, convertLayoutPoint(paintOffset));
 }
 
+extern "C" uint8_t RenderElementScion_effectiveOverflowBlockDirection(const void*);
+extern "C" uint8_t RenderElementScion_effectiveOverflowInlineDirection(const void*);
+
+Overflow RenderElementScion::effectiveOverflowBlockDirection() const
+{
+    return static_cast<Overflow>(RenderElementScion_effectiveOverflowBlockDirection(m_handle));
+}
+
+Overflow RenderElementScion::effectiveOverflowInlineDirection() const
+{
+    return static_cast<Overflow>(RenderElementScion_effectiveOverflowInlineDirection(m_handle));
+}
+
 String RenderBlockScion::debugDescription() const
 {
     const auto original = static_cast<const String*>(RenderBlockScion_debugDescription(m_handle));

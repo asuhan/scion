@@ -313,8 +313,8 @@ public:
 
     Overflow effectiveOverflowX() const;
     Overflow effectiveOverflowY() const;
-    inline Overflow effectiveOverflowInlineDirection() const;
-    inline Overflow effectiveOverflowBlockDirection() const;
+    Overflow effectiveOverflowInlineDirection() const;
+    Overflow effectiveOverflowBlockDirection() const;
 
     bool isWritingModeRoot() const;
 

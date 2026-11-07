@@ -24,16 +24,6 @@
 
 namespace WebCore {
 
-inline Overflow RenderElement::effectiveOverflowBlockDirection() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? effectiveOverflowY() : effectiveOverflowX();
-}
-inline Overflow RenderElement::effectiveOverflowInlineDirection() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY();
-}
 inline bool RenderElement::hasHiddenBackface() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }
