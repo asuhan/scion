@@ -492,7 +492,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func firstChild() -> RenderObjectWrapper? {
     if !isNativeImpl() {
       if let childRaw = wk_interop.RenderElement_firstChild(id()) {
-        return RenderObjectWrapper(p: childRaw)
+        return createRenderObjectWrapperOrNative(childRaw)
       }
       return nil
     }
