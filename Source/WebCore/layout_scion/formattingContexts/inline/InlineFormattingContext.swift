@@ -539,6 +539,7 @@ class InlineFormattingContext {
       lineLogicalWidth: lineContent.lineGeometry.logicalWidth,
       hangingTrailingWidth: lineContent.hangingContent.logicalWidth,
       runs: lineContent.inlineContent, isLastLine: true)
+    inlineContentCache.maximumIntrinsicWidthLineContent = lineContent
     var lineBoxBuilder = LineBoxBuilder(
       inlineFormattingContext: self, lineLayoutResult: lineContent)
     let lineBox = lineBoxBuilder.build(lineIndex: 0)
