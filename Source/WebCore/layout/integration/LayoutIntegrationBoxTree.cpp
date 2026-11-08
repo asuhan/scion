@@ -76,6 +76,39 @@ extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void* root_rend
     }
 }
 
+extern "C" bool RenderBlockFlowScion_hasInlineLayout(const void*);
+
+// Mirrors BoxTree::~BoxTree for the Swift box tree.
+extern "C" WEBCORE_EXPORT void BoxTree_destroy(void* root_renderer_raw)
+{
+    auto& rootRenderer = *static_cast<WebCore::RenderBlock*>(root_renderer_raw);
+    auto& rootLayoutBox = *rootRenderer.layoutBox();
+    auto& initialContainingBlock = rootRenderer.view().initialContainingBlock();
+
+    Vector<CheckedRef<WebCore::Layout::Box>> boxesToDetach;
+    for (auto& constLayoutBox : WebCore::Layout::formattingContextBoxes(rootLayoutBox)) {
+        auto& layoutBox = const_cast<WebCore::Layout::Box&>(constLayoutBox);
+        auto* renderer = layoutBox.rendererForIntegration();
+        if (!renderer)
+            continue;
+
+        auto* renderBlockFlow = dynamicDowncast<WebCore::RenderBlockFlow>(*renderer);
+        auto isLFCInlineBlock = renderBlockFlow && (renderBlockFlow->scion() ? RenderBlockFlowScion_hasInlineLayout(renderBlockFlow->scion()) : !!renderBlockFlow->inlineLayout());
+        if (isLFCInlineBlock)
+            boxesToDetach.append(layoutBox);
+    }
+
+    for (auto& toDetach : boxesToDetach) {
+        auto detachedBox = toDetach->removeFromParent();
+        initialContainingBlock.appendChild(WTFMove(detachedBox));
+    }
+
+    if (&rootLayoutBox.parent() == &initialContainingBlock)
+        rootLayoutBox.removeFromParent();
+    else
+        rootLayoutBox.destroyChildren();
+}
+
 extern "C" WEBCORE_EXPORT void BoxTree_insert(void* child_raw, const void* before_child_raw)
 {
     auto& child = *static_cast<WebCore::RenderObject*>(child_raw);

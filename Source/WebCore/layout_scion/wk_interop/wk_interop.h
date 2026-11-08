@@ -1014,6 +1014,7 @@ void GlyphDisplayListCacheInlineDisplay_remove(const void*);
 void RenderBox_scrollLayerToYPosition(void*, int32_t, const void*);
 void RenderBox_scrollLayerToXPosition(void*, int32_t, const void*);
 bool RenderBox_hasRelativeLogicalWidth(const void*);
+void BoxTree_destroy(void*);
 bool TextBreakingPositionCache_get(const void* text, const void* style, const void* securityOrigin, const uint64_t** positions, uint64_t* count);
 void TextBreakingPositionCache_set(const void* text, const void* style, const void* securityOrigin, const uint64_t* positions, uint64_t count);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);

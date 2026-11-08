@@ -52,6 +52,11 @@ extension LayoutIntegration {
       }
     }
 
+    // Upstream does this in the destructor; BoxTree is a value type here, so LineLayout's deinit calls it.
+    func destroy() {
+      wk_interop.BoxTree_destroy(wkRenderObject(rootRenderer)!)
+    }
+
     // TODO(asuhan): provide native implementation
     static func updateStyle(_ renderer: RenderObjectWrapper) {
       wk_interop.BoxTree_updateStyle(
