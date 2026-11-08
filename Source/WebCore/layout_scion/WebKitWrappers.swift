@@ -5965,6 +5965,22 @@ func RenderBoxScion_hasRelativeLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Bool 
   return box.hasRelativeLogicalWidth()
 }
 
+@_cdecl("RenderBoxScion_setScrollLeft")
+func RenderBoxScion_setScrollLeft(
+  _ boxRaw: UnsafeMutableRawPointer, _ newLeft: Int32, _ options: UnsafeRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setScrollLeft(newLeft, options)
+}
+
+@_cdecl("RenderBoxScion_setScrollTop")
+func RenderBoxScion_setScrollTop(
+  _ boxRaw: UnsafeMutableRawPointer, _ newTop: Int32, _ options: UnsafeRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setScrollTop(newTop, options)
+}
+
 @_cdecl("RenderBoxScion_hasHorizontalOverflow")
 func RenderBoxScion_hasHorizontalOverflow(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

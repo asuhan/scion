@@ -4119,6 +4119,20 @@ extern "C" WEBCORE_EXPORT bool RenderBox_hasRelativeLogicalWidth(const void* box
     return static_cast<const RenderBox*>(box)->hasRelativeLogicalWidth();
 }
 
+extern "C" void RenderBoxScion_setScrollLeft(void*, int, const void*);
+
+void RenderBoxScion::setScrollLeft(int newLeft, const void* options)
+{
+    RenderBoxScion_setScrollLeft(m_handle, newLeft, options);
+}
+
+extern "C" void RenderBoxScion_setScrollTop(void*, int, const void*);
+
+void RenderBoxScion::setScrollTop(int newTop, const void* options)
+{
+    RenderBoxScion_setScrollTop(m_handle, newTop, options);
+}
+
 extern "C" bool RenderBoxScion_hasHorizontalOverflow(const void*);
 
 bool RenderBoxScion::hasHorizontalOverflow() const

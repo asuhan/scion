@@ -1011,6 +1011,8 @@ void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineCla
 void RenderLayoutState_setLegacyLineClamp(void* p, struct OptionalLegacyLineClampRaw legacyLineClamp);
 struct OptionalRepaintRectsRaw RenderObject_computeVisibleRectsInContainer(const void*, struct RepaintRectsRaw, const void*, struct VisibleRectContextRaw);
 void GlyphDisplayListCacheInlineDisplay_remove(const void*);
+void RenderBox_scrollLayerToYPosition(void*, int32_t, const void*);
+void RenderBox_scrollLayerToXPosition(void*, int32_t, const void*);
 bool RenderBox_hasRelativeLogicalWidth(const void*);
 bool TextBreakingPositionCache_get(const void* text, const void* style, const void* securityOrigin, const uint64_t** positions, uint64_t* count);
 void TextBreakingPositionCache_set(const void* text, const void* style, const void* securityOrigin, const uint64_t* positions, uint64_t count);

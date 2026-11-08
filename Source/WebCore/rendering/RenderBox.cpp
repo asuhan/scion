@@ -1103,9 +1103,20 @@ static void setupWheelEventMonitor(RenderLayerScrollableArea& scrollableArea)
     scrollableArea.scrollAnimator().setWheelEventTestMonitor(page.wheelEventTestMonitor());
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_scrollLayerToXPosition(void* box, int position, const void* options)
+{
+    auto* scrollableArea = static_cast<RenderBox*>(box)->layer()->scrollableArea();
+    ASSERT(scrollableArea);
+    setupWheelEventMonitor(*scrollableArea);
+    scrollableArea->scrollToXPosition(position, *static_cast<const ScrollPositionChangeOptions*>(options));
+}
+
 void RenderBox::setScrollLeft(int newLeft, const ScrollPositionChangeOptions& options)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setScrollLeft(newLeft, &options);
+        return;
+    }
     if (!hasPotentiallyScrollableOverflow() || !layer())
         return;
     auto* scrollableArea = layer()->scrollableArea();
@@ -1114,9 +1125,20 @@ void RenderBox::setScrollLeft(int newLeft, const ScrollPositionChangeOptions& op
     scrollableArea->scrollToXPosition(newLeft, options);
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_scrollLayerToYPosition(void* box, int position, const void* options)
+{
+    auto* scrollableArea = static_cast<RenderBox*>(box)->layer()->scrollableArea();
+    ASSERT(scrollableArea);
+    setupWheelEventMonitor(*scrollableArea);
+    scrollableArea->scrollToYPosition(position, *static_cast<const ScrollPositionChangeOptions*>(options));
+}
+
 void RenderBox::setScrollTop(int newTop, const ScrollPositionChangeOptions& options)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setScrollTop(newTop, &options);
+        return;
+    }
     if (!hasPotentiallyScrollableOverflow() || !layer())
         return;
     auto* scrollableArea = layer()->scrollableArea();

@@ -5546,6 +5546,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       || style().logicalMaxHeight().isPercentOrCalculated()
   }
 
+  // The options stay an opaque C++ ScrollPositionChangeOptions, they only ever come from C++.
+  func setScrollLeft(_ newLeft: Int32, _ options: UnsafeRawPointer) {
+    assert(isNativeImpl())
+    if !hasPotentiallyScrollableOverflow() || layer() == nil {
+      return
+    }
+    wk_interop.RenderBox_scrollLayerToXPosition(getWk(), newLeft, options)
+  }
+
+  func setScrollTop(_ newTop: Int32, _ options: UnsafeRawPointer) {
+    assert(isNativeImpl())
+    if !hasPotentiallyScrollableOverflow() || layer() == nil {
+      return
+    }
+    wk_interop.RenderBox_scrollLayerToYPosition(getWk(), newTop, options)
+  }
+
   func hasRelativeLogicalWidth() -> Bool {
     if !isNativeImpl() {
       return wk_interop.RenderBox_hasRelativeLogicalWidth(id())
