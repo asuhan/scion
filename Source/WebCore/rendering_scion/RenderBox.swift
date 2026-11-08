@@ -6036,6 +6036,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func renderBoxWillBeDestroyed() {
     assert(isNativeImpl())
+    // Upstream relies on weak references in the percent height maps, the Swift ones are strong.
+    RenderBlockWrapper.removePercentHeightDescendantIfNeeded(descendant: self)
+
     if CPtrToInt(frame().eventHandler().autoscrollRenderer()?.id()) == CPtrToInt(id()) {
       frame().eventHandler().stopAutoscrollTimer(true)
     }

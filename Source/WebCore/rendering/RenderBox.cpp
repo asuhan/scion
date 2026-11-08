@@ -585,8 +585,13 @@ void RenderBox::setScionHandle(void* handle) {
     m_scion = std::make_unique<RenderBoxScion>(handle);
 }
 
+extern "C" void RenderBlockScion_removePercentHeightDescendant(const void*);
+
 void RenderBox::willBeDestroyed()
 {
+    // NB(asuhan): native blocks hold their C++ percent height descendants strongly.
+    if (Document::s_useScionRendering && !m_scion)
+        RenderBlockScion_removePercentHeightDescendant(this);
     if (m_scion) {
         m_scion->willBeDestroyed();
         return;
