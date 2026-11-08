@@ -5959,6 +5959,22 @@ func RenderBoxScion_sizesLogicalWidthToFitContent(_ boxRaw: UnsafeRawPointer, _ 
     widthType: RenderBoxWrapper.SizeType(rawValue: widthType)!)
 }
 
+private func convertOptionalLayoutUnitRaw(_ raw: OptionalLayoutUnitRaw) -> LayoutUnit? {
+  return raw.is_valid ? LayoutUnit.fromRawValue(value: raw.value) : nil
+}
+
+@_cdecl("RenderBoxScion_constrainLogicalHeightByMinMax")
+func RenderBoxScion_constrainLogicalHeightByMinMax(
+  _ boxRaw: UnsafeRawPointer, _ logicalHeight: Int32,
+  _ intrinsicContentHeight: OptionalLayoutUnitRaw
+) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.constrainLogicalHeightByMinMax(
+    logicalHeight: LayoutUnit.fromRawValue(value: logicalHeight),
+    intrinsicContentHeight: convertOptionalLayoutUnitRaw(intrinsicContentHeight)
+  ).rawValue()
+}
+
 @_cdecl("RenderBoxScion_hasRelativeLogicalWidth")
 func RenderBoxScion_hasRelativeLogicalWidth(_ boxRaw: UnsafeRawPointer) -> Bool {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -1322,7 +1322,7 @@ LayoutUnit RenderBox::constrainLogicalWidthInFragmentByMinMax(LayoutUnit logical
 
 LayoutUnit RenderBox::constrainLogicalHeightByMinMax(LayoutUnit logicalHeight, std::optional<LayoutUnit> intrinsicContentHeight) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->constrainLogicalHeightByMinMax(logicalHeight, intrinsicContentHeight); }
     const RenderStyle& styleToUse = style();
     std::optional<LayoutUnit> computedLogicalMaxHeight;
     if (!styleToUse.logicalMaxHeight().isUndefined())

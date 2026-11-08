@@ -1057,6 +1057,7 @@ public:
     bool sizesLogicalWidthToFitContent(uint8_t widthType) const;
     void setScrollLeft(int, const void* options);
     void setScrollTop(int, const void* options);
+    LayoutUnit constrainLogicalHeightByMinMax(LayoutUnit logicalHeight, std::optional<LayoutUnit> intrinsicContentHeight) const;
     bool hasRelativeLogicalWidth() const;
     bool hasHorizontalOverflow() const;
     bool hasVerticalOverflow() const;

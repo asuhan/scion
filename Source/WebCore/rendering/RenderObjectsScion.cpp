@@ -4107,6 +4107,18 @@ bool RenderBoxScion::sizesLogicalWidthToFitContent(uint8_t widthType) const
     return RenderBoxScion_sizesLogicalWidthToFitContent(m_handle, widthType);
 }
 
+extern "C" int32_t RenderBoxScion_constrainLogicalHeightByMinMax(const void*, int32_t, OptionalLayoutUnitRaw);
+
+static OptionalLayoutUnitRaw convertOptionalLayoutUnit(std::optional<LayoutUnit> value)
+{
+    return { value ? value->rawValue() : 0, !!value };
+}
+
+LayoutUnit RenderBoxScion::constrainLogicalHeightByMinMax(LayoutUnit logicalHeight, std::optional<LayoutUnit> intrinsicContentHeight) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_constrainLogicalHeightByMinMax(m_handle, logicalHeight.rawValue(), convertOptionalLayoutUnit(intrinsicContentHeight)));
+}
+
 extern "C" bool RenderBoxScion_hasRelativeLogicalWidth(const void*);
 
 bool RenderBoxScion::hasRelativeLogicalWidth() const
