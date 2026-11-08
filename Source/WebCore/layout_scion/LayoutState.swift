@@ -101,6 +101,16 @@ class LayoutStateWrapper {
     return cache
   }
 
+  func destroyInlineContentCache(formattingContextRoot: ElementBoxWrapper) {
+    assert(formattingContextRoot.establishesInlineFormattingContext())
+    inlineContentCaches.removeValue(forKey: CPtrToInt(formattingContextRoot.p))
+  }
+
+  func destroyBlockFormattingState(formattingContextRoot: ElementBoxWrapper) {
+    assert(formattingContextRoot.establishesBlockFormattingContext())
+    blockFormattingStates.removeValue(forKey: CPtrToInt(formattingContextRoot.p))
+  }
+
   func ensureBlockFormattingState(formattingContextRoot: ElementBoxWrapper) -> BlockFormattingState
   {
     assert(formattingContextRoot.establishesBlockFormattingContext())

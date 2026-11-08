@@ -209,7 +209,8 @@ extension LayoutIntegration {
     private static let emptyUInt64Slice: ArraySlice<UInt64> = [][...]
     private static let cacheThreshold = 16
 
-    private var lineLayout: LayoutIntegration.LineLayout? = nil
+    // Weak: LineLayout owns its InlineContent and tears down the caches from its deinit.
+    private weak var lineLayout: LayoutIntegration.LineLayout? = nil
     var hasVisualOverflow = false
   }
 }

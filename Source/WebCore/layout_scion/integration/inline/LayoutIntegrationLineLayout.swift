@@ -203,6 +203,17 @@ class LayoutIntegration {
         layoutState: flow.view().layoutState(), rootLayoutBox: boxTree.rootLayoutBox())
     }
 
+    deinit {
+      if !isDamaged() && !flow().document().renderTreeBeingDestroyed() {
+        InlineItemsBuilder.populateBreakingPositionCache(
+          inlineItemList: inlineContentCache!.inlineItems.content(), document: flow().document())
+      }
+      clearInlineContent()
+      layoutState!.destroyInlineContentCache(formattingContextRoot: rootLayoutBox())
+      layoutState!.destroyBlockFormattingState(formattingContextRoot: rootLayoutBox())
+      boxTree.destroy()
+    }
+
     static func canUseFor(_ flow: RenderBlockFlowWrapper) -> Bool {
       return canUseForLineLayout(rootContainer: flow)
     }
@@ -1120,6 +1131,8 @@ class LayoutIntegration {
     }
 
     func damage() -> InlineDamageWrapper? { return lineDamage }
+
+    func isDamaged() -> Bool { return lineDamage != nil }
 
     func hasDetachedContent() -> Bool {
       if let lineDamage = lineDamage {
