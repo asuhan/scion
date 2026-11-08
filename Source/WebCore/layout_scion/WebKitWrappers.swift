@@ -6036,20 +6036,20 @@ func RenderBoxScion_overridingContainingBlockContentLogicalHeight(
 
 @_cdecl("RenderBoxScion_setOverridingContainingBlockContentLogicalWidth")
 func RenderBoxScion_setOverridingContainingBlockContentLogicalWidth(
-  _ boxRaw: UnsafeMutableRawPointer, _ hasValue: Bool, _ rawValue: Int32
+  _ boxRaw: UnsafeMutableRawPointer, _ logicalWidth: OptionalLayoutUnitRaw
 ) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   box.setOverridingContainingBlockContentLogicalWidth(
-    logicalWidth: hasValue ? LayoutUnit.fromRawValue(value: rawValue) : nil)
+    logicalWidth: convertOptionalLayoutUnitRaw(logicalWidth))
 }
 
 @_cdecl("RenderBoxScion_setOverridingContainingBlockContentLogicalHeight")
 func RenderBoxScion_setOverridingContainingBlockContentLogicalHeight(
-  _ boxRaw: UnsafeMutableRawPointer, _ hasValue: Bool, _ rawValue: Int32
+  _ boxRaw: UnsafeMutableRawPointer, _ logicalHeight: OptionalLayoutUnitRaw
 ) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   box.setOverridingContainingBlockContentLogicalHeight(
-    logicalHeight: hasValue ? LayoutUnit.fromRawValue(value: rawValue) : nil)
+    logicalHeight: convertOptionalLayoutUnitRaw(logicalHeight))
 }
 
 @_cdecl("RenderBoxScion_clearOverridingContainingBlockContentSize")
