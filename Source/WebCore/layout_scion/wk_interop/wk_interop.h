@@ -1012,6 +1012,8 @@ void RenderLayoutState_setLegacyLineClamp(void* p, struct OptionalLegacyLineClam
 struct OptionalRepaintRectsRaw RenderObject_computeVisibleRectsInContainer(const void*, struct RepaintRectsRaw, const void*, struct VisibleRectContextRaw);
 void GlyphDisplayListCacheInlineDisplay_remove(const void*);
 bool RenderBox_hasRelativeLogicalWidth(const void*);
+bool TextBreakingPositionCache_get(const void* text, const void* style, const void* securityOrigin, const uint64_t** positions, uint64_t* count);
+void TextBreakingPositionCache_set(const void* text, const void* style, const void* securityOrigin, const uint64_t* positions, uint64_t count);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
 struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);

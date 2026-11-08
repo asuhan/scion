@@ -28,7 +28,33 @@
 
 #include "RenderStyle.h"
 #include "RenderStyleInlines.h"
+#include "SecurityOrigin.h"
 #include <wtf/TZoneMallocInlines.h>
+
+static WebCore::Layout::TextBreakingPositionCache::Key textBreakingPositionCacheKey(const void* text, const void* style, const void* securityOrigin)
+{
+    return { *static_cast<const String*>(text), { *static_cast<const WebCore::RenderStyle*>(style) }, static_cast<const WebCore::SecurityOrigin*>(securityOrigin)->data() };
+}
+
+extern "C" WEBCORE_EXPORT bool TextBreakingPositionCache_get(const void* text, const void* style, const void* securityOrigin, const uint64_t** positions, uint64_t* count)
+{
+    static_assert(sizeof(size_t) == sizeof(uint64_t));
+    auto* list = WebCore::Layout::TextBreakingPositionCache::singleton().get(textBreakingPositionCacheKey(text, style, securityOrigin));
+    if (!list)
+        return false;
+    *positions = reinterpret_cast<const uint64_t*>(list->span().data());
+    *count = list->size();
+    return true;
+}
+
+extern "C" WEBCORE_EXPORT void TextBreakingPositionCache_set(const void* text, const void* style, const void* securityOrigin, const uint64_t* positions, uint64_t count)
+{
+    WebCore::Layout::TextBreakingPositionCache::List list;
+    list.reserveInitialCapacity(count);
+    for (uint64_t index = 0; index < count; ++index)
+        list.append(positions[index]);
+    WebCore::Layout::TextBreakingPositionCache::singleton().set(textBreakingPositionCacheKey(text, style, securityOrigin), WTFMove(list));
+}
 
 namespace WebCore {
 namespace Layout {

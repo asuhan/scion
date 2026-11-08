@@ -23,24 +23,35 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
+// The cache itself stays in C++: its key is a tuple of a string, a context and an origin, and
+// Swift dictionaries are unreliable with complex keys.
 struct TextBreakingPositionCache {
+  static let minimumRequiredTextLengthForContentBreakCache = 5
   static let minimumRequiredContentBreaks = 3
 
   static func singleton() -> TextBreakingPositionCache {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextBreakingPositionCache()
   }
 
-  typealias Key = (StringWrapper, TextBreakingPositionContext, SecurityOriginData)
+  // C++ derives the TextBreakingPositionContext of the key from the style.
+  typealias Key = (StringWrapper, RenderStyleWrapper, SecurityOriginWrapper)
   typealias List = [UInt64]
 
   func set(key: Key, breakingPositionList: List) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    breakingPositionList.withUnsafeBufferPointer {
+      wk_interop.TextBreakingPositionCache_set(
+        key.0.p, key.1.p!, key.2.p, $0.baseAddress, UInt64($0.count))
+    }
   }
 
   func get(key: Key) -> [UInt64]? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var positions: UnsafePointer<UInt64>? = nil
+    var count: UInt64 = 0
+    if !wk_interop.TextBreakingPositionCache_get(key.0.p, key.1.p!, key.2.p, &positions, &count) {
+      return nil
+    }
+    return Array(UnsafeBufferPointer(start: positions, count: Int(count)))
   }
 }

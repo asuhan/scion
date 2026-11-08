@@ -459,6 +459,7 @@ struct InlineItemsBuilder {
   ) {
     self.inlineContentCache = inlineContentCache
     self.root = root
+    self.securityOrigin = securityOrigin
   }
 
   mutating func build(startPosition: InlineItemPosition) {
@@ -1063,9 +1064,7 @@ struct InlineItemsBuilder {
   ) -> Bool {
     let text = inlineTextBox.content
     let breakingPositions = TextBreakingPositionCache.singleton().get(
-      key: TextBreakingPositionCache.Key(
-        text: text, TextBreakingPositionContext(style: inlineTextBox.style),
-        securityOrigin: securityOrigin.data))
+      key: (text, inlineTextBox.style, securityOrigin))
     if breakingPositions == nil {
       return false
     }
@@ -1176,7 +1175,7 @@ struct InlineItemsBuilder {
     return inlineItemList[Int(index)..<Int(index + length)]
   }
 
-  func populateBreakingPositionCache(inlineItemList: InlineItemList, document: Document) {
+  static func populateBreakingPositionCache(inlineItemList: InlineItemList, document: Document) {
     if inlineItemList.count < TextBreakingPositionCache.minimumRequiredContentBreaks {
       return
     }
@@ -1202,15 +1201,15 @@ struct InlineItemsBuilder {
 
       let isInlineTextBoxEligibleForBreakingPositionCache =
         Int(inlineTextBox!.content.length())
-        >= TextBreakingPositionCache.minimumRequiredContentBreaks
+        >= TextBreakingPositionCache.minimumRequiredTextLengthForContentBreakCache
       if !isInlineTextBoxEligibleForBreakingPositionCache {
         // Text is too short.
         index += span.count
         continue
       }
 
-      let context = TextBreakingPositionContext(style: inlineTextBox!.style)
-      if breakingPositionCache.get(key: (inlineTextBox!.content, context, securityOrigin.data))
+      if breakingPositionCache.get(
+        key: (inlineTextBox!.content, inlineTextBox!.style, securityOrigin))
         != nil
       {
         // Cache is already populated.
@@ -1232,7 +1231,7 @@ struct InlineItemsBuilder {
       assert(!breakingPositionList.isEmpty)
       if breakingPositionList.count >= TextBreakingPositionCache.minimumRequiredContentBreaks {
         breakingPositionCache.set(
-          key: (inlineTextBox!.content, context, securityOrigin.data),
+          key: (inlineTextBox!.content, inlineTextBox!.style, securityOrigin),
           breakingPositionList: breakingPositionList)
       }
       index += span.count
@@ -1241,7 +1240,7 @@ struct InlineItemsBuilder {
 
   private var inlineContentCache: InlineContentCache
   private var root: ElementBoxWrapper
-  private var securityOrigin = SecurityOriginWrapper(p: nil)
+  private var securityOrigin: SecurityOriginWrapper
 
   private var contentRequiresVisualReordering = false
   private var isTextAndForcedLineBreakOnlyContent = true
