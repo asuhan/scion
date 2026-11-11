@@ -183,16 +183,8 @@ public:
     virtual LayoutUnit marginEnd(const RenderStyle* otherStyle = nullptr) const = 0;
     LayoutUnit verticalMarginExtent() const;
     LayoutUnit horizontalMarginExtent() const;
-    LayoutUnit marginLogicalHeight() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return marginBefore() + marginAfter();
-    }
-    LayoutUnit marginLogicalWidth() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return marginStart() + marginEnd();
-    }
+    LayoutUnit marginLogicalHeight() const;
+    LayoutUnit marginLogicalWidth() const;
 
     BorderShape borderShapeForContentClipping(const LayoutRect& borderBoxRect, bool includeLeftEdge = true, bool includeRightEdge = true) const;
 

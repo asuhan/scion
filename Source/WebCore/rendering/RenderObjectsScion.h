@@ -876,6 +876,8 @@ private:
 
 class RenderBoxModelObjectScion final {
 public:
+    LayoutUnit marginLogicalHeight() const;
+    LayoutUnit marginLogicalWidth() const;
     LayoutUnit borderAndPaddingLogicalLeft() const;
     LayoutUnit borderAndPaddingLogicalRight() const;
     RenderBoxModelObjectScion(void* handle)
