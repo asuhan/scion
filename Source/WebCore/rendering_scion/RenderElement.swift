@@ -337,7 +337,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   // out-of-band state (e.g. animations) requires that styleDidChange processing
   // continue even if the style isn't different from the current style.
   func setStyle(style: RenderStyleWrapper, minimalStyleDifference: StyleDifference = .Equal) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderElement_setStyle(id(), style.p!, minimalStyleDifference.rawValue)
+      return
+    }
     // FIXME: Should change RenderView so it can use initializeStyle too.
     // If we do that, we can assert m_hasInitializedStyle unconditionally,
     // and remove the check of m_hasInitializedStyle below too.

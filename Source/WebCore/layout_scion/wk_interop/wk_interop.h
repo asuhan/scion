@@ -1139,6 +1139,7 @@ bool RenderElement_isContinuation(const void*);
 bool RenderElement_isFirstLetter(const void*);
 bool RenderElement_shouldApplyStyleContainment(const void*);
 bool RenderElement_createsNewFormattingContext(const void*);
+void RenderElement_setStyle(void*, const void* style, uint8_t minimalStyleDifference);
 void* RenderElement_firstChildSlow(const void*);
 void* RenderElement_lastChildSlow(const void*);
 void RenderElement_layoutIfNeeded(void*);

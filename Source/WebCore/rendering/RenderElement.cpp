@@ -107,6 +107,11 @@
 #include "ContentChangeObserver.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void RenderElement_setStyle(void* p, const void* style, uint8_t minimalStyleDifference)
+{
+    static_cast<WebCore::RenderElement*>(p)->setStyle(WTFMove(*const_cast<WebCore::RenderStyle*>(static_cast<const WebCore::RenderStyle*>(style))), static_cast<WebCore::StyleDifference>(minimalStyleDifference));
+}
+
 extern "C" WEBCORE_EXPORT void RenderElement_layout(void* p)
 {
     static_cast<WebCore::RenderElement*>(p)->layout();
