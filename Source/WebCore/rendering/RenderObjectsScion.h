@@ -1099,6 +1099,8 @@ public:
 
     void clearOverridingContentSize();
 
+    void setOverridingLogicalHeight(LayoutUnit);
+    void setOverridingLogicalWidth(LayoutUnit);
     void clearOverridingLogicalHeight();
 
     void clearOverridingLogicalWidth();

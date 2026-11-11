@@ -2008,7 +2008,10 @@ LayoutUnit RenderBox::maxPreferredLogicalWidth() const
 
 void RenderBox::setOverridingLogicalHeight(LayoutUnit height)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOverridingLogicalHeight(height);
+        return;
+    }
     if (!gOverridingLogicalHeightMap)
         gOverridingLogicalHeightMap = new OverrideSizeMap();
     gOverridingLogicalHeightMap->set(*this, height);
@@ -2016,7 +2019,10 @@ void RenderBox::setOverridingLogicalHeight(LayoutUnit height)
 
 void RenderBox::setOverridingLogicalWidth(LayoutUnit width)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOverridingLogicalWidth(width);
+        return;
+    }
     if (!gOverridingLogicalWidthMap)
         gOverridingLogicalWidthMap = new OverrideSizeMap();
     gOverridingLogicalWidthMap->set(*this, width);
