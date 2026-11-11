@@ -4731,6 +4731,13 @@ Overflow RenderElementScion::effectiveOverflowInlineDirection() const
 
 extern "C" int32_t RenderBlockScion_textIndentOffset(const void*);
 
+extern "C" int32_t RenderBlockScion_lineHeight(const void*, bool, uint8_t, uint8_t);
+
+LayoutUnit RenderBlockScion::lineHeight(bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
+{
+    return LayoutUnit::fromRawValue(RenderBlockScion_lineHeight(m_handle, firstLine, static_cast<uint8_t>(direction), static_cast<uint8_t>(linePositionMode)));
+}
+
 LayoutUnit RenderBlockScion::textIndentOffset() const
 {
     return LayoutUnit::fromRawValue(RenderBlockScion_textIndentOffset(m_handle));

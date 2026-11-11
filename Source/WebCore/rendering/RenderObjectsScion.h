@@ -1253,6 +1253,8 @@ public:
 
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
+    LayoutUnit lineHeight(bool firstLine, LineDirectionMode, LinePositionMode) const;
+
     void insertPositionedObject(RenderBox&);
 
     void markPositionedObjectsForLayout();

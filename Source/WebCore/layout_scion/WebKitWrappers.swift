@@ -5871,6 +5871,17 @@ func RenderBoxScion_setMarginEnd(
     overrideStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
 }
 
+@_cdecl("RenderBlockScion_lineHeight")
+func RenderBlockScion_lineHeight(
+  _ blockRaw: UnsafeRawPointer, _ firstLine: Bool, _ direction: UInt8, _ linePositionMode: UInt8
+) -> Int32 {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.lineHeight(
+    firstLine: firstLine, direction: LineDirectionMode(rawValue: direction)!,
+    linePositionMode: LinePositionMode(rawValue: linePositionMode)!
+  ).rawValue()
+}
+
 @_cdecl("RenderBoxScion_marginStart")
 func RenderBoxScion_marginStart(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: UnsafeRawPointer?)
   -> Int32

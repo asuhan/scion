@@ -2618,7 +2618,7 @@ bool RenderBlock::hasLineIfEmpty() const
 
 LayoutUnit RenderBlock::lineHeight(bool firstLine, LineDirectionMode direction, LinePositionMode linePositionMode) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->lineHeight(firstLine, direction, linePositionMode); }
     // Inline blocks are replaced elements. Otherwise, just pass off to
     // the base class.  If we're being queried as though we're the root line
     // box, then the fact that we're an inline-block is irrelevant, and we behave
