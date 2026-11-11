@@ -4851,6 +4851,18 @@ func RenderBoxModelObjectScion_paddingEnd(_ objRaw: UnsafeRawPointer) -> Int32 {
   return obj.paddingEnd().rawValue()
 }
 
+@_cdecl("RenderBoxModelObjectScion_borderAndPaddingLogicalLeft")
+func RenderBoxModelObjectScion_borderAndPaddingLogicalLeft(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.borderAndPaddingLogicalLeft().rawValue()
+}
+
+@_cdecl("RenderBoxModelObjectScion_borderAndPaddingLogicalRight")
+func RenderBoxModelObjectScion_borderAndPaddingLogicalRight(_ objRaw: UnsafeRawPointer) -> Int32 {
+  let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.borderAndPaddingLogicalRight().rawValue()
+}
+
 @_cdecl("RenderBoxModelObjectScion_borderBefore")
 func RenderBoxModelObjectScion_borderBefore(_ objRaw: UnsafeRawPointer) -> Int32 {
   let obj = Unmanaged<RenderBoxModelObjectWrapper>.fromOpaque(objRaw).takeUnretainedValue()

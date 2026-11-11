@@ -822,6 +822,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
   }
 
+  func borderAndPaddingLogicalRight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? borderRight() + paddingRight() : borderBottom() + paddingBottom()
+  }
+
   func borderLogicalLeft() -> LayoutUnit {
     assert(isNativeImpl())
     return style().isHorizontalWritingMode() ? borderLeft() : borderTop()

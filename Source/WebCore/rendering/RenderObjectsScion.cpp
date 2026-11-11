@@ -3467,6 +3467,19 @@ LayoutUnit RenderBoxModelObjectScion::paddingEnd() const
     return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_paddingEnd(m_handle));
 }
 
+extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingLogicalLeft(const void*);
+extern "C" int32_t RenderBoxModelObjectScion_borderAndPaddingLogicalRight(const void*);
+
+LayoutUnit RenderBoxModelObjectScion::borderAndPaddingLogicalLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderAndPaddingLogicalLeft(m_handle));
+}
+
+LayoutUnit RenderBoxModelObjectScion::borderAndPaddingLogicalRight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderAndPaddingLogicalRight(m_handle));
+}
+
 LayoutUnit RenderBoxModelObjectScion::borderBefore() const
 {
     return LayoutUnit::fromRawValue(RenderBoxModelObjectScion_borderBefore(m_handle));

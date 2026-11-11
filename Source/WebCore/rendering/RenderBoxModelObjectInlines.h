@@ -43,12 +43,12 @@ inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalWidth() const
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderAndPaddingLogicalLeft(); }
     return style().isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop();
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingLogicalRight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->borderAndPaddingLogicalRight(); }
     return style().isHorizontalWritingMode() ? borderRight() + paddingRight() : borderBottom() + paddingBottom();
 }
 inline LayoutUnit RenderBoxModelObject::borderAndPaddingStart() const
