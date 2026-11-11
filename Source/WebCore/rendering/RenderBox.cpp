@@ -1291,6 +1291,39 @@ void RenderBox::constrainLogicalMinMaxSizesByAspectRatio(LayoutUnit& computedMin
     }
 }
 
+LayoutUnit RenderBox::marginLogicalLeft(const RenderStyle* overrideStyle) const
+{
+    if (m_scion) { return m_scion->marginLogicalLeft(overrideStyle); }
+    return m_marginBox.start((overrideStyle ? overrideStyle : &style())->writingMode());
+}
+
+LayoutUnit RenderBox::marginEnd(const RenderStyle* overrideStyle) const
+{
+    if (m_scion) { return m_scion->marginEnd(overrideStyle); }
+    const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
+    return m_marginBox.end(styleToUse->writingMode(), styleToUse->direction());
+}
+
+void RenderBox::setMarginStart(LayoutUnit value, const RenderStyle* overrideStyle)
+{
+    if (m_scion) {
+        m_scion->setMarginStart(value, overrideStyle);
+        return;
+    }
+    const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
+    m_marginBox.setStart(value, styleToUse->writingMode(), styleToUse->direction());
+}
+
+void RenderBox::setMarginEnd(LayoutUnit value, const RenderStyle* overrideStyle)
+{
+    if (m_scion) {
+        m_scion->setMarginEnd(value, overrideStyle);
+        return;
+    }
+    const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
+    m_marginBox.setEnd(value, styleToUse->writingMode(), styleToUse->direction());
+}
+
 LayoutUnit RenderBox::logicalHeight() const
 {
     if (m_scion) { return m_scion->logicalHeight(); }

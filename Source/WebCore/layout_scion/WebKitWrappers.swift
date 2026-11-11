@@ -5831,6 +5831,46 @@ func RenderBoxScion_marginBefore(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: U
   return margin.rawValue()
 }
 
+@_cdecl("RenderBoxScion_marginEnd")
+func RenderBoxScion_marginEnd(_ boxRaw: UnsafeRawPointer, _ overrideStyleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.marginEnd(
+    otherStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil
+  ).rawValue()
+}
+
+@_cdecl("RenderBoxScion_marginLogicalLeft")
+func RenderBoxScion_marginLogicalLeft(
+  _ boxRaw: UnsafeRawPointer, _ overrideStyleRaw: UnsafeRawPointer?
+) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.marginLogicalLeft(
+    overrideStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil
+  ).rawValue()
+}
+
+@_cdecl("RenderBoxScion_setMarginStart")
+func RenderBoxScion_setMarginStart(
+  _ boxRaw: UnsafeMutableRawPointer, _ value: Int32, _ overrideStyleRaw: UnsafeRawPointer?
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setMarginStart(
+    value: LayoutUnit.fromRawValue(value: value),
+    overrideStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
+}
+
+@_cdecl("RenderBoxScion_setMarginEnd")
+func RenderBoxScion_setMarginEnd(
+  _ boxRaw: UnsafeMutableRawPointer, _ value: Int32, _ overrideStyleRaw: UnsafeRawPointer?
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setMarginEnd(
+    value: LayoutUnit.fromRawValue(value: value),
+    overrideStyle: overrideStyleRaw != nil ? convert_render_style(p: overrideStyleRaw!) : nil)
+}
+
 @_cdecl("RenderBoxScion_marginStart")
 func RenderBoxScion_marginStart(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: UnsafeRawPointer?)
   -> Int32

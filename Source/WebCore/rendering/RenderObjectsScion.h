@@ -1036,6 +1036,10 @@ public:
     LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const;
 
     LayoutUnit marginStart(const RenderStyle* overrideStyle = nullptr) const;
+    LayoutUnit marginEnd(const RenderStyle* overrideStyle = nullptr) const;
+    LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const;
+    void setMarginStart(LayoutUnit, const RenderStyle* overrideStyle = nullptr);
+    void setMarginEnd(LayoutUnit, const RenderStyle* overrideStyle = nullptr);
 
     void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
 

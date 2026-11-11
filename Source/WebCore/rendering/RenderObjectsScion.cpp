@@ -4031,6 +4031,31 @@ LayoutUnit RenderBoxScion::marginBefore(const RenderStyle* overrideStyle) const
     return LayoutUnit::fromRawValue(RenderBoxScion_marginBefore(m_handle, overrideStyle));
 }
 
+extern "C" int32_t RenderBoxScion_marginEnd(const void*, const void*);
+extern "C" int32_t RenderBoxScion_marginLogicalLeft(const void*, const void*);
+extern "C" void RenderBoxScion_setMarginStart(void*, int32_t, const void*);
+extern "C" void RenderBoxScion_setMarginEnd(void*, int32_t, const void*);
+
+LayoutUnit RenderBoxScion::marginEnd(const RenderStyle* overrideStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginEnd(m_handle, overrideStyle));
+}
+
+LayoutUnit RenderBoxScion::marginLogicalLeft(const RenderStyle* overrideStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_marginLogicalLeft(m_handle, overrideStyle));
+}
+
+void RenderBoxScion::setMarginStart(LayoutUnit value, const RenderStyle* overrideStyle)
+{
+    RenderBoxScion_setMarginStart(m_handle, value.rawValue(), overrideStyle);
+}
+
+void RenderBoxScion::setMarginEnd(LayoutUnit value, const RenderStyle* overrideStyle)
+{
+    RenderBoxScion_setMarginEnd(m_handle, value.rawValue(), overrideStyle);
+}
+
 LayoutUnit RenderBoxScion::marginStart(const RenderStyle* overrideStyle) const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_marginStart(m_handle, overrideStyle));

@@ -299,11 +299,7 @@ public:
     void setMarginLeft(LayoutUnit margin);
     void setMarginRight(LayoutUnit margin);
 
-    LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return m_marginBox.start((overrideStyle ? overrideStyle : &style())->writingMode());
-    }
+    LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const;
     LayoutUnit marginLogicalRight(const RenderStyle* overrideStyle = nullptr) const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -313,12 +309,7 @@ public:
     LayoutUnit marginBefore(const RenderStyle* overrideStyle = nullptr) const final;
     LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const final;
     LayoutUnit marginStart(const RenderStyle* overrideStyle = nullptr) const final;
-    LayoutUnit marginEnd(const RenderStyle* overrideStyle = nullptr) const final
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
-        return m_marginBox.end(styleToUse->writingMode(), styleToUse->direction());
-    }
+    LayoutUnit marginEnd(const RenderStyle* overrideStyle = nullptr) const final;
     LayoutUnit marginBlockStart(const WritingMode& writingMode) const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -332,18 +323,8 @@ public:
 
     void setMarginBefore(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
     void setMarginAfter(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
-    void setMarginStart(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
-        m_marginBox.setStart(value, styleToUse->writingMode(), styleToUse->direction());
-    }
-    void setMarginEnd(LayoutUnit value, const RenderStyle* overrideStyle = nullptr)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        const RenderStyle* styleToUse = overrideStyle ? overrideStyle : &style();
-        m_marginBox.setEnd(value, styleToUse->writingMode(), styleToUse->direction());
-    }
+    void setMarginStart(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
+    void setMarginEnd(LayoutUnit value, const RenderStyle* overrideStyle = nullptr);
 
     virtual bool isSelfCollapsingBlock() const
     {
