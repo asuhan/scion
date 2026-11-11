@@ -30,11 +30,6 @@ inline bool RenderObject::isAtomicInlineLevelBox() const
     if (m_scion) { ASSERT_NOT_REACHED(); }
     return style().isDisplayInlineType() && !(style().display() == DisplayType::Inline && !isReplacedOrInlineBlock());
 }
-inline bool RenderObject::isBlockLevelBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isDisplayBlockLevel();
-}
 inline bool RenderObject::preservesNewline() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

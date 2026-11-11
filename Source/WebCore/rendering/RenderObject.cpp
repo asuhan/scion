@@ -1118,6 +1118,12 @@ void RenderObject::setParent(RenderElement* parent)
     m_parent = parent;
 }
 
+bool RenderObject::isBlockLevelBox() const
+{
+    if (m_scion) { return m_scion->isBlockLevelBox(); }
+    return style().isDisplayBlockLevel();
+}
+
 RenderObject* RenderObject::nextInPreOrder() const
 {
     if (m_scion) { return m_scion->nextInPreOrder(); }

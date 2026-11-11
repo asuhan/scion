@@ -3114,6 +3114,12 @@ func RenderElementScion_initializeStyle(_ elementRaw: UnsafeMutableRawPointer) {
   element.initializeStyle()
 }
 
+@_cdecl("RenderObjectScion_isBlockLevelBox")
+func RenderObjectScion_isBlockLevelBox(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isBlockLevelBox()
+}
+
 @_cdecl("RenderElementScion_setStyle")
 func RenderElementScion_setStyle(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,

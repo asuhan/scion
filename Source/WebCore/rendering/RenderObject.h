@@ -843,7 +843,7 @@ public:
     bool isAnonymousBlock() const;
     bool isAnonymousForPercentageResolution() const;
     bool isBlockBox() const;
-    inline bool isBlockLevelBox() const;
+    bool isBlockLevelBox() const;
     bool isBlockContainer() const;
 
     bool isFloating() const;

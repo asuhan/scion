@@ -146,6 +146,7 @@ class PseudoElementRequest;
 
 class RenderObjectScion final {
 public:
+    bool isBlockLevelBox() const;
     RenderObjectScion(void* handle)
         : m_handle(handle)
     {

@@ -2295,6 +2295,12 @@ void RenderElementScion::initializeStyle()
     RenderElementScion_initializeStyle(m_handle);
 }
 
+extern "C" bool RenderObjectScion_isBlockLevelBox(const void*);
+bool RenderObjectScion::isBlockLevelBox() const
+{
+    return RenderObjectScion_isBlockLevelBox(m_handle);
+}
+
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)
 {
     RenderElementScion_setStyle(m_handle, &style, static_cast<uint8_t>(minimalStyleDifference));
