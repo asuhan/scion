@@ -1127,6 +1127,10 @@ public:
     void clearOverridingLogicalWidthLength();
 
     void setLogicalLeft(LayoutUnit);
+    void setLogicalTop(LayoutUnit);
+    void setLogicalHeight(LayoutUnit);
+    void setLogicalLocation(LayoutPoint);
+    LayoutUnit logicalLeft() const;
 
     LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const;
 

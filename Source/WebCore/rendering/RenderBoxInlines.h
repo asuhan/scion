@@ -127,7 +127,7 @@ inline LayoutUnit RenderBox::logicalBottom() const
 }
 inline LayoutUnit RenderBox::logicalLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->logicalLeft(); }
     return style().isHorizontalWritingMode() ? x() : y();
 }
 inline LayoutUnit RenderBox::logicalLeftLayoutOverflow() const
@@ -197,7 +197,10 @@ inline int RenderBox::scrollbarLogicalWidth() const
 }
 inline void RenderBox::setLogicalLocation(LayoutPoint location)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setLogicalLocation(location);
+        return;
+    }
     setLocation(style().isHorizontalWritingMode() ? location : location.transposedPoint());
 }
 inline void RenderBox::setLogicalSize(LayoutSize size)
@@ -269,7 +272,10 @@ inline LayoutRect RenderBox::marginBoxRect() const
 
 inline void RenderBox::setLogicalHeight(LayoutUnit size)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setLogicalHeight(size);
+        return;
+    }
     if (style().isHorizontalWritingMode())
         setHeight(size);
     else
@@ -290,7 +296,10 @@ inline void RenderBox::setLogicalLeft(LayoutUnit left)
 
 inline void RenderBox::setLogicalTop(LayoutUnit top)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setLogicalTop(top);
+        return;
+    }
     if (style().isHorizontalWritingMode())
         setY(top);
     else

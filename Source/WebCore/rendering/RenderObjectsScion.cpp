@@ -3834,6 +3834,31 @@ LayoutUnit RenderBoxScion::logicalTop() const
     return LayoutUnit::fromRawValue(RenderBoxScion_logicalTop(m_handle));
 }
 
+extern "C" void RenderBoxScion_setLogicalTop(void*, int32_t);
+extern "C" void RenderBoxScion_setLogicalHeight(void*, int32_t);
+extern "C" void RenderBoxScion_setLogicalLocation(void*, LayoutPointRaw);
+extern "C" int32_t RenderBoxScion_logicalLeft(const void*);
+
+void RenderBoxScion::setLogicalTop(LayoutUnit top)
+{
+    RenderBoxScion_setLogicalTop(m_handle, top.rawValue());
+}
+
+void RenderBoxScion::setLogicalHeight(LayoutUnit height)
+{
+    RenderBoxScion_setLogicalHeight(m_handle, height.rawValue());
+}
+
+void RenderBoxScion::setLogicalLocation(LayoutPoint location)
+{
+    RenderBoxScion_setLogicalLocation(m_handle, convertLayoutPoint(location));
+}
+
+LayoutUnit RenderBoxScion::logicalLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_logicalLeft(m_handle));
+}
+
 extern "C" int32_t RenderBoxScion_logicalWidth(const void*);
 
 LayoutUnit RenderBoxScion::logicalWidth() const
