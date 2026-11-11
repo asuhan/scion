@@ -153,6 +153,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_previousSibling(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->previousSibling();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_nextInPreOrder(const void* p, const void* stayWithin)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->nextInPreOrder(static_cast<const WebCore::RenderObject*>(stayWithin));
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_nextSibling(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->nextSibling();

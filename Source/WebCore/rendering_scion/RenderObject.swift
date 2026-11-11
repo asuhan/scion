@@ -595,7 +595,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrder(stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let next = wk_interop.RenderObject_nextInPreOrder(id(), wkRenderObject(stayWithin))
+      else {
+        return nil
+      }
+      return createRenderObjectWrapperOrNative(next)
+    }
     if let o = firstChildSlow() {
       return o
     }
