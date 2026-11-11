@@ -970,6 +970,7 @@ public:
     LayoutUnit y() const;
 
     LayoutUnit width() const;
+    LayoutUnit logicalWidth() const;
 
     LayoutUnit height() const;
 

@@ -5595,6 +5595,12 @@ func RenderBoxScion_logicalTop(_ boxRaw: UnsafeRawPointer) -> Int32 {
   return box.logicalTop().rawValue()
 }
 
+@_cdecl("RenderBoxScion_logicalWidth")
+func RenderBoxScion_logicalWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.logicalWidth().rawValue()
+}
+
 @_cdecl("RenderBoxScion_setOverridingLogicalHeight")
 func RenderBoxScion_setOverridingLogicalHeight(_ boxRaw: UnsafeMutableRawPointer, _ height: Int32) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

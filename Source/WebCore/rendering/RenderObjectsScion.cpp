@@ -3834,6 +3834,13 @@ LayoutUnit RenderBoxScion::logicalTop() const
     return LayoutUnit::fromRawValue(RenderBoxScion_logicalTop(m_handle));
 }
 
+extern "C" int32_t RenderBoxScion_logicalWidth(const void*);
+
+LayoutUnit RenderBoxScion::logicalWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_logicalWidth(m_handle));
+}
+
 extern "C" void RenderBoxScion_setOverridingLogicalHeight(void*, int32_t);
 extern "C" void RenderBoxScion_setOverridingLogicalWidth(void*, int32_t);
 

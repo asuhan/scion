@@ -162,7 +162,7 @@ inline LayoutSize RenderBox::logicalSize() const
 }
 inline LayoutUnit RenderBox::logicalWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->logicalWidth(); }
     return style().isHorizontalWritingMode() ? width() : height();
 }
 inline LayoutUnit RenderBox::overridingContentLogicalHeight(LayoutUnit overridingLogicalHeight) const
