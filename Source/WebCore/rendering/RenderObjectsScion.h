@@ -645,6 +645,7 @@ public:
 
     void initializeStyle();
 
+    void paintAsInlineBlock(PaintInfo&, const LayoutPoint& childPoint);
     void setStyle(RenderStyle&&, StyleDifference minimalStyleDifference);
 
     RenderStyle* getUncachedPseudoStyle(const Style::PseudoElementRequest&, const RenderStyle*, const RenderStyle*) const;

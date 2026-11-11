@@ -2296,9 +2296,16 @@ void RenderElementScion::initializeStyle()
 }
 
 extern "C" bool RenderObjectScion_isBlockLevelBox(const void*);
+extern "C" void RenderElementScion_paintAsInlineBlock(void*, void*, LayoutPointRaw);
+
 bool RenderObjectScion::isBlockLevelBox() const
 {
     return RenderObjectScion_isBlockLevelBox(m_handle);
+}
+
+void RenderElementScion::paintAsInlineBlock(PaintInfo& paintInfo, const LayoutPoint& childPoint)
+{
+    RenderElementScion_paintAsInlineBlock(m_handle, &paintInfo, convertLayoutPoint(childPoint));
 }
 
 void RenderElementScion::setStyle(RenderStyle&& style, StyleDifference minimalStyleDifference)

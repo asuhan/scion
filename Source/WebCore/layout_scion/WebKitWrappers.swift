@@ -3120,6 +3120,16 @@ func RenderObjectScion_isBlockLevelBox(_ objectRaw: UnsafeRawPointer) -> Bool {
   return object.isBlockLevelBox()
 }
 
+@_cdecl("RenderElementScion_paintAsInlineBlock")
+func RenderElementScion_paintAsInlineBlock(
+  _ elementRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,
+  _ childPoint: LayoutPointRaw
+) {
+  var paintInfo = PaintInfoWrapper(p: paintInfoRaw)
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  element.paintAsInlineBlock(paintInfo: &paintInfo, childPoint: convertLayoutPointRaw(childPoint))
+}
+
 @_cdecl("RenderElementScion_setStyle")
 func RenderElementScion_setStyle(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer,

@@ -1671,7 +1671,10 @@ static inline void paintPhase(RenderElement& element, PaintPhase phase, PaintInf
 
 void RenderElement::paintAsInlineBlock(PaintInfo& paintInfo, const LayoutPoint& childPoint)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->paintAsInlineBlock(paintInfo, childPoint);
+        return;
+    }
     // Paint all phases atomically, as though the element established its own stacking context.
     // (See Appendix E.2, section 6.4 on inline block/table/replaced elements in the CSS2.1 specification.)
     // This is also used by other elements (e.g. flex items and grid items).
