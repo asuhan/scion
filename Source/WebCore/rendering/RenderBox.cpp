@@ -1291,6 +1291,18 @@ void RenderBox::constrainLogicalMinMaxSizesByAspectRatio(LayoutUnit& computedMin
     }
 }
 
+bool RenderBox::isGridItem() const
+{
+    if (m_scion) { return m_scion->isGridItem(); }
+    return parent() && parent()->isRenderGrid() && !isExcludedFromNormalLayout();
+}
+
+bool RenderBox::isFlexItem() const
+{
+    if (m_scion) { return m_scion->isFlexItem(); }
+    return parent() && parent()->isRenderFlexibleBox() && !isExcludedFromNormalLayout();
+}
+
 LayoutUnit RenderBox::marginLogicalLeft(const RenderStyle* overrideStyle) const
 {
     if (m_scion) { return m_scion->marginLogicalLeft(overrideStyle); }

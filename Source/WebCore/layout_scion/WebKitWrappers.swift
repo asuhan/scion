@@ -5831,6 +5831,18 @@ func RenderBoxScion_marginBefore(_ boxRaw: UnsafeRawPointer, overrideStyleRaw: U
   return margin.rawValue()
 }
 
+@_cdecl("RenderBoxScion_isGridItem")
+func RenderBoxScion_isGridItem(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isGridItem()
+}
+
+@_cdecl("RenderBoxScion_isFlexItem")
+func RenderBoxScion_isFlexItem(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isFlexItem()
+}
+
 @_cdecl("RenderBoxScion_marginEnd")
 func RenderBoxScion_marginEnd(_ boxRaw: UnsafeRawPointer, _ overrideStyleRaw: UnsafeRawPointer?)
   -> Int32

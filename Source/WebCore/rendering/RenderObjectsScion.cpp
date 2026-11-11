@@ -4031,6 +4031,19 @@ LayoutUnit RenderBoxScion::marginBefore(const RenderStyle* overrideStyle) const
     return LayoutUnit::fromRawValue(RenderBoxScion_marginBefore(m_handle, overrideStyle));
 }
 
+extern "C" bool RenderBoxScion_isGridItem(const void*);
+extern "C" bool RenderBoxScion_isFlexItem(const void*);
+
+bool RenderBoxScion::isGridItem() const
+{
+    return RenderBoxScion_isGridItem(m_handle);
+}
+
+bool RenderBoxScion::isFlexItem() const
+{
+    return RenderBoxScion_isFlexItem(m_handle);
+}
+
 extern "C" int32_t RenderBoxScion_marginEnd(const void*, const void*);
 extern "C" int32_t RenderBoxScion_marginLogicalLeft(const void*, const void*);
 extern "C" void RenderBoxScion_setMarginStart(void*, int32_t, const void*);

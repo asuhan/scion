@@ -761,16 +761,8 @@ public:
         return false;
     }
 
-    bool isGridItem() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return parent() && parent()->isRenderGrid() && !isExcludedFromNormalLayout();
-    }
-    bool isFlexItem() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return parent() && parent()->isRenderFlexibleBox() && !isExcludedFromNormalLayout();
-    }
+    bool isGridItem() const;
+    bool isFlexItem() const;
 
     virtual void adjustBorderBoxRectForPainting(LayoutRect&)
     {

@@ -1038,6 +1038,8 @@ public:
     LayoutUnit marginStart(const RenderStyle* overrideStyle = nullptr) const;
     LayoutUnit marginEnd(const RenderStyle* overrideStyle = nullptr) const;
     LayoutUnit marginLogicalLeft(const RenderStyle* overrideStyle = nullptr) const;
+    bool isGridItem() const;
+    bool isFlexItem() const;
     void setMarginStart(LayoutUnit, const RenderStyle* overrideStyle = nullptr);
     void setMarginEnd(LayoutUnit, const RenderStyle* overrideStyle = nullptr);
 
