@@ -3650,6 +3650,9 @@ func createElementWrapper(_ p: UnsafeMutableRawPointer) -> ElementWrapper {
 }
 
 func createNodeWrapper(_ p: UnsafeMutableRawPointer) -> NodeWrapper {
+  if wk_interop.Node_isTextNode(p) {
+    return TextWrapper(p: p)
+  }
   return wk_interop.Node_isElementNode(p) ? createElementWrapper(p) : NodeWrapper(p: p)
 }
 
