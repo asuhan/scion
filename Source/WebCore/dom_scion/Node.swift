@@ -149,7 +149,6 @@ class NodeWrapper {
   // As renderer() includes a branch you should avoid calling it repeatedly in hot code paths.
   func renderer() -> RenderObjectWrapper? {
     guard let raw = wk_interop.Node_renderer(p) else { return nil }
-    assert(!wk_interop.RenderObject_isRenderView(raw))
     return createRenderObjectWrapperOrNative(raw)
   }
 
