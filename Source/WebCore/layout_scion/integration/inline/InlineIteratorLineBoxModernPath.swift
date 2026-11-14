@@ -47,6 +47,8 @@ extension InlineIterator {
       return line().isHorizontal ? line().inkOverflow.maxY() : line().inkOverflow.maxX()
     }
 
+    func isHorizontal() -> Bool { return line().isHorizontal }
+
     func hasEllipsis() -> Bool { return line().hasEllipsis() }
 
     func ellipsisVisualRectIgnoringBlockDirection() -> FloatRectWrapper {

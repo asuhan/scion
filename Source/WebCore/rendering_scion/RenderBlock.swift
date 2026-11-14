@@ -981,7 +981,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return blockPositionForPoint(point, source, fragment)
   }
 
-  private func isSelectionRoot() -> Bool {
+  func isSelectionRoot() -> Bool {
     assert(isNativeImpl())
     if isPseudoElement() {
       return false

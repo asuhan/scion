@@ -147,6 +147,15 @@ class InlineIterator {
       }
     }
 
+    func isHorizontal() -> Bool {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.isHorizontal()
+      case .legacy(let path):
+        return path.isHorizontal()
+      }
+    }
+
     func style() -> RenderStyleWrapper {
       return isFirst() ? formattingContextRoot().firstLineStyle() : formattingContextRoot().style()
     }

@@ -664,6 +664,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return style().isHorizontalWritingMode() ? x() : y()
   }
 
+  func logicalRight() -> LayoutUnit {
+    return logicalLeft() + logicalWidth()
+  }
+
   func logicalTop() -> LayoutUnit {
     assert(isNativeImpl())
     return style().isHorizontalWritingMode() ? y() : x()

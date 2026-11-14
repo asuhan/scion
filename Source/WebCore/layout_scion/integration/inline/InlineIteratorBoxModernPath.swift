@@ -114,6 +114,8 @@ extension InlineIterator {
 
     func renderer() -> RenderObjectWrapper { return box().layoutBox.rendererForIntegration()! }
 
+    func hasRenderer() -> Bool { return box().layoutBox.rendererForIntegration() != nil }
+
     func formattingContextRoot() -> RenderBlockFlowWrapper {
       return m_inlineContent!.formattingContextRoot()
     }

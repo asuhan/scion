@@ -71,6 +71,8 @@ extension InlineIterator {
 
     func renderer() -> RenderObjectWrapper { return m_inlineBox!.renderer }
 
+    func hasRenderer() -> Bool { return true }
+
     func formattingContextRoot() -> RenderBlockFlowWrapper {
       return m_inlineBox!.root().blockFlow()
     }

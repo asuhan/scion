@@ -50,6 +50,8 @@ class LineBoxIteratorLegacyPath {
     return m_rootInlineBox!.logicalBottomVisualOverflow().float()
   }
 
+  func isHorizontal() -> Bool { return m_rootInlineBox!.isHorizontal() }
+
   func hasEllipsis() -> Bool { return false }
 
   func ellipsisVisualRectIgnoringBlockDirection() -> FloatRectWrapper { fatalError("Not reached") }

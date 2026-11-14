@@ -182,6 +182,15 @@ extension InlineIterator {
 
     func isLeftToRightDirection() -> Bool { return direction() == .LTR }
 
+    func hasRenderer() -> Bool {
+      switch m_pathVariant {
+      case .modern(let path):
+        return path.hasRenderer()
+      case .legacy(let path):
+        return path.hasRenderer()
+      }
+    }
+
     func renderer() -> RenderObjectWrapper {
       switch m_pathVariant {
       case .modern(let path):

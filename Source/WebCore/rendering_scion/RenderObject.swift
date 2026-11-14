@@ -2293,12 +2293,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return transformState.lastPlanarPoint()
   }
 
-  func localToContainerPoint(localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?)
-    -> FloatPoint
-  {
+  func localToContainerPoint(
+    localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?,
+    mode: MapCoordinatesMode = .UseTransforms
+  ) -> FloatPoint {
     assert(isNativeImpl())
     var wasFixed: Bool? = nil
-    return localToContainerPoint(localPoint: localPoint, container: container, wasFixed: &wasFixed)
+    return localToContainerPoint(
+      localPoint: localPoint, container: container, wasFixed: &wasFixed, mode: mode)
   }
 
   // Return the offset from the container() renderer (excluding transforms). In multi-column layout,
