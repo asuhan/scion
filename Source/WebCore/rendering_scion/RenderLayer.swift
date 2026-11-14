@@ -3302,6 +3302,14 @@ class RenderLayerWrapper {
     }
   }
 
+  func addBlockSelectionGapsBounds(_ bounds: LayoutRectWrapper) {
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_addBlockSelectionGapsBounds(pInterop, convertLayoutRect(bounds))
+      return
+    }
+    m_blockSelectionGapsBounds.unite(enclosingIntRect(rect: bounds))
+  }
+
   func paintsIntoProvidedBacking() -> Bool {
     assert(isNativeImpl())
     return backingProviderLayer != nil
@@ -6597,6 +6605,8 @@ class RenderLayerWrapper {
   private var usedTransparency = false
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
   var repaintStatus: RepaintStatus = .NeedsNormalRepaint
+
+  private var m_blockSelectionGapsBounds = IntRect()
 
   private var visibleContentStatusDirty = false
   var hasVisibleContent = false

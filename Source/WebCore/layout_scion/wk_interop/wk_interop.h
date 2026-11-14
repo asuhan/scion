@@ -1233,6 +1233,8 @@ void* RenderText_textNode(const void*);
 const void* RenderText_spellingErrorPseudoStyle(const void*);
 const void* RenderText_grammarErrorPseudoStyle(const void*);
 void RenderText_setNeedsVisualReordering(void*);
+uint32_t RenderText_countRenderedCharacterOffsetsUntil(const void*, uint32_t);
+void RenderLayer_addBlockSelectionGapsBounds(void*, struct LayoutRectRaw);
 bool RenderText_canUseSimpleFontCodePath(const void*);
 void RenderText_styleDidChange(void*, uint8_t, const void*);
 void RenderText_resetMinMaxWidth(void*);

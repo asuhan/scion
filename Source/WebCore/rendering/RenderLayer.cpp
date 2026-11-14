@@ -3050,6 +3050,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderLayer_scrollHeight(const void* layer)
     return static_cast<const RenderLayer*>(layer)->scrollHeight();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_addBlockSelectionGapsBounds(void* layer, LayoutRectRaw bounds)
+{
+    static_cast<RenderLayer*>(layer)->addBlockSelectionGapsBounds(LayoutRect(LayoutUnit::fromRawValue(bounds.x), LayoutUnit::fromRawValue(bounds.y), LayoutUnit::fromRawValue(bounds.width), LayoutUnit::fromRawValue(bounds.height)));
+}
+
 int RenderLayer::scrollWidth() const
 {
     if (m_scrollableArea)

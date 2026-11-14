@@ -1132,6 +1132,26 @@ class RenderTextWrapper: RenderObjectWrapper {
     return maxOffset
   }
 
+  func countRenderedCharacterOffsetsUntil(_ offset: UInt32) -> UInt32 {
+    if !isNativeImpl() {
+      return wk_interop.RenderText_countRenderedCharacterOffsetsUntil(id(), offset)
+    }
+    var result: UInt32 = 0
+    for run in InlineIterator.textBoxesFor(self) {
+      let start = run.start()
+      let length = run.length()
+      if offset < start {
+        return result
+      }
+      if offset <= start + length {
+        result += offset - start
+        return result
+      }
+      result += length
+    }
+    return result
+  }
+
   func hasRenderedText() -> Bool {
     assert(isNativeImpl())
     for box in InlineIterator.textBoxesFor(self) {

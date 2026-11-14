@@ -147,6 +147,11 @@ extern "C" WEBCORE_EXPORT void* RenderText_scion(const void* p)
     return static_cast<const WebCore::RenderText*>(p)->scion();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t RenderText_countRenderedCharacterOffsetsUntil(const void* p, uint32_t offset)
+{
+    return static_cast<const WebCore::RenderText*>(p)->countRenderedCharacterOffsetsUntil(offset);
+}
+
 extern "C" WEBCORE_EXPORT int32_t u_totitle_scion(int32_t c)
 {
     return u_totitle(c);
