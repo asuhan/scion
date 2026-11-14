@@ -169,3 +169,21 @@ class ElementWrapper: ContainerNodeWrapper {
 func isInTopLayerOrBackdrop(style: RenderStyleWrapper, element: ElementWrapper?) -> Bool {
   return (element != nil && element!.isInTopLayer()) || style.pseudoElementType() == .Backdrop
 }
+
+// wtf/text/StringCommon.h, for attribute values: WTF's string wrappers have no comparisons yet.
+func equalLettersIgnoringASCIICase(_ string: AtomStringWrapper, _ lowercaseLetters: ASCIILiteral)
+  -> Bool
+{
+  let letters = Array(lowercaseLetters.string.utf8)
+  let length = string.isNull() ? 0 : string.length()
+  if length != UInt32(letters.count) {
+    return false
+  }
+  let characters = string.string()
+  for index in 0..<letters.count {
+    if toASCIILowerUnchecked(character: characters[UInt32(index)]) != UChar(letters[index]) {
+      return false
+    }
+  }
+  return true
+}
