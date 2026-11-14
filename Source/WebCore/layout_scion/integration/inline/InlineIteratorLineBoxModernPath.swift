@@ -31,6 +31,10 @@ extension InlineIterator {
       m_lineIndex = lineIndex
     }
 
+    func deepCopy() -> LineBoxIteratorModernPath {
+      return LineBoxIteratorModernPath(inlineContent: m_inlineContent!, lineIndex: m_lineIndex)
+    }
+
     func contentLogicalTop() -> Float32 { return line().enclosingContentLogicalTop() }
 
     func contentLogicalBottom() -> Float32 { return line().enclosingContentLogicalBottom() }

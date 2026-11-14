@@ -51,6 +51,15 @@ class InlineIterator {
 
     init(path: PathVariant) { m_pathVariant = path }
 
+    func deepCopy() -> LineBox {
+      switch m_pathVariant {
+      case .modern(let path):
+        return LineBox(path: .modern(path.deepCopy()))
+      case .legacy(let path):
+        return LineBox(path: .legacy(path.deepCopy()))
+      }
+    }
+
     func logicalTop() -> Float32 {
       switch m_pathVariant {
       case .modern(let path):
@@ -267,7 +276,9 @@ class InlineIterator {
 
     init(_ pathVariant: LineBox.PathVariant) { m_lineBox = LineBox(path: pathVariant) }
 
-    init(_ lineBox: LineBox) { m_lineBox = lineBox }
+    // As BoxIterator does: the path is a class, so an iterator built from a line box must not
+    // move the line box it came from, as next() and previous() otherwise would.
+    init(_ lineBox: LineBox) { m_lineBox = lineBox.deepCopy() }
 
     @discardableResult
     func traverseNext() -> LineBoxIterator {

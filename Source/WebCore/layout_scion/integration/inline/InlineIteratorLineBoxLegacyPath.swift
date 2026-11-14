@@ -26,6 +26,8 @@
 class LineBoxIteratorLegacyPath {
   init(_ rootInlineBox: LegacyRootInlineBox?) { m_rootInlineBox = rootInlineBox }
 
+  func deepCopy() -> LineBoxIteratorLegacyPath { return LineBoxIteratorLegacyPath(m_rootInlineBox) }
+
   func contentLogicalTop() -> Float32 { return m_rootInlineBox!.lineTop.toFloat() }
 
   func contentLogicalBottom() -> Float32 { return m_rootInlineBox!.lineBottom.toFloat() }

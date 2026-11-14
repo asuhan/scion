@@ -3824,7 +3824,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         continue
       }
       if !firstLineBoxWithChildren.bool() {
-        firstLineBoxWithChildren = lineBox
+        firstLineBoxWithChildren = InlineIterator.LineBoxIterator(lineBox.get())
       }
 
       if !linesAreFlipped && lineBox.get().isFirstAfterPageBreak()
@@ -3834,7 +3834,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         break
       }
 
-      lastLineBoxWithChildren = lineBox
+      lastLineBoxWithChildren = InlineIterator.LineBoxIterator(lineBox.get())
 
       // check if this root line box is located at this y coordinate
       let selectionBottom = LineSelection.logicalBottom(lineBox: lineBox.get())
