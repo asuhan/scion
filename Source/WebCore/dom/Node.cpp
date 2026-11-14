@@ -3254,6 +3254,271 @@ TextStream& operator<<(TextStream& ts, const Node& node)
     return ts;
 }
 
+extern "C" WEBCORE_EXPORT bool Node_canContainRangeEndPoint(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->canContainRangeEndPoint();
+}
+
+extern "C" WEBCORE_EXPORT int32_t Node_computeEditability(const void* raw, int32_t arg0, int32_t arg1)
+{
+    return static_cast<int32_t>(static_cast<const WebCore::Node*>(raw)->computeEditability(static_cast<WebCore::Node::UserSelectAllTreatment>(arg0), static_cast<WebCore::Node::ShouldUpdateStyle>(arg1)));
+}
+
+extern "C" WEBCORE_EXPORT bool Node_contains(const void* raw, void* arg0)
+{
+    return static_cast<const WebCore::Node*>(raw)->contains(static_cast<WebCore::Node*>(arg0));
+}
+
+extern "C" WEBCORE_EXPORT bool Node_containsIncludingShadowDOM(const void* raw, void* arg0)
+{
+    return static_cast<const WebCore::Node*>(raw)->containsIncludingShadowDOM(static_cast<WebCore::Node*>(arg0));
+}
+
+extern "C" WEBCORE_EXPORT void* Node_firstChild(const void* raw)
+{
+    return const_cast<WebCore::Node*>(static_cast<const WebCore::Node*>(raw)->firstChild());
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasBlockquoteTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::blockquoteTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasBrTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::brTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasDdTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::ddTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasDivTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::divTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasDlTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::dlTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasDtTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::dtTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasH1TagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::h1Tag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasH2TagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::h2Tag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasH3TagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::h3Tag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasH4TagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::h4Tag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasH5TagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::h5Tag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasH6TagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::h6Tag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasHtmlTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::htmlTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasLiTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::liTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasListingTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::listingTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasMeterTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::meterTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasOlTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::olTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasPTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::pTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasPictureTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::pictureTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasPreTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::preTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasProgressTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::progressTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasRichlyEditableStyle(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasRichlyEditableStyle();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasTdTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::tdTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasThTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::thTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasTrTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::trTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasUlTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::ulTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_hasXmpTagName(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->hasTagName(WebCore::HTMLNames::xmpTag);
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isCharacterDataNode(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isCharacterDataNode();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isConnected(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isConnected();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isDescendantOrShadowDescendantOf(const void* raw, void* arg0)
+{
+    return static_cast<const WebCore::Node*>(raw)->isDescendantOrShadowDescendantOf(static_cast<WebCore::Node*>(arg0));
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isInShadowTree(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isInShadowTree();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isShadowRoot(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isShadowRoot();
+}
+
+extern "C" WEBCORE_EXPORT bool Node_isTextNode(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isTextNode();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_lastChild(const void* raw)
+{
+    return const_cast<WebCore::Node*>(static_cast<const WebCore::Node*>(raw)->lastChild());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_lastDescendant(const void* raw)
+{
+    return const_cast<WebCore::Node*>(static_cast<const WebCore::Node*>(raw)->lastDescendant());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_nextSibling(const void* raw)
+{
+    return const_cast<WebCore::Node*>(static_cast<const WebCore::Node*>(raw)->nextSibling());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_nonShadowBoundaryParentNode(const void* raw)
+{
+    return const_cast<WebCore::ContainerNode*>(static_cast<const WebCore::Node*>(raw)->nonShadowBoundaryParentNode());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_parentInComposedTree(const void* raw)
+{
+    return const_cast<WebCore::ContainerNode*>(static_cast<const WebCore::Node*>(raw)->parentInComposedTree());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_parentNode(const void* raw)
+{
+    return const_cast<WebCore::ContainerNode*>(static_cast<const WebCore::Node*>(raw)->parentNode());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_parentOrShadowHostNode(const void* raw)
+{
+    return const_cast<WebCore::ContainerNode*>(static_cast<const WebCore::Node*>(raw)->parentOrShadowHostNode());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_previousSibling(const void* raw)
+{
+    return const_cast<WebCore::Node*>(static_cast<const WebCore::Node*>(raw)->previousSibling());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_protectedDocument(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->protectedDocument().ptr();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_protectedParentNode(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->protectedParentNode().get();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_protectedParentOrShadowHostNode(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->protectedParentOrShadowHostNode().get();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_protectedPreviousSibling(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->protectedPreviousSibling().get();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_rootEditableElement(const void* raw)
+{
+    return const_cast<WebCore::Element*>(static_cast<const WebCore::Node*>(raw)->rootEditableElement());
+}
+
+extern "C" WEBCORE_EXPORT void* Node_traverseToChildAt(const void* raw, uint32_t arg0)
+{
+    return const_cast<WebCore::Node*>(static_cast<const WebCore::Node*>(raw)->traverseToChildAt(arg0));
+}
+
+extern "C" WEBCORE_EXPORT bool Node_connectedInSameTreeScope(const void* arg0, const void* arg1)
+{
+    return WebCore::connectedInSameTreeScope(static_cast<const WebCore::Node*>(arg0), static_cast<const WebCore::Node*>(arg1));
+}
+
 } // namespace WebCore
 
 #if ENABLE(TREE_DEBUGGING)

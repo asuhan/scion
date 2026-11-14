@@ -196,7 +196,7 @@ private struct InlineMinMaxIterator {
        in the middle of such an element.
    (3) Inline flows (e.g., <a>, <span>, <i>) are walked twice, since each side can have
        distinct borders/margin/padding that contribute to the min/max width.
-*/
+  */
 
   init(p: RenderBlockFlowWrapper) {
     parent = p
@@ -5730,4 +5730,278 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   var lineLayout: LineLayout = .None
 
   private var wk: UnsafeMutableRawPointer? = nil
+
+  override func clipOutFloatingObjects(
+    _ rootBlock: RenderBlockWrapper, _ paintInfo: PaintInfoWrapper?,
+    _ rootBlockPhysicalPosition: LayoutPointWrapper, _ offsetFromRootBlock: LayoutSizeWrapper
+  ) {
+    assert(isNativeImpl())
+    if floatingObjects != nil {
+      let floatingObjectSet = floatingObjects!.set()
+      for floatingObject in floatingObjectSet {
+        var floatBox = LayoutRectWrapper(
+          x: offsetFromRootBlock.width(), y: offsetFromRootBlock.height(),
+          width: floatingObject.renderer!.width(), height: floatingObject.renderer!.height())
+        floatBox.move(size: floatingObject.locationOffsetOfBorderBox())
+        rootBlock.flipForWritingMode(rect: &floatBox)
+        floatBox.move(dx: rootBlockPhysicalPosition.x, dy: rootBlockPhysicalPosition.y)
+        paintInfo!.context().clipOut(rect: FloatRectWrapper(r: snappedIntRect(rect: floatBox)))
+      }
+    }
+  }
+
+  override func inlineSelectionGaps(
+    rootBlock: RenderBlockWrapper, rootBlockPhysicalPosition: LayoutPointWrapper,
+    offsetFromRootBlock: LayoutSizeWrapper, lastLogicalTop: inout LayoutUnit,
+    lastLogicalLeft: inout LayoutUnit, lastLogicalRight: inout LayoutUnit,
+    _ cache: LogicalSelectionOffsetCaches, _ paintInfo: PaintInfoWrapper?
+  ) -> GapRects {
+    assert(isNativeImpl())
+    let containsStart: Bool = selectionState() == .Start || selectionState() == .Both
+    if !hasLines() {
+      if containsStart {
+        // Update our lastLogicalTop to be the bottom of the block. <hr>s or empty blocks with height can trip this case.
+        lastLogicalTop =
+          blockDirectionOffset(rootBlock: rootBlock, offsetFromRootBlock: offsetFromRootBlock)
+          + logicalHeight()
+        lastLogicalLeft = logicalLeftSelectionOffset(
+          rootBlock: rootBlock, position: logicalHeight(), cache: cache)
+        lastLogicalRight = logicalRightSelectionOffset(
+          rootBlock: rootBlock, position: logicalHeight(), cache: cache)
+      }
+      return GapRects()
+    }
+    let hasSelectedChildren = { (lineBox: InlineIterator.LineBoxIterator) -> Bool in
+      return LineSelection.selectionState(lineBox: lineBox.get()) != .None
+    }
+    let lineSelectionGap = {
+      (lineBox: InlineIterator.LineBoxIterator, selTop: LayoutUnit, selHeight: LayoutUnit)
+        -> GapRects in
+      let lineState = LineSelection.selectionState(lineBox: lineBox.get())
+      var leftGap: Bool = false
+      var rightGap: Bool = false
+      self.getSelectionGapInfo(state: lineState, leftGap: &leftGap, rightGap: &rightGap)
+      var result = GapRects()
+      let firstSelectedBox = { () -> InlineIterator.LeafBoxIterator in
+        let box = lineBox.get().firstLeafBox()
+        while box.bool() {
+          if box.get().selectionState() != .None {
+            return box
+          }
+          box.traverseNextOnLine()
+        }
+        return InlineIterator.LeafBoxIterator()
+      }()
+      let lastSelectedBox = { () -> InlineIterator.LeafBoxIterator in
+        do {
+          let box = lineBox.get().lastLeafBox()
+          while box.bool() {
+            if box.get().selectionState() != .None {
+              return box
+            }
+            box.traversePreviousOnLine()
+          }
+        }
+        return InlineIterator.LeafBoxIterator()
+      }()
+      if leftGap {
+        result.uniteLeft(
+          r: self.logicalLeftSelectionGap(
+            rootBlock: rootBlock, rootBlockPhysicalPosition: rootBlockPhysicalPosition,
+            offsetFromRootBlock: offsetFromRootBlock,
+            selObj: firstSelectedBox.get().renderer().parent(),
+            logicalLeft: LayoutUnit(
+              value: Float64(firstSelectedBox.get().logicalLeftIgnoringInlineDirection())),
+            logicalTop: selTop, logicalHeight: selHeight, cache: cache, paintInfo: paintInfo))
+      }
+      if rightGap {
+        result.uniteRight(
+          r: self.logicalRightSelectionGap(
+            rootBlock: rootBlock, rootBlockPhysicalPosition: rootBlockPhysicalPosition,
+            offsetFromRootBlock: offsetFromRootBlock,
+            selObj: lastSelectedBox.get().renderer().parent(),
+            logicalRight: LayoutUnit(
+              value: Float64(lastSelectedBox.get().logicalRightIgnoringInlineDirection())),
+            logicalTop: selTop, logicalHeight: selHeight, cache: cache, paintInfo: paintInfo))
+      }
+      // When dealing with bidi text, a non-contiguous selection region is possible.
+      // e.g. The logical text aaaAAAbbb (capitals denote RTL text and non-capitals LTR) is layed out
+      // visually as 3 text runs |aaa|bbb|AAA| if we select 4 characters from the start of the text the
+      // selection will look like (underline denotes selection):
+      // |aaa|bbb|AAA|
+      //  ___       _
+      // We can see that the |bbb| run is not part of the selection while the runs around it are.
+      if firstSelectedBox.bool() && firstSelectedBox != lastSelectedBox {
+        // Now fill in any gaps on the line that occurred between two selected elements.
+        var lastLogicalLeft = LayoutUnit(
+          value: Float64(firstSelectedBox.get().logicalRightIgnoringInlineDirection()))
+        var isPreviousBoxSelected: Bool = firstSelectedBox.get().selectionState() != .None
+        do {
+          let box = firstSelectedBox
+          while box.bool() {
+            if box.get().selectionState() != .None {
+              var logicalRect = LayoutRectWrapper(
+                x: lastLogicalLeft, y: selTop,
+                width: LayoutUnit(
+                  value: Float64(box.get().logicalLeftIgnoringInlineDirection() - lastLogicalLeft)),
+                height: selHeight)
+              logicalRect.move(
+                size: self.isHorizontalWritingMode()
+                  ? offsetFromRootBlock
+                  : LayoutSizeWrapper(
+                    width: offsetFromRootBlock.height(), height: offsetFromRootBlock.width()))
+              let gapRect = rootBlock.logicalRectToPhysicalRect(
+                rootBlockPhysicalPosition: rootBlockPhysicalPosition, logicalRect: logicalRect)
+              if isPreviousBoxSelected && gapRect.width() > 0 && gapRect.height() > 0 {
+                if paintInfo != nil
+                  && box.get().renderer().parent()!.style().usedVisibility() == .Visible
+                {
+                  paintInfo!.context().fillRect(
+                    rect: gapRect.FloatRect(),
+                    color: box.get().renderer().parent()!.selectionBackgroundColor())
+                }
+                // VisibleSelection may be non-contiguous, see comment above.
+                result.uniteCenter(r: gapRect)
+              }
+              lastLogicalLeft = LayoutUnit(value: box.get().logicalRightIgnoringInlineDirection())
+            }
+            if box == lastSelectedBox {
+              break
+            }
+            isPreviousBoxSelected = box.get().selectionState() != .None
+            box.traverseNextOnLine()
+          }
+        }
+      }
+      return result
+    }
+    var lastSelectedLineBox = InlineIterator.LineBoxIterator()
+    let lineBox = InlineIterator.firstLineBoxFor(flow: self)
+    while lineBox.bool() && !hasSelectedChildren(lineBox) {
+      lineBox.traverseNext()
+    }
+    var result = GapRects()
+    // Now paint the gaps for the lines.
+    while lineBox.bool() && hasSelectedChildren(lineBox) {
+      let selectionTop = LayoutUnit(
+        value: Float64(LineSelection.logicalTopAdjustedForPrecedingBlock(lineBox: lineBox.get())))
+      let selectionHeight = LayoutUnit(
+        value: Float64(max(0.0, LineSelection.logicalBottom(lineBox: lineBox.get()) - selectionTop))
+      )
+      if !containsStart && !lastSelectedLineBox.bool() && selectionState() != .Start
+        && selectionState() != .Both
+      {
+        result.uniteCenter(
+          r: blockSelectionGap(
+            rootBlock: rootBlock, rootBlockPhysicalPosition: rootBlockPhysicalPosition,
+            offsetFromRootBlock: offsetFromRootBlock, lastLogicalTop: lastLogicalTop,
+            lastLogicalLeft: lastLogicalLeft, lastLogicalRight: lastLogicalRight,
+            logicalBottom: selectionTop, cache: cache, paintInfo: paintInfo))
+      }
+      var logicalRect = LayoutRectWrapper(
+        x: LayoutUnit(value: Float64(lineBox.get().contentLogicalLeft())), y: selectionTop,
+        width: LayoutUnit(value: Float64(lineBox.get().contentLogicalWidth())),
+        height: selectionTop + selectionHeight)
+      logicalRect.move(
+        size: isHorizontalWritingMode() ? offsetFromRootBlock : offsetFromRootBlock.transposedSize()
+      )
+      let physicalRect = rootBlock.logicalRectToPhysicalRect(
+        rootBlockPhysicalPosition: rootBlockPhysicalPosition, logicalRect: logicalRect)
+      if paintInfo == nil
+        || (isHorizontalWritingMode() && physicalRect.y() < paintInfo!.rect.maxY()
+          && physicalRect.maxY() > paintInfo!.rect.y())
+        || (!isHorizontalWritingMode() && physicalRect.x() < paintInfo!.rect.maxX()
+          && physicalRect.maxX() > paintInfo!.rect.x())
+      {
+        result.unite(o: lineSelectionGap(lineBox, selectionTop, selectionHeight))
+      }
+      lastSelectedLineBox = lineBox
+      lineBox.traverseNext()
+    }
+    if containsStart && !lastSelectedLineBox.bool() {
+      // VisibleSelection must start just after our last line.
+      lastSelectedLineBox = InlineIterator.lastLineBoxFor(flow: self)
+    }
+    if lastSelectedLineBox.bool() && selectionState() != .End && selectionState() != .Both {
+      // Update our lastY to be the bottom of the last selected line.
+      let lastLineSelectionBottom = LayoutUnit(
+        value: Float64(LineSelection.logicalBottom(lineBox: lastSelectedLineBox.get())))
+      lastLogicalTop =
+        blockDirectionOffset(rootBlock: rootBlock, offsetFromRootBlock: offsetFromRootBlock)
+        + lastLineSelectionBottom
+      lastLogicalLeft = logicalLeftSelectionOffset(
+        rootBlock: rootBlock, position: lastLineSelectionBottom, cache: cache)
+      lastLogicalRight = logicalRightSelectionOffset(
+        rootBlock: rootBlock, position: lastLineSelectionBottom, cache: cache)
+    }
+    return result
+  }
+}
+
+// Generated by Tools/Scripts/scion-translate.
+extension RenderBlockFlowWrapper {
+  func adjustEnclosingTopForPrecedingBlock(top: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
+    var top = top
+    if selectionState() != .Inside && selectionState() != .End {
+      return top
+    }
+    if isSelectionRoot() {
+      return top
+    }
+    var offsetToBlockBefore = LayoutSizeWrapper()
+    let blockBeforeWithinSelectionRoot = { () -> RenderBlockFlowWrapper? in
+      var object: RenderElementWrapper? = self
+      var sibling: RenderObjectWrapper? = nil
+      repeat {
+        sibling = object!.previousSibling()
+        while sibling != nil {
+          let siblingBlock: RenderBlockWrapper? = sibling! as? RenderBlockWrapper
+          if siblingBlock != nil && !siblingBlock!.isSelectionRoot() {
+            break
+          }
+          sibling = sibling!.previousSibling()
+        }
+        let objectBlock = object! as! RenderBlockWrapper
+        offsetToBlockBefore -= LayoutSizeWrapper(
+          width: objectBlock.logicalLeft(), height: objectBlock.logicalTop())
+        object = object!.parent()
+      } while sibling == nil && object is RenderBlockWrapper
+        && !((object! as! RenderBlockWrapper).isSelectionRoot())
+      if sibling == nil {
+        return nil
+      }
+      var beforeBlock: RenderBlockWrapper? = (sibling as! RenderBlockWrapper)
+      offsetToBlockBefore += LayoutSizeWrapper(
+        width: beforeBlock!.logicalLeft(), height: beforeBlock!.logicalTop())
+      var child: RenderObjectWrapper? = beforeBlock!.lastChild()
+      while let childBlock = child as? RenderBlockWrapper {
+        beforeBlock = childBlock
+        offsetToBlockBefore += LayoutSizeWrapper(
+          width: beforeBlock!.logicalLeft(), height: beforeBlock!.logicalTop())
+        child = beforeBlock!.lastChild()
+      }
+      return beforeBlock as? RenderBlockFlowWrapper
+    }
+    let blockBefore: RenderBlockFlowWrapper? = blockBeforeWithinSelectionRoot()
+    if blockBefore == nil {
+      return top
+    }
+    // Do not adjust blocks sharing the same line.
+    if !offsetToBlockBefore.height().bool() {
+      return top
+    }
+    let lastLineBox = InlineIterator.lastLineBoxFor(flow: blockBefore!)
+    if lastLineBox.bool() {
+      let lastLineSelectionState = LineSelection.selectionState(lineBox: lastLineBox.get())
+      if lastLineSelectionState != .Inside && lastLineSelectionState != .Start {
+        return top
+      }
+      let lastLineSelectionBottom: Float32 =
+        LineSelection.logicalBottom(lineBox: lastLineBox.get()) + offsetToBlockBefore.height()
+      top = max(top, LayoutUnit(value: Float64(lastLineSelectionBottom)))
+    }
+    return top
+  }
+
 }

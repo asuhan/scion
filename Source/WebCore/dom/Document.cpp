@@ -11399,6 +11399,16 @@ void Document::securityOriginDidChange()
 
 uint8_t Document::s_useScionRendering = parseInteger<uint8_t>(StringView::fromLatin1(getenv("SCION_USE_RENDERING"))).value_or(0);
 
+extern "C" WEBCORE_EXPORT bool Document_inDesignMode(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->inDesignMode();
+}
+
+extern "C" WEBCORE_EXPORT int32_t Document_updateLayoutIgnorePendingStylesheets(void* raw)
+{
+    return static_cast<int32_t>(static_cast<WebCore::Document*>(raw)->updateLayoutIgnorePendingStylesheets());
+}
+
 } // namespace WebCore
 
 #undef DOCUMENT_RELEASE_LOG

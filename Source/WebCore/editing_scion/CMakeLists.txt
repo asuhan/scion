@@ -1,13 +1,30 @@
 target_sources(layout_scion PRIVATE
+    BackwardsCharacterIterator.swift
+    BitStack.swift
+    BoundaryPoint.swift
+    CharacterIterator.swift
+    CharacterRange.swift
     CompositionHighlight.swift
     CompositionUnderline.swift
     Editing.swift
     EditingBehavior.swift
     EditingBoundary.swift
+    EditingTextIterator.swift
     Editor.swift
     FrameSelection.swift
+    GeneratedEnums.swift
+    GeneratedStubs.swift
+    GeneratedTypes.swift
+    InlineBoxAndOffset.swift
+    RenderedPosition.swift
+    SearchBuffer.swift
+    SimplifiedBackwardsTextIterator.swift
     TextAffinity.swift
+    TextIteratorCopyableText.swift
     TextManipulationController.swift
     VisiblePosition.swift
+    VisiblePositionRange.swift
     VisibleSelection.swift
+    VisibleUnits.swift
+    WordAwareIterator.swift
 )

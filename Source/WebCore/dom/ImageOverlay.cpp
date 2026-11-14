@@ -704,4 +704,9 @@ void updateWithTextRecognitionResult(HTMLElement& element, const TextRecognition
 #endif // ENABLE(IMAGE_ANALYSIS)
 
 } // namespace ImageOverlay
+extern "C" WEBCORE_EXPORT bool ImageOverlay_hasOverlay(const void* arg0)
+{
+    return WebCore::ImageOverlay::hasOverlay(*static_cast<const WebCore::HTMLElement*>(arg0));
+}
+
 } // namespace WebCore

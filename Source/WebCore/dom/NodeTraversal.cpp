@@ -185,3 +185,28 @@ Node* previousSkippingChildrenPostOrder(const Node& current, const Node* stayWit
 
 }
 }
+
+extern "C" WEBCORE_EXPORT void* NodeTraversal_next(const void* arg0)
+{
+    return const_cast<WebCore::Node*>(WebCore::NodeTraversal::next(*static_cast<const WebCore::Node*>(arg0)));
+}
+
+extern "C" WEBCORE_EXPORT void* NodeTraversal_next_2(const void* arg0, const void* arg1)
+{
+    return const_cast<WebCore::Node*>(WebCore::NodeTraversal::next(*static_cast<const WebCore::Node*>(arg0), static_cast<const WebCore::Node*>(arg1)));
+}
+
+extern "C" WEBCORE_EXPORT void* NodeTraversal_nextSkippingChildren(const void* arg0)
+{
+    return const_cast<WebCore::Node*>(WebCore::NodeTraversal::nextSkippingChildren(*static_cast<const WebCore::Node*>(arg0)));
+}
+
+extern "C" WEBCORE_EXPORT void* NodeTraversal_nextSkippingChildren_2(const void* arg0, const void* arg1)
+{
+    return const_cast<WebCore::Node*>(WebCore::NodeTraversal::nextSkippingChildren(*static_cast<const WebCore::Node*>(arg0), static_cast<const WebCore::Node*>(arg1)));
+}
+
+extern "C" WEBCORE_EXPORT void* NodeTraversal_previousPostOrder(const void* arg0, const void* arg1)
+{
+    return const_cast<WebCore::Node*>(WebCore::NodeTraversal::previousPostOrder(*static_cast<const WebCore::Node*>(arg0), static_cast<const WebCore::Node*>(arg1)));
+}

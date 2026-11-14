@@ -242,3 +242,18 @@ String composedTreeAsText(ContainerNode& root, ComposedTreeAsTextMode mode)
 }
 
 }
+
+extern "C" WEBCORE_EXPORT void* ComposedTreeIterator_firstChildInComposedTreeIgnoringUserAgentShadow(void* arg0)
+{
+    return const_cast<WebCore::Node*>(WebCore::firstChildInComposedTreeIgnoringUserAgentShadow(*static_cast<WebCore::Node*>(arg0)));
+}
+
+extern "C" WEBCORE_EXPORT void* ComposedTreeIterator_nextInComposedTreeIgnoringUserAgentShadow(void* arg0)
+{
+    return const_cast<WebCore::Node*>(WebCore::nextInComposedTreeIgnoringUserAgentShadow(*static_cast<WebCore::Node*>(arg0)));
+}
+
+extern "C" WEBCORE_EXPORT void* ComposedTreeIterator_nextSiblingInComposedTreeIgnoringUserAgentShadow(void* arg0)
+{
+    return const_cast<WebCore::Node*>(WebCore::nextSiblingInComposedTreeIgnoringUserAgentShadow(*static_cast<WebCore::Node*>(arg0)));
+}

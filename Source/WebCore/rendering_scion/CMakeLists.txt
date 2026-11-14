@@ -1,9 +1,11 @@
 target_sources(layout_scion PRIVATE
+    CaretRectComputation.swift
     EllipsisBoxPainter.swift
     EventRegion.swift
     FixedTableLayout.swift
     FlexibleBoxAlgorithm.swift
     FloatingObjects.swift
+    GapRects.swift
     GlyphDisplayListCache.swift
     Grid.swift
     GridBaselineAlignment.swift
@@ -30,6 +32,7 @@ target_sources(layout_scion PRIVATE
     LegacyLineLayout.swift
     LegacyRootInlineBox.swift
     LineClampUpdater.swift
+    LogicalSelectionOffsetCaches.swift
     MarkedText.swift
     MotionPath.swift
     OrderIterator.swift

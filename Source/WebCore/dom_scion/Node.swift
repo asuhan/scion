@@ -51,11 +51,6 @@ class NodeWrapper {
     return createElementWrapper(parentElement)
   }
 
-  func nextSibling() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func nodeHasChildNodes() -> Bool { return wk_interop.Node_hasChildNodes(p) }
 
   func length() -> UInt32 { return wk_interop.Node_length(p) }

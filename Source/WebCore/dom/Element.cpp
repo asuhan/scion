@@ -6291,4 +6291,29 @@ HTMLElement* Element::topmostPopoverAncestor(TopLayerElementType topLayerType)
     return topmostAncestor.get();
 }
 
+extern "C" WEBCORE_EXPORT const void* Element_classAttributeWithoutSynchronization(const void* raw)
+{
+    return new WTF::AtomString(static_cast<const WebCore::Element*>(raw)->attributeWithoutSynchronization(WebCore::HTMLNames::classAttr));
+}
+
+extern "C" WEBCORE_EXPORT bool Element_hasEquivalentAttributes(const void* raw, void* arg0)
+{
+    return static_cast<const WebCore::Element*>(raw)->hasEquivalentAttributes(*static_cast<WebCore::Element*>(arg0));
+}
+
+extern "C" WEBCORE_EXPORT const void* Element_localName(const void* raw)
+{
+    return new WTF::AtomString(static_cast<const WebCore::Element*>(raw)->localName());
+}
+
+extern "C" WEBCORE_EXPORT const void* Element_roleAttributeWithoutSynchronization(const void* raw)
+{
+    return new WTF::AtomString(static_cast<const WebCore::Element*>(raw)->attributeWithoutSynchronization(WebCore::HTMLNames::roleAttr));
+}
+
+extern "C" WEBCORE_EXPORT const void* Element_typeAttributeWithoutSynchronization(const void* raw)
+{
+    return new WTF::AtomString(static_cast<const WebCore::Element*>(raw)->attributeWithoutSynchronization(WebCore::HTMLNames::typeAttr));
+}
+
 } // namespace WebCore

@@ -11,8 +11,10 @@ target_sources(layout_scion PRIVATE
     ElementChildIterator.swift
     Element.swift
     ElementTraversal.swift
+    GeneratedBridges.swift
     Node.swift
     Position.swift
+    PositionIterator.swift
     PseudoElement.swift
     QualifiedName.swift
     RenderedDocumentMarker.swift

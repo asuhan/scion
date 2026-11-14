@@ -18,9 +18,76 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class EditingBehavior {
-  func shouldMoveCaretToHorizontalBoundaryWhenPastTopOrBottom() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+import wk_interop
+
+struct EditingBehavior {
+  init(type: EditingBehaviorType) {
+    self.type = type
   }
+
+  func shouldMoveCaretToHorizontalBoundaryWhenPastTopOrBottom() -> Bool {
+    return type != .Windows
+  }
+
+  func shouldConsiderSelectionAsDirectional() -> Bool {
+    return type != .Mac && type != .iOS
+  }
+
+  func shouldCenterAlignWhenSelectionIsRevealed() -> Bool {
+    return type == .Mac || type == .iOS
+  }
+
+  func shouldToggleStyleBasedOnStartOfSelection() -> Bool {
+    return type == .Mac || type == .iOS
+  }
+
+  func shouldAlwaysGrowSelectionWhenExtendingToBoundary() -> Bool {
+    return type == .Mac || type == .iOS
+  }
+
+  func shouldSelectOnContextualMenuClick() -> Bool {
+    return type == .Mac
+  }
+
+  func shouldAllowSpellingSuggestionsWithoutSelection() -> Bool {
+    return type == .Unix
+  }
+
+  func shouldNavigateBackOnBackspace() -> Bool {
+    return type != .Unix
+  }
+
+  func shouldExtendSelectionByWordOrLineAcrossCaret() -> Bool {
+    return type != .Mac && type != .iOS
+  }
+
+  func shouldSkipSpaceWhenMovingRight() -> Bool {
+    return type == .Windows
+  }
+
+  func shouldRebalanceWhiteSpacesInSecureField() -> Bool {
+    return type != .iOS
+  }
+
+  func shouldSelectBasedOnDictionaryLookup() -> Bool {
+    return type == .Mac || type == .iOS
+  }
+
+  func shouldAlwaysExtendSelectionFromExtentEndpoint() -> Bool {
+    return type != .Mac && type != .iOS
+  }
+
+  func shouldMoveSelectionToEndWhenFocusingTextInput() -> Bool {
+    return type == .iOS
+  }
+
+  func shouldAlwaysSmartDelete() -> Bool {
+    return type == .iOS
+  }
+
+  func shouldSmartInsertDeleteParagraphs() -> Bool {
+    return type == .iOS
+  }
+
+  private var type: EditingBehaviorType
 }

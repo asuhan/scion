@@ -2736,3 +2736,43 @@ void showTree(const WebCore::TextIterator* pos)
 }
 
 #endif
+
+extern "C" WEBCORE_EXPORT void* SearchBuffer_create(const void* target, uint32_t arg1)
+{
+    return new WebCore::SearchBuffer(*static_cast<const WTF::String*>(target), WTF::OptionSet<WebCore::FindOption>::fromRaw(arg1));
+}
+
+extern "C" WEBCORE_EXPORT uint64_t SearchBuffer_append(void* raw, const void* arg0)
+{
+    return static_cast<WebCore::SearchBuffer*>(raw)->append(*static_cast<const WTF::StringView*>(arg0));
+}
+
+extern "C" WEBCORE_EXPORT bool SearchBuffer_needsMoreContext(const void* raw)
+{
+    return static_cast<const WebCore::SearchBuffer*>(raw)->needsMoreContext();
+}
+
+extern "C" WEBCORE_EXPORT void SearchBuffer_prependContext(void* raw, const void* arg0)
+{
+    static_cast<WebCore::SearchBuffer*>(raw)->prependContext(*static_cast<const WTF::StringView*>(arg0));
+}
+
+extern "C" WEBCORE_EXPORT void SearchBuffer_reachedBreak(void* raw)
+{
+    static_cast<WebCore::SearchBuffer*>(raw)->reachedBreak();
+}
+
+extern "C" WEBCORE_EXPORT uint64_t SearchBuffer_search(void* raw, uint64_t* startOffset)
+{
+    return static_cast<WebCore::SearchBuffer*>(raw)->search(*startOffset);
+}
+
+extern "C" WEBCORE_EXPORT bool SearchBuffer_atBreak(const void* raw)
+{
+    return static_cast<const WebCore::SearchBuffer*>(raw)->atBreak();
+}
+
+extern "C" WEBCORE_EXPORT void SearchBuffer_destroy(void* raw)
+{
+    delete static_cast<WebCore::SearchBuffer*>(raw);
+}

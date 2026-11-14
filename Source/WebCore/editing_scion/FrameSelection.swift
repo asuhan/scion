@@ -87,3 +87,47 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
 
   private let p: UnsafeMutableRawPointer
 }
+
+func adjustEndpointsAtBidiBoundary(
+  visibleBase: inout VisiblePosition, visibleExtent: inout VisiblePosition
+) {
+  var base = RenderedPosition(position: visibleBase)
+  var extent = RenderedPosition(position: visibleExtent)
+  if base.isNull() || extent.isNull() || base.isEquivalent(other: extent) {
+    return
+  }
+  if base.atLeftBoundaryOfBidiRun() {
+    if !(extent.atRightBoundaryOfBidiRun(bidiLevelOfRun: base.bidiLevelOnRight()))
+      && base.isEquivalent(
+        other: extent.leftBoundaryOfBidiRun(bidiLevelOfRun: base.bidiLevelOnRight()))
+    {
+      visibleBase = VisiblePosition(base.positionAtLeftBoundaryOfBiDiRun())
+      return
+    }
+    return
+  }
+  if base.atRightBoundaryOfBidiRun() {
+    if !(extent.atLeftBoundaryOfBidiRun(bidiLevelOfRun: base.bidiLevelOnLeft()))
+      && base.isEquivalent(
+        other: extent.rightBoundaryOfBidiRun(bidiLevelOfRun: base.bidiLevelOnLeft()))
+    {
+      visibleBase = VisiblePosition(base.positionAtRightBoundaryOfBiDiRun())
+      return
+    }
+    return
+  }
+  if extent.atLeftBoundaryOfBidiRun()
+    && extent.isEquivalent(
+      other: base.leftBoundaryOfBidiRun(bidiLevelOfRun: extent.bidiLevelOnRight()))
+  {
+    visibleExtent = VisiblePosition(extent.positionAtLeftBoundaryOfBiDiRun())
+    return
+  }
+  if extent.atRightBoundaryOfBidiRun()
+    && extent.isEquivalent(
+      other: base.rightBoundaryOfBidiRun(bidiLevelOfRun: extent.bidiLevelOnLeft()))
+  {
+    visibleExtent = VisiblePosition(extent.positionAtRightBoundaryOfBiDiRun())
+    return
+  }
+}
