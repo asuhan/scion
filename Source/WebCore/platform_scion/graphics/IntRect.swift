@@ -92,10 +92,20 @@ struct IntRect: Equatable {
     setWidth(width: max(0, width() - delta))
   }
 
+  mutating func shiftMaxXEdgeTo(_ edge: Int32) {
+    let delta = edge - maxX()
+    setWidth(width: max(0, width() + delta))
+  }
+
   mutating func shiftYEdgeTo(_ edge: Int32) {
     let delta = edge - y()
     setY(y: edge)
     setHeight(height: max(0, height() - delta))
+  }
+
+  mutating func shiftMaxYEdgeTo(_ edge: Int32) {
+    let delta = edge - maxY()
+    setHeight(height: max(0, height() + delta))
   }
 
   func minXMaxYCorner() -> IntPoint {
