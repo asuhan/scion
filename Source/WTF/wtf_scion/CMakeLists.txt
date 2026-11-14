@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     Ref.swift
     SaturatedArithmetic.swift
     SetForScope.swift
+    StdLibExtras.swift
     SystemTracing.swift
     WeakHashMap.swift
     WeakHashSet.swift
