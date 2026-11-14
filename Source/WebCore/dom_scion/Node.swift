@@ -58,6 +58,13 @@ class NodeWrapper {
 
   func nodeHasChildNodes() -> Bool { return wk_interop.Node_hasChildNodes(p) }
 
+  func length() -> UInt32 { return wk_interop.Node_length(p) }
+
+  func shadowRoot() -> ShadowRootWrapper? {
+    guard let shadowRoot = wk_interop.Node_shadowRoot(p) else { return nil }
+    return ShadowRootWrapper(p: shadowRoot)
+  }
+
   func isSVGElement() -> Bool {
     return wk_interop.Node_isSVGElement(p)
   }

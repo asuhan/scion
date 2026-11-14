@@ -142,6 +142,16 @@ extern "C" WEBCORE_EXPORT bool Node_hasChildNodes(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->hasChildNodes();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t Node_length(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->length();
+}
+
+extern "C" WEBCORE_EXPORT void* Node_shadowRoot(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->shadowRoot();
+}
+
 extern "C" WEBCORE_EXPORT bool Node_isElementNode(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->isElementNode();

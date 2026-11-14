@@ -2102,6 +2102,8 @@ bool Node_hasMarqueeTagName(const void*);
 bool Node_hasTextPathTagName(const void*);
 bool Node_hasUseTagName(const void*);
 bool Node_hasChildNodes(const void*);
+uint32_t Node_length(const void*);
+void* Node_shadowRoot(const void*);
 bool Node_isElementNode(const void*);
 bool Node_isSVGElement(const void*);
 bool Node_isPseudoElement(const void*);

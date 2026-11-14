@@ -26,7 +26,7 @@ class CharacterDataWrapper: NodeWrapper {
     return StringWrapper(p: wk_interop.CharacterData_data(p), owner: false)
   }
 
-  func length() -> UInt32 { return wk_interop.CharacterData_length(p) }
+  override func length() -> UInt32 { return wk_interop.CharacterData_length(p) }
 
   func containsOnlyASCIIWhitespace() -> Bool {
     return wk_interop.CharacterData_containsOnlyASCIIWhitespace(p)
