@@ -4440,6 +4440,12 @@ bool RenderObject::isOutOfFlowPositioned() const
 }
 
 // absolute or fixed positioning
+bool RenderObject::isAbsolutelyPositioned() const
+{
+    if (m_scion) { return m_scion->isAbsolutelyPositioned(); }
+    return isOutOfFlowPositioned() && style().position() == PositionType::Absolute;
+}
+
 bool RenderObject::isFixedPositioned() const
 {
     if (m_scion) { return m_scion->isFixedPositioned(); }

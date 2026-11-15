@@ -852,11 +852,7 @@ public:
     bool isInFlowPositioned() const;
     bool isOutOfFlowPositioned() const; // absolute or fixed positioning
     bool isFixedPositioned() const;
-    bool isAbsolutelyPositioned() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isOutOfFlowPositioned() && style().position() == PositionType::Absolute;
-    }
+    bool isAbsolutelyPositioned() const;
     bool isRelativelyPositioned() const;
     bool isStickilyPositioned() const;
     bool shouldUsePositionedClipping() const;

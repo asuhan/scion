@@ -385,6 +385,7 @@ public:
     bool isOutOfFlowPositioned() const;
 
     bool isFixedPositioned() const;
+    bool isAbsolutelyPositioned() const;
 
     bool isRelativelyPositioned() const;
 
