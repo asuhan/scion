@@ -58,8 +58,8 @@ final class EditorWrapper {
   }
 
   func behavior() -> EditingBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return EditingBehavior(
+      type: EditingBehaviorType(rawValue: wk_interop.Editor_editingBehaviorType(p))!)
   }
 
   func markedTextMatchesAreHighlighted() -> Bool {

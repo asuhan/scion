@@ -175,6 +175,20 @@ extern "C" WEBCORE_EXPORT bool Editor_markedTextMatchesAreHighlighted(const void
     return static_cast<const WebCore::Editor*>(p)->markedTextMatchesAreHighlighted();
 }
 
+extern "C" WEBCORE_EXPORT int32_t Editor_editingBehaviorType(const void* p)
+{
+    // EditingBehavior keeps its type private, but three of its predicates tell the types apart.
+    auto behavior = static_cast<const WebCore::Editor*>(p)->behavior();
+    auto type = WebCore::EditingBehaviorType::Unix;
+    if (behavior.shouldMoveSelectionToEndWhenFocusingTextInput())
+        type = WebCore::EditingBehaviorType::iOS;
+    else if (!behavior.shouldConsiderSelectionAsDirectional())
+        type = WebCore::EditingBehaviorType::Mac;
+    else if (!behavior.shouldMoveCaretToHorizontalBoundaryWhenPastTopOrBottom())
+        type = WebCore::EditingBehaviorType::Windows;
+    return static_cast<int32_t>(type);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(TemporarySelectionChange);
