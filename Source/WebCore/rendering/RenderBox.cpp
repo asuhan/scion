@@ -125,6 +125,14 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_height(const void* p)
     return height.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_hasTrimmedMargin(const void* p, bool hasMarginTrimType, uint8_t marginTrimType)
+{
+    std::optional<WebCore::MarginTrimType> type;
+    if (hasMarginTrimType)
+        type = static_cast<WebCore::MarginTrimType>(marginTrimType);
+    return static_cast<const WebCore::RenderBox*>(p)->hasTrimmedMargin(type);
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setX(void* p, int32_t x)
 {
     static_cast<WebCore::RenderBox*>(p)->setX(WebCore::LayoutUnit::fromRawValue(x));

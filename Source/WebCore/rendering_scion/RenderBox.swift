@@ -2235,7 +2235,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasTrimmedMargin(marginTrimType: MarginTrimType?) -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_hasTrimmedMargin(
+        id(), marginTrimType != nil, marginTrimType?.rawValue ?? 0)
+    }
     if !isInFlow() {
       return false
     }

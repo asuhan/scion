@@ -1165,6 +1165,7 @@ int32_t RenderBox_x(const void*);
 int32_t RenderBox_y(const void*);
 int32_t RenderBox_width(const void*);
 int32_t RenderBox_height(const void*);
+bool RenderBox_hasTrimmedMargin(const void*, bool, uint8_t);
 void RenderBox_setX(void*, int32_t);
 void RenderBox_setY(void*, int32_t);
 void* RenderBox_firstChildBox(const void*);
