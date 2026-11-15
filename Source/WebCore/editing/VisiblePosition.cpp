@@ -32,6 +32,7 @@
 #include "CaretRectComputation.h"
 #include "Document.h"
 #include "Editing.h"
+#include "EditingScion.h"
 #include "FloatQuad.h"
 #include "HTMLElement.h"
 #include "HTMLHtmlElement.h"
@@ -52,13 +53,21 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" VisiblePositionRaw VisiblePositionScion_create(PositionRaw, uint8_t affinity);
+
 namespace WebCore {
 
 using namespace HTMLNames;
 
 VisiblePosition::VisiblePosition(const Position& position, Affinity affinity)
-    : m_deepPosition { canonicalPosition(position) }
 {
+    if (usesScionEditing(position)) {
+        auto raw = VisiblePositionScion_create(positionToRaw(position), static_cast<uint8_t>(affinity));
+        m_deepPosition = positionFromRaw(raw.deepPosition);
+        m_affinity = static_cast<Affinity>(raw.affinity);
+        return;
+    }
+    m_deepPosition = canonicalPosition(position);
     if (affinity == Affinity::Upstream && !isNull()) {
         auto upstreamCopy = *this;
         upstreamCopy.m_affinity = Affinity::Upstream;

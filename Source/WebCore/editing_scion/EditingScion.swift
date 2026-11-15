@@ -34,3 +34,11 @@ extension VisiblePosition {
       deepPosition: deepEquivalent().raw(), affinity: affinity() == .Downstream ? 1 : 0)
   }
 }
+
+@_cdecl("VisiblePositionScion_create")
+func VisiblePositionScion_create(_ positionRaw: PositionRaw, _ affinityRaw: UInt8)
+  -> VisiblePositionRaw
+{
+  return VisiblePosition(Position(raw: positionRaw), affinityRaw != 0 ? .Downstream : .Upstream)
+    .raw()
+}
