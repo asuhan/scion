@@ -1130,6 +1130,8 @@ void RenderObject_repaint(const void*, bool);
 void RenderSVGText_setNeedsPositioningValuesUpdate(void*);
 void RenderSVGText_setNeedsTextMetricsUpdate(void*);
 void* RenderObject_node(const void*);
+void* RenderObject_nonPseudoNode(const void*);
+bool RenderObject_isPseudoElement(const void*);
 void RenderElement_layout(void*);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);

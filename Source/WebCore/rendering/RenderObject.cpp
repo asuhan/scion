@@ -148,6 +148,16 @@ extern "C" WEBCORE_EXPORT void* RenderObject_node(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->node();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_nonPseudoNode(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->nonPseudoNode();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isPseudoElement(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isPseudoElement();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_previousSibling(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->previousSibling();

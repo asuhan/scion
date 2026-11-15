@@ -811,7 +811,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   //////////////////////////////////////////
 
   func isPseudoElement() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isPseudoElement(id()) }
     return node()?.isPseudoElement() ?? false
   }
 
@@ -1987,7 +1987,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nonPseudoNode() -> NodeWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let raw = wk_interop.RenderObject_nonPseudoNode(id()) else { return nil }
+      return createNodeWrapper(raw)
+    }
     return isPseudoElement() ? nil : node()
   }
 
