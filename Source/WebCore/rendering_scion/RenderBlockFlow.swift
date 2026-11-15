@@ -2213,6 +2213,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
+  override func positionForPoint(_ point: LayoutPointWrapper, _ source: HitTestSource) -> Position {
+    assert(isNativeImpl())
+    return positionForPoint(point, source, nil).deepEquivalent()
+  }
+
   override func positionForPoint(
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?

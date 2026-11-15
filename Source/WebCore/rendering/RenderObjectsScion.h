@@ -1360,6 +1360,9 @@ public:
 
     LayoutUnit lowestFloatLogicalBottom(uint8_t) const;
 
+    Position positionForPoint(const LayoutPoint&, HitTestSource);
+    VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*);
+
     void setChildrenInline(bool);
 
     const LayoutIntegration::LineLayout* inlineLayout() const;

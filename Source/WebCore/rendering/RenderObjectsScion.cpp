@@ -25,6 +25,7 @@
 
 #include "RenderObjectsScion.h"
 #include "Document.h"
+#include "EditingScion.h"
 #include "HitTestLocation.h"
 #include "HitTestRequest.h"
 #include "HitTestResult.h"
@@ -39,6 +40,7 @@
 #include "RenderSelection.h"
 #include "RenderView.h"
 #include "ScrollTypes.h"
+#include "VisiblePosition.h"
 #include <wtf/Assertions.h>
 #include <wtf/CheckedRef.h>
 #include <wtf/FastMalloc.h>
@@ -1392,6 +1394,8 @@ extern "C" void RenderBlockFlowScion_addFloatsToNewParent(const void*, void*);
 extern "C" void RenderBlockFlowScion_removeFloatingObjects(void*);
 
 extern "C" int32_t RenderBlockFlowScion_lowestFloatLogicalBottom(void*, uint8_t);
+extern "C" PositionRaw RenderBlockFlowScion_positionForPointWithoutFragment(void*, LayoutPointRaw, bool);
+extern "C" VisiblePositionRaw RenderBlockFlowScion_positionForPoint(void*, LayoutPointRaw, bool, void*);
 
 extern "C" void RenderBlockFlowScion_setChildrenInline(void*, bool);
 
@@ -4887,6 +4891,17 @@ void RenderBlockFlowScion::removeFloatingObjects()
 LayoutUnit RenderBlockFlowScion::lowestFloatLogicalBottom(uint8_t floatType) const
 {
     return LayoutUnit::fromRawValue(RenderBlockFlowScion_lowestFloatLogicalBottom(m_handle, floatType));
+}
+
+Position RenderBlockFlowScion::positionForPoint(const LayoutPoint& point, HitTestSource source)
+{
+    return positionFromRaw(RenderBlockFlowScion_positionForPointWithoutFragment(m_handle, { point.x().rawValue(), point.y().rawValue() }, static_cast<bool>(source)));
+}
+
+VisiblePosition RenderBlockFlowScion::positionForPoint(const LayoutPoint& point, HitTestSource source, const RenderFragmentContainer* fragment)
+{
+    auto raw = RenderBlockFlowScion_positionForPoint(m_handle, { point.x().rawValue(), point.y().rawValue() }, static_cast<bool>(source), fragment ? fragment->scion() : nullptr);
+    return { positionFromRaw(raw.deepPosition), static_cast<Affinity>(raw.affinity) };
 }
 
 void RenderBlockFlowScion::setChildrenInline(bool value)

@@ -6806,6 +6806,31 @@ func RenderBlockFlowScion_inlineLayout(_ blockFlowRaw: UnsafeMutableRawPointer)
   return nil
 }
 
+@_cdecl("RenderBlockFlowScion_positionForPointWithoutFragment")
+func RenderBlockFlowScion_positionForPointWithoutFragment(
+  _ blockFlowRaw: UnsafeMutableRawPointer, _ pointRaw: LayoutPointRaw, _ sourceRaw: Bool
+) -> PositionRaw {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.positionForPoint(convertLayoutPointRaw(pointRaw), sourceRaw ? .User : .Script)
+    .raw()
+}
+
+@_cdecl("RenderBlockFlowScion_positionForPoint")
+func RenderBlockFlowScion_positionForPoint(
+  _ blockFlowRaw: UnsafeMutableRawPointer, _ pointRaw: LayoutPointRaw, _ sourceRaw: Bool,
+  _ fragmentRaw: UnsafeMutableRawPointer?
+) -> VisiblePositionRaw {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  var fragment: RenderFragmentContainerWrapper? = nil
+  if let fragmentRaw {
+    fragment = Unmanaged<RenderFragmentContainerWrapper>.fromOpaque(fragmentRaw)
+      .takeUnretainedValue()
+  }
+  return blockFlow.positionForPoint(
+    convertLayoutPointRaw(pointRaw), sourceRaw ? .User : .Script, fragment
+  ).raw()
+}
+
 @_cdecl("RenderBlockFlowScion_hasInlineLayout")
 func RenderBlockFlowScion_hasInlineLayout(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()

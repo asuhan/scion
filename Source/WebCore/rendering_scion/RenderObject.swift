@@ -2578,6 +2578,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
   }
 
+  func positionForPoint(_ point: LayoutPointWrapper, _ source: HitTestSource) -> Position {
+    assert(isNativeImpl())
+    // FIXME: This should just create a Position object instead (webkit.org/b/168566).
+    return positionForPoint(point, source, nil).deepEquivalent()
+  }
+
   func positionForPoint(
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
