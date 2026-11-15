@@ -4775,6 +4775,15 @@ func RenderMultiColumnSetScion_containsRendererInFragmentedFlow(
   return obj.containsRendererInFragmentedFlow(renderer: renderer)
 }
 
+@_cdecl("RenderBoxScion_hasTrimmedMargin")
+func RenderBoxScion_hasTrimmedMargin(
+  _ objRaw: UnsafeRawPointer, _ hasMarginTrimType: Bool, _ marginTrimTypeRaw: UInt8
+) -> Bool {
+  let obj = Unmanaged<RenderBoxWrapper>.fromOpaque(objRaw).takeUnretainedValue()
+  return obj.hasTrimmedMargin(
+    marginTrimType: hasMarginTrimType ? MarginTrimType(rawValue: marginTrimTypeRaw) : nil)
+}
+
 @_cdecl("RenderBoxScion_previousSiblingBox")
 func RenderBoxScion_previousSiblingBox(_ objRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let obj = Unmanaged<RenderBoxWrapper>.fromOpaque(objRaw).takeUnretainedValue()

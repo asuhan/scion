@@ -2282,7 +2282,8 @@ void RenderBox::clearTrimmedMarginsMarkings()
 
 bool RenderBox::hasTrimmedMargin(std::optional<MarginTrimType> marginTrimType) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->hasTrimmedMargin(marginTrimType);
     if (!isInFlow())
         return false;
     if (!hasRareData())

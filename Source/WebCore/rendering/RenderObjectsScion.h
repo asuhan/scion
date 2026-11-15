@@ -961,6 +961,8 @@ public:
 
     bool shrinkToAvoidFloats() const;
 
+    bool hasTrimmedMargin(std::optional<MarginTrimType>) const;
+
     RenderBox* previousInFlowSiblingBox() const;
 
     RenderBox* previousSiblingBox() const;

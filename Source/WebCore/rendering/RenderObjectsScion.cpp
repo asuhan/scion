@@ -909,6 +909,7 @@ extern "C" void RenderBlockFlowScion_setMultiColumnFlow(void*, void*);
 extern "C" void RenderBlockFlowScion_clearMultiColumnFlow(void*);
 extern "C" void RenderLayerModelObjectScion_destroyLayer(void*);
 extern "C" bool RenderBoxScion_shrinkToAvoidFloats(const void*);
+extern "C" bool RenderBoxScion_hasTrimmedMargin(const void*, bool hasMarginTrimType, uint8_t marginTrimType);
 extern "C" bool RenderElementScion_isFirstLetter(const void*);
 extern "C" int32_t RenderBoxModelObjectScion_paddingTop(const void*);
 extern "C" int32_t RenderBoxModelObjectScion_paddingBottom(const void*);
@@ -3437,6 +3438,11 @@ void RenderLayerModelObjectScion::destroyLayer()
 bool RenderBoxScion::shrinkToAvoidFloats() const
 {
     return RenderBoxScion_shrinkToAvoidFloats(m_handle);
+}
+
+bool RenderBoxScion::hasTrimmedMargin(std::optional<MarginTrimType> marginTrimType) const
+{
+    return RenderBoxScion_hasTrimmedMargin(m_handle, marginTrimType.has_value(), marginTrimType ? static_cast<uint8_t>(*marginTrimType) : 0);
 }
 
 bool RenderElementScion::isFirstLetter() const
