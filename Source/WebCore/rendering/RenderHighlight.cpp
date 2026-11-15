@@ -90,6 +90,18 @@ extern "C" WEBCORE_EXPORT uint8_t RenderHighlight_highlightStateForTextBox(void*
     return static_cast<uint8_t>(static_cast<WebCore::RenderHighlight*>(p)->highlightStateForTextBox(*static_cast<const WebCore::RenderText*>(rendererRaw), textBoxRange));
 }
 
+extern "C" WEBCORE_EXPORT void RenderHighlight_rangeForTextBox(void* p, const void* rendererRaw, TextBoxSelectableRangeRaw textBoxRangeRaw, unsigned* start, unsigned* end)
+{
+    WebCore::TextBoxSelectableRange textBoxRange {
+        textBoxRangeRaw.start,
+        textBoxRangeRaw.length,
+        textBoxRangeRaw.additionalLengthAtEnd,
+        textBoxRangeRaw.isLineBreak,
+        textBoxRangeRaw.truncation.is_valid ? textBoxRangeRaw.truncation.value : std::optional<uint32_t>()
+    };
+    std::tie(*start, *end) = static_cast<WebCore::RenderHighlight*>(p)->rangeForTextBox(*static_cast<const WebCore::RenderText*>(rendererRaw), textBoxRange);
+}
+
 namespace WebCore {
 
 

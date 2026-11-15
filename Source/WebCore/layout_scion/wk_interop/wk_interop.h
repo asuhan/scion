@@ -1273,6 +1273,7 @@ void* RenderHighlight_end(const void*);
 unsigned RenderHighlight_startOffset(const void*);
 unsigned RenderHighlight_endOffset(const void*);
 uint8_t RenderHighlight_highlightStateForTextBox(void*, const void*, struct TextBoxSelectableRangeRaw);
+void RenderHighlight_rangeForTextBox(void*, const void*, struct TextBoxSelectableRangeRaw, unsigned*, unsigned*);
 void RenderListItem_layout(void*);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);

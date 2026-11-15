@@ -207,13 +207,7 @@ class RenderHighlight {
     if !isNativeImpl() {
       return RenderObjectWrapper.HighlightState(
         rawValue: wk_interop.RenderHighlight_highlightStateForTextBox(
-          p, renderer.isNativeImpl() ? renderer.getWk() : renderer.id(),
-          TextBoxSelectableRangeRaw(
-            start: textBoxRange.start, length: textBoxRange.length,
-            additionalLengthAtEnd: textBoxRange.additionalLengthAtEnd,
-            isLineBreak: textBoxRange.isLineBreak,
-            truncation: OptionalUIntRaw(
-              value: textBoxRange.truncation ?? 0, is_valid: textBoxRange.truncation != nil))))!
+          p, renderer.isNativeImpl() ? renderer.getWk() : renderer.id(), textBoxRange.raw()))!
     }
     let state = highlightStateForRenderer(renderer)
 
@@ -255,7 +249,14 @@ class RenderHighlight {
   func rangeForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange) -> (
     UInt32, UInt32
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      var start: UInt32 = 0
+      var end: UInt32 = 0
+      wk_interop.RenderHighlight_rangeForTextBox(
+        p, renderer.isNativeImpl() ? renderer.getWk() : renderer.id(), textBoxRange.raw(), &start,
+        &end)
+      return (start, end)
+    }
     let state = highlightStateForTextBox(renderer: renderer, textBoxRange: textBoxRange)
 
     switch state {
@@ -289,4 +290,13 @@ class RenderHighlight {
   private var renderRange = RenderRange()
   private let isSelection: Bool
   private var p: UnsafeMutableRawPointer? = nil
+}
+
+extension TextBoxSelectableRange {
+  fileprivate func raw() -> TextBoxSelectableRangeRaw {
+    return TextBoxSelectableRangeRaw(
+      start: start, length: length, additionalLengthAtEnd: additionalLengthAtEnd,
+      isLineBreak: isLineBreak,
+      truncation: OptionalUIntRaw(value: truncation ?? 0, is_valid: truncation != nil))
+  }
 }
