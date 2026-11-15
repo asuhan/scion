@@ -202,6 +202,11 @@ extern "C" WEBCORE_EXPORT void* FontCascade_fonts(const void* p)
     return static_cast<const WebCore::FontCascade*>(p)->fonts();
 }
 
+extern "C" WEBCORE_EXPORT int32_t FontCascade_offsetForPosition(const void* p, const void* run, float position, bool includePartialGlyphs)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->offsetForPosition(*static_cast<const WebCore::TextRun*>(run), position, includePartialGlyphs);
+}
+
 extern "C" WEBCORE_EXPORT float FontCascade_widthWithGlyphOverflow(const void* p, const void* run, GlyphOverflowRaw* glyphOverflowRaw, bool computeBounds)
 {
     WebCore::GlyphOverflow glyphOverflow;

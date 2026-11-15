@@ -202,8 +202,7 @@ class FontCascadeWrapper: Equatable {
 
   func offsetForPosition(_ run: TextRunWrapper, _ x: Float32, _ includePartialGlyphs: Bool) -> Int32
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FontCascade_offsetForPosition(p!, run.p!, x, includePartialGlyphs)
   }
 
   func adjustSelectionRectForText(

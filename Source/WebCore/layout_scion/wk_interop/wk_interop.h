@@ -616,6 +616,7 @@ bool FontCascade_hasValidAverageCharWidth(const void*);
 bool FontCascade_fastAverageCharWidthIfAvailable(const void*, float*);
 bool FontCascade_isLoadingCustomFonts(const void*);
 float FontCascade_widthWithGlyphOverflow(const void*, const void*, struct GlyphOverflowRaw*, bool);
+int32_t FontCascade_offsetForPosition(const void*, const void*, float, bool);
 float FontCascade_widthWithFallbackFonts(const void*, const void*, const void**, uint32_t, uint32_t*, struct GlyphOverflowRaw*, bool);
 void* FontCascade_createWithDescription(const void*, const void*);
 void FontCascade_destroy(const void*);
