@@ -9,6 +9,7 @@ target_sources(layout_scion PRIVATE
     Editing.swift
     EditingBehavior.swift
     EditingBoundary.swift
+    EditingScion.swift
     EditingTextIterator.swift
     Editor.swift
     FrameSelection.swift

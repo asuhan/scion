@@ -34,6 +34,8 @@ namespace WTF {
 class TextStream;
 }
 
+struct PositionRaw;
+
 namespace WebCore {
 
 class LegacyInlineBox;
@@ -204,6 +206,7 @@ private:
     enum class LegacyEditingPositionFlag { On };
     WEBCORE_EXPORT Position(RefPtr<Node>&& anchorNode, unsigned offset, LegacyEditingPositionFlag);
     friend Position makeDeprecatedLegacyPosition(RefPtr<Node>&&, unsigned offset);
+    friend PositionRaw positionToRaw(const Position&);
 
     WEBCORE_EXPORT int offsetForPositionAfterAnchor() const;
     

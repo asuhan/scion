@@ -1477,6 +1477,23 @@ struct Position {
   private var isLegacyEditingPosition: Bool = false
 }
 
+// Positions cross to C++ by value; see editing/EditingScion.h. The stored properties are private,
+// as in C++, where positionToRaw() is a friend.
+extension Position {
+  init(raw: PositionRaw) {
+    self.m_anchorNode = raw.anchorNode.map { createNodeWrapper($0) }
+    self.offset = raw.offset
+    self.m_anchorType = UInt32(raw.anchorType)
+    self.isLegacyEditingPosition = raw.isLegacyEditingPosition
+  }
+
+  func raw() -> PositionRaw {
+    return PositionRaw(
+      anchorNode: m_anchorNode?.p, offset: offset, anchorType: UInt8(m_anchorType),
+      isLegacyEditingPosition: isLegacyEditingPosition)
+  }
+}
+
 extension Position: Equatable {}
 
 func hasInlineRun(renderer: RenderObjectWrapper) -> Bool {

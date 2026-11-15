@@ -156,6 +156,19 @@ struct LayoutPointRaw {
     int32_t y;
 };
 
+// See editing/EditingScion.h.
+struct PositionRaw {
+    void* anchorNode;
+    uint32_t offset;
+    uint8_t anchorType;
+    bool isLegacyEditingPosition;
+};
+
+struct VisiblePositionRaw {
+    struct PositionRaw deepPosition;
+    uint8_t affinity;
+};
+
 struct LayoutSizeRaw {
     int32_t width;
     int32_t height;
@@ -2760,4 +2773,3 @@ void SearchBuffer_reachedBreak(void*);
 uint64_t SearchBuffer_search(void*, uint64_t*);
 bool SearchBuffer_atBreak(const void*);
 void SearchBuffer_destroy(void*);
-

@@ -1353,6 +1353,7 @@ editing/DictationCommand.cpp
 editing/EditAction.cpp
 editing/EditCommand.cpp
 editing/Editing.cpp
+editing/EditingScion.cpp @no-unify
 editing/EditingStyle.cpp
 editing/Editor.cpp
 editing/EditorCommand.cpp
