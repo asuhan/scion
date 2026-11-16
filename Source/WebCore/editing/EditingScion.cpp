@@ -30,6 +30,7 @@
 #include "Node.h"
 #include "Position.h"
 #include "RenderObject.h"
+#include "SimpleRange.h"
 #include "VisiblePosition.h"
 
 namespace WebCore {
@@ -53,6 +54,16 @@ Position positionFromRaw(const PositionRaw& raw)
 VisiblePositionRaw visiblePositionToRaw(const VisiblePosition& position)
 {
     return { positionToRaw(position.deepEquivalent()), static_cast<uint8_t>(position.affinity()) };
+}
+
+SimpleRangeRaw simpleRangeToRaw(const SimpleRange& range)
+{
+    return { { range.start.container.ptr(), range.start.offset }, { range.end.container.ptr(), range.end.offset } };
+}
+
+SimpleRange simpleRangeFromRaw(const SimpleRangeRaw& raw)
+{
+    return { { *static_cast<Node*>(raw.start.container), raw.start.offset }, { *static_cast<Node*>(raw.end.container), raw.end.offset } };
 }
 
 bool usesScionEditing(const Position& position)

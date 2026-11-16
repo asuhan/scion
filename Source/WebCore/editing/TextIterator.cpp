@@ -32,6 +32,7 @@
 #include "ComposedTreeIterator.h"
 #include "Document.h"
 #include "Editing.h"
+#include "EditingScion.h"
 #include "ElementInlines.h"
 #include "ElementRareData.h"
 #include "FontCascade.h"
@@ -80,6 +81,8 @@
 #include <unicode/usearch.h>
 #include <wtf/text/TextBreakIteratorInternalICU.h>
 #endif
+
+extern "C" SimpleRangeRaw EditingScion_findPlainText(SimpleRangeRaw, const void* target, uint16_t options);
 
 namespace WebCore {
 
@@ -2693,6 +2696,9 @@ SimpleRange findClosestPlainText(const SimpleRange& range, const String& target,
 
 SimpleRange findPlainText(const SimpleRange& range, const String& target, FindOptions options)
 {
+    if (usesScionRendering(range))
+        return simpleRangeFromRaw(EditingScion_findPlainText(simpleRangeToRaw(range), &target, options.toRaw()));
+
     // When searching forward stop since we want the first match.
     // When searching backward keep going since we want the last match.
     bool stopAfterFindingMatch = !options.contains(FindOption::Backwards);

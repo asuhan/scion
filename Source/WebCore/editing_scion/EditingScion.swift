@@ -42,3 +42,29 @@ func VisiblePositionScion_create(_ positionRaw: PositionRaw, _ affinityRaw: UInt
   return VisiblePosition(Position(raw: positionRaw), affinityRaw != 0 ? .Downstream : .Upstream)
     .raw()
 }
+
+extension SimpleRange {
+  init(raw: SimpleRangeRaw) {
+    self.init(
+      start: BoundaryPoint(
+        container: createNodeWrapper(raw.start.container!), offset: raw.start.offset),
+      end: BoundaryPoint(container: createNodeWrapper(raw.end.container!), offset: raw.end.offset))
+  }
+
+  func raw() -> SimpleRangeRaw {
+    return SimpleRangeRaw(
+      start: BoundaryPointRaw(container: start.container.p, offset: start.offset),
+      end: BoundaryPointRaw(container: end.container.p, offset: end.offset))
+  }
+}
+
+@_cdecl("EditingScion_findPlainText")
+func EditingScion_findPlainText(
+  _ rangeRaw: SimpleRangeRaw, _ targetRaw: UnsafeRawPointer, _ optionsRaw: UInt16
+) -> SimpleRangeRaw {
+  let target = StringWrapper(p: targetRaw, owner: false)
+  return findPlainText(
+    range: SimpleRange(raw: rangeRaw), target: target,
+    options: FindOption(rawValue: UInt32(optionsRaw))
+  ).raw()
+}

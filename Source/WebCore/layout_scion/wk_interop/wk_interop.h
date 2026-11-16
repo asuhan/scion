@@ -169,6 +169,16 @@ struct VisiblePositionRaw {
     uint8_t affinity;
 };
 
+struct BoundaryPointRaw {
+    void* container;
+    uint32_t offset;
+};
+
+struct SimpleRangeRaw {
+    struct BoundaryPointRaw start;
+    struct BoundaryPointRaw end;
+};
+
 struct LayoutSizeRaw {
     int32_t width;
     int32_t height;

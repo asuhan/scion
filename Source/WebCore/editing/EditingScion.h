@@ -41,14 +41,27 @@ struct VisiblePositionRaw {
     uint8_t affinity;
 };
 
+struct BoundaryPointRaw {
+    void* container;
+    uint32_t offset;
+};
+
+struct SimpleRangeRaw {
+    struct BoundaryPointRaw start;
+    struct BoundaryPointRaw end;
+};
+
 namespace WebCore {
 
 class Position;
 class VisiblePosition;
+struct SimpleRange;
 
 PositionRaw positionToRaw(const Position&);
 Position positionFromRaw(const PositionRaw&);
 VisiblePositionRaw visiblePositionToRaw(const VisiblePosition&);
+SimpleRangeRaw simpleRangeToRaw(const SimpleRange&);
+SimpleRange simpleRangeFromRaw(const SimpleRangeRaw&);
 
 // Whether the position is laid out by the Swift port, so that editing queries about it go to
 // the Swift editing code.
