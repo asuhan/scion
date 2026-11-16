@@ -786,6 +786,8 @@ public:
 
     Vector<FloatQuad> absoluteQuadsForRange(unsigned startOffset, unsigned endOffset, OptionSet<RenderObject::BoundingRectBehavior>, bool* wasFixed) const;
 
+    LayoutRect collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>*) const;
+
     Text* textNode() const;
 
     const RenderStyle& style() const;

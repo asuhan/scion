@@ -414,6 +414,32 @@ private func selectionRectForTextBox(
     lineSelectionRect.height(), textBox.isHorizontal())
 }
 
+private func ellipsisRectForTextBox(
+  _ textBox: InlineIterator.TextBox, _ start: UInt32, _ end: UInt32
+) -> IntRect? {
+  let lineBox = textBox.lineBox()
+  if !lineBox.get().hasEllipsis() {
+    return nil
+  }
+
+  let selectableRange = textBox.selectableRange()
+  guard let truncation = selectableRange.truncation else {
+    return nil
+  }
+
+  // As in C++, the unsigned subtraction wraps around, and max with 0 keeps it.
+  let ellipsisStartPosition = start &- selectableRange.start
+  let ellipsisEndPosition = min(end &- selectableRange.start, selectableRange.length)
+  // The ellipsis should be considered to be selected if the end of
+  // the selection is past the beginning of the truncation and the
+  // beginning of the selection is before or at the beginning of the truncation.
+  if ellipsisEndPosition < truncation && ellipsisStartPosition > truncation {
+    return nil
+  }
+
+  return IntRect(lineBox.get().ellipsisVisualRect(adjustedForSelection: .Yes))
+}
+
 private func localQuadForTextBox(
   _ textBox: InlineIterator.TextBox, _ start: UInt32, _ end: UInt32, _ useSelectionHeight: Bool
 ) -> FloatRectWrapper {
@@ -841,6 +867,69 @@ class RenderTextWrapper: RenderObjectWrapper {
       }
     }
     return UInt32.max
+  }
+
+  func collectSelectionGeometriesForLineBoxes(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ clipToVisibleContent: Bool,
+    _ quads: inout [FloatQuad]?
+  ) -> LayoutRectWrapper {
+    assert(!needsLayout())
+
+    if selectionState() == .None {
+      return LayoutRectWrapper()
+    }
+    if containingBlock() == nil {
+      return LayoutRectWrapper()
+    }
+
+    // Now calculate startPos and endPos for painting selection.
+    // We include a selection while endPos > 0
+    var startOffset: UInt32
+    var endOffset: UInt32
+    if selectionState() == .Inside {
+      // We are fully selected.
+      startOffset = 0
+      endOffset = text().length()
+    } else {
+      startOffset = view().selection().startOffset()
+      endOffset = view().selection().endOffset()
+      if selectionState() == .Start {
+        endOffset = text().length()
+      } else if selectionState() == .End {
+        startOffset = 0
+      }
+    }
+
+    if startOffset == endOffset {
+      return LayoutRectWrapper()
+    }
+
+    var resultRect = LayoutRectWrapper()
+
+    for textBox in InlineIterator.textBoxesFor(self) {
+      var rect = LayoutRectWrapper()
+      rect.unite(other: selectionRectForTextBox(textBox, startOffset, endOffset))
+      rect.unite(
+        other: LayoutRectWrapper(
+          rect: ellipsisRectForTextBox(textBox, startOffset, endOffset) ?? IntRect()))
+      if rect.isEmpty() {
+        continue
+      }
+
+      resultRect.unite(other: rect)
+
+      quads?.append(
+        localToContainerQuad(
+          localQuad: FloatQuad(inRect: rect.FloatRect()), container: repaintContainer))
+    }
+
+    if clipToVisibleContent {
+      return computeRectForRepaint(rect: resultRect, repaintContainer: repaintContainer)
+    }
+    return LayoutRectWrapper(
+      rect: localToContainerQuad(
+        localQuad: FloatQuad(inRect: resultRect.FloatRect()), container: repaintContainer
+      ).enclosingBoundingBox())
   }
 
   func absoluteQuadsForRange(

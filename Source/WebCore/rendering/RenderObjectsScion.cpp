@@ -476,6 +476,7 @@ extern "C" IntRectRaw RenderObjectScion_absoluteBoundingBoxRect(const void*, boo
 extern "C" void RenderObjectScion_absoluteQuads(const void*, void*, bool*);
 
 extern "C" void RenderTextScion_absoluteQuadsForRange(const void*, unsigned, unsigned, uint8_t, void*, bool*);
+extern "C" LayoutRectRaw RenderTextScion_collectSelectionGeometriesForLineBoxes(const void*, const void*, bool, void*);
 
 extern "C" RepaintRectsRaw RenderObjectScion_rectsForRepaintingAfterLayout(const void*, void*, bool);
 
@@ -2179,6 +2180,11 @@ Vector<FloatQuad> RenderTextScion::absoluteQuadsForRange(unsigned startOffset, u
     Vector<FloatQuad> quads;
     RenderTextScion_absoluteQuadsForRange(m_handle, startOffset, endOffset, behavior.toRaw(), &quads, wasFixed);
     return quads;
+}
+
+LayoutRect RenderTextScion::collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>* quads) const
+{
+    return convertLayoutRectRaw(RenderTextScion_collectSelectionGeometriesForLineBoxes(m_handle, repaintContainer ? repaintContainer->scion() : nullptr, clipToVisibleContent, quads));
 }
 
 bool RenderObjectScion::isDescendantOf(const RenderObject* ancestor) const

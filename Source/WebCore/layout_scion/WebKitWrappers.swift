@@ -2657,6 +2657,29 @@ func RenderTextScion_absoluteQuadsForRange(
   }
 }
 
+@_cdecl("RenderTextScion_collectSelectionGeometriesForLineBoxes")
+func RenderTextScion_collectSelectionGeometriesForLineBoxes(
+  _ renderTextRaw: UnsafeRawPointer, _ containerRaw: UnsafeRawPointer?,
+  _ clipToVisibleContent: Bool,
+  _ quadsRaw: UnsafeMutableRawPointer?
+) -> LayoutRectRaw {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  var container: RenderLayerModelObjectWrapper? = nil
+  if let containerRaw {
+    container = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw)
+      .takeUnretainedValue()
+  }
+  var quads: [FloatQuad]? = quadsRaw != nil ? [] : nil
+  let rect = renderText.collectSelectionGeometriesForLineBoxes(
+    container, clipToVisibleContent, &quads)
+  if let quadsRaw {
+    for quad in quads! {
+      wk_interop.FloatQuadVector_append(quadsRaw, convertFloatQuad(quad))
+    }
+  }
+  return convertLayoutRect(rect)
+}
+
 @_cdecl("RenderObjectScion_absoluteBoundingBoxRect")
 func RenderObjectScion_absoluteBoundingBoxRect(
   _ objectRaw: UnsafeRawPointer, _ useTransforms: Bool, _ wasFixedRaw: UnsafeMutablePointer<Bool>?

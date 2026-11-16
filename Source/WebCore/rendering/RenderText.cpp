@@ -2096,7 +2096,8 @@ auto RenderText::rectsForRepaintingAfterLayout(const RenderLayerModelObject* rep
 
 LayoutRect RenderText::collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>* quads)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->collectSelectionGeometriesForLineBoxes(repaintContainer, clipToVisibleContent, quads);
     ASSERT(!needsLayout());
 
     if (selectionState() == HighlightState::None)
@@ -2146,7 +2147,7 @@ LayoutRect RenderText::collectSelectionGeometriesForLineBoxes(const RenderLayerM
 
 LayoutRect RenderText::collectSelectionGeometriesForLineBoxes(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent, Vector<FloatQuad>& quads)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // NB(asuhan): no need to route here, just a conversion from reference to pointer.
     return collectSelectionGeometriesForLineBoxes(repaintContainer, clipToVisibleContent, &quads);
 }
 
