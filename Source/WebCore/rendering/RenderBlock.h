@@ -536,7 +536,7 @@ private:
 
     LayoutRect selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool /*clipToVisibleContent*/) final
     {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
+        // NB(asuhan): no need to route here, callee does it.
         return selectionGapRectsForRepaint(repaintContainer);
     }
     bool shouldPaintSelectionGaps() const final;
