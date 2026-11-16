@@ -2621,6 +2621,23 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
 }
 
+@_cdecl("RenderBlockScion_selectionGapRectsForRepaint")
+func RenderBlockScion_selectionGapRectsForRepaint(
+  _ blockRaw: UnsafeRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
+  _ leftRaw: UnsafeMutablePointer<LayoutRectRaw>, _ centerRaw: UnsafeMutablePointer<LayoutRectRaw>,
+  _ rightRaw: UnsafeMutablePointer<LayoutRectRaw>
+) {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  let repaintContainer =
+    repaintContainerRaw != nil
+    ? createRenderObjectWrapperOrNative(repaintContainerRaw!) as? RenderLayerModelObjectWrapper
+    : nil
+  let rects = block.selectionGapRectsForRepaint(repaintContainer: repaintContainer)
+  leftRaw.pointee = convertLayoutRect(rects.left())
+  centerRaw.pointee = convertLayoutRect(rects.center())
+  rightRaw.pointee = convertLayoutRect(rects.right())
+}
+
 @_cdecl("RenderObjectScion_absoluteQuads")
 func RenderObjectScion_absoluteQuads(
   _ objectRaw: UnsafeRawPointer, _ quadsRaw: UnsafeMutableRawPointer,

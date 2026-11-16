@@ -4801,6 +4801,19 @@ LayoutUnit RenderBlockScion::textIndentOffset() const
     return LayoutUnit::fromRawValue(RenderBlockScion_textIndentOffset(m_handle));
 }
 
+extern "C" void RenderBlockScion_selectionGapRectsForRepaint(const void*, void*, LayoutRectRaw*, LayoutRectRaw*, LayoutRectRaw*);
+
+GapRects RenderBlockScion::selectionGapRectsForRepaint(const RenderLayerModelObject* repaintContainer) const
+{
+    LayoutRectRaw left, center, right;
+    RenderBlockScion_selectionGapRectsForRepaint(m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), &left, &center, &right);
+    GapRects result;
+    result.uniteLeft(convertLayoutRectRaw(left));
+    result.uniteCenter(convertLayoutRectRaw(center));
+    result.uniteRight(convertLayoutRectRaw(right));
+    return result;
+}
+
 extern "C" bool RenderBoxScion_foregroundIsKnownToBeOpaqueInRect(const void*, LayoutRectRaw, unsigned);
 
 bool RenderBoxScion::foregroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect, unsigned maxDepthToTest) const

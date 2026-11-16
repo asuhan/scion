@@ -1286,6 +1286,8 @@ public:
 
     LayoutUnit textIndentOffset() const;
 
+    GapRects selectionGapRectsForRepaint(const RenderLayerModelObject* repaintContainer) const;
+
     LayoutUnit borderTop() const;
 
     LayoutUnit borderBottom() const;

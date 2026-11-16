@@ -1535,7 +1535,8 @@ bool RenderBlock::isSelectionRoot() const
 
 GapRects RenderBlock::selectionGapRectsForRepaint(const RenderLayerModelObject* repaintContainer)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion)
+        return m_scion->selectionGapRectsForRepaint(repaintContainer);
     ASSERT(!needsLayout());
 
     if (!shouldPaintSelectionGaps())
