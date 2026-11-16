@@ -801,6 +801,15 @@ struct VisiblePosition {
   private var m_affinity: Affinity = VisiblePosition.defaultAffinity
 }
 
+// A visible position from C++ is already canonical, so it is not canonicalized again; see
+// editing/EditingScion.h. The stored properties are private, as in C++.
+extension VisiblePosition {
+  init(raw: VisiblePositionRaw) {
+    self.deepPosition = Position(raw: raw.deepPosition)
+    self.m_affinity = raw.affinity != 0 ? .Downstream : .Upstream
+  }
+}
+
 extension VisiblePosition: Equatable {}
 
 func canonicalizeCandidate(candidate: Position) -> Position {

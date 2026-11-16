@@ -191,6 +191,12 @@ struct LayoutRectRaw {
     int32_t height;
 };
 
+// See editing/EditingScion.h.
+struct LocalCaretRectRaw {
+    struct LayoutRectRaw rect;
+    void* renderer;
+};
+
 struct OptionalLayoutRectRaw {
     struct LayoutRectRaw rect;
     bool is_valid;

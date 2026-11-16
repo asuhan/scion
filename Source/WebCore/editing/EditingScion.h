@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "LayoutRectRaw.h"
 #include <cstdint>
 
 // Positions cross to the Swift editing code by value. The node pointer is borrowed: it is only
@@ -39,6 +40,11 @@ struct PositionRaw {
 struct VisiblePositionRaw {
     struct PositionRaw deepPosition;
     uint8_t affinity;
+};
+
+struct LocalCaretRectRaw {
+    struct LayoutRectRaw rect;
+    void* renderer;
 };
 
 struct BoundaryPointRaw {

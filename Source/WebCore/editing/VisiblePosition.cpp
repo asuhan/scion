@@ -54,6 +54,7 @@
 #include <wtf/text/TextStream.h>
 
 extern "C" VisiblePositionRaw VisiblePositionScion_create(PositionRaw, uint8_t affinity);
+extern "C" LocalCaretRectRaw VisiblePositionScion_localCaretRect(VisiblePositionRaw);
 
 namespace WebCore {
 
@@ -653,6 +654,10 @@ InlineBoxAndOffset VisiblePosition::inlineBoxAndOffset(TextDirection primaryDire
 
 auto VisiblePosition::localCaretRect() const -> LocalCaretRect
 {
+    if (usesScionEditing(m_deepPosition)) {
+        auto raw = VisiblePositionScion_localCaretRect(visiblePositionToRaw(*this));
+        return { LayoutRect { LayoutUnit::fromRawValue(raw.rect.x), LayoutUnit::fromRawValue(raw.rect.y), LayoutUnit::fromRawValue(raw.rect.width), LayoutUnit::fromRawValue(raw.rect.height) }, static_cast<RenderObject*>(raw.renderer) };
+    }
     RefPtr node = m_deepPosition.anchorNode();
     if (!node)
         return { };

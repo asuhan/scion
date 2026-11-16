@@ -68,3 +68,10 @@ func EditingScion_findPlainText(
     options: FindOption(rawValue: UInt32(optionsRaw))
   ).raw()
 }
+
+@_cdecl("VisiblePositionScion_localCaretRect")
+func VisiblePositionScion_localCaretRect(_ positionRaw: VisiblePositionRaw) -> LocalCaretRectRaw {
+  let caret = VisiblePosition(raw: positionRaw).localCaretRect()
+  return LocalCaretRectRaw(
+    rect: convertLayoutRect(caret.rect), renderer: wkRenderObject(caret.renderer))
+}
