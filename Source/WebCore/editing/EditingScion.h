@@ -66,6 +66,7 @@ struct SimpleRange;
 PositionRaw positionToRaw(const Position&);
 Position positionFromRaw(const PositionRaw&);
 VisiblePositionRaw visiblePositionToRaw(const VisiblePosition&);
+VisiblePosition visiblePositionFromRaw(const VisiblePositionRaw&);
 SimpleRangeRaw simpleRangeToRaw(const SimpleRange&);
 SimpleRange simpleRangeFromRaw(const SimpleRangeRaw&);
 

@@ -56,6 +56,11 @@ VisiblePositionRaw visiblePositionToRaw(const VisiblePosition& position)
     return { positionToRaw(position.deepEquivalent()), static_cast<uint8_t>(position.affinity()) };
 }
 
+VisiblePosition visiblePositionFromRaw(const VisiblePositionRaw& raw)
+{
+    return { positionFromRaw(raw.deepPosition), static_cast<Affinity>(raw.affinity) };
+}
+
 SimpleRangeRaw simpleRangeToRaw(const SimpleRange& range)
 {
     return { { range.start.container.ptr(), range.start.offset }, { range.end.container.ptr(), range.end.offset } };

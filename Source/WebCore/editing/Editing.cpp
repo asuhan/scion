@@ -26,6 +26,7 @@
 
 #include "config.h"
 #include "Editing.h"
+#include "EditingScion.h"
 
 #include "AXObjectCache.h"
 #include "CachedImage.h"
@@ -1167,10 +1168,18 @@ RenderBlock* rendererForCaretPainting(const Node* node)
     return renderer->containingBlock();
 }
 
+extern "C" LocalCaretRectRaw EditingScion_localCaretRectInRendererForCaretPainting(VisiblePositionRaw);
+
 LayoutRect localCaretRectInRendererForCaretPainting(const VisiblePosition& caretPosition, RenderBlock*& caretPainter)
 {
     if (caretPosition.isNull())
         return LayoutRect();
+    if (usesScionEditing(caretPosition.deepEquivalent())) {
+        // The renderers between the caret's and its painter are laid out by the Swift port.
+        auto raw = EditingScion_localCaretRectInRendererForCaretPainting(visiblePositionToRaw(caretPosition));
+        caretPainter = downcast<RenderBlock>(static_cast<RenderObject*>(raw.renderer));
+        return { LayoutUnit::fromRawValue(raw.rect.x), LayoutUnit::fromRawValue(raw.rect.y), LayoutUnit::fromRawValue(raw.rect.width), LayoutUnit::fromRawValue(raw.rect.height) };
+    }
     ASSERT(caretPosition.deepEquivalent().deprecatedNode()->renderer());
     auto [localRect, renderer] = caretPosition.localCaretRect();
     return localCaretRectInRendererForRect(localRect, caretPosition.deepEquivalent().deprecatedNode(), renderer, caretPainter);

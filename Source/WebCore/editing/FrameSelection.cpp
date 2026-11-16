@@ -34,6 +34,7 @@
 #include "DictationCaretAnimator.h"
 #include "DocumentInlines.h"
 #include "Editing.h"
+#include "EditingScion.h"
 #include "Editor.h"
 #include "EditorClient.h"
 #include "Element.h"
@@ -329,8 +330,18 @@ void DragCaretController::setCaretPosition(const VisiblePosition& position)
         updateCaretRect(*document, m_position);
 }
 
+extern "C" void EditingScion_adjustEndpointsAtBidiBoundary(VisiblePositionRaw* visibleBase, VisiblePositionRaw* visibleExtent);
+
 static void adjustEndpointsAtBidiBoundary(VisiblePosition& visibleBase, VisiblePosition& visibleExtent)
 {
+    if (usesScionEditing(visibleBase.deepEquivalent()) || usesScionEditing(visibleExtent.deepEquivalent())) {
+        auto base = visiblePositionToRaw(visibleBase);
+        auto extent = visiblePositionToRaw(visibleExtent);
+        EditingScion_adjustEndpointsAtBidiBoundary(&base, &extent);
+        visibleBase = visiblePositionFromRaw(base);
+        visibleExtent = visiblePositionFromRaw(extent);
+        return;
+    }
     RenderedPosition base(visibleBase);
     RenderedPosition extent(visibleExtent);
 

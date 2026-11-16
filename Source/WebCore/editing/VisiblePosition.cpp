@@ -55,6 +55,8 @@
 
 extern "C" VisiblePositionRaw VisiblePositionScion_create(PositionRaw, uint8_t affinity);
 extern "C" LocalCaretRectRaw VisiblePositionScion_localCaretRect(VisiblePositionRaw);
+extern "C" PositionRaw VisiblePositionScion_leftVisuallyDistinctCandidate(VisiblePositionRaw);
+extern "C" PositionRaw VisiblePositionScion_rightVisuallyDistinctCandidate(VisiblePositionRaw);
 
 namespace WebCore {
 
@@ -128,6 +130,8 @@ VisiblePosition VisiblePosition::previous(EditingBoundaryCrossingRule rule, bool
 
 Position VisiblePosition::leftVisuallyDistinctCandidate() const
 {
+    if (usesScionEditing(m_deepPosition))
+        return positionFromRaw(VisiblePositionScion_leftVisuallyDistinctCandidate(visiblePositionToRaw(*this)));
     Position p = m_deepPosition;
     if (p.isNull())
         return Position();
@@ -293,6 +297,8 @@ VisiblePosition VisiblePosition::left(bool stayInEditableContent, bool* reachedB
 
 Position VisiblePosition::rightVisuallyDistinctCandidate() const
 {
+    if (usesScionEditing(m_deepPosition))
+        return positionFromRaw(VisiblePositionScion_rightVisuallyDistinctCandidate(visiblePositionToRaw(*this)));
     Position p = m_deepPosition;
     if (p.isNull())
         return Position();

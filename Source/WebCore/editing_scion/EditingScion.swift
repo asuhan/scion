@@ -75,3 +75,39 @@ func VisiblePositionScion_localCaretRect(_ positionRaw: VisiblePositionRaw) -> L
   return LocalCaretRectRaw(
     rect: convertLayoutRect(caret.rect), renderer: wkRenderObject(caret.renderer))
 }
+
+@_cdecl("EditingScion_localCaretRectInRendererForCaretPainting")
+func EditingScion_localCaretRectInRendererForCaretPainting(_ positionRaw: VisiblePositionRaw)
+  -> LocalCaretRectRaw
+{
+  var caretPainter: RenderBlockWrapper? = nil
+  let rect = localCaretRectInRendererForCaretPainting(
+    caretPosition: VisiblePosition(raw: positionRaw), caretPainter: &caretPainter)
+  return LocalCaretRectRaw(rect: convertLayoutRect(rect), renderer: wkRenderObject(caretPainter))
+}
+
+@_cdecl("VisiblePositionScion_leftVisuallyDistinctCandidate")
+func VisiblePositionScion_leftVisuallyDistinctCandidate(_ positionRaw: VisiblePositionRaw)
+  -> PositionRaw
+{
+  return VisiblePosition(raw: positionRaw).leftVisuallyDistinctCandidate().raw()
+}
+
+@_cdecl("VisiblePositionScion_rightVisuallyDistinctCandidate")
+func VisiblePositionScion_rightVisuallyDistinctCandidate(_ positionRaw: VisiblePositionRaw)
+  -> PositionRaw
+{
+  return VisiblePosition(raw: positionRaw).rightVisuallyDistinctCandidate().raw()
+}
+
+@_cdecl("EditingScion_adjustEndpointsAtBidiBoundary")
+func EditingScion_adjustEndpointsAtBidiBoundary(
+  _ baseRaw: UnsafeMutablePointer<VisiblePositionRaw>,
+  _ extentRaw: UnsafeMutablePointer<VisiblePositionRaw>
+) {
+  var base = VisiblePosition(raw: baseRaw.pointee)
+  var extent = VisiblePosition(raw: extentRaw.pointee)
+  adjustEndpointsAtBidiBoundary(visibleBase: &base, visibleExtent: &extent)
+  baseRaw.pointee = base.raw()
+  extentRaw.pointee = extent.raw()
+}
