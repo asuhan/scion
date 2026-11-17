@@ -67,7 +67,7 @@ inline LayoutUnit RenderBox::clientTop() const
 }
 inline LayoutUnit RenderBox::contentHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->contentSize().height(); }
     return std::max(0_lu, paddingBoxHeight() - paddingTop() - paddingBottom() - (style().scrollbarGutter().bothEdges ? horizontalScrollbarHeight() : 0));
 }
 inline LayoutUnit RenderBox::contentLogicalHeight() const
@@ -92,7 +92,7 @@ inline LayoutSize RenderBox::contentSize() const
 }
 inline LayoutUnit RenderBox::contentWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->contentSize().width(); }
     return std::max(0_lu, paddingBoxWidth() - paddingLeft() - paddingRight() - (style().scrollbarGutter().bothEdges ? verticalScrollbarWidth() : 0));
 }
 inline std::optional<LayoutUnit> RenderBox::explicitIntrinsicInnerLogicalHeight() const
