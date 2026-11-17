@@ -1095,6 +1095,9 @@ public:
 
     bool hasAutoScrollbar(ScrollbarOrientation) const;
 
+    int verticalScrollbarWidth() const;
+    int horizontalScrollbarHeight() const;
+
     bool hasAlwaysPresentScrollbar(ScrollbarOrientation) const;
 
     bool scrollsOverflow() const;
@@ -1150,6 +1153,7 @@ public:
     LayoutUnit logicalLeft() const;
 
     LayoutUnit marginAfter(const RenderStyle* overrideStyle = nullptr) const;
+    LayoutUnit computeLogicalWidthInFragmentUsing(WebCore::RenderBox::SizeType, const Length&, LayoutUnit availableLogicalWidth, const RenderBlock& containingBlock, RenderFragmentContainer*) const;
 
     LayoutSize cachedSizeForOverflowClip() const;
 

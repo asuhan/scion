@@ -1693,7 +1693,7 @@ bool RenderBox::includeHorizontalScrollbarSize() const
 
 int RenderBox::verticalScrollbarWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->verticalScrollbarWidth(); }
     auto* scrollableArea = layer() ? layer()->scrollableArea() : nullptr;
     if (!scrollableArea)
         return 0;
@@ -1702,7 +1702,7 @@ int RenderBox::verticalScrollbarWidth() const
 
 int RenderBox::horizontalScrollbarHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->horizontalScrollbarHeight(); }
     auto* scrollableArea = layer() ? layer()->scrollableArea() : nullptr;
     if (!scrollableArea)
         return 0;
@@ -3771,7 +3771,7 @@ LayoutUnit RenderBox::computeIntrinsicLogicalWidthUsing(Length logicalWidthLengt
 LayoutUnit RenderBox::computeLogicalWidthInFragmentUsing(SizeType widthType, Length logicalWidth, LayoutUnit availableLogicalWidth,
     const RenderBlock& cb, RenderFragmentContainer* fragment) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->computeLogicalWidthInFragmentUsing(widthType, logicalWidth, availableLogicalWidth, cb, fragment); }
     ASSERT(widthType == SizeType::MinSize || widthType == SizeType::MainOrPreferredSize || !logicalWidth.isAuto());
     if (widthType == SizeType::MinSize && logicalWidth.isAuto())
         return adjustBorderBoxLogicalWidthForBoxSizing(0, logicalWidth.type());

@@ -1208,6 +1208,8 @@ extern "C" bool RenderBoxScion_canBeScrolledAndHasScrollableArea(const void*);
 extern "C" bool RenderBoxScion_canAutoscroll(const void*);
 
 extern "C" bool RenderBoxScion_hasAutoScrollbar(const void*, uint8_t);
+extern "C" int32_t RenderBoxScion_verticalScrollbarWidth(const void*);
+extern "C" int32_t RenderBoxScion_horizontalScrollbarHeight(const void*);
 
 extern "C" bool RenderBoxScion_hasAlwaysPresentScrollbar(const void*, uint8_t);
 
@@ -1262,6 +1264,8 @@ extern "C" void RenderBoxScion_setLogicalLeft(void*, int32_t);
 extern "C" int32_t RenderBoxScion_marginAfter(const void*, const void*);
 
 extern "C" LayoutSizeRaw RenderBoxScion_cachedSizeForOverflowClip(const void*);
+
+extern "C" int32_t RenderBoxScion_computeLogicalWidthInFragmentUsing(const void*, uint8_t, const void*, int32_t, void*, void*);
 
 extern "C" void RenderBlockScion_scrollbarsChanged(void*, bool, bool);
 
@@ -4375,6 +4379,16 @@ bool RenderBoxScion::canAutoscroll() const
     return RenderBoxScion_canAutoscroll(m_handle);
 }
 
+int RenderBoxScion::verticalScrollbarWidth() const
+{
+    return RenderBoxScion_verticalScrollbarWidth(m_handle);
+}
+
+int RenderBoxScion::horizontalScrollbarHeight() const
+{
+    return RenderBoxScion_horizontalScrollbarHeight(m_handle);
+}
+
 bool RenderBoxScion::hasAutoScrollbar(ScrollbarOrientation orientation) const
 {
     return RenderBoxScion_hasAutoScrollbar(m_handle, static_cast<uint8_t>(orientation));
@@ -4460,6 +4474,11 @@ void RenderBoxScion::setLogicalLeft(LayoutUnit left)
 LayoutUnit RenderBoxScion::marginAfter(const RenderStyle* overrideStyle) const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_marginAfter(m_handle, overrideStyle));
+}
+
+LayoutUnit RenderBoxScion::computeLogicalWidthInFragmentUsing(WebCore::RenderBox::SizeType widthType, const Length& logicalWidth, LayoutUnit availableLogicalWidth, const RenderBlock& containingBlock, RenderFragmentContainer* fragment) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_computeLogicalWidthInFragmentUsing(m_handle, static_cast<uint8_t>(widthType), &logicalWidth, availableLogicalWidth.rawValue(), const_cast<RenderBlock*>(&containingBlock), fragment));
 }
 
 LayoutSize RenderBoxScion::cachedSizeForOverflowClip() const

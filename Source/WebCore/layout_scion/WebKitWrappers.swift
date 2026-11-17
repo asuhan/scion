@@ -6333,6 +6333,18 @@ func RenderBoxScion_canAutoscroll(_ boxRaw: UnsafeRawPointer) -> Bool {
   return box.canAutoscroll()
 }
 
+@_cdecl("RenderBoxScion_verticalScrollbarWidth")
+func RenderBoxScion_verticalScrollbarWidth(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.verticalScrollbarWidth()
+}
+
+@_cdecl("RenderBoxScion_horizontalScrollbarHeight")
+func RenderBoxScion_horizontalScrollbarHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.horizontalScrollbarHeight()
+}
+
 @_cdecl("RenderBoxScion_hasAutoScrollbar")
 func RenderBoxScion_hasAutoScrollbar(_ boxRaw: UnsafeRawPointer, _ orientation: UInt8)
   -> Bool
@@ -6564,6 +6576,25 @@ func RenderBoxScion_setOverridingLogicalWidthLength(
 ) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
   box.setOverridingLogicalWidthLength(height: LengthWrapper(p: lengthRaw))
+}
+
+@_cdecl("RenderBoxScion_computeLogicalWidthInFragmentUsing")
+func RenderBoxScion_computeLogicalWidthInFragmentUsing(
+  _ boxRaw: UnsafeRawPointer, _ widthType: UInt8, _ logicalWidthRaw: UnsafeRawPointer,
+  _ availableLogicalWidth: Int32, _ containingBlockRaw: UnsafeMutableRawPointer,
+  _ fragmentRaw: UnsafeMutableRawPointer?
+) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let fragment =
+    fragmentRaw != nil
+    ? (createRenderObjectWrapperOrNative(fragmentRaw!) as! RenderFragmentContainerWrapper) : nil
+  return box.computeLogicalWidthInFragmentUsing(
+    widthType: RenderBoxWrapper.SizeType(rawValue: widthType)!,
+    logicalWidth: LengthWrapper(p: logicalWidthRaw),
+    availableLogicalWidth: LayoutUnit.fromRawValue(value: availableLogicalWidth),
+    cb: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper,
+    fragment: fragment
+  ).rawValue()
 }
 
 @_cdecl("RenderBoxScion_clearOverridingLogicalWidthLength")
