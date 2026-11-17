@@ -29,6 +29,7 @@
 
 #include "Document.h"
 #include "DocumentInlines.h"
+#include "EditingScion.h"
 #include "Editing.h"
 #include "HTMLBRElement.h"
 #include "HTMLElement.h"
@@ -735,6 +736,10 @@ bool isStartOfWord(const VisiblePosition& p)
 // ---------
 
 enum LineEndpointComputationMode { UseLogicalOrdering, UseInlineBoxOrdering };
+
+extern "C" VisiblePositionRaw EditingScion_startOfLine(VisiblePositionRaw, uint8_t mode, bool* reachedBoundary);
+extern "C" VisiblePositionRaw EditingScion_endOfLine(VisiblePositionRaw, uint8_t mode, bool* reachedBoundary);
+
 static VisiblePosition startPositionForLine(const VisiblePosition& c, LineEndpointComputationMode mode)
 {
     if (c.isNull())
@@ -778,6 +783,8 @@ static VisiblePosition startPositionForLine(const VisiblePosition& c, LineEndpoi
 
 static VisiblePosition startOfLine(const VisiblePosition& c, LineEndpointComputationMode mode, bool* reachedBoundary)
 {
+    if (Document::s_useScionRendering && usesScionEditing(c.deepEquivalent()))
+        return visiblePositionFromRaw(EditingScion_startOfLine(visiblePositionToRaw(c), mode, reachedBoundary));
     if (reachedBoundary)
         *reachedBoundary = false;
     // TODO: this is the current behavior that might need to be fixed.
@@ -866,6 +873,8 @@ static bool inSameLogicalLine(const VisiblePosition& a, const VisiblePosition& b
 
 static VisiblePosition endOfLine(const VisiblePosition& c, LineEndpointComputationMode mode, bool* reachedBoundary)
 {
+    if (Document::s_useScionRendering && usesScionEditing(c.deepEquivalent()))
+        return visiblePositionFromRaw(EditingScion_endOfLine(visiblePositionToRaw(c), mode, reachedBoundary));
     if (reachedBoundary)
         *reachedBoundary = false;
     // TODO: this is the current behavior that might need to be fixed.

@@ -111,3 +111,31 @@ func EditingScion_adjustEndpointsAtBidiBoundary(
   baseRaw.pointee = base.raw()
   extentRaw.pointee = extent.raw()
 }
+
+@_cdecl("EditingScion_startOfLine")
+func EditingScion_startOfLine(
+  _ positionRaw: VisiblePositionRaw, _ modeRaw: UInt8,
+  _ reachedBoundaryRaw: UnsafeMutablePointer<Bool>?
+) -> VisiblePositionRaw {
+  var reachedBoundary: Bool? = reachedBoundaryRaw != nil ? false : nil
+  let result = startOfLine(
+    c: VisiblePosition(raw: positionRaw),
+    mode: LineEndpointComputationMode(rawValue: Int32(modeRaw))!,
+    reachedBoundary: &reachedBoundary)
+  reachedBoundaryRaw?.pointee = reachedBoundary ?? false
+  return result.raw()
+}
+
+@_cdecl("EditingScion_endOfLine")
+func EditingScion_endOfLine(
+  _ positionRaw: VisiblePositionRaw, _ modeRaw: UInt8,
+  _ reachedBoundaryRaw: UnsafeMutablePointer<Bool>?
+) -> VisiblePositionRaw {
+  var reachedBoundary: Bool? = reachedBoundaryRaw != nil ? false : nil
+  let result = endOfLine(
+    c: VisiblePosition(raw: positionRaw),
+    mode: LineEndpointComputationMode(rawValue: Int32(modeRaw))!,
+    reachedBoundary: &reachedBoundary)
+  reachedBoundaryRaw?.pointee = reachedBoundary ?? false
+  return result.raw()
+}
