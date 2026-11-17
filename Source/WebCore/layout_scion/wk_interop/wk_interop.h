@@ -2671,6 +2671,7 @@ struct LayoutRectRaw RenderTheme_adjustedPaintRect(const void*, const void*, str
 const void* RenderTheme_fileListDefaultLabel(const void*, bool);
 const void* RenderTheme_fileListNameForWidth(const void*, const void*, const void*, int32_t, bool);
 bool RenderTheme_canCreateControlPartForRenderer(const void*, const void*);
+bool RenderTheme_supportsFocusRing(const void*, const void* style);
 bool RenderTheme_canCreateControlPartForBorderOnly(const void*, const void*);
 bool RenderTheme_canCreateControlPartForDecorations(const void*, const void*);
 void* RenderTheme_createControlPart(const void*, const void*);

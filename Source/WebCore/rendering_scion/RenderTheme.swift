@@ -351,7 +351,9 @@ struct RenderTheme {
 
   // A method asking if the theme is able to draw the focus ring.
   func supportsFocusRing(style: RenderStyleWrapper) -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderTheme_supportsFocusRing(p!, style.p!)
+    }
     return style.hasUsedAppearance()
       && style.usedAppearance() != .TextField
       && style.usedAppearance() != .TextArea

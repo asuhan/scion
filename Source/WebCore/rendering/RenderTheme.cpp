@@ -139,6 +139,11 @@ extern "C" WEBCORE_EXPORT const void* RenderTheme_fileListNameForWidth(const voi
     return new String(static_cast<const WebCore::RenderTheme*>(p)->fileListNameForWidth(static_cast<const WebCore::FileList*>(fileList), *static_cast<const WebCore::FontCascade*>(font), width, multipleFilesAllowed));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderTheme_supportsFocusRing(const void* p, const void* style)
+{
+    return static_cast<const WebCore::RenderTheme*>(p)->supportsFocusRing(*static_cast<const WebCore::RenderStyle*>(style));
+}
+
 extern "C" WEBCORE_EXPORT bool RenderTheme_canCreateControlPartForRenderer(const void* p, const void* rendererRaw)
 {
     return static_cast<const WebCore::RenderTheme*>(p)->canCreateControlPartForRenderer(*static_cast<const WebCore::RenderObject*>(rendererRaw));
