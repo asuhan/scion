@@ -139,3 +139,15 @@ func EditingScion_endOfLine(
   reachedBoundaryRaw?.pointee = reachedBoundary ?? false
   return result.raw()
 }
+
+@_cdecl("EditingScion_collectTextRanges")
+func EditingScion_collectTextRanges(
+  _ rangeRaw: SimpleRangeRaw, _ ranges: UnsafeMutableRawPointer,
+  _ append: @convention(c) (UnsafeMutableRawPointer?, SimpleRangeRaw) -> Void
+) {
+  var iterator = EditingTextIterator(range: SimpleRange(raw: rangeRaw))
+  while !iterator.atEnd() {
+    append(ranges, iterator.range().raw())
+    iterator.advance()
+  }
+}

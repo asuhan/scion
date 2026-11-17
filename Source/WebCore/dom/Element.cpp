@@ -113,6 +113,7 @@
 #include "KeyboardEvent.h"
 #include "KeyframeAnimationOptions.h"
 #include "KeyframeEffect.h"
+#include "LayoutRectRaw.h"
 #include "LocalDOMWindow.h"
 #include "LocalFrame.h"
 #include "LocalFrameView.h"
@@ -407,11 +408,6 @@ extern "C" void Element_clearDisplayContentsOrNoneStyle(void* p) {
     return static_cast<WebCore::Element*>(p)->clearDisplayContentsOrNoneStyle();
 }
 
-struct OptionalLayoutUnitRaw {
-    int32_t value;
-    bool is_valid;
-};
-
 extern "C" OptionalLayoutUnitRaw Element_lastRememberedLogicalWidth(void* p)
 {
     const auto width = static_cast<WebCore::Element*>(p)->lastRememberedLogicalWidth();
@@ -444,11 +440,6 @@ extern "C" bool Element_isRelevantToUser(void* p)
 {
     return static_cast<WebCore::Element*>(p)->isRelevantToUser();
 }
-
-struct IntPointRaw {
-    int32_t x;
-    int32_t y;
-};
 
 extern "C" WEBCORE_EXPORT IntPointRaw Element_savedLayerScrollPosition(const void* p)
 {

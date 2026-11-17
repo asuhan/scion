@@ -30,6 +30,7 @@
 #include "Chrome.h"
 #include "ChromeClient.h"
 #include "DocumentInlines.h"
+#include "EditingScion.h"
 #include "FontCascade.h"
 #include "LocalFrame.h"
 #include "NodeTraversal.h"
@@ -72,9 +73,18 @@ void DocumentMarkerController::detach()
     m_writingToolsTextSuggestionAnimationTimer.stop();
 }
 
+extern "C" void EditingScion_collectTextRanges(SimpleRangeRaw, void* ranges, void (*append)(void* ranges, SimpleRangeRaw));
+
 auto DocumentMarkerController::collectTextRanges(const SimpleRange& range) -> Vector<TextRange>
 {
     Vector<TextRange> ranges;
+    if (Document::s_useScionRendering && usesScionEditing(makeDeprecatedLegacyPosition(range.start))) {
+        EditingScion_collectTextRanges(simpleRangeToRaw(range), &ranges, [](void* ranges, SimpleRangeRaw raw) {
+            auto currentRange = simpleRangeFromRaw(raw);
+            static_cast<Vector<TextRange>*>(ranges)->append({ WTFMove(currentRange.start.container), { currentRange.start.offset, currentRange.end.offset } });
+        });
+        return ranges;
+    }
     for (TextIterator iterator(range); !iterator.atEnd(); iterator.advance()) {
         auto currentRange = iterator.range();
         ranges.append({ WTFMove(currentRange.start.container), { currentRange.start.offset, currentRange.end.offset } });
