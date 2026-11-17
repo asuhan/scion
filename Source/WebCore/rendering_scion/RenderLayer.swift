@@ -473,7 +473,10 @@ class RenderLayerWrapper {
   }
 
   func renderBox() -> RenderBoxWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let box = wk_interop.RenderLayer_renderBox(pInterop!) else { return nil }
+      return createRenderObjectWrapperOrNative(box) as! RenderBoxWrapper?
+    }
     return renderer() as? RenderBoxWrapper
   }
 

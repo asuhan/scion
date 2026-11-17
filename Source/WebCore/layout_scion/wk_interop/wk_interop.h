@@ -2014,6 +2014,7 @@ bool RenderBox_foregroundIsKnownToBeOpaqueInRect(const void*, struct LayoutRectR
 int32_t RenderLayer_scrollWidth(const void*);
 int32_t RenderLayer_scrollHeight(const void*);
 void* RenderLayer_renderer(const void*);
+void* RenderLayer_renderBox(const void*);
 void* RenderLayer_parent(const void*);
 void* RenderLayer_commonAncestorWithLayer(const void*, void*);
 void RenderLayer_addChild(void*, void*, void*);

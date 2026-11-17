@@ -172,6 +172,11 @@ extern "C" WEBCORE_EXPORT void* RenderLayer_scrollableArea(const void* p)
     return static_cast<const WebCore::RenderLayer*>(p)->scrollableArea();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderLayer_renderBox(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->renderBox();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderLayer_renderer(const void* p)
 {
     return &static_cast<const WebCore::RenderLayer*>(p)->renderer();
