@@ -73,6 +73,54 @@ void DocumentMarkerController::detach()
     m_writingToolsTextSuggestionAnimationTimer.stop();
 }
 
+extern "C" WEBCORE_EXPORT bool DocumentMarkerController_hasMarkers(const void* p)
+{
+    return static_cast<const DocumentMarkerController*>(p)->hasMarkers();
+}
+
+extern "C" WEBCORE_EXPORT void DocumentMarkerController_markersFor(const void* p, void* node, uint32_t types, void* markers, void (*append)(void* markers, void* marker))
+{
+    for (auto& marker : static_cast<const DocumentMarkerController*>(p)->markersFor(*static_cast<Node*>(node), OptionSet<DocumentMarker::Type>::fromRaw(types))) {
+        if (marker)
+            append(markers, marker.get());
+    }
+}
+
+extern "C" WEBCORE_EXPORT void DocumentMarkerController_markerYPositionAndHeightForFont(const void* font, float* y, float* height)
+{
+    std::tie(*y, *height) = DocumentMarkerController::markerYPositionAndHeightForFont(*static_cast<const FontCascade*>(font));
+}
+
+extern "C" WEBCORE_EXPORT uint32_t DocumentMarker_type(const void* p)
+{
+    return static_cast<uint32_t>(static_cast<const DocumentMarker*>(p)->type());
+}
+
+extern "C" WEBCORE_EXPORT unsigned DocumentMarker_startOffset(const void* p)
+{
+    return static_cast<const DocumentMarker*>(p)->startOffset();
+}
+
+extern "C" WEBCORE_EXPORT unsigned DocumentMarker_endOffset(const void* p)
+{
+    return static_cast<const DocumentMarker*>(p)->endOffset();
+}
+
+extern "C" WEBCORE_EXPORT void* DocumentMarker_dataNode(const void* p)
+{
+    auto& data = static_cast<const DocumentMarker*>(p)->data();
+    if (auto* node = std::get_if<RefPtr<Node>>(&data))
+        return node->get();
+    if (auto* transparentContent = std::get_if<DocumentMarker::TransparentContentData>(&data))
+        return transparentContent->node.get();
+    return nullptr;
+}
+
+extern "C" WEBCORE_EXPORT float RenderedDocumentMarker_opacity(const void* p)
+{
+    return static_cast<const RenderedDocumentMarker*>(p)->opacity();
+}
+
 extern "C" void EditingScion_collectTextRanges(SimpleRangeRaw, void* ranges, void (*append)(void* ranges, SimpleRangeRaw));
 
 auto DocumentMarkerController::collectTextRanges(const SimpleRange& range) -> Vector<TextRange>

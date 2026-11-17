@@ -24,24 +24,34 @@
  *
  */
 
+import wk_interop
+
 class DocumentMarkerControllerWrapper {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func hasMarkers() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.DocumentMarkerController_hasMarkers(p)
   }
 
   func markersFor(node: NodeWrapper, _ types: DocumentMarker.`Type` = DocumentMarker.allMarkers)
     -> [RenderedDocumentMarker]
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var markers: [RenderedDocumentMarker] = []
+    withUnsafeMutablePointer(to: &markers) { markersPointer in
+      wk_interop.DocumentMarkerController_markersFor(p, node.p, types.rawValue, markersPointer) {
+        markers, marker in
+        markers!.assumingMemoryBound(to: [RenderedDocumentMarker].self).pointee.append(
+          RenderedDocumentMarker(marker!))
+      }
+    }
+    return markers
   }
 
   static func markerYPositionAndHeightForFont(font: FontCascadeWrapper) -> (Float32, Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var y: Float32 = 0
+    var height: Float32 = 0
+    wk_interop.DocumentMarkerController_markerYPositionAndHeightForFont(font.p, &y, &height)
+    return (y, height)
   }
 
   private let p: UnsafeMutableRawPointer

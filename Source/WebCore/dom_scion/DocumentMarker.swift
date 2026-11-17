@@ -18,7 +18,11 @@
  *
  */
 
+import wk_interop
+
 class DocumentMarker {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   struct `Type`: OptionSet {
     let rawValue: UInt32
 
@@ -85,18 +89,20 @@ class DocumentMarker {
 
   func endOffset() -> UInt32 { return range.end }
 
-  var type: `Type` {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  var type: `Type` { return `Type`(rawValue: wk_interop.DocumentMarker_type(p)) }
 
   private var range: OffsetRange {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return OffsetRange(
+      start: wk_interop.DocumentMarker_startOffset(p), end: wk_interop.DocumentMarker_endOffset(p))
   }
 
   var data: Data {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let node = createNodeWrapper(wk_interop.DocumentMarker_dataNode(p)!)
+    if type == .TransparentContent {
+      return .TransparentContentData(TransparentContentData(node: node))
+    }
+    return .Node(node)
   }
+
+  let p: UnsafeMutableRawPointer
 }
