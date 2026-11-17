@@ -198,6 +198,16 @@ extern "C" WEBCORE_EXPORT const void* Box_nextInFlowSibling(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->nextInFlowSibling();
 }
 
+extern "C" WEBCORE_EXPORT const void* Box_nextInFlowOrFloatingSibling(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->nextInFlowOrFloatingSibling();
+}
+
+extern "C" WEBCORE_EXPORT const void* Box_previousInFlowSibling(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->previousInFlowSibling();
+}
+
 extern "C" WEBCORE_EXPORT const void* Box_firstLineStyle(const void* p)
 {
     return &static_cast<const WebCore::Layout::Box*>(p)->firstLineStyle();
