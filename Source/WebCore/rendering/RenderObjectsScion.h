@@ -408,6 +408,7 @@ public:
     bool isInline() const;
 
     bool isReplacedOrInlineBlock() const;
+    bool isAtomicInlineLevelBox() const;
 
     bool isHorizontalWritingMode() const;
 

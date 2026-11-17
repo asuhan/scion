@@ -4440,6 +4440,12 @@ bool RenderObject::isOutOfFlowPositioned() const
 }
 
 // absolute or fixed positioning
+bool RenderObject::isAtomicInlineLevelBox() const
+{
+    if (m_scion) { return m_scion->isAtomicInlineLevelBox(); }
+    return style().isDisplayInlineType() && !(style().display() == DisplayType::Inline && !isReplacedOrInlineBlock());
+}
+
 bool RenderObject::isAbsolutelyPositioned() const
 {
     if (m_scion) { return m_scion->isAbsolutelyPositioned(); }

@@ -1927,6 +1927,12 @@ func RenderObjectScion_isAbsolutelyPositioned(_ objectRaw: UnsafeRawPointer) -> 
   return object.isAbsolutelyPositioned()
 }
 
+@_cdecl("RenderObjectScion_isAtomicInlineLevelBox")
+func RenderObjectScion_isAtomicInlineLevelBox(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isAtomicInlineLevelBox()
+}
+
 @_cdecl("RenderObjectScion_isRelativelyPositioned")
 func RenderObjectScion_isRelativelyPositioned(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

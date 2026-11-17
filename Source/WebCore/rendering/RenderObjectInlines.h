@@ -25,11 +25,6 @@
 
 namespace WebCore {
 
-inline bool RenderObject::isAtomicInlineLevelBox() const
-{
-    if (m_scion) { ASSERT_NOT_REACHED(); }
-    return style().isDisplayInlineType() && !(style().display() == DisplayType::Inline && !isReplacedOrInlineBlock());
-}
 inline bool RenderObject::preservesNewline() const
 {
     if (m_scion) { ASSERT_NOT_REACHED(); }

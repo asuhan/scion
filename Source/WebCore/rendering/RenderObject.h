@@ -446,7 +446,7 @@ public:
     bool isRenderInline() const;
     WEBCORE_EXPORT bool isRenderLayerModelObject() const;
 
-    inline bool isAtomicInlineLevelBox() const;
+    bool isAtomicInlineLevelBox() const;
 
     bool isRenderCounter() const
     {
