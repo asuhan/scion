@@ -816,7 +816,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderElement() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderElement(id()) }
     return !isRenderText()
   }
 
@@ -836,7 +836,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderBlockFlow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderBlockFlow(id()) }
     return m_typeSpecificFlags.kind == .BlockFlow
   }
 
@@ -908,12 +908,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isInlineBlockOrInlineTable() -> Bool { return false }
 
   func isRenderListBox() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderListBox(id()) }
     return type() == .ListBox
   }
 
   func isRenderListItem() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderListItem(id()) }
     return type() == .ListItem
   }
 
@@ -943,7 +943,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderIFrame() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderIFrame(id()) }
     return type() == .IFrame
   }
 
@@ -975,7 +975,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTable() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTable(id()) }
     // TODO(asuhan): handle MathMLTable as well
     return type() == .Table
   }
@@ -988,7 +988,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableCol() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTableCol(id()) }
     return type() == .TableCol
   }
 
@@ -998,7 +998,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableSection() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTableSection(id()) }
     return type() == .TableSection
   }
 
@@ -1044,7 +1044,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderHTMLCanvas() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderHTMLCanvas(id()) }
     return type() == .HTMLCanvas
   }
 
@@ -1298,7 +1298,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isLegacyRenderSVGRoot() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isLegacyRenderSVGRoot(id()) }
     return type() == .LegacySVGRoot
   }
 
@@ -1333,7 +1333,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGText() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGText(id()) }
     return type() == .SVGText
   }
 
@@ -1651,7 +1651,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderLineBreak() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderLineBreak(id()) }
     return type() == .LineBreak
   }
 
@@ -1683,7 +1683,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableRow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTableRow(id()) }
     return type() == .TableRow
   }
 
