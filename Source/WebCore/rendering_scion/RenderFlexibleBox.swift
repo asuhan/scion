@@ -700,7 +700,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   func setCachedFlexItemIntrinsicContentLogicalHeight(
     flexItem: RenderBoxWrapper, height: LayoutUnit
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderFlexibleBox_setCachedFlexItemIntrinsicContentLogicalHeight(
+        id(), flexItem.isNativeImpl() ? flexItem.getWk() : flexItem.id(), height.rawValue())
+      return
+    }
     if flexItem.isRenderReplaced() {
       return  // Replaced elements know their intrinsic height already, so save space by not caching.
     }

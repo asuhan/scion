@@ -67,6 +67,11 @@ extern "C" WEBCORE_EXPORT bool RenderFlexibleBox_avoidsFloats(const void* p)
     return static_cast<const WebCore::RenderFlexibleBox*>(p)->avoidsFloats();
 }
 
+extern "C" WEBCORE_EXPORT void RenderFlexibleBox_setCachedFlexItemIntrinsicContentLogicalHeight(void* p, const void* flexItem, int32_t height)
+{
+    static_cast<WebCore::RenderFlexibleBox*>(p)->setCachedFlexItemIntrinsicContentLogicalHeight(*static_cast<const WebCore::RenderBox*>(flexItem), WebCore::LayoutUnit::fromRawValue(height));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderFlexibleBox);
