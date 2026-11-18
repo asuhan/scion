@@ -786,6 +786,8 @@ public:
 
     void setSelectionState(RenderObject::HighlightState);
 
+    unsigned countRenderedCharacterOffsetsUntil(unsigned offset) const;
+
     void absoluteQuads(Vector<FloatQuad>&, bool* wasFixed) const;
 
     Vector<FloatQuad> absoluteQuadsForRange(unsigned startOffset, unsigned endOffset, OptionSet<RenderObject::BoundingRectBehavior>, bool* wasFixed) const;
@@ -1251,6 +1253,13 @@ public:
 
     LayoutUnit offsetHeight() const;
 
+    LayoutUnit marginLeft() const;
+    LayoutUnit marginBottom() const;
+    LayoutUnit marginStart(const RenderStyle* otherStyle) const;
+    LayoutUnit marginEnd(const RenderStyle* otherStyle) const;
+    LayoutUnit marginBefore(const RenderStyle* otherStyle) const;
+    LayoutUnit marginAfter(const RenderStyle* otherStyle) const;
+
     void paint(PaintInfo&, const LayoutPoint&);
 
     RenderObject::RepaintRects rectsForRepaintingAfterLayout(const RenderLayerModelObject*, RepaintOutlineBounds) const;
@@ -1314,6 +1323,8 @@ public:
     bool hasMarginAfterQuirk() const;
 
     void markForPaginationRelayoutIfNeeded();
+
+    bool hasPercentHeightDescendants() const;
 
     LayoutUnit textIndentOffset() const;
 

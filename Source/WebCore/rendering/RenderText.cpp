@@ -2187,7 +2187,7 @@ int RenderText::caretMaxOffset() const
 
 unsigned RenderText::countRenderedCharacterOffsetsUntil(unsigned offset) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->countRenderedCharacterOffsetsUntil(offset); }
     unsigned result = 0;
     for (auto& run : InlineIterator::textBoxesFor(*this)) {
         auto start = run.start();

@@ -6641,6 +6641,68 @@ func RenderBoxScion_scrollbarLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Int32 
   return box.scrollbarLogicalHeight()
 }
 
+@_cdecl("RenderBlockScion_hasPercentHeightDescendants")
+func RenderBlockScion_hasPercentHeightDescendants(_ blockRaw: UnsafeRawPointer) -> Bool {
+  let block = Unmanaged<RenderBlockWrapper>.fromOpaque(blockRaw).takeUnretainedValue()
+  return block.hasPercentHeightDescendants()
+}
+
+@_cdecl("RenderTextScion_countRenderedCharacterOffsetsUntil")
+func RenderTextScion_countRenderedCharacterOffsetsUntil(
+  _ textRaw: UnsafeRawPointer, _ offset: UInt32
+)
+  -> UInt32
+{
+  let text = Unmanaged<RenderTextWrapper>.fromOpaque(textRaw).takeUnretainedValue()
+  return text.countRenderedCharacterOffsetsUntil(offset)
+}
+
+private func inlineFromRaw(_ inlineRaw: UnsafeRawPointer) -> RenderInlineWrapper {
+  return Unmanaged<RenderInlineWrapper>.fromOpaque(inlineRaw).takeUnretainedValue()
+}
+
+private func otherStyleFromRaw(_ styleRaw: UnsafeRawPointer?) -> RenderStyleWrapper? {
+  return styleRaw != nil ? convert_render_style(p: styleRaw!) : nil
+}
+
+@_cdecl("RenderInlineScion_marginLeft")
+func RenderInlineScion_marginLeft(_ inlineRaw: UnsafeRawPointer) -> Int32 {
+  return inlineFromRaw(inlineRaw).marginLeft().rawValue()
+}
+
+@_cdecl("RenderInlineScion_marginBottom")
+func RenderInlineScion_marginBottom(_ inlineRaw: UnsafeRawPointer) -> Int32 {
+  return inlineFromRaw(inlineRaw).marginBottom().rawValue()
+}
+
+@_cdecl("RenderInlineScion_marginStart")
+func RenderInlineScion_marginStart(_ inlineRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  return inlineFromRaw(inlineRaw).marginStart(otherStyle: otherStyleFromRaw(styleRaw)).rawValue()
+}
+
+@_cdecl("RenderInlineScion_marginEnd")
+func RenderInlineScion_marginEnd(_ inlineRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  return inlineFromRaw(inlineRaw).marginEnd(otherStyle: otherStyleFromRaw(styleRaw)).rawValue()
+}
+
+@_cdecl("RenderInlineScion_marginBefore")
+func RenderInlineScion_marginBefore(_ inlineRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  return inlineFromRaw(inlineRaw).marginBefore(otherStyle: otherStyleFromRaw(styleRaw)).rawValue()
+}
+
+@_cdecl("RenderInlineScion_marginAfter")
+func RenderInlineScion_marginAfter(_ inlineRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPointer?)
+  -> Int32
+{
+  return inlineFromRaw(inlineRaw).marginAfter(otherStyle: otherStyleFromRaw(styleRaw)).rawValue()
+}
+
 @_cdecl("RenderBoxScion_setMarginTop")
 func RenderBoxScion_setMarginTop(_ boxRaw: UnsafeMutableRawPointer, _ margin: Int32) {
   let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()

@@ -415,7 +415,7 @@ static LayoutUnit computeMargin(const RenderInline* renderer, const Length& marg
 
 LayoutUnit RenderInline::marginLeft() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->marginLeft(); }
     return computeMargin(this, style().marginLeft());
 }
 
@@ -433,31 +433,31 @@ LayoutUnit RenderInline::marginTop() const
 
 LayoutUnit RenderInline::marginBottom() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->marginBottom(); }
     return computeMargin(this, style().marginBottom());
 }
 
 LayoutUnit RenderInline::marginStart(const RenderStyle* otherStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->marginStart(otherStyle); }
     return computeMargin(this, style().marginStartUsing(otherStyle ? otherStyle : &style()));
 }
 
 LayoutUnit RenderInline::marginEnd(const RenderStyle* otherStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->marginEnd(otherStyle); }
     return computeMargin(this, style().marginEndUsing(otherStyle ? otherStyle : &style()));
 }
 
 LayoutUnit RenderInline::marginBefore(const RenderStyle* otherStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->marginBefore(otherStyle); }
     return computeMargin(this, style().marginBeforeUsing(otherStyle ? otherStyle : &style()));
 }
 
 LayoutUnit RenderInline::marginAfter(const RenderStyle* otherStyle) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->marginAfter(otherStyle); }
     return computeMargin(this, style().marginAfterUsing(otherStyle ? otherStyle : &style()));
 }
 

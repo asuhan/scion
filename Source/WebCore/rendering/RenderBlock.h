@@ -90,12 +90,7 @@ public:
     void addPercentHeightDescendant(RenderBox&);
     static void removePercentHeightDescendant(RenderBox&);
     TrackedRendererListHashSet* percentHeightDescendants() const;
-    bool hasPercentHeightDescendants() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        auto* objects = percentHeightDescendants();
-        return objects && !objects->isEmptyIgnoringNullReferences();
-    }
+    bool hasPercentHeightDescendants() const;
     static bool hasPercentHeightContainerMap();
     static bool hasPercentHeightDescendant(RenderBox&);
     static void clearPercentHeightDescendantsFrom(RenderBox&);

@@ -1364,6 +1364,14 @@ extern "C" bool RenderBlockScion_hasMarginBeforeQuirk(const void*);
 extern "C" bool RenderBlockScion_hasMarginAfterQuirk(const void*);
 
 extern "C" void RenderBlockScion_markForPaginationRelayoutIfNeeded(void*);
+extern "C" bool RenderBlockScion_hasPercentHeightDescendants(const void*);
+extern "C" uint32_t RenderTextScion_countRenderedCharacterOffsetsUntil(const void*, uint32_t);
+extern "C" int32_t RenderInlineScion_marginLeft(const void*);
+extern "C" int32_t RenderInlineScion_marginBottom(const void*);
+extern "C" int32_t RenderInlineScion_marginStart(const void*, const void*);
+extern "C" int32_t RenderInlineScion_marginEnd(const void*, const void*);
+extern "C" int32_t RenderInlineScion_marginBefore(const void*, const void*);
+extern "C" int32_t RenderInlineScion_marginAfter(const void*, const void*);
 
 extern "C" int32_t RenderBlockScion_borderTop(const void*);
 
@@ -4877,6 +4885,46 @@ bool RenderBlockScion::hasMarginAfterQuirk() const
 void RenderBlockScion::markForPaginationRelayoutIfNeeded()
 {
     RenderBlockScion_markForPaginationRelayoutIfNeeded(m_handle);
+}
+
+bool RenderBlockScion::hasPercentHeightDescendants() const
+{
+    return RenderBlockScion_hasPercentHeightDescendants(m_handle);
+}
+
+unsigned RenderTextScion::countRenderedCharacterOffsetsUntil(unsigned offset) const
+{
+    return RenderTextScion_countRenderedCharacterOffsetsUntil(m_handle, offset);
+}
+
+LayoutUnit RenderInlineScion::marginLeft() const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_marginLeft(m_handle));
+}
+
+LayoutUnit RenderInlineScion::marginBottom() const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_marginBottom(m_handle));
+}
+
+LayoutUnit RenderInlineScion::marginStart(const RenderStyle* otherStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_marginStart(m_handle, otherStyle));
+}
+
+LayoutUnit RenderInlineScion::marginEnd(const RenderStyle* otherStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_marginEnd(m_handle, otherStyle));
+}
+
+LayoutUnit RenderInlineScion::marginBefore(const RenderStyle* otherStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_marginBefore(m_handle, otherStyle));
+}
+
+LayoutUnit RenderInlineScion::marginAfter(const RenderStyle* otherStyle) const
+{
+    return LayoutUnit::fromRawValue(RenderInlineScion_marginAfter(m_handle, otherStyle));
 }
 
 LayoutUnit RenderBlockScion::borderTop() const

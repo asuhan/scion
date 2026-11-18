@@ -1964,6 +1964,13 @@ TrackedRendererListHashSet* RenderBlock::percentHeightDescendants() const
     return percentHeightDescendantsMap ? percentHeightDescendantsMap->get(*this) : nullptr;
 }
 
+bool RenderBlock::hasPercentHeightDescendants() const
+{
+    if (m_scion) { return m_scion->hasPercentHeightDescendants(); }
+    auto* objects = percentHeightDescendants();
+    return objects && !objects->isEmptyIgnoringNullReferences();
+}
+
 bool RenderBlock::hasPercentHeightContainerMap()
 {
     return percentHeightContainerMap;
