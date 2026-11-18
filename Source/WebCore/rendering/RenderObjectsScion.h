@@ -1204,6 +1204,8 @@ public:
     bool isScrollContainerX() const;
     bool isScrollContainerY() const;
     LayoutUnit contentLogicalHeight() const;
+    LayoutUnit paddingBoxWidth() const;
+    LayoutUnit paddingBoxHeight() const;
     int scrollbarLogicalHeight() const;
     void setMarginTop(LayoutUnit);
     void setMarginBottom(LayoutUnit);

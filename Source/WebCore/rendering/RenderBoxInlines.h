@@ -177,12 +177,12 @@ inline LayoutUnit RenderBox::overridingContentLogicalWidth(LayoutUnit overriding
 }
 inline LayoutUnit RenderBox::paddingBoxHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingBoxHeight(); }
     return std::max(0_lu, height() - borderTop() - borderBottom() - horizontalScrollbarHeight());
 }
 inline LayoutUnit RenderBox::paddingBoxWidth() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->paddingBoxWidth(); }
     return std::max(0_lu, width() - borderLeft() - borderRight() - verticalScrollbarWidth());
 }
 inline int RenderBox::scrollbarLogicalHeight() const

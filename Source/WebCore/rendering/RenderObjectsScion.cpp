@@ -1273,6 +1273,8 @@ extern "C" int32_t RenderBoxScion_computeLogicalWidthInFragmentUsing(const void*
 extern "C" bool RenderBoxScion_isScrollContainerX(const void*);
 extern "C" bool RenderBoxScion_isScrollContainerY(const void*);
 extern "C" int32_t RenderBoxScion_contentLogicalHeight(const void*);
+extern "C" int32_t RenderBoxScion_paddingBoxWidth(const void*);
+extern "C" int32_t RenderBoxScion_paddingBoxHeight(const void*);
 extern "C" int32_t RenderBoxScion_scrollbarLogicalHeight(const void*);
 extern "C" void RenderBoxScion_setMarginTop(void*, int32_t);
 extern "C" void RenderBoxScion_setMarginBottom(void*, int32_t);
@@ -4549,6 +4551,16 @@ bool RenderBoxScion::isScrollContainerY() const
 LayoutUnit RenderBoxScion::contentLogicalHeight() const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_contentLogicalHeight(m_handle));
+}
+
+LayoutUnit RenderBoxScion::paddingBoxWidth() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_paddingBoxWidth(m_handle));
+}
+
+LayoutUnit RenderBoxScion::paddingBoxHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_paddingBoxHeight(m_handle));
 }
 
 int RenderBoxScion::scrollbarLogicalHeight() const
