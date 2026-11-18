@@ -108,7 +108,7 @@ int RenderLineBreak::caretMaxOffset() const
 
 bool RenderLineBreak::canBeSelectionLeaf() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // NB(asuhan): this returns true for both native and interop paths, we can skip the check
     return true;
 }
 

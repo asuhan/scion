@@ -396,6 +396,7 @@ public:
     bool isRenderText() const;
 
     bool isRenderLineBreak() const;
+    bool isLineBreakOpportunity() const;
 
     bool isBR() const;
 
@@ -525,6 +526,8 @@ public:
     void repaintRectangle(const LayoutRect&, bool) const;
 
     LayoutRect clippedOverflowRectForRepaint(const RenderLayerModelObject*) const;
+
+    LayoutRect absoluteClippedOverflowRectForRepaint() const;
 
     LayoutRect clippedOverflowRect(const RenderLayerModelObject* repaintContainer, RenderObject::VisibleRectContext) const;
 
@@ -1195,6 +1198,29 @@ public:
     void mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode>, TransformState&) const;
 
     const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
+
+    bool isScrollContainerX() const;
+    bool isScrollContainerY() const;
+    LayoutUnit contentLogicalHeight() const;
+    int scrollbarLogicalHeight() const;
+    void setMarginTop(LayoutUnit);
+    void setMarginBottom(LayoutUnit);
+    std::optional<LayoutUnit> firstLineBaseline() const;
+    std::optional<LayoutUnit> lastLineBaseline() const;
+    void markForPaginationRelayoutIfNeeded();
+    LayoutSize intrinsicSize() const;
+    void setOverridingLogicalHeightLength(const Length&);
+    void clearOverridingLogicalHeightLength();
+    FloatRect referenceBoxRect(CSSBoxType) const;
+    void clearTrimmedMarginsMarkings();
+    LayoutUnit containingBlockLogicalWidthForContentInFragment(RenderFragmentContainer*) const;
+    std::optional<LayoutUnit> computePercentageLogicalHeight(const Length&, bool updateDescendants) const;
+    std::optional<LayoutUnit> computeContentLogicalHeight(WebCore::RenderBox::SizeType, const Length&, std::optional<LayoutUnit> intrinsicContentHeight) const;
+    LayoutUnit constrainLogicalWidthInFragmentByMinMax(LayoutUnit logicalWidth, LayoutUnit availableWidth, const RenderBlock&, RenderFragmentContainer*, bool allowIntrinsic) const;
+    void computeInlineDirectionMargins(const RenderBlock&, LayoutUnit containerWidth, std::optional<LayoutUnit> availableSpaceAdjustedWithFloats, LayoutUnit childWidth, LayoutUnit& marginStart, LayoutUnit& marginEnd) const;
+    void computeBlockDirectionMargins(const RenderBlock&, LayoutUnit& marginBefore, LayoutUnit& marginAfter) const;
+    void repaintDuringLayoutIfMoved(const LayoutRect&);
+    void repaintOverhangingFloats(bool paintAllDescendants);
 
     void* handle() const { return m_handle; }
 

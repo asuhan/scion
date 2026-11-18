@@ -300,6 +300,7 @@ extern "C" bool RenderObjectScion_isRenderText(const void*);
 extern "C" bool RenderObjectScion_isRenderLineBreak(const void*);
 
 extern "C" bool RenderObjectScion_isBR(const void*);
+extern "C" bool RenderObjectScion_isLineBreakOpportunity(const void*);
 
 extern "C" bool RenderObjectScion_isRenderBox(const void*);
 
@@ -471,6 +472,8 @@ extern "C" void RenderObjectScion_repaint(const void*, bool);
 extern "C" void RenderObjectScion_repaintRectangle(void*, LayoutRectRaw, bool);
 
 extern "C" LayoutRectRaw RenderObjectScion_clippedOverflowRectForRepaint(const void*, void*);
+
+extern "C" LayoutRectRaw RenderObjectScion_absoluteClippedOverflowRectForRepaint(const void*);
 
 extern "C" IntRectRaw RenderObjectScion_absoluteBoundingBoxRect(const void*, bool, bool*);
 
@@ -1267,6 +1270,28 @@ extern "C" int32_t RenderBoxScion_marginAfter(const void*, const void*);
 extern "C" LayoutSizeRaw RenderBoxScion_cachedSizeForOverflowClip(const void*);
 
 extern "C" int32_t RenderBoxScion_computeLogicalWidthInFragmentUsing(const void*, uint8_t, const void*, int32_t, void*, void*);
+extern "C" bool RenderBoxScion_isScrollContainerX(const void*);
+extern "C" bool RenderBoxScion_isScrollContainerY(const void*);
+extern "C" int32_t RenderBoxScion_contentLogicalHeight(const void*);
+extern "C" int32_t RenderBoxScion_scrollbarLogicalHeight(const void*);
+extern "C" void RenderBoxScion_setMarginTop(void*, int32_t);
+extern "C" void RenderBoxScion_setMarginBottom(void*, int32_t);
+extern "C" OptionalLayoutUnitRaw RenderBoxScion_firstLineBaseline(const void*);
+extern "C" OptionalLayoutUnitRaw RenderBoxScion_lastLineBaseline(const void*);
+extern "C" void RenderBoxScion_markForPaginationRelayoutIfNeeded(void*);
+extern "C" LayoutSizeRaw RenderBoxScion_intrinsicSize(const void*);
+extern "C" void RenderBoxScion_setOverridingLogicalHeightLength(void*, const void*);
+extern "C" void RenderBoxScion_clearOverridingLogicalHeightLength(void*);
+extern "C" FloatRectRaw RenderBoxScion_referenceBoxRect(const void*, uint8_t);
+extern "C" void RenderBoxScion_clearTrimmedMarginsMarkings(void*);
+extern "C" int32_t RenderBoxScion_containingBlockLogicalWidthForContentInFragment(const void*, void*);
+extern "C" OptionalLayoutUnitRaw RenderBoxScion_computePercentageLogicalHeight(const void*, const void*, bool);
+extern "C" OptionalLayoutUnitRaw RenderBoxScion_computeContentLogicalHeight(const void*, uint8_t, const void*, OptionalLayoutUnitRaw);
+extern "C" int32_t RenderBoxScion_constrainLogicalWidthInFragmentByMinMax(const void*, int32_t, int32_t, void*, void*, bool);
+extern "C" void RenderBoxScion_computeInlineDirectionMargins(const void*, void*, int32_t, OptionalLayoutUnitRaw, int32_t, int32_t*, int32_t*);
+extern "C" void RenderBoxScion_computeBlockDirectionMargins(const void*, void*, int32_t*, int32_t*);
+extern "C" void RenderBoxScion_repaintDuringLayoutIfMoved(void*, LayoutRectRaw);
+extern "C" void RenderBoxScion_repaintOverhangingFloats(void*, bool);
 
 extern "C" void RenderBlockScion_scrollbarsChanged(void*, bool, bool);
 
@@ -1866,6 +1891,8 @@ bool RenderObjectScion::isRenderLineBreak() const { return RenderObjectScion_isR
 
 bool RenderObjectScion::isBR() const { return RenderObjectScion_isBR(m_handle); }
 
+bool RenderObjectScion::isLineBreakOpportunity() const { return RenderObjectScion_isLineBreakOpportunity(m_handle); }
+
 bool RenderObjectScion::isRenderBox() const { return RenderObjectScion_isRenderBox(m_handle); }
 
 bool RenderObjectScion::isRenderTableRow() const { return RenderObjectScion_isRenderTableRow(m_handle); }
@@ -2150,6 +2177,11 @@ LayoutRect RenderObjectScion::clippedOverflowRectForRepaint(const RenderLayerMod
     return convertLayoutRectRaw(
         RenderObjectScion_clippedOverflowRectForRepaint(
             m_handle, const_cast<RenderLayerModelObject*>(repaintContainer)));
+}
+
+LayoutRect RenderObjectScion::absoluteClippedOverflowRectForRepaint() const
+{
+    return convertLayoutRectRaw(RenderObjectScion_absoluteClippedOverflowRectForRepaint(m_handle));
 }
 
 void RenderBoxScion::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
@@ -4482,6 +4514,138 @@ LayoutUnit RenderBoxScion::marginAfter(const RenderStyle* overrideStyle) const
 LayoutUnit RenderBoxScion::computeLogicalWidthInFragmentUsing(WebCore::RenderBox::SizeType widthType, const Length& logicalWidth, LayoutUnit availableLogicalWidth, const RenderBlock& containingBlock, RenderFragmentContainer* fragment) const
 {
     return LayoutUnit::fromRawValue(RenderBoxScion_computeLogicalWidthInFragmentUsing(m_handle, static_cast<uint8_t>(widthType), &logicalWidth, availableLogicalWidth.rawValue(), const_cast<RenderBlock*>(&containingBlock), fragment));
+}
+
+static OptionalLayoutUnitRaw toOptionalLayoutUnitRaw(std::optional<LayoutUnit> value)
+{
+    return { value ? value->rawValue() : 0, value.has_value() };
+}
+
+static std::optional<LayoutUnit> fromOptionalLayoutUnitRaw(OptionalLayoutUnitRaw raw)
+{
+    if (!raw.is_valid)
+        return std::nullopt;
+    return LayoutUnit::fromRawValue(raw.value);
+}
+
+bool RenderBoxScion::isScrollContainerX() const
+{
+    return RenderBoxScion_isScrollContainerX(m_handle);
+}
+
+bool RenderBoxScion::isScrollContainerY() const
+{
+    return RenderBoxScion_isScrollContainerY(m_handle);
+}
+
+LayoutUnit RenderBoxScion::contentLogicalHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_contentLogicalHeight(m_handle));
+}
+
+int RenderBoxScion::scrollbarLogicalHeight() const
+{
+    return RenderBoxScion_scrollbarLogicalHeight(m_handle);
+}
+
+void RenderBoxScion::setMarginTop(LayoutUnit margin)
+{
+    RenderBoxScion_setMarginTop(m_handle, margin.rawValue());
+}
+
+void RenderBoxScion::setMarginBottom(LayoutUnit margin)
+{
+    RenderBoxScion_setMarginBottom(m_handle, margin.rawValue());
+}
+
+std::optional<LayoutUnit> RenderBoxScion::firstLineBaseline() const
+{
+    return fromOptionalLayoutUnitRaw(RenderBoxScion_firstLineBaseline(m_handle));
+}
+
+std::optional<LayoutUnit> RenderBoxScion::lastLineBaseline() const
+{
+    return fromOptionalLayoutUnitRaw(RenderBoxScion_lastLineBaseline(m_handle));
+}
+
+void RenderBoxScion::markForPaginationRelayoutIfNeeded()
+{
+    RenderBoxScion_markForPaginationRelayoutIfNeeded(m_handle);
+}
+
+LayoutSize RenderBoxScion::intrinsicSize() const
+{
+    const auto size = RenderBoxScion_intrinsicSize(m_handle);
+    return { LayoutUnit::fromRawValue(size.width), LayoutUnit::fromRawValue(size.height) };
+}
+
+void RenderBoxScion::setOverridingLogicalHeightLength(const Length& length)
+{
+    RenderBoxScion_setOverridingLogicalHeightLength(m_handle, &length);
+}
+
+void RenderBoxScion::clearOverridingLogicalHeightLength()
+{
+    RenderBoxScion_clearOverridingLogicalHeightLength(m_handle);
+}
+
+FloatRect RenderBoxScion::referenceBoxRect(CSSBoxType boxType) const
+{
+    const auto rect = RenderBoxScion_referenceBoxRect(m_handle, static_cast<uint8_t>(boxType));
+    return { rect.x, rect.y, rect.width, rect.height };
+}
+
+void RenderBoxScion::clearTrimmedMarginsMarkings()
+{
+    RenderBoxScion_clearTrimmedMarginsMarkings(m_handle);
+}
+
+LayoutUnit RenderBoxScion::containingBlockLogicalWidthForContentInFragment(RenderFragmentContainer* fragment) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_containingBlockLogicalWidthForContentInFragment(m_handle, fragment));
+}
+
+std::optional<LayoutUnit> RenderBoxScion::computePercentageLogicalHeight(const Length& height, bool updateDescendants) const
+{
+    return fromOptionalLayoutUnitRaw(RenderBoxScion_computePercentageLogicalHeight(m_handle, &height, updateDescendants));
+}
+
+std::optional<LayoutUnit> RenderBoxScion::computeContentLogicalHeight(WebCore::RenderBox::SizeType heightType, const Length& height, std::optional<LayoutUnit> intrinsicContentHeight) const
+{
+    return fromOptionalLayoutUnitRaw(RenderBoxScion_computeContentLogicalHeight(m_handle, static_cast<uint8_t>(heightType), &height, toOptionalLayoutUnitRaw(intrinsicContentHeight)));
+}
+
+LayoutUnit RenderBoxScion::constrainLogicalWidthInFragmentByMinMax(LayoutUnit logicalWidth, LayoutUnit availableWidth, const RenderBlock& containingBlock, RenderFragmentContainer* fragment, bool allowIntrinsic) const
+{
+    return LayoutUnit::fromRawValue(RenderBoxScion_constrainLogicalWidthInFragmentByMinMax(m_handle, logicalWidth.rawValue(), availableWidth.rawValue(), const_cast<RenderBlock*>(&containingBlock), fragment, allowIntrinsic));
+}
+
+void RenderBoxScion::computeInlineDirectionMargins(const RenderBlock& containingBlock, LayoutUnit containerWidth, std::optional<LayoutUnit> availableSpaceAdjustedWithFloats, LayoutUnit childWidth, LayoutUnit& marginStart, LayoutUnit& marginEnd) const
+{
+    int32_t start = marginStart.rawValue();
+    int32_t end = marginEnd.rawValue();
+    RenderBoxScion_computeInlineDirectionMargins(m_handle, const_cast<RenderBlock*>(&containingBlock), containerWidth.rawValue(), toOptionalLayoutUnitRaw(availableSpaceAdjustedWithFloats), childWidth.rawValue(), &start, &end);
+    marginStart = LayoutUnit::fromRawValue(start);
+    marginEnd = LayoutUnit::fromRawValue(end);
+}
+
+void RenderBoxScion::computeBlockDirectionMargins(const RenderBlock& containingBlock, LayoutUnit& marginBefore, LayoutUnit& marginAfter) const
+{
+    int32_t before = marginBefore.rawValue();
+    int32_t after = marginAfter.rawValue();
+    RenderBoxScion_computeBlockDirectionMargins(m_handle, const_cast<RenderBlock*>(&containingBlock), &before, &after);
+    marginBefore = LayoutUnit::fromRawValue(before);
+    marginAfter = LayoutUnit::fromRawValue(after);
+}
+
+void RenderBoxScion::repaintDuringLayoutIfMoved(const LayoutRect& oldRect)
+{
+    RenderBoxScion_repaintDuringLayoutIfMoved(m_handle, { oldRect.x().rawValue(), oldRect.y().rawValue(), oldRect.width().rawValue(), oldRect.height().rawValue() });
+}
+
+void RenderBoxScion::repaintOverhangingFloats(bool paintAllDescendants)
+{
+    RenderBoxScion_repaintOverhangingFloats(m_handle, paintAllDescendants);
 }
 
 LayoutSize RenderBoxScion::cachedSizeForOverflowClip() const

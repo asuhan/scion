@@ -1205,6 +1205,8 @@ void RenderBox_clearOverridingLogicalHeight(void*);
 void RenderBox_clearOverridingLogicalWidth(void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
+void RenderBox_clearOverridingLogicalHeightLength(void*);
+void RenderBox_setOverridingLogicalHeightLength(void*, const void*);
 void RenderBox_computeAndSetBlockDirectionMargins(void*, const void*);
 void RenderBox_repaintDuringLayoutIfMoved(void*, struct LayoutRectRaw);
 bool RenderBox_shrinkToAvoidFloats(const void*);

@@ -72,7 +72,7 @@ inline LayoutUnit RenderBox::contentHeight() const
 }
 inline LayoutUnit RenderBox::contentLogicalHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->contentLogicalHeight(); }
     return style().isHorizontalWritingMode() ? contentHeight() : contentWidth();
 }
 inline LayoutSize RenderBox::contentLogicalSize() const
@@ -187,7 +187,7 @@ inline LayoutUnit RenderBox::paddingBoxWidth() const
 }
 inline int RenderBox::scrollbarLogicalHeight() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->scrollbarLogicalHeight(); }
     return style().isHorizontalWritingMode() ? horizontalScrollbarHeight() : verticalScrollbarWidth();
 }
 inline int RenderBox::scrollbarLogicalWidth() const

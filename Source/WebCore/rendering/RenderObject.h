@@ -865,11 +865,7 @@ public:
         if (m_scion) { ASSERT_NOT_REACHED(); }
         return isRenderLineBreak() && hasWBRLineBreakFlag();
     }
-    bool isLineBreakOpportunity() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return isRenderLineBreak() && isWBR();
-    }
+    bool isLineBreakOpportunity() const;
     bool isRenderTextOrLineBreak() const;
     bool isRenderBox() const;
     bool isRenderTableRow() const;
@@ -1285,11 +1281,7 @@ public:
 
     // Returns the rect that should be repainted whenever this object changes. The rect is in the view's
     // coordinate space. This method deals with outlines and overflow.
-    LayoutRect absoluteClippedOverflowRectForRepaint() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return clippedOverflowRect(nullptr, visibleRectContextForRepaint());
-    }
+    LayoutRect absoluteClippedOverflowRectForRepaint() const;
     LayoutRect absoluteClippedOverflowRectForSpatialNavigation() const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }

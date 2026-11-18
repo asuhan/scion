@@ -286,16 +286,8 @@ public:
     LayoutUnit marginBottom() const override;
     LayoutUnit marginLeft() const override;
     LayoutUnit marginRight() const override;
-    void setMarginTop(LayoutUnit margin)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_marginBox.setTop(margin);
-    }
-    void setMarginBottom(LayoutUnit margin)
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        m_marginBox.setBottom(margin);
-    }
+    void setMarginTop(LayoutUnit);
+    void setMarginBottom(LayoutUnit);
     void setMarginLeft(LayoutUnit margin);
     void setMarginRight(LayoutUnit margin);
 
@@ -480,11 +472,7 @@ public:
 
     bool stretchesToViewport() const;
 
-    virtual LayoutSize intrinsicSize() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return LayoutSize();
-    }
+    virtual LayoutSize intrinsicSize() const;
     LayoutUnit intrinsicLogicalWidth() const;
     inline LayoutUnit intrinsicLogicalHeight() const;
 
@@ -572,16 +560,8 @@ public:
     inline bool hasScrollableOverflowX() const;
     inline bool hasScrollableOverflowY() const;
 
-    bool isScrollContainerX() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Hidden || style().overflowX() == Overflow::Auto;
-    }
-    bool isScrollContainerY() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Hidden || style().overflowY() == Overflow::Auto;
-    }
+    bool isScrollContainerX() const;
+    bool isScrollContainerY() const;
 
     LayoutBoxExtent scrollPaddingForViewportRect(const LayoutRect& viewportRect);
 
@@ -643,16 +623,8 @@ public:
     
     RenderLayer* enclosingFloatPaintingLayer() const;
     
-    virtual std::optional<LayoutUnit> firstLineBaseline() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return std::optional<LayoutUnit>();
-    }
-    virtual std::optional<LayoutUnit> lastLineBaseline() const
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-        return std::optional<LayoutUnit>();
-    }
+    virtual std::optional<LayoutUnit> firstLineBaseline() const;
+    virtual std::optional<LayoutUnit> lastLineBaseline() const;
     virtual std::optional<LayoutUnit> inlineBlockBaseline(LineDirectionMode) const
     {
         if (m_scion) { ASSERT_NOT_REACHED(); }
@@ -663,10 +635,7 @@ public:
     bool shrinkToAvoidFloats() const;
     virtual bool avoidsFloats() const;
 
-    virtual void markForPaginationRelayoutIfNeeded()
-    {
-        if (m_scion) { ASSERT_NOT_REACHED(); }
-    }
+    virtual void markForPaginationRelayoutIfNeeded();
     
     LayoutUnit lineHeight(bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;
     LayoutUnit baselinePosition(FontBaseline, bool firstLine, LineDirectionMode, LinePositionMode = PositionOnContainingLine) const override;

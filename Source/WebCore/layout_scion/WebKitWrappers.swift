@@ -1963,6 +1963,12 @@ func RenderObjectScion_isRenderLineBreak(_ objectRaw: UnsafeRawPointer) -> Bool 
   return object.isRenderLineBreak()
 }
 
+@_cdecl("RenderObjectScion_isLineBreakOpportunity")
+func RenderObjectScion_isLineBreakOpportunity(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.isLineBreakOpportunity()
+}
+
 @_cdecl("RenderObjectScion_isBR")
 func RenderObjectScion_isBR(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
@@ -2625,6 +2631,14 @@ func RenderObjectScion_clippedOverflowRectForRepaint(
   return convertLayoutRect(
     object.clippedOverflowRectForRepaint(
       createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?))
+}
+
+@_cdecl("RenderObjectScion_absoluteClippedOverflowRectForRepaint")
+func RenderObjectScion_absoluteClippedOverflowRectForRepaint(_ objectRaw: UnsafeRawPointer)
+  -> LayoutRectRaw
+{
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return convertLayoutRect(object.absoluteClippedOverflowRectForRepaint())
 }
 
 @_cdecl("RenderBlockScion_selectionGapRectsForRepaint")
@@ -6601,6 +6615,204 @@ func RenderBoxScion_computeLogicalWidthInFragmentUsing(
     cb: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper,
     fragment: fragment
   ).rawValue()
+}
+
+@_cdecl("RenderBoxScion_isScrollContainerX")
+func RenderBoxScion_isScrollContainerX(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isScrollContainerX()
+}
+
+@_cdecl("RenderBoxScion_isScrollContainerY")
+func RenderBoxScion_isScrollContainerY(_ boxRaw: UnsafeRawPointer) -> Bool {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.isScrollContainerY()
+}
+
+@_cdecl("RenderBoxScion_contentLogicalHeight")
+func RenderBoxScion_contentLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.contentLogicalHeight().rawValue()
+}
+
+@_cdecl("RenderBoxScion_scrollbarLogicalHeight")
+func RenderBoxScion_scrollbarLogicalHeight(_ boxRaw: UnsafeRawPointer) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.scrollbarLogicalHeight()
+}
+
+@_cdecl("RenderBoxScion_setMarginTop")
+func RenderBoxScion_setMarginTop(_ boxRaw: UnsafeMutableRawPointer, _ margin: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setMarginTop(margin: LayoutUnit.fromRawValue(value: margin))
+}
+
+@_cdecl("RenderBoxScion_setMarginBottom")
+func RenderBoxScion_setMarginBottom(_ boxRaw: UnsafeMutableRawPointer, _ margin: Int32) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setMarginBottom(margin: LayoutUnit.fromRawValue(value: margin))
+}
+
+private func toOptionalLayoutUnitRaw(_ value: LayoutUnit?) -> OptionalLayoutUnitRaw {
+  guard let value else { return OptionalLayoutUnitRaw(value: 0, is_valid: false) }
+  return OptionalLayoutUnitRaw(value: value.rawValue(), is_valid: true)
+}
+
+@_cdecl("RenderBoxScion_firstLineBaseline")
+func RenderBoxScion_firstLineBaseline(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return toOptionalLayoutUnitRaw(box.firstLineBaseline())
+}
+
+@_cdecl("RenderBoxScion_lastLineBaseline")
+func RenderBoxScion_lastLineBaseline(_ boxRaw: UnsafeRawPointer) -> OptionalLayoutUnitRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return toOptionalLayoutUnitRaw(box.lastLineBaseline())
+}
+
+@_cdecl("RenderBoxScion_markForPaginationRelayoutIfNeeded")
+func RenderBoxScion_markForPaginationRelayoutIfNeeded(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.markForPaginationRelayoutIfNeeded()
+}
+
+@_cdecl("RenderBoxScion_intrinsicSize")
+func RenderBoxScion_intrinsicSize(_ boxRaw: UnsafeRawPointer) -> LayoutSizeRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  let size = box.intrinsicSize()
+  return LayoutSizeRaw(width: size.width().rawValue(), height: size.height().rawValue())
+}
+
+@_cdecl("RenderBoxScion_setOverridingLogicalHeightLength")
+func RenderBoxScion_setOverridingLogicalHeightLength(
+  _ boxRaw: UnsafeMutableRawPointer, _ lengthRaw: UnsafeRawPointer
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.setOverridingLogicalHeightLength(height: LengthWrapper(p: lengthRaw))
+}
+
+@_cdecl("RenderBoxScion_clearOverridingLogicalHeightLength")
+func RenderBoxScion_clearOverridingLogicalHeightLength(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearOverridingLogicalHeightLength()
+}
+
+@_cdecl("RenderBoxScion_referenceBoxRect")
+func RenderBoxScion_referenceBoxRect(_ boxRaw: UnsafeRawPointer, _ boxType: UInt8) -> FloatRectRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return toFloatRectRaw(box.referenceBoxRect(boxType: CSSBoxType(rawValue: boxType)!))
+}
+
+@_cdecl("RenderBoxScion_clearTrimmedMarginsMarkings")
+func RenderBoxScion_clearTrimmedMarginsMarkings(_ boxRaw: UnsafeMutableRawPointer) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.clearTrimmedMarginsMarkings()
+}
+
+private func fragmentFromRaw(_ fragmentRaw: UnsafeMutableRawPointer?)
+  -> RenderFragmentContainerWrapper?
+{
+  guard let fragmentRaw else { return nil }
+  return createRenderObjectWrapperOrNative(fragmentRaw) as! RenderFragmentContainerWrapper?
+}
+
+@_cdecl("RenderBoxScion_containingBlockLogicalWidthForContentInFragment")
+func RenderBoxScion_containingBlockLogicalWidthForContentInFragment(
+  _ boxRaw: UnsafeRawPointer, _ fragmentRaw: UnsafeMutableRawPointer?
+) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.containingBlockLogicalWidthForContentInFragment(fragment: fragmentFromRaw(fragmentRaw))
+    .rawValue()
+}
+
+@_cdecl("RenderBoxScion_computePercentageLogicalHeight")
+func RenderBoxScion_computePercentageLogicalHeight(
+  _ boxRaw: UnsafeRawPointer, _ heightRaw: UnsafeRawPointer, _ updateDescendants: Bool
+) -> OptionalLayoutUnitRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return toOptionalLayoutUnitRaw(
+    box.computePercentageLogicalHeight(
+      height: LengthWrapper(p: heightRaw), updateDescendants: updateDescendants ? .Yes : .No))
+}
+
+@_cdecl("RenderBoxScion_computeContentLogicalHeight")
+func RenderBoxScion_computeContentLogicalHeight(
+  _ boxRaw: UnsafeRawPointer, _ heightType: UInt8, _ heightRaw: UnsafeRawPointer,
+  _ intrinsicContentHeight: OptionalLayoutUnitRaw
+) -> OptionalLayoutUnitRaw {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return toOptionalLayoutUnitRaw(
+    box.computeContentLogicalHeight(
+      heightType: RenderBoxWrapper.SizeType(rawValue: heightType)!,
+      height: LengthWrapper(p: heightRaw),
+      intrinsicContentHeight: convertOptionalLayoutUnitRaw(intrinsicContentHeight)))
+}
+
+@_cdecl("RenderBoxScion_constrainLogicalWidthInFragmentByMinMax")
+func RenderBoxScion_constrainLogicalWidthInFragmentByMinMax(
+  _ boxRaw: UnsafeRawPointer, _ logicalWidth: Int32, _ availableWidth: Int32,
+  _ containingBlockRaw: UnsafeMutableRawPointer, _ fragmentRaw: UnsafeMutableRawPointer?,
+  _ allowIntrinsic: Bool
+) -> Int32 {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  return box.constrainLogicalWidthInFragmentByMinMax(
+    logicalWidth: LayoutUnit.fromRawValue(value: logicalWidth),
+    availableWidth: LayoutUnit.fromRawValue(value: availableWidth),
+    cb: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper,
+    fragment: fragmentFromRaw(fragmentRaw), allowIntrinsic: allowIntrinsic ? .Yes : .No
+  ).rawValue()
+}
+
+@_cdecl("RenderBoxScion_computeInlineDirectionMargins")
+func RenderBoxScion_computeInlineDirectionMargins(
+  _ boxRaw: UnsafeRawPointer, _ containingBlockRaw: UnsafeMutableRawPointer,
+  _ containerWidth: Int32, _ availableSpaceAdjustedWithFloats: OptionalLayoutUnitRaw,
+  _ childWidth: Int32, _ marginStartRaw: UnsafeMutablePointer<Int32>,
+  _ marginEndRaw: UnsafeMutablePointer<Int32>
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  var marginStart = LayoutUnit.fromRawValue(value: marginStartRaw.pointee)
+  var marginEnd = LayoutUnit.fromRawValue(value: marginEndRaw.pointee)
+  box.computeInlineDirectionMargins(
+    containingBlock: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper,
+    containerWidth: LayoutUnit.fromRawValue(value: containerWidth),
+    availableSpaceAdjustedWithFloats: convertOptionalLayoutUnitRaw(
+      availableSpaceAdjustedWithFloats),
+    childWidth: LayoutUnit.fromRawValue(value: childWidth), marginStart: &marginStart,
+    marginEnd: &marginEnd)
+  marginStartRaw.pointee = marginStart.rawValue()
+  marginEndRaw.pointee = marginEnd.rawValue()
+}
+
+@_cdecl("RenderBoxScion_computeBlockDirectionMargins")
+func RenderBoxScion_computeBlockDirectionMargins(
+  _ boxRaw: UnsafeRawPointer, _ containingBlockRaw: UnsafeMutableRawPointer,
+  _ marginBeforeRaw: UnsafeMutablePointer<Int32>, _ marginAfterRaw: UnsafeMutablePointer<Int32>
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  var marginBefore = LayoutUnit.fromRawValue(value: marginBeforeRaw.pointee)
+  var marginAfter = LayoutUnit.fromRawValue(value: marginAfterRaw.pointee)
+  box.computeBlockDirectionMargins(
+    containingBlock: createRenderObjectWrapperOrNative(containingBlockRaw) as! RenderBlockWrapper,
+    marginBefore: &marginBefore, marginAfter: &marginAfter)
+  marginBeforeRaw.pointee = marginBefore.rawValue()
+  marginAfterRaw.pointee = marginAfter.rawValue()
+}
+
+@_cdecl("RenderBoxScion_repaintDuringLayoutIfMoved")
+func RenderBoxScion_repaintDuringLayoutIfMoved(
+  _ boxRaw: UnsafeMutableRawPointer, _ oldRect: LayoutRectRaw
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.repaintDuringLayoutIfMoved(oldRect: convertLayoutRect(oldRect))
+}
+
+@_cdecl("RenderBoxScion_repaintOverhangingFloats")
+func RenderBoxScion_repaintOverhangingFloats(
+  _ boxRaw: UnsafeMutableRawPointer, _ paintAllDescendants: Bool
+) {
+  let box = Unmanaged<RenderBoxWrapper>.fromOpaque(boxRaw).takeUnretainedValue()
+  box.repaintOverhangingFloats(paintAllDescendants: paintAllDescendants)
 }
 
 @_cdecl("RenderBoxScion_clearOverridingLogicalWidthLength")

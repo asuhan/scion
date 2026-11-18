@@ -251,6 +251,17 @@ extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingLogicalWidthLength(void*
     renderer->clearOverridingLogicalWidthLength();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalHeightLength(void* box_raw_ptr, const void* length_raw_ptr)
+{
+    auto* renderer = static_cast<WebCore::RenderBox*>(box_raw_ptr);
+    renderer->setOverridingLogicalHeightLength(*static_cast<const WebCore::Length*>(length_raw_ptr));
+}
+
+extern "C" WEBCORE_EXPORT void RenderBox_clearOverridingLogicalHeightLength(void* box_raw_ptr)
+{
+    static_cast<WebCore::RenderBox*>(box_raw_ptr)->clearOverridingLogicalHeightLength();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_computeAndSetBlockDirectionMargins(void* box_raw_ptr, const void* containing_block_raw)
 {
     auto* renderer = static_cast<WebCore::RenderBox*>(box_raw_ptr);
@@ -1352,7 +1363,7 @@ LayoutUnit RenderBox::logicalHeight() const
 
 LayoutUnit RenderBox::constrainLogicalWidthInFragmentByMinMax(LayoutUnit logicalWidth, LayoutUnit availableWidth, const RenderBlock& cb, RenderFragmentContainer* fragment, AllowIntrinsic allowIntrinsic) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->constrainLogicalWidthInFragmentByMinMax(logicalWidth, availableWidth, cb, fragment, allowIntrinsic == AllowIntrinsic::Yes); }
     const RenderStyle& styleToUse = style();
     LayoutUnit computedMaxWidth = LayoutUnit::max();
     if (!styleToUse.logicalMaxWidth().isUndefined() && (allowIntrinsic == AllowIntrinsic::Yes || !styleToUse.logicalMaxWidth().isIntrinsic()))
@@ -1502,9 +1513,63 @@ LayoutPoint RenderBox::contentBoxLocation() const
     return { borderLeft() + paddingLeft() + verticalScrollbarSpace, borderTop() + paddingTop() + horizontalScrollbarSpace };
 }
 
+bool RenderBox::isScrollContainerX() const
+{
+    if (m_scion) { return m_scion->isScrollContainerX(); }
+    return style().overflowX() == Overflow::Scroll || style().overflowX() == Overflow::Hidden || style().overflowX() == Overflow::Auto;
+}
+
+bool RenderBox::isScrollContainerY() const
+{
+    if (m_scion) { return m_scion->isScrollContainerY(); }
+    return style().overflowY() == Overflow::Scroll || style().overflowY() == Overflow::Hidden || style().overflowY() == Overflow::Auto;
+}
+
+void RenderBox::setMarginTop(LayoutUnit margin)
+{
+    if (m_scion) {
+        m_scion->setMarginTop(margin);
+        return;
+    }
+    m_marginBox.setTop(margin);
+}
+
+void RenderBox::setMarginBottom(LayoutUnit margin)
+{
+    if (m_scion) {
+        m_scion->setMarginBottom(margin);
+        return;
+    }
+    m_marginBox.setBottom(margin);
+}
+
+LayoutSize RenderBox::intrinsicSize() const
+{
+    if (m_scion) { return m_scion->intrinsicSize(); }
+    return LayoutSize();
+}
+
+std::optional<LayoutUnit> RenderBox::firstLineBaseline() const
+{
+    if (m_scion) { return m_scion->firstLineBaseline(); }
+    return std::optional<LayoutUnit>();
+}
+
+std::optional<LayoutUnit> RenderBox::lastLineBaseline() const
+{
+    if (m_scion) { return m_scion->lastLineBaseline(); }
+    return std::optional<LayoutUnit>();
+}
+
+void RenderBox::markForPaginationRelayoutIfNeeded()
+{
+    if (m_scion)
+        m_scion->markForPaginationRelayoutIfNeeded();
+}
+
 FloatRect RenderBox::referenceBoxRect(CSSBoxType boxType) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->referenceBoxRect(boxType); }
     switch (boxType) {
     case CSSBoxType::ContentBox:
     case CSSBoxType::FillBox:
@@ -2222,7 +2287,10 @@ std::optional<Length> RenderBox::overridingLogicalHeightLength() const
 
 void RenderBox::setOverridingLogicalHeightLength(const Length& height)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setOverridingLogicalHeightLength(height);
+        return;
+    }
     if (!gOverridingLogicalHeightLengthMap)
         gOverridingLogicalHeightLengthMap = new OverridingLengthMap();
     gOverridingLogicalHeightLengthMap->set(*this, height);
@@ -2230,7 +2298,10 @@ void RenderBox::setOverridingLogicalHeightLength(const Length& height)
 
 void RenderBox::clearOverridingLogicalHeightLength()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearOverridingLogicalHeightLength();
+        return;
+    }
     if (gOverridingLogicalHeightLengthMap)
         gOverridingLogicalHeightLengthMap->remove(*this);
 }
@@ -2275,7 +2346,10 @@ void RenderBox::markMarginAsTrimmed(MarginTrimType newTrimmedMargin)
 
 void RenderBox::clearTrimmedMarginsMarkings()
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->clearTrimmedMarginsMarkings();
+        return;
+    }
     ASSERT(hasRareData());
     ensureRareData().trimmedMargins = { };
 }
@@ -3245,7 +3319,7 @@ LayoutUnit RenderBox::containingBlockLogicalHeightForContent(AvailableLogicalHei
 
 LayoutUnit RenderBox::containingBlockLogicalWidthForContentInFragment(RenderFragmentContainer* fragment) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->containingBlockLogicalWidthForContentInFragment(fragment); }
     if (!fragment)
         return containingBlockLogicalWidthForContent();
 
@@ -3554,7 +3628,10 @@ auto RenderBox::computeVisibleRectsInContainer(const RepaintRects& rects, const 
 
 void RenderBox::repaintDuringLayoutIfMoved(const LayoutRect& oldRect)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->repaintDuringLayoutIfMoved(oldRect);
+        return;
+    }
     if (oldRect.location() != m_frameRect.location()) {
         LayoutRect newRect = m_frameRect;
         // The child moved.  Invalidate the object's old and new positions.  We have to do this
@@ -3568,9 +3645,12 @@ void RenderBox::repaintDuringLayoutIfMoved(const LayoutRect& oldRect)
     }
 }
 
-void RenderBox::repaintOverhangingFloats(bool)
+void RenderBox::repaintOverhangingFloats(bool paintAllDescendants)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->repaintOverhangingFloats(paintAllDescendants);
+        return;
+    }
 }
 
 void RenderBox::updateLogicalWidth()
@@ -3963,7 +4043,10 @@ LayoutUnit RenderBox::computeOrTrimInlineMargin(const RenderBlock& containingBlo
 
 void RenderBox::computeInlineDirectionMargins(const RenderBlock& containingBlock, LayoutUnit containerWidth, std::optional<LayoutUnit> availableSpaceAdjustedWithFloats, LayoutUnit childWidth, LayoutUnit& marginStart, LayoutUnit& marginEnd) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->computeInlineDirectionMargins(containingBlock, containerWidth, availableSpaceAdjustedWithFloats, childWidth, marginStart, marginEnd);
+        return;
+    }
     const RenderStyle& containingBlockStyle = containingBlock.style();
     Length marginStartLength = style().marginStartUsing(&containingBlockStyle);
     Length marginEndLength = style().marginEndUsing(&containingBlockStyle);
@@ -4335,7 +4418,7 @@ std::optional<LayoutUnit> RenderBox::computeLogicalHeightUsing(SizeType heightTy
 
 std::optional<LayoutUnit> RenderBox::computeContentLogicalHeight(SizeType heightType, const Length& height, std::optional<LayoutUnit> intrinsicContentHeight) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->computeContentLogicalHeight(heightType, height, intrinsicContentHeight); }
     if (std::optional<LayoutUnit> heightIncludingScrollbar = computeContentAndScrollbarLogicalHeightUsing(heightType, height, intrinsicContentHeight))
         return std::max<LayoutUnit>(0, adjustContentBoxLogicalHeightForBoxSizing(heightIncludingScrollbar) - scrollbarLogicalHeight());
     return std::nullopt;
@@ -4439,7 +4522,7 @@ static bool tableCellShouldHaveZeroInitialSize(const RenderBlock& block, const R
 
 std::optional<LayoutUnit> RenderBox::computePercentageLogicalHeight(const Length& height, UpdatePercentageHeightDescendants updateDescendants) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->computePercentageLogicalHeight(height, updateDescendants == UpdatePercentageHeightDescendants::Yes); }
     bool skippedAutoHeightContainingBlock = false;
     RenderBlock* cb = containingBlock();
     const RenderBox* containingBlockChild = this;
@@ -4800,7 +4883,10 @@ LayoutUnit RenderBox::availableLogicalHeightUsing(const Length& h, AvailableLogi
 
 void RenderBox::computeBlockDirectionMargins(const RenderBlock& containingBlock, LayoutUnit& marginBefore, LayoutUnit& marginAfter) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->computeBlockDirectionMargins(containingBlock, marginBefore, marginAfter);
+        return;
+    }
     // First assert that we're not calling this method on box types that don't support margins.
     ASSERT(!isRenderTableCell());
     ASSERT(!isRenderTableRow());

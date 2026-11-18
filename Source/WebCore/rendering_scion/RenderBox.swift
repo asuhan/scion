@@ -27,7 +27,7 @@ private var gOverridingLogicalHeightMap: OverrideSizeMap? = nil
 private var gOverridingLogicalWidthMap: OverrideSizeMap? = nil
 
 private typealias OverridingLengthMap = WeakHashMap<RenderBoxWrapper, LengthWrapper>
-private let gOverridingLogicalHeightLengthMap: OverridingLengthMap? = nil
+private var gOverridingLogicalHeightLengthMap: OverridingLengthMap? = nil
 private var gOverridingLogicalWidthLengthMap: OverridingLengthMap? = nil
 
 // FIXME: We should store these based on physical direction.
@@ -1529,6 +1529,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height() - borderTop() - borderBottom() - horizontalScrollbarHeight())
   }
 
+  override func referenceBoxRect(boxType: CSSBoxType) -> FloatRectWrapper {
+    assert(isNativeImpl())
+    switch boxType {
+    case .ContentBox, .FillBox:
+      return contentBoxRect().FloatRect()
+    case .PaddingBox:
+      return paddingBoxRect().FloatRect()
+    case .MarginBox:
+      return marginBoxRect().FloatRect()
+    // stroke-box, view-box compute to border-box for HTML elements.
+    case .StrokeBox, .ViewBox, .BorderBox, .BoxMissing:
+      return borderBoxRect().FloatRect()
+    }
+  }
+
   func paddingBoxRect() -> LayoutRectWrapper {
     assert(isNativeImpl())
     let zero = LayoutUnit(value: UInt64(0))
@@ -2195,8 +2210,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setOverridingLogicalHeightLength(height: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setOverridingLogicalHeightLength(id(), height.p)
+      return
+    }
+    if gOverridingLogicalHeightLengthMap == nil {
+      gOverridingLogicalHeightLengthMap = OverridingLengthMap()
+    }
+    gOverridingLogicalHeightLengthMap!.set(self, LengthWrapper(copyOf: height))
   }
 
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
@@ -2211,8 +2232,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverridingLogicalHeightLength() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.RenderBox_clearOverridingLogicalHeightLength(id())
+      return
+    }
+    gOverridingLogicalHeightLengthMap?.remove(self)
   }
 
   func clearOverridingLogicalWidthLength() {

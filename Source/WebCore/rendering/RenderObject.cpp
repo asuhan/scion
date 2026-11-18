@@ -4446,6 +4446,12 @@ bool RenderObject::isAtomicInlineLevelBox() const
     return style().isDisplayInlineType() && !(style().display() == DisplayType::Inline && !isReplacedOrInlineBlock());
 }
 
+LayoutRect RenderObject::absoluteClippedOverflowRectForRepaint() const
+{
+    if (m_scion) { return m_scion->absoluteClippedOverflowRectForRepaint(); }
+    return clippedOverflowRect(nullptr, visibleRectContextForRepaint());
+}
+
 bool RenderObject::isAbsolutelyPositioned() const
 {
     if (m_scion) { return m_scion->isAbsolutelyPositioned(); }
@@ -4486,6 +4492,12 @@ bool RenderObject::isRenderLineBreak() const
 {
     if (m_scion) { return m_scion->isRenderLineBreak(); }
     return type() == Type::LineBreak;
+}
+
+bool RenderObject::isLineBreakOpportunity() const
+{
+    if (m_scion) { return m_scion->isLineBreakOpportunity(); }
+    return isRenderLineBreak() && isWBR();
 }
 
 bool RenderObject::isBR() const
