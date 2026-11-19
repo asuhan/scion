@@ -658,6 +658,268 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isSkippedContentForLayout(const void
     return static_cast<const WebCore::RenderObject*>(p)->isSkippedContentForLayout();
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_mapLocalToContainer(const void* p, const void* ancestorContainer, void* transformState, uint8_t mode, bool* wasFixed)
+{
+    static_cast<const WebCore::RenderObject*>(p)->mapLocalToContainer(static_cast<const WebCore::RenderLayerModelObject*>(ancestorContainer), *static_cast<WebCore::TransformState*>(transformState), OptionSet<WebCore::MapCoordinatesMode>::fromRaw(mode), wasFixed);
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderWidget(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderWidget();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGTextPath(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGTextPath();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderReplaced(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderReplaced();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderBoxModelObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderBoxModelObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderLayerModelObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderLayerModelObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderQuote(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderQuote();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderDetailsMarker(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderDetailsMarker();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderEmbeddedObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderEmbeddedObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderFileUploadControl(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderFileUploadControl();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMultiColumnSpannerPlaceholder(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderMultiColumnSpannerPlaceholder();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderFrame(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderFrame();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderFrameSet(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderFrameSet();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMedia(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderMedia();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMenuList(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderMenuList();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMeter(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderMeter();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderButton(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderButton();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderImage(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderImage();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextFragment(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTextFragment();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderFragmentContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderFragmentContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderViewTransitionContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderViewTransitionContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderReplica(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderReplica();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableCaption(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTableCaption();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextControl(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTextControl();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextControlMultiLine(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTextControlMultiLine();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextControlSingleLine(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTextControlSingleLine();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSearchField(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSearchField();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderVideo(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderVideo();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTextControlInnerBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTextControlInnerBlock();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderViewTransitionCapture(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderViewTransitionCapture();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMultiColumnFlow(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderMultiColumnFlow();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderScrollbarPart(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderScrollbarPart();
+}
+
+#if ENABLE(MATHML)
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderMathMLFenced(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderMathMLFenced();
+}
+#endif
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGModelObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGModelObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGBlock();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGRoot(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGRoot();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGViewportContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGViewportContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGShape(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGShape();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGInline(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGInline();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGInlineText(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGInlineText();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGForeignObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGForeignObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGGradientStop(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGGradientStop();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGHiddenContainer(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGHiddenContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderSVGResourceMarker(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderSVGResourceMarker();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderOrLegacyRenderSVGShape(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderOrLegacyRenderSVGShape();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderOrLegacyRenderSVGForeignObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderOrLegacyRenderSVGForeignObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderOrLegacyRenderSVGModelObject(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderOrLegacyRenderSVGModelObject();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderCombineText(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderCombineText();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isSkippedContentRoot(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isSkippedContentRoot();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderObject_selectionState(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderObject*>(p)->selectionState());
+}
+
+extern "C" WEBCORE_EXPORT void RenderObject_setSelectionState(void* p, uint8_t state)
+{
+    static_cast<WebCore::RenderObject*>(p)->setSelectionState(static_cast<WebCore::RenderObject::HighlightState>(state));
+}
+
 extern "C" WEBCORE_EXPORT void RenderObject_setPreviousSibling(void* p, void* previous)
 {
     static_cast<WebCore::RenderObject*>(p)->setPreviousSibling(static_cast<WebCore::RenderObject*>(previous));

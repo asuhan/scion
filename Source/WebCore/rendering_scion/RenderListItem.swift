@@ -216,7 +216,12 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlock_paint(
+        id(), paintInfo.interop(),
+        LayoutPointRaw(x: paintOffset.x.rawValue(), y: paintOffset.y.rawValue()))
+      return
+    }
     if !logicalHeight().bool() && hasNonVisibleOverflow() {
       return
     }

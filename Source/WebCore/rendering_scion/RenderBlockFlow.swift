@@ -4037,7 +4037,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func repaintOverhangingFloats(paintAllDescendants: Bool) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_repaintOverhangingFloats(id(), paintAllDescendants)
+      return
+    }
     // Repaint any overhanging floats (if we know we're the one to paint them).
     // Otherwise, bail out.
     if !hasOverhangingFloats() {

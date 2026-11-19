@@ -530,7 +530,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Note that even if these 2 "canContain" functions return true for a particular renderer, it does not necessarily mean the renderer is the containing block (see containingBlockForAbsolute(Fixed)Position).
   func canContainFixedPositionObjects() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderElement_canContainFixedPositionObjects(id()) }
     return isRenderView()
       || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())
       || (hasBackdropFilter() && !isDocumentElementRenderer())
@@ -542,7 +542,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func canContainAbsolutelyPositionedObjects() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_canContainAbsolutelyPositionedObjects(id())
+    }
     return isRenderView()
       || style().position() != .Static
       || (canEstablishContainingBlockWithTransform() && hasTransformRelatedProperty())

@@ -1027,7 +1027,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func linesBoundingBox() -> IntRect {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return convertIntRect(wk_interop.RenderText_linesBoundingBox(id())) }
     let firstTextBox = InlineIterator.firstTextBoxFor(self)
     if !firstTextBox.bool() { return IntRect() }
 

@@ -881,7 +881,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func locationOffset() -> LayoutSizeWrapper { return LayoutSizeWrapper(width: x(), height: y()) }
 
   func size() -> LayoutSizeWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return frameRect().size() }
     return m_frameRect.size()
   }
 
@@ -6620,7 +6620,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      if var fixed = wasFixed {
+        wk_interop.RenderObject_mapLocalToContainer(
+          id(), wkRenderObject(ancestorContainer), transformState.interop(), mode.rawValue, &fixed)
+        wasFixed = fixed
+      } else {
+        wk_interop.RenderObject_mapLocalToContainer(
+          id(), wkRenderObject(ancestorContainer), transformState.interop(), mode.rawValue, nil)
+      }
+      return
+    }
     if CPtrToInt(ancestorContainer?.id()) == CPtrToInt(id()) {
       return
     }

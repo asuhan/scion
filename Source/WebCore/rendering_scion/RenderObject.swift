@@ -586,7 +586,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrder() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let next = wk_interop.RenderObject_nextInPreOrder(id(), nil) else {
+        return nil
+      }
+      return createRenderObjectWrapperOrNative(next)
+    }
     if let o = firstChildSlow() {
       return o
     }
@@ -821,12 +826,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderReplaced() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderReplaced(id()) }
     return m_typeSpecificFlags.kind == .Replaced
   }
 
   func isRenderBoxModelObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderBoxModelObject(id()) }
     return m_typeFlags.contains(.IsBoxModelObject)
   }
 
@@ -846,7 +851,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderLayerModelObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderLayerModelObject(id()) }
     return m_typeFlags.contains(.IsLayerModelObject)
   }
 
@@ -857,17 +862,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderQuote() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderQuote(id()) }
     return type() == .Quote
   }
 
   func isRenderDetailsMarker() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderDetailsMarker(id()) }
     return type() == .DetailsMarker
   }
 
   func isRenderEmbeddedObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderEmbeddedObject(id()) }
     return type() == .EmbeddedObject
   }
 
@@ -879,22 +884,24 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderFileUploadControl() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderFileUploadControl(id()) }
     return type() == .FileUploadControl
   }
 
   func isRenderMultiColumnSpannerPlaceholder() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isRenderMultiColumnSpannerPlaceholder(id())
+    }
     return type() == .MultiColumnSpannerPlaceholder
   }
 
   func isRenderFrame() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderFrame(id()) }
     return type() == .Frame
   }
 
   func isRenderFrameSet() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderFrameSet(id()) }
     return type() == .FrameSet
   }
 
@@ -923,22 +930,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMedia() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderMedia(id()) }
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsMedia)
   }
 
   func isRenderMenuList() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderMenuList(id()) }
     return type() == .MenuList
   }
 
   func isRenderMeter() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderMeter(id()) }
     return type() == .Meter
   }
 
   func isRenderButton() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderButton(id()) }
     return type() == .Button
   }
 
@@ -948,29 +955,29 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderImage() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderImage(id()) }
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsImage)
   }
 
   func isRenderTextFragment() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTextFragment(id()) }
     return type() == .TextFragment
   }
 
   func isRenderFragmentContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderFragmentContainer(id()) }
     return isRenderBlockFlow()
       && m_typeSpecificFlags.blockFlowFlags().contains(.IsFragmentContainer)
   }
 
   func isRenderViewTransitionContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderViewTransitionContainer(id()) }
     return isRenderBlockFlow()
       && m_typeSpecificFlags.blockFlowFlags().contains(.IsViewTransitionContainer)
   }
 
   func isRenderReplica() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderReplica(id()) }
     return type() == .Replica
   }
 
@@ -993,7 +1000,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableCaption() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTableCaption(id()) }
     return type() == .TableCaption
   }
 
@@ -1003,43 +1010,43 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTextControl() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTextControl(id()) }
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(.IsTextControl)
   }
 
   func isRenderTextControlMultiLine() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTextControlMultiLine(id()) }
     return type() == .TextControlMultiLine
   }
 
   func isRenderTextControlSingleLine() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTextControlSingleLine(id()) }
     return isRenderTextControl() && !isRenderTextControlMultiLine()
   }
 
   func isRenderSearchField() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSearchField(id()) }
     return type() == .SearchField
   }
 
   func isRenderVideo() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderVideo(id()) }
     return type() == .Video
   }
 
   func isRenderTextControlInnerBlock() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderTextControlInnerBlock(id()) }
     return type() == .TextControlInnerBlock
   }
 
   func isRenderViewTransitionCapture() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderViewTransitionCapture(id()) }
     return isRenderReplaced()
       && m_typeSpecificFlags.replacedFlags().contains(.IsViewTransitionCapture)
   }
 
   func isRenderWidget() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderWidget(id()) }
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsWidget)
   }
 
@@ -1061,12 +1068,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMultiColumnFlow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderMultiColumnFlow(id()) }
     return type() == .MultiColumnFlow
   }
 
   func isRenderScrollbarPart() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderScrollbarPart(id()) }
     return type() == .ScrollbarPart
   }
 
@@ -1276,7 +1283,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMathMLFenced() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderMathMLFenced(id()) }
     return type() == .MathMLFenced
   }
 
@@ -1287,13 +1294,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGModelObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGModelObject(id()) }
     return m_typeSpecificFlags.kind == .SVGModelObject
       && !m_typeSpecificFlags.svgFlags().contains(.IsLegacy)
   }
 
   func isRenderSVGBlock() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGBlock(id()) }
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(.IsSVGBlock)
   }
 
@@ -1303,12 +1310,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGRoot() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGRoot(id()) }
     return type() == .SVGRoot
   }
 
   func isRenderSVGContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGContainer(id()) }
     return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsContainer)
   }
 
@@ -1318,12 +1325,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGViewportContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGViewportContainer(id()) }
     return type() == .SVGViewportContainer
   }
 
   func isRenderSVGShape() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGShape(id()) }
     return isRenderSVGModelObject() && m_typeSpecificFlags.svgFlags().contains(.IsShape)
   }
 
@@ -1338,17 +1345,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGTextPath() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGTextPath(id()) }
     return type() == .SVGTextPath
   }
 
   func isRenderSVGInline() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGInline(id()) }
     return type() == .SVGInline || type() == .SVGTSpan || type() == .SVGTextPath
   }
 
   func isRenderSVGInlineText() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGInlineText(id()) }
     return type() == .SVGInlineText
   }
 
@@ -1358,7 +1365,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGForeignObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGForeignObject(id()) }
     return type() == .SVGForeignObject
   }
 
@@ -1374,7 +1381,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGGradientStop() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGGradientStop(id()) }
     return type() == .SVGGradientStop
   }
 
@@ -1389,7 +1396,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGHiddenContainer() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGHiddenContainer(id()) }
     return type() == .SVGHiddenContainer || isRenderSVGResourceContainer()
       || isRenderSVGResourceFilterPrimitive()
   }
@@ -1405,7 +1412,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGResourceMarker() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderSVGResourceMarker(id()) }
     return type() == .SVGResourceMarker
   }
 
@@ -1415,17 +1422,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderOrLegacyRenderSVGShape() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderOrLegacyRenderSVGShape(id()) }
     return isRenderSVGShape() || isLegacyRenderSVGShape()
   }
 
   func isRenderOrLegacyRenderSVGForeignObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isRenderOrLegacyRenderSVGForeignObject(id())
+    }
     return isRenderSVGForeignObject() || isLegacyRenderSVGForeignObject()
   }
 
   func isRenderOrLegacyRenderSVGModelObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderOrLegacyRenderSVGModelObject(id()) }
     return isRenderSVGModelObject() || isLegacyRenderSVGModelObject()
   }
 
@@ -3261,7 +3270,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // The current selection state for an object.  For blocks, the state refers to the state of the leaf
   // descendants (as described above in the HighlightState enum declaration).
   func selectionState() -> HighlightState {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return HighlightState(rawValue: wk_interop.RenderObject_selectionState(id()))!
+    }
     return m_stateBitfields.selectionState()
   }
 
@@ -3309,7 +3320,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderCombineText() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderCombineText(id()) }
     return type() == .CombineText
   }
 
@@ -3611,7 +3622,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSkippedContentRootForRenderObject() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isSkippedContentRoot(id()) }
     if isRenderText() {
       return false
     }

@@ -945,7 +945,10 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func setSelectionState(_ state: HighlightState) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setSelectionState(id(), state.rawValue)
+      return
+    }
     if state == .Inside && selectionState() != .None {
       return
     }

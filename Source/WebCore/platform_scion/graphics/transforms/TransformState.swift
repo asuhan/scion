@@ -129,6 +129,8 @@ class TransformState {
       ? .UnapplyInverseTransformDirection : .ApplyTransformDirection
   }
 
+  func interop() -> UnsafeMutableRawPointer { return p }
+
   private let p: UnsafeMutableRawPointer
   private let owner: Bool
 }

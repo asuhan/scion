@@ -41,6 +41,7 @@
 #include "InlineRunAndOffset.h"
 #include "LayoutInlineTextBox.h"
 #include "LayoutIntegrationLineLayout.h"
+#include "LayoutRectRaw.h"
 #include "LineSelection.h"
 #include "LocalFrame.h"
 #include "LocalFrameView.h"
@@ -78,6 +79,12 @@
 #include "Page.h"
 #include "SelectionGeometry.h"
 #endif
+
+extern "C" WEBCORE_EXPORT IntRectRaw RenderText_linesBoundingBox(const void* p)
+{
+    auto rect = static_cast<const WebCore::RenderText*>(p)->linesBoundingBox();
+    return { { rect.x(), rect.y() }, { rect.width(), rect.height() } };
+}
 
 extern "C" WEBCORE_EXPORT const void* RenderText_firstLineStyle(const void* p)
 {

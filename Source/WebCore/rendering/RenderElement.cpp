@@ -112,6 +112,16 @@ extern "C" WEBCORE_EXPORT void RenderElement_setStyle(void* p, const void* style
     static_cast<WebCore::RenderElement*>(p)->setStyle(WTFMove(*const_cast<WebCore::RenderStyle*>(static_cast<const WebCore::RenderStyle*>(style))), static_cast<WebCore::StyleDifference>(minimalStyleDifference));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_canContainFixedPositionObjects(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->canContainFixedPositionObjects();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderElement_canContainAbsolutelyPositionedObjects(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->canContainAbsolutelyPositionedObjects();
+}
+
 extern "C" WEBCORE_EXPORT void RenderElement_layout(void* p)
 {
     static_cast<WebCore::RenderElement*>(p)->layout();
