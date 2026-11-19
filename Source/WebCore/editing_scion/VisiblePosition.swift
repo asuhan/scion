@@ -137,7 +137,7 @@ struct VisiblePosition {
     }
     let downstreamStart = p.downstream()
     let primaryDirection = p.primaryDirection()
-    var orderCache = InlineIterator.LineLogicalOrderCache()
+    let orderCache = InlineIterator.LineLogicalOrderCache()
     while true {
       let decomposed = p.inlineBoxAndOffset(
         affinity: m_affinity, primaryDirection: primaryDirection)
@@ -205,7 +205,8 @@ struct VisiblePosition {
           if !previousBox.bool() {
             let logicalStart =
               primaryDirection == .LTR
-              ? firstLeafOnLineInLogicalOrderWithNode(box.get().lineBox(), &orderCache)
+              ? InlineIterator.firstLeafOnLineInLogicalOrderWithNode(
+                box.get().lineBox(), orderCache)
               : InlineIterator.lastLeafOnLineInLogicalOrderWithNode(box.get().lineBox(), orderCache)
             if logicalStart.bool() {
               box = logicalStart
@@ -333,7 +334,7 @@ struct VisiblePosition {
     }
     let downstreamStart = p.downstream()
     let primaryDirection = p.primaryDirection()
-    var orderCache = InlineIterator.LineLogicalOrderCache()
+    let orderCache = InlineIterator.LineLogicalOrderCache()
     while true {
       let decomposed = p.inlineBoxAndOffset(
         affinity: m_affinity, primaryDirection: primaryDirection)
@@ -402,7 +403,8 @@ struct VisiblePosition {
             let logicalEnd =
               primaryDirection == .LTR
               ? InlineIterator.lastLeafOnLineInLogicalOrderWithNode(box.get().lineBox(), orderCache)
-              : firstLeafOnLineInLogicalOrderWithNode(box.get().lineBox(), &orderCache)
+              : InlineIterator.firstLeafOnLineInLogicalOrderWithNode(
+                box.get().lineBox(), orderCache)
             if logicalEnd.bool() {
               box = logicalEnd
               renderer = box.get().renderer()

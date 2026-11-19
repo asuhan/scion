@@ -112,38 +112,6 @@ func contentStartInBlockDirection(_ arg0: InlineIterator.LineBox) -> Float32 {
   fatalError("Not implemented")
 }
 
-// layout/integration/inline/InlineIteratorLogicalOrderTraversal.h
-
-func firstLeafOnLineInLogicalOrder(
-  _ arg0: InlineIterator.LineBoxIterator, _ arg1: inout InlineIterator.LineLogicalOrderCache
-) -> InlineIterator.LeafBoxIterator {
-  fatalError("Not implemented")
-}
-
-func firstLeafOnLineInLogicalOrderWithNode(
-  _ arg0: InlineIterator.LineBoxIterator, _ arg1: inout InlineIterator.LineLogicalOrderCache
-) -> InlineIterator.LeafBoxIterator {
-  fatalError("Not implemented")
-}
-
-func lastLeafOnLineInLogicalOrder(
-  _ arg0: InlineIterator.LineBoxIterator, _ arg1: inout InlineIterator.LineLogicalOrderCache
-) -> InlineIterator.LeafBoxIterator {
-  fatalError("Not implemented")
-}
-
-func nextLeafOnLineInLogicalOrder(
-  _ arg0: InlineIterator.LeafBoxIterator, _ arg1: inout InlineIterator.LineLogicalOrderCache
-) -> InlineIterator.LeafBoxIterator {
-  fatalError("Not implemented")
-}
-
-func previousLeafOnLineInLogicalOrder(
-  _ arg0: InlineIterator.LeafBoxIterator, _ arg1: inout InlineIterator.LineLogicalOrderCache
-) -> InlineIterator.LeafBoxIterator {
-  fatalError("Not implemented")
-}
-
 // platform/text/TextBoundaries.h
 
 func endOfFirstWordBoundaryContext(_ arg0: StringWrapperView) -> UInt32 {

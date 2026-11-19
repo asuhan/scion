@@ -129,7 +129,7 @@ func previousTextOrLineBreakBox(
 ) -> InlineIterator.LeafBoxIterator {
   var box = box
   while box.bool() {
-    box = previousLeafOnLineInLogicalOrder(box, &orderCache)
+    box = InlineIterator.previousLeafOnLineInLogicalOrder(box, orderCache)
     if isTextOrLineBreakBox(box: box) {
       return box
     }
@@ -142,7 +142,7 @@ func nextTextOrLineBreakBox(
 ) -> InlineIterator.LeafBoxIterator {
   var box = box
   while box.bool() {
-    box = nextLeafOnLineInLogicalOrder(box, &orderCache)
+    box = InlineIterator.nextLeafOnLineInLogicalOrder(box, orderCache)
     if isTextOrLineBreakBox(box: box) {
       return box
     }
@@ -153,7 +153,7 @@ func nextTextOrLineBreakBox(
 func startTextOrLineBreakBox(
   lineBox: InlineIterator.LineBoxIterator, orderCache: inout InlineIterator.LineLogicalOrderCache
 ) -> InlineIterator.LeafBoxIterator {
-  let box = firstLeafOnLineInLogicalOrder(lineBox, &orderCache)
+  let box = InlineIterator.firstLeafOnLineInLogicalOrder(lineBox, orderCache)
   if isTextOrLineBreakBox(box: box) {
     return box
   }
@@ -163,7 +163,7 @@ func startTextOrLineBreakBox(
 func endTextOrLineBreakBox(
   lineBox: InlineIterator.LineBoxIterator, orderCache: inout InlineIterator.LineLogicalOrderCache
 ) -> InlineIterator.LeafBoxIterator {
-  let box = lastLeafOnLineInLogicalOrder(lineBox, &orderCache)
+  let box = InlineIterator.lastLeafOnLineInLogicalOrder(lineBox, orderCache)
   if isTextOrLineBreakBox(box: box) {
     return box
   }
@@ -209,7 +209,7 @@ func logicallyPreviousBox(
         return previousBox
       }
     }
-    startBox = firstLeafOnLineInLogicalOrder(previousLineBox, &orderCache)
+    startBox = InlineIterator.firstLeafOnLineInLogicalOrder(previousLineBox, orderCache)
   }
   return InlineIterator.LeafBoxIterator()
 }
@@ -476,11 +476,12 @@ func startPositionForLine(c: VisiblePosition, mode: LineEndpointComputationMode)
     }
     return VisiblePosition()
   }
-  var orderCache = InlineIterator.LineLogicalOrderCache()
+  let orderCache = InlineIterator.LineLogicalOrderCache()
   var startNode: NodeWrapper? = nil
   var startBox =
     mode == .UseLogicalOrdering
-    ? firstLeafOnLineInLogicalOrderWithNode(lineBox, &orderCache) : lineBox.get().firstLeafBox()
+    ? InlineIterator.firstLeafOnLineInLogicalOrderWithNode(lineBox, orderCache)
+    : lineBox.get().firstLeafBox()
   // Generated content (e.g. list markers and CSS :before and :after pseudoelements) have no corresponding DOM element,
   // and so cannot be represented by a VisiblePosition. Use whatever follows instead.
   while true {
@@ -492,7 +493,7 @@ func startPositionForLine(c: VisiblePosition, mode: LineEndpointComputationMode)
       break
     }
     if mode == .UseLogicalOrdering {
-      startBox = nextLeafOnLineInLogicalOrder(startBox, &orderCache)
+      startBox = InlineIterator.nextLeafOnLineInLogicalOrder(startBox, orderCache)
     } else {
       startBox.traverseNextOnLine()
     }
@@ -562,11 +563,11 @@ func endPositionForLine(c: VisiblePosition, mode: LineEndpointComputationMode) -
     }
     return VisiblePosition()
   }
-  var orderCache = InlineIterator.LineLogicalOrderCache()
+  let orderCache = InlineIterator.LineLogicalOrderCache()
   var endNode: NodeWrapper? = nil
   var endBox =
     mode == .UseLogicalOrdering
-    ? lastLeafOnLineInLogicalOrder(lineBox, &orderCache) : lineBox.get().lastLeafBox()
+    ? InlineIterator.lastLeafOnLineInLogicalOrder(lineBox, orderCache) : lineBox.get().lastLeafBox()
   // Generated content (e.g. list markers and CSS :before and :after pseudoelements) have no corresponding DOM element,
   // and so cannot be represented by a VisiblePosition. Use whatever precedes instead.
   while true {
@@ -578,7 +579,7 @@ func endPositionForLine(c: VisiblePosition, mode: LineEndpointComputationMode) -
       break
     }
     if mode == .UseLogicalOrdering {
-      endBox = previousLeafOnLineInLogicalOrder(endBox, &orderCache)
+      endBox = InlineIterator.previousLeafOnLineInLogicalOrder(endBox, orderCache)
     } else {
       endBox.traversePreviousOnLine()
     }
