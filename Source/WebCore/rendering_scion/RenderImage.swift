@@ -52,6 +52,13 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func altText() -> StringWrapper {
+    if !isNativeImpl() {
+      return StringWrapper(p: wk_interop.RenderImage_altText(id()), owner: false)
+    }
+    return m_altText
+  }
+
   func cachedImage() -> CachedImageWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -63,19 +70,19 @@ class RenderImageWrapper: RenderReplacedWrapper {
     var imageSize = IntSize()
     if newImage?.imageForRenderer(renderer: self) != nil {
       imageSize = imageSizeForError(newImage)
-    } else if !altText.isEmpty() || newImage != nil {
+    } else if !m_altText.isEmpty() || newImage != nil {
       // If we'll be displaying either text or an image, add a little padding.
       imageSize = IntSize(width: Int32(paddingWidth), height: Int32(paddingHeight))
     }
 
     // we have an alt and the user meant it (its not a text we invented)
-    if !altText.isEmpty() {
+    if !m_altText.isEmpty() {
       let font = style().fontCascade()
       let paddedTextSize = IntSize(
         width: Int32(
           Float32(paddingWidth)
             + min(
-              ceilf(font.width(run: RenderBlockWrapper.constructTextRun(altText, style()))),
+              ceilf(font.width(run: RenderBlockWrapper.constructTextRun(m_altText, style()))),
               maxAltTextWidth)),
         height: Int32(paddingHeight)
           + min(font.metricsOfPrimaryFont().intHeight(), maxAltTextHeight)
@@ -199,7 +206,8 @@ class RenderImageWrapper: RenderReplacedWrapper {
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     if needsToSetSizeForAltText {
-      if !altText.isEmpty() && setImageSizeForAltText(cachedImage()) == .ImageSizeChangeForAltText {
+      if !m_altText.isEmpty() && setImageSizeForAltText(cachedImage()) == .ImageSizeChangeForAltText
+      {
         repaintOrMarkForLayout(.ImageSizeChangeForAltText)
       }
       needsToSetSizeForAltText = false
@@ -350,12 +358,12 @@ class RenderImageWrapper: RenderReplacedWrapper {
           errorPictureDrawn = true
         }
 
-        if !altText.isEmpty() {
+        if !m_altText.isEmpty() {
           let style = self.style()
           let fontCascade = style.fontCascade()
           let fontMetrics = fontCascade.metricsOfPrimaryFont()
           let isHorizontal = style.isHorizontalWritingMode()
-          let encodedDisplayString = document().displayStringModifiedByEncoding(altText)
+          let encodedDisplayString = document().displayStringModifiedByEncoding(m_altText)
           let textRun = RenderBlockWrapper.constructTextRun(
             encodedDisplayString, style, ExpansionBehaviorWrapper.defaultBehavior(),
             [.RespectDirection, .RespectDirectionOverride])
@@ -760,7 +768,7 @@ class RenderImageWrapper: RenderReplacedWrapper {
       if !element()!.hasAltAttr() {
         return false
       }
-      return imageResource().errorOccurred() && altText.isEmpty()
+      return imageResource().errorOccurred() && m_altText.isEmpty()
     }
     if element() == nil {
       // Images with no associated elements do not fall under the category of unwanted content.
@@ -777,6 +785,6 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   // Text to display as long as the image isn't available.
-  private let altText = StringWrapper()
+  private let m_altText = StringWrapper()
   private var needsToSetSizeForAltText = false
 }

@@ -83,6 +83,11 @@
 #include "Settings.h"
 #endif
 
+extern "C" WEBCORE_EXPORT const void* RenderImage_altText(const void* p)
+{
+    return &static_cast<const WebCore::RenderImage*>(p)->altText();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderImage);
