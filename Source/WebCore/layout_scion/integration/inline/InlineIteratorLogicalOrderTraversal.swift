@@ -55,13 +55,13 @@ extension InlineIterator {
   }
 
   struct LineLogicalOrderCacheData {
-    let lineBox: LineBoxIterator
-    let boxes: [LeafBoxIterator]
-    let index: UInt64 = 0
+    var lineBox: LineBoxIterator
+    var boxes: [LeafBoxIterator]
+    var index: Int = 0
   }
 
   class LineLogicalOrderCache {
-    private let data: LineLogicalOrderCacheData? = nil
+    var data: LineLogicalOrderCacheData? = nil
   }
 
   static func firstTextBoxInLogicalOrderFor(_ text: RenderTextWrapper) -> (
@@ -82,10 +82,155 @@ extension InlineIterator {
     return textBox.get().nextTextBox()
   }
 
+  // Iterators are mutable references here: the cache keeps copies and hands out copies, so
+  // callers advancing a returned iterator leave the cached boxes alone.
+  static func leafBoxesInLogicalOrder(
+    _ lineBox: LineBoxIterator, _ reverseFunction: (inout [LeafBoxIterator], Range<Int>) -> Void
+  ) -> [LeafBoxIterator] {
+    var boxes: [LeafBoxIterator] = []
+
+    var minLevel: UInt8 = 128
+    var maxLevel: UInt8 = 0
+
+    let box = lineBox.get().firstLeafBox()
+    while box.bool() {
+      minLevel = min(minLevel, box.get().bidiLevel())
+      maxLevel = max(maxLevel, box.get().bidiLevel())
+      boxes.append(LeafBoxIterator(box.get()))
+      box.traverseNextOnLine()
+    }
+
+    if lineBox.get().formattingContextRoot().style().rtlOrdering() == .Visual {
+      return boxes
+    }
+
+    // Reverse of reordering of the line (L2 according to Bidi spec):
+    // L2. From the highest level found in the text to the lowest odd level on each line,
+    // reverse any contiguous sequence of characters that are at that level or higher.
+
+    // Reversing the reordering of the line is only done up to the lowest odd level.
+    if minLevel % 2 == 0 {
+      minLevel += 1
+    }
+
+    let end = boxes.count
+    while minLevel <= maxLevel {
+      var box = 0
+      while box < end {
+        while box < end && boxes[box].get().bidiLevel() < minLevel {
+          box += 1
+        }
+
+        let first = box
+        while box < end && boxes[box].get().bidiLevel() >= minLevel {
+          box += 1
+        }
+
+        let last = box
+        reverseFunction(&boxes, first..<last)
+      }
+      minLevel += 1
+    }
+
+    return boxes
+  }
+
+  private static func makeLineLogicalOrderCache(_ lineBox: LineBoxIterator)
+    -> LineLogicalOrderCacheData
+  {
+    return LineLogicalOrderCacheData(
+      lineBox: LineBoxIterator(lineBox.get()),
+      boxes: leafBoxesInLogicalOrder(lineBox, { boxes, range in boxes[range].reverse() }))
+  }
+
+  private static func updateLineLogicalOrderCacheIfNeeded(
+    _ box: LeafBoxIterator, _ cache: LineLogicalOrderCache
+  ) {
+    let lineBox = box.get().lineBox()
+    if cache.data == nil || cache.data!.lineBox != lineBox {
+      cache.data = makeLineLogicalOrderCache(lineBox)
+    }
+
+    if cache.data!.index < cache.data!.boxes.count && cache.data!.boxes[cache.data!.index] == box {
+      return
+    }
+
+    let index = cache.data!.boxes.firstIndex(where: { $0 == box })
+    assert(index != nil)
+    cache.data!.index = index ?? cache.data!.boxes.count
+  }
+
+  static func firstLeafOnLineInLogicalOrder(
+    _ lineBox: LineBoxIterator, _ cache: LineLogicalOrderCache
+  ) -> LeafBoxIterator {
+    cache.data = makeLineLogicalOrderCache(lineBox)
+
+    guard let first = cache.data!.boxes.first else {
+      return LeafBoxIterator()
+    }
+
+    cache.data!.index = 0
+    return LeafBoxIterator(first.get())
+  }
+
+  static func lastLeafOnLineInLogicalOrder(
+    _ lineBox: LineBoxIterator, _ cache: LineLogicalOrderCache
+  ) -> LeafBoxIterator {
+    cache.data = makeLineLogicalOrderCache(lineBox)
+
+    guard let last = cache.data!.boxes.last else {
+      return LeafBoxIterator()
+    }
+
+    cache.data!.index = cache.data!.boxes.count - 1
+    return LeafBoxIterator(last.get())
+  }
+
+  static func nextLeafOnLineInLogicalOrder(_ box: LeafBoxIterator, _ cache: LineLogicalOrderCache)
+    -> LeafBoxIterator
+  {
+    updateLineLogicalOrderCacheIfNeeded(box, cache)
+
+    cache.data!.index += 1
+
+    if cache.data!.index < cache.data!.boxes.count {
+      return LeafBoxIterator(cache.data!.boxes[cache.data!.index].get())
+    }
+
+    return LeafBoxIterator()
+  }
+
+  static func previousLeafOnLineInLogicalOrder(
+    _ box: LeafBoxIterator, _ cache: LineLogicalOrderCache
+  ) -> LeafBoxIterator {
+    updateLineLogicalOrderCacheIfNeeded(box, cache)
+
+    if cache.data!.index == 0 {
+      return LeafBoxIterator()
+    }
+
+    cache.data!.index -= 1
+
+    return LeafBoxIterator(cache.data!.boxes[cache.data!.index].get())
+  }
+
+  static func firstLeafOnLineInLogicalOrderWithNode(
+    _ lineBox: LineBoxIterator, _ cache: LineLogicalOrderCache
+  ) -> LeafBoxIterator {
+    var box = firstLeafOnLineInLogicalOrder(lineBox, cache)
+    while box.bool() && box.get().renderer().node() == nil {
+      box = nextLeafOnLineInLogicalOrder(box, cache)
+    }
+    return box
+  }
+
   static func lastLeafOnLineInLogicalOrderWithNode(
     _ lineBox: LineBoxIterator, _ cache: LineLogicalOrderCache
   ) -> LeafBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var box = lastLeafOnLineInLogicalOrder(lineBox, cache)
+    while box.bool() && box.get().renderer().node() == nil {
+      box = previousLeafOnLineInLogicalOrder(box, cache)
+    }
+    return box
   }
 }
