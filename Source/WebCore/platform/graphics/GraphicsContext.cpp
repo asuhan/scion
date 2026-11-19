@@ -287,6 +287,14 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_fillRect(void* p, FloatRectRaw re
     static_cast<WebCore::GraphicsContext*>(p)->fillRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha });
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_drawFocusRingRects(void* p, const FloatRectRaw* rects_raw, uint64_t count, float outlineOffset, float outlineWidth, SRGBARaw srgba)
+{
+    Vector<WebCore::FloatRect> rects(count, [&](size_t i) {
+        return WebCore::FloatRect { rects_raw[i].x, rects_raw[i].y, rects_raw[i].width, rects_raw[i].height };
+    });
+    static_cast<WebCore::GraphicsContext*>(p)->drawFocusRing(rects, outlineOffset, outlineWidth, WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha });
+}
+
 extern "C" WEBCORE_EXPORT void GraphicsContext_fillRectComposite(void* p, FloatRectRaw rect_raw, SRGBARaw srgba, uint8_t op, uint8_t blendMode)
 {
     static_cast<WebCore::GraphicsContext*>(p)->fillRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha }, static_cast<WebCore::CompositeOperator>(op), static_cast<WebCore::BlendMode>(blendMode));

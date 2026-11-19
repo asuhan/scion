@@ -481,6 +481,19 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func drawFocusRing(
+    _ rects: [FloatRectWrapper], _ outlineOffset: Float32, _ outlineWidth: Float32,
+    _ color: ColorWrapper
+  ) {
+    let srgba = color.toSRGBA()
+    let rectsRaw = rects.map { toFloatRectRaw($0) }
+    rectsRaw.withUnsafeBufferPointer { buffer in
+      wk_interop.GraphicsContext_drawFocusRingRects(
+        p!, buffer.baseAddress, UInt64(buffer.count), outlineOffset, outlineWidth,
+        SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
+    }
+  }
+
   // Transforms
 
   func scale(_ s: Float32) { wk_interop.GraphicsContext_scale(p!, s) }

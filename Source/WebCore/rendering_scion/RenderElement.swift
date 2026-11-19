@@ -176,13 +176,13 @@ private func mustRepaintFillLayers(_ renderer: RenderElementWrapper, _ layer: Fi
 }
 
 private func usePlatformFocusRingColorForOutlineStyleAuto() -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // NB(asuhan): true for PLATFORM(COCOA) || PLATFORM(GTK) || PLATFORM(WPE), false otherwise.
+  return true
 }
 
 private func useShrinkWrappedFocusRingForOutlineStyleAuto() -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // NB(asuhan): true for PLATFORM(COCOA) || PLATFORM(GTK) || PLATFORM(WPE), false otherwise.
+  return true
 }
 
 private func drawFocusRing(
@@ -195,8 +195,8 @@ private func drawFocusRing(
   context: GraphicsContextWrapper, rects: [FloatRectWrapper], style: RenderStyleWrapper,
   color: ColorWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // NB(asuhan) passes an outline offset of 0 for PLATFORM(MAC) only.
+  context.drawFocusRing(rects, style.outlineOffset(), style.outlineWidth(), color)
 }
 
 struct MarginRect {
