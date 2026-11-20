@@ -2885,7 +2885,7 @@ LayoutSize RenderObject::offsetFromContainer(RenderElement& container, const Lay
 
 LayoutSize RenderObject::offsetFromAncestorContainer(const RenderElement& container) const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->offsetFromAncestorContainer(container); }
     LayoutSize offset;
     LayoutPoint referencePoint;
     CheckedPtr currentContainer = this;

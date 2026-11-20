@@ -2858,6 +2858,16 @@ func RenderObjectScion_isSkippedContentRoot(_ objectRaw: UnsafeRawPointer) -> Bo
   return object.isSkippedContentRootForRenderObject()
 }
 
+@_cdecl("RenderObjectScion_offsetFromAncestorContainer")
+func RenderObjectScion_offsetFromAncestorContainer(
+  _ objectRaw: UnsafeRawPointer, _ containerRaw: UnsafeMutableRawPointer
+) -> LayoutSizeRaw {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  let container = createRenderObjectWrapperOrNative(containerRaw) as! RenderElementWrapper
+  let offset = object.offsetFromAncestorContainer(container)
+  return LayoutSizeRaw(width: offset.width().rawValue(), height: offset.height().rawValue())
+}
+
 @_cdecl("RenderObjectScion_isSkippedContentForLayout")
 func RenderObjectScion_isSkippedContentForLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

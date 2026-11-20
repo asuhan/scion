@@ -595,6 +595,7 @@ public:
     bool isSkippedContent() const;
 
     bool isSkippedContentRoot() const;
+    LayoutSize offsetFromAncestorContainer(const RenderElement&) const;
 
     bool isSkippedContentForLayout() const;
 

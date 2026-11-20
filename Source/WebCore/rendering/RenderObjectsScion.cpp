@@ -800,6 +800,8 @@ struct LayoutSizeRaw {
 
 extern "C" LayoutSizeRaw RenderBoxModelObjectScion_offsetForInFlowPosition(const void* p);
 
+extern "C" LayoutSizeRaw RenderObjectScion_offsetFromAncestorContainer(const void*, void* container);
+
 extern "C" bool RenderBoxModelObjectScion_hasAcceleratedCompositing(const void*);
 
 extern "C" int32_t RenderBoxModelObjectScion_borderTop(const void*);
@@ -2315,6 +2317,12 @@ void RenderObjectScion::initializeFragmentedFlowStateOnInsertion() { RenderObjec
 bool RenderObjectScion::isSkippedContent() const { return RenderObjectScion_isSkippedContent(m_handle); }
 
 bool RenderObjectScion::isSkippedContentRoot() const { return RenderObjectScion_isSkippedContentRoot(m_handle); }
+
+LayoutSize RenderObjectScion::offsetFromAncestorContainer(const RenderElement& container) const
+{
+    const auto offset = RenderObjectScion_offsetFromAncestorContainer(m_handle, const_cast<RenderElement*>(&container));
+    return { LayoutUnit::fromRawValue(offset.width), LayoutUnit::fromRawValue(offset.height) };
+}
 
 bool RenderObjectScion::isSkippedContentForLayout() const { return RenderObjectScion_isSkippedContentForLayout(m_handle); }
 
