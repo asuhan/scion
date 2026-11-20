@@ -423,7 +423,89 @@ struct EditingTextIterator {
   }
 
   mutating func handleReplacedElement() -> Bool {
-    fatalError("Not implemented")
+    if fullyClippedStack.top() {
+      return false
+    }
+    let renderer = currentNode!.renderer()!
+    if renderer.style().visibility() != .Visible && !behaviors.contains(.IgnoresStyleVisibility) {
+      return false
+    }
+    if lastTextNodeEndedWithCollapsedSpace {
+      emitCharacter(
+        character: UInt16(32 /* ' ' */), characterNode: lastTextNode!.protectedParentNode(),
+        offsetBaseNode: lastTextNode, textStartOffset: 1, textEndOffset: 1)
+      return false
+    }
+    if let renderTextControl = renderer as? RenderTextControlWrapper,
+      behaviors.contains(.EntersTextControls)
+    {
+      if let innerTextElement = renderTextControl.textFormControlElement().innerTextElement() {
+        currentNode = innerTextElement.containingShadowRoot().map { createNodeWrapper($0.p) }
+        pushFullyClippedState(stack: &fullyClippedStack, node: protectedCurrentNode()!)
+        offset = 0
+        return false
+      }
+    }
+    let currentElement: HTMLElementWrapper? = currentNode as? HTMLElementWrapper
+    if behaviors.contains(.EntersImageOverlays) && currentElement != nil
+      && hasOverlay(currentElement!)
+    {
+      if let shadowRoot = currentNode!.shadowRoot() {
+        currentNode = createNodeWrapper(shadowRoot.p)
+        pushFullyClippedState(stack: &fullyClippedStack, node: protectedCurrentNode()!)
+        offset = 0
+        return false
+      }
+      assertionFailure()
+    }
+    hasEmitted = true
+    let shouldEmitObjectReplacementCharacter: Bool = { () -> Bool in
+      if self.behaviors.contains(.EmitsObjectReplacementCharacters) {
+        return true
+      }
+      if self.behaviors.contains(.EmitsObjectReplacementCharactersForImages)
+        && self.currentNode is HTMLImageElementWrapper
+      {
+        return true
+      }
+      return false
+    }()
+    if shouldEmitObjectReplacementCharacter {
+      emitCharacter(
+        character: objectReplacementCharacter, characterNode: currentNode!.protectedParentNode(),
+        offsetBaseNode: protectedCurrentNode(), textStartOffset: 0, textEndOffset: 1)
+      // Don't process subtrees for embedded objects. If the text there is required,
+      // it must be explicitly asked by specifying a range falling inside its boundaries.
+      handledChildren = true
+      return true
+    }
+    if behaviors.contains(.EmitsCharactersBetweenAllVisiblePositions) {
+      // We want replaced elements to behave like punctuation for boundary
+      // finding, and to simply take up space for the selection preservation
+      // code in moveParagraphs, so we use a comma.
+      emitCharacter(
+        character: UInt16(44 /* ',' */), characterNode: currentNode!.protectedParentNode(),
+        offsetBaseNode: protectedCurrentNode(), textStartOffset: 0, textEndOffset: 1)
+      return true
+    }
+    positionNode = currentNode!.parentNode()
+    positionOffsetBaseNode = currentNode
+    positionStartOffset = 0
+    positionEndOffset = 1
+    if let renderImage = renderer as? RenderImageWrapper, behaviors.contains(.EmitsImageAltText) {
+      let altText = renderImage.altText()
+      let length = altText.length()
+      if length != 0 {
+        lastCharacter = altText[length - 1]
+        m_copyableText.set(string: altText)
+        m_text = m_copyableText.text()
+        return true
+      }
+    }
+    m_copyableText.reset()
+    m_text = StringWrapperView()
+    lastCharacter = 0
+    return true
   }
 
   mutating func shouldRepresentNodeOffsetZero() -> Bool {
