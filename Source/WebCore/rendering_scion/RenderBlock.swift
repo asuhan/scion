@@ -3875,7 +3875,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override final func shouldPaintSelectionGaps() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBlock_shouldPaintSelectionGaps(id()) }
     return selectionState() != .None && style().usedVisibility() == .Visible && isSelectionRoot()
   }
 

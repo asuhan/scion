@@ -910,6 +910,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isSkippedContentRoot(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isSkippedContentRoot();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isDescendantOf(const void* p, const void* ancestor)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isDescendantOf(static_cast<const WebCore::RenderObject*>(ancestor));
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderObject_selectionState(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderObject*>(p)->selectionState());

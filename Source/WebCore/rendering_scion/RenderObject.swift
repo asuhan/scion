@@ -518,7 +518,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isDescendantOf(ancestor: RenderObjectWrapper?) -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isDescendantOf(id(), wkRenderObject(ancestor))
+    }
     var renderer: RenderObjectWrapper? = self
     while renderer != nil {
       if CPtrToInt(renderer!.id()) == CPtrToInt(ancestor?.id()) {

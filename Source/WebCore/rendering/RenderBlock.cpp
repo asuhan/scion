@@ -155,6 +155,12 @@ extern "C" WEBCORE_EXPORT void RenderBlock_paint(void* p, void* paint_info_raw, 
     static_cast<WebCore::RenderBlock*>(p)->paint(*static_cast<WebCore::PaintInfo*>(paint_info_raw), { WebCore::LayoutUnit::fromRawValue(paint_offset.x), WebCore::LayoutUnit::fromRawValue(paint_offset.y) });
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBlock_shouldPaintSelectionGaps(const void* p)
+{
+    // RenderBlock's override is private; dispatch through the public RenderObject virtual.
+    return static_cast<const WebCore::RenderObject*>(static_cast<const WebCore::RenderBlock*>(p))->shouldPaintSelectionGaps();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBlock_isSelfCollapsingBlock(const void* p)
 {
     return static_cast<const WebCore::RenderBlock*>(p)->isSelfCollapsingBlock();
