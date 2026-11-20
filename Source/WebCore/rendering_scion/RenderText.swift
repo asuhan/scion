@@ -1760,7 +1760,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   override final func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return clippedOverflowRectInterop(self, repaintContainer, context) }
     var rendererToRepaint: RenderObjectWrapper? = containingBlock()
 
     // Do not cross self-painting layer boundaries.

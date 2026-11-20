@@ -6171,15 +6171,30 @@ func RenderBoxScion_applyCachedClipAndScrollPosition(
   return intersects
 }
 
-func computeVisibleRectsInContainerInterop(
-  _ renderer: RenderObjectWrapper, _ rects: RenderObjectWrapper.RepaintRects,
-  _ container: RenderLayerModelObjectWrapper?, _ context: RenderObjectWrapper.VisibleRectContext
-) -> RenderObjectWrapper.RepaintRects? {
-  let contextRaw = VisibleRectContextRaw(
+private func convertVisibleRectContext(_ context: RenderObjectWrapper.VisibleRectContext)
+  -> VisibleRectContextRaw
+{
+  return VisibleRectContextRaw(
     hasPositionFixedDescendant: context.hasPositionFixedDescendant,
     dirtyRectIsFlipped: context.dirtyRectIsFlipped,
     descendantNeedsEnclosingIntRect: context.descendantNeedsEnclosingIntRect,
     options: context.options.rawValue)
+}
+
+func clippedOverflowRectInterop(
+  _ renderer: RenderObjectWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,
+  _ context: RenderObjectWrapper.VisibleRectContext
+) -> LayoutRectWrapper {
+  return convertLayoutRect(
+    wk_interop.RenderObject_clippedOverflowRect(
+      renderer.id(), wkRenderObject(repaintContainer), convertVisibleRectContext(context)))
+}
+
+func computeVisibleRectsInContainerInterop(
+  _ renderer: RenderObjectWrapper, _ rects: RenderObjectWrapper.RepaintRects,
+  _ container: RenderLayerModelObjectWrapper?, _ context: RenderObjectWrapper.VisibleRectContext
+) -> RenderObjectWrapper.RepaintRects? {
+  let contextRaw = convertVisibleRectContext(context)
   let raw = wk_interop.RenderObject_computeVisibleRectsInContainer(
     renderer.id(), convertRepaintRects(rects), wkRenderObject(container), contextRaw)
   return raw.is_valid ? convertRepaintRects(raw.rects) : nil

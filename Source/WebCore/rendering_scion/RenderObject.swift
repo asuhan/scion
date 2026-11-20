@@ -3124,7 +3124,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return clippedOverflowRectInterop(self, repaintContainer, context) }
     let repaintRects = localRectsForRepaint(.No)
     if repaintRects.clippedOverflowRect.isEmpty() {
       return LayoutRectWrapper()

@@ -1094,6 +1094,7 @@ bool RenderLayoutState_isClipped(const void*);
 void RenderLayoutState_setLineClamp(void* p, struct OptionalLineClampRaw lineClamp);
 void RenderLayoutState_setLegacyLineClamp(void* p, struct OptionalLegacyLineClampRaw legacyLineClamp);
 struct OptionalRepaintRectsRaw RenderObject_computeVisibleRectsInContainer(const void*, struct RepaintRectsRaw, const void*, struct VisibleRectContextRaw);
+struct LayoutRectRaw RenderObject_clippedOverflowRect(const void*, const void* repaintContainer, struct VisibleRectContextRaw);
 void GlyphDisplayListCacheInlineDisplay_remove(const void*);
 void RenderBox_scrollLayerToYPosition(void*, int32_t, const void*);
 void RenderBox_scrollLayerToXPosition(void*, int32_t, const void*);

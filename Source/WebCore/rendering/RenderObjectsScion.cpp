@@ -4298,6 +4298,13 @@ extern "C" WEBCORE_EXPORT OptionalRepaintRectsRaw RenderObject_computeVisibleRec
     return { convertRepaintRects(*result), true };
 }
 
+extern "C" WEBCORE_EXPORT LayoutRectRaw RenderObject_clippedOverflowRect(const void* objectRaw, const void* repaintContainerRaw, VisibleRectContextRaw contextRaw)
+{
+    RenderObject::VisibleRectContext context { contextRaw.hasPositionFixedDescendant, contextRaw.dirtyRectIsFlipped, OptionSet<RenderObject::VisibleRectContextOption>::fromRaw(contextRaw.options) };
+    context.descendantNeedsEnclosingIntRect = contextRaw.descendantNeedsEnclosingIntRect;
+    return convertLayoutRect(static_cast<const RenderObject*>(objectRaw)->clippedOverflowRect(static_cast<const RenderLayerModelObject*>(repaintContainerRaw), context));
+}
+
 extern "C" bool RenderBoxScion_sizesLogicalWidthToFitContent(const void*, uint8_t);
 
 bool RenderBoxScion::sizesLogicalWidthToFitContent(uint8_t widthType) const
