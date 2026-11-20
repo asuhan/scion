@@ -3099,6 +3099,11 @@ void RenderObject::destroy()
 {
     if (m_scion) {
         m_scion->destroy();
+        // Unlike the `delete this` below, the C++ peer of a Scion renderer outlives destroy().
+        // Revoke its weak pointers so callers still observe the renderer as gone, e.g.
+        // RenderTreeBuilder::Block::detach, whose nested destroy() can drop the anonymous
+        // block that its outer frame holds in a WeakPtr.
+        weakPtrFactory().revokeAll();
         return;
     }
     RELEASE_ASSERT(!m_parent);
