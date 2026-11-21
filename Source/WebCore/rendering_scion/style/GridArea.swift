@@ -32,7 +32,7 @@
 // A span in a single direction (either rows or columns). Note that |startLine|
 // and |endLine| are grid lines' indexes.
 // Despite line numbers in the spec start in "1", the indexes here start in "0".
-struct GridSpan: Sequence, IteratorProtocol {
+struct GridSpan: Sequence {
   static func untranslatedDefiniteGridSpan(startLine: Int32, endLine: Int32) -> GridSpan {
     return GridSpan(startLine: startLine, endLine: endLine, type: .UntranslatedDefinite)
   }
@@ -76,9 +76,9 @@ struct GridSpan: Sequence, IteratorProtocol {
     return UInt32(m_endLine)
   }
 
-  func next() -> UInt32? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  // Upstream iterates the lines from startLine() to endLine().
+  func makeIterator() -> Range<UInt32>.Iterator {
+    return (startLine()..<endLine()).makeIterator()
   }
 
   func isTranslatedDefinite() -> Bool { return m_type == .TranslatedDefinite }
