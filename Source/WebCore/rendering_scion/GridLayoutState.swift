@@ -34,18 +34,22 @@ struct GridLayoutState {
   func containsLayoutRequirementForGridItem(
     gridItem: RenderBoxWrapper, layoutRequirement: ItemLayoutRequirement
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let requirements = itemsLayoutRequirements[CPtrToInt(gridItem.id())] {
+      return requirements.contains(layoutRequirement)
+    }
+    return false
   }
 
   mutating func setLayoutRequirementForGridItem(
     gridItem: RenderBoxWrapper, layoutRequirement: ItemLayoutRequirement
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    itemsLayoutRequirements[CPtrToInt(gridItem.id()), default: []].insert(layoutRequirement)
   }
 
   mutating func setNeedsSecondTrackSizingPass() { needsSecondTrackSizingPass = true }
 
   var needsSecondTrackSizingPass = false
+
+  // Upstream's HashMap keyed by the grid item, keyed by its identity here.
+  private var itemsLayoutRequirements: [UInt: ItemLayoutRequirement] = [:]
 }

@@ -734,8 +734,8 @@ final class GridTrackSizingAlgorithm {
   }
 
   func clearBaselineItemsCache() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    columnBaselineItemsMap.clear()
+    rowBaselineItemsMap.clear()
   }
 
   func tracks(direction: GridTrackSizingDirection) -> GridTrackArrayRef {
@@ -895,8 +895,14 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func resizeTracks(direction: GridTrackSizingDirection, numTracks: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Upstream resizes the track vector in place, keeping the existing tracks.
+    let tracks = tracks(direction: direction)
+    if tracks.a.count > Int(numTracks) {
+      tracks.a.removeLast(tracks.a.count - Int(numTracks))
+    }
+    while tracks.a.count < Int(numTracks) {
+      tracks.a.append(GridTrack())
+    }
   }
 
   func availableSpace() -> LayoutUnit? {
@@ -2159,6 +2165,8 @@ final class GridTrackSizingAlgorithm {
 
   private var baselineAlignment = GridBaselineAlignment()
 
+  // Upstream's HashMap<SingleThreadWeakRef<const RenderBox>, bool>, keyed by the box identity
+  // since the generic HashMap port is a stub. Keys keep their insertion order.
   private class BaselineItemsCache {
     func set(_ key: RenderBoxWrapper, _ value: Bool) {
       // TODO(asuhan): implement this
@@ -2166,19 +2174,27 @@ final class GridTrackSizingAlgorithm {
     }
 
     func contains(_ key: RenderBoxWrapper) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return values[CPtrToInt(key.id())] != nil
     }
 
     func keys() -> ArraySlice<RenderBoxWrapper> {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return boxes[...]
+    }
+
+    func clear() {
+      boxes.removeAll()
+      values.removeAll()
     }
 
     func deepCopy() -> BaselineItemsCache {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let copy = BaselineItemsCache()
+      copy.boxes = boxes
+      copy.values = values
+      return copy
     }
+
+    private var boxes: [RenderBoxWrapper] = []
+    private var values: [UInt: Bool] = [:]
   }
 
   private let columnBaselineItemsMap = BaselineItemsCache()
