@@ -1433,13 +1433,11 @@ class RenderStyleWrapper: Equatable {
   func boxPack() -> BoxPack { return BoxPack(rawValue: wk_interop.RenderStyle_boxPack(p!))! }
 
   func gridColumnTrackSizes() -> ArraySlice<GridTrackSize> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridTrackSizes(wk_interop.RenderStyle_gridColumnTrackSizes(p!)!)[...]
   }
 
   func gridRowTrackSizes() -> ArraySlice<GridTrackSize> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridTrackSizes(wk_interop.RenderStyle_gridRowTrackSizes(p!)!)[...]
   }
 
   func gridTrackSizes(_ direction: GridTrackSizingDirection) -> ArraySlice<GridTrackSize> {
@@ -1448,13 +1446,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func gridAutoRepeatColumns() -> ArraySlice<GridTrackSize> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridTrackSizes(wk_interop.RenderStyle_gridAutoRepeatColumns(p!)!)[...]
   }
 
   func gridAutoRepeatRows() -> ArraySlice<GridTrackSize> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridTrackSizes(wk_interop.RenderStyle_gridAutoRepeatRows(p!)!)[...]
   }
 
   func gridAutoRepeatColumnsInsertionPoint() -> UInt32 {
@@ -1492,13 +1488,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func gridAutoColumns() -> [GridTrackSize] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridTrackSizes(wk_interop.RenderStyle_gridAutoColumns(p!)!)
   }
 
   func gridAutoRows() -> [GridTrackSize] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridTrackSizes(wk_interop.RenderStyle_gridAutoRows(p!)!)
   }
 
   func columnCount() -> UInt16 { return wk_interop.RenderStyle_columnCount(p!) }
@@ -2172,23 +2166,19 @@ class RenderStyleWrapper: Equatable {
   func gridMasonryColumns() -> Bool { return wk_interop.RenderStyle_gridMasonryColumns(p!) }
 
   func gridItemColumnStart() -> GridPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridPosition(wk_interop.RenderStyle_gridItemColumnStart(p!))
   }
 
   func gridItemColumnEnd() -> GridPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridPosition(wk_interop.RenderStyle_gridItemColumnEnd(p!))
   }
 
   func gridItemRowStart() -> GridPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridPosition(wk_interop.RenderStyle_gridItemRowStart(p!))
   }
 
   func gridItemRowEnd() -> GridPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return convertGridPosition(wk_interop.RenderStyle_gridItemRowEnd(p!))
   }
 
   func boxShadow() -> ShadowData? {
@@ -3630,4 +3620,45 @@ func isNonVisibleOverflow(_ overflow: Overflow) -> Bool {
 
 func isVisibleToHitTesting(_ style: RenderStyleWrapper, _ request: HitTestRequestWrapper) -> Bool {
   return (request.userTriggered() ? style.usedVisibility() : style.visibility()) == .Visible
+}
+
+// The grid track sizes below are copied out of the C++ style: the style can replace them while
+// a render grid still holds what it read (see fontCascade()).
+private func convertGridLength(_ raw: GridLengthRaw) -> GridLength {
+  if raw.isFlex {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  return GridLength(length: LengthWrapper(copyOf: LengthWrapper(p: raw.length!)))
+}
+
+private func convertGridTrackSizes(_ vector: UnsafeRawPointer) -> [GridTrackSize] {
+  let count = wk_interop.GridTrackSizeVector_size(vector)
+  var result: [GridTrackSize] = []
+  result.reserveCapacity(Int(count))
+  for index in 0..<count {
+    let raw = wk_interop.GridTrackSizeVector_at(vector, index)
+    switch raw.type {
+    case 1:
+      result.append(
+        GridTrackSize(
+          minTrackBreadth: convertGridLength(raw.minTrackBreadth),
+          maxTrackBreadth: convertGridLength(raw.maxTrackBreadth)))
+    case 2:
+      result.append(
+        GridTrackSize(
+          length: convertGridLength(raw.fitContentTrackBreadth),
+          trackSizeType: .FitContentTrackSizing))
+    default:
+      result.append(GridTrackSize(length: convertGridLength(raw.minTrackBreadth)))
+    }
+  }
+  return result
+}
+
+private func convertGridPosition(_ raw: GridPositionRaw) -> GridPosition {
+  let types: [GridPositionType] = [
+    .AutoPosition, .ExplicitPosition, .SpanPosition, .NamedGridAreaPosition,
+  ]
+  return GridPosition(type: types[Int(raw.type)], integerPosition: raw.integerPosition)
 }

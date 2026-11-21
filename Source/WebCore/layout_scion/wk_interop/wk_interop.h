@@ -184,6 +184,24 @@ struct LayoutSizeRaw {
     int32_t height;
 };
 
+struct GridLengthRaw {
+    bool isFlex;
+    double flex;
+    const void* length;
+};
+
+struct GridTrackSizeRaw {
+    uint8_t type;
+    struct GridLengthRaw minTrackBreadth;
+    struct GridLengthRaw maxTrackBreadth;
+    struct GridLengthRaw fitContentTrackBreadth;
+};
+
+struct GridPositionRaw {
+    uint8_t type;
+    int32_t integerPosition;
+};
+
 struct LayoutRectRaw {
     int32_t x;
     int32_t y;
@@ -1412,6 +1430,18 @@ const void* RenderStyle_getCachedPseudoStyle(const void*, uint32_t, const void*)
 bool RenderStyle_isFloating(const void*);
 uint8_t RenderStyle_position(const void*);
 const void* RenderStyle_width(const void*);
+const void* RenderStyle_gridColumnTrackSizes(const void*);
+const void* RenderStyle_gridRowTrackSizes(const void*);
+const void* RenderStyle_gridAutoRepeatColumns(const void*);
+const void* RenderStyle_gridAutoRepeatRows(const void*);
+const void* RenderStyle_gridAutoColumns(const void*);
+const void* RenderStyle_gridAutoRows(const void*);
+uint64_t GridTrackSizeVector_size(const void*);
+struct GridTrackSizeRaw GridTrackSizeVector_at(const void*, uint64_t);
+struct GridPositionRaw RenderStyle_gridItemColumnStart(const void*);
+struct GridPositionRaw RenderStyle_gridItemColumnEnd(const void*);
+struct GridPositionRaw RenderStyle_gridItemRowStart(const void*);
+struct GridPositionRaw RenderStyle_gridItemRowEnd(const void*);
 const void* RenderStyle_height(const void*);
 const void* RenderStyle_minWidth(const void*);
 const void* RenderStyle_maxWidth(const void*);

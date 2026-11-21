@@ -2633,6 +2633,106 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_outOfFlowPositionStyleDidChange(const
     return static_cast<const WebCore::RenderStyle*>(p)->outOfFlowPositionStyleDidChange(other);
 }
 
+struct GridLengthRaw {
+    bool isFlex;
+    double flex;
+    const void* length;
+};
+
+struct GridTrackSizeRaw {
+    uint8_t type;
+    GridLengthRaw minTrackBreadth;
+    GridLengthRaw maxTrackBreadth;
+    GridLengthRaw fitContentTrackBreadth;
+};
+
+struct GridPositionRaw {
+    uint8_t type;
+    int32_t integerPosition;
+};
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_gridColumnTrackSizes(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->gridColumnTrackSizes();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_gridRowTrackSizes(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->gridRowTrackSizes();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_gridAutoRepeatColumns(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->gridAutoRepeatColumns();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_gridAutoRepeatRows(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->gridAutoRepeatRows();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_gridAutoColumns(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->gridAutoColumns();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_gridAutoRows(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->gridAutoRows();
+}
+
+extern "C" WEBCORE_EXPORT uint64_t GridTrackSizeVector_size(const void* p)
+{
+    return static_cast<const Vector<WebCore::GridTrackSize>*>(p)->size();
+}
+
+static GridLengthRaw convertGridLength(const WebCore::GridLength& length)
+{
+    if (length.isFlex())
+        return { true, length.flex(), nullptr };
+    return { false, 0, &length.length() };
+}
+
+// The lengths point into the style; callers copy them.
+extern "C" WEBCORE_EXPORT GridTrackSizeRaw GridTrackSizeVector_at(const void* p, uint64_t index)
+{
+    auto& trackSize = static_cast<const Vector<WebCore::GridTrackSize>*>(p)->at(index);
+    GridTrackSizeRaw raw { static_cast<uint8_t>(trackSize.type()), convertGridLength(trackSize.minTrackBreadth()), convertGridLength(trackSize.maxTrackBreadth()), { } };
+    if (trackSize.isFitContent())
+        raw.fitContentTrackBreadth = convertGridLength(trackSize.fitContentTrackBreadth());
+    return raw;
+}
+
+static GridPositionRaw convertGridPosition(const WebCore::GridPosition& position)
+{
+    int integerPosition = 0;
+    if (position.type() == WebCore::GridPositionType::ExplicitPosition)
+        integerPosition = position.integerPosition();
+    else if (position.isSpan())
+        integerPosition = position.spanPosition();
+    return { static_cast<uint8_t>(position.type()), integerPosition };
+}
+
+extern "C" WEBCORE_EXPORT GridPositionRaw RenderStyle_gridItemColumnStart(const void* p)
+{
+    return convertGridPosition(static_cast<const WebCore::RenderStyle*>(p)->gridItemColumnStart());
+}
+
+extern "C" WEBCORE_EXPORT GridPositionRaw RenderStyle_gridItemColumnEnd(const void* p)
+{
+    return convertGridPosition(static_cast<const WebCore::RenderStyle*>(p)->gridItemColumnEnd());
+}
+
+extern "C" WEBCORE_EXPORT GridPositionRaw RenderStyle_gridItemRowStart(const void* p)
+{
+    return convertGridPosition(static_cast<const WebCore::RenderStyle*>(p)->gridItemRowStart());
+}
+
+extern "C" WEBCORE_EXPORT GridPositionRaw RenderStyle_gridItemRowEnd(const void* p)
+{
+    return convertGridPosition(static_cast<const WebCore::RenderStyle*>(p)->gridItemRowEnd());
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif

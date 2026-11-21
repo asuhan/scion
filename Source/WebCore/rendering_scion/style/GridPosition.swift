@@ -46,6 +46,13 @@ enum GridPositionSide {
 private let kGridMaxPosition: Int32 = 1_000_000
 
 struct GridPosition: Equatable {
+  init() {}
+
+  init(type: GridPositionType, integerPosition: Int32) {
+    self.type = type
+    m_integerPosition = integerPosition
+  }
+
   func isPositive() -> Bool { return integerPosition() > 0 }
 
   func isAuto() -> Bool { return type == .AutoPosition }
