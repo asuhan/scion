@@ -879,6 +879,8 @@ extern "C" bool LegacyRenderSVGRootScion_isEmbeddedThroughSVGImage(const void*);
 
 extern "C" void RenderFlexibleBoxScion_setWk(void*, void*);
 
+extern "C" void RenderGridScion_setWk(void*, void*);
+
 extern "C" void RenderListMarkerScion_setWk(void*, void*);
 
 extern "C" void RenderTableSectionScion_willBeRemovedFromTree(void*);
@@ -3840,6 +3842,11 @@ void RenderListMarkerScion::setWk(void* wk)
 void RenderFlexibleBoxScion::setWk(void* wk)
 {
     RenderFlexibleBoxScion_setWk(wk, m_handle);
+}
+
+void RenderGridScion::setWk(void* wk)
+{
+    RenderGridScion_setWk(wk, m_handle);
 }
 
 bool RenderCombineTextScion::isCombined() const

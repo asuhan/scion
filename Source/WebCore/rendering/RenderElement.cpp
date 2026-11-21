@@ -447,6 +447,12 @@ RenderPtr<RenderElement> RenderElement::createFor(Element& element, RenderStyle&
         return createRenderer<RenderFlexibleBox>(RenderObject::Type::FlexibleBox, element, WTFMove(style));
     case DisplayType::Grid:
     case DisplayType::InlineGrid:
+        if (Document::s_useScionRendering >= 19) {
+            auto clonedStyle = RenderStyle::clonePtr(style);
+            auto renderer = createRenderer<RenderGrid>(element, WTFMove(style));
+            renderer->setScionHandle(RenderGridScion_create(&element, clonedStyle.release()));
+            return renderer;
+        }
         return createRenderer<RenderGrid>(element, WTFMove(style));
     case DisplayType::Box:
     case DisplayType::InlineBox:

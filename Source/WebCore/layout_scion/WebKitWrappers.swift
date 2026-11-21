@@ -2559,6 +2559,9 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderFlexibleBoxWrapper>.fromOpaque(flexibleBoxRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderGrid(raw), let gridRaw = wk_interop.RenderElement_scion(raw) {
+    return Unmanaged<RenderGridWrapper>.fromOpaque(gridRaw).takeUnretainedValue()
+  }
   return createRenderObjectWrapper(raw)
 }
 
@@ -4195,6 +4198,17 @@ func RenderFlexibleBoxScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderGridScion_create")
+func RenderGridScion_create(_ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let grid = RenderGridWrapper(element: createElementWrapper(elementRaw), style: style)
+  let unmanaged = Unmanaged.passRetained(grid)
+  return unmanaged.toOpaque()
+}
+
 @_cdecl("RenderHTMLCanvasScion_create")
 func RenderHTMLCanvasScion_create(
   _ elementRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
@@ -4412,6 +4426,12 @@ func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bo
   let combineText = Unmanaged<RenderCombineTextWrapper>.fromOpaque(combineTextRaw)
     .takeUnretainedValue()
   return combineText.isCombined()
+}
+
+@_cdecl("RenderGridScion_setWk")
+func RenderGridScion_setWk(_ wk: UnsafeMutableRawPointer, _ gridRaw: UnsafeMutableRawPointer) {
+  let grid = Unmanaged<RenderGridWrapper>.fromOpaque(gridRaw).takeUnretainedValue()
+  grid.setWk(wk)
 }
 
 @_cdecl("RenderFlexibleBoxScion_setWk")

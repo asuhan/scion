@@ -53,6 +53,7 @@ extern "C" void* RenderIFrameScion_create(void*, const void*);
 extern "C" void* RenderHTMLCanvasScion_create(void*, const void*);
 
 extern "C" void* RenderFlexibleBoxScion_create(void*, const void*);
+extern "C" void* RenderGridScion_create(void*, const void*);
 
 extern "C" void* RenderButtonScion_create(void*, const void*);
 

@@ -73,6 +73,7 @@ void RenderGrid::setScionHandle(void* handle)
     RenderBox::setScionHandle(handle);
     RenderBlock::setScionHandle(handle);
     m_scion = std::make_unique<RenderGridScion>(handle);
+    m_scion->setWk(this);
 }
 
 StyleSelfAlignmentData RenderGrid::selfAlignmentForGridItem(GridAxis axis, const RenderBox& gridItem, const RenderStyle* gridStyle) const

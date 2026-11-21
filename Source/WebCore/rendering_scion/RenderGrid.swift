@@ -200,6 +200,18 @@ private func resolveContentDistributionFallback(distribution: ContentDistributio
 }
 
 final class RenderGridWrapper: RenderBlockWrapper {
+  init(element: ElementWrapper, style: RenderStyleWrapper) {
+    super.init(.Grid, element, style, [])
+    grid = GridWrapper(renderGrid: self)
+    trackSizingAlgorithm = GridTrackSizingAlgorithm(renderGrid: self, grid: currentGrid())
+    masonryLayout = GridMasonryLayout(renderGrid: self)
+    assert(isRenderGrid())
+    // All of our children must be block level.
+    setChildrenInline(b: false)
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     if oldStyle == nil || diff != .Layout {
@@ -3257,13 +3269,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   private class GridWrapper {
     init(renderGrid: RenderGridWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      layoutGrid = Grid(grid: renderGrid)
+      currentGrid = layoutGrid
     }
 
     func resetCurrentGrid() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      currentGrid = layoutGrid
     }
 
     private let layoutGrid: Grid
@@ -3274,15 +3285,15 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // FIXME: Refactor m_trackSizingAlgorithm to be inside of layoutGrid and layoutMasonry.
   // https://bugs.webkit.org/show_bug.cgi?id=277496
-  let trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
+  private(set) var trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
 
-  private let columnPositions: [LayoutUnit] = []
-  private let rowPositions: [LayoutUnit] = []
+  private var columnPositions: [LayoutUnit] = []
+  private var rowPositions: [LayoutUnit] = []
 
   private var offsetBetweenColumns = ContentAlignmentData()
   private var offsetBetweenRows = ContentAlignmentData()
 
-  private let masonryLayout: GridMasonryLayout? = nil
+  private var masonryLayout: GridMasonryLayout? = nil
 
   private typealias OutOfFlowPositionsMap = [UInt: UInt64]
   private var outOfFlowItemColumn = OutOfFlowPositionsMap()
@@ -3290,4 +3301,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   private var hasAspectRatioBlockSizeDependentItem = false
   private var baselineItemsCached = false
+
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }
