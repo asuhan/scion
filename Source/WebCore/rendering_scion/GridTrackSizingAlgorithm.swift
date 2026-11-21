@@ -417,10 +417,69 @@ private func computeGridSpanSize(
 
 private final class IndefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
   override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
+
+  override func isComputingSizeContainment() -> Bool {
+    return renderGrid()!.shouldApplySizeContainment()
+  }
+
+  override func isComputingInlineSizeContainment() -> Bool {
+    return renderGrid()!.shouldApplyInlineSizeContainment()
+  }
+
+  override func isComputingSizeOrInlineSizeContainment() -> Bool {
+    return renderGrid()!.shouldApplySizeOrInlineSizeContainment()
+  }
+
+  override func freeSpaceForStretchAutoTracksStep() -> LayoutUnit {
+    assert(algorithm.freeSpace(direction: direction()) == nil)
+    if direction() == .ForColumns {
+      return LayoutUnit()
+    }
+
+    guard
+      let minSize = renderGrid()!.computeContentLogicalHeight(
+        heightType: .MinSize, height: renderGrid()!.style().logicalMinHeight(),
+        intrinsicContentHeight: nil)
+    else {
+      return LayoutUnit()
+    }
+    return minSize - algorithm.computeTrackBasedSize()
+  }
+
+  override func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: inout LayoutUnit?) {
+    for track in tracks {
+      track.setBaseSize(track.growthLimit())
+    }
+  }
 }
 
 private final class DefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
   override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
+
+  override func isComputingSizeContainment() -> Bool { return false }
+
+  override func isComputingInlineSizeContainment() -> Bool { return false }
+
+  override func isComputingSizeOrInlineSizeContainment() -> Bool { return false }
+
+  override func freeSpaceForStretchAutoTracksStep() -> LayoutUnit {
+    return algorithm.freeSpace(direction: direction())!
+  }
+
+  override func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: inout LayoutUnit?) {
+    let tracksForDistribution = GridTrackArrayRef()
+    tracksForDistribution.a = Array(tracks)
+    for track in tracksForDistribution.a {
+      track.setPlannedSize(plannedSize: track.baseSize())
+    }
+
+    assert(freeSpace != nil)
+    distributeSpaceToTracks(tracksForDistribution, &freeSpace!)
+
+    for track in tracksForDistribution.a {
+      track.setBaseSize(track.plannedSize())
+    }
+  }
 }
 
 private func marginAndBorderAndPaddingForEdge(
@@ -571,9 +630,13 @@ final class GridTrackSizingAlgorithm {
     }
 
     // Step 3.
-    strategy!.maximizeTracks(
-      tracks: tracks(direction: direction).a[...],
-      freeSpace: direction == .ForColumns ? freeSpaceColumns : freeSpaceRows)
+    if direction == .ForColumns {
+      strategy!.maximizeTracks(
+        tracks: tracks(direction: direction).a[...], freeSpace: &freeSpaceColumns)
+    } else {
+      strategy!.maximizeTracks(
+        tracks: tracks(direction: direction).a[...], freeSpace: &freeSpaceRows)
+    }
 
     // Step 4.
     stretchFlexibleTracks(freeSpace: initialFreeSpace, gridLayoutState: &gridLayoutState)
@@ -1464,9 +1527,9 @@ final class GridTrackSizingAlgorithm {
     }
   }
 
-  private func distributeSpaceToTracks(
+  fileprivate func distributeSpaceToTracks(
     _ variant: TrackSizeComputationVariant, _ phase: TrackSizeComputationPhase,
-    _ tracks: GridTrackArrayRef, _ growBeyondGrowthLimitsTracks: GridTrackArrayRef,
+    _ tracks: GridTrackArrayRef, _ growBeyondGrowthLimitsTracks: GridTrackArrayRef?,
     _ freeSpace: inout LayoutUnit
   ) {
     assert(freeSpace >= Int32(0))
@@ -1482,7 +1545,7 @@ final class GridTrackSizingAlgorithm {
         freeSpace: &freeSpace)
     }
 
-    if freeSpace > Int32(0) {
+    if freeSpace > Int32(0), let growBeyondGrowthLimitsTracks {
       distributeItemIncurredIncreases(
         variant: variant, phase: phase, limit: .BeyondGrowthLimit,
         tracks: growBeyondGrowthLimitsTracks, freeSpace: &freeSpace)
@@ -2395,8 +2458,15 @@ private class GridTrackSizingAlgorithmStrategy {
     return minLogicalSizeForGridItem(gridItem, gridItemMinSize, gridAreaSize) + baselineShim
   }
 
-  func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: LayoutUnit?) {
+  func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: inout LayoutUnit?) {
     fatalError("Not reached")
+  }
+
+  func distributeSpaceToTracks(
+    _ tracks: GridTrackArrayRef, _ availableLogicalSpace: inout LayoutUnit
+  ) {
+    algorithm.distributeSpaceToTracks(
+      .NotCrossingFlexibleTracks, .MaximizeTracks, tracks, nil, &availableLogicalSpace)
   }
 
   func findUsedFlexFraction(
@@ -2558,15 +2628,15 @@ private class GridTrackSizingAlgorithmStrategy {
     return true
   }
 
-  private func direction() -> GridTrackSizingDirection { return algorithm.direction }
+  fileprivate func direction() -> GridTrackSizingDirection { return algorithm.direction }
 
   private func sizingState() -> GridTrackSizingAlgorithm.SizingState {
     return algorithm.sizingState
   }
 
-  private func renderGrid() -> RenderGridWrapper? { return algorithm.renderGrid }
+  fileprivate func renderGrid() -> RenderGridWrapper? { return algorithm.renderGrid }
 
   private func availableSpace() -> LayoutUnit? { return algorithm.availableSpace() }
 
-  private let algorithm: GridTrackSizingAlgorithm
+  fileprivate let algorithm: GridTrackSizingAlgorithm
 }
