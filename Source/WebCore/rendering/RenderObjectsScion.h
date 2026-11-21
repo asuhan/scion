@@ -2101,6 +2101,19 @@ private:
     void* m_handle;
 };
 
+class RenderGridScion final {
+public:
+    RenderGridScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void setWk(void*);
+
+private:
+    void* m_handle;
+};
+
 class RenderFlexibleBoxScion final {
 public:
     RenderFlexibleBoxScion(void* handle)

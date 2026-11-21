@@ -38,6 +38,7 @@ namespace WebCore {
 class GridArea;
 class GridLayoutState;
 class GridSpan;
+class RenderGridScion;
 
 struct ContentAlignmentData {
     LayoutUnit positionOffset;
@@ -53,22 +54,41 @@ public:
     RenderGrid(Element&, RenderStyle&&);
     virtual ~RenderGrid();
 
+    void setScionHandle(void* handle);
+
     Element& element() const { return downcast<Element>(nodeForNonAnonymous()); }
 
     void styleDidChange(StyleDifference, const RenderStyle* oldStyle) override;
     void layoutBlock(bool relayoutChildren, LayoutUnit pageLogicalHeight = 0_lu) override;
 
+    // NB(asuhan): these return literals, we can skip the Scion check
     bool avoidsFloats() const override { return true; }
     bool canDropAnonymousBlockChild() const override { return false; }
 
     void dirtyGrid(bool subgridChanged = false);
     Vector<LayoutUnit> trackSizesForComputedStyle(GridTrackSizingDirection) const;
 
-    const Vector<LayoutUnit>& columnPositions() const { return m_columnPositions; }
-    const Vector<LayoutUnit>& rowPositions() const { return m_rowPositions; }
+    const Vector<LayoutUnit>& columnPositions() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_columnPositions;
+    }
+    const Vector<LayoutUnit>& rowPositions() const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return m_rowPositions;
+    }
 
-    unsigned autoRepeatCountForDirection(GridTrackSizingDirection direction) const { return currentGrid().autoRepeatTracks(direction); }
-    unsigned explicitGridStartForDirection(GridTrackSizingDirection direction) const { return currentGrid().explicitGridStart(direction); }
+    unsigned autoRepeatCountForDirection(GridTrackSizingDirection direction) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return currentGrid().autoRepeatTracks(direction);
+    }
+    unsigned explicitGridStartForDirection(GridTrackSizingDirection direction) const
+    {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
+        return currentGrid().explicitGridStart(direction);
+    }
 
     // Required by GridTrackSizingAlgorithm. Keep them under control.
     LayoutUnit guttersSize(GridTrackSizingDirection, unsigned startLine, unsigned span, std::optional<LayoutUnit> availableSize) const;
@@ -141,6 +161,7 @@ private:
 
     ItemPosition selfAlignmentNormalBehavior(const RenderBox* gridItem = nullptr) const override
     {
+        if (m_scion) { ASSERT_NOT_REACHED(); }
         ASSERT(gridItem);
         return gridItem->isRenderReplaced() ? ItemPosition::Start : ItemPosition::Stretch;
     }
@@ -251,6 +272,7 @@ private:
 
     LayoutUnit translateRTLCoordinate(LayoutUnit) const;
 
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     bool shouldResetLogicalHeightBeforeLayout() const override { return true; }
     bool establishesIndependentFormattingContext() const override;
 
@@ -291,6 +313,8 @@ private:
     bool m_hasAspectRatioBlockSizeDependentItem { false };
     bool m_baselineItemsCached {false};
     bool m_hasAnyBaselineAlignmentItem { false };
+
+    std::unique_ptr<RenderGridScion> m_scion;
 };
 
 } // namespace WebCore
