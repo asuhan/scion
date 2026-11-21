@@ -989,7 +989,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func gridGap(direction: GridTrackSizingDirection, availableSize: LayoutUnit?) -> LayoutUnit {
-    assert(availableSize != nil || availableSize! >= Int32(0))
+    assert(availableSize == nil || availableSize! >= Int32(0))
     let gapLength = direction == .ForColumns ? style().columnGap() : style().rowGap()
     if gapLength.isNormal {
       if !isSubgrid(direction: direction) {
