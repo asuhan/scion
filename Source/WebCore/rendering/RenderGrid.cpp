@@ -2611,7 +2611,7 @@ void RenderGrid::paintChildren(PaintInfo& paintInfo, const LayoutPoint& paintOff
 
 ASCIILiteral RenderGrid::renderName() const
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    // TODO(asuhan): don't route to Scion since it's correct as-is and all calls will be from Scion eventually.
     if (isFloating())
         return "RenderGrid (floating)"_s;
     if (isOutOfFlowPositioned())
