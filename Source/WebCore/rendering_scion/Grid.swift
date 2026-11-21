@@ -381,6 +381,7 @@ class GridIterator {
         if direction == .ForColumns { m_rowIndex += 1 } else { m_columnIndex += 1 }
         return result
       }
+      if direction == .ForColumns { m_rowIndex += 1 } else { m_columnIndex += 1 }
     }
     return nil
   }
