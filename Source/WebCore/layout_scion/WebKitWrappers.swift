@@ -4428,6 +4428,12 @@ func RenderCombineTextScion_isCombined(_ combineTextRaw: UnsafeRawPointer) -> Bo
   return combineText.isCombined()
 }
 
+@_cdecl("RenderGridScion_dirtyGrid")
+func RenderGridScion_dirtyGrid(_ gridRaw: UnsafeMutableRawPointer, _ subgridChanged: Bool) {
+  let grid = Unmanaged<RenderGridWrapper>.fromOpaque(gridRaw).takeUnretainedValue()
+  grid.dirtyGrid(subgridChanged: subgridChanged)
+}
+
 @_cdecl("RenderGridScion_setWk")
 func RenderGridScion_setWk(_ wk: UnsafeMutableRawPointer, _ gridRaw: UnsafeMutableRawPointer) {
   let grid = Unmanaged<RenderGridWrapper>.fromOpaque(gridRaw).takeUnretainedValue()

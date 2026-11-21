@@ -2110,6 +2110,7 @@ public:
     }
 
     void setWk(void*);
+    void dirtyGrid(bool subgridChanged);
 
 private:
     void* m_handle;

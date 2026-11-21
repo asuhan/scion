@@ -1332,7 +1332,7 @@ GridTrackSizingDirection RenderGrid::autoPlacementMinorAxisDirection() const
 
 void RenderGrid::dirtyGrid(bool subgridChanged)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) { return m_scion->dirtyGrid(subgridChanged); }
     if (currentGrid().needsItemsPlacement())
         return;
 

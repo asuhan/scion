@@ -3849,6 +3849,13 @@ void RenderGridScion::setWk(void* wk)
     RenderGridScion_setWk(wk, m_handle);
 }
 
+extern "C" void RenderGridScion_dirtyGrid(void*, bool);
+
+void RenderGridScion::dirtyGrid(bool subgridChanged)
+{
+    RenderGridScion_dirtyGrid(m_handle, subgridChanged);
+}
+
 bool RenderCombineTextScion::isCombined() const
 {
     return RenderCombineTextScion_isCombined(m_handle);
