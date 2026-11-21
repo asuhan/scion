@@ -2532,7 +2532,7 @@ private class GridTrackSizingAlgorithmStrategy {
     if let overridingContainingBlockContentSizeForGridItem =
       GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
         gridItem: gridItem, direction: direction),
-      overridingContainingBlockContentSizeForGridItem! == overrideSize
+      overridingContainingBlockContentSizeForGridItem == overrideSize
     {
       return false
     }
