@@ -3875,6 +3875,17 @@ func RenderInlineScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderQuoteScion_create")
+func RenderQuoteScion_create(
+  _ document: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer, _ quoteRaw: UInt8
+) -> UnsafeMutableRawPointer {
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let quote = RenderQuoteWrapper(
+    document: Document(document), style: style, quote: QuoteType(rawValue: quoteRaw)!)
+  return Unmanaged.passRetained(quote).toOpaque()
+}
+
 @_cdecl("RenderInlineScion_createFromDocument")
 func RenderInlineScion_createFromDocument(
   _ typeRaw: UInt8, _ document: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer

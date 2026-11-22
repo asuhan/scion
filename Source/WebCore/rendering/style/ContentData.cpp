@@ -77,7 +77,15 @@ RenderPtr<RenderObject> CounterContentData::createContentRenderer(Document& docu
 
 RenderPtr<RenderObject> QuoteContentData::createContentRenderer(Document& document, const RenderStyle& pseudoStyle) const
 {
-    auto quote = createRenderer<RenderQuote>(document, RenderStyle::createStyleInheritingFromPseudoStyle(pseudoStyle), m_quote);
+    auto style = RenderStyle::createStyleInheritingFromPseudoStyle(pseudoStyle);
+    if (Document::s_useScionRendering >= 20) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto quote = createRenderer<RenderQuote>(document, WTFMove(style), m_quote);
+        quote->setScionHandle(RenderQuoteScion_create(&document, clonedStyle.release(), static_cast<uint8_t>(m_quote)));
+        quote->initializeStyle();
+        return quote;
+    }
+    auto quote = createRenderer<RenderQuote>(document, WTFMove(style), m_quote);
     quote->initializeStyle();
     return quote;
 }

@@ -107,6 +107,7 @@ extern "C" void* RenderTextFragmentScion_create(void*, const void*, int32_t, int
 extern "C" void* RenderTextFragmentScion_createFromDocument(void*, const void*, int32_t, int32_t);
 
 extern "C" void* RenderTextFragmentScion_createFromContentString(void*, const void*);
+extern "C" void* RenderQuoteScion_create(void*, const void*, uint8_t);
 
 namespace WebCore {
 
