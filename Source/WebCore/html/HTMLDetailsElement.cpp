@@ -33,6 +33,7 @@
 #include "LocalizedStrings.h"
 #include "MouseEvent.h"
 #include "RenderBlockFlow.h"
+#include "RenderObjectsScion.h"
 #include "ShadowRoot.h"
 #include "ShouldNotFireMutationEventsScope.h"
 #include "SlotAssignment.h"
@@ -99,6 +100,12 @@ HTMLDetailsElement::~HTMLDetailsElement() = default;
 
 RenderPtr<RenderElement> HTMLDetailsElement::createElementRenderer(RenderStyle&& style, const RenderTreePosition&)
 {
+    if (Document::s_useScionRendering >= 2) {
+        auto clonedStyle = RenderStyle::clonePtr(style);
+        auto renderer = createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, *this, WTFMove(style));
+        renderer->setScionHandle(RenderBlockFlowScion_create(static_cast<uint8_t>(RenderObject::Type::BlockFlow), this, clonedStyle.release(), 0));
+        return renderer;
+    }
     return createRenderer<RenderBlockFlow>(RenderObject::Type::BlockFlow, *this, WTFMove(style));
 }
 
