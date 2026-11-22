@@ -1031,6 +1031,7 @@ bool RenderObject_isRenderReplaced(const void*);
 bool RenderObject_isRenderBoxModelObject(const void*);
 bool RenderObject_isRenderLayerModelObject(const void*);
 bool RenderObject_isRenderQuote(const void*);
+bool RenderObject_isRenderCounter(const void*);
 void RenderQuote_setNeedsTextUpdate(void*);
 bool RenderObject_isRenderDetailsMarker(const void*);
 bool RenderObject_isRenderEmbeddedObject(const void*);

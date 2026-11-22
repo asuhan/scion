@@ -72,6 +72,11 @@ RenderPtr<RenderObject> TextContentData::createContentRenderer(Document& documen
 
 RenderPtr<RenderObject> CounterContentData::createContentRenderer(Document& document, const RenderStyle&) const
 {
+    if (Document::s_useScionRendering >= 21) {
+        auto counter = createRenderer<RenderCounter>(document, *m_counter);
+        counter->setScionHandle(RenderCounterScion_create(&document));
+        return counter;
+    }
     return createRenderer<RenderCounter>(document, *m_counter);
 }
 

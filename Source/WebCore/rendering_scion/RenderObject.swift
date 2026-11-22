@@ -873,6 +873,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .Quote
   }
 
+  func isRenderCounter() -> Bool {
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderCounter(id()) }
+    return type() == .Counter
+  }
+
   func isRenderDetailsMarker() -> Bool {
     if !isNativeImpl() { return wk_interop.RenderObject_isRenderDetailsMarker(id()) }
     return type() == .DetailsMarker

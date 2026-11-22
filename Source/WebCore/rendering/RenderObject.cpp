@@ -698,6 +698,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderQuote(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderQuote();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderCounter(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderCounter();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderDetailsMarker(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderDetailsMarker();

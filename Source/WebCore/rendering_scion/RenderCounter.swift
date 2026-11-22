@@ -23,6 +23,13 @@
 import wk_interop
 
 final class RenderCounter: RenderTextWrapper {
+  init(document: Document) {
+    super.init(.Counter, document.ContainerNode(), emptyString())
+    assert(isRenderCounter())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   static func destroyCounterNodes(_ owner: RenderElementWrapper) {
     let ownerRaw = owner.isNativeImpl() ? owner.getWk() : owner.id()
     wk_interop.RenderCounter_destroyCounterNodes(ownerRaw)

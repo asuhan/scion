@@ -3884,6 +3884,11 @@ func RenderInlineScion_create(
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderCounterScion_create")
+func RenderCounterScion_create(_ document: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+  return Unmanaged.passRetained(RenderCounter(document: Document(document))).toOpaque()
+}
+
 @_cdecl("RenderQuoteScion_create")
 func RenderQuoteScion_create(
   _ document: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer, _ quoteRaw: UInt8
