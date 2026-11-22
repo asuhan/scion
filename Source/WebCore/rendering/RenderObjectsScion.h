@@ -2209,6 +2209,8 @@ public:
 
     LayoutRect replacedContentRect() const;
 
+    void paint(PaintInfo&, const LayoutPoint&);
+
 private:
     void* m_handle;
 };

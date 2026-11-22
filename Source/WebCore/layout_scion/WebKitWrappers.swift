@@ -5523,6 +5523,16 @@ func RenderReplacedScion_replacedContentRect(_ replacedRaw: UnsafeRawPointer) ->
   return convertLayoutRect(replaced.replacedContentRect())
 }
 
+@_cdecl("RenderReplacedScion_paint")
+func RenderReplacedScion_paint(
+  _ replacedRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,
+  _ paintOffset: LayoutPointRaw
+) {
+  var paintInfo = PaintInfoWrapper(p: paintInfoRaw)
+  let replaced = Unmanaged<RenderReplacedWrapper>.fromOpaque(replacedRaw).takeUnretainedValue()
+  replaced.paint(paintInfo: &paintInfo, paintOffset: convertLayoutPointRaw(paintOffset))
+}
+
 @_cdecl("RenderIFrameScion_setWk")
 func RenderIFrameScion_setWk(_ wk: UnsafeMutableRawPointer, _ iframeRaw: UnsafeMutableRawPointer) {
   let iframe = Unmanaged<RenderIFrameWrapper>.fromOpaque(iframeRaw).takeUnretainedValue()

@@ -234,7 +234,10 @@ Color RenderReplaced::calculateHighlightColor() const
 
 void RenderReplaced::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->paint(paintInfo, paintOffset);
+        return;
+    }
     if (!shouldPaint(paintInfo, paintOffset))
         return;
 
