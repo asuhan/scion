@@ -713,7 +713,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    fatalError("Not reached")
+    assert(isNativeImpl())
   }
 
   override func pageLogicalWidth() -> LayoutUnit {
