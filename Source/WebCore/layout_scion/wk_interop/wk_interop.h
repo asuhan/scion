@@ -905,6 +905,7 @@ int32_t ElementBox_baselineForIntegration(const void*);
 void* RenderObject_previousSibling(const void*);
 void* RenderObject_nextSibling(const void*);
 void* RenderObject_nextInPreOrder(const void*, const void* stayWithin);
+void* RenderObject_nextInPreOrderAfterChildren(const void*);
 void* RenderObject_previousInFlowSibling(const void*);
 void* RenderObject_nextInFlowSibling(const void*);
 void* RenderObject_enclosingLayer(const void*);

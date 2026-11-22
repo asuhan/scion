@@ -168,6 +168,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_nextInPreOrder(const void* p, const
     return static_cast<const WebCore::RenderObject*>(p)->nextInPreOrder(static_cast<const WebCore::RenderObject*>(stayWithin));
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_nextInPreOrderAfterChildren(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->nextInPreOrderAfterChildren();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_nextSibling(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->nextSibling();
