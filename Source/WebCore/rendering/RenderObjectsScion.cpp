@@ -554,6 +554,8 @@ extern "C" IntRectRaw RenderTextScion_linesBoundingBox(const void*);
 
 extern "C" void RenderTextScion_setTextWithOffset(const void*, const void*, uint32_t, bool);
 
+extern "C" void RenderTextScion_setText(const void*, const void*, bool);
+
 extern "C" bool RenderTextScion_hasRenderedText(const void*);
 
 extern "C" bool RenderTextScion_needsVisualReordering(const void*);
@@ -2818,6 +2820,11 @@ IntRect RenderTextScion::linesBoundingBox() const
 void RenderTextScion::setTextWithOffset(const String& newText, unsigned offset, bool force)
 {
     RenderTextScion_setTextWithOffset(m_handle, &newText, offset, force);
+}
+
+void RenderTextScion::setText(const String& newContent, bool force)
+{
+    RenderTextScion_setText(m_handle, &newContent, force);
 }
 
 bool RenderTextScion::hasRenderedText() const

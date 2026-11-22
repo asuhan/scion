@@ -3031,6 +3031,15 @@ func RenderTextScion_setTextWithOffset(
   renderText.setTextWithOffset(newText: newText, offset: offset, force: force)
 }
 
+@_cdecl("RenderTextScion_setText")
+func RenderTextScion_setText(
+  _ renderTextRaw: UnsafeRawPointer, _ newContentRaw: UnsafeRawPointer, _ force: Bool
+) {
+  let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
+  let newContent = StringWrapper(p: wk_interop.String_new_copy(newContentRaw), owner: true)
+  renderText.setText(newContent: newContent, force: force)
+}
+
 @_cdecl("RenderTextScion_hasRenderedText")
 func RenderTextScion_hasRenderedText(_ renderTextRaw: UnsafeRawPointer) -> Bool {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()

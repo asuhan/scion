@@ -1936,7 +1936,10 @@ void RenderText::setTextInternal(const String& text, bool force)
 
 void RenderText::setText(const String& newContent, bool force)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        m_scion->setText(newContent, force);
+        return;
+    }
     auto isDifferent = newContent != text();
     setTextInternal(newContent, force);
     if (isDifferent || force)

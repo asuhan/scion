@@ -817,6 +817,7 @@ public:
     IntRect linesBoundingBox() const;
 
     void setTextWithOffset(const String&, unsigned offset, bool force = false);
+    void setText(const String&, bool force);
 
     bool hasRenderedText() const;
 
