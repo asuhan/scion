@@ -89,8 +89,7 @@ class StringWrapper: Hashable {
   }
 
   func left(length: UInt32) -> StringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StringWrapper(p: wk_interop.String_substring(p, 0, length), owner: true)
   }
 
   func characterStartingAt(i: UInt32) -> UInt32 {

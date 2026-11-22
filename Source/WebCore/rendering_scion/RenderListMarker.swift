@@ -39,8 +39,13 @@ private func adjustedStyleDifference(
 }
 
 private func reversed(_ string: StringWrapperView) -> StringWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let length = string.length()
+  var characters: [UChar] = []
+  characters.reserveCapacity(Int(length))
+  for i in 0..<length {
+    characters.append(string[length - i - 1])
+  }
+  return StringWrapper(characters: characters)
 }
 
 final class RenderListMarkerWrapper: RenderBoxWrapper {
