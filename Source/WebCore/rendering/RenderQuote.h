@@ -34,6 +34,7 @@ public:
     virtual ~RenderQuote();
 
     void updateRenderer(RenderTreeBuilder&, RenderQuote* previousQuote);
+    void setNeedsTextUpdate() { m_needsTextUpdate = true; }
 
 private:
     ASCIILiteral renderName() const override { return "RenderQuote"_s; }

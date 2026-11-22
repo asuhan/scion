@@ -20,6 +20,8 @@
  *
  */
 
+import wk_interop
+
 // These strings need to be compared according to "Extended Filtering", as in Section 3.3.2 in RFC4647.
 // https://tools.ietf.org/html/rfc4647#page-10
 //
@@ -103,8 +105,13 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    if diff >= .Layout {
+      needsTextUpdate = true
+      // NB(asuhan): the C++ quote updates the text, through the C++ render tree builder.
+      wk_interop.RenderQuote_setNeedsTextUpdate(getWk())
+      view().setHasQuotesNeedingUpdate(true)
+    }
   }
 
   override final func insertedIntoTree() {

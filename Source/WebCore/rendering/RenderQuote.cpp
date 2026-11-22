@@ -521,3 +521,8 @@ void RenderQuote::updateRenderer(RenderTreeBuilder& builder, RenderQuote* previo
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT void RenderQuote_setNeedsTextUpdate(void* p)
+{
+    static_cast<WebCore::RenderQuote*>(p)->setNeedsTextUpdate();
+}
