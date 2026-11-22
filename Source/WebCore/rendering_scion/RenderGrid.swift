@@ -2053,15 +2053,17 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let numberOfCollapsedTracks =
       hasCollapsedTracks ? currentGrid().autoRepeatEmptyTracks(direction: direction).size() : 0
     let offset = direction == .ForColumns ? offsetBetweenColumns : offsetBetweenRows
-    var positions = isRowAxis ? columnPositions[...] : rowPositions[...]
-    assert(positions.count <= numberOfLines)
-    for _ in positions.count..<numberOfLines {
-      positions.append(LayoutUnit())
+    let positions = isRowAxis ? columnPositions : rowPositions
+    if positions.a.count > numberOfLines {
+      positions.a.removeLast(positions.a.count - numberOfLines)
+    }
+    while positions.a.count < numberOfLines {
+      positions.a.append(LayoutUnit())
     }
 
     let borderAndPadding = isRowAxis ? borderAndPaddingStart() : borderAndPaddingBefore()
 
-    positions[0] = borderAndPadding + offset.positionOffset
+    positions.a[0] = borderAndPadding + offset.positionOffset
     if numberOfLines > 1 {
       // If we have collapsed tracks we just ignore gaps here and add them later as we might not
       // compute the gap between two consecutive tracks without examining the surrounding ones.
@@ -2069,10 +2071,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
       let nextToLastLine = numberOfLines - 2
 
       for i in 0..<nextToLastLine {
-        positions[i + 1] =
-          positions[i] + offset.distributionOffset + tracks.a[i].unclampedBaseSize() + gap
+        positions.a[i + 1] =
+          positions.a[i] + offset.distributionOffset + tracks.a[i].unclampedBaseSize() + gap
       }
-      positions[lastLine] = positions[nextToLastLine] + tracks.a[nextToLastLine].unclampedBaseSize()
+      positions.a[lastLine] =
+        positions.a[nextToLastLine] + tracks.a[nextToLastLine].unclampedBaseSize()
 
       // Adjust collapsed gaps. Collapsed tracks cause the surrounding gutters to collapse (they
       // coincide exactly) except on the edges of the grid where they become 0.
@@ -2095,9 +2098,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
               gapAccumulator += gap
             }
           }
-          positions[i] += gapAccumulator - offsetAccumulator
+          positions.a[i] += gapAccumulator - offsetAccumulator
         }
-        positions[lastLine] += gapAccumulator - offsetAccumulator
+        positions.a[lastLine] += gapAccumulator - offsetAccumulator
       }
     }
   }
@@ -2121,7 +2124,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
     var start = LayoutUnit()
     var end = LayoutUnit()
-    let positions = isRowAxis ? columnPositions[...] : rowPositions[...]
+    let positions = isRowAxis ? columnPositions.a[...] : rowPositions.a[...]
     let borderEdge = isRowAxis ? borderStart() : borderBefore()
     if gridPositions!.startIsAuto {
       start = borderEdge
@@ -2193,7 +2196,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let outOfFlowItemLine = isRowAxis ? outOfFlowItemColumn : outOfFlowItemRow
     var start = isRowAxis ? borderStart() : borderBefore()
     if let line = outOfFlowItemLine[CPtrToInt(gridItem.id())] {
-      let positions = isRowAxis ? columnPositions[...] : rowPositions[...]
+      let positions = isRowAxis ? columnPositions.a[...] : rowPositions.a[...]
       start = positions[Int(line)]
     }
     start += logicalOffsetForOutOfFlowGridItem(
@@ -2208,7 +2211,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
     // FIXME (lajava): This is a common pattern, why not defining a function like
     // positions(direction) ?
-    let positions = direction == .ForColumns ? columnPositions[...] : rowPositions[...]
+    let positions = direction == .ForColumns ? columnPositions.a[...] : rowPositions.a[...]
     let start = positions[Int(span.startLine())]
     var end = positions[Int(span.endLine())]
     // The 'positions' vector includes distribution offset (because of content
@@ -2591,7 +2594,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     // may have some influence in the final grid area breadth.
     let tracks = trackSizingAlgorithm!.tracks(direction: direction)
     let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
-    let linePositions = direction == .ForColumns ? columnPositions[...] : rowPositions[...]
+    let linePositions = direction == .ForColumns ? columnPositions.a[...] : rowPositions.a[...]
 
     let initialTrackPosition = linePositions[Int(span.startLine())]
     let finalTrackPosition = linePositions[Int(span.endLine() - 1)]
@@ -2629,7 +2632,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
     // FIXME: We should handle RTL and other writing modes also.
     if style().direction() == .LTR && isHorizontalWritingMode() {
-      var gridAreaSize = LayoutSizeWrapper(width: columnPositions.last!, height: rowPositions.last!)
+      var gridAreaSize = LayoutSizeWrapper(
+        width: columnPositions.a.last!, height: rowPositions.a.last!)
       gridAreaSize += LayoutSizeWrapper(width: paddingEnd(), height: paddingAfter())
       addLayoutOverflow(rect: LayoutRectWrapper(location: LayoutPointWrapper(), size: gridAreaSize))
     }
@@ -3287,8 +3291,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   // https://bugs.webkit.org/show_bug.cgi?id=277496
   private(set) var trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
 
-  private var columnPositions: [LayoutUnit] = []
-  private var rowPositions: [LayoutUnit] = []
+  private let columnPositions = LayoutUnitArrayRef()
+  private let rowPositions = LayoutUnitArrayRef()
 
   private var offsetBetweenColumns = ContentAlignmentData()
   private var offsetBetweenRows = ContentAlignmentData()
@@ -3308,4 +3312,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   override func getWk() -> UnsafeMutableRawPointer { return wk! }
 
   private var wk: UnsafeMutableRawPointer? = nil
+}
+
+class LayoutUnitArrayRef {
+  var a: [LayoutUnit] = []
 }
