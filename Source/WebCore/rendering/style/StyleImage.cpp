@@ -79,6 +79,22 @@ extern "C" WEBCORE_EXPORT bool StyleImage_imageHasNaturalDimensions(const void* 
     return static_cast<const WebCore::StyleImage*>(p)->imageHasNaturalDimensions();
 }
 
+// Returns a reference the caller adopts.
+extern "C" WEBCORE_EXPORT void* StyleImage_image(const void* p, const void* renderer_raw, float width, float height, bool isForFirstLine)
+{
+    return static_cast<const WebCore::StyleImage*>(p)->image(static_cast<const WebCore::RenderElement*>(renderer_raw), { width, height }, isForFirstLine).leakRef();
+}
+
+extern "C" WEBCORE_EXPORT bool Image_isBitmapImage(const void* p)
+{
+    return static_cast<const WebCore::Image*>(p)->isBitmapImage();
+}
+
+extern "C" WEBCORE_EXPORT void Image_deref(void* p)
+{
+    static_cast<WebCore::Image*>(p)->deref();
+}
+
 extern "C" WEBCORE_EXPORT bool StyleImage_canRender(const void* p, const void* renderer_raw, float multiplier)
 {
     return static_cast<const WebCore::StyleImage*>(p)->canRender(static_cast<const WebCore::RenderElement*>(renderer_raw), multiplier);

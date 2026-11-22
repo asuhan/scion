@@ -24,10 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class ImageWrapper {
+  // Adopts a reference to the C++ image.
+  init(p: UnsafeMutableRawPointer) { self.p = p }
+
+  deinit { wk_interop.Image_deref(p) }
+
   func isBitmapImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Image_isBitmapImage(p)
   }
 
   func isNull() -> Bool {
@@ -55,4 +61,6 @@ class ImageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let p: UnsafeMutableRawPointer
 }

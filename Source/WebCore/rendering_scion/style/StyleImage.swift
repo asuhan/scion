@@ -94,8 +94,16 @@ class StyleImage: Equatable {
   func image(renderer: RenderElementWrapper?, size: FloatSize, isForFirstLine: Bool = false)
     -> ImageWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard
+      let image = wk_interop.StyleImage_image(
+        p, wkRenderObject(renderer), size.width, size.height, isForFirstLine)
+    else {
+      return nil
+    }
+    if wk_interop.Image_isBitmapImage(image) {
+      return BitmapImageWrapper(p: image)
+    }
+    return ImageWrapper(p: image)
   }
 
   func cachedImage() -> CachedImageWrapper? {
