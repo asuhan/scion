@@ -197,6 +197,11 @@ extern "C" WEBCORE_EXPORT bool Element_hasAltAttr(const void* p)
     return static_cast<const WebCore::Element*>(p)->hasAttribute(WebCore::HTMLNames::altAttr);
 }
 
+extern "C" WEBCORE_EXPORT const void* Element_innerText(void* p)
+{
+    return new String(static_cast<WebCore::Element*>(p)->innerText());
+}
+
 extern "C" WEBCORE_EXPORT bool Element_hasFontTag(const void* p)
 {
     return static_cast<const WebCore::Element*>(p)->hasTagName(WebCore::HTMLNames::fontTag);

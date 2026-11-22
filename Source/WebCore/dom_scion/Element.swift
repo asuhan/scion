@@ -29,6 +29,10 @@ class ElementWrapper: ContainerNodeWrapper {
 
   func hasAltAttr() -> Bool { return wk_interop.Element_hasAltAttr(p) }
 
+  func innerText() -> StringWrapper {
+    return StringWrapper(p: wk_interop.Element_innerText(p), owner: true)
+  }
+
   func hasViewBoxAttr() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
