@@ -184,8 +184,29 @@ class InlineIterator {
     }
 
     func ellipsisVisualRect(adjustedForSelection: AdjustedForSelection = .No) -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(hasEllipsis())
+
+      var visualRect: FloatRectWrapper
+      switch m_pathVariant {
+      case .modern(let path):
+        visualRect = path.ellipsisVisualRectIgnoringBlockDirection()
+      case .legacy(let path):
+        visualRect = path.ellipsisVisualRectIgnoringBlockDirection()
+      }
+
+      // FIXME: Add pixel snapping here.
+      if adjustedForSelection == .No {
+        formattingContextRoot().flipForWritingMode(rect: &visualRect)
+        return visualRect
+      }
+      let selectionTop = formattingContextRoot().adjustEnclosingTopForPrecedingBlock(
+        top: LayoutUnit(value: contentLogicalTopAdjustedForPrecedingLineBox()))
+      let selectionBottom = contentLogicalBottomAdjustedForFollowingLineBox()
+
+      visualRect.setY(y: selectionTop.toFloat())
+      visualRect.setHeight(height: selectionBottom - selectionTop.toFloat())
+      formattingContextRoot().flipForWritingMode(rect: &visualRect)
+      return visualRect
     }
 
     func ellipsisText() -> TextRunWrapper {
