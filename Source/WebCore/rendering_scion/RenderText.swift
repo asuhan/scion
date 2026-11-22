@@ -622,7 +622,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   func originalText() -> StringWrapper {
     assert(isNativeImpl())
     if m_originalTextDiffersFromRendered {
-      return StringWrapper(p: wk_interop.originalTextMap_get(wkRenderObject(self)), owner: false)
+      return StringWrapper(p: wk_interop.originalTextMap_get(wkRenderObject(self)), owner: true)
     }
     return m_text!
   }
