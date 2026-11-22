@@ -1034,6 +1034,7 @@ bool RenderObject_isRenderDetailsMarker(const void*);
 bool RenderObject_isRenderEmbeddedObject(const void*);
 bool RenderObject_isRenderFileUploadControl(const void*);
 bool RenderObject_isRenderMultiColumnSpannerPlaceholder(const void*);
+void* RenderMultiColumnSpannerPlaceholder_spanner(const void*);
 bool RenderObject_isRenderFrame(const void*);
 bool RenderObject_isRenderFrameSet(const void*);
 bool RenderObject_isRenderMedia(const void*);

@@ -2559,6 +2559,12 @@ func createRenderObjectWrapperOrNative(_ raw: UnsafeMutableRawPointer)
   {
     return Unmanaged<RenderFlexibleBoxWrapper>.fromOpaque(flexibleBoxRaw).takeUnretainedValue()
   }
+  if wk_interop.RenderObject_isRenderMultiColumnSpannerPlaceholder(raw),
+    let placeholderRaw = wk_interop.RenderElement_scion(raw)
+  {
+    return Unmanaged<RenderMultiColumnSpannerPlaceholderWrapper>.fromOpaque(placeholderRaw)
+      .takeUnretainedValue()
+  }
   if wk_interop.RenderObject_isRenderGrid(raw), let gridRaw = wk_interop.RenderElement_scion(raw) {
     return Unmanaged<RenderGridWrapper>.fromOpaque(gridRaw).takeUnretainedValue()
   }
@@ -4146,6 +4152,32 @@ func RenderMultiColumnSetScion_create(
     createRenderObjectWrapperOrNative(fragmentedFlowRaw) as! RenderFragmentedFlowWrapper
   let renderer = RenderMultiColumnSetWrapper(fragmentedFlow: fragmentedFlow, style: style)
   return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderMultiColumnSpannerPlaceholderScion_create")
+func RenderMultiColumnSpannerPlaceholderScion_create(
+  _ fragmentedFlowRaw: UnsafeMutableRawPointer, _ spannerRaw: UnsafeMutableRawPointer,
+  _ styleRaw: UnsafeRawPointer
+)
+  -> UnsafeMutableRawPointer
+{
+  let style = convert_render_style(p: styleRaw)
+  style.pOwner = true
+  let fragmentedFlow =
+    createRenderObjectWrapperOrNative(fragmentedFlowRaw) as! RenderMultiColumnFlowWrapper
+  let spanner = createRenderObjectWrapperOrNative(spannerRaw) as! RenderBoxWrapper
+  let renderer = RenderMultiColumnSpannerPlaceholderWrapper(
+    fragmentedFlow: fragmentedFlow, spanner: spanner, style: style)
+  return Unmanaged.passRetained(renderer).toOpaque()
+}
+
+@_cdecl("RenderMultiColumnSpannerPlaceholderScion_setWk")
+func RenderMultiColumnSpannerPlaceholderScion_setWk(
+  _ wk: UnsafeMutableRawPointer, _ placeholderRaw: UnsafeMutableRawPointer
+) {
+  let placeholder = Unmanaged<RenderMultiColumnSpannerPlaceholderWrapper>.fromOpaque(placeholderRaw)
+    .takeUnretainedValue()
+  placeholder.setWk(wk)
 }
 
 @_cdecl("RenderListItemScion_create")

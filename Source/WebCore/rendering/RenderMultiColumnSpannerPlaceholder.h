@@ -34,6 +34,8 @@
 
 namespace WebCore {
 
+class RenderMultiColumnSpannerPlaceholderScion;
+
 class RenderMultiColumnSpannerPlaceholder final : public RenderBox {
     WTF_MAKE_TZONE_OR_ISO_ALLOCATED(RenderMultiColumnSpannerPlaceholder);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderMultiColumnSpannerPlaceholder);
@@ -41,6 +43,9 @@ public:
     static RenderPtr<RenderMultiColumnSpannerPlaceholder> createAnonymous(RenderMultiColumnFlow&, RenderBox& spanner, const RenderStyle& parentStyle);
     virtual ~RenderMultiColumnSpannerPlaceholder();
 
+    void setScionHandle(void* handle);
+
+    // TODO(asuhan): don't route to Scion since the C++ tree builder keeps these in sync.
     RenderBox* spanner() const { return m_spanner.get(); }
     RenderMultiColumnFlow* fragmentedFlow() const { return m_fragmentedFlow.get(); }
 
@@ -49,12 +54,20 @@ private:
 
     RenderMultiColumnSpannerPlaceholder(RenderMultiColumnFlow&, RenderBox& spanner, RenderStyle&&);
 
-    bool canHaveChildren() const override { return false; }
-    void paint(PaintInfo&, const LayoutPoint&) override { }
+    bool canHaveChildren() const override
+    {
+        // NB(asuhan): this returns a literal, we can skip the Scion check
+        return false;
+    }
+    void paint(PaintInfo&, const LayoutPoint&) override
+    {
+        // NB(asuhan): this does nothing, we can skip the Scion check
+    }
     ASCIILiteral renderName() const override;
 
     SingleThreadWeakPtr<RenderBox> m_spanner;
     SingleThreadWeakPtr<RenderMultiColumnFlow> m_fragmentedFlow;
+    std::unique_ptr<RenderMultiColumnSpannerPlaceholderScion> m_scion;
 };
 
 } // namespace WebCore

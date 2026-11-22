@@ -96,6 +96,7 @@ extern "C" void* RenderTableCaptionScion_create(void*, const void*);
 extern "C" void* RenderMultiColumnFlowScion_create(void*, const void*);
 
 extern "C" void* RenderMultiColumnSetScion_create(void*, const void*);
+extern "C" void* RenderMultiColumnSpannerPlaceholderScion_create(void*, void*, const void*);
 
 extern "C" void* RenderListMarkerScion_create(void*, const void*);
 
@@ -2194,6 +2195,19 @@ public:
     void setWidget(Widget*);
 
     uint8_t updateWidgetPosition();
+
+private:
+    void* m_handle;
+};
+
+class RenderMultiColumnSpannerPlaceholderScion final {
+public:
+    RenderMultiColumnSpannerPlaceholderScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
+    void setWk(void*);
 
 private:
     void* m_handle;

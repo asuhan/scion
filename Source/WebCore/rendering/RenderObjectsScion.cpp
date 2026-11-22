@@ -864,6 +864,8 @@ extern "C" LayoutRectRaw RenderReplacedScion_replacedContentRect(const void*);
 
 extern "C" void RenderReplacedScion_paint(void*, void*, LayoutPointRaw);
 
+extern "C" void RenderMultiColumnSpannerPlaceholderScion_setWk(void*, void*);
+
 extern "C" void RenderHTMLCanvasScion_setWk(void*, void*);
 extern "C" void* RenderHTMLCanvasScion_canvasElement(const void*);
 
@@ -3122,6 +3124,11 @@ LayoutRect RenderReplacedScion::replacedContentRect() const
 void RenderReplacedScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
     RenderReplacedScion_paint(m_handle, &paintInfo, convertLayoutPoint(paintOffset));
+}
+
+void RenderMultiColumnSpannerPlaceholderScion::setWk(void* wk)
+{
+    RenderMultiColumnSpannerPlaceholderScion_setWk(wk, m_handle);
 }
 
 HTMLCanvasElement& RenderHTMLCanvasScion::canvasElement() const

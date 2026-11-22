@@ -27,7 +27,21 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 final class RenderMultiColumnSpannerPlaceholderWrapper: RenderBoxWrapper {
+  init(
+    fragmentedFlow: RenderMultiColumnFlowWrapper, spanner: RenderBoxWrapper,
+    style: RenderStyleWrapper
+  ) {
+    m_spanner = spanner
+    m_fragmentedFlow = fragmentedFlow
+    super.init(.MultiColumnSpannerPlaceholder, fragmentedFlow.document(), style, .IsBoxModelObject)
+    assert(isRenderMultiColumnSpannerPlaceholder())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   static func createAnonymous(
     fragmentedFlow: RenderMultiColumnFlowWrapper, spanner: RenderBoxWrapper,
     parentStyle: RenderStyleWrapper
@@ -37,8 +51,18 @@ final class RenderMultiColumnSpannerPlaceholderWrapper: RenderBoxWrapper {
   }
 
   func spanner() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNativeImpl() {
+      guard let spanner = wk_interop.RenderMultiColumnSpannerPlaceholder_spanner(id()) else {
+        return nil
+      }
+      return createRenderObjectWrapperOrNative(spanner) as! RenderBoxWrapper?
+    }
+    return m_spanner
+  }
+
+  func fragmentedFlow() -> RenderMultiColumnFlowWrapper? {
+    assert(isNativeImpl())
+    return m_fragmentedFlow
   }
 
   override func canHaveChildren() -> Bool {
@@ -47,7 +71,14 @@ final class RenderMultiColumnSpannerPlaceholderWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
   }
+
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
+  override func getWk() -> UnsafeMutableRawPointer { return wk! }
+
+  private var m_spanner: RenderBoxWrapper? = nil
+  private var m_fragmentedFlow: RenderMultiColumnFlowWrapper? = nil
+  private var wk: UnsafeMutableRawPointer? = nil
 }

@@ -33,6 +33,7 @@
 #include "RenderBoxInlines.h"
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderMultiColumnFlow.h"
+#include "RenderObjectsScion.h"
 #include <wtf/TZoneMallocInlines.h>
 
 namespace WebCore {
@@ -43,7 +44,13 @@ RenderPtr<RenderMultiColumnSpannerPlaceholder> RenderMultiColumnSpannerPlacehold
 {
     auto newStyle = RenderStyle::createAnonymousStyleWithDisplay(parentStyle, DisplayType::Block);
     newStyle.setClear(Clear::Both); // We don't want floats in the row preceding the spanner to continue on the other side.
-    auto placeholder = createRenderer<RenderMultiColumnSpannerPlaceholder>(fragmentedFlow, spanner, WTFMove(newStyle));
+    RenderPtr<RenderMultiColumnSpannerPlaceholder> placeholder;
+    if (Document::s_useScionRendering >= 18) {
+        auto clonedStyle = RenderStyle::clonePtr(newStyle);
+        placeholder = createRenderer<RenderMultiColumnSpannerPlaceholder>(fragmentedFlow, spanner, WTFMove(newStyle));
+        placeholder->setScionHandle(RenderMultiColumnSpannerPlaceholderScion_create(&fragmentedFlow, &spanner, clonedStyle.release()));
+    } else
+        placeholder = createRenderer<RenderMultiColumnSpannerPlaceholder>(fragmentedFlow, spanner, WTFMove(newStyle));
     placeholder->initializeStyle();
     return placeholder;
 }
@@ -58,9 +65,26 @@ RenderMultiColumnSpannerPlaceholder::RenderMultiColumnSpannerPlaceholder(RenderM
 
 RenderMultiColumnSpannerPlaceholder::~RenderMultiColumnSpannerPlaceholder() = default;
 
+void RenderMultiColumnSpannerPlaceholder::setScionHandle(void* handle)
+{
+    RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
+    RenderLayerModelObject::setScionHandle(handle);
+    RenderBoxModelObject::setScionHandle(handle);
+    RenderBox::setScionHandle(handle);
+    m_scion = std::make_unique<RenderMultiColumnSpannerPlaceholderScion>(handle);
+    m_scion->setWk(this);
+}
+
 ASCIILiteral RenderMultiColumnSpannerPlaceholder::renderName() const
 {
+    // NB(asuhan): this returns a literal, we can skip the Scion check
     return "RenderMultiColumnSpannerPlaceholder"_s;
 }
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT void* RenderMultiColumnSpannerPlaceholder_spanner(const void* p)
+{
+    return static_cast<const WebCore::RenderMultiColumnSpannerPlaceholder*>(p)->spanner();
+}
