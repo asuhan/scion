@@ -864,6 +864,8 @@ extern "C" LayoutRectRaw RenderReplacedScion_replacedContentRect(const void*);
 
 extern "C" void RenderReplacedScion_paint(void*, void*, LayoutPointRaw);
 
+extern "C" LayoutRectRaw RenderReplacedScion_selectionRectForRepaint(void*, void*, bool);
+
 extern "C" void RenderMultiColumnSpannerPlaceholderScion_setWk(void*, void*);
 
 extern "C" void RenderHTMLCanvasScion_setWk(void*, void*);
@@ -3124,6 +3126,13 @@ LayoutRect RenderReplacedScion::replacedContentRect() const
 void RenderReplacedScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
     RenderReplacedScion_paint(m_handle, &paintInfo, convertLayoutPoint(paintOffset));
+}
+
+LayoutRect RenderReplacedScion::selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent)
+{
+    return convertLayoutRectRaw(
+        RenderReplacedScion_selectionRectForRepaint(
+            m_handle, const_cast<RenderLayerModelObject*>(repaintContainer), clipToVisibleContent));
 }
 
 void RenderMultiColumnSpannerPlaceholderScion::setWk(void* wk)

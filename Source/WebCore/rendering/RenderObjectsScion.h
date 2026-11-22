@@ -2227,6 +2227,8 @@ public:
 
     void paint(PaintInfo&, const LayoutPoint&);
 
+    LayoutRect selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent);
+
 private:
     void* m_handle;
 };

@@ -809,7 +809,9 @@ VisiblePosition RenderReplaced::positionForPoint(const LayoutPoint& point, HitTe
 
 LayoutRect RenderReplaced::selectionRectForRepaint(const RenderLayerModelObject* repaintContainer, bool clipToVisibleContent)
 {
-    if (m_scion) { ASSERT_NOT_REACHED(); }
+    if (m_scion) {
+        return m_scion->selectionRectForRepaint(repaintContainer, clipToVisibleContent);
+    }
     ASSERT(!needsLayout());
 
     if (!isSelected())

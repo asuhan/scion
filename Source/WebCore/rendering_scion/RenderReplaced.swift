@@ -449,6 +449,25 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     return isHighlighted(selectionState(), view().selection())
   }
 
+  func selectionRectForRepaint(
+    repaintContainer: RenderLayerModelObjectWrapper?, clipToVisibleContent: Bool = true
+  ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    assert(!needsLayout())
+
+    if !isSelected() {
+      return LayoutRectWrapper()
+    }
+
+    let rect = localSelectionRect()
+    if clipToVisibleContent {
+      return computeRectForRepaint(rect: rect, repaintContainer: repaintContainer)
+    }
+    return LayoutRectWrapper(
+      rect: localToContainerQuad(localQuad: FloatQuad(inRect: rect.FloatRect()), container: repaintContainer)
+        .enclosingBoundingBox())
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     let previousUsedZoom = oldStyle != nil ? oldStyle!.usedZoom() : RenderStyleWrapper.initialZoom()

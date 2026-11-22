@@ -5566,6 +5566,21 @@ func RenderReplacedScion_replacedContentRect(_ replacedRaw: UnsafeRawPointer) ->
   return convertLayoutRect(replaced.replacedContentRect())
 }
 
+@_cdecl("RenderReplacedScion_selectionRectForRepaint")
+func RenderReplacedScion_selectionRectForRepaint(
+  _ replacedRaw: UnsafeMutableRawPointer, _ repaintContainerRaw: UnsafeMutableRawPointer?,
+  _ clipToVisibleContent: Bool
+) -> LayoutRectRaw {
+  let replaced = Unmanaged<RenderReplacedWrapper>.fromOpaque(replacedRaw).takeUnretainedValue()
+  let repaintContainer =
+    repaintContainerRaw != nil
+    ? createRenderObjectWrapperOrNative(repaintContainerRaw!) as! RenderLayerModelObjectWrapper?
+    : nil
+  return convertLayoutRect(
+    replaced.selectionRectForRepaint(
+      repaintContainer: repaintContainer, clipToVisibleContent: clipToVisibleContent))
+}
+
 @_cdecl("RenderReplacedScion_paint")
 func RenderReplacedScion_paint(
   _ replacedRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,
