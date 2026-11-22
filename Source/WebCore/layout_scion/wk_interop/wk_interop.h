@@ -2730,6 +2730,7 @@ struct ChangedContextSensitiveProperties RenderStyle_changeRequiresLayerRepaint(
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaint(const void*, const void*);
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRepaintIfText(const void*, const void*);
 struct ChangedContextSensitiveProperties RenderStyle_changeRequiresRecompositeLayer(const void*, const void*);
+void RenderCounter_destroyCounterNodes(void*);
 void RenderCounter_rendererStyleChanged(void*, const void*, const void*);
 struct RenderTextWidthsRaw {
     float min;

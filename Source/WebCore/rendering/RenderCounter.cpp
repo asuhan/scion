@@ -42,6 +42,11 @@
 #include <stdio.h>
 #endif
 
+extern "C" WEBCORE_EXPORT void RenderCounter_destroyCounterNodes(void* ownerRaw)
+{
+    WebCore::RenderCounter::destroyCounterNodes(*static_cast<WebCore::RenderElement*>(ownerRaw));
+}
+
 extern "C" WEBCORE_EXPORT void RenderCounter_rendererStyleChanged(void* rendererRaw, const void* oldStyleRaw, const void* newStyleRaw)
 {
     auto& renderer = *static_cast<WebCore::RenderElement*>(rendererRaw);

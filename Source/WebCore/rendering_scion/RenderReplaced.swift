@@ -464,8 +464,10 @@ class RenderReplacedWrapper: RenderBoxWrapper {
       return computeRectForRepaint(rect: rect, repaintContainer: repaintContainer)
     }
     return LayoutRectWrapper(
-      rect: localToContainerQuad(localQuad: FloatQuad(inRect: rect.FloatRect()), container: repaintContainer)
-        .enclosingBoundingBox())
+      rect: localToContainerQuad(
+        localQuad: FloatQuad(inRect: rect.FloatRect()), container: repaintContainer
+      )
+      .enclosingBoundingBox())
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

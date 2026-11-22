@@ -24,8 +24,8 @@ import wk_interop
 
 final class RenderCounter: RenderTextWrapper {
   static func destroyCounterNodes(_ owner: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let ownerRaw = owner.isNativeImpl() ? owner.getWk() : owner.id()
+    wk_interop.RenderCounter_destroyCounterNodes(ownerRaw)
   }
 
   static func rendererStyleChanged(
