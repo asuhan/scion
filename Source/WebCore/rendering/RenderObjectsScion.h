@@ -1400,6 +1400,7 @@ public:
     RenderMultiColumnFlow* multiColumnFlow() const;
 
     bool requiresColumns(int) const;
+    bool willCreateColumns(std::optional<unsigned> desiredColumnCount) const;
 
     bool containsFloats() const;
 

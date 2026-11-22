@@ -7184,6 +7184,15 @@ func RenderBlockFlowScion_requiresColumns(
   return blockFlow.requiresColumns(desiredColumnCount: desiredColumnCount)
 }
 
+@_cdecl("RenderBlockFlowScion_willCreateColumns")
+func RenderBlockFlowScion_willCreateColumns(
+  _ blockFlowRaw: UnsafeRawPointer, _ hasDesiredColumnCount: Bool, _ desiredColumnCount: UInt32
+) -> Bool {
+  let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()
+  return blockFlow.willCreateColumns(
+    desiredColumnCount: hasDesiredColumnCount ? desiredColumnCount : nil)
+}
+
 @_cdecl("RenderBlockFlowScion_containsFloats")
 func RenderBlockFlowScion_containsFloats(_ blockFlowRaw: UnsafeRawPointer) -> Bool {
   let blockFlow = Unmanaged<RenderBlockFlowWrapper>.fromOpaque(blockFlowRaw).takeUnretainedValue()

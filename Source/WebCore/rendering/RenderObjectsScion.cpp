@@ -1432,6 +1432,8 @@ extern "C" void* RenderBlockFlowScion_multiColumnFlow(const void*);
 
 extern "C" bool RenderBlockFlowScion_requiresColumns(const void*, int32_t);
 
+extern "C" bool RenderBlockFlowScion_willCreateColumns(const void*, bool hasDesiredColumnCount, uint32_t desiredColumnCount);
+
 extern "C" bool RenderBlockFlowScion_containsFloats(const void*);
 
 extern "C" bool RenderBlockFlowScion_containsFloat(const void*, void*);
@@ -5171,6 +5173,11 @@ RenderMultiColumnFlow* RenderBlockFlowScion::multiColumnFlow() const
 bool RenderBlockFlowScion::requiresColumns(int desiredColumnCount) const
 {
     return RenderBlockFlowScion_requiresColumns(m_handle, desiredColumnCount);
+}
+
+bool RenderBlockFlowScion::willCreateColumns(std::optional<unsigned> desiredColumnCount) const
+{
+    return RenderBlockFlowScion_willCreateColumns(m_handle, !!desiredColumnCount, desiredColumnCount.value_or(0));
 }
 
 bool RenderBlockFlowScion::containsFloats() const
