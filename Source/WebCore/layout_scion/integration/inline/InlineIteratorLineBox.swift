@@ -221,8 +221,26 @@ class InlineIterator {
     }
 
     func ellipsisSelectionState() -> RenderObjectWrapper.HighlightState {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let lastLeafBox = self.lastLeafBox()
+      if !lastLeafBox.bool() {
+        return .None
+      }
+
+      let leafBox = lastLeafBox.get()
+      guard let text = (leafBox.isText() ? InlineIterator.TextBox(leafBox.m_pathVariant) : nil),
+        text.selectionState() != .None
+      else {
+        return .None
+      }
+
+      let selectionRange = text.selectableRange()
+      guard let truncation = selectionRange.truncation else {
+        return .None
+      }
+
+      let (selectionStart, selectionEnd) = formattingContextRoot().view().selection()
+        .rangeForTextBox(renderer: text.renderer(), textBoxRange: selectionRange)
+      return selectionStart <= truncation && selectionEnd >= truncation ? .Inside : .None
     }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
