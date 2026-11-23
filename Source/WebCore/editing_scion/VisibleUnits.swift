@@ -912,7 +912,69 @@ func findStartOfParagraph(
   startNode: NodeWrapper?, highestRoot: NodeWrapper?, startBlock: NodeWrapper?, offset: inout Int32,
   type: inout AnchorType, boundaryCrossingRule: EditingBoundaryCrossingRule
 ) -> NodeWrapper? {
-  fatalError("Not implemented")
+  var node: NodeWrapper? = startNode
+  var n: NodeWrapper? = startNode
+  let startNodeIsEditable: Bool = startNode!.hasEditableStyle()
+  while n != nil {
+    if boundaryCrossingRule == .CannotCrossEditingBoundary && !Position.nodeIsUserSelectAll(node: n)
+      && n!.hasEditableStyle() != startNodeIsEditable
+    {
+      break
+    }
+    if boundaryCrossingRule == .CanSkipOverEditingBoundary {
+      while n != nil && n!.hasEditableStyle() != startNodeIsEditable {
+        n = previousPostOrder(n!, startBlock)
+      }
+      if n == nil || !n!.isDescendantOf(highestRoot) {
+        break
+      }
+    }
+    let r: RenderObjectWrapper? = n!.renderer()
+    if r == nil {
+      n = previousPostOrder(n!, startBlock)
+      continue
+    }
+    let style = r!.style()
+    if style.visibility() != .Visible {
+      n = previousPostOrder(n!, startBlock)
+      continue
+    }
+    if r!.isBRForRenderObject() || isBlock(node: n!) {
+      break
+    }
+    if let renderText = r! as? RenderTextWrapper, renderText.hasRenderedText() {
+      assert(n! is TextWrapper)
+      type = .PositionIsOffsetInAnchor
+      if style.preserveNewline() {
+        let text = renderText.text()
+        var i: Int32 = Int32(text.length())
+        let o: Int32 = offset
+        if CPtrToInt(n?.p) == CPtrToInt(startNode?.p) && o < i {
+          i = max(0, o)
+        }
+        while true {
+          i -= 1
+          if !(i >= 0) {
+            break
+          }
+          if Int32(text[UInt32(i)]) == Int32(10 /* '\n' */) {
+            offset = i + 1
+            return n
+          }
+        }
+      }
+      node = n
+      offset = 0
+      n = previousPostOrder(n!, startBlock)
+    } else if editingIgnoresContent(node: n!) || isRenderedTable(node: n) {
+      node = n
+      type = .PositionIsBeforeAnchor
+      n = n!.previousSibling() != nil ? n!.previousSibling() : previousPostOrder(n!, startBlock)
+    } else {
+      n = previousPostOrder(n!, startBlock)
+    }
+  }
+  return node
 }
 
 func findEndOfParagraph(
