@@ -69,6 +69,12 @@ func EditingScion_findPlainText(
   ).raw()
 }
 
+@_cdecl("EditingScion_characterCount")
+func EditingScion_characterCount(_ rangeRaw: SimpleRangeRaw, _ behaviorsRaw: UInt32) -> UInt64 {
+  return characterCount(
+    range: SimpleRange(raw: rangeRaw), behaviors: TextIteratorBehavior(rawValue: behaviorsRaw))
+}
+
 @_cdecl("VisiblePositionScion_localCaretRect")
 func VisiblePositionScion_localCaretRect(_ positionRaw: VisiblePositionRaw) -> LocalCaretRectRaw {
   let caret = VisiblePosition(raw: positionRaw).localCaretRect()

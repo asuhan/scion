@@ -83,6 +83,7 @@
 #endif
 
 extern "C" SimpleRangeRaw EditingScion_findPlainText(SimpleRangeRaw, const void* target, uint16_t options);
+extern "C" uint64_t EditingScion_characterCount(SimpleRangeRaw, uint32_t behaviors);
 
 namespace WebCore {
 
@@ -2467,8 +2468,13 @@ size_t SearchBuffer::length() const
 
 // --------
 
+static bool usesScionRendering(const SimpleRange&);
+
 uint64_t characterCount(const SimpleRange& range, TextIteratorBehaviors behaviors)
 {
+    if (usesScionRendering(range))
+        return EditingScion_characterCount(simpleRangeToRaw(range), behaviors.toRaw());
+
     auto adjustedRange = range;
     auto ordering = treeOrder<ComposedTree>(range.start, range.end);
     if (is_gt(ordering))
