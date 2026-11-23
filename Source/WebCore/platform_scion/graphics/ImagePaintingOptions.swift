@@ -24,18 +24,20 @@
  */
 
 class ImagePaintingOptionsWrapper {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init() {}
 
   init(
     compositeOperator: CompositeOperator, blendMode: BlendMode, decodingMode: DecodingMode,
     orientation: ImageOrientation.Orientation, interpolationQuality: InterpolationQuality,
     allowImageSubsampling: AllowImageSubsampling, showDebugBackground: ShowDebugBackground
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.compositeOperator = compositeOperator
+    self.blendMode = blendMode
+    self.decodingMode = decodingMode
+    self.orientation = orientation
+    self.interpolationQuality = interpolationQuality
+    self.allowImageSubsampling = allowImageSubsampling
+    self.showDebugBackground = showDebugBackground
   }
 
   init(
@@ -43,46 +45,27 @@ class ImagePaintingOptionsWrapper {
     orientation: ImageOrientation, interpolationQuality: InterpolationQuality,
     allowImageSubsampling: AllowImageSubsampling, showDebugBackground: ShowDebugBackground
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.compositeOperator = compositeOperator
+    self.decodingMode = decodingMode
+    self.orientation = orientation.orientation()
+    self.interpolationQuality = interpolationQuality
+    self.allowImageSubsampling = allowImageSubsampling
+    self.showDebugBackground = showDebugBackground
   }
 
   init(_ orientation: ImageOrientation) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.orientation = orientation.orientation()
   }
 
   init(_ compositeOperator: CompositeOperator) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.compositeOperator = compositeOperator
   }
 
-  var blendMode: BlendMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-  var decodingMode: DecodingMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-  var compositeOperator: CompositeOperator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-  var orientation: ImageOrientation.Orientation {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-  var interpolationQuality: InterpolationQuality {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-  var allowImageSubsampling: AllowImageSubsampling {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-  var showDebugBackground: ShowDebugBackground {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  private(set) var blendMode: BlendMode = .Normal
+  private(set) var decodingMode: DecodingMode = .Synchronous
+  private(set) var compositeOperator: CompositeOperator = .SourceOver
+  private(set) var orientation: ImageOrientation.Orientation = .None
+  private(set) var interpolationQuality: InterpolationQuality = .Default
+  private(set) var allowImageSubsampling: AllowImageSubsampling = .No
+  private(set) var showDebugBackground: ShowDebugBackground = .No
 }

@@ -46,5 +46,7 @@ struct ImageOrientation: Equatable {
 
   init(orientation: Orientation) { m_orientation = orientation }
 
+  func orientation() -> Orientation { return m_orientation }
+
   private let m_orientation: Orientation
 }
