@@ -2482,6 +2482,16 @@ void GraphicsContext_fillRectWithClipping(void*, struct FloatRectRaw, bool);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void GraphicsContext_drawFocusRingRects(void*, const struct FloatRectRaw*, uint64_t, float outlineOffset, float outlineWidth, struct SRGBARaw);
 void GraphicsContext_fillRectComposite(void* p, struct FloatRectRaw, struct SRGBARaw, uint8_t, uint8_t);
+struct ImagePaintingOptionsRaw {
+    uint8_t compositeOperator;
+    uint8_t blendMode;
+    uint8_t decodingMode;
+    uint8_t orientation;
+    uint8_t interpolationQuality;
+    uint8_t allowImageSubsampling;
+    uint8_t showDebugBackground;
+};
+uint8_t GraphicsContext_drawTiledImage(void*, void* image, struct FloatRectRaw destination, struct FloatPointRaw source, struct FloatSizeRaw tileSize, struct FloatSizeRaw spacing, struct ImagePaintingOptionsRaw);
 void GraphicsContext_fillRoundedRect(void*, struct FloatRoundedRectRaw, struct SRGBARaw, uint8_t);
 void GraphicsContext_fillRectWithRoundedHole(void*, struct FloatRectRaw, struct FloatRoundedRectRaw, struct SRGBARaw);
 void GraphicsContext_clearRect(void*, struct FloatRectRaw);

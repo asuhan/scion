@@ -356,8 +356,17 @@ class GraphicsContextWrapper {
     image: ImageWrapper, destination: FloatRectWrapper, source: FloatPoint, tileSize: FloatSize,
     spacing: FloatSize, options: ImagePaintingOptionsWrapper = ImagePaintingOptionsWrapper()
   ) -> ImageDrawResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let optionsRaw = ImagePaintingOptionsRaw(
+      compositeOperator: options.compositeOperator.rawValue, blendMode: options.blendMode.rawValue,
+      decodingMode: options.decodingMode.rawValue, orientation: options.orientation.rawValue,
+      interpolationQuality: options.interpolationQuality.rawValue,
+      allowImageSubsampling: options.allowImageSubsampling.rawValue,
+      showDebugBackground: options.showDebugBackground.rawValue)
+    return ImageDrawResult(
+      rawValue: wk_interop.GraphicsContext_drawTiledImage(
+        p!, image.p, toFloatRectRaw(destination), FloatPointRaw(x: source.x, y: source.y),
+        FloatSizeRaw(width: tileSize.width, height: tileSize.height),
+        FloatSizeRaw(width: spacing.width, height: spacing.height), optionsRaw))!
   }
 
   func drawImageBuffer(

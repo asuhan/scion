@@ -305,6 +305,33 @@ struct FloatSizeRaw {
     float height;
 };
 
+struct ImagePaintingOptionsRaw {
+    uint8_t compositeOperator;
+    uint8_t blendMode;
+    uint8_t decodingMode;
+    uint8_t orientation;
+    uint8_t interpolationQuality;
+    uint8_t allowImageSubsampling;
+    uint8_t showDebugBackground;
+};
+
+extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_drawTiledImage(void* p, void* image, FloatRectRaw destination, FloatPointRaw source, FloatSizeRaw tileSize, FloatSizeRaw spacing, ImagePaintingOptionsRaw options)
+{
+    WebCore::ImagePaintingOptions imagePaintingOptions {
+        static_cast<WebCore::CompositeOperator>(options.compositeOperator),
+        static_cast<WebCore::BlendMode>(options.blendMode),
+        static_cast<WebCore::DecodingMode>(options.decodingMode),
+        static_cast<WebCore::ImageOrientation::Orientation>(options.orientation),
+        static_cast<WebCore::InterpolationQuality>(options.interpolationQuality),
+        static_cast<WebCore::AllowImageSubsampling>(options.allowImageSubsampling),
+        static_cast<WebCore::ShowDebugBackground>(options.showDebugBackground)
+    };
+    auto result = static_cast<WebCore::GraphicsContext*>(p)->drawTiledImage(*static_cast<WebCore::Image*>(image),
+        { destination.x, destination.y, destination.width, destination.height }, { source.x, source.y },
+        { tileSize.width, tileSize.height }, { spacing.width, spacing.height }, imagePaintingOptions);
+    return static_cast<uint8_t>(result);
+}
+
 struct FloatRadiiRaw {
     FloatSizeRaw topLeft;
     FloatSizeRaw topRight;

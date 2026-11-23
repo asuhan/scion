@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum ImageDrawResult {
+enum ImageDrawResult: UInt8 {
   case DidNothing
   case DidRequestDecoding
   case DidRecord
