@@ -701,7 +701,28 @@ struct VisiblePosition {
   }
 
   func characterAfter() -> UInt32 {
-    fatalError("Not implemented")
+    // We canonicalize to the first of two equivalent candidates, but the second of the two candidates
+    // is the one that will be inside the text node containing the character after this visible position.
+    let pos = deepPosition.downstream()
+    if !(pos.containerNode() is TextWrapper) {
+      return 0
+    }
+    switch pos.anchorType() {
+    case .PositionIsAfterChildren, .PositionIsAfterAnchor, .PositionIsBeforeAnchor,
+      .PositionIsBeforeChildren:
+      return 0
+    case .PositionIsOffsetInAnchor:
+      break
+    }
+    var offset: UInt32 = UInt32(UInt32(pos.offsetInContainerNode()))
+    let textNode: TextWrapper? = pos.containerText()
+    let length: UInt32 = textNode!.length()
+    if offset >= length {
+      return 0
+    }
+    var ch: UInt32 = 0
+    U16_NEXT(textNode!.data(), &offset, length, &ch)
+    return ch
   }
 
   func inlineBoxAndOffset() -> InlineBoxAndOffset {
