@@ -47,7 +47,9 @@ class StringWrapperView {
   init(p: UnsafeRawPointer) { self.p = p }
 
   // Construct a view of UTF-16 data.
-  init(characters: CharSpanWrapper<UChar>) { self.p = wk_interop.StringView_new_span16(characters.p) }
+  init(characters: CharSpanWrapper<UChar>) {
+    self.p = wk_interop.StringView_new_span16(characters.p)
+  }
 
   init() { self.p = wk_interop.StringView_new() }
 
@@ -193,4 +195,13 @@ func makeStringByReplacingAll(_ string: StringWrapper, target: UChar, literal: A
 {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+// unicode/utf16.h: U16_NEXT(s, i, length, c) reads the code point of s at i into c and moves i past it.
+func U16_NEXT(_ s: StringWrapper, _ i: inout UInt32, _ length: UInt32, _ c: inout UInt32) {
+  c = UInt32(s[i])
+  i += 1
+  if UTF16.isLeadSurrogate(UInt16(c)) && i != length && UTF16.isTrailSurrogate(s[i]) {
+    c = (c << 10) + UInt32(s[i]) - ((0xD800 << 10) + 0xDC00 - 0x10000)
+    i += 1
+  }
 }
