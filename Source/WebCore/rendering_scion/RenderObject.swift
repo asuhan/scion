@@ -1100,7 +1100,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isHR() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isHR(id()) }
     return node()?.hasHRTagName() ?? false
   }
 
