@@ -165,7 +165,7 @@ extension InlineDisplay {
     }
 
     func hasEllipsis() -> Bool {
-      return ellipsisVisualRect != nil
+      return ellipsis != nil
     }
 
     func setHasContentAfterEllipsisBox() {
@@ -210,8 +210,6 @@ extension InlineDisplay {
     var isFirstAfterPageBreak = false
     var isFullyTruncatedInBlockDirection = false
     var hasContentAfterEllipsisBox = false
-    // This is visual rect ignoring block direction.
-    var ellipsisVisualRect: FloatRectWrapper?
     var ellipsis: Ellipsis? = nil
   }
 }
