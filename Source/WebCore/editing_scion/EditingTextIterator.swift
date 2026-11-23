@@ -1364,7 +1364,20 @@ func isSeparator(character: UInt32) -> Bool {
 }
 
 func characterCount(range: SimpleRange, behaviors: TextIteratorBehavior = []) -> UInt64 {
-  fatalError("Not implemented")
+  var adjustedRange = range
+  let ordering = treeOrder(range.start, range.end)
+  if is_gt(ordering) {
+    swap(&adjustedRange.start, &adjustedRange.end)
+  } else if !is_lt(ordering) {
+    return 0
+  }
+  var length: UInt64 = 0
+  var it = EditingTextIterator(range: adjustedRange, behaviors: behaviors)
+  while !it.atEnd() {
+    length += UInt64(it.text().length())
+    it.advance()
+  }
+  return length
 }
 
 func isInsideReplacedElement(iterator: inout EditingTextIterator, behaviors: TextIteratorBehavior)
@@ -1455,7 +1468,30 @@ func hasAnyPlainText(range: SimpleRange, behaviors: TextIteratorBehavior = []) -
 func plainText(
   range: SimpleRange, defaultBehavior: TextIteratorBehavior = [], isDisplayString: Bool = false
 ) -> StringWrapper {
-  fatalError("Not implemented")
+  // The initial buffer size can be critical for performance: https://bugs.webkit.org/show_bug.cgi?id=81192
+  let initialCapacity: UInt32 = UInt32(1 << 15)
+  let document = range.start.document()
+  var bufferLength: UInt32 = 0
+  let builder = StringBuilderWrapper()
+  builder.reserveCapacity(initialCapacity)
+  var behaviors = defaultBehavior
+  if !isDisplayString {
+    behaviors.insert([.EmitsTextsWithoutTranscoding])
+  }
+  var it = EditingTextIterator(range: range, behaviors: behaviors)
+  while !it.atEnd() {
+    it.appendTextToStringBuilder(builder: builder)
+    bufferLength += it.text().length()
+    it.advance()
+  }
+  if !(bufferLength != 0) {
+    return emptyString()
+  }
+  let result = builder.toString()
+  if isDisplayString {
+    document.displayStringModifiedByEncoding(result)
+  }
+  return result
 }
 
 func plainTextReplacingNoBreakSpace(

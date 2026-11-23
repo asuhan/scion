@@ -175,6 +175,7 @@ class Document: TreeScopeWrapper {
     return TextResourceDecoder(p: decoderRaw)
   }
 
+  @discardableResult
   func displayStringModifiedByEncoding(_ string: StringWrapper) -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
