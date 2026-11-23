@@ -73,5 +73,9 @@ class StringBuilderWrapper {
     return StringWrapperView(p: wk_interop.StringBuilder_view(self.p))
   }
 
+  func reserveCapacity(_ newCapacity: UInt32) {
+    wk_interop.StringBuilder_reserveCapacity(self.p, newCapacity)
+  }
+
   var p: UnsafeMutableRawPointer
 }

@@ -768,6 +768,7 @@ void* StringBuilder_new();
 void StringBuilder_destroy(const void*);
 void StringBuilder_append_UChar(void*, uint16_t);
 void StringBuilder_append_UChar32(void*, int32_t);
+void StringBuilder_reserveCapacity(void*, uint32_t);
 void StringBuilder_append_String(void*, const void*);
 void StringBuilder_append_StringView(void*, const void*);
 void StringBuilder_append_literal(void*, const char*);

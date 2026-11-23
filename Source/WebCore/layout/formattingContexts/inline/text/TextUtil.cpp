@@ -618,6 +618,11 @@ extern "C" WEBCORE_EXPORT void StringBuilder_append_UChar32(void* builder, int32
     static_cast<StringBuilder*>(builder)->append(static_cast<char32_t>(ch));
 }
 
+extern "C" WEBCORE_EXPORT void StringBuilder_reserveCapacity(void* builder, uint32_t newCapacity)
+{
+    static_cast<StringBuilder*>(builder)->reserveCapacity(newCapacity);
+}
+
 extern "C" WEBCORE_EXPORT void StringBuilder_append_String(void* builder, const void* s)
 {
     static_cast<StringBuilder*>(builder)->append(*static_cast<const String*>(s));
