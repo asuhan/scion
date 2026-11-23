@@ -280,6 +280,11 @@ extern "C" WEBCORE_EXPORT bool Page_isVisible(const void* raw)
     return static_cast<const WebCore::Page*>(raw)->isVisible();
 }
 
+extern "C" WEBCORE_EXPORT bool Page_inLowQualityImageInterpolationMode(const void* raw)
+{
+    return static_cast<const WebCore::Page*>(raw)->inLowQualityImageInterpolationMode();
+}
+
 extern "C" WEBCORE_EXPORT bool Page_isInWindow(const void* raw)
 {
     return static_cast<const WebCore::Page*>(raw)->isInWindow();

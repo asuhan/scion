@@ -90,6 +90,11 @@ extern "C" WEBCORE_EXPORT bool Image_isBitmapImage(const void* p)
     return static_cast<const WebCore::Image*>(p)->isBitmapImage();
 }
 
+extern "C" WEBCORE_EXPORT bool Image_isPDFDocumentImage(const void* p)
+{
+    return static_cast<const WebCore::Image*>(p)->isPDFDocumentImage();
+}
+
 extern "C" WEBCORE_EXPORT void Image_deref(void* p)
 {
     static_cast<WebCore::Image*>(p)->deref();

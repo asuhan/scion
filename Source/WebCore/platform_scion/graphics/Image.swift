@@ -36,6 +36,10 @@ class ImageWrapper {
     return wk_interop.Image_isBitmapImage(p)
   }
 
+  func isPDFDocumentImage() -> Bool {
+    return wk_interop.Image_isPDFDocumentImage(p)
+  }
+
   func isNull() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

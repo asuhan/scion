@@ -70,6 +70,10 @@ class PageWrapper {
 
   func isVisible() -> Bool { return wk_interop.Page_isVisible(p) }
 
+  func inLowQualityImageInterpolationMode() -> Bool {
+    return wk_interop.Page_inLowQualityImageInterpolationMode(p)
+  }
+
   func isInWindow() -> Bool { return wk_interop.Page_isInWindow(p) }
 
   func addRelevantRepaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
