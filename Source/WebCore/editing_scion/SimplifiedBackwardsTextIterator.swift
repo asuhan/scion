@@ -288,7 +288,16 @@ struct SimplifiedBackwardsTextIterator {
   }
 
   mutating func advanceRespectingRange(next: NodeWrapper?) -> Bool {
-    fatalError("Not implemented")
+    if next == nil {
+      return false
+    }
+    havePassedStartContainer =
+      (CPtrToInt(m_node?.p) == CPtrToInt(startContainer?.p)) || havePassedStartContainer
+    if havePassedStartContainer {
+      return false
+    }
+    m_node = next
+    return true
   }
 
   func range() -> SimpleRange {
