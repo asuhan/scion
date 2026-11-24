@@ -2277,6 +2277,7 @@ bool Node_isEditingText(const void*);
 bool Node_hasEditableStyle(const void*, bool);
 uint32_t Node_computeNodeIndex(const void*);
 void* Node_document(const void*);
+int8_t BoundaryPoint_treeOrder(int32_t type, struct BoundaryPointRaw, struct BoundaryPointRaw);
 bool Node_isDescendantOf(const void*, const void*);
 void* Node_renderer(const void*);
 void Node_setRenderer(void*, void*);

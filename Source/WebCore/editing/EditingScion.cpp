@@ -85,3 +85,30 @@ bool usesScionEditing(const Position& position)
 }
 
 } // namespace WebCore
+
+// treeOrder<TreeType>(const BoundaryPoint&, const BoundaryPoint&): -1, 0 and 1 for less, equivalent and greater, 2 for unordered.
+extern "C" WEBCORE_EXPORT int8_t BoundaryPoint_treeOrder(int32_t type, BoundaryPointRaw aRaw, BoundaryPointRaw bRaw)
+{
+    using namespace WebCore;
+    BoundaryPoint a { *static_cast<Node*>(aRaw.container), aRaw.offset };
+    BoundaryPoint b { *static_cast<Node*>(bRaw.container), bRaw.offset };
+    std::partial_ordering ordering = std::partial_ordering::unordered;
+    switch (static_cast<TreeType>(type)) {
+    case Tree:
+        ordering = treeOrder<Tree>(a, b);
+        break;
+    case ShadowIncludingTree:
+        ordering = treeOrder<ShadowIncludingTree>(a, b);
+        break;
+    case ComposedTree:
+        ordering = treeOrder<ComposedTree>(a, b);
+        break;
+    }
+    if (std::is_lt(ordering))
+        return -1;
+    if (std::is_gt(ordering))
+        return 1;
+    if (std::is_eq(ordering))
+        return 0;
+    return 2;
+}

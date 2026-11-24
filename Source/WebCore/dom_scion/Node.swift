@@ -180,3 +180,20 @@ class NodeWrapper {
 
   let p: UnsafeMutableRawPointer
 }
+
+// dom/BoundaryPoint.h: treeOrder<TreeType = Tree>(const BoundaryPoint&, const BoundaryPoint&), in the DOM.
+func treeOrder(type: TreeType = .Tree, _ a: BoundaryPoint, _ b: BoundaryPoint) -> PartialOrdering {
+  let ordering = wk_interop.BoundaryPoint_treeOrder(
+    type.rawValue, BoundaryPointRaw(container: a.container.p, offset: a.offset),
+    BoundaryPointRaw(container: b.container.p, offset: b.offset))
+  switch ordering {
+  case -1:
+    return .less
+  case 0:
+    return .equivalent
+  case 1:
+    return .greater
+  default:
+    return .unordered
+  }
+}
