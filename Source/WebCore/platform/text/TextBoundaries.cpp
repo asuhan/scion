@@ -114,3 +114,28 @@ void findEndWordBoundary(StringView text, int position, int* end)
 #endif // !PLATFORM(COCOA)
 
 } // namespace WebCore
+
+extern "C" WEBCORE_EXPORT bool TextBoundaries_requiresContextForWordBoundary(uint32_t character)
+{
+    return WebCore::requiresContextForWordBoundary(character);
+}
+
+extern "C" WEBCORE_EXPORT uint32_t TextBoundaries_endOfFirstWordBoundaryContext(const void* text)
+{
+    return WebCore::endOfFirstWordBoundaryContext(*static_cast<const StringView*>(text));
+}
+
+extern "C" WEBCORE_EXPORT uint32_t TextBoundaries_startOfLastWordBoundaryContext(const void* text)
+{
+    return WebCore::startOfLastWordBoundaryContext(*static_cast<const StringView*>(text));
+}
+
+extern "C" WEBCORE_EXPORT void TextBoundaries_findWordBoundary(const void* text, int32_t position, int32_t* start, int32_t* end)
+{
+    WebCore::findWordBoundary(*static_cast<const StringView*>(text), position, start, end);
+}
+
+extern "C" WEBCORE_EXPORT void TextBoundaries_findEndWordBoundary(const void* text, int32_t position, int32_t* end)
+{
+    WebCore::findEndWordBoundary(*static_cast<const StringView*>(text), position, end);
+}

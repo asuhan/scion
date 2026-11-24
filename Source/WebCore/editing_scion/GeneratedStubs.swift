@@ -110,29 +110,7 @@ func contentStartInBlockDirection(_ arg0: InlineIterator.LineBox) -> Float32 {
 
 // platform/text/TextBoundaries.h
 
-func endOfFirstWordBoundaryContext(_ arg0: StringWrapperView) -> UInt32 {
-  fatalError("Not implemented")
-}
-
-func findEndWordBoundary(_ arg0: StringWrapperView, _ position: Int32, _ end: inout Int32?) {
-  fatalError("Not implemented")
-}
-
 func findNextWordFromIndex(_ arg0: StringWrapperView, _ position: Int32, _ forward: Bool) -> Int32 {
-  fatalError("Not implemented")
-}
-
-func findWordBoundary(
-  _ arg0: StringWrapperView, _ position: Int32, _ start: inout Int32?, _ end: inout Int32?
-) {
-  fatalError("Not implemented")
-}
-
-func requiresContextForWordBoundary(_ character: UInt32) -> Bool {
-  fatalError("Not implemented")
-}
-
-func startOfLastWordBoundaryContext(_ arg0: StringWrapperView) -> UInt32 {
   fatalError("Not implemented")
 }
 
