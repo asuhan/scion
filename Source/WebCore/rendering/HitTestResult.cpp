@@ -45,6 +45,7 @@
 #include "RenderBlockFlow.h"
 #include "RenderImage.h"
 #include "RenderInline.h"
+#include "RenderObjectsScion.h"
 #include "SVGAElement.h"
 #include "SVGElementTypeHelpers.h"
 #include "SVGImageElement.h"
@@ -298,6 +299,17 @@ String HitTestResult::title(TextDirection& dir) const
 
 String HitTestResult::innerTextIfTruncated(TextDirection& dir) const
 {
+    if (Document::s_useScionRendering) {
+        // As for editing positions: the renderer of the nearest rendered node decides.
+        for (RefPtr node = m_innerNode.get(); node; node = node->parentInComposedTree()) {
+            if (auto* renderer = node->renderer()) {
+                if (renderer->isScion())
+                    return innerTextIfTruncatedScion(*this, dir);
+                break;
+            }
+        }
+    }
+
     for (auto* truncatedNode = m_innerNode.get(); truncatedNode; truncatedNode = truncatedNode->parentInComposedTree()) {
         auto* element = dynamicDowncast<Element>(*truncatedNode);
         if (!element)

@@ -438,6 +438,8 @@ struct HitTestResultRaw {
 
 extern "C" bool RenderObjectScion_hitTest(void*, HitTestRequestRaw, HitTestResultRaw*, HitTestLocationRaw, LayoutPointRaw, bool);
 
+extern "C" const void* HitTestResultScion_innerTextIfTruncated(HitTestResultRaw, uint8_t*);
+
 extern "C" void* RenderObjectScion_containingBlock(const void*);
 
 extern "C" FloatPointRaw RenderObjectScion_localToAbsolute(const void*, FloatPointRaw, uint8_t, bool*);
@@ -2087,6 +2089,16 @@ HitTestLocation convertHitTestLocation(const HitTestLocationRaw& hitTestLocation
 extern "C" WEBCORE_EXPORT void FloatQuadVector_append(void* vectorRaw, FloatQuadRaw quad)
 {
     static_cast<Vector<FloatQuad>*>(vectorRaw)->append(convertFloatQuad(quad));
+}
+
+String innerTextIfTruncatedScion(const HitTestResult& result, TextDirection& dir)
+{
+    HitTestResultRaw resultRaw { convertHitTestLocation(result.hitTestLocation()), result.innerNode(), result.innerNonSharedNode(), convertLayoutPoint(result.localPoint()) };
+    uint8_t dirRaw = static_cast<uint8_t>(dir);
+    // The Swift side hands over a heap-allocated copy.
+    std::unique_ptr<const String> text(static_cast<const String*>(HitTestResultScion_innerTextIfTruncated(resultRaw, &dirRaw)));
+    dir = static_cast<TextDirection>(dirRaw);
+    return *text;
 }
 
 bool RenderObjectScion::hitTest(const HitTestRequest& request, HitTestResult& result, const HitTestLocation& locationInContainer, const LayoutPoint& accumulatedOffset, HitTestFilter hitTestFilter)

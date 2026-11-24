@@ -148,6 +148,9 @@ namespace Style {
 class PseudoElementRequest;
 }
 
+// HitTestResult::innerTextIfTruncated, ported to Swift for Scion renderers.
+String innerTextIfTruncatedScion(const HitTestResult&, TextDirection&);
+
 class RenderObjectScion final {
 public:
     bool isBlockLevelBox() const;

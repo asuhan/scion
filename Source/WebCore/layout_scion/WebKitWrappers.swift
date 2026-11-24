@@ -2325,6 +2325,17 @@ private func convertHitTestLocation(_ r: HitTestLocationWrapper) -> HitTestLocat
     isRectilinear: r.isRectilinear())
 }
 
+@_cdecl("HitTestResultScion_innerTextIfTruncated")
+func HitTestResultScion_innerTextIfTruncated(
+  _ resultRaw: HitTestResultRaw, _ dirRaw: UnsafeMutablePointer<UInt8>
+) -> UnsafeRawPointer {
+  let result = convertHitTestResult(resultRaw)
+  var dir = TextDirection(rawValue: dirRaw.pointee)!
+  let text = result.innerTextIfTruncated(&dir)
+  dirRaw.pointee = dir.rawValue
+  return wk_interop.String_new_copy(text.p)
+}
+
 @_cdecl("RenderObjectScion_hitTest")
 func RenderObjectScion_hitTest(
   _ objectRaw: UnsafeMutableRawPointer, _ requestRaw: HitTestRequestRaw,

@@ -20,6 +20,8 @@
  *
 */
 
+import wk_interop
+
 enum HitTestProgress {
   case Stop
   case Continue
@@ -47,6 +49,34 @@ struct HitTestResultWrapper {
   func URLElement() -> ElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func innerTextIfTruncated(_ dir: inout TextDirection) -> StringWrapper {
+    var truncatedNode = m_innerNode
+    while let node = truncatedNode {
+      truncatedNode = node.parentInComposedTree()
+      if !wk_interop.Node_isElementNode(node.p) {
+        continue
+      }
+      let element = createElementWrapper(node.p)
+
+      if let block = element.renderer() as? RenderBlockFlowWrapper {
+        if block.style().textOverflow() == .Ellipsis {
+          let lineBox = InlineIterator.firstLineBoxFor(flow: block)
+          while lineBox.bool() {
+            if lineBox.get().hasEllipsis() {
+              dir = block.style().direction()
+              return element.innerText()
+            }
+            lineBox.traverseNext()
+          }
+        }
+        break
+      }
+    }
+
+    dir = .LTR
+    return StringWrapper()
   }
 
   func setScrollbar(_ scrollbar: Scrollbar) {
