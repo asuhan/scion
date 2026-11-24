@@ -1365,7 +1365,7 @@ func isSeparator(character: UInt32) -> Bool {
 
 func characterCount(range: SimpleRange, behaviors: TextIteratorBehavior = []) -> UInt64 {
   var adjustedRange = range
-  let ordering = treeOrder(range.start, range.end)
+  let ordering = treeOrder(type: .ComposedTree, range.start, range.end)
   if is_gt(ordering) {
     swap(&adjustedRange.start, &adjustedRange.end)
   } else if !is_lt(ordering) {

@@ -25,10 +25,6 @@ func makeBoundaryPointBeforeNodeContents(_ arg0: NodeWrapper) -> BoundaryPoint {
   fatalError("Not implemented")
 }
 
-func treeOrder(_ arg0: BoundaryPoint, _ arg1: BoundaryPoint) -> PartialOrdering {
-  fatalError("Not implemented")
-}
-
 // dom/ComposedTreeIterator.h
 
 func firstChildInComposedTreeIgnoringUserAgentShadow(_ node: NodeWrapper) -> NodeWrapper? {
