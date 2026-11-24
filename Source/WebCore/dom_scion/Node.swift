@@ -181,6 +181,15 @@ class NodeWrapper {
   let p: UnsafeMutableRawPointer
 }
 
+// dom/BoundaryPoint.h
+func makeBoundaryPointBeforeNodeContents(_ node: NodeWrapper) -> BoundaryPoint {
+  return BoundaryPoint(container: node, offset: 0)
+}
+
+func makeBoundaryPointAfterNodeContents(_ node: NodeWrapper) -> BoundaryPoint {
+  return BoundaryPoint(container: node, offset: node.length())
+}
+
 // dom/BoundaryPoint.h: treeOrder<TreeType = Tree>(const BoundaryPoint&, const BoundaryPoint&), in the DOM.
 func treeOrder(type: TreeType = .Tree, _ a: BoundaryPoint, _ b: BoundaryPoint) -> PartialOrdering {
   let ordering = wk_interop.BoundaryPoint_treeOrder(

@@ -53,6 +53,16 @@ class StringWrapperView {
 
   init() { self.p = wk_interop.StringView_new() }
 
+  // A view of UTF-16 data a Swift array holds, as std::span<const UChar>; the view keeps a copy.
+  convenience init(characters: [UChar]) {
+    let string = StringWrapper(
+      p: wk_interop.String_new_utf16(characters, UInt32(characters.count)), owner: true)
+    self.init(s: string)
+    storage = string
+  }
+
+  private var storage: StringWrapper? = nil
+
   deinit { wk_interop.StringView_destroy(p) }
 
   func length() -> UInt32 { return wk_interop.StringView_length(p) }
@@ -203,5 +213,14 @@ func U16_NEXT(_ s: StringWrapper, _ i: inout UInt32, _ length: UInt32, _ c: inou
   if UTF16.isLeadSurrogate(UInt16(c)) && i != length && UTF16.isTrailSurrogate(s[i]) {
     c = (c << 10) + UInt32(s[i]) - ((0xD800 << 10) + 0xDC00 - 0x10000)
     i += 1
+  }
+}
+
+// wtf/text/StringView.h: append(Vector<UChar>&, StringView).
+func append(_ buffer: inout [UChar], _ string: StringWrapperView) {
+  let length = string.length()
+  buffer.reserveCapacity(buffer.count + Int(length))
+  for index in 0..<length {
+    buffer.append(string[index])
   }
 }

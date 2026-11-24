@@ -177,6 +177,24 @@ func makeSimpleRangeHelper(start: BoundaryPoint, end: BoundaryPoint) -> SimpleRa
   return SimpleRange(start: start, end: end)
 }
 
+// makeSimpleRange(auto&&...) is makeSimpleRangeHelper over makeBoundaryPointHelper of each argument.
+func makeSimpleRange(_ start: BoundaryPoint, _ end: BoundaryPoint) -> SimpleRange {
+  return makeSimpleRangeHelper(start: start, end: end)
+}
+
+func makeSimpleRange(_ start: BoundaryPoint, _ end: VisiblePosition) -> SimpleRange? {
+  return makeSimpleRangeHelper(start: start, end: makeBoundaryPoint(position: end))
+}
+
+func makeSimpleRange(_ start: VisiblePosition, _ end: BoundaryPoint) -> SimpleRange? {
+  return makeSimpleRangeHelper(start: makeBoundaryPoint(position: start), end: end)
+}
+
+func makeSimpleRange(_ start: VisiblePosition, _ end: VisiblePosition) -> SimpleRange? {
+  return makeSimpleRangeHelper(
+    start: makeBoundaryPoint(position: start), end: makeBoundaryPoint(position: end))
+}
+
 func intersectsForTesting(type: TreeType, a: SimpleRange, b: SimpleRange) -> Bool {
   fatalError("Not implemented")
 }

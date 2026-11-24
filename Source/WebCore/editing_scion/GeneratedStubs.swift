@@ -15,16 +15,6 @@ func is_gteq(_ ordering: PartialOrdering) -> Bool {
   return ordering == .greater || ordering == .equivalent
 }
 
-// dom/BoundaryPoint.h
-
-func makeBoundaryPointAfterNodeContents(_ arg0: NodeWrapper) -> BoundaryPoint {
-  fatalError("Not implemented")
-}
-
-func makeBoundaryPointBeforeNodeContents(_ arg0: NodeWrapper) -> BoundaryPoint {
-  fatalError("Not implemented")
-}
-
 // dom/ComposedTreeIterator.h
 
 func firstChildInComposedTreeIgnoringUserAgentShadow(_ node: NodeWrapper) -> NodeWrapper? {
