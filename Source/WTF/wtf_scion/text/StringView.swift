@@ -224,3 +224,11 @@ func append(_ buffer: inout [UChar], _ string: StringWrapperView) {
     buffer.append(string[index])
   }
 }
+
+// unicode/utf16.h: U16_BACK_1(s, start, i) moves i back over one code point of s.
+func U16_BACK_1(_ s: StringWrapperView, _ start: UInt32, _ i: inout UInt32) {
+  i -= 1
+  if UTF16.isTrailSurrogate(s[i]) && i > start && UTF16.isLeadSurrogate(s[i - 1]) {
+    i -= 1
+  }
+}

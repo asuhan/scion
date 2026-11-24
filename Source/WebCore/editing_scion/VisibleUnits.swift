@@ -291,11 +291,28 @@ func rightWordPosition(visiblePosition: VisiblePosition, skipsSpaceWhenMovingRig
 }
 
 func prepend(buffer: inout [UInt16], string: StringWrapperView) {
-  fatalError("Not implemented")
+  let oldSize: UInt32 = UInt32(UInt64(buffer.count))
+  let length: UInt32 = string.length()
+  buffer.append(contentsOf: repeatElement(0, count: Int(UInt64(oldSize + length)) - buffer.count))
+  buffer.replaceSubrange(
+    Int(length)..<Int(length) + Int(UInt64(oldSize)), with: buffer[0..<Int(UInt64(oldSize))])
+  var i: UInt32 = 0
+  while i < length {
+    buffer[Int(UInt64(i))] = string[i]
+    i += 1
+  }
 }
 
 func prependRepeatedCharacter(buffer: inout [UInt16], character: UInt16, count: UInt32) {
-  fatalError("Not implemented")
+  let oldSize: UInt32 = UInt32(UInt64(buffer.count))
+  buffer.append(contentsOf: repeatElement(0, count: Int(UInt64(oldSize + count)) - buffer.count))
+  buffer.replaceSubrange(
+    Int(count)..<Int(count) + Int(UInt64(oldSize)), with: buffer[0..<Int(UInt64(oldSize))])
+  var i: UInt32 = 0
+  while i < count {
+    buffer[Int(UInt64(i))] = character
+    i += 1
+  }
 }
 
 func appendRepeatedCharacter(buffer: inout [UInt16], character: UInt16, count: UInt32) {
@@ -309,7 +326,19 @@ func appendRepeatedCharacter(buffer: inout [UInt16], character: UInt16, count: U
 }
 
 func suffixLengthForRange(forwardsScanRange: SimpleRange, string: inout [UInt16]) -> UInt32 {
-  fatalError("Not implemented")
+  var suffixLength: UInt32 = 0
+  var forwardsIterator = EditingTextIterator(range: forwardsScanRange)
+  while !forwardsIterator.atEnd() {
+    let text = forwardsIterator.text()
+    let i: UInt32 = endOfFirstWordBoundaryContext(text)
+    append(&string, text.left(length: i))
+    suffixLength += i
+    if i < text.length() {
+      break
+    }
+    forwardsIterator.advance()
+  }
+  return suffixLength
 }
 
 func prefixLengthForRange(backwardsScanRange: SimpleRange, string: inout [UInt16]) -> UInt32 {
@@ -333,7 +362,39 @@ func backwardSearchForBoundaryWithTextIterator(
   searchFunction: (StringWrapperView, UInt32, BoundarySearchContextAvailability, inout Bool) ->
     UInt32
 ) -> UInt32 {
-  fatalError("Not implemented")
+  var next: UInt32 = 0
+  var needMoreContext: Bool = false
+  while !it.atEnd() {
+    let inTextSecurityMode: Bool =
+      it.node() != nil && it.node()!.renderer() != nil
+      && it.node()!.renderer()!.style().textSecurity() != .None
+    // iterate to get chunks until the searchFunction returns a non-zero value.
+    if !inTextSecurityMode {
+      prepend(buffer: &string, string: it.text())
+    } else {
+      // Treat bullets used in the text security mode as regular characters when looking for boundaries
+      prependRepeatedCharacter(
+        buffer: &string, character: UInt16(120 /* 'x' */), count: it.text().length())
+    }
+    if UInt64(string.count) > UInt64(suffixLength) {
+      next = searchFunction(
+        StringWrapperView(characters: string), UInt32(UInt64(string.count) - UInt64(suffixLength)),
+        .MayHaveMoreContext, &needMoreContext)
+      if next > 1 {
+        break
+      }
+    }
+    it.advance()
+  }
+  if needMoreContext && UInt64(string.count) > UInt64(suffixLength) {
+    // The last search returned the beginning of the buffer and asked for more context,
+    // but there is no earlier text. Force a search with what's available.
+    next = searchFunction(
+      StringWrapperView(characters: string), UInt32(UInt64(string.count) - UInt64(suffixLength)),
+      .DontHaveMoreContext, &needMoreContext)
+    assert(!needMoreContext)
+  }
+  return next
 }
 
 func forwardSearchForBoundaryWithTextIterator(
@@ -341,7 +402,38 @@ func forwardSearchForBoundaryWithTextIterator(
   searchFunction: (StringWrapperView, UInt32, BoundarySearchContextAvailability, inout Bool) ->
     UInt32
 ) -> UInt32 {
-  fatalError("Not implemented")
+  var next: UInt32 = 0
+  var needMoreContext: Bool = false
+  while !it.atEnd() {
+    let inTextSecurityMode: Bool =
+      it.node() != nil && it.node()!.renderer() != nil
+      && it.node()!.renderer()!.style().textSecurity() != .None
+    // Keep asking the iterator for chunks until the search function
+    // returns an end value not equal to the length of the string passed to it.
+    if !inTextSecurityMode {
+      append(&string, it.text())
+    } else {
+      // Treat bullets used in the text security mode as regular characters when looking for boundaries
+      appendRepeatedCharacter(
+        buffer: &string, character: UInt16(120 /* 'x' */), count: it.text().length())
+    }
+    if UInt64(string.count) > UInt64(prefixLength) {
+      next = searchFunction(
+        StringWrapperView(characters: string), prefixLength, .MayHaveMoreContext, &needMoreContext)
+      if UInt64(next) != UInt64(string.count) {
+        break
+      }
+    }
+    it.advance()
+  }
+  if needMoreContext && UInt64(string.count) > UInt64(prefixLength) {
+    // The last search returned the end of the buffer and asked for more context,
+    // but there is no further text. Force a search with what's available.
+    next = searchFunction(
+      StringWrapperView(characters: string), prefixLength, .DontHaveMoreContext, &needMoreContext)
+    assert(!needMoreContext)
+  }
+  return next
 }
 
 func previousBoundary(
@@ -349,7 +441,55 @@ func previousBoundary(
   searchFunction: (StringWrapperView, UInt32, BoundarySearchContextAvailability, inout Bool) ->
     UInt32, needsContextAtParagraphStart: NeedsContextAtParagraphStart = .No
 ) -> VisiblePosition {
-  fatalError("Not implemented")
+  let boundary: NodeWrapper? = position.deepEquivalent().parentEditingBoundary()
+  if boundary == nil {
+    return VisiblePosition()
+  }
+  var string = [UInt16]()
+  var suffixLength: UInt32 = 0
+  let searchRange: SimpleRange? = makeSimpleRange(
+    makeBoundaryPointBeforeNodeContents(boundary!), position)
+  if searchRange == nil {
+    return VisiblePosition()
+  }
+  if needsContextAtParagraphStart == .Yes && isStartOfParagraph(pos: position) {
+    let forwardsScanRange: SimpleRange? = makeSimpleRange(
+      searchRange!.start, endOfParagraph(c: position))
+    if forwardsScanRange == nil {
+      return VisiblePosition()
+    }
+    var forwardsIterator = EditingTextIterator(range: forwardsScanRange!)
+    while !forwardsIterator.atEnd() {
+      append(&string, forwardsIterator.text())
+      forwardsIterator.advance()
+    }
+    suffixLength = UInt32(UInt64(string.count))
+  } else if requiresContextForWordBoundary(position.characterBefore()) {
+    let forwardsScanRange = makeSimpleRange(
+      searchRange!.end, makeBoundaryPointAfterNodeContents(boundary!))
+    suffixLength = suffixLengthForRange(forwardsScanRange: forwardsScanRange, string: &string)
+  }
+  var it = SimplifiedBackwardsTextIterator(range: searchRange!)
+  let next: UInt32 = backwardSearchForBoundaryWithTextIterator(
+    it: &it, string: &string, suffixLength: suffixLength, searchFunction: searchFunction)
+  if !(next != 0) {
+    return it.atEnd()
+      ? VisiblePosition(makeDeprecatedLegacyPosition(point: searchRange!.start)) : position
+  }
+  let node = (it.atEnd() ? searchRange! : it.range()).start.container
+  let textNode: TextWrapper? = node as? TextWrapper
+  if textNode != nil && !(suffixLength != 0) && next <= textNode!.length() {
+    // The next variable contains a usable index into a text node.
+    return VisiblePosition(makeDeprecatedLegacyPosition(node, next))
+    // The next variable contains a usable index into a text node.
+  }
+  // Use the character iterator to translate the next value into a DOM position.
+  let charIt = BackwardsCharacterIterator(range: searchRange!)
+  if UInt64(next) < UInt64(string.count) - UInt64(suffixLength) {
+    charIt.advance(count: Int32(UInt64(string.count) - UInt64(suffixLength) - UInt64(next)))
+  }
+  // FIXME: charIt can get out of shadow host.
+  return VisiblePosition(makeDeprecatedLegacyPosition(point: charIt.range().end))
 }
 
 func nextBoundary(
@@ -357,14 +497,73 @@ func nextBoundary(
   searchFunction: (StringWrapperView, UInt32, BoundarySearchContextAvailability, inout Bool) ->
     UInt32
 ) -> VisiblePosition {
-  fatalError("Not implemented")
+  var pos = c.deepEquivalent()
+  let boundary: NodeWrapper? = pos.parentEditingBoundary()
+  if boundary == nil {
+    return VisiblePosition()
+  }
+  let boundaryDocument = boundary!.document()
+  var string = [UInt16]()
+  var prefixLength: UInt32 = 0
+  if requiresContextForWordBoundary(c.characterAfter()) {
+    let backwardsScanRange: SimpleRange? = makeSimpleRange(
+      makeBoundaryPointBeforeNodeContents(createNodeWrapper(boundaryDocument.p)), c)
+    if backwardsScanRange == nil {
+      return VisiblePosition()
+    }
+    prefixLength = prefixLengthForRange(backwardsScanRange: backwardsScanRange!, string: &string)
+  }
+  let searchRange: SimpleRange? = makeSimpleRange(c, makeBoundaryPointAfterNodeContents(boundary!))
+  if searchRange == nil {
+    return VisiblePosition()
+  }
+  var it = EditingTextIterator(
+    range: searchRange!, behaviors: [.EmitsCharactersBetweenAllVisiblePositions])
+  let next: UInt32 = forwardSearchForBoundaryWithTextIterator(
+    it: &it, string: &string, prefixLength: prefixLength, searchFunction: searchFunction)
+  if it.atEnd() && UInt64(next) == UInt64(string.count) {
+    pos = makeDeprecatedLegacyPosition(point: searchRange!.end)
+  } else if next > prefixLength {
+    // Use the character iterator to translate the next value into a DOM position.
+    var charIt = CharacterIterator(
+      range: searchRange!, behaviors: [.EmitsCharactersBetweenAllVisiblePositions])
+    charIt.advance(count: Int32(next - prefixLength - 1))
+    if charIt.atEnd() {
+      return VisiblePosition()
+    }
+    let characterRange = charIt.range()
+    pos = makeDeprecatedLegacyPosition(point: characterRange.end)
+    if Int32(charIt.text()[0]) == Int32(10 /* '\n' */) {
+      // FIXME: workaround for collapsed range (where only start position is correct) emitted for some emitted newlines (see rdar://5192593)
+      if VisiblePosition(pos)
+        == VisiblePosition(makeDeprecatedLegacyPosition(point: characterRange.start))
+      {
+        charIt.advance(count: 1)
+        pos = makeDeprecatedLegacyPosition(point: charIt.range().start)
+      }
+    }
+  }
+  return VisiblePosition(pos, .Upstream)
 }
 
 func startWordBoundary(
   text: StringWrapperView, offset: UInt32, mayHaveMoreContext: BoundarySearchContextAvailability,
   needMoreContext: inout Bool
 ) -> UInt32 {
-  fatalError("Not implemented")
+  var offset = offset
+  assert(offset != 0)
+  if mayHaveMoreContext.rawValue != 0
+    && !(startOfLastWordBoundaryContext(text.left(length: offset)) != 0)
+  {
+    needMoreContext = true
+    return 0
+  }
+  needMoreContext = false
+  var start: Int32? = 0
+  var end: Int32? = 0
+  U16_BACK_1(text, 0, &offset)
+  findWordBoundary(text, Int32(offset), &start, &end)
+  return UInt32(start!)
 }
 
 func startOfWord(c: VisiblePosition, side: WordSide = .RightWordIfOnBoundary) -> VisiblePosition {
