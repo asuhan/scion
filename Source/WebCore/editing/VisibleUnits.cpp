@@ -652,8 +652,13 @@ unsigned startWordBoundary(StringView text, unsigned offset, BoundarySearchConte
     return start;
 }
 
+extern "C" VisiblePositionRaw EditingScion_startOfWord(VisiblePositionRaw, uint8_t side);
+extern "C" VisiblePositionRaw EditingScion_endOfWord(VisiblePositionRaw, uint8_t side);
+
 VisiblePosition startOfWord(const VisiblePosition& c, WordSide side)
 {
+    if (Document::s_useScionRendering && usesScionEditing(c.deepEquivalent()))
+        return visiblePositionFromRaw(EditingScion_startOfWord(visiblePositionToRaw(c), static_cast<uint8_t>(side)));
     // FIXME: This returns a null VP for c at the start of the document
     // and side == LeftWordIfOnBoundary
     VisiblePosition p = c;
@@ -684,6 +689,8 @@ unsigned endWordBoundary(StringView text, unsigned offset, BoundarySearchContext
 
 VisiblePosition endOfWord(const VisiblePosition& c, WordSide side)
 {
+    if (Document::s_useScionRendering && usesScionEditing(c.deepEquivalent()))
+        return visiblePositionFromRaw(EditingScion_endOfWord(visiblePositionToRaw(c), static_cast<uint8_t>(side)));
     VisiblePosition p = c;
     if (side == WordSide::LeftWordIfOnBoundary) {
         if (isStartOfParagraph(c))

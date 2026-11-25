@@ -118,6 +118,24 @@ func EditingScion_adjustEndpointsAtBidiBoundary(
   extentRaw.pointee = extent.raw()
 }
 
+@_cdecl("EditingScion_startOfWord")
+func EditingScion_startOfWord(_ positionRaw: VisiblePositionRaw, _ sideRaw: UInt8)
+  -> VisiblePositionRaw
+{
+  return startOfWord(
+    c: VisiblePosition(raw: positionRaw), side: WordSide(rawValue: Int32(sideRaw))!
+  )
+  .raw()
+}
+
+@_cdecl("EditingScion_endOfWord")
+func EditingScion_endOfWord(_ positionRaw: VisiblePositionRaw, _ sideRaw: UInt8)
+  -> VisiblePositionRaw
+{
+  return endOfWord(c: VisiblePosition(raw: positionRaw), side: WordSide(rawValue: Int32(sideRaw))!)
+    .raw()
+}
+
 @_cdecl("EditingScion_startOfLine")
 func EditingScion_startOfLine(
   _ positionRaw: VisiblePositionRaw, _ modeRaw: UInt8,
