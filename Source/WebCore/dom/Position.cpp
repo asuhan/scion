@@ -30,6 +30,7 @@
 #include "BoundaryPoint.h"
 #include "CSSComputedStyleDeclaration.h"
 #include "Editing.h"
+#include "EditingScion.h"
 #include "ElementInlines.h"
 #include "HTMLBRElement.h"
 #include "HTMLBodyElement.h"
@@ -72,6 +73,7 @@
 extern "C" bool InlineIterator_hasInlineRunForText(const void*);
 extern "C" bool InlineIterator_hasInlineRunForBox(const void*);
 extern "C" bool InlineIterator_hasInlineRunForLineBreak(const void*);
+extern "C" PositionRaw PositionScion_previousCharacterPosition(PositionRaw, uint8_t affinity);
 
 namespace WebCore {
 
@@ -606,6 +608,9 @@ Position Position::previousCharacterPosition(Affinity affinity) const
 {
     if (isNull())
         return { };
+
+    if (Document::s_useScionRendering && usesScionEditing(*this))
+        return positionFromRaw(PositionScion_previousCharacterPosition(positionToRaw(*this), static_cast<uint8_t>(affinity)));
 
     RefPtr fromRootEditableElement = deprecatedNode()->rootEditableElement();
 

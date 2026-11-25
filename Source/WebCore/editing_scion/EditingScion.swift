@@ -35,6 +35,15 @@ extension VisiblePosition {
   }
 }
 
+@_cdecl("PositionScion_previousCharacterPosition")
+func PositionScion_previousCharacterPosition(_ positionRaw: PositionRaw, _ affinityRaw: UInt8)
+  -> PositionRaw
+{
+  return Position(raw: positionRaw).previousCharacterPosition(
+    affinity: affinityRaw != 0 ? .Downstream : .Upstream
+  ).raw()
+}
+
 @_cdecl("VisiblePositionScion_create")
 func VisiblePositionScion_create(_ positionRaw: PositionRaw, _ affinityRaw: UInt8)
   -> VisiblePositionRaw
