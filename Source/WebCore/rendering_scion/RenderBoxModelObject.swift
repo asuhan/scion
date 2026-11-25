@@ -1287,8 +1287,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     context: GraphicsContextWrapper, image: ImageWrapper, layer: FillLayerWrapper,
     size: LayoutSizeWrapper
   ) -> InterpolationQuality {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return view().imageQualityController().chooseInterpolationQuality(
+      context, self, image, layer, size)
   }
 
   func decodingModeForImageDraw(image: ImageWrapper, paintInfo: PaintInfoWrapper) -> DecodingMode {

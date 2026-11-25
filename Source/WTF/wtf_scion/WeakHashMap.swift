@@ -48,6 +48,10 @@ final class WeakHashMap<KeyType: AnyObject, ValueType> {
     m_impl[ObjectIdentifier(key)] = value
   }
 
+  func find(_ key: KeyType) -> ValueType? {
+    return m_impl[ObjectIdentifier(key)]
+  }
+
   func get(_ key: KeyType, _ defaultValue: ValueType) -> ValueType {
     return m_impl[ObjectIdentifier(key)] ?? defaultValue
   }
@@ -55,6 +59,10 @@ final class WeakHashMap<KeyType: AnyObject, ValueType> {
   @discardableResult
   func remove(_ key: KeyType) -> Bool {
     return m_impl.removeValue(forKey: ObjectIdentifier(key)) != nil
+  }
+
+  func isEmpty() -> Bool {
+    return m_impl.isEmpty
   }
 
   func contains(_ key: KeyType) -> Bool {

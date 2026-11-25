@@ -124,5 +124,5 @@ class FillLayerWrapper {
 
   private func isNativeImpl() -> Bool { return false }
 
-  private let p: UnsafeRawPointer
+  let p: UnsafeRawPointer
 }
