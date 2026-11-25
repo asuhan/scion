@@ -84,6 +84,7 @@
 
 extern "C" SimpleRangeRaw EditingScion_findPlainText(SimpleRangeRaw, const void* target, uint16_t options);
 extern "C" uint64_t EditingScion_characterCount(SimpleRangeRaw, uint32_t behaviors);
+extern "C" SimpleRangeRaw EditingScion_resolveCharacterRange(SimpleRangeRaw scope, uint64_t location, uint64_t length, uint32_t behaviors);
 
 namespace WebCore {
 
@@ -2503,6 +2504,9 @@ constexpr uint64_t clampedAdd(uint64_t a, uint64_t b)
 
 SimpleRange resolveCharacterRange(const SimpleRange& scope, CharacterRange range, TextIteratorBehaviors behaviors)
 {
+    if (Document::s_useScionRendering && usesScionRendering(scope))
+        return simpleRangeFromRaw(EditingScion_resolveCharacterRange(simpleRangeToRaw(scope), range.location, range.length, behaviors.toRaw()));
+
     auto resultRange = SimpleRange { range.location ? scope.end : scope.start, (range.location || range.length) ? scope.end : scope.start };
     auto rangeEnd = clampedAdd(range.location, range.length);
     uint64_t location = 0;

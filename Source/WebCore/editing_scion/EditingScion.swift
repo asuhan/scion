@@ -75,6 +75,16 @@ func EditingScion_characterCount(_ rangeRaw: SimpleRangeRaw, _ behaviorsRaw: UIn
     range: SimpleRange(raw: rangeRaw), behaviors: TextIteratorBehavior(rawValue: behaviorsRaw))
 }
 
+@_cdecl("EditingScion_resolveCharacterRange")
+func EditingScion_resolveCharacterRange(
+  _ scopeRaw: SimpleRangeRaw, _ location: UInt64, _ length: UInt64, _ behaviorsRaw: UInt32
+) -> SimpleRangeRaw {
+  return resolveCharacterRange(
+    scope: SimpleRange(raw: scopeRaw), range: CharacterRange(location: location, length: length),
+    behaviors: TextIteratorBehavior(rawValue: behaviorsRaw)
+  ).raw()
+}
+
 @_cdecl("VisiblePositionScion_localCaretRect")
 func VisiblePositionScion_localCaretRect(_ positionRaw: VisiblePositionRaw) -> LocalCaretRectRaw {
   let caret = VisiblePosition(raw: positionRaw).localCaretRect()
