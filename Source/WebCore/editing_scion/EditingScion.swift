@@ -136,6 +136,16 @@ func EditingScion_endOfWord(_ positionRaw: VisiblePositionRaw, _ sideRaw: UInt8)
     .raw()
 }
 
+@_cdecl("EditingScion_startOfSentence")
+func EditingScion_startOfSentence(_ positionRaw: VisiblePositionRaw) -> VisiblePositionRaw {
+  return startOfSentence(position: VisiblePosition(raw: positionRaw)).raw()
+}
+
+@_cdecl("EditingScion_endOfSentence")
+func EditingScion_endOfSentence(_ positionRaw: VisiblePositionRaw) -> VisiblePositionRaw {
+  return endOfSentence(position: VisiblePosition(raw: positionRaw)).raw()
+}
+
 @_cdecl("EditingScion_startOfLine")
 func EditingScion_startOfLine(
   _ positionRaw: VisiblePositionRaw, _ modeRaw: UInt8,

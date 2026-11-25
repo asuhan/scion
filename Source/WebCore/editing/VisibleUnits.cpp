@@ -1098,8 +1098,13 @@ unsigned startSentenceBoundary(StringView text, unsigned, BoundarySearchContextA
     return ubrk_preceding(sentenceBreakIterator(text), text.length());
 }
 
+extern "C" VisiblePositionRaw EditingScion_startOfSentence(VisiblePositionRaw);
+extern "C" VisiblePositionRaw EditingScion_endOfSentence(VisiblePositionRaw);
+
 VisiblePosition startOfSentence(const VisiblePosition& position)
 {
+    if (Document::s_useScionRendering && usesScionEditing(position.deepEquivalent()))
+        return visiblePositionFromRaw(EditingScion_startOfSentence(visiblePositionToRaw(position)));
     return previousBoundary(position, startSentenceBoundary, NeedsContextAtParagraphStart::Yes);
 }
 
@@ -1110,6 +1115,8 @@ unsigned endSentenceBoundary(StringView text, unsigned, BoundarySearchContextAva
 
 VisiblePosition endOfSentence(const VisiblePosition& position)
 {
+    if (Document::s_useScionRendering && usesScionEditing(position.deepEquivalent()))
+        return visiblePositionFromRaw(EditingScion_endOfSentence(visiblePositionToRaw(position)));
     // FIXME: This includes the space after the punctuation that marks the end of the sentence.
     return nextBoundary(position, endSentenceBoundary);
 }
