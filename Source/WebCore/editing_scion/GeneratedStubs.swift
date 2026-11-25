@@ -118,14 +118,6 @@ func ubrk_isBoundary(_ bi: UnsafeMutableRawPointer?, _ offset: Int32) -> Bool {
   fatalError("Not implemented")
 }
 
-func ubrk_next(_ bi: UnsafeMutableRawPointer?) -> Int32 {
-  fatalError("Not implemented")
-}
-
-func ubrk_preceding(_ bi: UnsafeMutableRawPointer?, _ offset: Int32) -> Int32 {
-  fatalError("Not implemented")
-}
-
 // unicode/unorm2.h
 
 func unorm2_getNFCInstance(_ pErrorCode: UErrorCode?) -> UnsafeMutableRawPointer? {
@@ -162,10 +154,6 @@ func deprecatedIsSpaceOrNewline(_ arg0: UInt16) -> Bool {
 // wtf/text/TextBreakIterator.h
 
 func isWordTextBreak(_ arg0: UnsafeMutableRawPointer?) -> Bool {
-  fatalError("Not implemented")
-}
-
-func sentenceBreakIterator(_ arg0: StringWrapperView) -> UnsafeMutableRawPointer? {
   fatalError("Not implemented")
 }
 

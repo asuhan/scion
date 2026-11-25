@@ -2052,6 +2052,8 @@ void* wordBreakIterator_scion(const uint16_t* characters, uint32_t length);
 uint32_t numCodeUnitsInGraphemeClusters_scion(const void*, uint32_t);
 int32_t ubrk_first_scion(void*);
 int32_t ubrk_next_scion(void*);
+int32_t ubrk_preceding_scion(void*, int32_t);
+void* sentenceBreakIterator_scion(const void*);
 void ubidi_close_scion(void*);
 struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position);
 void* ubidi_open_scion();

@@ -184,6 +184,16 @@ extern "C" WEBCORE_EXPORT int32_t ubrk_next_scion(void* p)
     return ubrk_next(static_cast<UBreakIterator*>(p));
 }
 
+extern "C" WEBCORE_EXPORT int32_t ubrk_preceding_scion(void* p, int32_t offset)
+{
+    return ubrk_preceding(static_cast<UBreakIterator*>(p), offset);
+}
+
+extern "C" WEBCORE_EXPORT void* sentenceBreakIterator_scion(const void* text)
+{
+    return WTF::sentenceBreakIterator(*static_cast<const WTF::StringView*>(text));
+}
+
 extern "C" bool RenderTextScion_containsCaretOffset(const void*, uint32_t);
 
 extern "C" bool RenderTextScion_containsRenderedCharacterOffset(const void*, uint32_t);

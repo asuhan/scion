@@ -54,6 +54,15 @@ internal func ubrk_next(iterator: UnsafeMutableRawPointer) -> Int32 {
   return wk_interop.ubrk_next_scion(iterator)
 }
 
+// As in unicode/ubrk.h, for the generated code.
+func ubrk_next(_ bi: UnsafeMutableRawPointer?) -> Int32 {
+  return wk_interop.ubrk_next_scion(bi)
+}
+
+func ubrk_preceding(_ bi: UnsafeMutableRawPointer?, _ offset: Int32) -> Int32 {
+  return wk_interop.ubrk_preceding_scion(bi, offset)
+}
+
 internal func ubidi_close(ubidi: UBiDiWrapper) {
   wk_interop.ubidi_close_scion(ubidi.p)
 }

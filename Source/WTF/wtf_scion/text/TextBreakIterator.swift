@@ -112,6 +112,10 @@ struct CachedLineBreakIteratorFactoryWrapper: ~Copyable {
   private var p: UnsafeMutableRawPointer
 }
 
+func sentenceBreakIterator(_ text: StringWrapperView) -> UnsafeMutableRawPointer? {
+  return wk_interop.sentenceBreakIterator_scion(text.p)
+}
+
 // FIXME: Delete this in favor of CachedTextBreakIteratorWrapper.
 func wordBreakIterator(characters: UnsafeBufferPointer<UChar>) -> UnsafeMutableRawPointer? {
   return wk_interop.wordBreakIterator_scion(characters.baseAddress, UInt32(characters.count))
