@@ -463,7 +463,7 @@ extension LayoutIntegration {
           continue
         }
         let layoutBox = displayBox.layoutBox
-        if layoutBox is InlineTextBoxWrapper && displayBox.bidiLevel == UBiDiLevel.UBIDI_DEFAULT_LTR
+        if layoutBox is InlineTextBoxWrapper && displayBox.bidiLevel != UBiDiLevel.UBIDI_DEFAULT_LTR
         {
           (layoutBox.rendererForIntegration() as! RenderTextWrapper).setNeedsVisualReordering()
         }
