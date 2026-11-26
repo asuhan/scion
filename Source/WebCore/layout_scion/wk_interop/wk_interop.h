@@ -1231,6 +1231,7 @@ void RenderElement_layout(void*);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void* RenderElement_lastChild(const void*);
+void* RenderElement_selectionPseudoStyle(const void*);
 bool RenderElement_canContainFixedPositionObjects(const void*);
 bool RenderElement_canContainAbsolutelyPositionedObjects(const void*);
 bool RenderElement_shouldApplyLayoutContainment(const void*);

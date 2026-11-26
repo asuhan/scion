@@ -644,7 +644,12 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func selectionPseudoStyle() -> RenderStyleWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let raw = wk_interop.RenderElement_selectionPseudoStyle(id()) else { return nil }
+      let style = convert_render_style(p: raw)
+      style.pOwner = true
+      return style
+    }
     if isAnonymous() {
       return nil
     }
