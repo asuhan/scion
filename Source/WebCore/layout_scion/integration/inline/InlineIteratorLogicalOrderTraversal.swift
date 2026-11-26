@@ -29,29 +29,55 @@ extension InlineIterator {
     var index: UInt64 = 0
   }
 
+  // Upstream's std::unique_ptr<TextLogicalOrderCacheData>, null when data is nil.
   class TextLogicalOrderCache {
-    var data = TextLogicalOrderCacheData()
+    var data: TextLogicalOrderCacheData? = nil
   }
 
   private static func makeTextLogicalOrderCacheIfNeeded(_ text: RenderTextWrapper)
-    -> TextLogicalOrderCache?
+    -> TextLogicalOrderCacheData?
   {
     if !text.needsVisualReordering() {
-      return TextLogicalOrderCache()
-    }
-
-    let cache = TextLogicalOrderCache()
-    for textBox in textBoxesFor(text) {
-      cache.data.boxes.append(textBox)
-    }
-
-    if cache.data.boxes.isEmpty {
       return nil
     }
 
-    cache.data.boxes.sort(by: { a, b in a.start() < b.start() })
+    var cache = TextLogicalOrderCacheData()
+    for textBox in textBoxesFor(text) {
+      cache.boxes.append(textBox)
+    }
+
+    if cache.boxes.isEmpty {
+      return nil
+    }
+
+    cache.boxes.sort(by: { a, b in a.start() < b.start() })
 
     return cache
+  }
+
+  private static func updateTextLogicalOrderCacheIfNeeded(
+    _ textBox: TextBoxIterator, _ cache: TextLogicalOrderCache
+  ) {
+    if cache.data == nil {
+      cache.data = makeTextLogicalOrderCacheIfNeeded(textBox.get().renderer())
+      if cache.data == nil {
+        return
+      }
+    }
+
+    let data = cache.data!
+    if data.index < UInt64(data.boxes.count)
+      && TextBoxIterator(data.boxes[Int(data.index)]) == textBox
+    {
+      return
+    }
+
+    guard let index = data.boxes.firstIndex(where: { TextBoxIterator($0) == textBox }) else {
+      cache.data = nil
+      updateTextLogicalOrderCacheIfNeeded(textBox, cache)
+      return
+    }
+    cache.data!.index = UInt64(index)
   }
 
   struct LineLogicalOrderCacheData {
@@ -67,19 +93,31 @@ extension InlineIterator {
   static func firstTextBoxInLogicalOrderFor(_ text: RenderTextWrapper) -> (
     TextBoxIterator, TextLogicalOrderCache
   ) {
-    assert(!text.needsVisualReordering())
-    if let cache = makeTextLogicalOrderCacheIfNeeded(text) {
-      return (TextBoxIterator(cache.data.boxes.first!), cache)
+    let cache = TextLogicalOrderCache()
+    if let data = makeTextLogicalOrderCacheIfNeeded(text) {
+      cache.data = data
+      return (TextBoxIterator(data.boxes.first!), cache)
     }
-    return (firstTextBoxFor(text), TextLogicalOrderCache())
+
+    return (firstTextBoxFor(text), cache)
   }
 
   static func nextTextBoxInLogicalOrder(
     _ textBox: TextBoxIterator, _ cache: TextLogicalOrderCache
   ) -> TextBoxIterator {
-    // TODO(asuhan): update the logical order cache once visual reordering is
-    // handled by firstTextBoxInLogicalOrderFor above.
-    return textBox.get().nextTextBox()
+    updateTextLogicalOrderCacheIfNeeded(textBox, cache)
+
+    if cache.data == nil {
+      return textBox.get().nextTextBox()
+    }
+
+    cache.data!.index += 1
+
+    if cache.data!.index < UInt64(cache.data!.boxes.count) {
+      return TextBoxIterator(cache.data!.boxes[Int(cache.data!.index)])
+    }
+
+    return TextBoxIterator()
   }
 
   // Iterators are mutable references here: the cache keeps copies and hands out copies, so
