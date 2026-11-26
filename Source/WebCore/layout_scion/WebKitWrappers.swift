@@ -3012,7 +3012,10 @@ func RenderTextScion_text(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer
 @_cdecl("RenderTextScion_originalText")
 func RenderTextScion_originalText(_ renderTextRaw: UnsafeRawPointer) -> UnsafeRawPointer {
   let renderText = Unmanaged<RenderTextWrapper>.fromOpaque(renderTextRaw).takeUnretainedValue()
-  return renderText.originalText().p
+  // A copy for the caller to adopt: the original text may be a temporary from the original text map,
+  // which must stay alive until it is copied.
+  let originalText = renderText.originalText()
+  return withExtendedLifetime(originalText) { wk_interop.String_new_copy(originalText.p)! }
 }
 
 @_cdecl("RenderTextScion_textWithoutConvertingBackslashToYenSymbol")

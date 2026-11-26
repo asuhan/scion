@@ -2815,7 +2815,8 @@ const String& RenderTextScion::text() const
 
 String RenderTextScion::originalText() const
 {
-    return *static_cast<const String*>(RenderTextScion_originalText(m_handle));
+    std::unique_ptr<const String> text(static_cast<const String*>(RenderTextScion_originalText(m_handle)));
+    return *text;
 }
 
 String RenderTextScion::textWithoutConvertingBackslashToYenSymbol() const
