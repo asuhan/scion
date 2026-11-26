@@ -134,5 +134,16 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   // Alternative description that can be used for accessibility instead of the native text.
   private var m_altText: StringWrapper? = nil
   private var m_contentString: StringWrapper? = nil
-  private weak var m_firstLetter: RenderBoxModelObjectWrapper? = nil
+  // Upstream's SingleThreadWeakPtr is cleared by the delete at the end of the first letter's
+  // destroy(). The Swift object of a destroyed renderer outlives its destroy(), so it reads as gone.
+  private var m_firstLetter: RenderBoxModelObjectWrapper? {
+    get {
+      guard let firstLetter = m_firstLetterStorage, !firstLetter.beingDestroyed() else {
+        return nil
+      }
+      return firstLetter
+    }
+    set { m_firstLetterStorage = newValue }
+  }
+  private weak var m_firstLetterStorage: RenderBoxModelObjectWrapper? = nil
 }
